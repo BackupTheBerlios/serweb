@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.14 2003/11/04 22:47:32 jiri Exp $
+ * $Id: page.php,v 1.15 2003/11/04 23:11:51 jiri Exp $
  */
 
 	function put_headers(){
@@ -47,20 +47,18 @@
 		echo $config->realm." User Management";
 		virtual($config->separator);
 
-		?>
-
-		<div class="f12">
-			<table width="100%">
-			<tr><td align="left">Personal Page for: 
-				<?echo $user_name ? $user_name : "anonymous" ;?></td>
-			<td align="right">&nbsp;<a href=logout.php>Logout</a></td>
-			<td align="right">&nbsp;<a href=/phpBB/>FAQ</a></td>
-			</tr>
-			</table>
-		</div>
-		<br>
-
-		<?
+		if ($user_name){?>
+			<div class="f12">
+				<table width="100%">
+				<tr><td align="left">Personal Page for: <?echo $user_name;?></td>
+				<td align="right">&nbsp;<a href=logout.php>Logout</a></td>
+				<td align="right">&nbsp;<a href=/phpBB/>FAQ</a></td>
+				</tr>
+				</table>
+			</div>
+			<br>
+		<?}
+		
 		if ($tab) { print_tabs($tab); $_page_tab=1;?>	
 
  		<table bgcolor="#B1C9DC" width="100%" border="0" cellspacing="0" cellpadding="1">
