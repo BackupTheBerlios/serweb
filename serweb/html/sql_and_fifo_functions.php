@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.5 2003/11/18 12:05:09 jiri Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.6 2003/11/18 12:06:12 jiri Exp $
  */
 
  /*
@@ -65,7 +65,7 @@ function is_user_exists($uname, $udomain, &$errors){
 	if ($row[0]) return true;
 	
 	$q="select count(*) from ".$config->table_pending.
-		" where lower(username)=lower('$uname') and lower(domain)=lower('$domain')";
+		" where lower(username)=lower('$uname') and lower(domain)=lower('$udomain')";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return -1;}
 
