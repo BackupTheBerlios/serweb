@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.5 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: missed_calls.php,v 1.6 2002/10/23 12:23:39 kozlik Exp $
  */
 
 require "prepend.php";
@@ -32,6 +32,8 @@ do{
 	while ($row=MySQL_Fetch_Object($mc_res)){
 		$mc_arr[]=new Cmisc($row->sip_from, $row->time, $row->sip_status, get_status($row->sip_from, $errors));
 	}
+
+	set_timezone($errors);
 						 
 }while (false);
 
@@ -65,11 +67,21 @@ do{
 	</tr>
 	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?foreach($mc_arr as $row){
-		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
-		else $time=Substr($row->time,0,16);
+		$timestamp=gmmktime(substr($row->time,11,2), 	//hour
+							substr($row->time,14,2), 	//minute
+							substr($row->time,17,2), 	//second
+							substr($row->time,5,2), 	//month
+							substr($row->time,8,2), 	//day
+							substr($row->time,0,4));	//year
+	
+		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
+		else $time=date('Y-m-d H:i',$timestamp)
+		
+//		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
+//		else $time=Substr($row->time,0,16);
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="135">&nbsp;<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_from));?>"><?echo $row->sip_from;?></a></td>
+	<td align="left" class="f12" width="135"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_from));?>"><?echo htmlspecialchars($row->sip_from);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
