@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.5 2004/11/18 15:47:12 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.6 2004/11/24 11:51:31 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -12,11 +12,18 @@
    --------------
    'numerical_target_only'		(bool) default: false
      if is true, only phonenumbers are alowed in username part of targer uri. 
-	 The 'username_in_target_only' should be set to true too.
+	 The 'username_in_target_only' should be set to true too. Phonenumbers are checked
+	 against 'phonenumber_check_regex'
 	 
    'username_in_target_only'	(bool) default: false
      If is true, user enter only username part of target uri. Domain name is 
 	 appended by the option 'domain_for_targets'
+	 
+   'phonenumber_check_regex'	(string) default: Creg::phonenumber
+   	 Regex for validating phonenumbers
+
+   'phonenumber_check_e'		(string) default: $lang_str['fe_not_valid_phonenumber']
+	 error message that is displayed if phonenumber don't match to 'phonenumber_check_regex'
 	 
    'domain_for_targets'			(string) default: domain of loged in user
      see description of option 'username_in_target_only'
@@ -87,12 +94,18 @@ class apu_whitelist extends apu_base_class{
 		global $lang_str, $config, $controler;
 		parent::apu_base_class();
 
+		$this->reg = new Creg;				// create regular expressions class
+
 		/* set default values to $this->opt */		
 
 		$this->opt['numerical_target_only'] =		false;
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
 
+		
+		$this->opt['phonenumber_check_regex'] = $this->reg->phonenumber;
+		$this->opt['phonenumber_check_e'] = &$lang_str['fe_not_valid_phonenumber'];
+		
 		/* blacklist */
 		$this->opt['blacklist'] = null;
 		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
@@ -167,7 +180,6 @@ class apu_whitelist extends apu_base_class{
 	function init(){
 		parent::init();
 
-		$this->reg = new Creg;				// create regular expressions class
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -217,8 +229,8 @@ class apu_whitelist extends apu_base_class{
 
 		if ($this->opt['username_in_target_only']) {
 			if ($this->opt['numerical_target_only']){
-				$element_edit_field["valid_regex"] = "^(".$this->reg->phonenumber.")?$";
-				$element_edit_field["valid_e"]     = $lang_str['fe_not_valid_phonenumber'];
+				$element_edit_field["valid_regex"] = "^(".$this->opt['phonenumber_check_regex'].")?$";
+				$element_edit_field["valid_e"]     = $this->opt['phonenumber_check_e'];
 			}
 		}
 		else {
@@ -245,8 +257,8 @@ class apu_whitelist extends apu_base_class{
 
 				if ($this->opt['username_in_target_only']){
 					if ($this->opt['numerical_target_only']){
-						if (!ereg("^(".$this->reg->phonenumber.")?$", $val)){
-							$errors[]=$lang_str['fe_not_valid_phonenumber'].": ".$val;
+						if (!ereg("^(".$this->opt['phonenumber_check_regex'].")?$", $val)){
+							$errors[]=$this->opt['phonenumber_check_e'].": ".$val;
 							return false;
 						}
 						/* if user enter phonenumbers, convert it to strict phonenumber */
@@ -325,8 +337,8 @@ class apu_whitelist extends apu_base_class{
 
 		if ($this->opt['username_in_target_only']){
 			if ($this->opt['numerical_target_only']){
-				$v_regex = addslashes("^(".$this->reg->phonenumber.")?$");
-				$v_msg = $lang_str['fe_not_valid_phonenumber'];
+				$v_regex = addslashes("^(".$this->opt['phonenumber_check_regex'].")?$");
+				$v_msg = $this->opt['phonenumber_check_e'];
 			}
 		}
 		else{
