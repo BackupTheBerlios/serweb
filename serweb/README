@@ -1,0 +1,10 @@
+This software, serweb, is a web interface for self-provisioning
+of users of SER SIP Server (http://www.iptel.org/ser/). It is
+provided as is without any warranty under terms of GPL. To install
+it, unpack the distibution on your webserver so that the directory
+html is in document root and phplib is not accessible via web.
+Then, change config.php to reflect your local configuration.
+
+Thats it. Sorry, we do not currently provide more info. If you
+are interested in helping us with doc writing, write an email
+to info@iptel.org.
