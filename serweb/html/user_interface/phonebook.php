@@ -184,11 +184,11 @@ if ($okey_x){							//data isn't valid or error in sql
 <tr><td>
 	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
 	<tr>
-	<td class="titleT" width="170">name</td>
+	<td class="titleT" width="160">name</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="220">sip address</td>
+	<td class="titleT" width="205">sip address</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="60">status</td>
+	<td class="titleT" width="85">status</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="50">&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
@@ -200,11 +200,11 @@ if ($okey_x){							//data isn't valid or error in sql
 		if ($name) $name.=" "; $name.=$row->fname;
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="170">&nbsp;<?echo $name;?></td>
+	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="220">&nbsp;<a href="javascript: alert('click to dial not implemented');"><?echo $row->sip_uri;?></a></td>
+	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: alert('click to dial not implemented');"><?echo $row->sip_uri;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="60"><?echo $row->status;?></td>
+	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="50"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&edit_id=".$row->id);?>">edit</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

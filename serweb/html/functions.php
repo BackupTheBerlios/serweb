@@ -134,9 +134,15 @@ function get_status($sip_uri, &$errors){
 
 	$user=substr($regs[1],0,-1);
 	
+	$q="select count(*) from ".$config->table_subscriber." where user_id='$user'";
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
+	$row=mysql_fetch_row($res);
+	if (!$row[0]) return "<div class=\"statusunknown\">non-existent</div>";
+
 	$q="select count(*) from ".$config->table_location." where user='$user'";
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">non-local</div>";}
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
 	$row=mysql_fetch_row($res);
 	
 	if ($row[0]) return "<div class=\"statusonline\">on line</div>";
