@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: voicemail.php,v 1.2 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: voicemail.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -36,7 +36,7 @@ do{
 			$errors[]="you didn't select greeting file";
 			break;
 		}
-		
+
 		if (filesize($greeting)==0){
 			$errors[]="greeting file is invalid";
 			break;
@@ -46,7 +46,7 @@ do{
 			$errors[]="greeting file type must be audio/wav";
 			break;
 		}
-		
+
 		if (!copy ($greeting, $config->greetings_spool_dir.$config->default_domain."/".$auth->auth["uname"].".wav")){
 			$errors[]="store greeting failed";
 			break;
@@ -67,7 +67,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.15 2003/09/15 03:13:47 jiri Exp $
+ * $Id: confirmation.php,v 1.16 2003/10/13 19:56:43 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -14,26 +14,26 @@ do{
 
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
+
 
 		$q="select username from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
-		if (!MySQL_Num_Rows($res)){ 
+
+		if (!MySQL_Num_Rows($res)){
 			$q="select username from ".$config->table_subscriber." where confirmation='$nr'";
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			if (!MySQL_Num_Rows($res)){ $errors[]="Sorry. No such a confirmation number exists."; break;}
 			else { $ok=1; $errors[]="Your account has already been created."; break; }
 		}
-		
+
 		$row=MySQL_Fetch_Object($res);
 		if ($config->setup_jabber_account) {
 			$user_id=$row->username; // needed for Jabber gw reg.
 		}
 		$sip_address="sip:".$row->username."@".$config->default_domain;
-			
+
 		// get the max number alias - abs() converts string to number
 		$q="select max(abs(username)) from ".$config->table_aliases." where username REGEXP \"^[0-9]+$\"";
 		$res=mySQL_query($q);
@@ -53,7 +53,7 @@ do{
 
 		/* add new alias */
 		/*
-		if ($config->ul_multidomain) 
+		if ($config->ul_multidomain)
 			$ul_name=$alias."@".$config->default_domain."\n";
 		else
 			$ul_name=$alias."\n";
@@ -67,7 +67,7 @@ do{
 			$sip_address."\n".					//contact
 			$config->new_alias_expires."\n".	//expires
 			$config->new_alias_q."\n". 		//priority
-			$replication."\n";		
+			$replication."\n";
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
@@ -80,28 +80,28 @@ do{
 		if ($config->setup_jabber_account) {
 			# Jabber Gateway registration
 			$res = reg_jab($user_id);
-			if($res!=0) { 
+			if($res!=0) {
 				$res=$res+1; Header("Location: confirmation.php?ok=$res");
-			} else { 
-				Header("Location: confirmation.php?ok=1"); 
+			} else {
+				Header("Location: confirmation.php?ok=1");
 			}
 		} else {
-				Header("Location: confirmation.php?ok=1"); 
+				Header("Location: confirmation.php?ok=1");
 		}
-		
+
 		page_close();
 		exit;
 	}
 }while (false);
 
-	
+
 
 
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -112,15 +112,15 @@ do{
 
 	if ($ok==1){
 ?>
-<span class="txt_norm">Congratulations! Your iptel.org account was set up!</span>
+<span class="txt_norm">Congratulations! Your <?echo $config->realm;?> account was set up!</span>
 <? }elseif ($ok>=2 && $ok<10) {
 error_log("SERWEB:jabber registration failed: <$user_id> [$ok]\n");?>
-<span class="txt_norm">Your iptel.org account was set up!<br><b>But your iptel.org Jabber Gateway registration failed-
+<span class="txt_norm">Your <?echo $config->realm;?> account was set up!<br><b>But your <?echo $config->realm;?> Jabber Gateway registration failed-
 <? echo "$ok"; ?>
-</b><br>Please contact <a href="mailto:info@iptel.org">info@iptel.org</a> for further assistance.</span>
+</b><br>Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</span>
 <? }elseif ($errors) {?>
-<span class="txt_norm">We regret but your iptel.org confirmation attempt failed.<br>
-Please contact <a href="mailto:info@iptel.org">info@iptel.org</a> for further assistance.</span>
+<span class="txt_norm">We regret but your <?echo $config->realm;?> confirmation attempt failed.<br>
+Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</span>
 <?}?>
 
 <br>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.9 2003/04/04 03:09:04 jiri Exp $
+ * $Id: send_im.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -17,7 +17,7 @@ $f = new form;                  // create a form object
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
+
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"sip_address",
 	                             "value"=>$sip_addr,
@@ -42,25 +42,25 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_send.gif",
 								 "extrahtml"=>"alt='send'"));
-	
-	
+
+
 	if (isset($okey_x)){						// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
-		
+
 		if (!$instant_message){
 			$errors[]="you didn't write massage";
 			break;
 		}
-		
+
 		if (strlen($instant_message)>$config->im_length){
 			$errors[]="instant message is too long";
 			break;
 		}
 
-		/* Process data */           // Data ok; 
+		/* Process data */           // Data ok;
 
 		/* construct FIFO command */
 		$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
@@ -79,14 +79,14 @@ do{
 		if ($errors) break;
 		/* we accept any status code beginning with 2 as ok */
 		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
-		
+
 		$message="message was sent successfully to address ".$sip_address;
-		
+
         Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($status)));
 		page_close();
 		exit;
 	}
-						 
+
 }while (false);
 
 if ($okey_x){							//data isn't valid or error in sql
@@ -98,13 +98,13 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 <script language="JavaScript">
 <!--
 	var max_length=<?echo $config->im_length;?>;
 	var im_len=0;
-	
+
 	function countit(f){
 		im_len=f.instant_message.value.length;
 
@@ -116,10 +116,10 @@ if ($okey_x){							//data isn't valid or error in sql
 		else
 			f.num_chars.value=max_length-im_len;
 	}
-	
+
 	function sip_address_completion(adr){
 		var default_domain='<?echo $config->default_domain;?>';
-		
+
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;
@@ -138,7 +138,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		wait_win.document.write('<html><head><title>please wait!</title></head><body><div align="center">sending message<br>please wait!</div><div align="center"><img src="<?echo $config->img_src_path;?>send_im.gif" border="0"></div></body></html>');
 		wait_win.document.close();
 	}
-	
+
 	function close_window(){
 		wait_win=window.open('',"wait_win");	//get reference to window
 		wait_win.close();						//close the window
@@ -187,7 +187,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		f.instant_message.focus();
 		return (false);
 	}
-	
+
 	display_window();
 
 ","sip_address_completion(f.sip_address);");					// Finish form?>

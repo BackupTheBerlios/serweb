@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.7 2003/09/15 04:28:48 jiri Exp $
+ * $Id: index.php,v 1.8 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -14,9 +14,9 @@ do{
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
+
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
-	
+
 
 		if ($config->clear_text_pw) {
 			$q="select phplib_id from ". $config->table_subscriber.
@@ -31,7 +31,7 @@ do{
 
 		if (!MySQL_Num_Rows($res)) {$errors[]="Bad username or password"; break;}
 		$row=MySQL_Fetch_Object($res);
-	
+
 		$sess->register('pre_uid');
 		$pre_uid=$row->phplib_id;
 
@@ -62,7 +62,7 @@ $f->add_element(array("type"=>"submit",
                              "name"=>"okey",
                              "src"=>$config->img_src_path."butons/b_login.gif",
 							 "extrahtml"=>"alt='login'"));
-	
+
 
 if ($okey_x){							//data isn't valid or error in sql
 	$passw="";
@@ -73,7 +73,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -85,7 +85,7 @@ if ($okey_x){							//data isn't valid or error in sql
 
 
 <center>
-<h1>iptel.org Adminlogin</h1>
+<h1><?echo $config->realm;?> Adminlogin</h1>
 Please enter your username and password :<br>
 </center>
 <?$f->start("form");				// Start displaying form?>

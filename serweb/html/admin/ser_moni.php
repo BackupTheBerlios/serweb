@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni.php,v 1.2 2003/09/16 16:51:47 kozlik Exp $
+ * $Id: ser_moni.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -21,18 +21,18 @@ do{
 	$q="select param, lv, av, mv, ad, min_val, max_val, min_inc, max_inc  from ".$config->table_ser_mon_agg;
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+
 	//create assoc. array
 	while ($row=MySQL_Fetch_Object($res)) {
 		$values[$row->param]=$row;
-		
+
 		//create list of usrloc stats
 		if (substr($row->param, 0, 3) == "ul_" and substr($row->param, -4) == "_reg")
 			$ul_params[]=substr($row->param, 3, -4);
 
 	}//while
 
-	
+
 
 }while (false);
 
@@ -40,7 +40,7 @@ do{
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -111,7 +111,7 @@ do{
 	<tr><td><? print_value ("registered current", "registered average", $values['ul_'.$row.'_reg']);?></td></tr>
 	<tr><td><? print_value ("expired current", "expired average", $values['ul_'.$row.'_exp']);?></td></tr>
 	<tr><td>&nbsp;</td></tr>
-	<?}}?>	
+	<?}}?>
 	</table>
 
 <?print_html_body_end();?>

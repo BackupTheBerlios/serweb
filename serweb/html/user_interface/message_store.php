@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: message_store.php,v 1.2 2003/04/26 17:57:21 jiri Exp $
+ * $Id: message_store.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -35,7 +35,7 @@ class Cvoice_mess{
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
-	
+
 	if (isset($dele_im)){
 		$q="delete from ".$config->table_message_silo." where mid=$dele_im and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
 		$res=mySQL_query($q);
@@ -51,10 +51,10 @@ do{
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		if (!MySQL_num_rows($res)) {$errors[]="Message not found or you haven't access to message"; break;}
-		$row=MySQL_Fetch_Object($res);		
+		$row=MySQL_Fetch_Object($res);
 
 		@unlink($config->voice_silo_dir.$row->file);
-		
+
 		$q="delete from ".$config->table_voice_silo." where mid=$dele_vm";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__;}
@@ -73,36 +73,36 @@ do{
 			"@".$config->default_domain."%'";
 		$im_res=mySQL_query($q);
 		if (!$im_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+
 		while ($row=MySQL_Fetch_Object($im_res)){
-			$im_arr[]=new Cinst_mess($row->mid, $row->src_addr, 
+			$im_arr[]=new Cinst_mess($row->mid, $row->src_addr,
 				$row->inc_time, $row->body);
 		}
 
-		if ($config->show_voice_silo) {	
+		if ($config->show_voice_silo) {
 			$q="select mid, src_addr, inc_time, subject, file from ".
 				$config->table_voice_silo." where r_uri like 'sip:".
 				$auth->auth["uname"]."@".$config->default_domain."%'";
 			$vm_res=mySQL_query($q);
 			if (!$vm_res) {
-				$errors[]="error in SQL query, line: ".__LINE__; 
+				$errors[]="error in SQL query, line: ".__LINE__;
 				break;
 			}
 			while ($row=MySQL_Fetch_Object($vm_res)){
-				$vm_arr[]=new Cvoice_mess($row->mid, $row->src_addr, 
+				$vm_arr[]=new Cvoice_mess($row->mid, $row->src_addr,
 					$row->inc_time, $row->subject, $row->file);
 			}
 		}
 		set_timezone($errors);
 	}
-						 
+
 }while (false);
 
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 
 	<style type="text/css">
@@ -157,7 +157,7 @@ do{
 
 		<tr>
 		<td colspan="4" width="500"><?echo $row->body;?></td>
-		</tr>		
+		</tr>
 		</table>
 	</td></tr>
 	</table>

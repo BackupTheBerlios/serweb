@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.24 2003/09/16 16:58:55 kozlik Exp $
+ * $Id: config.php,v 1.25 2003/10/13 19:56:43 kozlik Exp $
  */
 
 class Csub_not {
@@ -206,6 +206,10 @@ class Cconfig {
 		$this->prolog="/prolog.html";
 		$this->separator="/separator.html";
 		$this->epilog="/epilog.html";
+
+		/* content of html <title> tag */
+		$this->title="iptel.org, the IP Telephony Site";
+
 		/* your domain name */
 		$this->realm="192.168.2.16";
 		$this->domainname="192.168.2.16";
@@ -215,6 +219,11 @@ class Cconfig {
 		*/
 		$this->first_alias_number=82000;
 
+
+		/* info email address */
+		$this->infomail	=	"info@iptel.org";
+		/* email address for questions concerning registration */
+		$this->regmail	=	"registrar@iptel.org";
 
 		/* alternate development settings ...
 		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		
@@ -490,6 +499,8 @@ class Cconfig {
 		/* address of user wishing to initiate conversation */
 		$this->ctd_uri="sip:44@192.168.2.16";
 		
+		/* from header for click-to-dial request */
+		$this->ctd_from	=	"sip:controller@iptel.org";
 		
 		/* ------------------------------------------------------------*/
 		/* Values you typically do NOT want to change unless you know  *

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: index.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -12,7 +12,7 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	$f = new form;                   // create a form object
-	
+
 	$opt=get_time_zones($errors);
 	$options[]=array("label"=>"--- please select your timezone ---","value"=>"");
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
@@ -98,7 +98,7 @@ do{
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
+
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -112,7 +112,7 @@ do{
 			$errors[]="You don't accept terms and conditions"; break;
 		}
 
-			/* Process data */           // Data ok; 
+			/* Process data */           // Data ok;
 
 		$q="select count(*) from ".$config->table_subscriber." where lower(username)=lower('$uname')";
 		$res=mySQL_query($q);
@@ -127,11 +127,11 @@ do{
 
 		$row=MySQL_Fetch_Row($res);
 		if ($row[0]) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
-			
+
 		$ha1=md5($uname.":".$config->realm.":".$passwd);
 		$ha1b=md5($uname."@".$config->domainname.":".$config->realm.":".$passwd);
 		$confirm=md5(uniqid(rand()));
-		
+
 		$q="insert into ".$config->table_pending." (username, password, first_name, last_name, phone, email_address, ".
 				"datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) ".
 			"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
@@ -139,23 +139,23 @@ do{
 
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-			
+
 		$sip_address="sip:".$uname."@".$config->default_domain;
-	
+
 		$mail_body=str_replace("#confirm#", $confirm, $config->mail_register);
 		$mail_body=str_replace("#sip_address#", $sip_address, $mail_body);
-			
+
 		if (!send_mail($email, $config->register_subj, $mail_body)){
 			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
 		}
-	
+
         Header("Location: ".$sess->url("finish.php?sip_address=".RawURLEncode($sip_address)));
 		page_close();
 		exit;
 	}
 }while (false);
 
-	
+
 
 if ($okey_x){							//data isn't valid or error in sql
 	$terms=$config->terms_and_conditions;
@@ -166,7 +166,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -179,7 +179,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <span class="txt_norm">To register, please fill out the form below and click the
 submit button at the bottom of the page. <br>An email message will be sent to you
 confirming your registration. Please contact
-<A HREF=mailto:registrar@iptel.org>registrar@iptel.org</A> <br>
+<A HREF=mailto:<?echo $config->regmail;?>><?echo $config->regmail;?></A> <br>
 if you have any questions concerning registration and our free trial SIP services.</span>
 <br>
 <?print_errors($errors);                    // Display error?>

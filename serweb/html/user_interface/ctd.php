@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ctd.php,v 1.1 2003/04/29 08:12:57 kozlik Exp $
+ * $Id: ctd.php,v 1.2 2003/10/13 19:56:43 kozlik Exp $
  */
 require "prepend.php";
 
@@ -15,7 +15,7 @@ click_to_dial($target, $uri, $errors);
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org -- My Account </title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <body bgcolor="#B1C9DC" text="#000000" link="#33CCFF" vlink="#33CCCC" alink="#33FFFF" MARGINHEIGHT="0" MARGINWIDTH="0" leftmargin="0" topmargin="0">

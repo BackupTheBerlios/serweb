@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: finish.php,v 1.2 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: finish.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,7 +13,7 @@ page_open (array("sess" => "phplib_Session"));
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -24,7 +24,7 @@ page_open (array("sess" => "phplib_Session"));
 
 
 <span class="txt_norm">
-Thank you for registering with iptel.org.<br>
+Thank you for registering with <?echo $config->realm;?>.<br>
 <br>
 Your application was forwarded for approval.<br>
 Expect a confirmation message shortly.<br>
@@ -32,7 +32,7 @@ Expect a confirmation message shortly.<br>
 We are reserving the following SIP address for you: <?echo $sip_address;?>.<br>
 <br>
 If you have any further questions please feel free to send<br>
-an email to <a href="mailto:info@iptel.org">info@iptel.org</a>.<br>
+an email to <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a>.<br>
 </span>
 <br>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.24 2003/10/02 16:13:16 kozlik Exp $
+ * $Id: functions.php,v 1.25 2003/10/13 19:56:43 kozlik Exp $
  */
 
 
@@ -354,7 +354,7 @@ function filter_fl($in){
 function click_to_dial($target, $uri, &$errors){
 	global $config;
 
-	$from="<sip:controller@iptel.org>";
+	$from="<".$config->ctd_from.">";
 	$callidnr = uniqid("");
 	$callid = $callidnr.".fifouacctd";
 	$cseq=1;

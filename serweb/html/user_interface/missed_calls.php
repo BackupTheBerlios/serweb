@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.15 2003/08/15 00:36:36 jiri Exp $
+ * $Id: missed_calls.php,v 1.16 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -25,9 +25,9 @@ class Cmisc{
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
-	
+
 	if ($delete_calls==1){
-	
+
 		$q="select username from ".$config->table_aliases.
 			" where 'sip:".$auth->auth["uname"]."@".$config->default_domain."'=contact";
 
@@ -35,20 +35,20 @@ do{
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		$usernames_arr= Array();
-		
+
 		while ($row=MySQL_Fetch_Object($res)){
 			$usernames_ar[]=$row->username;
 		}
 		$usernames_ar[]=$auth->auth["uname"];
-		
+
 		$usernames_ar=array_unique($usernames_ar);
-		
+
 		foreach($usernames_ar as $row){
 			$q="delete from ".$config->table_missed_calls." where username='".$row."' and time<'".gmdate("Y-m-d H:i:s", $page_loaded_timestamp)."'";
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; }
 		}
-	
+
 	}
 
 	/* we have here a UNION statement -- that speeds up queries a lot as
@@ -63,24 +63,24 @@ do{
 			"WHERE 'sip:".$auth->auth["uname"]."@".$config->default_domain."'".
 				"=t2.contact AND t2.username=t1.username  ) ".
 		"ORDER BY time DESC";
-	
+
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 	while ($row=MySQL_Fetch_Object($mc_res)){
-		$mc_arr[]=new Cmisc($row->from_uri, $row->sip_from, $row->time, 
+		$mc_arr[]=new Cmisc($row->from_uri, $row->sip_from, $row->time,
 			$row->sip_status, get_status($row->from_uri, $errors));
 	}
 
 	set_timezone($errors);
-						 
+
 }while (false);
 
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 <script language="JavaScript" src="ctd.js"></script>
 </head>
@@ -113,10 +113,10 @@ do{
 							substr($row->time,5,2), 	//month
 							substr($row->time,8,2), 	//day
 							substr($row->time,0,4));	//year
-	
+
 		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
 		else $time=date('Y-m-d H:i',$timestamp);
-		
+
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
 

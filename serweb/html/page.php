@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.12 2003/10/13 18:53:30 kozlik Exp $
+ * $Id: page.php,v 1.13 2003/10/13 19:56:43 kozlik Exp $
  */
 
 	function put_headers(){
@@ -73,7 +73,7 @@
 		global $config, $_page_tab, $sess;
 
 		virtual($config->prolog);
-		echo "iptel.org User Management";
+		echo $config->realm." User Management";
 		virtual($config->separator);
 
 		?>
@@ -101,7 +101,7 @@
 		global $config, $_page_tab, $sess, $auth;
 
 		virtual($config->prolog);
-		echo "iptel.org Reseller Management";
+		echo $config->realm." Reseller Management";
 		virtual($config->separator);
 
 		?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.5 2003/09/15 04:28:48 jiri Exp $
+ * $Id: get_pass.php,v 1.6 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -21,10 +21,10 @@ do{
 
 		if (!MySQL_Num_Rows($res)) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
 		$row=MySQL_Fetch_Object($res);
-		
+
 		$pre_uid=$row->phplib_id;
 		$pre_uid_expires=time()+$config->pre_uid_expires;
-		
+
 		$my_sess=new phplib_Session();
 		$my_sess->set_container();
 		$my_sess->name=$my_sess->classname;
@@ -34,7 +34,7 @@ do{
 		$my_sess->freeze();
 
 		$mail_body=str_replace("#session#", $my_sess->name."=".$my_sess->id, $config->mail_forgot_pass);
-		
+
 		if (!send_mail($row->email_address, $config->forgot_pass_subj, $mail_body)){
 			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
 		}
@@ -45,16 +45,16 @@ do{
 
 //		echo "oook/~iptel/user_interface/my_account.php?".$my_sess->name."=".$my_sess->id;
 //		exit;
-/*	
+/*
 		$q="select password, email_address from ".$config->table_subscriber." where username='$uname'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		if (!MySQL_Num_Rows($res)) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
 		$row=MySQL_Fetch_Object($res);
-	
+
 		$mail_body=str_replace("#password#", $row->password, $config->mail_forgot_pass);
-		
+
 		if (!send_mail($row->email_address, $config->forgot_pass_subj, $mail_body)){
 			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
 		}
@@ -79,7 +79,7 @@ $f->add_element(array("type"=>"submit",
                              "name"=>"okey",
                              "src"=>$config->img_src_path."butons/b_get_pass.gif",
 							 "extrahtml"=>"alt='get password'"));
-	
+
 
 if (isset($okey_x)){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
@@ -89,7 +89,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.9 2003/09/15 04:28:48 jiri Exp $
+ * $Id: index.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -72,7 +72,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org Services</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?
@@ -84,7 +84,7 @@ if ($okey_x){							//data isn't valid or error in sql
 
 
 <center>
-<h1>iptel.org Userlogin</h1>
+<h1><?echo $config->realm;?> Userlogin</h1>
 Please enter your username and password :<br>
 </center>
 <?$f->start("form");				// Start displaying form?>

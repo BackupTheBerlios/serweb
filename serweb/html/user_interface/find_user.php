@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.5 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: find_user.php,v 1.6 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -19,8 +19,8 @@ $f = new form;                  // create a form object
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
-	
+
+
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"fname",
 								 "size"=>16,
@@ -46,22 +46,22 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_find.gif",
 								 "extrahtml"=>"alt='find'"));
-	
-	
+
+
 	if (isset($okey_x)){						// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
 
-			/* Process data */           // Data ok; 
+			/* Process data */           // Data ok;
 		if ($onlineonly)
 			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
 				" where s.username=l.username and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.username like '%$uname%' limit 0,".$config->max_showed_rows;
 		else
 			$q=	"select timezone, first_name, last_name, username from ".$config->table_subscriber.
 				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and username like '%$uname%' limit 0,".$config->max_showed_rows;
-		
+
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	}
@@ -76,7 +76,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?

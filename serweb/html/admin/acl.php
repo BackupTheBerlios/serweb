@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.4 2003/09/15 03:55:35 jiri Exp $
+ * $Id: acl.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,25 +20,25 @@ do{
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
-	
+
 	$q="select grp from ".$config->table_grp." where domain='".$config->realm."' and username='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+
 	while ($row=MySQL_Fetch_Object($res)) $grp_val[]=$row->grp;
-	
+
 
 	unset ($options);
 	foreach($config->grp_values as $val){
 		$options[]=array("label"=>$val, "value"=>$val);
 	}
 
-	
+
 	if (is_array($grp_val)){
 		$diff=array_diff($grp_val, $config->grp_values);
 		$options=array_merge($options, $diff);
 	}
-	
+
 	$f->add_element(array("type"=>"select",
 	                             "name"=>"f_grp",
 								 "size"=>10,
@@ -53,13 +53,13 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
-								 
+
 
 	if (isset($okey_x)){								// Is there data to process?
 
 		if (!is_array($grp_val)) $grp_val=array();
 		if (!is_array($f_grp)) $f_grp=array();
-	
+
 		$del=array_diff($grp_val, $f_grp);
 		if (is_array($del))
 			foreach($del as $val){
@@ -68,7 +68,7 @@ do{
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}
-		
+
 
 		$ins=array_diff($f_grp, $grp_val);
 		if (is_array($ins))
@@ -78,9 +78,9 @@ do{
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}
-		
+
 		if ($errors) break;
-			
+
         Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
 		page_close();
 		exit;
@@ -95,7 +95,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?

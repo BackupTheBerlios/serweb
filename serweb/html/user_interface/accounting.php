@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.13 2003/10/10 04:11:06 jiri Exp $
+ * $Id: accounting.php,v 1.14 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -14,7 +14,7 @@ page_open (array("sess" => "phplib_Session",
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
-	
+
 	$q="select t1.to_uri, t1.sip_to, t1.sip_callid, t1.time, ".
 		"t1.fromtag as invft, t2.fromtag as byeft, t2.totag as byett, ".
 		"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) ".
@@ -27,7 +27,7 @@ do{
 		"order by t1.time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-						 
+
 	set_timezone($errors);
 
 }while (false);
@@ -36,7 +36,7 @@ do{
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 <script language="JavaScript" src="ctd.js"></script>
 </head>
@@ -65,7 +65,7 @@ do{
 	</tr>
 	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?while ($row=MySQL_Fetch_Object($mc_res)){
-		if ($flag==1) { 
+		if ($flag==1) {
 			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
 		} else {
 			$flag = 1; $bgc = "bgcolor=\"#EEEEEE\"";
@@ -76,7 +76,7 @@ do{
 							substr($row->time,5,2), 	//month
 							substr($row->time,8,2), 	//day
 							substr($row->time,0,4));	//year
-	
+
 		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
 		else $time=date('Y-m-d H:i',$timestamp);
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -14,7 +14,7 @@ page_open (array("sess" => "phplib_Session",
 function remove_from_events($uri){
 	global $config;
 
-	if (is_array($config->sub_not))	
+	if (is_array($config->sub_not))
 		foreach ($config->sub_not as $key => $row) if ($row->uri==$uri) unset ($config->sub_not[$key]);
 }
 
@@ -31,7 +31,7 @@ do{
 		page_close();
 		exit;
 	}
-	
+
 	if (isset($dele_id)){
 		$q="delete from ".$config->table_event." where username='".$auth->auth["uname"]."' and id=".$dele_id;
 		$res=mySQL_query($q);
@@ -41,26 +41,26 @@ do{
 		page_close();
 		exit;
 	}
-	
+
 }while (false);
 
 do{
-	if ($db){	
+	if ($db){
 		$q="select id, uri, description ".
 			"from ".$config->table_event." ".
 			"where username='".$auth->auth["uname"]."'";
-	
+
 		$ev_res=mySQL_query($q);
 		if (!$ev_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	}
-						 
+
 }while (false);
 
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 </head>
 <?

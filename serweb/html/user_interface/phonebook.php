@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.9 2003/09/15 03:49:49 jiri Exp $
+ * $Id: phonebook.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,7 +20,7 @@ class Cphonebook{
 	var $lname;
 	var $sip_uri;
 	var $status;
-	
+
 	function Cphonebook($id, $fname, $lname, $sip_uri, $status='unknown'){
 		$this->id=$id;
 		$this->fname=$fname;
@@ -33,26 +33,26 @@ class Cphonebook{
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
-	
+
 	if ($dele_id){
 		$q="delete from ".$config->table_phonebook." where ".
 			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and id=".$dele_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
 	}
-	
+
 	if ($edit_id){
 		$q="select fname, lname, sip_uri from ".$config->table_phonebook.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and id=".$edit_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=mysql_fetch_object($res);
-	}	
-	
+	}
+
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"fname",
 								 "size"=>16,
@@ -80,25 +80,25 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
-	
-	
+
+
 	if (isset($okey_x)){								// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
 
-			/* Process data */           // Data ok; 
+			/* Process data */           // Data ok;
 
 		if ($id) $q="update ".$config->table_phonebook." set fname='$fname', lname='$lname', sip_uri='$sip_uri' ".
 			"where id=$id and domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
 		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, username, domain) ".
 			"values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."', '".$config->realm."')";
-		
+
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-		
+
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
@@ -109,16 +109,16 @@ do{
 	if ($db){
 		// get phonebook
 		if ($edit_id) $qw=" and id!=$edit_id "; else $qw="";
-		
+
 		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by lname";
 		$phonebook_res=MySQL_Query($q);
 		if (!$phonebook_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
+
 		while ($row=MySQL_Fetch_Object($phonebook_res)){
 			$pb_arr[]=new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $errors));
 		}
-		
+
 	}
 }while (false);
 
@@ -130,13 +130,13 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 <script language="JavaScript">
 <!--
 	function sip_address_completion(adr){
 		var default_domain='<?echo $config->default_domain;?>';
-		
+
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;

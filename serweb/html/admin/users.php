@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.9 2003/09/16 16:51:47 kozlik Exp $
+ * $Id: users.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
  */
 
 require "prepend.php";
@@ -28,22 +28,22 @@ do{
 		$q="delete from ".$config->table_aliases." where contact='sip:".$dele_id."@".$config->default_domain."'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+
 		$q="delete from ".$config->table_subscriber." where username='$dele_id'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
+
         Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user seleted succesfully")));
 		page_close();
 		exit;
 	}
 }while (false);
-	
+
 do{
 	if ($db){
 
 		$query_c=$sess_fusers->get_query_where_phrase('s');
-	
+
 		// get num of users
 		if ($sess_fusers->onlineonly)
 			$q1="select distinct s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
@@ -51,12 +51,12 @@ do{
 		else
 			$q1="select s.username from ".$config->table_subscriber." s ".
 				" where ".$query_c;
-			
+
 		$res=MySQL_Query($q1);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
+
 		$num_rows=MySQL_Num_Rows($res);
-	
+
 		// get users
 		if ($sess_fusers->onlineonly)
 			$q="select distinct s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s, ".$config->table_location." l ".
@@ -66,15 +66,15 @@ do{
 				" where ".$query_c." order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
 		$users_res=MySQL_Query($q);
 		if (!$users_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
+
 	}
-						 
+
 }while (false);
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title><?echo $config->title;?></title>
 <?print_html_head();?>
 <script language="JavaScript">
 <!--
