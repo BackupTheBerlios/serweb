@@ -23,6 +23,8 @@ class Cconfig {
 	var $table_phonebook;
 	var $table_event;
 	
+	var $show_voicemail_acl;
+
 	var $grp_values;
 
 	var $realm;
@@ -97,6 +99,8 @@ class Cconfig {
 		$this->table_accounting="acc";
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
+
+		$this->show_voicemail_acl=true;				//show "voicemail" in ACL at my account
 		
 		$this->grp_values[]="voicemail";
 		$this->grp_values[]="grp 1";
@@ -108,7 +112,7 @@ class Cconfig {
 		$this->realm="iptel.org";
 		$this->domainname="iptel.org";
 
-		$this->first_alias_number=8888;
+		$this->first_alias_number=18888;
 		
 		$this->new_alias_expires='2020-01-01 00:00:00';
 		$this->new_alias_q=1.00;

@@ -194,7 +194,10 @@ do{
 		if (!$aliases_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
 		// get Access-Control-list
-		$q="select grp from ".$config->table_grp." where user='".$user_id."' order by grp";
+
+		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
+		else $qc="";
+		$q="select grp from ".$config->table_grp." where user='".$user_id."'".$qc." order by grp";
 		$grp_res=MySQL_Query($q);
 		if (!$grp_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
