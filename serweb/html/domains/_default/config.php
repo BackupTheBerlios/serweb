@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.5 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: config.php,v 1.6 2004/08/25 14:56:52 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -50,14 +50,14 @@
 		/* Default language to use, if not browser-defined or user-defined
 		*/
 		
-		$config->lang['default_lang'] = 'en-iso-8859-1';
+		$this->lang['default_lang'] = 'en-iso-8859-1';
 		
 		/* Force: always use this language - must be defined in
 		   lang/config_lang.php
 
-		   $config->lang['lang'] = 'en-iso-8859-1';
+		   $this->lang['lang'] = 'en-iso-8859-1';
 		*/
-		$config->lang['lang'] = '';
+		$this->lang['lang'] = '';
 
 		/* ------------------------------------------------------------*/
 		/* aliases generation                                          */
@@ -68,23 +68,23 @@
 		   Values 'rand' or 'inc' on the next line.
 		*/
 
-		$config->alias_generation='inc';
+		$this->alias_generation='inc';
 
 		/* initial nummerical alias for new subscriber - only if aliases
 		   are generated incrementaly
 		*/
-		$config->first_alias_number=82000;
+		$this->first_alias_number=82000;
 		
 		/* next lines are only for randomly generated aliases */
 		
 		/* prefix of generated alias */
-		$config->alias_prefix="8";
+		$this->alias_prefix="8";
 		/* postfix of generated alias */
-		$config->alias_postfix="";
+		$this->alias_postfix="";
 		/* length of random part of alias */
-		$config->alias_lenght=5;
+		$this->alias_lenght=5;
 		/* how many times will serweb try find unused alias number until error will occured */
-		$config->alias_generation_retries=10;		
+		$this->alias_generation_retries=10;		
 
 		/* ------------------------------------------------------------*/
 		/* text														   */
