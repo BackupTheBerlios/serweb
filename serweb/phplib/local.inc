@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.4 2002/09/09 17:28:11 kozlik Exp $
+ * $Id: local.inc,v 1.5 2003/03/17 20:01:25 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -128,7 +128,7 @@ class phplib_Auth extends Auth {
     
     $this->db->query(sprintf("select phplib_id, perms ".
                              "        from %s ".
-                             "       where user_id = '%s' ".
+                             "       where username = '%s' ".
                              "         and ha1 = '%s'",
                           $this->database_table,
                           addslashes($username),
@@ -154,7 +154,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 		if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
 		
-	    $this->db->query(sprintf("select user_id, perms ".
+	    $this->db->query(sprintf("select username, perms ".
 	                             "        from %s ".
 	                             "       where phplib_id = '%s' ",
 	                          $this->database_table,
@@ -162,7 +162,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 	    $uid=0;
 	    while($this->db->next_record())	{
-	      $this->auth["uname"] = $this->db->f("user_id");
+	      $this->auth["uname"] = $this->db->f("username");
 	      $this->auth["perm"] = $this->db->f("perms");
 		  $uid=$pre_uid;
 	    }
@@ -210,7 +210,7 @@ class phplib_Challenge_Auth extends Auth {
     if(isset($username)) {
       $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
     }
-    $this->db->query(sprintf("select user_id,perms,password ".
+    $this->db->query(sprintf("select username,perms,password ".
                 "from %s where username = '%s'",
                           $this->database_table,
                           addslashes($username)));
@@ -220,7 +220,7 @@ class phplib_Challenge_Auth extends Auth {
     }
 
     while($this->db->next_record()) {
-      $uid   = $this->db->f("user_id");
+      $uid   = $this->db->f("username");
       $perm  = $this->db->f("perms");
       $pass  = $this->db->f("password");
     }
@@ -280,7 +280,7 @@ class phplib_Challenge_Crypt_Auth extends Auth {
 
     $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
     
-    $this->db->query(sprintf("select user_id,perms,password ".
+    $this->db->query(sprintf("select username,perms,password ".
                 "from %s where username = '%s'",
                           $this->database_table,
                           addslashes($username)));
@@ -290,7 +290,7 @@ class phplib_Challenge_Crypt_Auth extends Auth {
     }
 
     while($this->db->next_record()) {
-      $uid   = $this->db->f("user_id");
+      $uid   = $this->db->f("username");
       $perm  = $this->db->f("perms");
       $pass  = $this->db->f("password");   ## Password is stored as a md5 hash
     }

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_metar.php,v 1.1 2003/01/07 18:00:18 kozlik Exp $
+ * $Id: send_metar.php,v 1.2 2003/03/17 20:03:52 kozlik Exp $
  */
 
 //disable time limit
@@ -32,14 +32,14 @@ $text_type = 'pw_text_'.$language;
 
 
 //get users which have subscribed this service
-$q="select user from ".$config->table_event." where uri='".$config->metar_event_uri."'";
+$q="select username from ".$config->table_event." where uri='".$config->metar_event_uri."'";
 $res=mySQL_query($q);
 if (!$res) {echo "error in SQL query, line: ".__LINE__."\n"; exit (1);}
 
 while ($row=MySQL_Fetch_Object($res)){
 
 	//for each user get contacts
-	$q="select contact from ".$config->table_location." where user='".$row->user."'";
+	$q="select contact from ".$config->table_location." where username='".$row->username."'";
 	$res2=mySQL_query($q);
 	if (!$res2) {echo "error in SQL query, line: ".__LINE__."\n"; continue;}
 
@@ -85,7 +85,7 @@ while ($row=MySQL_Fetch_Object($res)){
 		$fifo_cmd=":t_uac_from:".$config->reply_fifo_filename."\n".
 		    "MESSAGE\n".
 			$config->metar_from_sip_uri."\n".
-			"sip:".$row->user."@".$config->default_domain."\n".
+			"sip:".$row->username."@".$config->default_domain."\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: ".$config->web_contact."\n".
 		    "Content-Type: text/plain; charset=UTF-8\n\n".
@@ -106,7 +106,7 @@ while ($row=MySQL_Fetch_Object($res)){
 		$fifo_cmd=":t_uac_from:".$config->reply_fifo_filename."\n".
 		    "MESSAGE\n".
 			$config->metar_from_sip_uri."\n".
-			"sip:".$row->user."@".$config->default_domain."\n".
+			"sip:".$row->username."@".$config->default_domain."\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: ".$config->web_contact."\n".
 		    "Content-Type: text/plain; charset=UTF-8\n\n".

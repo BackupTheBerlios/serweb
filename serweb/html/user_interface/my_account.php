@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.15 2003/02/13 13:04:13 kozlik Exp $
+ * $Id: my_account.php,v 1.16 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -43,12 +43,12 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select email_address, allow_find, timezone from ".$config->table_subscriber." where user_id='".$user_id."'";
+	$q="select email_address, allow_find, timezone from ".$config->table_subscriber." where username='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	$q="select user from ".$config->table_grp." where user='".$user_id."' and grp='voicemail'";
+	$q="select username from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
@@ -207,14 +207,14 @@ do{
 		}
 		
  		$q="update ".$config->table_subscriber." set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
-			" where user_id='".$user_id."'";
+			" where username='".$user_id."'";
 
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
-			if ($f2voicemail) $q="insert into ".$config->table_grp." (user, grp) values ('".$user_id."', 'voicemail')";
-			else $q="delete from ".$config->table_grp." where user='".$user_id."' and grp='voicemail'";
+			if ($f2voicemail) $q="insert into ".$config->table_grp." (username, grp) values ('".$user_id."', 'voicemail')";
+			else $q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
 			
 			$res=MySQL_Query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -231,14 +231,14 @@ do{
 	if ($db){
 
 		// get aliases
-		$q="select user from ".$config->table_aliases." where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by user";
+		$q="select username from ".$config->table_aliases." where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
 		$aliases_res=MySQL_Query($q);
 		if (!$aliases_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
 		// get Access-Control-list
 		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
 		else $qc="";
-		$q="select grp from ".$config->table_grp." where user='".$user_id."'".$qc." order by grp";
+		$q="select grp from ".$config->table_grp." where username='".$user_id."'".$qc." order by grp";
 		$grp_res=MySQL_Query($q);
 		if (!$grp_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -381,7 +381,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		<tr><td class="titleT">your aliases:</td></tr>
 		<tr><td height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 		<?while ($row=MySQL_Fetch_Object($aliases_res)){?>
-		<tr><td align="center" class="f12"><?echo $row->user;?>&nbsp;</td></tr>
+		<tr><td align="center" class="f12"><?echo $row->username;?>&nbsp;</td></tr>
 		<?}?>
 		</table>
 	</td></tr>

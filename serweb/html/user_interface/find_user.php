@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.4 2003/03/17 18:18:35 kozlik Exp $
+ * $Id: find_user.php,v 1.5 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -56,11 +56,11 @@ do{
 
 			/* Process data */           // Data ok; 
 		if ($onlineonly)
-			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.user_id=l.user and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.user_id like '%$uname%' limit 0,".$config->max_showed_rows;
+			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.username=l.username and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.username like '%$uname%' limit 0,".$config->max_showed_rows;
 		else
-			$q=	"select timezone, first_name, last_name, user_id from ".$config->table_subscriber.
-				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".$config->max_showed_rows;
+			$q=	"select timezone, first_name, last_name, username from ".$config->table_subscriber.
+				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and username like '%$uname%' limit 0,".$config->max_showed_rows;
 		
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -141,7 +141,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 		$odd=$odd?0:1;
 		$name=$row->last_name;
 		if ($name) $name.=" "; $name.=$row->first_name;
-		$sip_uri="sip:".$row->user_id."@".$config->default_domain;
+		$sip_uri="sip:".$row->username."@".$config->default_domain;
 	?>
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.2 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: acl.php,v 1.3 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -21,7 +21,7 @@ do{
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
 	
-	$q="select grp from ".$config->table_grp." where user='".$user_id."'";
+	$q="select grp from ".$config->table_grp." where username='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
@@ -63,7 +63,7 @@ do{
 		$del=array_diff($grp_val, $f_grp);
 		if (is_array($del))
 			foreach($del as $val){
-				$q="delete from ".$config->table_grp." where user='$user_id' and grp='$val'";
+				$q="delete from ".$config->table_grp." where username='$user_id' and grp='$val'";
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}
@@ -72,7 +72,7 @@ do{
 		$ins=array_diff($f_grp, $grp_val);
 		if (is_array($ins))
 			foreach($ins as $val){
-				$q="insert into ".$config->table_grp." (user, grp, last_modified) values ('$user_id', '$val', now())";
+				$q="insert into ".$config->table_grp." (username, grp, last_modified) values ('$user_id', '$val', now())";
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}

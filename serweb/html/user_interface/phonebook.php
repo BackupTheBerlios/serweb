@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.6 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: phonebook.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -35,7 +35,7 @@ do{
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 	
 	if ($dele_id){
-		$q="delete from ".$config->table_phonebook." where user='".$auth->auth["uname"]."' and id=".$dele_id;
+		$q="delete from ".$config->table_phonebook." where username='".$auth->auth["uname"]."' and id=".$dele_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
@@ -45,7 +45,7 @@ do{
 	}
 	
 	if ($edit_id){
-		$q="select fname, lname, sip_uri from ".$config->table_phonebook." where user='".$auth->auth["uname"]."' and id=".$edit_id;
+		$q="select fname, lname, sip_uri from ".$config->table_phonebook." where username='".$auth->auth["uname"]."' and id=".$edit_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=mysql_fetch_object($res);
@@ -88,8 +88,8 @@ do{
 
 			/* Process data */           // Data ok; 
 
-		if ($id) $q="update ".$config->table_phonebook." set fname='$fname', lname='$lname', sip_uri='$sip_uri' where id=$id and user='".$auth->auth["uname"]."'";
-		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, user) values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."')";
+		if ($id) $q="update ".$config->table_phonebook." set fname='$fname', lname='$lname', sip_uri='$sip_uri' where id=$id and username='".$auth->auth["uname"]."'";
+		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, username) values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."')";
 		
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -106,7 +106,7 @@ do{
 		// get phonebook
 		if ($edit_id) $qw=" and id!=$edit_id "; else $qw="";
 		
-		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook." where user='".$auth->auth["uname"]."'".$qw." order by lname";
+		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook." where username='".$auth->auth["uname"]."'".$qw." order by lname";
 		$phonebook_res=MySQL_Query($q);
 		if (!$phonebook_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.6 2003/02/19 21:27:51 kozlik Exp $
+ * $Id: users.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -42,7 +42,7 @@ do{
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
-		$q="delete from ".$config->table_subscriber." where user_id='$dele_id'";
+		$q="delete from ".$config->table_subscriber." where username='$dele_id'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
@@ -90,7 +90,7 @@ do{
 	if ($db){
 
 		$query_c="";
-		if ($sess_usrnm) $query_c.="s.user_id like '%$sess_usrnm%' and ";
+		if ($sess_usrnm) $query_c.="s.username like '%$sess_usrnm%' and ";
 		if ($sess_fname) $query_c.="s.first_name like '%$sess_fname%' and ";
 		if ($sess_lname) $query_c.="s.last_name like '%$sess_lname%' and ";
 		if ($sess_email) $query_c.="s.email_address like '%$sess_email%' and ";
@@ -98,10 +98,10 @@ do{
 	
 		// get num of users
 		if ($sess_onlineonly)
-			$q1="select distinct s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.user_id=l.user and ".$query_c;
+			$q1="select distinct s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.username=l.username and ".$query_c;
 		else
-			$q1="select s.user_id from ".$config->table_subscriber." s ".
+			$q1="select s.username from ".$config->table_subscriber." s ".
 				" where ".$query_c;
 			
 		$res=MySQL_Query($q1);
@@ -111,11 +111,11 @@ do{
 	
 		// get users
 		if ($sess_onlineonly)
-			$q="select distinct s.user_id, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.user_id=l.user and ".$query_c." order by s.user_id limit $sess_act_row,".$config->num_of_showed_items;
+			$q="select distinct s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.username=l.username and ".$query_c." order by s.username limit $sess_act_row,".$config->num_of_showed_items;
 		else
-			$q="select s.user_id, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s ".
-				" where ".$query_c." order by s.user_id limit $sess_act_row,".$config->num_of_showed_items;
+			$q="select s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s ".
+				" where ".$query_c." order by s.username limit $sess_act_row,".$config->num_of_showed_items;
 		$users_res=MySQL_Query($q);
 		if (!$users_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
@@ -199,7 +199,7 @@ function confirmDelete(theLink){
 		if ($name) $name.=" "; $name.=$row->first_name;
 	?>
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="85">&nbsp;<?echo $row->user_id;?></td>
+	<td align="left" class="f12" width="85">&nbsp;<?echo $row->username;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="100">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
@@ -207,11 +207,11 @@ function confirmDelete(theLink){
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="125">&nbsp;<a href="mailto:<?echo $row->email_address;?>"><?echo $row->email_address;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="40"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->user_id));?>">ACL</a></td>
+	<td align="center" class="f12" width="40"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->username));?>">ACL</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("../user/my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->user_id));?>">account</a></td>
+	<td align="center" class="f12" width="63"><a href="<?$sess->purl("../user/my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->username));?>">account</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="55"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->user_id));?>" onclick="return confirmDelete(this)">delete</a></td>
+	<td align="center" class="f12" width="55"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this)">delete</a></td>
 	</tr>
 	<?}?>
 	</table>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.3 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: get_pass.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,7 +15,7 @@ do{
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-		$q="select phplib_id, email_address from ".$config->table_subscriber." where user_id='$uname'";
+		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -46,7 +46,7 @@ do{
 //		echo "oook/~iptel/user_interface/my_account.php?".$my_sess->name."=".$my_sess->id;
 //		exit;
 /*	
-		$q="select password, email_address from ".$config->table_subscriber." where user_id='$uname'";
+		$q="select password, email_address from ".$config->table_subscriber." where username='$uname'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

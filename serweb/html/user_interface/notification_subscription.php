@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.3 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -23,7 +23,7 @@ do{
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
 	if ($uri and $desc){
-		$q="insert into ".$config->table_event." (uri, description, user) values ('$uri', '$desc', '".$auth->auth["uname"]."')";
+		$q="insert into ".$config->table_event." (uri, description, username) values ('$uri', '$desc', '".$auth->auth["uname"]."')";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -33,7 +33,7 @@ do{
 	}
 	
 	if (isset($dele_id)){
-		$q="delete from ".$config->table_event." where user='".$auth->auth["uname"]."' and id=".$dele_id;
+		$q="delete from ".$config->table_event." where username='".$auth->auth["uname"]."' and id=".$dele_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -48,7 +48,7 @@ do{
 	if ($db){	
 		$q="select id, uri, description ".
 			"from ".$config->table_event." ".
-			"where user='".$auth->auth["uname"]."'";
+			"where username='".$auth->auth["uname"]."'";
 	
 		$ev_res=mySQL_query($q);
 		if (!$ev_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.3 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: index.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -114,14 +114,14 @@ do{
 
 			/* Process data */           // Data ok; 
 
-		$q="select count(*) from ".$config->table_subscriber." where lower(user_id)=lower('$uname')";
+		$q="select count(*) from ".$config->table_subscriber." where lower(username)=lower('$uname')";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		$row=MySQL_Fetch_Row($res);
 		if ($row[0]) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
 
-		$q="select count(*) from ".$config->table_pending." where lower(user_id)=lower('$uname')";
+		$q="select count(*) from ".$config->table_pending." where lower(username)=lower('$uname')";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -132,8 +132,8 @@ do{
 		$ha1b=md5($uname."@".$config->domainname.":".$config->realm.":".$passwd);
 		$confirm=md5(uniqid(rand()));
 		
-		$q="insert into ".$config->table_pending." (user_id, password, first_name, last_name, phone, email_address, ".
-				"datetime_created, datetime_modified, confirmation, ha1, ha1b, realm, phplib_id, timezone) ".
+		$q="insert into ".$config->table_pending." (username, password, first_name, last_name, phone, email_address, ".
+				"datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) ".
 			"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
 				"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."', '$timezone')";
 

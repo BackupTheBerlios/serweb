@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.6 2002/11/30 10:03:25 jiri Exp $
+ * $Id: index.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -19,7 +19,7 @@ do{
 	
 		$ha1=md5($uname.":".$config->realm.":".$passw);
 
-		$q="select phplib_id from ".$config->table_subscriber." where user_id='$uname' and ha1='$ha1'";
+		$q="select phplib_id from ".$config->table_subscriber." where username='$uname' and ha1='$ha1'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

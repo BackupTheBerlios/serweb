@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.12 2003/02/13 13:04:13 kozlik Exp $
+ * $Id: functions.php,v 1.13 2003/03/17 20:01:25 kozlik Exp $
  */
 
 
@@ -141,7 +141,7 @@ function get_status($sip_uri, &$errors){
 
 	$user=substr($regs[1],0,-1);
 
-	$q="select count(*) from ".$config->table_subscriber." where user_id='$user'";
+	$q="select count(*) from ".$config->table_subscriber." where username='$user'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
 	$row=mysql_fetch_row($res);
@@ -213,7 +213,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 function get_user_name(&$errors){
 	global $auth, $config;
 
-	$q="select first_name, last_name from ".$config->table_subscriber." where user_id='".$auth->auth["uname"]."'";
+	$q="select first_name, last_name from ".$config->table_subscriber." where username='".$auth->auth["uname"]."'";
 	@$res=MySQL_Query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return false;}
 	if (!MySQL_Num_rows($res)) return false;
@@ -250,7 +250,7 @@ function get_time_zones(&$errors){
 function set_timezone(&$errors){
 	global $config, $auth;
 
-	$q="select timezone from ".$config->table_subscriber." where user_id='".$auth->auth["uname"]."'";
+	$q="select timezone from ".$config->table_subscriber." where username='".$auth->auth["uname"]."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
 	$row=mysql_fetch_object($res);

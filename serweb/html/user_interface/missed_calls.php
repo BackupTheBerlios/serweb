@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.6 2002/10/23 12:23:39 kozlik Exp $
+ * $Id: missed_calls.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -25,7 +25,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 	
-	$q="select sip_from, time, sip_status from ".$config->table_missed_calls." where user='".$auth->auth["uname"]."' order by time desc";
+	$q="select sip_from, time, sip_status from ".$config->table_missed_calls." where username='".$auth->auth["uname"]."' order by time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

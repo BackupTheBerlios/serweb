@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: voicemail.php,v 1.1 2003/03/17 18:18:35 kozlik Exp $
+ * $Id: voicemail.php,v 1.2 2003/03/17 20:01:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -91,7 +91,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td align="right"><a href="<?$sess->purl("play_greeting.php?kvrk=".uniqid("")."&uid=".rawURLEncode($auth->auth["uname"]));?>"><img src="<?echo $config->img_src_path;?>butons/b_download_greeting.gif" width="165" height="16" border="0"></a></td>
+	<td align="right"><a href="<?$sess->purl("play_greeting.php?kvrk=".uniqid(""));?>"><img src="<?echo $config->img_src_path;?>butons/b_download_greeting.gif" width="165" height="16" border="0"></a></td>
 </tr>
 </table>
 

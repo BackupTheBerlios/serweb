@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.8 2003/01/28 09:56:29 kozlik Exp $
+ * $Id: confirmation.php,v 1.9 2003/03/17 20:01:25 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -16,12 +16,12 @@ do{
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
 	
 
-		$q="select user_id from ".$config->table_pending." where confirmation='$nr'";
+		$q="select username from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
 		if (!MySQL_Num_Rows($res)){ 
-			$q="select user_id from ".$config->table_subscriber." where confirmation='$nr'";
+			$q="select username from ".$config->table_subscriber." where confirmation='$nr'";
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			if (!MySQL_Num_Rows($res)){ $errors[]="Sorry. No such a confirmation number exists."; break;}
@@ -30,12 +30,12 @@ do{
 		
 		$row=MySQL_Fetch_Object($res);
 		if ($config->setup_jabber_account) {
-			$user_id=$row->user_id; // needed for Jabber gw reg.
+			$user_id=$row->username; // needed for Jabber gw reg.
 		}
-		$sip_address="sip:".$row->user_id."@".$config->default_domain;
+		$sip_address="sip:".$row->username."@".$config->default_domain;
 			
 		// get the max number alias - abs() converts string to number
-		$q="select max(abs(user)) from ".$config->table_aliases." where user REGEXP \"^[0-9]+$\"";
+		$q="select max(abs(username)) from ".$config->table_aliases." where username REGEXP \"^[0-9]+$\"";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=MySQL_Fetch_Row($res);
