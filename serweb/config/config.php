@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.2 2004/09/22 11:10:30 kozlik Exp $
+ * $Id: config.php,v 1.3 2004/09/22 11:50:10 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -243,6 +243,16 @@
 		*/
 		$config->require_delete_confirmation_page=false;
 
+		/* Regular expressions for check if phonenumber entered by user is valid
+		   (is used only if serweb is workong with phonenumbers instead of sip addresses)
+		   The diferent between phonenumber_regex and strict_phonenumber_regex is that 
+		   phonenumber_regex can contain chars as '-' '/' ' ' (which will be removed
+		   after form submition)
+		*/
+		
+		$config->phonenumber_regex = "\\+?[-/ 1-9]+";
+		$config->strict_phonenumber_regex = "\\+?[1-9]+";
+		
 		/* which tabs should show in user's profile ? those set to false
 		   by default are experimental features which have not been tested
 		   yet
