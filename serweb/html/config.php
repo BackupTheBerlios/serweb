@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.35 2004/03/04 14:04:44 kozlik Exp $
+ * $Id: config.php,v 1.36 2004/03/04 22:45:20 kozlik Exp $
  */
 
 class Csub_not {
@@ -307,7 +307,6 @@ class Cconfig {
 		   this is a list of groups that serweb allows to set -- they need to
 		   correspond to names of groups used in SER's membership checks
 		*/
-		$this->grp_values[]="voicemail";
 		$this->grp_values[]="ld";
 		$this->grp_values[]="local";
 		$this->grp_values[]="int";
