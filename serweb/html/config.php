@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.34 2004/03/03 17:52:40 kozlik Exp $
+ * $Id: config.php,v 1.35 2004/03/04 14:04:44 kozlik Exp $
  */
 
 class Csub_not {
@@ -583,6 +583,23 @@ class Cconfig {
 		   incorrect domain during installation process
 		*/
 		$this->clear_text_pw=1;
+
+		/* ------------------------------------------------------------*/
+		/*            send daily missed calls by email                 */
+		/* ------------------------------------------------------------*/
+		
+		/*
+			name of attribute in user preferences for daily sending missed  
+			calls to email, it's type should be boolean
+		*/
+		$this->up_send_daily_missed_calls="send_daily_missed_calls";
+		
+		/*
+			subject and body of daily sended email with missed calls
+		*/
+		$this->send_daily_missed_calls_mail_subj="your missed calls";
+		$this->send_daily_missed_calls_mail_body=" Hello, \n".
+				"we are sending your missed calls";
 
 	}
 }
