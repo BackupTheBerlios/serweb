@@ -202,6 +202,42 @@ function write2fifo($fifo_cmd, &$errors){
 	@unlink($config->reply_fifo_path);
 }
 
+function write2fifo_with_output($fifo_cmd, &$errors){
+	global $config;
+
+	/* open fifo now */
+	$fifo_handle=fopen( $config->fifo_server, "w" );
+	if (!$fifo_handle) {
+		$errors[]="sorry -- cannot open fifo"; return false;
+	}
+	
+	/* create fifo for replies */
+	@system("mkfifo -m 666 ".$config->reply_fifo_path );
+
+	/* add command separator */
+	$fifo_cmd=$fifo_cmd."\n";
+	
+	/* write fifo command */
+	if (fwrite( $fifo_handle, $fifo_cmd)==-1) {
+	    @unlink($config->reply_fifo_path);
+	    @fclose($fifo_handle);
+		$errors[]="sorry -- fifo writing error"; return false;
+	}
+	@fclose($fifo_handle);
+	
+	/* read output now */
+	@$fp = fopen( $config->reply_fifo_path, "r");
+	if (!$fp) {
+	    @unlink($config->reply_fifo_path);
+		$errors[]="sorry -- fifo reading error"; return false;
+	}
+
+	$rd=fread($fp,255);
+
+	@unlink($config->reply_fifo_path);
+	return $rd;
+}
+
 function get_user_name(&$errors){
 	global $auth, $config;
 

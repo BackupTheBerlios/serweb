@@ -18,6 +18,16 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
 
+class Cusrloc {
+	var $uri, $q, $expires;
+	
+	function Cusrloc ($uri, $q, $expires){
+		$this->uri=$uri;
+		$this->q=$q;
+		$this->expires=$expires;
+	}
+}
+
 define("FOREVER",567648000);	//number of second for forever (18 years)
 
 do{
@@ -102,7 +112,7 @@ do{
 		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".		//table
 			$user_id."\n".	//username
-			$del_contact."\n";			//contact
+			$del_contact."\n\n";			//contact
 
 		write2fifo($fifo_cmd, $errors);
 
@@ -128,7 +138,7 @@ do{
 			$user_id."\n".		//username
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
-			$config->ul_priority."\n";		//priority
+			$config->ul_priority."\n\n";		//priority
 
 		write2fifo($fifo_cmd, $errors);
 
@@ -194,7 +204,6 @@ do{
 		if (!$aliases_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
 		// get Access-Control-list
-
 		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
 		else $qc="";
 		$q="select grp from ".$config->table_grp." where user='".$user_id."'".$qc." order by grp";
@@ -202,10 +211,24 @@ do{
 		if (!$grp_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		// get UsrLoc
-		$q="select contact, expires, q, callid, cseq from ".$config->table_location." where user='".$user_id."' order by contact";
-		$location_res=MySQL_Query($q);
-		if (!$location_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
+		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
+			$config->ul_table."\n".		//table
+			$user_id."\n\n";	//username
+
+		$out=write2fifo_with_output($fifo_cmd, $errors);
+
+		if ($errors or !$out) break;		
+		if (ereg("^ERROR:",$out)){ $errors[]=$out; break;}
+
+		$out_arr=explode("\n", $out);
+		
+		foreach($out_arr as $val){
+			if (!ereg("^[[:space:]]*$", $val)){
+				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
+					$usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3]);
+				else { $errors[]="sorry error -- invalid output from fifo"; break; }
+			}
+		}
 	}
 						 
 }while (false);
@@ -325,7 +348,7 @@ if ($okey_x){							//data isn't valid or error in sql
 </td></tr>
 </table>
 
-<?if ($location_res and MySQL_num_rows($location_res)){?>
+<?if (is_array($usrloc)){?>
 
 <table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
 <tr><td>
@@ -337,25 +360,23 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="60">priority</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">call id</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="63">&nbsp;</td>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-	<?while ($row=MySQL_Fetch_Object($location_res)){
-		if (Substr($row->expires,0,10)==date('Y-m-d')) $date=Substr($row->expires,11,5);
-		else $date=Substr($row->expires,0,10);
+	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<?foreach($usrloc as $row){
+		$expires=date('Y-m-d H:i',time()+$row->expires);
+		
+		if (Substr($expires,0,10)==date('Y-m-d')) $date=Substr($expires,11,5);
+		else $date=Substr($expires,0,10);
 	?>
 	<tr valign="top">
-	<td align="center" class="f12" width="125"><?echo $row->contact;?>&nbsp;</td>
+	<td align="left" class="f12" width="125">&nbsp;<?echo $row->uri;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="125"><?echo $date;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="60"><?echo $row->q;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><?echo $row->callid;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->contact));?>">delete</a></td>
+	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->uri));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
