@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.7 2004/10/12 12:52:14 kozlik Exp $
+ * $Id: main_prepend.php,v 1.8 2005/03/02 15:29:43 kozlik Exp $
  */ 
 
 //require class defintions
@@ -16,10 +16,11 @@ require_once ($_SERWEB["serwebdir"] . "../config/set_domain.php");
 require_once ($_SERWEB["serwebdir"] . "config_domain.php");
 $domain_config=new CDomain_config();
 
-//TO DO: load language
-
 //require sql access configuration and table names
 require_once ($_SERWEB["serwebdir"] . "../config/config_data_layer.php");
+
+//require default values for domain depending options
+require_once ($_SERWEB["serwebdir"] . "../config/config_domain_defaults.php");
 
 //require other configuration
 require_once ($_SERWEB["serwebdir"] . "../config/config.php");
