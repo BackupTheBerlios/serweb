@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.1 2002/09/04 18:20:28 kozlik Exp $
+ * $Id: of_select.inc,v 1.2 2003/12/02 10:28:14 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -40,7 +40,7 @@ class of_select extends of_element {
       $str .= "<option";
       if (is_array($o)) 
         $str .= " value='" .  $o["value"] . "'";
-      if (!$this->multiple && ($this->value==$o["value"] || $this->value==$o))
+      if (!$this->multiple && ((is_array($o) && $this->value==$o["value"]) || $this->value==$o))
         $str .= " selected";
       elseif ($this->multiple && is_array($this->value)) {
         reset($this->value);
