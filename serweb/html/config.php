@@ -1,8 +1,17 @@
 <?
 /*
- * $Id: config.php,v 1.45 2004/05/06 11:48:44 kozlik Exp $
+ * $Id: config.php,v 1.46 2004/05/06 19:00:54 kozlik Exp $
  */
 
+/*****************************************************************************
+ * 	                      DOMAIN DEPENDING VALUES                            *
+ *****************************************************************************/
+ 
+ /* In this section is values that can be changed in config of each domain. 
+    Values below is only default values which is used only if isn't said in 
+    domain dependend config file
+  */
+ 
 		/* ------------------------------------------------------------*/
 		/*      basic local configuration options                      */
 		/* ------------------------------------------------------------*/
@@ -13,14 +22,29 @@
 		   should appear in them ?
 		*/
 		$config->mail_header_from="registrar@mydomain.org";
-		$config->web_contact="sip:daemon@192.168.2.16";
+		$config->web_contact="sip:daemon@mydomain.org";
 
+		/* info email address */
+		$config->infomail	=	"info@mydomain.org";
+
+		/* email address for questions concerning registration */
+		$config->regmail	=	"registrar@mydomain.org";
+
+		
 		/* content of html <title> tag */
 		$config->html_title="SIP Express Router - web interface";
 
-		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags */
+		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags
+		   for example CSS styles used in prolog.html
+		      $this->html_headers[]='<link REL="StyleSheet" HREF="http://www.mydomain.org/styles/my_styles.css" TYPE="text/css">';
+		   or some javascript
+		      $this->html_headers[]='<script language="JavaScript" src="http://www.mydomain.org/js/main.js"></script>';
+		   uncoment following lines if you want add something
+		*/	
 		$config->html_headers=array();
-		$config->html_headers[]="";
+//		$config->html_headers[]="";
+//		$config->html_headers[]="";
+//		$config->html_headers[]="";
 
 		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
@@ -30,127 +54,6 @@
 		   align your SER routing script to it !
 		*/
 		$config->first_alias_number=82000;
-
-
-		/* info email address */
-		$config->infomail	=	"info@iptel.org";
-		/* email address for questions concerning registration */
-		$config->regmail	=	"registrar@iptel.org";
-
-
-		/* ------------------------------------------------------------*/
-		/* serweb appearance                                           */
-		/* ------------------------------------------------------------*/
-
-		/* which tabs should show in user's profile ? those set to false
-		   by default are experimental features which have not been tested
-		   yet
-		*/
-
-		/* user tabs definitions
-			Ctab (enabled, name_of_tab, php_script)
-		*/
-
-		$config->user_tabs=array();
-		$config->user_tabs[]=new Ctab (true, "my account", "my_account.php");
-		$config->user_tabs[]=new Ctab (true, "phone book", "phonebook.php");
-		$config->user_tabs[]=new Ctab (true, "missed calls", "missed_calls.php");
-		$config->user_tabs[]=new Ctab (true, "accounting", "accounting.php");
-		$config->user_tabs[]=new Ctab (true, "send IM", "send_im.php");
-		$config->user_tabs[]=new Ctab (false, "notification subscription", "notification_subscription.php");
-		$config->user_tabs[]=new Ctab (true, "message store", "message_store.php");
-		$config->user_tabs[]=new Ctab (false, "voicemail", "voicemail.php");
-		$config->user_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
-		$config->user_tabs[]=new Ctab (false, "speed dial", "speed_dial.php");
-		$config->user_tabs[]=new Ctab (false, "caller screening", "caller_screening.php");
-
-		/* admin tabs definitions
-			Ctab (enabled, name_of_tab, php_script)
-		*/
-		$config->admin_tabs=array();
-		$config->admin_tabs[]=new Ctab (true, "users", "users.php");
-		$config->admin_tabs[]=new Ctab (true, "admin privileges", "list_of_admins.php");
-		$config->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
-		$config->admin_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
-
-		$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
-		$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
-
-		/* show test firewall/NAT button (see also advanced FW/NAT settings bellow */
-		$config->enable_test_firewall=true;
-
-		/* experimental/incomplete features turned off: voicemail
-		   and set up a jabber account for each new SIP user too
-		*/
-		$config->show_voice_silo=false; /* show voice messages in silo too */
-		$config->enable_dial_voicemail=false;
-		$config->setup_jabber_account=false;
-
-		$config->jserver = "bat.iptel.org";   # Jabber server hostname
-		$config->jport = "5222";     			# Jabber server port
-		$config->jcid  = 0;      				# Jabber communication ID
-
-		# Jabber module database
-		$config->jab_db_type="mysql";           # type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
-		$config->jab_db_srv="localhost";        # database server
-		$config->jab_db_port="";                # database port - leave empty for default
-		$config->jab_db_usr="ser";              # database user
-		$config->jab_db_pas="heslo";            # database user's password
-		$config->jab_db_db="sip_jab";           # database name
-
-		/* this array contain list of config parameter which can be modified
-		   by admins of particular domains */
-
-		$config->domain_depend_config=array("mail_header_from", "web_contact", "html_title", "html_doctype", 
-			"html_headers", "first_alias_number", "infomail", "regmail", "forgot_pass_subj",
-			"mail_forgot_pass", "register_subj", "mail_register", "terms_and_conditions");
-
-		/* ------------------------------------------------------------*/
-		/* Loging                                                      */
-		/* ------------------------------------------------------------*/
-
-		/* I think that loging is currently useful only for developers.
-		   When you enable loging be sure if you have instaleld PEAR package
-		   Log. See http://pear.php.net/manual/en/installation.getting.php 
-		   for more information
-		*/
-
-		$config->enable_loging = false;
-		$config->log_file = "/var/spool/log/serweb";
-
-		/* ------------------------------------------------------------*/
-		/* Speed dial                                                  */
-		/* ------------------------------------------------------------*/
-
-
-		// string to which must start username from request uri in speed dial
-		$config->speed_dial_initiation="11";
-
-
-		/* ------------------------------------------------------------*/
-		/* ACLs                                                        */
-		/* ------------------------------------------------------------*/
-
-		/* there may be SIP contacts which you wish to prevent from being added
-		   through serweb to avoid loops, forwarding to unfriendly domains, etc.
-		   use these REGexs  to specify which contacts you do not wish;
-		   the first value includes banned REs, the second displays error message
-		   displayed to users if they attempt to introduce a banned contact
-		*/
-		$config->denny_reg=array();
-		$config->denny_reg[]=new CREG_list_item("iptel\.org$","local forwarding prohibited");
-		$config->denny_reg[]=new CREG_list_item("gateway","gateway contacts prohibited");
-
-		/* SER configuration script may check for group membership of users
-		   identified using digest authentication; e.g., it may only allow
-		   international calls to callers who are members of 'int' group;
-		   this is a list of groups that serweb allows to set -- they need to
-		   correspond to names of groups used in SER's membership checks
-		*/
-		$config->grp_values=array();
-		$config->grp_values[]="ld";
-		$config->grp_values[]="local";
-		$config->grp_values[]="int";
 
 
 		/* ------------------------------------------------------------*/
@@ -245,6 +148,128 @@
 			"PROPOSALS, DISCUSSIONS, AGREEMENTS, UNDERSTANDINGS, AND COMMUNICATIONS, ".
 			"WHETHER WRITTEN OR ORAL AND MAY BE AMENDED ONLY IN A WRITING EXECUTED BY ".
 			"BOTH USER AND ".$config->domain.". \n\n";
+		
+
+/*****************************************************************************
+ * 	                     DOMAIN INDEPENDING VALUES                           *
+ *****************************************************************************/
+
+/* There are values common for all domains */
+
+		/* this array contain list of config parameter which can be modified
+		   by admins of particular domains */
+
+		$config->domain_depend_config=array("mail_header_from", "web_contact", 
+			"html_title", "html_doctype", "html_headers", "first_alias_number", 
+			"infomail", "regmail", "forgot_pass_subj", "mail_forgot_pass", 
+			"register_subj", "mail_register", "terms_and_conditions");
+
+		/* ------------------------------------------------------------*/
+		/* serweb appearance                                           */
+		/* ------------------------------------------------------------*/
+
+		/* which tabs should show in user's profile ? those set to false
+		   by default are experimental features which have not been tested
+		   yet
+		*/
+
+		/* user tabs definitions
+			Ctab (enabled, name_of_tab, php_script)
+		*/
+
+		$config->user_tabs=array();
+		$config->user_tabs[]=new Ctab (true, "my account", "my_account.php");
+		$config->user_tabs[]=new Ctab (true, "phone book", "phonebook.php");
+		$config->user_tabs[]=new Ctab (true, "missed calls", "missed_calls.php");
+		$config->user_tabs[]=new Ctab (true, "accounting", "accounting.php");
+		$config->user_tabs[]=new Ctab (true, "send IM", "send_im.php");
+		$config->user_tabs[]=new Ctab (false, "notification subscription", "notification_subscription.php");
+		$config->user_tabs[]=new Ctab (true, "message store", "message_store.php");
+		$config->user_tabs[]=new Ctab (false, "voicemail", "voicemail.php");
+		$config->user_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
+		$config->user_tabs[]=new Ctab (false, "speed dial", "speed_dial.php");
+		$config->user_tabs[]=new Ctab (false, "caller screening", "caller_screening.php");
+
+		/* admin tabs definitions
+			Ctab (enabled, name_of_tab, php_script)
+		*/
+		$config->admin_tabs=array();
+		$config->admin_tabs[]=new Ctab (true, "users", "users.php");
+		$config->admin_tabs[]=new Ctab (true, "admin privileges", "list_of_admins.php");
+		$config->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
+		$config->admin_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
+
+		$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
+		$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
+
+		/* experimental/incomplete features turned off: voicemail
+		   and set up a jabber account for each new SIP user too
+		*/
+		$config->show_voice_silo=false; /* show voice messages in silo too */
+		$config->enable_dial_voicemail=false;
+		$config->setup_jabber_account=false;
+
+		$config->jserver = "localhost";   		# Jabber server hostname
+		$config->jport = "5222";     			# Jabber server port
+		$config->jcid  = 0;      				# Jabber communication ID
+
+		# Jabber module database
+		$config->jab_db_type="mysql";           # type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
+		$config->jab_db_srv="localhost";        # database server
+		$config->jab_db_port="";                # database port - leave empty for default
+		$config->jab_db_usr="ser";              # database user
+		$config->jab_db_pas="heslo";            # database user's password
+		$config->jab_db_db="sip_jab";           # database name
+
+
+		/* ------------------------------------------------------------*/
+		/* Loging                                                      */
+		/* ------------------------------------------------------------*/
+
+		/* I think that loging is currently useful only for developers.
+		   When you enable loging be sure if you have instaleld PEAR package
+		   Log. See http://pear.php.net/manual/en/installation.getting.php 
+		   for more information
+		*/
+
+		$config->enable_loging = false;
+		$config->log_file = "/var/log/serweb";
+
+		/* ------------------------------------------------------------*/
+		/* Speed dial                                                  */
+		/* ------------------------------------------------------------*/
+
+
+		// string to which must start username from request uri in speed dial
+		$config->speed_dial_initiation="11";
+
+
+		/* ------------------------------------------------------------*/
+		/* ACLs                                                        */
+		/* ------------------------------------------------------------*/
+
+		/* there may be SIP contacts which you wish to prevent from being added
+		   through serweb to avoid loops, forwarding to unfriendly domains, etc.
+		   use these REGexs  to specify which contacts you do not wish;
+		   the first value includes banned REs, the second displays error message
+		   displayed to users if they attempt to introduce a banned contact
+		*/
+		$config->denny_reg=array();
+		$config->denny_reg[]=new CREG_list_item("iptel\.org$","local forwarding prohibited");
+		$config->denny_reg[]=new CREG_list_item("gateway","gateway contacts prohibited");
+
+		/* SER configuration script may check for group membership of users
+		   identified using digest authentication; e.g., it may only allow
+		   international calls to callers who are members of 'int' group;
+		   this is a list of groups that serweb allows to set -- they need to
+		   correspond to names of groups used in SER's membership checks
+		*/
+		$config->grp_values=array();
+		$config->grp_values[]="ld";
+		$config->grp_values[]="local";
+		$config->grp_values[]="int";
+
+
 
 		/* =========================================================== */
         /* ADVANCED SETTINGS                                           */
@@ -280,7 +305,11 @@
 		/*            configure FW/NAT detection applet                */
 		/* ------------------------------------------------------------*/
 
-		/* the applet is used to detect whether user is behind firewall or NAT */
+		/* the applet is used to detect whether user is behind firewall or NAT 
+		   to enable FW/NAT detection must be installed STUN server */
+
+		// show test firewall/NAT button at my account tab
+		$config->enable_test_firewall=false;
 
 		//width of NAT detection applet
 		$config->stun_applet_width=350;				
@@ -353,7 +382,7 @@
 		$config->ctd_uri="sip:44@192.168.2.16";
 		
 		/* from header for click-to-dial request */
-		$config->ctd_from	=	"sip:controller@iptel.org";
+		$config->ctd_from	=	"sip:controller@mydomain.org";
 		
 		/* ------------------------------------------------------------*/
 		/*            caller screening                                 */
@@ -384,9 +413,6 @@
 		$config->fifo_aliases_table="aliases";
 
 
-		/* values used for names of reply fifos -- they change radnomly */
-		$config->reply_fifo_filename="webfifo_".rand();
-		$config->reply_fifo_path="/tmp/".$config->reply_fifo_filename;
 		/* development value
 		$config->reply_fifo_path="d:/temp/".$config->reply_fifo_filename; */	
 
@@ -405,9 +431,6 @@
 		$config->ul_priority="1.00";
 		/* replication support ? (a new ser feature) */
 		$config->ul_replication=1;
-		/* fifo expects usernames AND domainnames ? make sure this
-		   option is synchronized with usrloc's use_domain option	*/
-		$config->ul_multidomain=0;
 
 		/* seconds in which expires "get pass session" */
 		$config->pre_uid_expires=3600;                

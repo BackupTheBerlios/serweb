@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.2 2004/04/23 12:37:57 kozlik Exp $
+ * $Id: config.php,v 1.3 2004/05/06 19:00:54 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -13,7 +13,13 @@
 		   should appear in them ?
 		*/
 		$this->mail_header_from="registrar@mydomain.org";			
-		$this->web_contact="sip:daemon@192.168.2.16";
+		$this->web_contact="sip:daemon@mydomain.org";
+
+		/* info email address */
+		$this->infomail	=	"info@mydomain.org";
+		
+		/* email address for questions concerning registration */
+		$this->regmail	=	"registrar@mydomain.org";
 
 		/* content of html <title> tag */
 		$this->html_title="SIP Express Router - web interface";
@@ -22,20 +28,22 @@
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
 		$this->html_doctype="strict";
 
-		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags */
-		$this->html_headers[]="";
+		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags
+		   for example CSS styles used in prolog.html
+		      $this->html_headers[]='<link REL="StyleSheet" HREF="http://www.mydomain.org/styles/my_styles.css" TYPE="text/css">';
+		   or some javascript
+		      $this->html_headers[]='<script language="JavaScript" src="http://www.mydomain.org/js/main.js"></script>';
+		   uncoment following lines if you want add something
+		*/	
  
+//		$this->html_headers[]='';
+//		$this->html_headers[]='';
+//		$this->html_headers[]='';
+
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/
 		$this->first_alias_number=82000;
-
-
-		/* info email address */
-		$this->infomail	=	"info@iptel.org";
-		/* email address for questions concerning registration */
-		$this->regmail	=	"registrar@iptel.org";
-
 
 		/* ------------------------------------------------------------*/
 		/* text														   */

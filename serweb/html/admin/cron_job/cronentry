@@ -1,13 +1,19 @@
-# $Id: cronentry,v 1.4 2004/03/04 14:04:44 kozlik Exp $
-# shell commmand examples for running read_ser_moni scripts
+# $Id: cronentry,v 1.5 2004/05/06 19:00:54 kozlik Exp $
 #
-#wget -q -O - http://www.your.domain.org/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
-#php -q /var/www/serweb/html/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
+# Shell commmand examples for running serweb cron jobs. If you have installed
+# php as command line executabele, you can use first lines. Otherwise you must 
+# use second lines and make sure if you have properly setting access rights in 
+# .htaccess
+#
+# Server monitoring - read server statistics every minute
+#
+# * * * * *		php -q /your/serweb/dir/html/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
+# * * * * *		wget -q -O - http://www.your.domain.org/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
 #
 #
-# shell commmand examples for running "send daily missed calls by email" scripts
-# it should be run after midnight because it sending missed calls of previous day
+# Send daily missed calls
+# It should be run after midnight because it sending missed calls of previous day
 #
-#wget -q -O - http://www.your.domain.org/admin/cron_job/send_daily_missed_calls.php | cat >> send_daily_missed_calls.log
-#php -q /var/www/serweb/html/admin/cron_job/send_daily_missed_calls.php | cat >> send_daily_missed_calls.log
+# 5 0 * * *		php -q /your/serweb/dir/html/admin/cron_job/send_daily_missed_calls.php | cat >> send_daily_missed_calls.log
+# 5 0 * * *		wget -q -O - http://www.your.domain.org/admin/cron_job/send_daily_missed_calls.php | cat >> send_daily_missed_calls.log
 

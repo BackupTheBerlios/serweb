@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: config_paths.php,v 1.2 2004/05/06 19:00:54 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
@@ -10,8 +10,8 @@
 			Hint: if path incorrect, image buttons do not show up
 		*/
 		$config->root_path="/serweb/";
+
 		/* roo uri of your server */
-		/* $this->root_uri="http://192.168.2.16"; */
 		$config->root_uri="http://".$_SERVER['SERVER_NAME'];
 
 		/* where is your zone file on your server ? */
@@ -31,12 +31,19 @@
 
 		/* directory with voicemail greetings */
 		$config->greetings_spool_dir = '/var/greetings/';
+
 		/* serweb talks to SER via FIFO -- this is FIFO's name,
 		   it must have the same value as SER's fifo config param
 		*/
-
 		$config->fifo_server="/tmp/ser_fifo";
 
+		/* values used for names of reply fifos -- they change radnomly 
+		   this values shouldn't be changed unless you well know what are
+		   you doing
+		 */
+		$config->reply_fifo_filename="webfifo_".rand();
+		$config->reply_fifo_path="/tmp/".$config->reply_fifo_filename;
+		
 
 		/* names of HTML documents surrounding
 		   serweb pages -- these may typically include banner, trailers,
