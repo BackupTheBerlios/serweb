@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.17 2003/04/03 09:57:23 kozlik Exp $
+ * $Id: my_account.php,v 1.18 2003/04/03 19:47:10 jiri Exp $
  */
 
 require "prepend.php";
@@ -45,12 +45,12 @@ do{
 
 	$q="select email_address, allow_find, timezone from ".$config->table_subscriber." where username='".$user_id."'";
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	if (!$res) {$errors[]="error in SQL query (1), line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
 	$q="select username from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	if (!$res) {$errors[]="error in SQL query (2), line: ".__LINE__; break;}
 	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
 	
 	set_timezone($errors);
@@ -164,13 +164,17 @@ do{
 
 		/* Process data */           // Data ok; 
 
+		if ($config->ul_replication) $replication="0\n";
+		else $replication="";
+
 		/* construct FIFO command */
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".			//table
 			$user_id."@".$config->default_domain."\n".		//username
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
-			$config->ul_priority."\n\n";		//priority
+			$config->ul_priority."\n".	// priority
+			$replication."\n";		
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
@@ -210,14 +214,14 @@ do{
 			" where username='".$user_id."'";
 
 		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		if (!$res) {$errors[]="error in SQL query(3), line: ".__LINE__; break;}
 
 		if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
 			if ($f2voicemail) $q="insert into ".$config->table_grp." (username, grp) values ('".$user_id."', 'voicemail')";
 			else $q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
 			
 			$res=MySQL_Query($q);
-			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+			if (!$res) {$errors[]="error in SQL query(4), line: ".__LINE__; break;}
 		}
 		
 		
@@ -233,14 +237,14 @@ do{
 		// get aliases
 		$q="select username from ".$config->table_aliases." where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
 		$aliases_res=MySQL_Query($q);
-		if (!$aliases_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		if (!$aliases_res) {$errors[]="error in SQL query(5), line: ".__LINE__; break;}
 		
 		// get Access-Control-list
 		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
 		else $qc="";
 		$q="select grp from ".$config->table_grp." where username='".$user_id."'".$qc." order by grp";
 		$grp_res=MySQL_Query($q);
-		if (!$grp_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		if (!$grp_res) {$errors[]="error in SQL query(6), line: ".__LINE__; break;}
 
 		// get UsrLoc
 		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".

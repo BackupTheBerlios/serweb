@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.10 2003/04/03 09:56:00 kozlik Exp $
+ * $Id: confirmation.php,v 1.11 2003/04/03 19:47:10 jiri Exp $
  */
 
 include "reg_jab.php";
@@ -46,6 +46,11 @@ do{
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
+
+
+        if ($config->ul_replication) $replication="0\n";
+        else $replication="";
+
 		/* add new alias */
 		/* construct FIFO command */
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
@@ -53,7 +58,8 @@ do{
 			$alias."@".$config->default_domain."\n".	//user
 			$sip_address."\n".					//contact
 			$config->new_alias_expires."\n".	//expires
-			$config->new_alias_q."\n\n";		//priority
+			$config->new_alias_q."\n". 		//priority
+			$replication."\n";		
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
