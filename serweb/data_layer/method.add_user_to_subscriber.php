@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_user_to_subscriber.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.add_user_to_subscriber.php,v 1.2 2004/12/02 12:56:45 kozlik Exp $
  */
 
 class CData_Layer_add_user_to_subscriber {
@@ -29,12 +29,16 @@ class CData_Layer_add_user_to_subscriber {
 			$attributes.=", uuid";
 			$values.=", '$uuid'";
 		}
+		else{
+			$attributes.=", phplib_id";
+			$values.=", '$uuid'";
+		}
 		
 		$q="insert into ".$table." (username, password, first_name, last_name, phone".$attributes.", 
-				datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) 
+				datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, timezone) 
 			values ('".addslashes($uname)."', '".addslashes($passwd)."', '".addslashes($fname)."', '".addslashes($lname)."', 
 			    '".addslashes($phone)."' ".$values.", now(), now(), '".$confirm."', 
-				'".$ha1."', '".$ha1b."','".addslashes($domain)."', '".$uuid."', '".addslashes($timezone)."')";
+				'".$ha1."', '".$ha1b."','".addslashes($domain)."', '".addslashes($timezone)."')";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
