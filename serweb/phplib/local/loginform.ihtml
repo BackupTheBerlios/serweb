@@ -1,6 +1,8 @@
 <?
-	global $username, $config, $page_attributes, $errors, $serweb_auth, $_POST, $smarty;
+	global $username, $config, $page_attributes, $errors, $serweb_auth, $_POST, $smarty, $lang_str, $_SERWEB;
 
+require($_SERWEB["serwebdir"] . "load_lang.php");
+	
 	print_html_head();
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
@@ -12,13 +14,29 @@
 
 	//create copy of some options from config in order to sensitive options will not accessible via templates
 	$cfg=new stdclass();
-	$cfg->img_src_path = $config->img_src_path;
+	$cfg->img_src_path = 		$config->img_src_path;
+	$cfg->js_src_path =    		$config->js_src_path;
+	$cfg->style_src_path = 		$config->style_src_path;
+	$cfg->user_pages_path = 	$config->user_pages_path;
+	$cfg->admin_pages_path =	$config->admin_pages_path;
+	$cfg->domains_path =		$config->domains_path;
+
+	// text 'bad username or password' can't be in errors array can't be in errors array
+	// because lang was not loaded yet when method check_password was called
+	// so we must add this message to errors array when there is en empty slot.
+	// This solution IS NOT CLEAR!!!, rewrite check_password mathod is required to 
+	// not using lang directly
+	foreach ($errors as $k => $v){
+		if (!$v) $errors[$k] = $lang_str['bad_username'];
+	}
 
 	$page_attributes['errors']=&$errors;
 	$page_attributes['message']=&$message;
-	
+
 	$smarty->assign_by_ref('parameters', $page_attributes);
-	$smarty->assign_by_ref('config', $cfg);
+
+	$smarty->assign_by_ref("cfg", $cfg);		
+	$smarty->assign_by_ref('config', $cfg);		//deprecated form 7.12.2004 - for backward compatibility only
 
 	$smarty->assign('form_action', $this->url());
 
@@ -26,6 +44,8 @@
 		$smarty->assign('form_username', $serweb_auth->uname.'@'.$serweb_auth->domain);
 	else
 		$smarty->assign('form_username', $serweb_auth->uname);
+
+	$smarty->assign_by_ref('lang_str', $lang_str);
 	
 	$smarty->display('relogin.tpl');
 ?>
