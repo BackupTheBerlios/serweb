@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.11 2003/10/16 09:21:39 kozlik Exp $
+ * $Id: local.inc,v 1.12 2004/03/03 16:22:28 kozlik Exp $
  *
  */ 
 
@@ -110,6 +110,7 @@ class phplib_Auth extends Auth {
   function auth_loginform() {
     global $sess;
     global $_PHPLIB;
+	global $config;
 
     include($_PHPLIB["libdir"] . "loginform.ihtml");
   }
