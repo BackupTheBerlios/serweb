@@ -2,10 +2,10 @@
 /*****************************************************************************
 * NetGeoClient.java
 *
-* $Id: NetGeoClient.java,v 1.1 2003/01/07 16:20:29 kozlik Exp $
+* $Id: NetGeoClient.java,v 1.2 2003/02/13 13:09:40 kozlik Exp $
 * $Author: kozlik $
 * $Name:  $
-* $Revision: 1.1 $
+* $Revision: 1.2 $
 *
 * Copyright 1999 The Regents of the University of California
 * All Rights Reserved
@@ -77,9 +77,8 @@ public class NetGeoClient
 {
    public static final String VERSION = "1.1";
 
-   public static final String DEFAULT_SERVER_URL =
-      "http://localhost:1080/perl/netgeo.cgi";
-//   "http://netgeo.caida.org/perl/netgeo.cgi";
+   public static String DEFAULT_SERVER_URL =
+   "http://netgeo.caida.org/perl/netgeo.cgi";
 
    //------------------------------------------------------------------------
    //                         Status strings

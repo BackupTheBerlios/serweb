@@ -67,6 +67,9 @@ public class UpdateNetgeoCache {
     usrloc_table = properties.getProperty("usrloc_table", "location");
     contact_col = properties.getProperty("contact_col", "contact");
 
+    String server_url = properties.getProperty("server_url","http://netgeo.caida.org/perl/netgeo.cgi");
+    NetGeoClient.DEFAULT_SERVER_URL=server_url;
+
     try{
       unknown_domains_max_age=Integer.parseInt(properties.getProperty("unknown_domains_max_age", "24"));
     }
@@ -115,8 +118,9 @@ public class UpdateNetgeoCache {
     String domainname;
     ResultSet res;
     ResultSet res_1;
-    LatLong latlong;
+    NetGeo netgeo;
     String icao_str;
+    String location, country, city;
 
     float lon, lat;
     Icao icao=new Icao(station_list);
@@ -125,7 +129,7 @@ public class UpdateNetgeoCache {
       Statement stmt = conn.createStatement();
       Statement stmt_1 = conn.createStatement();
 
-      q="create table if not exists "+netgeo_cache_table+" (domainname varchar(255) primary key, lon float, lat float, icao char(4), modified timestamp)";
+      q="create table if not exists "+netgeo_cache_table+" (domainname varchar(255) primary key, lon float, lat float, icao char(4), location varchar(128), modified timestamp)";
       stmt.executeUpdate(q);
 
       if (unknown_domains_max_age!=0){
@@ -164,14 +168,14 @@ public class UpdateNetgeoCache {
 
         if (res_1.getInt(1)!=0) continue;    //this domain name allready is in cache
 
-        latlong=new LatLong(domainname);
+        netgeo=new NetGeo(domainname);
 
-        if (latlong.get_lon()==0 && latlong.get_lat()==0){
+        if (netgeo.get_lon()==0 && netgeo.get_lat()==0){
           icao_str="NULL";
         }
         else{
           try {
-            icao_str="'"+icao.get_icao(latlong.get_lon(), latlong.get_lat())+"'";
+            icao_str="'"+icao.get_icao(netgeo.get_lon(), netgeo.get_lat())+"'";
           }
           catch (IcaoNotFoundException e){
             if (DEBUG){
@@ -181,9 +185,22 @@ public class UpdateNetgeoCache {
           }
         }
 
+        country=netgeo.get_country();
+        if (country==null) country="";
 
-        q="insert into "+netgeo_cache_table+" (domainname, lon, lat, icao) "+
-          "values ('"+domainname+"', "+latlong.get_lon()+", "+latlong.get_lat()+", "+icao_str+")";
+        city=netgeo.get_city();
+        if (city==null) city="";
+
+        location=city;
+
+        if (!location.equals("") && !country.equals("")){
+          location+=" / ";
+        }
+
+        location+=country;
+
+        q="insert into "+netgeo_cache_table+" (domainname, lon, lat, icao, location) "+
+          "values ('"+domainname+"', "+netgeo.get_lon()+", "+netgeo.get_lat()+", "+icao_str+", '"+location+"')";
         stmt.executeUpdate(q);
 
       }
@@ -212,7 +229,7 @@ public class UpdateNetgeoCache {
 
     my_NetgeoCache.read_config(config_file);
 
-    LatLong.DEBUG=DEBUG;
+    NetGeo.DEBUG=DEBUG;
     Icao.DEBUG=DEBUG;
 
     my_NetgeoCache.connect2db();

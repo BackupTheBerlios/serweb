@@ -4,31 +4,38 @@
  * <p>Description: </p>
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: </p>
- * @author Karel Kozlik
+ * @author unascribed
  * @version 1.0
  */
 
 import java.util.*;
 import java.net.*;
 
-public class LatLong {
+public class NetGeo {
+
   private float lat=0, lon=0;
+  private String country, city;
+
   private NetGeoClient netgeo = new NetGeoClient();
 
   public static boolean DEBUG = false;
 
-  public LatLong(String domainname) {
-    Hashtable latLongHash;
+  public NetGeo(String domainname) {
+    Hashtable record;
 
-    latLongHash = netgeo.getLatLong(domainname);
+    record = netgeo.getRecord(domainname);
 
-    if( latLongHash.get("HTTP_ERROR") != null ) {
-      System.out.println( latLongHash.get("HTTP_ERROR") );
+    if( record.get("HTTP_ERROR") != null ) {
+      System.out.println( record.get("HTTP_ERROR") );
       return;
     }
 
-    lon=get_float_from_hash(latLongHash, "LONG");
-    lat=get_float_from_hash(latLongHash, "LAT");
+    country=(String)record.get("COUNTRY");
+    city=(String)record.get("CITY");
+
+    lon=get_float_from_hash(record, "LONG");
+    lat=get_float_from_hash(record, "LAT");
+
 
     if (lon!=0 || lat!=0) { //it's OK we have long and lat
       if (DEBUG){
@@ -53,15 +60,18 @@ public class LatLong {
     }
 
     for (int i=0; i < inaddr.length; i++){
-      latLongHash = netgeo.getLatLong(inaddr[i].getHostAddress());
+      record = netgeo.getRecord(inaddr[i].getHostAddress());
 
-      if( latLongHash.get("HTTP_ERROR") != null ) {
-        System.out.println( latLongHash.get("HTTP_ERROR") );
+      if( record.get("HTTP_ERROR") != null ) {
+        System.out.println( record.get("HTTP_ERROR") );
         return;
       }
 
-      lon=get_float_from_hash(latLongHash, "LONG");
-      lat=get_float_from_hash(latLongHash, "LAT");
+      country=(String)record.get("COUNTRY");
+      city=(String)record.get("CITY");
+
+      lon=get_float_from_hash(record, "LONG");
+      lat=get_float_from_hash(record, "LAT");
 
       if (DEBUG){
         System.out.println("   IP: "+inaddr[i].getHostAddress()+" lat/long: "+lat+"/"+lon);
@@ -69,7 +79,6 @@ public class LatLong {
 
       if (lon!=0 || lat!=0) return; //it's OK we have long and lat
     }
-
   }
 
   public float get_lon(){
@@ -78,6 +87,14 @@ public class LatLong {
 
   public float get_lat(){
     return lat;
+  }
+
+  public String get_city(){
+    return city;
+  }
+
+  public String get_country(){
+    return country;
   }
 
   private float get_float_from_hash (Hashtable hash, String what){
@@ -94,4 +111,5 @@ public class LatLong {
     }
     return x;
   }
+
 }
