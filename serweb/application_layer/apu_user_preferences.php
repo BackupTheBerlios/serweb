@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.3 2004/08/26 13:50:44 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.4 2004/08/27 11:05:06 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -15,6 +15,7 @@
    								default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
    'smarty_attributes'			name of smarty variable - see below
    'smarty_form'				name of smarty variable - see below
+   'smarty_action'				name of smarty variable - see below
    'form_name'					name of html form
    
    Exported smarty variables:
@@ -22,6 +23,10 @@
    opt['smarty_attributes'] 	(attributes)	associative array containing info about attributes
    													key: 'att_name' - name of attribute
    opt['smarty_form'] 			(form)			phplib html form
+   
+   opt['smarty_action']			(action)		tells what should smarty display. Values:
+   												'default' - 
+												'was_updated' - when user submited form and data was succefully stored
 */
  
 class apu_user_preferences extends apu_base_class{
@@ -29,6 +34,7 @@ class apu_user_preferences extends apu_base_class{
 	var $reg;			//Creg class
 	var $usr_pref;		//User_preferences class
 	var $attributes;	//array of cattrib objects
+	var $smarty_action='default';
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -57,6 +63,8 @@ class apu_user_preferences extends apu_base_class{
 		$this->opt['smarty_attributes'] =	'attributes';
 		/* form */
 		$this->opt['smarty_form'] =			'form';
+		/* smarty action */
+		$this->opt['smarty_action'] =		'action';
 
 		/* name of html form */
 		$this->opt['form_name'] =			'';
@@ -197,6 +205,7 @@ class apu_user_preferences extends apu_base_class{
 		
 		if (isset($_GET['m_usr_pref_updated']) and $_GET['m_usr_pref_updated'] == $this->opt['instance_id']){
 			$msgs[]=&$this->opt['msg_update'];
+			$this->smarty_action="was_updated";
 		}
 
 	}
@@ -212,6 +221,7 @@ class apu_user_preferences extends apu_base_class{
 									array('jvs_name'=>'form_'.$this->opt['instance_id'],
 									      'form_name'=>$this->opt['form_name']), 
 									array('before'=>$js_on_subm));
+		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 	}
 }
 
