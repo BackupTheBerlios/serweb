@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.20 2003/05/26 23:00:34 jiri Exp $
+ * $Id: functions.php,v 1.21 2003/05/30 06:42:14 jiri Exp $
  */
 
 
@@ -57,8 +57,14 @@ class Creg{
 		$this->ipv6address="(".$this->hexpart."(:".$this->ipv4address.")?)";
 		$this->ipv6reference="(\\[".$this->ipv6address."])";
 
+		/* toplabel is the name of top-level DNS domain ".com" -- alphanum only
+		   domainlabel is one part of the dot.dot name string in a DNS name ("iptel");
+		     it must begin with alphanum, can contain special characters (-) and end
+			 with alphanums
+		   hostname can include any number of domain lables and end with toplable
+		*/
 		$this->toplabel="([a-zA-Z]|([a-zA-Z](~|".$this->alphanum.")*".$this->alphanum."))";
-		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."(~|".$this->alphanum.")*".$this->alphanum."))";
+		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."([~-]|".$this->alphanum.")*".$this->alphanum."))";
 		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel."(\\.)?)";
 		$this->host="(".$this->hostname."|".$this->ipv4address."|".$this->ipv6reference.")";
 
@@ -322,7 +328,7 @@ function filter_fl($in){
 function click_to_dial($target, $uri, &$errors){
 	global $config;
 
-	$from="<sip:controller@foo.bar>";
+	$from="<sip:controller@iptel.org>";
 	$callidnr = uniqid("");
 	$callid = $callidnr.".fifouacctd";
 	$cseq=1;
