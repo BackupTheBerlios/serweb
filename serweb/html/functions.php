@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.33 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: functions.php,v 1.34 2004/03/25 21:13:33 kozlik Exp $
  */
 
 
@@ -276,6 +276,7 @@ function get_time_zones(&$errors){
 	while (!feof($fp)){
 		$line=FgetS($fp, 512);
 		if (substr($line,0,1)=="#") continue; //skip comments
+		if (!$line) continue; //skip blank lines
 		
 		$line_a=explode("\t", $line);
 		
@@ -509,7 +510,9 @@ class Cfusers{
 		if (isset($HTTP_POST_VARS['fname'])) $this->fname=$HTTP_POST_VARS['fname'];
 		if (isset($HTTP_POST_VARS['lname'])) $this->lname=$HTTP_POST_VARS['lname'];
 		if (isset($HTTP_POST_VARS['email'])) $this->email=$HTTP_POST_VARS['email'];
-		if (isset($HTTP_POST_VARS['okey_x'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
+		if (isset($HTTP_POST_VARS['okey_x']))
+			if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
+			else $this->onlineonly=0;
 
 		if (isset($HTTP_GET_VARS['act_row'])) $this->act_row=$HTTP_GET_VARS['act_row'];
 		if (isset($HTTP_POST_VARS['okey_x'])) $this->act_row=0;

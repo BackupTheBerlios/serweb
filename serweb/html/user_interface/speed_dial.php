@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.5 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: speed_dial.php,v 1.6 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,13 +13,22 @@ page_open (array("sess" => "phplib_Session",
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
+if (isset($_POST['edit_sd'])) $edit_sd=$_POST['edit_sd'];
+elseif (isset($_GET['edit_sd'])) $edit_sd=$_GET['edit_sd'];
+else $edit_sd=null;
+
+if (isset($_POST['edit_sd_dom'])) $edit_sd_dom=$_POST['edit_sd_dom'];
+elseif (isset($_GET['edit_sd_dom'])) $edit_sd_dom=$_GET['edit_sd_dom'];
+else $edit_sd_dom=null;
+
+
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	if ($dele_sd){
+	if (isset($_GET['dele_sd'])){
 		$q="delete from ".$config->table_speed_dial." where ".
-			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and username_from_req_uri='".$dele_sd."' and domain_from_req_uri='".$dele_sd_dom."'";
+			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and username_from_req_uri='".$_GET['dele_sd']."' and domain_from_req_uri='".$_GET['dele_sd_dom']."'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -40,7 +49,7 @@ do{
 	                             "name"=>"usrnm_from_uri",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>$row->username_from_req_uri?$row->username_from_req_uri:"",
+	                             "value"=>isset($row->username_from_req_uri)?$row->username_from_req_uri:"",
                                      "valid_regex"=>"^".$config->speed_dial_initiation,
                                      "valid_e"=>"username from request uri must start by: ".$config->speed_dial_initiation,
 								 "extrahtml"=>"style='width:120px;'"));
@@ -48,13 +57,13 @@ do{
 	                             "name"=>"domain_from_uri",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>$row->domain_from_req_uri?$row->domain_from_req_uri:$config->realm,
+	                             "value"=>isset($row->domain_from_req_uri)?$row->domain_from_req_uri:$config->realm,
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"new_uri",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>$row->new_request_uri?$row->new_request_uri:"",
+	                             "value"=>isset($row->new_request_uri)?$row->new_request_uri:"",
 	                             "valid_regex"=>"^".$reg->sip_address."$",
 	                             "valid_e"=>"not valid sip address",
 								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
@@ -70,7 +79,7 @@ do{
 								 "extrahtml"=>"alt='save'"));
 
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -106,7 +115,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

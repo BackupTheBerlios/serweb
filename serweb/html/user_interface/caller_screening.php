@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.3 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: caller_screening.php,v 1.4 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,13 +13,17 @@ page_open (array("sess" => "phplib_Session",
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
+if (isset($_POST['edit_caller'])) $edit_caller=$_POST['edit_caller'];
+elseif (isset($_GET['edit_caller'])) $edit_caller=$_GET['edit_caller'];
+else $edit_caller=null;
+
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	if ($dele_caller){
+	if (isset($_GET['dele_caller'])){
 		$q="delete from ".$config->table_calls_forwarding." where ".
-			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and purpose='screening' and uri_re='".$dele_caller."'";
+			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and purpose='screening' and uri_re='".$_GET['dele_caller']."'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -46,14 +50,14 @@ do{
 	                             "name"=>"uri_re",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>$row->uri_re?$row->uri_re:"",
+	                             "value"=>isset($row->uri_re)?$row->uri_re:"",
 								 "minlength"=>1,
 								 "length_e"=>"you must fill caller uri",
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"select",
 	                             "name"=>"action_key",
 								 "size"=>1,
-	                             "value"=>$row->action?(
+	                             "value"=>isset($row->action)?(
 								 			Ccall_fw::get_key($config->calls_forwarding["screening"],
 																$row->action,
 																$row->param1,
@@ -70,7 +74,7 @@ do{
 								 "extrahtml"=>"alt='save'"));
 
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -117,7 +121,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.11 2004/03/24 21:39:47 kozlik Exp $
+ * $Id: index.php,v 1.12 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -94,7 +94,7 @@ do{
 	                             "src"=>$config->img_src_path."butons/b_register.gif",
 								 "extrahtml"=>"alt='register'"));
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		$db = connect_to_db();
 		if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
@@ -139,7 +139,7 @@ do{
 
 
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$terms=$config->terms_and_conditions;
 	$f->load_defaults();				// Load form with submitted data
 }

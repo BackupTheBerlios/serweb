@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.13 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: users.php,v 1.14 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -23,16 +23,16 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
-	if ($dele_id){ //delete user
-		$q="delete from ".$config->table_aliases." where contact='sip:".$dele_id."@".$config->default_domain."'";
+	if (isset($_GET['dele_id'])){ //delete user
+		$q="delete from ".$config->table_aliases." where contact='sip:".$_GET['dele_id']."@".$config->default_domain."'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-		$q="delete from ".$config->table_subscriber." where username='$dele_id' and domain='$config->default_domain'";
+		$q="delete from ".$config->table_subscriber." where username='".$_GET['dele_id']."' and domain='$config->default_domain'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user seleted succesfully")));
+        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user deleted succesfully")));
 		page_close();
 		exit;
 	}

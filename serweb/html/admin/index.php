@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.11 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: index.php,v 1.12 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -63,7 +63,7 @@ $f->add_element(array("type"=>"submit",
 							 "extrahtml"=>"alt='login'"));
 
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$passw="";
 	$f->load_defaults();				// Load form with submitted data
 }

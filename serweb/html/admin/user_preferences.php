@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.4 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: user_preferences.php,v 1.5 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,21 +15,25 @@ page_open (array("sess" => "phplib_Session",
 				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
+if (isset($_POST['att_edit'])) $att_edit=$_POST['att_edit'];
+elseif (isset($_GET['att_edit'])) $att_edit=$_GET['att_edit'];
+else $att_edit=null;
+
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 	//delete attrib from DB
-	if ($att_dele){
+	if (isset($_GET['att_dele'])){
 		//delete attribute from user_preferences table
 		$q="delete from ".$config->table_user_preferences.
-			" where attribute='$att_dele'";
+			" where attribute='".$_GET['att_dele']."'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		//delete attribute form user_preferences_types table
 		$q="delete from ".$config->table_user_preferences_types.
-			" where att_name='$att_dele'";
+			" where att_name='".$_GET['att_dele']."'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -64,7 +68,7 @@ do{
 
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"att_name",
-	                             "value"=>$row->att_name?$row->att_name:"",
+	                             "value"=>isset($row->att_name)?$row->att_name:"",
 								 "size"=>16,
 								 "maxlength"=>32,
 								 "minlength"=>1,
@@ -75,7 +79,7 @@ do{
 
 	$f->add_element(array("type"=>"select",
     	                         "name"=>"att_rich_type",
-	                             "value"=>$row->att_rich_type?$row->att_rich_type:"",
+	                             "value"=>isset($row->att_rich_type)?$row->att_rich_type:"",
 								 "size"=>1,
 								 "options"=>$opt,
 								 "extrahtml"=>"style='width:120px;'"));
@@ -97,7 +101,7 @@ do{
 								 "extrahtml"=>"alt='".($att_edit?"save":"add")."'"));
 
 								 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -153,7 +157,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

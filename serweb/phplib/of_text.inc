@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.1 2002/09/04 18:20:29 kozlik Exp $
+ * $Id: of_text.inc,v 1.2 2004/03/25 21:13:33 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -32,7 +32,7 @@ class of_text extends of_element {
     else 
       $v = htmlspecialchars($this->value);
     $n = $this->name . ($this->multiple ? "[]" : "");
-    $str .= "<input name='$n' value=\"$v\"";
+    $str .= "<input name='$n' id='$n' value=\"$v\"";
     $str .= ($this->pass)? " type='password'" : " type='text'";
     if ($this->maxlength)
       $str .= " maxlength='$this->maxlength'";
@@ -73,7 +73,7 @@ class of_text extends of_element {
         $str .= "  return(false);\n}\n";
       }
       if ($this->valid_e) {
-        $flags = ($this->icase ? "gi" : "g");
+        $flags = ((isset($this->icase) and $this->icase) ? "gi" : "g");
         $str .= "if (window.RegExp) {\n";
         $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
 //        $str .= "  var reg = /$this->valid_regex/$flags;\n";
@@ -94,9 +94,9 @@ class of_text extends of_element {
     while (list($k,$v) = each($val)) {
       if ($this->length_e && (strlen($v) < $this->minlength))
         return $this->length_e;
-      if ($this->valid_e && (($this->icase && 
+      if ($this->valid_e && (((isset($this->icase) and $this->icase) && 
             !eregi($this->valid_regex,$v)) ||
-           (!$this->icase &&
+           (!(isset($this->icase) and $this->icase) &&
             !ereg($this->valid_regex,$v))))
         return $this->valid_e;
     }

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.4 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.5 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -12,6 +12,11 @@ page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Pre_Auth",
 				 "perm" => "phplib_Perm"));
 $perm->check("admin");
+
+if (isset($_POST['item_edit'])) $item_edit=$_POST['item_edit'];
+elseif (isset($_GET['item_edit'])) $item_edit=$_GET['item_edit'];
+else $item_edit=null;
+
 
 function update_items_in_db($item_list, $attrib_name, $default_value){
 	global $config;
@@ -46,14 +51,14 @@ do{
 		exit;
 	}
 
-	$item_list=unserialize($row->att_type_spec);
+	$item_list=unserialize(is_string($row->att_type_spec)?$row->att_type_spec:"");
 	$default_value=$row->default_value;
 
 	//if user want delete item
-	if ($item_dele){
+	if (isset($_GET['item_dele'])){
 		//find item in array and unset it
 		foreach($item_list as $key=>$row){
-			if ($row->label==$item_dele){
+			if ($row->label==$_GET['item_dele']){
 				unset($item_list[$key]);
 				break;
 			}
@@ -115,7 +120,7 @@ do{
         	                     "src"=>$config->img_src_path."butons/b_".($item_edit?"save":"add").".gif",
 								 "extrahtml"=>"alt='".($item_edit?"save":"add")."'"));
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -147,7 +152,7 @@ do{
 }while (false);
 
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

@@ -6,10 +6,12 @@
 </head>
 <?
 	global $username, $config;
+	$errors=array();
 	
 	print_html_body_begin(false, true);
 	echo "<br>";
 	if (isset($username)) $errors[]="Either your username or your password are invalid. Please try again!";
+
 	print_errors($errors);                    // Display error
 //	print_message($message);
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.8 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.9 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -21,9 +21,9 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	if ($uri and $desc){
+	if (isset($_GET['uri']) and isset($_GET['desc'])){
 		$q="insert into ".$config->table_event." (uri, description, username, domain) ".
-			"values ('$uri', '$desc', '".$auth->auth["uname"]."' , '".$config->realm."')";
+			"values ('".$_GET['uri']."', '".$_GET['desc']."', '".$auth->auth["uname"]."' , '".$config->realm."')";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -32,9 +32,9 @@ do{
 		exit;
 	}
 
-	if (isset($dele_id)){
+	if (isset($_GET['dele_id'])){
 		$q="delete from ".$config->table_event.
-			" where username='".$auth->auth["uname"]."' and domain='".$config->realm."'  and id=".$dele_id;
+			" where username='".$auth->auth["uname"]."' and domain='".$config->realm."'  and id=".$_GET['dele_id'];
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

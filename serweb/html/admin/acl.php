@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.9 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: acl.php,v 1.10 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -58,11 +58,11 @@ do{
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){					// Is there data to process?
 
 		foreach ($ACL_control as $row){
 			//if checkbox isn't checked, assign value "0" to variable
-			if ($_POST["chk_".$row] != "1") $_POST["chk_".$row] != "0";
+			if (!isset($_POST["chk_".$row])) $_POST["chk_".$row] = "0";
 
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
@@ -78,7 +78,7 @@ do{
 			}
 		}
 
-		if ($errors) break;
+		if (isset($errors) and $errors) break;
 
         Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
 		page_close();
@@ -86,7 +86,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

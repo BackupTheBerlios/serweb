@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.2 2003/11/19 09:21:57 kozlik Exp $
+ * $Id: oohforms.inc,v 1.3 2004/03/25 21:13:33 kozlik Exp $
  */
 
 class of_element {
@@ -68,8 +68,8 @@ class of_element {
         "extra_html"=>"extrahtml");
     reset($a);
     while (list($k,$v) = each($a)) {
-      if ($cv_tab[$k]=="ignore") continue;
-      else $k = ($cv_tab[$k] ? $cv_tab[$k] : $k);
+      if (isset($cv_tab[$k]) and $cv_tab[$k]=="ignore") continue;
+      else $k = (isset($cv_tab[$k]) ? $cv_tab[$k] : $k);
       $this->$k = $v;
     }
   }
@@ -232,8 +232,8 @@ class form {
       return false;
     
     $cv_tab = array("select multiple"=>"select", "image"=>"submit");
-    if ($t = $cv_tab[$el["type"]]) 
-      $t = ("of_" . $t);
+    if (isset($cv_tab[$el["type"]])) 
+      $t = ("of_" . $cv_tab[$el["type"]]);
     else
       $t = ("of_" . $el["type"]);
     
@@ -247,10 +247,11 @@ class form {
     }
     $el = new $t($el);
     $el->type = $t; # as suggested by Michael Graham (magog@the-wire.com)
-    if ($el->isfile) 
+
+    if (isset($el->isfile) and $el->isfile) 
       $this->isfile = true;
     $this->elements[$el->name]["ob"] = $el;
-    if ($el->hidden)
+    if (isset($el->hidden) and $el->hidden)
       $this->hidden[] = $el->name;
   }
 
@@ -281,7 +282,7 @@ class form {
     if (false == $value) 
        $value = $el->value; 
 
-    if ($this->elements[$name]["frozen"])
+    if (isset($this->elements[$name]["frozen"]) and $this->elements[$name]["frozen"])
       $str .= $el->self_get_frozen($value,$this->elements[$name]["which"]++, $x);
     else
       $str .= $el->self_get($value,$this->elements[$name]["which"]++, $x);
@@ -317,7 +318,7 @@ class form {
     }
     while ($elrec) {
       $el = $elrec["ob"];
-      if ($res = $el->marshal_dispatch($this->method,"self_validate"))
+      if ($res = $el->marshal_dispatch(isset($this->method)?$this->method:"","self_validate"))
         $err[]=$res;
       if ($vallist) {
         next($vallist);
@@ -327,7 +328,7 @@ class form {
         $elrec = current($this->elements);
       }
     }
-    return $err?$err:$default;
+    return isset($err)?$err:$default;
   }
 
   function load_defaults($deflist="") {
@@ -340,7 +341,7 @@ class form {
     }
     while ($elrec) {
       $el = $elrec["ob"];
-      $el->marshal_dispatch($this->method,"self_load_defaults");
+      $el->marshal_dispatch(isset($this->method)?$this->method:"", "self_load_defaults");
       $this->elements[$el->name]["ob"] = $el;  // no refs -> must copy back
       if ($deflist) {
         next($deflist);

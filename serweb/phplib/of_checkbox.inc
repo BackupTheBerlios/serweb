@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_checkbox.inc,v 1.1 2002/09/04 18:20:27 kozlik Exp $
+ * $Id: of_checkbox.inc,v 1.2 2004/03/25 21:13:33 kozlik Exp $
  */
 
 class of_checkbox extends of_element {
@@ -20,7 +20,7 @@ class of_checkbox extends of_element {
     
     if ($this->multiple) {
       $n = $this->name . "[]";
-      $str .= "<input type='checkbox' name='$n' value='$val'";
+      $str .= "<input type='checkbox' name='$n' value='$val' id='$this->name'";
       if (is_array($this->value)) {
         reset($this->value);
         while (list($k,$v) = each($this->value)) {
@@ -31,7 +31,7 @@ class of_checkbox extends of_element {
         }
       }
     } else {
-      $str .= "<input type='checkbox' name='$this->name'";
+      $str .= "<input type='checkbox' name='$this->name' id='$this->name'";
       $str .= " value='$this->value'";
       if ($this->checked) 
         $str .= " checked";

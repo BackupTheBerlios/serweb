@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.19 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: confirmation.php,v 1.20 2004/03/25 21:13:33 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -8,6 +8,9 @@ include "reg_jab.php";
 require "prepend.php";
 
 put_headers();
+
+if (isset($_GET['ok'])) $ok=$_GET['ok']; else $ok=null;
+if (isset($_GET['nr'])) $nr=$_GET['nr']; else $nr=null;
 
 do{
 	if (isset($nr)){  // Is there data to process?

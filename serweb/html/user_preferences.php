@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.4 2004/03/02 21:07:41 kozlik Exp $
+ * $Id: user_preferences.php,v 1.5 2004/03/25 21:13:33 kozlik Exp $
  */
 
 /*
@@ -92,7 +92,7 @@ class User_Preferences {
 		
 		case 'list':
 		case 'provider':
-			if ($type=='list') $items=unserialize($type_spec);
+			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
 			if ($type=='provider') $items=$this->providers->get_items();
 
 			if (is_Array($items)){
@@ -125,7 +125,7 @@ class User_Preferences {
 		
 		case 'list':
 		case 'provider':
-			if ($type=='list') $items=unserialize($type_spec);
+			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
 			if ($type=='provider') $items=$this->providers->get_items();
 			
 			if (!$items) return true;
@@ -194,7 +194,7 @@ class User_Preferences {
 			break;
 		case 'list':
 		case 'provider':
-			if ($type=='list') $items=unserialize($type_spec);
+			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
 			if ($type=='provider') $items=$this->providers->get_items();
 
 			if (!is_array($items)) $items=array();

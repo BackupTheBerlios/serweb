@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.21 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: missed_calls.php,v 1.22 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -31,7 +31,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 
-	if ($delete_calls==1){
+	if (isset($_GET['delete_calls'])){
 
 		$q="select username, domain from ".$config->table_aliases.
 			" where 'sip:".$auth->auth["uname"]."@".$config->default_domain."'=contact";
@@ -139,12 +139,11 @@ print_html_body_begin($page_attributes);
 							substr($row->time,5,2), 	//month
 							substr($row->time,8,2), 	//day
 							substr($row->time,0,4));	//year
-
-		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
-		else $time=date('Y-m-d H:i',$timestamp);
-
-//		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
-//		else $time=Substr($row->time,0,16);
+		if ($timestamp <=0 ) $time="";
+		else {
+			if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
+			else $time=date('Y-m-d H:i',$timestamp);
+		}
 
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.3 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.4 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,6 +15,7 @@ $perm->check("admin,change_priv");
 $f = new form;                   // create a form object
 $ad_priv=array();
 $ad_priv['acl_control']=array();
+$ad_priv['change_privileges']=array();
 
 if (isset($_GET['user_domain'])) $user_domain=$_GET['user_domain'];
 elseif (isset($_POST['user_domain'])) $user_domain=$_POST['user_domain'];
@@ -49,12 +50,12 @@ do{
 
 	$f->add_element(array("type"=>"checkbox",
 	                      "name"=>"chk_change_privileges",
-	                      "checked"=>$ad_priv['change_privileges'][0]?"1":"0",
+	                      "checked"=>isset($ad_priv['change_privileges'][0]) and $ad_priv['change_privileges'][0]?"1":"0",
 	                      "value"=>"1"));
 
 	$f->add_element(array("type"=>"hidden",
 	                      "name"=>"hidden_change_privileges",
-	                      "value"=>$ad_priv['change_privileges'][0]?"1":"0"));
+	                      "value"=>isset($ad_priv['change_privileges'][0]) and $ad_priv['change_privileges'][0]?"1":"0"));
 
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"user_id",
@@ -67,11 +68,11 @@ do{
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){					// Is there data to process?
 
 		foreach ($config->grp_values as $row){
 			//if checkbox isn't checked, assign value "0" to variable
-			if ($_POST["chk_".$row] != "1") $_POST["chk_".$row] != "0";
+			if (!isset($_POST["chk_".$row])) $_POST["chk_".$row] = "0";
 
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
@@ -86,13 +87,15 @@ do{
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}
 		}
-		if ($errors) break;
+		if (isset($errors) and $errors) break;
 
-		if ($_POST["chk_change_privileges"] != "1") $_POST["chk_change_privileges"] != "0";
+		//if checkbox isn't checked, assign value "0" to variable
+		if (!isset($_POST["chk_change_privileges"])) $_POST["chk_change_privileges"] = "0";
+
 		if ($_POST["chk_change_privileges"] != $_POST["hidden_change_privileges"]){
 			if ($_POST["chk_change_privileges"])
 
-				if (isset($ad_priv['change_privileges'])){ /* if privilege is in db we must update its value */
+				if (isset($ad_priv['change_privileges'][0])){ /* if privilege is in db we must update its value */
 					$q="update ".$config->table_admin_privileges." set priv_value='1' ".
 						"where domain='".$user_domain."' and username='".$user_id."' and priv_name='change_privileges'";
 				} else { /* otherwise we insert privilege with right value */
@@ -113,7 +116,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

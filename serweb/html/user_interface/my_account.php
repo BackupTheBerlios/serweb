@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.31 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: my_account.php,v 1.32 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,6 +15,10 @@ page_open (array("sess" => "phplib_Session_Pre_Auth",
 				 "auth" => "phplib_Pre_Auth",
 				 "perm" => "phplib_Perm"));
 
+if (isset($_POST["uid"])) $uid=$_POST["uid"];
+elseif (isset($_GET["uid"])) $uid=$_GET["uid"];
+else $uid=null;
+				 
 if ($perm->have_perm("admin")){
 	if ($uid) $user_id=$uid;
 	else $user_id=$auth->auth["uname"];
@@ -123,7 +127,7 @@ do{
 	                             "src"=>$config->img_src_path."butons/b_add.gif",
 								 "extrahtml"=>"alt='add'"));
 
-	if ($del_contact){
+	if (isset($_GET['del_contact'])){
 		/* construct FIFO command */
 		/*
 		if ($config->ul_multidomain)
@@ -279,7 +283,7 @@ do{
 
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
@@ -378,7 +382,7 @@ else {
 
 <br class="swCleaner"><br>
 
-<?if (is_array($usrloc)){?>
+<?if (isset($usrloc) and is_array($usrloc)){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.2 2003/12/02 10:28:14 kozlik Exp $
+ * $Id: of_select.inc,v 1.3 2004/03/25 21:13:33 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -28,7 +28,7 @@ class of_select extends of_element {
       $n = $this->name;
       $t = "select";
     }
-    $str .= "<$t name='$n'";
+    $str .= "<$t name='$n' id='$n'";
     if ($this->size) 
       $str .= " size='$this->size'";
     if ($this->extrahtml) 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.24 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: page.php,v 1.25 2004/03/25 21:13:33 kozlik Exp $
  */
 
 function put_headers(){
@@ -44,24 +44,26 @@ function print_html_body_begin($parameters=null){
 		$parameters['run_at_html_body_begin']($parameters);
 	
 	virtual(multidomain_get_file($config->html_prolog));
-	if ($parameters['title']) echo $parameters['title'];
+	if (isset($parameters['title']) and $parameters['title']) echo $parameters['title'];
 	virtual(multidomain_get_file($config->html_separator));
 
 ?>
 <div class="swMain">
 
-	<?if ($parameters['user_name']){?>
+	<?if (isset($parameters['user_name'])){?>
 	<div class="swHeadingUser"><?echo $parameters['user_name'];?></div>
 	<?}?>
 
-	<?if ($auth->auth["uname"]){?>
+	<?if (isset($auth->auth["uname"]) and $auth->auth["uname"]){?>
 	<div class="swHeadingLogout"><a href=logout.php>Logout</a></div>
 	<?}?>
 
 	<br class="cleaner" /><br />
 
-	<?if ($parameters['tab_collection']) { 
-		print_tabs($parameters['tab_collection'], $parameters['path_to_pages'], $parameters['selected_tab']);?>
+	<?if (isset($parameters['tab_collection']) and $parameters['tab_collection']) { 
+		print_tabs($parameters['tab_collection'], 
+					isset($parameters['path_to_pages'])?$parameters['path_to_pages']:null, 
+					isset($parameters['selected_tab'])?$parameters['selected_tab']:null);?>
 	<div id="swContent">
 	<?}else{?>
 	<div id="swContentNoTabs">

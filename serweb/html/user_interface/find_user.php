@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.12 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: find_user.php,v 1.13 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -58,8 +58,9 @@ do{
 	                             "src"=>$config->img_src_path."butons/b_find.gif",
 								 "extrahtml"=>"alt='find'"));
 
-
-	if (isset($okey_x)){						// Is there data to process?
+	$found_users=array();
+								 
+	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -89,7 +90,7 @@ do{
 
 }while (false);
 
-if (isset($okey_x)){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

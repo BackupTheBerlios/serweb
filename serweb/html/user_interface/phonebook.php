@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.13 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: phonebook.php,v 1.14 2004/03/25 21:13:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -12,6 +12,11 @@ page_open (array("sess" => "phplib_Session",
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
+
+if (isset($_POST['okey_x'])) $okey_x=$_POST['okey_x'];
+elseif (isset($_GET['okey_x'])) $okey_x=$_GET['okey_x'];
+else $okey_x=null;
+
 
 class Cphonebook{
 	var $id;
@@ -34,7 +39,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	if ($dele_id){
+	if (isset($_GET['dele_id'])){
 		$q="delete from ".$config->table_phonebook." where ".
 			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and id=".$dele_id;
 		$res=mySQL_query($q);
@@ -45,9 +50,9 @@ do{
 		exit;
 	}
 
-	if ($edit_id){
+	if (isset($_GET['edit_id'])){
 		$q="select fname, lname, sip_uri from ".$config->table_phonebook.
-			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and id=".$edit_id;
+			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and id=".$_GET['edit_id'];
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=mysql_fetch_object($res);
@@ -57,32 +62,32 @@ do{
 	                             "name"=>"fname",
 								 "size"=>16,
 								 "maxlength"=>32,
-	                             "value"=>$row->fname?$row->fname:"",
+	                             "value"=>isset($row->fname)?$row->fname:"",
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"lname",
 								 "size"=>16,
 								 "maxlength"=>32,
-	                             "value"=>$row->lname?$row->lname:"",
+	                             "value"=>isset($row->lname)?$row->lname:"",
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"sip_uri",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>$row->sip_uri?$row->sip_uri:"",
+	                             "value"=>isset($row->sip_uri)?$row->sip_uri:"",
 	                             "valid_regex"=>"^".$reg->sip_address."$",
 	                             "valid_e"=>"not valid sip address",
 								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"id",
-	                             "value"=>$edit_id?$edit_id:""));
+	                             "value"=>isset($_GET['edit_id'])?$_GET['edit_id']:""));
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
 
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (!is_null($okey_x)){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -106,9 +111,10 @@ do{
 }while (false);
 
 do{
+	$pb_arr=array();
 	if ($db){
 		// get phonebook
-		if ($edit_id) $qw=" and id!=$edit_id "; else $qw="";
+		if (isset($_GET['edit_id'])) $qw=" and id!=".$_GET['edit_id']." "; else $qw="";
 
 		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by lname";
@@ -123,7 +129,7 @@ do{
 	}
 }while (false);
 
-if ($okey_x){							//data isn't valid or error in sql
+if (!is_null($okey_x)){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
@@ -160,7 +166,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","sip_address_completion(f.sip_uri);");					// Finish form?>
 </div>
 
-<?if (is_array($pb_arr)){?>
+<?if (is_array($pb_arr) and count($pb_arr)){?>
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>name</th>

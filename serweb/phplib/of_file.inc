@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_file.inc,v 1.1 2002/09/04 18:20:27 kozlik Exp $
+ * $Id: of_file.inc,v 1.2 2004/03/25 21:13:33 kozlik Exp $
  */
 
 class of_file extends of_element {
@@ -19,7 +19,7 @@ class of_file extends of_element {
     $str = "";
     
     $str .= "<input type='hidden' name='MAX_FILE_SIZE' value=$this->size>\n";
-    $str .= "<input type='file' name='$this->name'";
+    $str .= "<input type='file' name='$this->name' id='$this->name'";
     if ($this->extrahtml)
       $str .= " $this->extrahtml";
     $str .= ">";
