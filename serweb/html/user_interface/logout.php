@@ -5,9 +5,13 @@ put_headers();
 
 page_open (array("sess" => "phplib_Session"));
 
-//$auth->logout();
-//$sess->delete();
-$sess->unregister("auth");
+$sess->delete();
+//$sess->unregister("auth");
 
-Header("Location: ".$sess->url("index.php?kvrk=".uniqID("")."&message=".RAWUrlEncode("You have been logged out")));
+if ($sess_admin){ //when admins logged out from user's "my_account page"
+//	$sess->unregister("sess_admin");
+	Header("Location: ".$sess->url("../admin/index.php?kvrk=".uniqID("")."&message=".RAWUrlEncode("You have been logged out")));
+}
+else
+	Header("Location: ".$sess->url("index.php?kvrk=".uniqID("")."&message=".RAWUrlEncode("You have been logged out")));
 page_close(); ?>

@@ -5,8 +5,15 @@ require "../../phplib/oohforms.inc";
 put_headers();
 
 page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth"));
+				 "auth" => "phplib_Pre_Auth",
+				 "perm" => "phplib_Perm"));
 
+if ($perm->have_perm("admin")){
+	if ($uid) $user_id=$uid;
+	else $user_id=$auth->auth["uname"];
+}
+else $user_id=$auth->auth["uname"];
+				 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
@@ -17,12 +24,12 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select email_address from ".$config->table_subscriber." where user_id='".$auth->auth["uname"]."'";
+	$q="select email_address from ".$config->table_subscriber." where user_id='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	$q="select user from ".$config->table_grp." where user='".$auth->auth["uname"]."' and grp='voicemail'";
+	$q="select user from ".$config->table_grp." where user='".$user_id."' and grp='voicemail'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
@@ -53,6 +60,9 @@ do{
 								 "maxlength"=>25,
 								 "pass"=>1,
 								 "extrahtml"=>"style='width:120px;'"));
+	$f->add_element(array("type"=>"hidden",
+	                             "name"=>"uid",
+	                             "value"=>$uid));
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_change.gif",
@@ -78,6 +88,10 @@ do{
 								"size"=>1,
 								"value"=>3600));
 	
+	$f2->add_element(array("type"=>"hidden",
+	                             "name"=>"uid",
+	                             "value"=>$uid));
+
 	$f2->add_element(array("type"=>"submit",
 	                             "name"=>"okey2",
 	                             "src"=>$config->img_src_path."butons/b_add.gif",
@@ -87,14 +101,14 @@ do{
 		/* construct FIFO command */
 		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".		//table
-			$auth->auth["uname"]."\n".	//username
+			$user_id."\n".	//username
 			$del_contact."\n";			//contact
 
 		write2fifo($fifo_cmd, $errors);
 
 		if ($errors) break;		
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)));
 		page_close();
 		exit;
 	
@@ -111,7 +125,7 @@ do{
 		/* construct FIFO command */
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".			//table
-			$auth->auth["uname"]."\n".		//username
+			$user_id."\n".		//username
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
 			$config->ul_priority."\n";		//priority
@@ -120,7 +134,7 @@ do{
 
 		if ($errors) break;		
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)));
 		page_close();
 		exit;
 	
@@ -141,31 +155,31 @@ do{
 		$qpass="";
 		if ($passwd){
 			
-			$inp=$auth->auth["uname"].":".$config->realm.":".$passwd;
+			$inp=$user_id.":".$config->realm.":".$passwd;
 			$ha1=md5($inp);
 		
-			$inpb=$auth->auth["uname"]."@".$config->domainname.":".$config->realm.":".$passwd;
+			$inpb=$user_id."@".$config->domainname.":".$config->realm.":".$passwd;
 			$ha1b=md5($inpb);
 			
 			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
 		}
 		
  		$q="update ".$config->table_subscriber." set email_address='$email', datetime_modified=now()".$qpass.
-			" where user_id='".$auth->auth["uname"]."'";
+			" where user_id='".$user_id."'";
 
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
-			if ($f2voicemail) $q="insert into ".$config->table_grp." (user, grp) values ('".$auth->auth["uname"]."', 'voicemail')";
-			else $q="delete from ".$config->table_grp." where user='".$auth->auth["uname"]."' and grp='voicemail'";
+			if ($f2voicemail) $q="insert into ".$config->table_grp." (user, grp) values ('".$user_id."', 'voicemail')";
+			else $q="delete from ".$config->table_grp." where user='".$user_id."' and grp='voicemail'";
 			
 			$res=MySQL_Query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		}
 		
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")."&uid=".RawURLEncode($uid)));
 		page_close();
 		exit;
 	}
@@ -175,17 +189,17 @@ do{
 	if ($db){
 
 		// get aliases
-		$q="select user from ".$config->table_aliases." where lower(contact)=lower('sip:".$auth->auth["uname"]."@".$config->default_domain."') order by user";
+		$q="select user from ".$config->table_aliases." where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by user";
 		$aliases_res=MySQL_Query($q);
 		if (!$aliases_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
 		// get Access-Control-list
-		$q="select grp from ".$config->table_grp." where user='".$auth->auth["uname"]."' order by grp";
+		$q="select grp from ".$config->table_grp." where user='".$user_id."' order by grp";
 		$grp_res=MySQL_Query($q);
 		if (!$grp_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		// get UsrLoc
-		$q="select contact, expires, q, callid, cseq from ".$config->table_location." where user='".$auth->auth["uname"]."' order by contact";
+		$q="select contact, expires, q, callid, cseq from ".$config->table_location." where user='".$user_id."' order by contact";
 		$location_res=MySQL_Query($q);
 		if (!$location_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
@@ -225,7 +239,11 @@ if ($okey_x){							//data isn't valid or error in sql
 </script>
 </head>
 <?
-	print_html_body_begin(1, true, true);
+	if ($perm->have_perm("admin") and $uid){
+		print_html_body_begin(false, true, true);
+		echo "user: ".$uid."<br>";
+	}
+	else print_html_body_begin(1, true, true);
 	echo "<br>";
 	print_errors($errors);                    // Display error
 	print_message($message);
@@ -279,7 +297,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		<tr><td class="titleT">your aliases:</td></tr>
 		<tr><td height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 		<?while ($row=MySQL_Fetch_Object($aliases_res)){?>
-		<tr><td align="center" class="f12"><?echo $row->user;?></td></tr>
+		<tr><td align="center" class="f12"><?echo $row->user;?>&nbsp;</td></tr>
 		<?}?>
 		</table>
 	</td></tr>
@@ -294,7 +312,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		<tr><td class="titleT">Access-Control-list:</td></tr>
 		<tr><td height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 		<?while ($row=MySQL_Fetch_Object($grp_res)){?>
-		<tr><td align="center" class="f12"><?echo $row->grp;?></td></tr>
+		<tr><td align="center" class="f12"><?echo $row->grp;?>&nbsp;</td></tr>
 		<?}?>
 		</table>
 	</td></tr>
@@ -326,15 +344,15 @@ if ($okey_x){							//data isn't valid or error in sql
 		else $date=Substr($row->expires,0,10);
 	?>
 	<tr valign="top">
-	<td align="center" class="f12" width="125"><?echo $row->contact;?></td>
+	<td align="center" class="f12" width="125"><?echo $row->contact;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><?echo $date;?></td>
+	<td align="center" class="f12" width="125"><?echo $date;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="60"><?echo $row->q;?></td>
+	<td align="center" class="f12" width="60"><?echo $row->q;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><?echo $row->callid;?></td>
+	<td align="center" class="f12" width="125"><?echo $row->callid;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&del_contact=".rawURLEncode($row->contact));?>">delete</a></td>
+	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->contact));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
@@ -370,6 +388,9 @@ if ($okey_x){							//data isn't valid or error in sql
 </table>
 
 <br>
+<? if ($perm->have_perm("admin") and $uid){?>
+	<a href="<?$sess->purl("../admin/users.php?kvrk=".uniqid(""));?>">back to main page</a><br>
+<?}?>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

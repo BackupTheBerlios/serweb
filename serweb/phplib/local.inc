@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.1 2002/09/04 18:20:20 kozlik Exp $
+ * $Id: local.inc,v 1.2 2002/09/06 20:11:44 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -81,7 +81,6 @@ class phplib_Session extends Session {
   var $cookiename     = "";                ## defaults to classname
   var $magic          = "Hocuspocus";      ## ID seed
   var $mode           = "cookie";          ## We propagate session IDs with cookies
-//  var $mode           = "get";          ## We propagate session IDs with cookies
   var $fallback_mode  = "get";
   var $lifetime       = 0;                 ## 0 = do session cookies, else minutes
   var $that_class     = "phplib_CT_Sql";  ## name of data storage container class
@@ -125,7 +124,7 @@ class phplib_Auth extends Auth {
     
     $uid = false;
     
-    $this->db->query(sprintf("select phplib_id ".
+    $this->db->query(sprintf("select phplib_id, perms ".
                              "        from %s ".
                              "       where user_id = '%s' ".
                              "         and password = '%s'",
@@ -135,7 +134,7 @@ class phplib_Auth extends Auth {
 
     while($this->db->next_record()) {
       $uid = $this->db->f("phplib_id");
-//      $this->auth["perm"] = $this->db->f("perms");
+      $this->auth["perm"] = $this->db->f("perms");
     }
     return $uid;
   }
@@ -150,7 +149,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 		$sess->unregister('pre_uid');
 
-	    $this->db->query(sprintf("select user_id ".
+	    $this->db->query(sprintf("select user_id, perms ".
 	                             "        from %s ".
 	                             "       where phplib_id = '%s' ",
 	                          $this->database_table,
@@ -159,7 +158,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 	    $uid=0;
 	    while($this->db->next_record())	{
 	      $this->auth["uname"] = $this->db->f("user_id");
-//	      $this->auth["perm"] = $this->db->f("perms");
+	      $this->auth["perm"] = $this->db->f("perms");
 		  $uid=$pre_uid;
 	    }
 
@@ -320,11 +319,7 @@ class phplib_Perm extends Perm {
   var $classname = "phplib_Perm";
   
   var $permissions = array(
-                            "user"       => 1,
-                            "author"     => 2,
-                            "editor"     => 4,
-                            "supervisor" => 8,
-                            "admin"      => 16
+                            "admin"      => 1
                           );
 
   function perm_invalid($does_have, $must_have) {

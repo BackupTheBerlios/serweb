@@ -22,6 +22,8 @@ class Cconfig {
 	var $table_accounting;
 	var $table_phonebook;
 	var $table_event;
+	
+	var $grp_values;
 
 	var $realm;
 	var $domainname;
@@ -54,6 +56,8 @@ class Cconfig {
 	var $charset;
 
 	var $default_width;
+	
+	var $num_of_showed_items;
 	
 	var $enable_tabs;
 
@@ -93,6 +97,13 @@ class Cconfig {
 		$this->table_accounting="acc";
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
+		
+		$this->grp_values[]="voicemail";
+		$this->grp_values[]="grp 1";
+		$this->grp_values[]="grp 2";
+		$this->grp_values[]="grp 3";
+		$this->grp_values[]="grp 4";
+		
 
 		$this->realm="iptel.org";
 		$this->domainname="iptel.org";
@@ -125,6 +136,8 @@ class Cconfig {
 		$this->charset="windows-1250";
 
 		$this->default_width=564;					//width of usable area
+		
+		$this->num_of_showed_items=20;				//num of showed items in the list of users
 
 		$this->enable_tabs[1]=true;					//enable tab my account
 		$this->enable_tabs[2]=true;					//enable tab phonebook

@@ -115,7 +115,7 @@
 		</td>
 		</tr>
 		<tr> 
-		<td colspan="3" height="48"><img src="<?echo $config->img_src_path;?>title/login.gif" width="156" height="55" alt="Login" border="0"></td>
+		<td colspan="3" height="48"><img src="<?echo $config->img_src_path;?>title/login.gif" width="156" height="55" border="0"></td>
 		</tr>
 		<tr> 
 		<td width="22" height="11"><img src="<?echo $config->img_src_path;?>title/login_left.gif" width="22" height="14" border="0"></td>
@@ -144,7 +144,7 @@
 		<tr>
 		<td width="22" height="11"><img src="<?echo $config->img_src_path;?>title/search_left.gif" width="22" height="14"></td>
 		<?if ($show_logout){?>
-		<td width="77" height="11"><a href="<?$sess->purl($config->root_path."user_interface/logout.php");?>" onMouseOver="image6.src='<?echo $config->img_src_path;?>preload/logout_a.gif';" onMouseOut="image6.src='<?echo $config->img_src_path;?>preload/logout.gif';"><img name="image6" src="<?echo $config->img_src_path;?>preload/logout.gif" border="0"></td>
+		<td width="77" height="11"><a href="<?$sess->purl("logout.php");?>" onMouseOver="image6.src='<?echo $config->img_src_path;?>preload/logout_a.gif';" onMouseOut="image6.src='<?echo $config->img_src_path;?>preload/logout.gif';"><img name="image6" src="<?echo $config->img_src_path;?>preload/logout.gif" border="0" alt="logout"></td>
 		<?}else{?>
  		<td width="77" height="11"><img src="<?echo $config->img_src_path;?>search_mitte.gif"></td>
 		<?}?>

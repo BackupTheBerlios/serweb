@@ -83,6 +83,37 @@ function print_message($msg){
 	if ($msg) echo "<div class=\"message\">".$msg."</div>\n";
 }
 
+function get_sess_url($url){
+	global $sess;
+	
+	if ($sess) return $sess->url($url);
+	else return $url;
+
+}
+
+function print_search_links($actual, $num, $rows, $url){
+// print bar for search
+// actual - from each item it is printed
+// num - how many items total
+// rows - how many items on one page
+// url - href in <a> takgs
+
+	$links=10; //max num of links at one page
+
+	if ($num<=$rows) return;
+
+	$lfrom=$actual-($links*$rows); if ($lfrom<0) $lfrom=0;
+	$lto=$actual+($links*$rows); if ($lto>$num) $lto=$num;
+
+	if ($actual>0) echo '<a href="'.get_sess_url($url.((($actual-$rows)>0)?($actual-$rows):0)).'">&lt;&lt;&lt;</a>&nbsp;';
+	for ($i=$lfrom; $i<$lto; $i+=$rows){
+		if ($i<=$actual and $actual<($i+$rows)) echo '<span class="f14b">'.(floor($i/$rows)+1).'</span>&nbsp;';
+		else echo '<a href="'.get_sess_url($url.$i).'">'.(floor($i/$rows)+1).'</a>&nbsp;';
+	}
+ 	if (($actual+$rows)<$num) echo '<a href="'.get_sess_url($url.($actual+$rows)).'">&gt;&gt;&gt;</a>';
+
+}
+
 function connect_to_db(){
 	global $config;
 	
