@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: index.php,v 1.6 2003/10/15 10:06:19 kozlik Exp $
  */
 
 require "prepend.php";
@@ -128,17 +128,9 @@ do{
 		$row=MySQL_Fetch_Row($res);
 		if ($row[0]) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
 
-		$ha1=md5($uname.":".$config->realm.":".$passwd);
-		$ha1b=md5($uname."@".$config->domainname.":".$config->realm.":".$passwd);
 		$confirm=md5(uniqid(rand()));
 
-		$q="insert into ".$config->table_pending." (username, password, first_name, last_name, phone, email_address, ".
-				"datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) ".
-			"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
-				"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."', '$timezone')";
-
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		if (!add_user_to_subscriber($uname, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
 
 		$sip_address="sip:".$uname."@".$config->default_domain;
 
