@@ -18,7 +18,7 @@ do{
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			if (!MySQL_Num_Rows($res)){ $errors[]="Sorry. No such a confirmation number exists."; break;}
-			else { $errors[]="Your account has already created."; break; }
+			else { $errors[]="Your account has already been created."; break; }
 		}
 		
 		$row=MySQL_Fetch_Object($res);
