@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.4 2004/08/27 11:05:06 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.5 2004/08/28 15:38:19 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -11,6 +11,25 @@
    Configuration:
    --------------
    'attributes'					(array) with which attributes should object work - default with all atributes
+   'error_messages'				associative array - keys are names of attributes, values are custom error messages
+                                displayed when value of attribute is wrong
+   'validate_funct'				name of validate function
+   								validate function must return true or false, first parametr is associative array of
+								attributes, second one is property 'error_messages' and third one is reference to errors 
+								array - function can add error message to it which is dispayed to user
+								
+								example:
+									function validate_form($values, $error_messages, &$errors){
+										//validate only one attribute
+										if (ereg('^[0-9]+$', $values['some_attribute'])) return true;
+										else {
+											$errors[]=$error_messages['some_attribute'];
+											return false;
+										}
+									}
+	
+									set_opt('validate_funct') = 'validate_form';
+								
    'msg_update'					message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
    'smarty_attributes'			name of smarty variable - see below
@@ -53,6 +72,9 @@ class apu_user_preferences extends apu_base_class{
 
 		/* with which attributes we will work, if this array is ampty we will work with all defined attributes */		
 		$this->opt['attributes'] = array();	
+
+		$this->opt['error_messages'] = array();	
+		$this->opt['validate_funct'] = null;	
 
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -108,10 +130,31 @@ class apu_user_preferences extends apu_base_class{
 			if (!$this->usr_pref->format_inputed_value($_POST[$this->attributes[$att]->att_name], 
 														$this->attributes[$att]->att_rich_type, 
 														$this->attributes[$att]->att_type_spec)){
-				$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attributes[$att]->att_name; return false;
-			}
+				// value of attribute is wrong
+				// if is set error message for this attribut, add it to $errors array
+				// otherwise add to $errors array default message: $lang_str['fe_invalid_value_of_attribute']
+				
+				if (isset($this->opt['error_messages'][$this->attributes[$att]->att_name]))
+					$errors[]=$this->opt['error_messages'][$this->attributes[$att]->att_name];
+				else
+					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attributes[$att]->att_name; 
 
-			//if att value is changedz
+				return false;
+			}
+		}
+		
+
+		//value of attributes seems to be ok, try to call user checking function yet
+		if (!empty($this->opt['validate_funct']) and
+			!call_user_func_array($this->opt['validate_funct'], array(&$_POST, $this->opt['error_messages'], &$errors))){
+				//user checking function returned false -> value of attribute is wrong
+				return false;
+		}
+			
+
+		//update all changed attributes
+		foreach($this->opt['attributes'] as $att){
+			//if att value is changed
 			if ($_POST[$this->attributes[$att]->att_name] != $_POST["_hidden_".$this->attributes[$att]->att_name]){
 				if (false === $data->update_attribute_of_user($this->user_id, 
 																$this->attributes[$att]->att_name, 
