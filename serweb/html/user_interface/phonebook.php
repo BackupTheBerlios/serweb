@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: phonebook.php,v 1.8 2003/05/07 08:03:16 kozlik Exp $
  */
 
 require "prepend.php";
@@ -145,6 +145,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	}
 //-->
 </script>
+<script language="JavaScript" src="ctd.js"></script>
 </head>
 <?
 	print_html_body_begin(2, true, true, get_user_name($errors));
@@ -204,7 +205,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_uri));?>"><?echo $row->sip_uri;?></a></td>
+	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->sip_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo $row->sip_uri;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
