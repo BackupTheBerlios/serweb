@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: first_time_register.php,v 1.1 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: first_time_register.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_details_from_ldap', 'get_new_alias_number', 'add_new_alias',
 									'register_user', 'get_aliases', 'get_user_details_from_ldap');
+
+$_phplib_page_open = array("sess" => "phplib_Session_Pre_Auth",
+						   "auth" => "phplib_Pre_Auth");
  
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session_Pre_Auth",
-				 "auth" => "phplib_Pre_Auth"));
 
 do{
 	$errors = array();

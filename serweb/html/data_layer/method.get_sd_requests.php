@@ -1,13 +1,13 @@
 <?
 /*
- * $Id: method.get_sd_requests.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.get_sd_requests.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 class CData_Layer_get_sd_requests {
 	var $required_methods = array();
 	
 	function get_SD_requests($user, $sd, $sd_dom, &$errors){
-		global $config;
+		global $config,$sess;
 		
 		if (!$this->connect_to_db($errors)) return false;
 
@@ -19,7 +19,11 @@ class CData_Layer_get_sd_requests {
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
 		$out=array();
-		while ($row=$res->fetchRow(DB_FETCHMODE_OBJECT)) $out[]=$row;
+		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
+			$out[$i]   = $row;
+			$out[$i]['url_edit']  = $sess->url("speed_dial.php?kvrk=".uniqID("")."&edit_sd=".rawURLEncode($row['username_from_req_uri'])."&edit_sd_dom=".rawURLEncode($row['domain_from_req_uri']));
+			$out[$i]['url_dele']  = $sess->url("speed_dial.php?kvrk=".uniqID("")."&dele_sd=".rawURLEncode($row['username_from_req_uri'])."&dele_sd_dom=".rawURLEncode($row['domain_from_req_uri']));
+		}
 		$res->free();
 		return $out;
 	}

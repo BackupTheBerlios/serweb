@@ -1,9 +1,9 @@
 {* Smarty *}
-{* $Id: u_voicemail.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: u_voicemail.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">Customize greetings:</h2>
+<h2 class="swTitle">{$lang_str.customize_greetings}:</h2>
 
 <div class="swForm">
 {$form.start}

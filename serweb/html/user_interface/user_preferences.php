@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.9 2004/08/09 12:21:28 kozlik Exp $
+ * $Id: user_preferences.php,v 1.10 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_attributes', 'get_att_values', 'update_attribute_of_user', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
 require "../user_preferences.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
@@ -64,7 +62,7 @@ do{
 		//check values of attributes and format its
 		foreach($attributes as $att){
 			if (!$usr_pref->format_inputed_value($HTTP_POST_VARS[$att->att_name], $att->att_rich_type, $att->att_type_spec)){
-				$errors[]="invalid value of attribute ".$att->att_name; break;
+				$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$att->att_name; break;
 			}
 
 			//if att value is changed
@@ -106,6 +104,8 @@ $js_on_subm="";
 $smarty->assign('attributes', format_attributes_for_output($attributes, $js_on_subm));
 
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), array('before'=>$js_on_subm));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_user_preferences.tpl');
 ?>

@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: phonebook.php,v 1.17 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: phonebook.php,v 1.18 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('del_phonebook_entry', 'get_phonebook_entry', 'get_phonebook_entries', 
 		'update_phonebook_entry', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+						   
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 if (!$sess->is_registered('sess_pb_act_row')) $sess->register('sess_pb_act_row');
 if (!isset($sess_pb_act_row)) $sess_pb_act_row=0;
@@ -92,7 +90,7 @@ do{
 								 "maxlength"=>128,
 	                             "value"=>isset($contact['sip_uri'])?$contact['sip_uri']:"",
 	                             "valid_regex"=>"^".$reg->sip_address."$",
-	                             "valid_e"=>"not valid sip address",
+	                             "valid_e"=>$lang_str['fe_not_valid_sip'],
 								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"id",
@@ -133,18 +131,18 @@ if (!is_null($okey_x)){							//data isn't valid or error in sql
 }
 
 if (isset($_GET['m_contact_deleted'])){
-	$message['short']="Contact Deleted";
-	$message['long']="The contact has been deleted from your Phone Book";
+	$message['short'] = $lang_str['msg_pb_contact_deleted_s'];
+	$message['long']  = $lang_str['msg_pb_contact_deleted_l'];
 }
 
 if (isset($_GET['m_contact_updated'])){
-	$message['short']="Contact Updated";
-	$message['long']="Your changes have been saved.";
+	$message['short'] = $lang_str['msg_pb_contact_updated_s'];
+	$message['long']  = $lang_str['msg_pb_contact_updated_l'];
 }
 
 if (isset($_GET['m_contact_added'])){
-	$message['short']="Contact Added";
-	$message['long']="The contact has been added to your Phone Book";
+	$message['short'] = $lang_str['msg_pb_contact_added_s'];
+	$message['long']  = $lang_str['msg_pb_contact_added_l'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -176,6 +174,8 @@ $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), array('before
 
 $smarty->assign_by_ref('action', $action);
 $smarty->assign_by_ref('contact', $contact);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_phonebook.tpl');
 

@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: ms_get_v_msg.php,v 1.7 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: ms_get_v_msg.php,v 1.8 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name', 'get_vm');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 do{
 	if (!$data->get_VM($serweb_auth, $_GET['mid'], $errors)) break;
@@ -30,6 +28,8 @@ $page_attributes['errors']=&$errors;
 $page_attributes['message']=&$message;
 
 $smarty->assign_by_ref('parameters', $page_attributes);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_ms_get_v_msg.tpl');
 ?>

@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: stun_applet.php,v 1.4 2004/08/09 12:21:28 kozlik Exp $
+ * $Id: stun_applet.php,v 1.5 2004/08/09 23:04:57 kozlik Exp $
  */
+
+$_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
 

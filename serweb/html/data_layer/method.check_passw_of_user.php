@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.1 2004/08/09 11:40:58 kozlik Exp $
+ * $Id: method.check_passw_of_user.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 class CData_Layer_check_passw_of_user {
@@ -12,7 +12,7 @@ class CData_Layer_check_passw_of_user {
 	 */
 
 	function check_passw_of_user($user, $domain, $passw, &$errors){
-		global $config;
+		global $config, $lang_str;
 
 		if (!$this->connect_to_db($errors)) return false;
 
@@ -30,7 +30,7 @@ class CData_Layer_check_passw_of_user {
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
-		if (!$res->numRows()) {$errors[]="Bad username or password"; return false;}
+		if (!$res->numRows()) {$errors[]=$lang_str['bad_username']; return false;}
 		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
 		$res->free();
 

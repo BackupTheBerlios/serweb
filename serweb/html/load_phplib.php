@@ -2,7 +2,7 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.4 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: load_phplib.php,v 1.5 2004/08/09 23:04:57 kozlik Exp $
  */ 
 
 
@@ -31,4 +31,9 @@ require($_PHPLIB["libdir"] . "page.inc");      /* Required, contains the page ma
 
 require($_PHPLIB["libdir"] . "oohforms.inc");  /* Required for object oriented HTML forms. */
 
+if (isset($_phplib_page_open)){ //backward compatibility
+	put_headers();
+	page_open ($_phplib_page_open);
+	unset($_phplib_page_open);
+}
 ?>

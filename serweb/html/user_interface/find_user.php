@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: find_user.php,v 1.16 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: find_user.php,v 1.17 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('find_users', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 if (!$sess->is_registered('sess_fu_search_filter')) $sess->register('sess_fu_search_filter');
 if (!isset($sess_fu_search_filter)){
@@ -72,7 +70,7 @@ do{
 								 "maxlength"=>128,
 	                             "value"=>$sess_fu_search_filter['sip_uri'],
 	                             "valid_regex"=>"^((".$reg->sip_address.")|())$",
-	                             "valid_e"=>"not valid sip address",
+	                             "valid_e"=>$lang_str['fe_not_valid_sip'],
 								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"alias",
@@ -143,6 +141,8 @@ $smarty->assign_by_ref('found_users', $found_users);
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), array('before'=>'sip_address_completion(f.sip_uri);'));
 
 $smarty->assign_by_ref('action', $action);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_find_user.tpl');
 ?>

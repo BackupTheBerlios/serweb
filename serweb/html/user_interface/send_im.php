@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: send_im.php,v 1.17 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: send_im.php,v 1.18 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
@@ -23,7 +21,7 @@ do{
 								 "size"=>16,
 								 "maxlength"=>128,
 	                             "valid_regex"=>"^".$reg->sip_address."$",
-	                             "valid_e"=>"not valid sip address",
+	                             "valid_e"=>$lang_str['fe_not_valid_sip'],
 								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 	$f->add_element(array("type"=>"textarea",
 	                             "name"=>"instant_message",
@@ -51,12 +49,12 @@ do{
 		}
 
 		if (!$instant_message){
-			$errors[]="you didn't write massage";
+			$errors[]=$lang_str['fe_no_im'];
 			break;
 		}
 
 		if (strlen($instant_message)>$config->im_length){
-			$errors[]="instant message is too long";
+			$errors[]=$lang_str['fe_im_too_long'];
 			break;
 		}
 
@@ -80,9 +78,7 @@ do{
 		/* we accept any status code beginning with 2 as ok */
 		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
 
-		$message="message was sent successfully to address ".$sip_address;
-
-        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($status)."&close_window=1"));
+        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&m_msg_send=".RawURLencode($sip_address)."&close_window=1"));
 		page_close();
 		exit;
 	}
@@ -92,6 +88,11 @@ do{
 if (isset($_POST['okey_x'])){							//data isn't valid or error in sql
 	$num_chars=$config->im_length-strlen($instant_message); //element is disable, set value manualy
 	$f->load_defaults();				// Load form with submitted data
+}
+
+if (isset($_GET['m_msg_send'])){
+	$message['short'] = $lang_str['msg_im_send_s'];
+	$message['long']  = $lang_str['msg_im_send_l']." ".$_GET['m_msg_send'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -106,7 +107,7 @@ print_html_head();?>
 
 		if (im_len>max_length){
 			f.instant_message.value=f.instant_message.value.substr(0, max_length);
-			alert("Max length of instant message is "+max_length);
+			alert("<?echo addslashes($lang_str['max_length_of_im']);?> "+max_length);
 			return 0;
 		}
 		else
@@ -116,7 +117,7 @@ print_html_head();?>
 	function display_window(){
 		var left=window.screen.width-350;
 		wait_win=window.open('',"wait_win","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=50,width=300,height=130,left="+left);
-		wait_win.document.write('<html><head><title>please wait!</title></head><body><div align="center">sending message<br>please wait!</div><div align="center"><img src="<?echo $config->img_src_path;?>send_im.gif" border="0"></div></body></html>');
+		wait_win.document.write('<html><head><title><?echo addslashes($lang_str['please_wait']);?></title></head><body><div align="center"><?echo addslashes($lang_str['sending_message']);?><br><?echo addslashes($lang_str['please_wait']);?></div><div align="center"><img src="<?echo $config->img_src_path;?>send_im.gif" border="0"></div></body></html>');
 		wait_win.document.close();
 	}
 
@@ -144,13 +145,15 @@ $smarty->assign_phplib_form('form', $f,
 			array('before'=>'sip_address_completion(f.sip_address);',
 			      'after'=>"
 						if (f.instant_message.value==''){
-							alert(\"you didn't write message\");
+							alert('".addslashes($lang_str['fe_no_im'])."');
 							f.instant_message.focus();
 							return (false);
 						}
 					
 						display_window();
 				  "));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_send_im.tpl');
 

@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: accounting.php,v 1.24 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: accounting.php,v 1.25 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('check_admin_perms_to_user', 'set_timezone', 'get_acc_entries', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth",
-				 "perm" => "phplib_Perm"));
 
 if (!$sess->is_registered('sess_acc_act_row')) $sess->register('sess_acc_act_row');
 if (!isset($sess_acc_act_row)) $sess_acc_act_row=0;
@@ -60,7 +58,7 @@ if ($come_from_admin_interface){
 	$page_attributes['selected_tab']="users.php";
 
 	print_html_body_begin($page_attributes);
-	echo "<div class=\"swNameOfUser\">user: ".$uid->uname."</div>";
+	echo "<div class=\"swNameOfUser\">".$lang_str['user'].": ".$uid->uname."</div>";
 }
 else {
 	$page_attributes['user_name']=$data->get_user_real_name($user_id, $errors);
@@ -86,6 +84,8 @@ $smarty->assign_by_ref('pager', $pager);
 $smarty->assign_by_ref('acc_res', $acc_res);
 
 $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvrk=".uniqid("")));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_accounting.tpl');
 

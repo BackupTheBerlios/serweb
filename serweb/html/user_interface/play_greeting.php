@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: play_greeting.php,v 1.6 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: play_greeting.php,v 1.7 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('play_greeting', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 do{
 	if (false === $data->play_greeting($serweb_auth, $errors)) break;

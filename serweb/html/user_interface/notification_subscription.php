@@ -1,9 +1,12 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.12 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.13 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('subscribe_event', 'unsubscribe_event', 'get_events', 'get_user_real_name');
+
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
 
 require "prepend.php";
 
@@ -67,6 +70,8 @@ $smarty->assign_by_ref('parameters', $page_attributes);
 
 $smarty->assign_by_ref('subs_events', $subs_events);
 $smarty->assign_by_ref('other_events', $other_events);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_notification_subscription.tpl');
 ?>

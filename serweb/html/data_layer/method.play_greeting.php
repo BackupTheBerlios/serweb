@@ -1,13 +1,13 @@
 <?
 /*
- * $Id: method.play_greeting.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.play_greeting.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 class CData_Layer_play_greeting {
 	var $required_methods = array();
 	
 	function play_greeting($user, &$errors){
-		global $config;
+		global $config, $lang_str;
 		
 		if ($config->users_indexed_by=='uuid') {
 			@$fp=fopen($config->greetings_spool_dir.$user->uuid.".wav", 'rb');
@@ -20,7 +20,7 @@ class CData_Layer_play_greeting {
 			//try open default greeting
 			@$fp=fopen($config->greetings_spool_dir."default.wav", 'rb');
 			if (!$fp){
-				log_errors(PEAR::raiseError("Can't open greeting"), $errors); return false;
+				log_errors(PEAR::raiseError($lang_str['err_can_not_open_greeting']), $errors); return false;
 			}
 		}
 	

@@ -1,13 +1,13 @@
 <?
 /*
- * $Id: method.update_sd_request.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.update_sd_request.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 class CData_Layer_update_sd_request {
 	var $required_methods = array();
 	
 	function update_SD_request($user, $sd, $new_uri, $usrnm_from_uri, $domain_from_uri, &$errors){
-		global $config;
+		global $config, $lang_str;
 		
 		if (!$this->connect_to_db($errors)) return false;
 
@@ -23,7 +23,7 @@ class CData_Layer_update_sd_request {
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
-				$errors[]="Record with this username and domain already exists";
+				$errors[]=$lang_str['err_speed_dial_already_exists'];
 			else log_errors($res, $errors); 
 			return false;
 		}

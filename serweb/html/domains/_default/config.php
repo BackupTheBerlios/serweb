@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.4 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: config.php,v 1.5 2004/08/09 23:04:57 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -43,6 +43,21 @@
 //		$this->html_headers[]='';
 //		$this->html_headers[]='';
 
+		/* ------------------------------------------------------------*/
+		/* Language settings                                           */
+		/* ------------------------------------------------------------*/
+
+		/* Default language to use, if not browser-defined or user-defined
+		*/
+		
+		$config->lang['default_lang'] = 'en-iso-8859-1';
+		
+		/* Force: always use this language - must be defined in
+		   lang/config_lang.php
+
+		   $config->lang['lang'] = 'en-iso-8859-1';
+		*/
+		$config->lang['lang'] = '';
 
 		/* ------------------------------------------------------------*/
 		/* aliases generation                                          */

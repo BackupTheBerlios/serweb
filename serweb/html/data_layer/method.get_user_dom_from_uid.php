@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_user_dom_from_uid.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.get_user_dom_from_uid.php,v 1.2 2004/08/09 23:04:57 kozlik Exp $
  */
 
 class CData_Layer_get_user_dom_from_uid {
@@ -12,7 +12,7 @@ class CData_Layer_get_user_dom_from_uid {
 	 */
 
 	function get_user_dom_from_uid($uid, &$errors){
-		global $config;
+		global $config, $lang_str;
 	
 		if (!$this->connect_to_db($errors)) return false;
 		
@@ -24,7 +24,7 @@ class CData_Layer_get_user_dom_from_uid {
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
-		if (!$res->numRows()) {$errors[]="Bad username or password"; return false;}
+		if (!$res->numRows()) {$errors[]=$lang_str['bad_username']; return false;}
 		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
 		$res->free();
 

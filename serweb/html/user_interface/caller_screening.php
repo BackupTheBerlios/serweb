@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.7 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: caller_screening.php,v 1.8 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name', 'del_cs_caller', 'get_cs_caller',
 									'update_cs_caller', 'get_cs_callers');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
@@ -22,7 +20,7 @@ do{
 	if (isset($_GET['dele_caller'])){
 		if (!$data->del_CS_caller($serweb_auth, $_GET['dele_caller'], $errors)) break;
 
-        Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")));
+        Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")."&m_cs_deleted=1"));
 		page_close();
 		exit;
 	}
@@ -43,7 +41,7 @@ do{
 								 "maxlength"=>128,
 	                             "value"=>isset($row->uri_re)?$row->uri_re:"",
 								 "minlength"=>1,
-								 "length_e"=>"you must fill caller uri",
+								 "length_e"=>$lang_str['fe_not_caller_uri'],
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"select",
 	                             "name"=>"action_key",
@@ -94,6 +92,11 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
+if (isset($_GET['m_cs_deleted'])){
+	$message['short'] = $lang_str['msg_caller_screening_deleted_s'];
+	$message['long']  = $lang_str['msg_caller_screening_deleted_l'];
+}
+
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
 
@@ -101,55 +104,21 @@ print_html_head();?>
 <?
 $page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+if(!$caller_uris) $caller_uris = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_by_ref('caller_uris', $caller_uris);
+
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), array('before'=>'sip_address_completion(f.new_uri);'));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
+
+$smarty->display('u_caller_screening.tpl');
 ?>
-
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="uri_re">caller uri (regular expression):</label></td>
-	<td><?$f->show_element("uri_re");?></td>
-	</tr>
-	<tr>
-	<td><label for="action_key">action:</label></td>
-	<td><?$f->show_element("action_key");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("","");					// Finish form?>
-</div>
-
-<?if (is_array($caller_uris) and count($caller_uris)){?>
-
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr>
-	<th>caller uri</th>
-	<th>action</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	</tr>
-	<?$odd=0;
-	foreach($caller_uris as $row){
-		$odd=$odd?0:1;
-	?>
-	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
-	<td align="left"><?echo nbsp_if_empty($row->uri_re);?></td>
-	<td align="left"><?echo nbsp_if_empty(Ccall_fw::get_label($config->calls_forwarding["screening"], $row->action, $row->param1, $row->param2));?></td>
-	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&edit_caller=".$row->uri_re);?>">edit</a></td>
-	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&dele_caller=".$row->uri_re);?>">delete</a></td>
-	</tr>
-	<?}//while?>
-	</table>
-<?}else{?>
-
-<div class="swNumOfFoundRecords">No caller screenings defined</div>
-
-<?}?>
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

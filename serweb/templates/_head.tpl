@@ -1,12 +1,12 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.domain}&gt;</div>
 {/if}
 
 {if $parameters.logout}
-	<div class="swHeadingLogout"><a href="{url url='logout.php'}">Logout</a></div>
+	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout}</a></div>
 {/if}
 
 	<br class="cleaner" /><br />

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -8,31 +8,31 @@
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 {if $config->allow_change_email}
 	<tr>
-	<td><label for="email">your email:</label></td>
+	<td><label for="email">{$lang_str.ff_your_email}:</label></td>
 	<td>{$form.email}</td>
 	</tr>
 {/if}
 {if $config->forwarding_to_voicemail_by_group}
 	<tr>
-	<td><label for="f2voicemail">forwarding to voicemail:</label></td>
+	<td><label for="f2voicemail">{$lang_str.ff_fwd_to_voicemail}:</label></td>
 	<td>{$form.f2voicemail}</td>
 	</tr>
 {/if}
 	<tr>
-	<td><label for="allow_find">allow find me by other users:</label></td>
+	<td><label for="allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
 	<td>{$form.allow_find}</td>
 	</tr>
 	<tr>
-	<td><label for="timezone">your timezone:</label></td>
+	<td><label for="timezone">{$lang_str.ff_your_timezone}:</label></td>
 	<td>{$form.timezone}</td>
 	</tr>
 {if $config->allow_change_password}
 	<tr>
-	<td><label for="passwd">your password:</label></td>
+	<td><label for="passwd">{$lang_str.ff_your_password}:</label></td>
 	<td>{$form.passwd}</td>
 	</tr>
 	<tr>
-	<td><label for="passwd_r">retype password:</label></td>
+	<td><label for="passwd_r">{$lang_str.ff_retype_password}:</label></td>
 	<td>{$form.passwd_r}</td>
 	</tr>
 {/if}
@@ -48,7 +48,7 @@
 	{if $smarty.foreach.aliases.first}
 	<div id="swMAAliasesTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr><th>your aliases:</th></tr>
+	<tr><th>{$lang_str.your_aliases}:</th></tr>
 	{/if}
 	<tr><td align="center">{$row->username}</td></tr>
 	{if $smarty.foreach.aliases.last}
@@ -62,7 +62,7 @@
 	{if $smarty.foreach.acl.first}
 	<div id="swMAACLTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr><th>Access-Control-list:</td></tr>
+	<tr><th>{$lang_str.your_acl}:</td></tr>
 	{/if}
 	<tr><td align="center">{$row.grp}</td></tr>
 	{if $smarty.foreach.acl.last}
@@ -77,10 +77,10 @@
 	{if $smarty.foreach.usrloc.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>contact</th>
-	<th>expires</th>
-	<th>priority</th>
-	<th>location</th>
+	<th>{$lang_str.th_contact}</th>
+	<th>{$lang_str.th_expires}</th>
+	<th>{$lang_str.th_priority}</th>
+	<th>{$lang_str.th_location}</th>
 	<th>&nbsp;</th>
 	</tr>
 	{/if}
@@ -89,7 +89,7 @@
 	<td align="center">{$row.expires|empty2nbsp}</td>
 	<td align="center">{$row.q|empty2nbsp}</td>
 	<td align="center">{$row.geo_loc|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_dele}">delete</a></td>
+	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.usrloc.last}
 	</table>
@@ -97,15 +97,15 @@
 {/foreach}
 	
 
-<h2 class="swTitle">add new contact:</h2>
+<h2 class="swTitle">{$lang_str.add_new_contact}:</h2>
 
 <div class="swForm">
 {$form2.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="sip_address">sip address:</label></td>
+	<td><label for="sip_address">{$lang_str.ff_sip_address}:</label></td>
 	<td>{$form2.sip_address}</td>
-	<td><label for="expires">expires:</label></td>
+	<td><label for="expires">{$lang_str.ff_expires}:</label></td>
 	<td>{$form2.expires}</td>
 	<td>{$form2.okey2}</td></tr>
 	</table>
@@ -124,7 +124,7 @@
 {/if}
 
 {if $come_from_admin_interface}
-	<div class="swBackToMainPage"><a href="{$url_admin}">back to main page</a></div>
+	<div class="swBackToMainPage"><a href="{$url_admin}">{$lang_str.l_back_to_main}</a></div>
 {/if}
 <br>
 {include file='_tail.tpl'}

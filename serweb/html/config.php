@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.47 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: config.php,v 1.48 2004/08/09 23:04:57 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -52,6 +52,23 @@
 		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
 		$config->html_doctype="strict";
+
+
+		/* ------------------------------------------------------------*/
+		/* Language settings                                           */
+		/* ------------------------------------------------------------*/
+
+		/* Default language to use, if not browser-defined or user-defined
+		*/
+		
+		$config->lang['default_lang'] = 'en-iso-8859-1';
+		
+		/* Force: always use this language - must be defined in
+		   lang/config_lang.php
+
+		   $config->lang['lang'] = 'en-iso-8859-1';
+		*/
+		$config->lang['lang'] = '';
 		
 
 		/* ------------------------------------------------------------*/
@@ -190,7 +207,7 @@
 			"alias_generation",	"first_alias_number", "alias_prefix", 
 			"alias_postfix", "alias_lenght", "alias_generation_retries",
 			"infomail", "regmail", "forgot_pass_subj", "mail_forgot_pass", 
-			"register_subj", "mail_register", "terms_and_conditions");
+			"register_subj", "mail_register", "terms_and_conditions", "lang");
 
 			
 		/* ------------------------------------------------------------*/
@@ -339,9 +356,15 @@
 		/* ------------------------------------------------------------*/
 
 
-		// string to which must start username from request uri in speed dial
-		$config->speed_dial_initiation="11";
+		/* validation regex which must much username from request uri 
+		   in speed dial
+		*/
+		$config->speed_dial['validation']="^[0-9][0-9]$";
 
+		/* index into $lang_str array which contains error string used 
+		   for failed validations
+		*/
+		$config->speed_dial['validation_msg']="fe_invalid_speed_dial";
 
 		/* ------------------------------------------------------------*/
 		/* ACLs                                                        */

@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: voicemail.php,v 1.8 2004/08/09 12:21:28 kozlik Exp $
+ * $Id: voicemail.php,v 1.9 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('store_greeting', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 $f = new form;                  // create a form object
 
@@ -31,17 +29,17 @@ do{
 		}
 
 		if (!is_uploaded_file($greeting)){
-			$errors[]="you didn't select greeting file";
+			$errors[]=$lang_str['fe_no_greeeting_file'];
 			break;
 		}
 
 		if (filesize($greeting)==0){
-			$errors[]="greeting file is invalid";
+			$errors[]=$lang_str['fe_invalid_greeting_file'];
 			break;
 		}
 
 		if ($greeting_type != "audio/wav"){
-			$errors[]="greeting file type must be audio/wav";
+			$errors[]=$lang_str['fe_greeting_file_no_wav'];
 			break;
 		}
 
@@ -59,8 +57,8 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 }
 
 if (isset($_GET['m_file_uploaded'])){
-	$message['short']="Greeting stored";
-	$message['long']="Your greeting was succesfully stored";
+	$message['short'] = $lang_str['msg_greeting_stored_s'];
+	$message['long']  = $lang_str['msg_greeting_stored_l'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -81,11 +79,13 @@ $smarty->assign_by_ref("config", $cfg);
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), 
 		array('after'=>"
 			if (f.greeting.value==''){
-				alert(\"you didn't select greeting file\");
+				alert('".addslashes($lang_str['fe_no_greeeting_file'])."');
 				f.greeting.focus();
 				return (false);
 			}
 		"));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_voicemail.tpl');
 ?>

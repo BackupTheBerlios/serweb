@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_user_preferences.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: u_user_preferences.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -25,7 +25,7 @@
 	</div>
 	{/if}
 {foreachelse}
-<div class="swNumOfFoundRecords">No attributes defined by admin</div>
+<div class="swNumOfFoundRecords">{$lang_str.no_attributes_defined}</div>
 {/foreach}
 
 <br>

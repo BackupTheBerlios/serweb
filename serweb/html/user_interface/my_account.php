@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.35 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: my_account.php,v 1.36 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_sip_user_details', 'update_sip_user_details', 'del_contact',
@@ -8,17 +8,15 @@ $_data_layer_required_methods=array('get_sip_user_details', 'update_sip_user_det
 		'check_admin_perms_to_user', 'set_timezone', 'get_time_zones', 'set_password_to_user', 'get_aliases', 
 		'get_user_real_name');
 
-require "prepend.php";
-
-put_headers();
+$_phplib_page_open = array("sess" => "phplib_Session_Pre_Auth",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
 
 //this line is useful when new session is created when user forgot password
 //we must ensure to value in $HTTP_COOKIE_VARS["phplib_Session"] and $HTTP_GET_VARS["phplib_Session"] is same
 if (isset($HTTP_GET_VARS["phplib_Session"]) and isset($HTTP_COOKIE_VARS["phplib_Session"])) $HTTP_COOKIE_VARS["phplib_Session"]=$HTTP_GET_VARS["phplib_Session"];
 
-page_open (array("sess" => "phplib_Session_Pre_Auth",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
+require "prepend.php";
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
@@ -73,7 +71,7 @@ do{
 									 "size"=>16,
 									 "maxlength"=>50,
 		                             "valid_regex"=>$reg_validate_email,
-		                             "valid_e"=>"not valid email address",
+		                             "valid_e"=>$lang_str['fe_not_valid_email'],
 		                             "value"=>$row->email_address,
 									 "extrahtml"=>"style='width:200px;'"));
 	}
@@ -125,14 +123,14 @@ do{
 									 "size"=>16,
 									 "maxlength"=>128,
 									 "minlength"=>1,
-		                             "length_e"=>"you mmust fill sip address",
+		                             "length_e"=>$lang_str['fe_not_filled_sip'],
 		                             "valid_regex"=>"^".$reg->sip_address."$",
-		                             "valid_e"=>"not valid sip address",
+		                             "valid_e"=>$lang_str['fe_not_valid_sip'],
 									 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 	
-		$options = array(array("label"=>"one hour","value"=>3600),
-						array("label"=>"one day","value"=>86400),
-						array("label"=>"permanent","value"=>FOREVER));
+		$options = array(array("label"=>$lang_str['contact_expire_hour'],"value"=>3600),
+						array("label"=>$lang_str['contact_expire_day'],"value"=>86400),
+						array("label"=>$lang_str['contact_will_not_expire'],"value"=>FOREVER));
 	
 		$f2->add_element(array("type"=>"select",
 									"name"=>"expires",
@@ -266,18 +264,18 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 }
 
 if (isset($_GET['m_changes_saved'])){
-	$message['short']="Changes saved";
-	$message['long']="Your changes have been saved.";
+	$message['short'] = $lang_str['msg_changes_saved_s'];
+	$message['long']  = $lang_str['msg_changes_saved_l'];
 }
 
 if (isset($_GET['m_contact_deleted'])){
-	$message['short']="Contact deleted";
-	$message['long']="Your contact have been deleted. Returned status: ".$_GET['m_contact_deleted'];
+	$message['short'] = $lang_str['msg_loc_contact_deleted_s'];
+	$message['long']  = $lang_str['msg_loc_contact_deleted_l'];
 }
 
 if (isset($_GET['m_contact_added'])){
-	$message['short']="Contact added";
-	$message['long']="Your contact have been added. Returned status: ".$_GET['m_contact_added'];
+	$message['short'] = $lang_str['msg_loc_contact_added_s'];
+	$message['long']  = $lang_str['msg_loc_contact_added_s'];
 }
 
 
@@ -308,7 +306,7 @@ if ($come_from_admin_interface){
 	$page_attributes['selected_tab']="users.php";
 
 	print_html_body_begin($page_attributes);
-	echo "<div class=\"swNameOfUser\">user: ".$uid->uname."</div>";
+	echo "<div class=\"swNameOfUser\">".$lang_str['user'].": ".$uid->uname."</div>";
 }
 else {
 	$page_attributes['user_name']=$data->get_user_real_name($user_id, $errors);
@@ -350,7 +348,7 @@ $smarty->assign_phplib_form('form', $f,
 		array('jvs_name'=>'form'), 
 		array("after"=>$config->allow_change_password?"
 			if (f.passwd.value!=f.passwd_r.value){
-				alert('passwords not match');
+				alert('".$lang_str['fe_passwords_not_match']."');
 				f.passwd.focus();
 				return (false);
 			}":""));
@@ -360,6 +358,7 @@ if ($config->enable_usrloc){
 			array('jvs_name'=>'form2'));
 }
 		
+$smarty->assign_by_ref("lang_str", $lang_str);
 $smarty->display('u_my_account.tpl');
 		
 		

@@ -1,16 +1,14 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.25 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: missed_calls.php,v 1.26 2004/08/09 23:04:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('delete_user_missed_calls', 'set_timezone', 'get_missed_calls', 'get_user_real_name');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Auth"));
 
 if (!$sess->is_registered('sess_mc_act_row')) $sess->register('sess_mc_act_row');
 if (!isset($sess_mc_act_row)) $sess_mc_act_row=0;
@@ -23,7 +21,7 @@ do{
 		if (!$data->delete_user_missed_calls($serweb_auth, $page_loaded_timestamp, $errors)) break;
 		$sess_mc_act_row=0;
 
-        Header("Location: ".$sess->url("missed_calls.php?kvrk=".uniqID("")."&message=".RawURLEncode("calls deleted succesfully")));
+        Header("Location: ".$sess->url("missed_calls.php?kvrk=".uniqID("")."&m_calls_deleted=1"));
 		page_close();
 		exit;
 	}
@@ -38,6 +36,11 @@ do{
 
 
 }while (false);
+
+if (isset($_GET['m_calls_deleted'])){
+	$message['short'] = $lang_str['msg_mc_deleted_s'];
+	$message['long']  = $lang_str['msg_mc_deleted_l'];
+}
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
@@ -70,6 +73,8 @@ $smarty->assign_by_ref('pager', $pager);
 $smarty->assign_by_ref('mc_res', $mc_res);
 
 $smarty->assign('url_dele', $sess->url("missed_calls.php?kvrk=".uniqID("")."&delete_calls=1&page_loaded_timestamp=".time()));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('u_missed_calls.tpl');
 
