@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.48 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: config.php,v 1.49 2004/09/02 11:20:21 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -397,6 +397,11 @@
         /* ADVANCED SETTINGS                                           */
 		/* =========================================================== */
 
+		/* Maximum allowed idle time before the authentication expires. 
+		   If set to 0, The authentication never expires 
+		 */
+		$config->auth_lifetime = 20;
+		
 		/* ------------------------------------------------------------*/
 		/* applications (experimental)                                 */
 		/* ------------------------------------------------------------*/

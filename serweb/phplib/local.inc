@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.17 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: local.inc,v 1.18 2004/09/02 11:20:21 kozlik Exp $
  *
  */
 
@@ -100,8 +100,12 @@ class phplib_Auth extends Auth {
   var $data;
 
   function phplib_Auth(){
+  		global $config;
+		
 		if (!$data = CData_Layer::create($errors)) die($errors[0]);
 		$this->data=$data;
+		
+		$this->lifetime = $config->auth_lifetime;
   }
 
   function auth_loginform() {
