@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.6 2004/08/31 14:16:13 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.7 2004/12/15 21:49:39 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -29,6 +29,10 @@
 									}
 	
 									set_opt('validate_funct') = 'validate_form';
+   
+   'optionals'   				associative array - keys are names of attributes, values are booleans
+                                can be used to make value of attribute optional
+								(have efect only for some types of attributes (e.g. sip_adr, int)
 								
    'msg_update'					message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
@@ -76,6 +80,8 @@ class apu_user_preferences extends apu_base_class{
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
 
+		$this->opt['optionals'] = array();	
+		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
@@ -191,7 +197,14 @@ class apu_user_preferences extends apu_base_class{
 								$this->attributes[$att]->att_name, 
 								$this->attributes[$att]->att_value, 
 								$this->attributes[$att]->att_rich_type, 
-								$this->attributes[$att]->att_type_spec);
+								$this->attributes[$att]->att_type_spec,
+								(isset($this->opt['optionals'][$this->attributes[$att]->att_name])) ? 
+									($this->opt['optionals'][$this->attributes[$att]->att_name]) : 
+									false,
+								(isset($this->opt['error_messages'][$this->attributes[$att]->att_name])) ? 
+									($this->opt['error_messages'][$this->attributes[$att]->att_name]) : 
+									null
+								);
 			}
 		
 		} while (false);
