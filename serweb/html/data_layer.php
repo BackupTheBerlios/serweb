@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.3 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: data_layer.php,v 1.4 2004/08/25 10:45:58 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be difined at beginning of each php script
@@ -76,12 +76,12 @@ class CData_Layer{
 			if (false ===  array_search($item, $this->_data_layer_loaded_methods)){ //if required method isn't loaded yet, load it
 			
 				//require class with method definition
-				if (file_exists($_SERWEB["serwebdir"] . "data_layer/customized/method.".$item.".php")) 
+				if (file_exists($_SERWEB["serwebdir"] . "../data_layer/customized/method.".$item.".php")) 
 					//if exists customized version of method, require it
-					require_once ($_SERWEB["serwebdir"] . "data_layer/customized/method.".$item.".php");
+					require_once ($_SERWEB["serwebdir"] . "../data_layer/customized/method.".$item.".php");
 				else
 					//otherwise require default version
-					require_once ($_SERWEB["serwebdir"] . "data_layer/method.".$item.".php");	
+					require_once ($_SERWEB["serwebdir"] . "../data_layer/method.".$item.".php");	
 					
 				//agregate methods of required class to this object
 				aggregate_methods($this, "CData_Layer_".$item);								
