@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.5 2002/10/15 03:39:09 jiri Exp $
+ * $Id: index.php,v 1.6 2002/11/30 10:03:25 jiri Exp $
  */
 
 require "prepend.php";
@@ -13,7 +13,7 @@ page_open (array("sess" => "phplib_Session"));
 do{
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
-		if (!$db){ $errors[]="can´t connect to sql server"; break;}
+		if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 	

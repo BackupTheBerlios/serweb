@@ -1,14 +1,17 @@
 <?
 /*
- * $Id: confirmation.php,v 1.6 2002/10/15 15:25:01 kozlik Exp $
+ * $Id: confirmation.php,v 1.7 2002/11/30 10:03:25 jiri Exp $
  */
+
+include "reg_jab.php";
 
 require "prepend.php";
 
 put_headers();
 
 do{
-	if (isset($nr)){								// Is there data to process?
+	if (isset($nr)){  // Is there data to process?
+
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
 	
@@ -26,7 +29,9 @@ do{
 		}
 		
 		$row=MySQL_Fetch_Object($res);
-//		$user_id=$row->user_id;
+		if ($config->setup_jabber_account) {
+			$user_id=$row->user_id; // needed for Jabber gw reg.
+		}
 		$sip_address="sip:".$row->user_id."@".$config->default_domain;
 			
 		// get the max number alias - abs() converts string to number
@@ -51,9 +56,19 @@ do{
 		$q="delete from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-			
 
-        Header("Location: confirmation.php?ok=1");
+		if ($config->setup_jabber_account) {
+			# Jabber Gateway registration
+			$res = reg_jab($user_id);
+			if($res!=0) { 
+				$res=$res+1; Header("Location: confirmation.php?ok=$res");
+			} else { 
+				Header("Location: confirmation.php?ok=1"); 
+			}
+		} else {
+				Header("Location: confirmation.php?ok=1"); 
+		}
+		
 		page_close();
 		exit;
 	}
@@ -75,13 +90,18 @@ do{
 	print_errors($errors);                    // Display error
 	print_message($message);
 
-	if ($ok){
+	if ($ok==1){
 ?>
 <span class="txt_norm">Congratulations! Your iptel.org account was set up!</span>
+<? }elseif ($ok>=2 && $ok<10) {?>
+<span class="txt_norm">Your iptel.org account was set up!<br><b>But your iptel.org Jabber Gateway registration failed-
+<? echo "$ok"; ?>
+</b><br>Please contact <a href="mailto:info@iptel.org">info@iptel.org</a> for further assistance.</span>
 <? }elseif ($errors) {?>
 <span class="txt_norm">We regret but your iptel.org confirmation attempt failed.<br>
 Please contact <a href="mailto:info@iptel.org">info@iptel.org</a> for further assistance.</span>
 <?}?>
+
 <br>
 <hr>
 <div align="center" class="txt_norm">Back to <a href="../index.php">login form</a>. </div>
