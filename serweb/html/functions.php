@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.46 2004/10/12 12:49:07 kozlik Exp $
+ * $Id: functions.php,v 1.47 2004/10/14 19:26:05 kozlik Exp $
  */
 
 
@@ -175,9 +175,13 @@ class Creg{
 }
 
 
-function print_errors($errors){
-	if (is_Array($errors))
-		foreach ($errors as $val) echo "<div class=\"errors\">".$val."</div>\n";
+function print_errors($errors, $html=true){
+	if (is_Array($errors)){
+		foreach ($errors as $val){
+			if ($html) echo "<div class=\"errors\">".$val."</div>\n";
+			else echo $val."\n";
+		}
+	}
 }
 
 function print_message($msg){
@@ -693,4 +697,13 @@ function get_userauth_from_get_param($prefix){
 	
 	return false;
 }
+
+function toCSV($str, $delim=','){
+	$str = str_replace('"', '""', $str);	//double alll quotes
+	$pos1 = strpos($str, '"');				// if $str contains quote or delim, quote it
+	$pos2 = strpos($str, $delim);
+	if (!($pos1===false and $pos2===false)) $str = '"'.$str.'"';
+	return $str;
+}
+
 ?>
