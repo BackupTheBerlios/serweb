@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.28 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: page.php,v 1.29 2005/03/02 15:33:55 kozlik Exp $
  */
 
 function put_headers(){
@@ -10,7 +10,7 @@ function put_headers(){
 }
 	
 function print_html_head($title=""){
-	global $config;	
+	global $config, $lang_set;	
 	
 	if (!$title) $title=$config->html_title;
 
@@ -23,7 +23,7 @@ function print_html_head($title=""){
 <head>
 <?if ($title){?><title><?echo $title;?></title><?}?>
 
-	<meta http-equiv="Content-Type" content="text/html; charset=<?echo $config->charset;?>">
+	<meta http-equiv="Content-Type" content="text/html; charset=<?echo $lang_set['charset'];?>">
 	<meta name="Author" content="Karel Kozlik <kozlik@kufr.cz>">
 	<meta http-equiv="PRAGMA" content="no-cache"> 
 	<meta http-equiv="Cache-control" content="no-cache">

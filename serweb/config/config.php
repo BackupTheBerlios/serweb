@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.9 2005/03/02 14:10:07 kozlik Exp $
+ * $Id: config.php,v 1.10 2005/03/02 15:33:55 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -405,7 +405,6 @@
 	$config->psignature="Web_interface_Karel_Kozlik-0.9";
 
 	/* IM paging configuration */
-	$config->charset="windows-1250";
 	$config->im_length=1300;
 
 	/* expiration times, priorities, etc. for usrloc/alias contacts */

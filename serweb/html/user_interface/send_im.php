@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.19 2004/11/10 13:13:06 kozlik Exp $
+ * $Id: send_im.php,v 1.20 2005/03/02 15:33:55 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -70,7 +70,7 @@ do{
 			"To: <".$sip_address.">\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: <".$config->web_contact.">\n".
-		    "Content-Type: text/plain; charset=UTF-8\n.\n".
+		    "Content-Type: text/plain; charset=".$lang_set['charset']."\n.\n".
 		    str_Replace("\n.\n","\n. \n",$instant_message)."\n.\n\n";
 
 
