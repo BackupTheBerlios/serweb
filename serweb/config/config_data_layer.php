@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.3 2004/09/16 17:05:17 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sip_address_completion.js.php,v 1.2 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: sip_address_completion.js.php,v 1.3 2004/09/17 19:39:07 kozlik Exp $
  */
 
 Header("content-type: text/js");
@@ -9,8 +9,8 @@ $_SERWEB = array();
 $_SERWEB["serwebdir"]  = "../";
 
 require ($_SERWEB["serwebdir"] . "class_definitions.php");
-require ($_SERWEB["serwebdir"] . "config_paths.php");
-require ($_SERWEB["serwebdir"] . "set_domain.php");
+require ($_SERWEB["serwebdir"] . "../config/config_paths.php");
+require ($_SERWEB["serwebdir"] . "../config/set_domain.php");
 require ($_SERWEB["serwebdir"] . "functions.php");
 
 $reg = new Creg;				// create regular expressions class

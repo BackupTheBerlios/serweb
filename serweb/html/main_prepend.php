@@ -1,16 +1,16 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.5 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: main_prepend.php,v 1.6 2004/09/17 19:39:07 kozlik Exp $
  */ 
 
 //require class defintions
 require_once ($_SERWEB["serwebdir"] . "class_definitions.php");
 
 //require paths configuration
-require_once ($_SERWEB["serwebdir"] . "config_paths.php");
+require_once ($_SERWEB["serwebdir"] . "../config/config_paths.php");
 
 //set $config->domain
-require_once ($_SERWEB["serwebdir"] . "set_domain.php");
+require_once ($_SERWEB["serwebdir"] . "../config/set_domain.php");
 
 //require domain depending config
 require_once ($_SERWEB["serwebdir"] . "config_domain.php");
@@ -19,14 +19,14 @@ $domain_config=new CDomain_config();
 //TO DO: load language
 
 //require sql access configuration and table names
-require_once ($_SERWEB["serwebdir"] . "config_data_layer.php");
+require_once ($_SERWEB["serwebdir"] . "../config/config_data_layer.php");
 
 //require other configuration
-require_once ($_SERWEB["serwebdir"] . "config.php");
+require_once ($_SERWEB["serwebdir"] . "../config/config.php");
 
 //if config.developer is present, replace default config by developer config
-if (file_exists($_SERWEB["serwebdir"] . "config.developer.php")){
-	require_once ($_SERWEB["serwebdir"] . "config.developer.php");
+if (file_exists($_SERWEB["serwebdir"] . "../config/config.developer.php")){
+	require_once ($_SERWEB["serwebdir"] . "../config/config.developer.php");
 }
 
 //activate domain depending config

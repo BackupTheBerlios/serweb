@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.2 2004/05/06 19:00:54 kozlik Exp $
+ * $Id: config_paths.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: set_domain.php,v 1.3 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: set_domain.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
  */ 
 
 /* set domain name */
