@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.14 2003/07/07 20:37:38 jiri Exp $
+ * $Id: missed_calls.php,v 1.15 2003/08/15 00:36:36 jiri Exp $
  */
 
 require "prepend.php";
@@ -50,14 +50,20 @@ do{
 		}
 	
 	}
+
+	/* we have here a UNION statement -- that speeds up queries a lot as
+	   opposed to having an OR condition; it takes mysql 4.0.0 at least
+	*/
+	$q="(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
+			"FROM missed_calls t1 ".
+			"WHERE t1.username='".$auth->auth["uname"]."') ".
+		"UNION ".
+		"(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
+			"FROM missed_calls t1, aliases t2 ".
+			"WHERE 'sip:".$auth->auth["uname"]."@".$config->default_domain."'".
+				"=t2.contact AND t2.username=t1.username  ) ".
+		"ORDER BY time DESC";
 	
-	
-	$q="select distinct t1.from_uri, t1.sip_from, t1.time, t1.sip_status from ".
-		$config->table_missed_calls." t1, ".$config->table_aliases." t2".
-		" where t1.username='".$auth->auth["uname"].
-		"' OR ('sip:".$auth->auth["uname"]."@".$config->default_domain.
-			"'=t2.contact AND t2.username=t1.username) ".
-		" order by time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
