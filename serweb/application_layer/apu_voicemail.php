@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_voicemail.php,v 1.1 2004/09/02 11:27:03 kozlik Exp $
+ * $Id: apu_voicemail.php,v 1.2 2004/09/02 11:48:58 kozlik Exp $
  */ 
 
 /* Application unit voicemail */
@@ -10,8 +10,13 @@
    
    Configuration:
    --------------
+   'use_radio_button'			If this is true, is to the form added radio button for select if voicemail should use
+   								customized or standard greeting. Default: false.
+   'max_file_size'				maximum size of uploaded file. Default: 1048576 (1 MB)
    'msg_upload'					message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								default: $lang_str['msg_greeting_stored_s'] and $lang_str['msg_greeting_stored_l']
+   'msg_delete'					message which should be showed on greeting delete - assoc array with keys 'short' and 'long'
+   								default: $lang_str['msg_greeting_deleted_s'] and $lang_str['msg_greeting_deleted_l']
    'smarty_form'				name of smarty variable - see below
    'smarty_action'				name of smarty variable - see below
    'form_name'					name of html form
@@ -26,9 +31,10 @@
 												
 	Form fields
 	-----------
-	greeting					for upload greeting file
-	which_greeting				radio buton for select if should be used standard or customized greeting
-								(values: standard, customized)
+	greeting								for upload greeting file
+	which_greeting							radio buton for select if should be used standard or customized greeting
+											(values: standard, customized)
+	_hidden_customized_greeting_exists		for internal use						
 													
 */
  
@@ -48,22 +54,16 @@ class apu_voicemail extends apu_base_class{
 		global $lang_str, $config;
 		parent::apu_base_class();
 
+		$this->opt['use_radio_button'] =	false;
+
+		$this->opt['max_file_size'] = 1048576; //1MB
+
 		/* message on attributes update */
 		$this->opt['msg_upload']['short'] =	&$lang_str['msg_greeting_stored_s'];
 		$this->opt['msg_upload']['long']  =	&$lang_str['msg_greeting_stored_l'];
 
-//-------------- nove, pridat do popisu nahore
-
-		//pokud je nas. volba tru, bude zadani souboru vyzadovano jen kdyz bude 
-		//radio button prepnut na prislusnou polohu
-		//poloha buttonu bude zavisla na (ne)existenci prislusneho souboru
-		$this->opt['use_radio_button'] =	false;
-
-		$this->opt['max_file_size'] = 1048576; //1MB
-		
-		$this->opt['msg_delete']['short'] = 'brekeke deleted';
-		$this->opt['msg_delete']['long']  = 'brekeke deleted';
-//--------------		
+		$this->opt['msg_delete']['short'] = &$lang_str['msg_greeting_deleted_s'];
+		$this->opt['msg_delete']['long']  = &$lang_str['msg_greeting_deleted_l'];
 		
 		/*** names of variables assigned to smarty ***/
 		/* form */
