@@ -1,11 +1,11 @@
-$Id: INSTALL,v 1.7 2003/08/13 22:14:09 jiri Exp $
+$Id: INSTALL,v 1.8 2003/08/15 00:59:58 jiri Exp $
 
 serweb - Installation
 
   Requirements:
   - Apache web server
   - php 4.x and support for mysql (php-mysql package)
-  - MySQL
+  - MySQL 4.0 (we use UNIONs)
   - running SER with MySQL support
 
   Quick Install:
