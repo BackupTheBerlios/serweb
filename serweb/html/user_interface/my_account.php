@@ -1,12 +1,16 @@
 <?
 /*
- * $Id: my_account.php,v 1.13 2002/12/02 12:49:58 kozlik Exp $
+ * $Id: my_account.php,v 1.14 2003/01/06 21:27:40 kozlik Exp $
  */
 
 require "prepend.php";
 require "../../phplib/oohforms.inc";
 
 put_headers();
+
+//this line is useful when new session is created when user forgot password
+//we must ensure to value in $HTTP_COOKIE_VARS["phplib_Session"] and $HTTP_GET_VARS["phplib_Session"] is same
+if (isset($HTTP_GET_VARS["phplib_Session"]) and isset($HTTP_COOKIE_VARS["phplib_Session"])) $HTTP_COOKIE_VARS["phplib_Session"]=$HTTP_GET_VARS["phplib_Session"];
 
 page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Pre_Auth",
