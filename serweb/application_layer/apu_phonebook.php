@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_phonebook.php,v 1.1 2004/09/17 17:34:11 kozlik Exp $
+ * $Id: apu_phonebook.php,v 1.2 2004/12/07 20:07:19 kozlik Exp $
  */ 
 
 /* Application unit phonebook */
@@ -22,6 +22,13 @@
      see description of option 'username_in_target_only'
    
 
+   'blacklist'					default: null
+	 if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
+
+   'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
+	 error message that is displayed if URI is blacklisted
+
+	 
    'get_user_status'			(bool) default: false
      should output array contain status of user?
 
@@ -94,6 +101,7 @@ class apu_phonebook extends apu_base_class{
 	var $contact = array();			//assoc - current contact
 	var $act_pb_id = "";			//id of current contact
 	var $js_before = "";
+	var $js_after = "";
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -114,6 +122,11 @@ class apu_phonebook extends apu_base_class{
 		$this->opt['numerical_target_only'] =		false;
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
+
+
+		/* blacklist */
+		$this->opt['blacklist'] = null;
+		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
 
 
 		$this->opt['get_user_status'] = 	false;
@@ -372,6 +385,26 @@ class apu_phonebook extends apu_base_class{
 			                             "name"=>"id",
 			                             "value"=>$this->act_pb_id));
 
+
+			if ($this->opt['blacklist']){ //perform regex check against entered URIs
+				$js_tmp = "if (window.RegExp) {\n".
+						  " 	var blacklistreg = /".str_replace('/','\/',$this->opt['blacklist'])."/gi\n\n";
+				/* if we are using phonenumbers, convert it to strict form */
+				if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only'])
+					$js_tmp .= "	".$this->reg->convert_phonenumber_to_strict_js("f.elements['sip_uri'].value", "blklist_tmp_uri").";\n";
+				else 
+					$js_tmp .= "	blklist_tmp_uri = f.elements['sip_uri'].value;\n";
+					
+					
+				$js_tmp .= "	if (blacklistreg.test(blklist_tmp_uri)) {\n".
+							"		alert('".addslashes($this->opt['blacklist_e'])."');\n".
+							"		f.elements['sip_uri'].focus();\n".
+							"		return(false);\n".
+							"	}\n}\n";
+										
+				$this->js_after .= $js_tmp;
+			}
+
 		}
 
 
@@ -379,7 +412,27 @@ class apu_phonebook extends apu_base_class{
 
 	/* validate html form */
 	function validate_form(&$errors){
-		if (false === parent::validate_form($errors)) return false;
+		if (false === parent::validate_form($errors)){
+			$this->smarty_action="edit"; //if there was errors in submited form, set smarty action to edit
+			return false;
+		}
+
+		if ($this->opt['blacklist']){ //perform regex check against entered URIs
+			$sip_uri = $_POST['sip_uri'];
+
+			/* if we are using phonenumbers, convert it to strict form */
+			if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only']){
+				$sip_uri = $this->reg->convert_phonenumber_to_strict($sip_uri);
+			}
+		
+			/* check against blacklist */
+			if (ereg($this->opt['blacklist'], $sip_uri)){
+				$errors[] = $this->opt['blacklist_e'];
+				$this->smarty_action="edit"; //if there was errors in submited form, set smarty action to edit
+				return false;
+			}
+		}
+
 		return true;
 	}
 	
@@ -422,7 +475,7 @@ class apu_phonebook extends apu_base_class{
 	function pass_form_to_html(){
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
-		             'after'       => '',
+		             'after'       => $this->js_after,
 					 'before'      => $this->js_before);
 	}
 }
