@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.1 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: my_account.php,v 1.2 2004/04/23 13:32:16 kozlik Exp $
  */
 
 class Cusrloc {
@@ -148,12 +148,12 @@ class CData_Layer extends CDL_common{
 		if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; return false; }
 
 		$out=array();	
-		$out_arr=explode("\n", $out);
+		$out_arr=explode("\n", $fifo_out);
 
 		foreach($out_arr as $val){
 			if (!ereg("^[[:space:]]*$", $val)){
 				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
-					$usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3], $this->get_location($regs[1], $errors));
+					$out[]=new Cusrloc($regs[1], $regs[2], $regs[3], $this->get_location($regs[1], $errors));
 				else { $errors[]="sorry error -- invalid output from fifo"; return false; }
 			}
 		}
