@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: confirmation.php,v 1.5 2002/10/14 09:58:51 kozlik Exp $
  */
 
 require "prepend.php";
@@ -22,7 +22,7 @@ do{
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			if (!MySQL_Num_Rows($res)){ $errors[]="Sorry. No such a confirmation number exists."; break;}
-			else { $errors[]="Your account has already been created."; break; }
+			else { $ok=1; $errors[]="Your account has already been created."; break; }
 		}
 		
 		$row=MySQL_Fetch_Object($res);
