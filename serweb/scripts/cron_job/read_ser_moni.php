@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: read_ser_moni.php,v 1.4 2004/08/09 11:37:50 kozlik Exp $
+ * $Id: read_ser_moni.php,v 1.1 2004/10/12 14:42:20 kozlik Exp $
  */
 
 require "prepend.php";

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni_update.php,v 1.5 2004/08/09 11:37:50 kozlik Exp $
+ * $Id: ser_moni_update.php,v 1.1 2004/10/12 14:42:20 kozlik Exp $
  */
 
 /*

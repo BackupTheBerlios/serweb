@@ -2,7 +2,7 @@
 /*
  * this script should be run after midnight - sends missed calls of previous day
  *
- * $Id: send_daily_missed_calls.php,v 1.4 2004/08/09 11:37:50 kozlik Exp $
+ * $Id: send_daily_missed_calls.php,v 1.1 2004/10/12 14:42:20 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_missed_calls_of_yesterday', 'get_send_mc_default_value', 'get_send_mc_list_of_users');
