@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.2 2004/09/23 14:02:33 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.3 2004/09/23 14:09:41 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -304,12 +304,12 @@ class apu_whitelist extends apu_base_class{
 
 		if ($this->opt['username_in_target_only']){
 			if ($this->opt['numerical_target_only']){
-				$v_regex = "^(".$this->reg->phonenumber.")?$";
+				$v_regex = addslashes("^(".$this->reg->phonenumber.")?$");
 				$v_msg = $lang_str['fe_not_valid_phonenumber'];
 			}
 		}
 		else{
-			$v_regex = "^(".$this->reg->sip_address.")?$";
+			$v_regex = addslashes("^(".$this->reg->sip_address.")?$");
 			$v_msg = $lang_str['fe_not_valid_sip'];
 		}
 
