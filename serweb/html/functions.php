@@ -163,6 +163,9 @@ function write2fifo($fifo_cmd, &$errors){
 	
 	/* create fifo for replies */
 	@system("mkfifo -m 666 ".$config->reply_fifo_path );
+
+	/* add command separator */
+	$fifo_cmd=$fifo_cmd."\n";
 	
 	/* write fifo command */
 	if (fwrite( $fifo_handle, $fifo_cmd)==-1) {
@@ -183,7 +186,10 @@ function write2fifo($fifo_cmd, &$errors){
 	if (!eregi("200 *OK",$rd)){
 	    @unlink($config->reply_fifo_path);
 		if (!$rd) $errors[]="sorry -- fifo reading error";
+		/* just write it out as you get it in; -jiri
 		else $errors[]="sorry error ".$rd; 
+		*/
+		else $errors[]=$rd;
 		return;
 	}
 
