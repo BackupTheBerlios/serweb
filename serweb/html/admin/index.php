@@ -38,7 +38,7 @@ $f->add_element(array("type"=>"text",
                              "value"=>"",
 							 "minlength"=>1,
 							 "length_e"=>"you must fill username",
-							 "extrahtml"=>"autocomplete'off' style='width:250px;'"));
+							 "extrahtml"=>"autocomplete='off' style='width:250px;'"));
 $f->add_element(array("type"=>"text",
                              "name"=>"passw",
                              "value"=>"",

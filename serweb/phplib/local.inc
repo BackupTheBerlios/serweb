@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.2 2002/09/06 20:11:44 kozlik Exp $
+ * $Id: local.inc,v 1.3 2002/09/09 17:13:20 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -145,10 +145,13 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 	function auth_preauth()	{
 	    global $sess;
-	    global $pre_uid;
+	    global $pre_uid, $pre_uid_expires;
 
 		$sess->unregister('pre_uid');
+		$sess->unregister('pre_uid_expires');
 
+		if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
+		
 	    $this->db->query(sprintf("select user_id, perms ".
 	                             "        from %s ".
 	                             "       where phplib_id = '%s' ",

@@ -37,6 +37,8 @@ class Cconfig {
 	var $new_alias_callid;
 	var $new_alias_cseq;
 	
+	var $pre_uid_expires;
+	
 	var $psignature;
 
 	var $web_contact;
@@ -119,6 +121,8 @@ class Cconfig {
 		$this->new_alias_callid="";
 		$this->new_alias_cseq=1;
 		
+		$this->pre_uid_expires=3600;				//seconds in which expires "get pass session"
+
 		$this->psignature="Web_interface_Karel_Kozlik-0.9";
 
 		$this->web_contact="sip:daemon@iptel.org";			//address of pseudo sender
@@ -168,10 +172,11 @@ class Cconfig {
 		
 		$this->mail_header_from="php.kk@kufr.cz";			//header From: in outgoing emails
 
-		$this->forgot_pass_subj="your password";
+		$this->forgot_pass_subj="your login information";
 		$this->mail_forgot_pass="Hi,\n".
-					" your password is: #password#\n".
-					"\n".
+					"now you can access to your account at the folowing URL within 1 hour:\n".
+					"http://oook/~iptel/user_interface/my_account.php?#session#\n\n".
+					"we recommend change your password after you login\n".
 					"iptel.org\n";
 					
 		$this->register_subj="Your iptel.org Registration";
