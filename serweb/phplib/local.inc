@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.12 2004/03/03 16:22:28 kozlik Exp $
+ * $Id: local.inc,v 1.13 2004/03/04 22:47:37 kozlik Exp $
  *
  */ 
 
@@ -153,7 +153,35 @@ class phplib_Auth extends Auth {
       $uid = $this->db->f("phplib_id");
       $this->auth["perm"] = $this->db->f("perms");
     }
+	
+	if ($this->auth["perm"]=='admin'){
+		$this->check_for_privilege_change_privileges();
+	}
+	
     return $uid;
+  }
+
+  /*
+  	method checks if user have privilege 'change_privileges'
+  */
+  function check_for_privilege_change_privileges(){
+    global $username, $config;
+
+    $this->db->query(sprintf("select priv_value ".
+   	                         "        from %s ".
+       	                     "       where username = '%s' ".
+							 "        and domain = '%s'".
+           	                 "        and priv_name = 'change_privileges'",
+               	          $config->table_admin_privileges,
+                   	      addslashes($this->auth["uname"]),
+						  addslashes($config->realm)));
+
+    while($this->db->next_record()) {
+		if ($this->db->f("priv_value")) {
+			if ($this->auth["perm"]) $this->auth["perm"].=",";
+			$this->auth["perm"].="change_priv";
+		}
+    }
   }
 }
 
@@ -182,6 +210,10 @@ class phplib_Pre_Auth extends phplib_Auth {
 		  $uid=$pre_uid;
 	    }
 
+		if ($this->auth["perm"]=='admin'){
+			$this->check_for_privilege_change_privileges();
+		}
+		
 		return $uid;
 	}
 }
@@ -195,7 +227,8 @@ class phplib_Perm extends Perm {
   var $classname = "phplib_Perm";
   
   var $permissions = array(
-                            "admin"      => 1
+                            "admin"      => 1,
+							"change_priv"=> 2
                           );
 
   function perm_invalid($does_have, $must_have) {

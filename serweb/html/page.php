@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.19 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: page.php,v 1.20 2004/03/04 22:47:37 kozlik Exp $
  */
 
 	function put_headers(){
@@ -72,7 +72,7 @@
 	}
 
 	function print_admin_html_body_begin($tab_selected=null){
-		global $config, $_page_tab, $sess;
+		global $config, $_page_tab, $sess, $perm;
 
 		virtual($config->prolog);
 		echo $config->realm." User Management";
@@ -88,6 +88,12 @@
 			</div>
 			<br clear="all">
 		<?
+
+		/* if user haven't privilege 'change_priv' disable tab 'admin privileges' */
+		if (!$perm->have_perm("change_priv"))
+			foreach($config->admin_tabs as $k=>$v){
+				if ($v->page == "list_of_admins.php") { $config->admin_tabs[$k]->enabled=false; break; }
+			}
 		
 		print_tabs_new($config->admin_tabs, $config->admin_pages_path, $tab_selected); $_page_tab=1;?>	
 

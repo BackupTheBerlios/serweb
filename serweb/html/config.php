@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.36 2004/03/04 22:45:20 kozlik Exp $
+ * $Id: config.php,v 1.37 2004/03/04 22:47:37 kozlik Exp $
  */
 
 class Csub_not {
@@ -256,6 +256,7 @@ class Cconfig {
 			Ctab (enabled, name_of_tab, php_script)
 		*/
 		$this->admin_tabs[]=new Ctab (true, "users", "users.php");
+		$this->admin_tabs[]=new Ctab (true, "admin privileges", "list_of_admins.php");
 		$this->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
 		$this->admin_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
 
@@ -536,6 +537,7 @@ class Cconfig {
 		$this->table_user_preferences="usr_preferences";
 		$this->table_user_preferences_types="usr_preferences_types";
 		$this->table_providers="providers";
+		$this->table_admin_privileges="admin_privileges";
 
 		/* these are table names as reffered from script and via FIFO */
 		$this->ul_table="location";
