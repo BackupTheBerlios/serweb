@@ -59,8 +59,8 @@ do{
 
 		/* construct FIFO command */
 		$fifo_cmd=":t_uac_from:".$config->reply_fifo_filename."\n".
-			"sip:".$auth->auth["uname"]."@".$config->default_domain."\n".
 		    "MESSAGE\n".
+			"sip:".$auth->auth["uname"]."@".$config->default_domain."\n".
 			$sip_address."\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: ".$config->web_contact."\n".
