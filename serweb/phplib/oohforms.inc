@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.1 2002/09/04 18:20:31 kozlik Exp $
+ * $Id: oohforms.inc,v 1.2 2003/11/19 09:21:57 kozlik Exp $
  */
 
 class of_element {
@@ -381,5 +381,6 @@ include($_PHPLIB["libdir"] . "of_radio.inc");
 include($_PHPLIB["libdir"] . "of_checkbox.inc");
 include($_PHPLIB["libdir"] . "of_textarea.inc");
 include($_PHPLIB["libdir"] . "of_file.inc");
+include($_PHPLIB["libdir"] . "of_calendar.inc");
 
 ?>
