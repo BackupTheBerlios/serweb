@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.7 2003/11/19 11:23:21 kozlik Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.8 2003/12/01 21:44:46 kozlik Exp $
  */
 
  /*
@@ -91,10 +91,19 @@ function add_user_to_subscriber($uname, $domain, $passwd, $fname, $lname, $phone
 			"'$ha1', '$ha1b','$domain', '".md5(uniqid('fvkiore'))."', '$timezone')";
 
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;;}
+	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;}
 
 	return true;	
 }
 
+function dele_sip_user ($uname, $domain, &$errors){
+ 	global $config;
+
+	$q="delete from subscriber where username='$uname' and domain='$domain'"; 
+	$res=MySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;}
+
+	return true;
+}
 
 ?>
