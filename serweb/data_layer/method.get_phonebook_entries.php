@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.2 2004/09/17 17:25:04 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.3 2004/12/13 14:29:59 kozlik Exp $
  */
 
 /*
@@ -40,7 +40,11 @@ class CData_Layer_get_phonebook_entries {
 		if (!$this->connect_to_db($errors)) return false;
 
 		/* backward compatibility */
-		if (!is_array($opt)) $pbid = $opt;
+		if (!is_array($opt)){
+			 $pbid = $opt;
+			 $opt_get_user_status = true;
+			 $opt_get_aliases = true;
+		}
 		else{
 		    $pbid = (isset($opt['pbid'])) ? $opt['pbid'] : null;
 		    $opt_get_user_status = (isset($opt['get_user_status'])) ? (bool)$opt['get_user_status'] : true;
