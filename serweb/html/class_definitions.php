@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: class_definitions.php,v 1.2 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: class_definitions.php,v 1.3 2005/03/03 11:39:01 kozlik Exp $
  */
 
 class Csub_not {
@@ -28,11 +28,12 @@ class Capplet_params {
 }
 
 class Ctab{
-	var $name, $page, $enabled;
-	function Ctab($enabled, $name, $page){
-		$this->name=$name;
-		$this->page=$page;
-		$this->enabled=$enabled;
+	var $name, $page, $enabled, $lang_str;
+	function Ctab($enabled, $lang_str, $page){
+		$this->lang_str = $lang_str;
+		$this->name = $lang_str;
+		$this->page = $page;
+		$this->enabled = $enabled;
 	}
 }
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.10 2005/03/02 15:33:55 kozlik Exp $
+ * $Id: config.php,v 1.11 2005/03/03 11:38:21 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -73,26 +73,26 @@
 	*/
 
 	$config->user_tabs=array();
-	$config->user_tabs[]=new Ctab (true, "my account", "my_account.php");
-	$config->user_tabs[]=new Ctab (true, "phone book", "phonebook.php");
-	$config->user_tabs[]=new Ctab (true, "missed calls", "missed_calls.php");
-	$config->user_tabs[]=new Ctab (true, "accounting", "accounting.php");
-	$config->user_tabs[]=new Ctab (true, "send IM", "send_im.php");
-	$config->user_tabs[]=new Ctab (false, "notification subscription", "notification_subscription.php");
-	$config->user_tabs[]=new Ctab (true, "message store", "message_store.php");
-	$config->user_tabs[]=new Ctab (false, "voicemail", "voicemail.php");
-	$config->user_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
-	$config->user_tabs[]=new Ctab (false, "speed dial", "speed_dial.php");
-	$config->user_tabs[]=new Ctab (false, "caller screening", "caller_screening.php");
+	$config->user_tabs[]=new Ctab (true, "tab_my_account", "my_account.php");									// $lang_str['tab_my_account']
+	$config->user_tabs[]=new Ctab (true, "tab_phonebook", "phonebook.php");										// $lang_str['tab_phonebook']
+	$config->user_tabs[]=new Ctab (true, "tab_missed_calls", "missed_calls.php");								// $lang_str['tab_missed_calls']
+	$config->user_tabs[]=new Ctab (true, "tab_accounting", "accounting.php");									// $lang_str['tab_accounting']
+	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");											// $lang_str['tab_send_im']
+	$config->user_tabs[]=new Ctab (false, "tab_notification_subscription", "notification_subscription.php");	// $lang_str['tab_notification_subscription']
+	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");								// $lang_str['tab_message_store']
+	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");									// $lang_str['tab_voicemail']
+	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
+	$config->user_tabs[]=new Ctab (false, "tab_speed_dial", "speed_dial.php");									// $lang_str['tab_speed_dial']
+	$config->user_tabs[]=new Ctab (false, "tab_caller_screening", "caller_screening.php");						// $lang_str['tab_caller_screening']
 
 	/* admin tabs definitions
 		Ctab (enabled, name_of_tab, php_script)
 	*/
 	$config->admin_tabs=array();
-	$config->admin_tabs[]=new Ctab (true, "users", "users.php");
-	$config->admin_tabs[]=new Ctab (true, "admin privileges", "list_of_admins.php");
-	$config->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
-	$config->admin_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
+	$config->admin_tabs[]=new Ctab (true, "tab_users", "users.php");											// $lang_str['tab_users']
+	$config->admin_tabs[]=new Ctab (true, "tab_admin_privileges", "list_of_admins.php");						// $lang_str['tab_admin_privileges']
+	$config->admin_tabs[]=new Ctab (true, "tab_ser_moni", "ser_moni.php");										// $lang_str['tab_ser_moni']
+	$config->admin_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */

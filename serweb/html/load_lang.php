@@ -1,21 +1,28 @@
 <?
-/*
- * $Id: load_lang.php,v 1.1 2004/08/09 23:04:57 kozlik Exp $
+/**
+ * Functions for corect pick language file and load it
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: load_lang.php,v 1.2 2005/03/03 11:38:21 kozlik Exp $
+ * @package   serweb
  */ 
 
 require_once($_SERWEB["serwebdir"]."../lang/config_lang.php");
 
- 
-if (!$sess->is_registered("sess_lang")) $sess->register("sess_lang");
+/**
+ *	Change names of tabs according to $lang_str
+ */
 
-// Lang forced
-if (!empty($config->lang['lang'])) {
-    $sess_lang = $config->lang;
-}
+function internationalize_tabs(){
+	global $config, $lang_str;
 
-// If '$sess_lang' is defined, ensure this is a valid translation
-if (!empty($sess_lang) && empty($available_languages[$sess_lang])) {
-    $sess_lang = '';
+	foreach ($config->user_tabs as $k=>$v){
+		$config->user_tabs[$k]->name = $lang_str[$v->lang_str];
+	}
+
+	foreach ($config->admin_tabs as $k=>$v){
+		$config->admin_tabs[$k]->name = $lang_str[$v->lang_str];
+	}
 }
 
 /**
@@ -46,6 +53,21 @@ function lang_detect($str = '', $envType = ''){
 	}
 } 
 
+
+ 
+if (!$sess->is_registered("sess_lang")) $sess->register("sess_lang");
+
+// Lang forced
+if (!empty($config->lang['lang'])) {
+    $sess_lang = $config->lang;
+}
+
+// If '$sess_lang' is defined, ensure this is a valid translation
+if (!empty($sess_lang) && empty($available_languages[$sess_lang])) {
+    $sess_lang = '';
+}
+
+
 // Language is not defined yet :
 // try to findout user's language by checking its HTTP_ACCEPT_LANGUAGE variable
 
@@ -68,5 +90,7 @@ if (empty($sess_lang)) {
 }
 
 require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$sess_lang][1].".php");
+
+internationalize_tabs();
 
 ?>
