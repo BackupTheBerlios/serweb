@@ -334,7 +334,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="125"><?echo $row->callid;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account?kvrk=".uniqid('')."&del_contact=".rawURLEncode($row->contact));?>">delete</a></td>
+	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&del_contact=".rawURLEncode($row->contact));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
