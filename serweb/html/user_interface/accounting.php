@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.6 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: accounting.php,v 1.7 2003/04/03 23:37:26 jiri Exp $
  */
 
 require "prepend.php";
@@ -13,12 +13,16 @@ page_open (array("sess" => "phplib_Session",
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
-	$q="select t1.sip_to, t1.sip_callid, t1.time, sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length ".
-		"from ".$config->table_accounting." t1, ".$config->table_accounting." t2 ".
-		"where t1.username='".$auth->auth["uname"]."' and t2.username='".$auth->auth["uname"]."' and ".
-			"t1.sip_callid=t2.sip_callid and t1.sip_method='INVITE' and t2.sip_method='BYE' ".
+	$q="select t1.sip_to, t1.sip_callid, t1.time, ".
+		"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) ".
+			"as length ".
+		"from ".$config->table_accounting." t1, ".
+			$config->table_accounting." t2 ".
+		"where t1.username='".$auth->auth["uname"]."' and ".
+			"t1.sip_callid=t2.sip_callid and ".
+			"t1.sip_method='INVITE' and t2.sip_method='BYE' ".
 		"order by t1.time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
