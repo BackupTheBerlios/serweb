@@ -1,0 +1,84 @@
+# This file contain terms and conditions as they appear on the subscription 
+# webpage
+# 
+# replacements in allowed this file: 
+# 	- #@#domain#@# - is replaced by domain name
+#
+# notice: line ends of non empty lines are stripped
+#
+
+BY PRESSING THE 'I ACCEPT' BUTTON, YOU (HEREINAFTER THE 'USER') ARE 
+STATING THAT YOU AGREE TO ACCEPT AND BE BOUND BY ALL OF THE TERMS AND 
+CONDITIONS OF THIS AGREEMENT.  DO NOT PROCEED IF YOU ARE UNABLE TO AGREE
+TO THE TERMS AND CONDITIONS OF THIS AGREEMENT. THESE TERMS AND CONDITIONS 
+OF SERVICE FOR USE OF #@#domain#@# SIP SERVER (THE 'AGREEMENT')
+CONSTITUTE A LEGALLY BINDING CONTRACT BETWEEN #@#domain#@#
+AND THE ENTITY THAT AGREES TO AND ACCEPTS THESE TERMS AND CONDITIONS. 
+ACCESS TO #@#domain#@#'s SESSION INITIATION PROTOCOL SERVER 
+('SIP SERVER') IS BEING PROVIDED ON AN 'AS IS' AND 'AS AVAILABLE' BASIS, 
+AND #@#domain#@# MAKES NO REPRESENTATIONS OR WARRANTIES OF ANY 
+KIND, WHETHER EXPRESS OR IMPLIED, WITH RESPECT TO USER'S ACCESS OF THE 
+SIP SERVER, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, 
+NONINFRINGEMENT, TITLE OR FITNESS FOR A PARTICULAR PURPOSE. FURTHER, 
+#@#domain#@# MAKES NO REPRESENTATIONS OR WARRANTIES THAT THE SIP 
+"SERVER, OR USER'S ACCESS THERETO, WILL BE AVAILABLE AT ANY GIVEN TIME, 
+OR WILL BE FREE FROM ERRORS, DEFECTS, OMISSIONS, INACCURACIES, OR FAILURES
+ OR DELAYS IN DELIVERY OF DATA. USER ASSUMES, AND #@#domain#@#
+ DISCLAIM, TOTAL RISK, RESPONSIBILITY, AND LIABILITY FOR USER'S ACCESS TO 
+AND USE OF THE SIP SERVER.
+
+
+Access to #@#domain#@# SIP Server is being provided on a 
+non-exclusive basis. User acknowledges and understands that 
+#@#domain#@# SIP site is in a developmental stage and that 
+#@#domain#@# makes no guarantees regarding the availability or 
+functionality thereof. User may not sublicense its access rights to the 
+SIP Server to any third party. 
+
+
+USER AGREES TO INDEMNIFY, DEFEND AND HOLD iptel.org, ITS AFFILIATES, 
+DIRECTORS, OFFICERS, EMPLOYEES, AGENTS AND LICENSORS HARMLESS FROM AND 
+AGAINST ANY AND ALL CLAIMS, ACTIONS, EXPENSES, LOSSES, AND LIABILITIES 
+(INCLUDING COURTS COSTS AND REASONABLE ATTORNEYS' FEES), 
+ARISING FROM OR RELATING TO THIS AGREEMENT INCLUDING USER'S ACCESS TO 
+AND USE OF THE SIP SERVER TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW,
+ IN NO EVENT SHALL #@#domain#@# OR ANY OF ITS LICENSORS, BE LIABLE 
+FOR ANY INDIRECT, SPECIAL, PUNITIVE, EXEMPLARY, OR CONSEQUENTIAL DAMAGES, 
+ARISING OUT OF THE ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE 
+SIP SERVER, OR THAT RESULT FROM MISTAKES, OMISSIONS, INTERRUPTIONS, 
+DELETIONS OF FILES, ERRORS, DEFECTS, DELAYS IN TRANSMISSION OR OPERATION OR 
+ANY FAILURE OF PERFORMANCE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
+DAMAGES. 
+
+
+If User commits, in #@#domain#@#'s  sole determination, a default 
+of these terms and conditions, #@#domain#@# may immediately 
+terminate User's access to the SIP Server. Furthermore, #@#domain#@#
+ reserves the right to discontinue offering access to the SIP Server at any 
+time. 
+
+
+User may not assign its rights hereunder without the prior written 
+consent of #@#domain#@#. User agrees to comply with all laws, 
+regulations and other legal requirements that apply to these terms and 
+conditions.  
+
+
+If any provision of this Agreement is held to be unenforceable for any 
+reason, such provision shall be reformed only to the extent necessary to 
+comply with applicable laws, and the remainder shall remain in full force 
+and effect. 
+
+
+Any failure of #@#domain#@# to enforce any provision of this 
+Agreement shall not constitute a waiver of any rights under such provision 
+or any other provision of this Agreement. 
+
+
+USER ACKNOWLEDGES THAT IT HAS READ THIS AGREEMENT, UNDERSTANDS IT, AND 
+AGREES THAT IT IS THE COMPLETE AND EXCLUSIVE STATEMENT OF THE ENTIRE 
+AGREEMENT BETWEEN COMPANY AND #@#domain#@# WITH RESPECT TO THE 
+SUBJECT MATTER HEREIN, AND SUPERSEDES ALL PRIOR AND CONTEMPORANEOUS 
+PROPOSALS, DISCUSSIONS, AGREEMENTS, UNDERSTANDINGS, AND COMMUNICATIONS, 
+WHETHER WRITTEN OR ORAL AND MAY BE AMENDED ONLY IN A WRITING EXECUTED BY 
+BOTH USER AND #@#domain#@#. 

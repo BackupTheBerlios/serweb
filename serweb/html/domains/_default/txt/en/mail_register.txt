@@ -1,0 +1,25 @@
+# This file contain text of confirmation email sent during account registration
+# 
+# replacements in allowed this file: 
+# 	- #@#domain#@# - is replaced by domain name
+#	- #@#sip_address#@#	- replaced by SIP address reserved for user
+#	- #@#confirmation_url#@# - URL of confirmation script
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: Your #@#domain#@# Registration
+
+Thank you for registering with #@#domain#@#.
+
+
+We are reserving the following SIP address for you: #@#sip_address#@#
+
+
+To finalize your registration please check the following URL within 24 hours:
+#@#confirmation_url#@#
+
+(If you confirm later you will have to re-register.)
+
+
+Windows Messenger users may look at additional configuration hints at
+http://www.iptel.org/phpBB/viewtopic.php?topic=11&forum=1&0
