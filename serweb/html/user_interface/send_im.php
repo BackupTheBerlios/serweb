@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: send_im.php,v 1.5 2002/09/19 22:45:47 jiri Exp $
  */
 
 require "prepend.php";
@@ -75,7 +75,7 @@ do{
 		$message=write2fifo($fifo_cmd, $errors);
 		if ($errors) break;
 		
-		if ($message=="200 OK") $message="message was send successfully to address ".$sip_address;
+		if ($message=="200 OK") $message="message was sent successfully to address ".$sip_address;
 		
         Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($message)));
 		page_close();
