@@ -373,16 +373,15 @@ class of_calendar extends of_element {
 
    function marshal_dispatch($m,$func) {
     $vname = $this->name;
-    global $$vname;
+
     if($this->type=="of_calendar") {
         $kk_day=$this->name."_day";
         $kk_month=$this->name."_month";
         $kk_year=$this->name."_year";
-        //global $$kk_day,$$kk_month,$$kk_year;
-        //$$vname=$$kk_day."-".$$kk_month."-".$$kk_year;
-            $$vname=$_POST["$kk_day"]."-".$_POST["$kk_month"]."-".$_POST["$kk_year"];
+
+        $val=$_REQUEST["$kk_day"]."-".$_REQUEST["$kk_month"]."-".$_REQUEST["$kk_year"];
     }
-    return $this->$func($$vname);
+    return $this->$func($val);
   }
 
 

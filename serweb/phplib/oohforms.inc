@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.5 2004/08/26 13:50:44 kozlik Exp $
+ * $Id: oohforms.inc,v 1.6 2004/09/20 09:53:47 kozlik Exp $
  */
 
 class of_element {
@@ -17,8 +17,16 @@ class of_element {
   
   function marshal_dispatch($m,$func) {   
     $vname = $this->name;
-    global $$vname;
-    return $this->$func($$vname);
+
+	if (0 == strcasecmp($m, 'post'))
+	    $val = isset($_POST[$vname]) ? $_POST[$vname] : null;
+	elseif (0 == strcasecmp($m, 'get'))
+	    $val = isset($_GET[$vname]) ? $_GET[$vname] : null;
+	else
+	    $val = isset($_REQUEST[$vname]) ? $_REQUEST[$vname] : null;
+
+    return $this->$func($val);
+
   }
   
   function self_get($val, $which, &$count) {
