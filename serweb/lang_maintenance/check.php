@@ -1,6 +1,6 @@
 #!/usr/local/bin/php -q
 <?
-//$Id: check.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+//$Id: check.php,v 1.2 2004/10/01 11:37:44 kozlik Exp $
 
 if ($argc != 2 || in_array($argv[1], array('--help', '-help', '-h', '-?'))) {?>
 Usage: <?php echo $argv[0]; ?> <file>
@@ -11,6 +11,8 @@ Usage: <?php echo $argv[0]; ?> <file>
 }
 
 $fp=fopen($argv[1],'r');
+
+if (!$fp) exit;
 
 //read all keys of $lang_str into array
 $line_nr=0;
