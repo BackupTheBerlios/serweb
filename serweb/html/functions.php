@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.21 2003/05/30 06:42:14 jiri Exp $
+ * $Id: functions.php,v 1.22 2003/09/15 04:01:25 jiri Exp $
  */
 
 
@@ -220,7 +220,8 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 function get_user_name(&$errors){
 	global $auth, $config;
 
-	$q="select first_name, last_name from ".$config->table_subscriber." where username='".$auth->auth["uname"]."'";
+	$q="select first_name, last_name from ".$config->table_subscriber.
+		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
 	@$res=MySQL_Query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return false;}
 	if (!MySQL_Num_rows($res)) return false;
@@ -257,7 +258,8 @@ function get_time_zones(&$errors){
 function set_timezone(&$errors){
 	global $config, $auth;
 
-	$q="select timezone from ".$config->table_subscriber." where username='".$auth->auth["uname"]."'";
+	$q="select timezone from ".$config->table_subscriber.
+		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
 	$row=mysql_fetch_object($res);
