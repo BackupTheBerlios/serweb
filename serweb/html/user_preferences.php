@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.12 2004/08/28 10:49:54 kozlik Exp $
+ * $Id: user_preferences.php,v 1.13 2004/12/15 21:46:51 kozlik Exp $
  */
 
 /*
@@ -184,7 +184,7 @@ class User_Preferences {
 		add form element to form
 	*/
 
-	function form_element(&$form, $att_name, $value, $type, $type_spec){
+	function form_element(&$form, $att_name, $value, $type, $type_spec, $optional = false, $err_message = null){
 		global $lang_str;
 		
 		$form->add_element(array("type"=>"hidden",
@@ -238,8 +238,9 @@ class User_Preferences {
 									 "size"=>16,
 									 "maxlength"=>16,
 	    	                         "value"=>$value,
-		                             "valid_regex"=>"^[0-9]+$",
-		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_number']));
+		                             "valid_regex"=> $optional ? "^[0-9]*$" :
+									                             "^[0-9]+$",
+		                             "valid_e"=>$err_message ? $err_message : ($att_name." ".$lang_str['fe_is_not_number'])));
 			break;
 		case 'sip_adr':
 			$form->add_element(array("type"=>"text",
@@ -247,8 +248,9 @@ class User_Preferences {
 									 "size"=>16,
 									 "maxlength"=>255,
 	    	                         "value"=>$value,
-		                             "valid_regex"=>"^".$this->reg->sip_address."$",
-		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_sip_adr'],
+		                             "valid_regex"=> $optional ? "^(".$this->reg->sip_address.")?$" :
+									                             "^".$this->reg->sip_address."$",
+		                             "valid_e"=>$err_message ? $err_message : ($att_name." ".$lang_str['fe_is_not_sip_adr']),
 									 "extrahtml"=>"onBlur='sip_address_completion(this)'"));
 			break;
 		case 'string':
