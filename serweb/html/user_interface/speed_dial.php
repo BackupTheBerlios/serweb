@@ -1,7 +1,10 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.8 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: speed_dial.php,v 1.9 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_user_real_name', 'update_sd_request', 'del_sd_request', 
+									'get_sd_request', 'get_sd_requests');
 
 require "prepend.php";
 
@@ -17,10 +20,8 @@ set_global('edit_sd');
 set_global('edit_sd_dom');
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	if (isset($_GET['dele_sd'])){
-		if (!$data->del_SD_request($auth->auth["uname"], $config->domain, $_GET['dele_sd'], $_GET['dele_sd_dom'], $errors)) break;
+		if (!$data->del_SD_request($serweb_auth, $_GET['dele_sd'], $_GET['dele_sd_dom'], $errors)) break;
 
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
@@ -28,7 +29,7 @@ do{
 	}
 
 	if ($edit_sd){
-		if (false === $row = $data->get_SD_request($auth->auth["uname"], $config->domain, $edit_sd, $edit_sd_dom, $errors)) break;
+		if (false === $row = $data->get_SD_request($serweb_auth, $edit_sd, $edit_sd_dom, $errors)) break;
 	}
 
 	$f->add_element(array("type"=>"text",
@@ -43,7 +44,7 @@ do{
 	                             "name"=>"domain_from_uri",
 								 "size"=>16,
 								 "maxlength"=>128,
-	                             "value"=>isset($row->domain_from_req_uri)?$row->domain_from_req_uri:$config->realm,
+	                             "value"=>isset($row->domain_from_req_uri)?$row->domain_from_req_uri:$serweb_auth->domain,
 								 "extrahtml"=>"style='width:120px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"new_uri",
@@ -73,8 +74,8 @@ do{
 
 			/* Process data */           // Data ok;
 
-		if (!$data->update_SD_request($auth->auth["uname"], $config->domain, $edit_sd, $_POST['new_uri'], $_POST['usrnm_from_uri'], $_POST['domain_from_uri'], $errors)) break;
-			
+		if (!$data->update_SD_request($serweb_auth, $edit_sd, $_POST['new_uri'], $_POST['usrnm_from_uri'], $_POST['domain_from_uri'], $errors)) break;
+
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
@@ -83,10 +84,10 @@ do{
 
 do{
 	$requests=array();
-	
+
 	if ($data){
 		// get speed dial requests
-		if (false === $requests = $data->get_SD_requests($auth->auth["uname"], $config->domain, $edit_sd?$edit_sd:NULL, $edit_sd_dom?$edit_sd_dom:NULL, $errors)) break;
+		if (false === $requests = $data->get_SD_requests($serweb_auth, $edit_sd?$edit_sd:NULL, $edit_sd_dom?$edit_sd_dom:NULL, $errors)) break;
 
 	}
 }while (false);
@@ -101,7 +102,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sip_address_completion.js.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: sip_address_completion.js.php,v 1.2 2004/08/09 12:21:27 kozlik Exp $
  */
 
 Header("content-type: text/js");

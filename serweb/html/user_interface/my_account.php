@@ -1,7 +1,12 @@
 <?
 /*
- * $Id: my_account.php,v 1.34 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: my_account.php,v 1.35 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_sip_user_details', 'update_sip_user_details', 'del_contact',
+		'add_contact', 'get_usrloc', 'get_acl_of_user', 'get_forward_to_voicemail_grp', 'update_forward_to_voicemail_grp',
+		'check_admin_perms_to_user', 'set_timezone', 'get_time_zones', 'set_password_to_user', 'get_aliases', 
+		'get_user_real_name');
 
 require "prepend.php";
 
@@ -15,16 +20,6 @@ page_open (array("sess" => "phplib_Session_Pre_Auth",
 				 "auth" => "phplib_Pre_Auth",
 				 "perm" => "phplib_Perm"));
 
-if (isset($_POST["uid"])) $uid=$_POST["uid"];
-elseif (isset($_GET["uid"])) $uid=$_GET["uid"];
-else $uid=null;
-
-if ($perm->have_perm("admin")){
-	if ($uid) $user_id=$uid;
-	else $user_id=$auth->auth["uname"];
-}
-else $user_id=$auth->auth["uname"];
-
 $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
@@ -32,96 +27,139 @@ $f2 = new form;                   // create a form object
 
 define("FOREVER",567648000);	//number of second for forever (18 years)
 
-do{
-	if (!$data = CData_Layer::create($errors)) break;
 
-	$data->set_timezone($errors);
+$uid=null; //contains Cserweb_auth if admin editing this user
+
+do{
+	// get $user_id of user which accout should be displayed
+	if ($perm->have_perm("admin")){
+		if (false === $uid = get_userauth_from_get_param('u')) {
+			$user_id=$serweb_auth;
+		}
+		else {
+			if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $uid, $errors))) break;
+			if (!$pp){
+				die("You can't manage user '".$uid->uname."' this user is from different domain");
+				break;
+			}
 	
-	if (false === $row = $data->get_sip_user_details($user_id, $config->domain, $errors)) break;
+			$user_id=$uid;
+		}
+	}
+	else $user_id=$serweb_auth;
+
+	
+
+	$data->set_timezone($user_id, $errors);
+
+	if (false === $row = $data->get_sip_user_details($user_id, $errors)) break;
+
+	if ($config->forwarding_to_voicemail_by_group){
+		if (($f2vm=$data->get_forward_to_voicemail_grp($user_id, $errors)) < 0) break;
+
+		$f->add_element(array("type"=>"checkbox",
+									 "checked"=>$f2vm,
+		                             "value"=>1,
+		                             "name"=>"f2voicemail"));
+	}
 	
 	$options=array();
 	$opt=$data->get_time_zones($errors);
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
 
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"email",
-								 "size"=>16,
-								 "maxlength"=>50,
-	                             "valid_regex"=>$reg_validate_email,
-	                             "valid_e"=>"not valid email address",
-	                             "value"=>$row->email_address,
-								 "extrahtml"=>"style='width:200px;'"));
+	if ($config->allow_change_email){
+		$f->add_element(array("type"=>"text",
+		                             "name"=>"email",
+									 "size"=>16,
+									 "maxlength"=>50,
+		                             "valid_regex"=>$reg_validate_email,
+		                             "valid_e"=>"not valid email address",
+		                             "value"=>$row->email_address,
+									 "extrahtml"=>"style='width:200px;'"));
+	}
+
+	if ($config->allow_change_status_visibility){
+		$f->add_element(array("type"=>"checkbox",
+									 "checked"=>$row->allow_show_status,
+		                             "value"=>1,
+		                             "name"=>"status_visibility"));
+	}
+
 	$f->add_element(array("type"=>"checkbox",
 								 "checked"=>$row->allow_find,
 	                             "value"=>1,
 	                             "name"=>"allow_find"));
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"passwd",
-	                             "value"=>"",
-								 "size"=>16,
-								 "maxlength"=>25,
-								 "pass"=>1,
-								 "extrahtml"=>"style='width:200px;'"));
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"passwd_r",
-	                             "value"=>"",
-								 "size"=>16,
-								 "maxlength"=>25,
-								 "pass"=>1,
-								 "extrahtml"=>"style='width:200px;'"));
+	if ($config->allow_change_password){
+		$f->add_element(array("type"=>"text",
+		                             "name"=>"passwd",
+		                             "value"=>"",
+									 "size"=>16,
+									 "maxlength"=>25,
+									 "pass"=>1,
+									 "extrahtml"=>"style='width:200px;'"));
+		$f->add_element(array("type"=>"text",
+		                             "name"=>"passwd_r",
+		                             "value"=>"",
+									 "size"=>16,
+									 "maxlength"=>25,
+									 "pass"=>1,
+									 "extrahtml"=>"style='width:200px;'"));
+	}
 	$f->add_element(array("type"=>"select",
 								 "name"=>"timezone",
 								 "options"=>$options,
 								 "size"=>1,
 	                             "value"=>$row->timezone,
 								 "extrahtml"=>"style='width:200px;'"));
-	$f->add_element(array("type"=>"hidden",
-	                             "name"=>"uid",
-	                             "value"=>$uid));
+
+	if ($uid) userauth_to_form($uid, 'u', $f);
+	
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_change.gif",
 								 "extrahtml"=>"alt='change'"));
 
-	$f2->add_element(array("type"=>"text",
-	                             "name"=>"sip_address",
-								 "size"=>16,
-								 "maxlength"=>128,
-								 "minlength"=>1,
-	                             "length_e"=>"you mmust fill sip address",
-	                             "valid_regex"=>"^".$reg->sip_address."$",
-	                             "valid_e"=>"not valid sip address",
-								 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
+	if ($config->enable_usrloc){
+		$f2->add_element(array("type"=>"text",
+		                             "name"=>"sip_address",
+									 "size"=>16,
+									 "maxlength"=>128,
+									 "minlength"=>1,
+		                             "length_e"=>"you mmust fill sip address",
+		                             "valid_regex"=>"^".$reg->sip_address."$",
+		                             "valid_e"=>"not valid sip address",
+									 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
+	
+		$options = array(array("label"=>"one hour","value"=>3600),
+						array("label"=>"one day","value"=>86400),
+						array("label"=>"permanent","value"=>FOREVER));
+	
+		$f2->add_element(array("type"=>"select",
+									"name"=>"expires",
+									"options"=>$options,
+									"size"=>1,
+									"value"=>3600));
+	
+		if ($uid) userauth_to_form($uid, 'u', $f2);
+	
+		$f2->add_element(array("type"=>"submit",
+		                             "name"=>"okey2",
+		                             "src"=>$config->img_src_path."butons/b_add.gif",
+									 "extrahtml"=>"alt='add'"));
+	}
 
-	$options = array(array("label"=>"one hour","value"=>3600),
-					array("label"=>"one day","value"=>86400),
-					array("label"=>"permanent","value"=>FOREVER));
+	if ($config->enable_usrloc and isset($_GET['del_contact'])){
 
-	$f2->add_element(array("type"=>"select",
-								"name"=>"expires",
-								"options"=>$options,
-								"size"=>1,
-								"value"=>3600));
+		if (false === $status = $data->del_contact($user_id->uname, $user_id->domain, $_GET['del_contact'], $errors)) break;
 
-	$f2->add_element(array("type"=>"hidden",
-	                             "name"=>"uid",
-	                             "value"=>$uid));
-
-	$f2->add_element(array("type"=>"submit",
-	                             "name"=>"okey2",
-	                             "src"=>$config->img_src_path."butons/b_add.gif",
-								 "extrahtml"=>"alt='add'"));
-
-	if (isset($_GET['del_contact'])){
-
-		if (false === $status = $data->del_contact($user_id, $config->domain, $_GET['del_contact'], $errors)) break;
-
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("").
+		                                             "&m_contact_deleted=".RawURLEncode($status).
+													 ($uid?("&".userauth_to_get_param($uid, 'u')):"")));
 		page_close();
 		exit;
 	}
 
-	if (isset($okey2_x)){						// Is there data to process?
+	if ($config->enable_usrloc and isset($okey2_x)){						// Is there data to process?
 		if ($err = $f2->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -136,9 +174,13 @@ do{
 
 		/* Process data */           // Data ok;
 
-		if (false === $status = $data->add_contact($user_id, $config->domain, $_POST['sip_address'], $_POST['expires'], $errors)) break;
+		if (false === $status = $data->add_contact($user_id->uname, $user_id->domain, $_POST['sip_address'], $_POST['expires'], $errors)) break;
 
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("").
+		                                             "&m_contact_added=".RawURLEncode($status).
+													 ($uid?("&".userauth_to_get_param($uid, 'u')):"")));
+
+
 		page_close();
 		exit;
 
@@ -150,18 +192,51 @@ do{
 			break;
 		}
 
-		if ($_POST['passwd'] and ($_POST['passwd'] != $_POST['passwd_r'])){
-			$errors[]="passwords don't match"; break;
+		$pass=NULL;
+		$email=NULL;
+		$status_visibility=NULL;
+
+		if ($config->allow_change_password){
+			if ($_POST['passwd'] and ($_POST['passwd'] != $_POST['passwd_r'])){
+				$errors[]="passwords don't match"; break;
+			}
+
+			if ($_POST['passwd']) $pass=$_POST['passwd'];
+		}
+
+		if ($config->allow_change_email) $email=$_POST['email'];
+
+		if ($config->allow_change_status_visibility){
+			if (isset($_POST['status_visibility']) and $_POST['status_visibility'])	$status_visibility='1';
+			else $status_visibility='0';
 		}
 
 			/* Process data */           // Data ok;
+		
+		if (false === $data->update_sip_user_details($user_id, $email, isset($_POST['allow_find'])?1:0, $_POST['timezone'], $status_visibility, $errors)) break;
 
-		$pass=NULL;
-		if ($_POST['passwd']) $pass=$_POST['passwd'];
-
-		if (!$data->update_sip_user_details($user_id, $config->domain, $pass, $_POST['email'], isset($_POST['allow_find'])?1:0, $_POST['timezone'], $errors)) break;
-
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")."&uid=".RawURLEncode($uid)));
+		//if password should be changed
+		if (!is_null($pass)){
+			if (false === $data->set_password_to_user($user_id, $pass, $errors)) break;
+		}
+		
+		if ($config->forwarding_to_voicemail_by_group){
+			if (isset($_POST['f2voicemail']) and $_POST['f2voicemail']) $f2voicemail=true;
+			else $f2voicemail=false;
+			
+			if ($f2vm xor $f2voicemail){  // was changed forward to voicemail state?
+				if ($f2voicemail) {
+					if (false === $data->update_forward_to_voicemail_grp($user_id, 'add', $errors)) break;
+				}
+				else {
+					if (false === $data->update_forward_to_voicemail_grp($user_id, 'del', $errors)) break;
+				}
+			}
+		}
+		
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("").
+		                                             "&m_changes_saved=1".
+													 ($uid?("&".userauth_to_get_param($uid, 'u')):"")));
 		page_close();
 		exit;
 	}
@@ -172,13 +247,15 @@ do{
 	if ($data){
 
 		// get aliases
-		if (false === $aliases_res = $data->get_aliases("sip:".$user_id."@".$config->domain, $errors)) break;
+		if (false === $aliases_res = $data->get_aliases($user_id, $errors)) break;
 
 		// get Access-Control-list
-		if (false === $acl_res = $data->get_acl($user_id, $config->domain, $errors)) break;
+		if (false === $acl_res = $data->get_acl_of_user($user_id, $errors)) break;
 
 		// get UsrLoc
-		if (false === $usrloc = $data->get_usrloc($user_id, $config->domain, $errors)) break;
+		if ($config->enable_usrloc){
+			if (false === $usrloc = $data->get_usrloc($user_id->uname, $user_id->domain, $errors)) break;
+		}
 
 	}
 
@@ -187,6 +264,22 @@ do{
 if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
+
+if (isset($_GET['m_changes_saved'])){
+	$message['short']="Changes saved";
+	$message['long']="Your changes have been saved.";
+}
+
+if (isset($_GET['m_contact_deleted'])){
+	$message['short']="Contact deleted";
+	$message['long']="Your contact have been deleted. Returned status: ".$_GET['m_contact_deleted'];
+}
+
+if (isset($_GET['m_contact_added'])){
+	$message['short']="Contact added";
+	$message['long']="Your contact have been added. Returned status: ".$_GET['m_contact_added'];
+}
+
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
@@ -206,140 +299,71 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-if ($perm->have_perm("admin") and $uid){
+$come_from_admin_interface = ($perm->have_perm("admin") and $uid);
+
+if ($come_from_admin_interface){
 
 	/* script is called from admin interface, load page attributes of admin interface */
 	require ("../admin/page_attributes.php");
 	$page_attributes['selected_tab']="users.php";
 
 	print_html_body_begin($page_attributes);
-	echo "<div class=\"swNameOfUser\">user: ".$uid."</div>";
+	echo "<div class=\"swNameOfUser\">user: ".$uid->uname."</div>";
 }
 else {
-		$page_attributes['user_name']=$data->get_user_name($errors);
+	$page_attributes['user_name']=$data->get_user_real_name($user_id, $errors);
 	print_html_body_begin($page_attributes);
 }
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+//create copy of some options from config in order to sensitive options will not accessible via templates
+$cfg=new stdclass();
+$cfg->allow_change_email               = $config->allow_change_email;
+$cfg->forwarding_to_voicemail_by_group = $config->forwarding_to_voicemail_by_group;
+$cfg->allow_change_password            = $config->allow_change_password;
+$cfg->enable_dial_voicemail            = $config->enable_dial_voicemail; 
+$cfg->enable_test_firewall             = $config->enable_test_firewall;
+$cfg->img_src_path                     = $config->img_src_path;
+$cfg->enable_usrloc                    = $config->enable_usrloc;
+
+if (!$aliases_res)	$aliases_res = array();
+if (!$acl_res) 		$acl_res = array();
+if (!$usrloc) 		$usrloc = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_by_ref("config", $cfg);		
+$smarty->assign_by_ref("come_from_admin_interface", $come_from_admin_interface);		
+
+$smarty->assign_by_ref("aliases_res", $aliases_res);
+$smarty->assign_by_ref("acl_res", $acl_res);
+$smarty->assign_by_ref("usrloc", $usrloc);
+
+$smarty->assign('url_ctd', "javascript: open_ctd_win('".RawURLEncode("sip:".$user_id->uname."@".$user_id->domain)."');");
+$smarty->assign('url_stun', "javascript:stun_applet_win();");
+$smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvrk=".uniqid("")));
+
+$smarty->assign('sip_user', $user_id);
+
+$smarty->assign_phplib_form('form', $f, 
+		array('jvs_name'=>'form'), 
+		array("after"=>$config->allow_change_password?"
+			if (f.passwd.value!=f.passwd_r.value){
+				alert('passwords not match');
+				f.passwd.focus();
+				return (false);
+			}":""));
+
+if ($config->enable_usrloc){
+	$smarty->assign_phplib_form('form2', $f2, 
+			array('jvs_name'=>'form2'));
+}
+		
+$smarty->display('u_my_account.tpl');
+		
+		
 ?>
-
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="email">your email:</label></td>
-	<td><?$f->show_element("email");?></td>
-	</tr>
-	<tr>
-	<td><label for="allow_find">allow find me by other users:</label></td>
-	<td><?$f->show_element("allow_find");?></td>
-	</tr>
-	<tr>
-	<td><label for="timezone">your timezone:</label></td>
-	<td><?$f->show_element("timezone");?></td>
-	</tr>
-	<tr>
-	<td><label for="passwd">your password:</label></td>
-	<td><?$f->show_element("passwd");?></td>
-	</tr>
-	<tr>
-	<td><label for="passwd_r">retype password:</label></td>
-	<td><?$f->show_element("passwd_r");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("
-	if (f.passwd.value!=f.passwd_r.value){
-		alert('passwords not match');
-		f.passwd.focus();
-		return (false);
-	}
-");					// Finish form?>
-</div>
-
-
-<?if (is_array($aliases_res) and count($aliases_res)){?>
-	<div id="swMAAliasesTable">
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr><th>your aliases:</th></tr>
-	<?foreach($aliases_res as $row){?>
-	<tr><td align="center"><?echo nbsp_if_empty($row->username);?></td></tr>
-	<?}//while?>
-	</table>
-	</div>
-<?}?>
-
-<?if (is_array($acl_res) and count($acl_res)){?>
-	<div id="swMAACLTable">
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr><th>Access-Control-list:</td></tr>
-	<?foreach($acl_res as $row){?>
-	<tr><td align="center"><?echo nbsp_if_empty($row->grp);?></td></tr>
-	<?}//while?>
-	</table>
-	</div>
-<?}?>
-
-<br class="swCleaner"><br>
-
-<?if (is_array($usrloc) and count($usrloc)){?>
-
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr>
-	<th>contact</th>
-	<th>expires</th>
-	<th>priority</th>
-	<th>location</th>
-	<th>&nbsp;</th>
-	</tr>
-	<?foreach($usrloc as $row){
-		$expires=date('Y-m-d H:i',time()+$row->expires);
-
-		if (Substr($expires,0,10)==date('Y-m-d')) $date=Substr($expires,11,5);
-		else $date=Substr($expires,0,10);
-	?>
-	<tr valign="top">
-	<td align="left"><?echo nbsp_if_empty($row->uri);?></td>
-	<td align="center"><?echo nbsp_if_empty($date);?></td>
-	<td align="center"><?echo nbsp_if_empty($row->q);?></td>
-	<td align="center"><?echo nbsp_if_empty($row->geo_loc);?></td>
-	<td align="center"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->uri));?>">delete</a></td>
-	</tr>
-	<?}?>
-	</table>
-<?}?>
-
-<h2 class="swTitle">add new contact:</h2>
-
-<div class="swForm">
-<?$f2->start("form2");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="sip_address">sip address:</label></td>
-	<td><?$f2->show_element("sip_address");?></td>
-	<td><label for="expires">expires:</label></td>
-	<td><?$f2->show_element("expires");?></td>
-	<td><?$f2->show_element("okey2");?></td></tr>
-	</table>
-<?$f2->finish();					// Finish form?>
-</div>
-
-
-
-<?if ($config->enable_dial_voicemail or $config->enable_test_firewall){?>
-<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<?if ($config->enable_dial_voicemail){?><td align="center"><a href="javascript: open_ctd_win('<?echo RawURLEncode("sip:".$user_id."@".$config->default_domain); ?>');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td><?}?>
-<?if ($config->enable_test_firewall){?><td align="center"><a href="javascript:stun_applet_win();"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td><?}?>
-</tr>
-</table>
-<?}?>
-
-<? if ($perm->have_perm("admin") and $uid){?>
-	<div class="swBackToMainPage"><a href="<?$sess->purl($config->admin_pages_path."users.php?kvrk=".uniqid(""));?>" class="f14">back to main page</a></div>
-<?}?>
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

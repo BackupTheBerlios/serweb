@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: user_preferences.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('del_attribute', 'get_attribute', 'update_attribute', 'get_attributes');
 
 require "prepend.php";
 require "../user_preferences.php";
@@ -20,9 +22,26 @@ set_global('att_name');
 set_global('att_rich_type');
 set_global('default_value');
 
-do{
-	if (!$data = CData_Layer::create($errors)) break;
+function format_attributes_for_output($attributes, $usr_pref){
+	global $sess;
 
+	$out=array();
+	$i=0;
+	foreach($attributes as $att){
+		$out[$i]['att_name'] = $att->att_name;
+		$out[$i]['att_type'] = $usr_pref->att_types[$att->att_rich_type]->label;
+		$out[$i]['def_value'] = $usr_pref->format_value_for_output($att->default_value, $att->att_rich_type, $att->att_type_spec);
+		$out[$i]['url_dele'] = $sess->url("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($att->att_name));
+		$out[$i]['url_edit'] = $sess->url("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($att->att_name));
+		$i++;
+	}
+	
+	return $out;
+}
+
+
+
+do{
 	//delete attrib from DB
 	if (isset($_GET['att_dele'])){
 		if (!$data->del_attribute($_GET['att_dele'], $errors)) break;
@@ -126,61 +145,29 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+//create copy of some options from config in order to sensitive options will not accessible via templates
+$cfg=new stdclass();
+$cfg->img_src_path = $config->img_src_path;
+
+if(!$attributes) $attributes = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_by_ref("config", $cfg);		
+
+$smarty->assign('attributes', format_attributes_for_output($attributes, $usr_pref));
+
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
+
+if($att_edit and $att_rich_type=="list")
+	$smarty->assign('url_edit_list', $sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID("")));
+
+$smarty->display('a_user_preferences.tpl');
 ?>
 
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="att_name">attribute name:</label></td>
-	<td><?$f->show_element("att_name");?></td>
-	</tr>
-	<tr>
-	<td><label for="att_rich_type">attribute type:</label></td>
-	<td><?$f->show_element("att_rich_type");?></td>
-	</tr>
-	<tr>
-	<td><label for="default_value">default value:</label></td>
-	<td><?$f->show_element("default_value");?></td>
-	</tr>
-	<tr>
-	<td align="left"><?
-		if($att_edit and $att_rich_type=="list"){?>
-			<a href="<?$sess->purl("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID(""))?>"><img src="<?echo $config->img_src_path;?>butons/b_edit_items_of_the_list.gif" width="165" height="16" border="0"></a><?
-		}else echo "&nbsp;";?></td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("","");					// Finish form?>
-</div>
-
-<?if (is_array($attributes) and count($attributes)){?>
-
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr>
-	<th>attribute name</th>
-	<th>attribute type</th>
-	<th>default value</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	</tr>
-	<?$odd=0;
-	foreach($attributes as $row){
-		$odd=$odd?0:1;
-	?>
-	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
-	<td align="left"><?echo nbsp_if_empty($row->att_name);?></td>
-	<td align="left"><?echo nbsp_if_empty($usr_pref->att_types[$row->att_rich_type]->label);?></td>
-	<td align="left"><?echo nbsp_if_empty($usr_pref->format_value_for_output($row->default_value, $row->att_rich_type, $row->att_type_spec));?></td>
-	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
-	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($row->att_name));?>">delete</a></td>
-	</tr>
-	<?}//while?>
-	</table>
-
-<?}?>
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

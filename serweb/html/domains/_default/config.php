@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.3 2004/05/06 19:00:54 kozlik Exp $
+ * $Id: config.php,v 1.4 2004/08/09 12:21:27 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -24,6 +24,9 @@
 		/* content of html <title> tag */
 		$this->html_title="SIP Express Router - web interface";
 
+		/* true if should be displayed heading like 'domain.org user management' or 'domain.org admin interface' at all pages */
+		$this->display_page_heading=true;
+
 		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
 		$this->html_doctype="strict";
@@ -40,10 +43,33 @@
 //		$this->html_headers[]='';
 //		$this->html_headers[]='';
 
-		/* initial nummerical alias for new subscriber -- don't forget to
-		   align your SER routing script to it !
+
+		/* ------------------------------------------------------------*/
+		/* aliases generation                                          */
+		/* ------------------------------------------------------------*/
+		/* Ddon't forget to align your SER routing script to it !      */
+
+		/* Nummerical aliases can be generated randomly or incrementaly.
+		   Values 'rand' or 'inc' on the next line.
 		*/
-		$this->first_alias_number=82000;
+
+		$config->alias_generation='inc';
+
+		/* initial nummerical alias for new subscriber - only if aliases
+		   are generated incrementaly
+		*/
+		$config->first_alias_number=82000;
+		
+		/* next lines are only for randomly generated aliases */
+		
+		/* prefix of generated alias */
+		$config->alias_prefix="8";
+		/* postfix of generated alias */
+		$config->alias_postfix="";
+		/* length of random part of alias */
+		$config->alias_lenght=5;
+		/* how many times will serweb try find unused alias number until error will occured */
+		$config->alias_generation_retries=10;		
 
 		/* ------------------------------------------------------------*/
 		/* text														   */

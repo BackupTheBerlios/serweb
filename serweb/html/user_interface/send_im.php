@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: send_im.php,v 1.16 2004/04/23 17:42:10 kozlik Exp $
+ * $Id: send_im.php,v 1.17 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_user_real_name');
 
 require "prepend.php";
 
@@ -15,8 +17,6 @@ $f = new form;                  // create a form object
 $close_window=0;
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"sip_address",
 	                             "value"=>isset($_GET['sip_addr'])?$_GET['sip_addr']:"",
@@ -67,7 +67,7 @@ do{
 		    "MESSAGE\n".
 			$sip_address."\n".
 			".\n".
-			"From: sip:".$auth->auth["uname"]."@".$config->default_domain."\n".
+			"From: sip:".$serweb_auth->uname."@".$serweb_auth->domain."\n".
 			"To: <".$sip_address.">\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: <".$config->web_contact.">\n".
@@ -130,47 +130,32 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
 <?
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+
+$smarty->assign_phplib_form('form', $f, 
+			array('jvs_name'=>'form'), 
+			array('before'=>'sip_address_completion(f.sip_address);',
+			      'after'=>"
+						if (f.instant_message.value==''){
+							alert(\"you didn't write message\");
+							f.instant_message.focus();
+							return (false);
+						}
+					
+						display_window();
+				  "));
+
+$smarty->display('u_send_im.tpl');
+
 ?>
 
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td align="left">
-		<table border="0" cellspacing="0" cellpadding="0" align="left" style="margin-left: 0px;">
-		<tr>
-		<td><label for="sip_address">sip address of recipient:</label></td>
-		<td><?$f->show_element("sip_address");?></td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	<tr>
-	<td class="swHorizontalForm"><label for="instant_message">text of message:</label></td>
-	</tr>
-	<tr>
-	<td><?$f->show_element("instant_message");?></td>
-	</tr>
-	<tr><td align="center">Remaining <?$f->show_element("num_chars");?> characters</td></tr>
-	<tr>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("
-	if (f.instant_message.value==''){
-		alert(\"you didn't write massage\");
-		f.instant_message.focus();
-		return (false);
-	}
-
-	display_window();
-
-","sip_address_completion(f.sip_address);");					// Finish form?>
-</div>
-
-<br>
 <?print_html_body_end();?>
 <? if ($close_window or (isset($_GET['close_window']) and $_GET['close_window'])){?>
 <script language="JavaScript">

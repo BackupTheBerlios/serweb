@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: logout.php,v 1.3 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: logout.php,v 1.4 2004/08/09 12:21:27 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,7 +11,8 @@ page_open (array("sess" => "phplib_Session"));
 
 $sess->unregister("auth");
 $sess->unregister("sess_admin");
+$sess->unregister("serweb_auth");
 
 $sess->delete();
-Header("Location: ".$sess->url("index.php?kvrk=".uniqID("")."&message=".RAWUrlEncode("You have been logged out")));
+Header("Location: ".$sess->url("index.php?kvrk=".uniqID("")."&logout=1"));
 page_close(); ?>

@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('update_att_type_spec', 'get_attribute');
 
 require "prepend.php";
 require "../user_preferences.php";
@@ -24,9 +26,26 @@ function update_items_in_db($item_list, $attrib_name, $default_value, $data, &$e
 	return true;
 }
 
-do{
-	if (!$data = CData_Layer::create($errors)) break;
+function format_items_for_output($items, $item_edit, $attrib_name){
+	global $sess;
 
+	$out=array();
+	$i=0;
+	foreach($items as $item){
+		if ($item->label==$item_edit) continue;
+		
+		$out[$i]['label'] = $item->label;
+		$out[$i]['value'] = $item->value;
+		$out[$i]['url_dele'] = $sess->url("edit_list_items.php?kvrk=".uniqID("")."&item_dele=".RawURLEncode($item->label)."&attrib_name=".RawURLEncode($attrib_name));
+		$out[$i]['url_edit'] = $sess->url("edit_list_items.php?kvrk=".uniqID("")."&item_edit=".RawURLEncode($item->label)."&attrib_name=".RawURLEncode($attrib_name));
+		$i++;
+	}
+	
+	return $out;
+}
+
+
+do{
 	//get attrib from DB
 	if (false === $row = $data->get_attribute($attrib_name, $errors)) break;
 	
@@ -147,61 +166,20 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 print_html_head();
 $page_attributes['selected_tab']="user_preferences.php";
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+if(!$item_list) $item_list = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+
+$smarty->assign('item_list', format_items_for_output($item_list, $item_edit, $attrib_name));
+
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
+
+$smarty->display('a_edit_list_items.tpl');
 ?>
-
-<h2 class="swTitle">edit items of the list</h2>
-
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="item_label">item label:</label></td>
-	<td><?$f->show_element("item_label");?></td>
-	</tr>
-	<tr>
-	<td><label for="item_value">item value:</label></td>
-	<td><?$f->show_element("item_value");?></td>
-	</tr>
-	<tr>
-	<td><label for="set_default">set as default:</label></td>
-	<td><?$f->show_element("set_default");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("","");					// Finish form?>
-</div>
-
-<?if (is_array($item_list) and count($item_list)){?>
-
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr>
-	<th>item label</th>
-	<th>item value</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	</tr>
-	<?$odd=0;
-	foreach($item_list as $row){
-		if ($row->label==$item_edit) continue;
-		$odd=$odd?0:1;
-	?>
-	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
-	<td align="left"><?echo nbsp_if_empty($row->label);?></td>
-	<td align="left"><?echo nbsp_if_empty($row->value);?></td>
-	<td align="center"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_edit=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">edit</a></td>
-	<td align="center"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_dele=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">delete</a></td>
-	</tr>
-	<?}?>
-	</table>
-
-<?}?>
-
-<div class="swBackToMainPage"><a href="<?$sess->purl($config->admin_pages_path."user_preferences.php?kvrk=".uniqid(""));?>" class="f14">back to editing attributes</a></div>
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

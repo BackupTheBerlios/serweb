@@ -1,7 +1,10 @@
 <?
 /*
- * $Id: acl.php,v 1.12 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: acl.php,v 1.13 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('check_admin_perms_to_user', 'get_admin_acl_privileges', 
+		'get_acl_of_user', 'update_acl_of_user');
 
 require "prepend.php";
 
@@ -17,15 +20,25 @@ $grp_val=array();
 $ACL_control=array();
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
-	if (!isset($user_id)) {$errors[]="unknown user"; break;}
-
+	if (false !== $uid = get_userauth_from_get_param('u')) {
+		if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $uid, $errors))) break;
+		if (!$pp){
+			$errors[]="You can't manage user '".$uid->uname."' this user is from different domain";
+			break;
+		}
+	}
+	else {
+		$errors[]="unknown user"; break;
+	}
+	
 	/* get admin ACL control privileges */
-	if (false === $ACL_control = $data->get_admin_ACL_privileges($auth->auth["uname"], $config->domain, $errors)) break;
+	if (false === $ACL_control = $data->get_admin_ACL_privileges($serweb_auth, $errors)) break;
 
 	/* get access control list of user */
-	if (false === $grp_val = $data->get_ACL_of_user($user_id, $config->domain, $errors)) break;
+	if (false === $grp_val_tmp = $data->get_ACL_of_user($uid, $errors)) break;
+	$grp_val=array();
+	foreach($grp_val_tmp as $val) $grp_val[]=$val['grp'];
+	unset($grp_val_tmp);
 
 	/* add form elements */
 	foreach ($ACL_control as $row){
@@ -39,9 +52,8 @@ do{
 		                      "value"=>in_array($row, $grp_val)?"1":"0"));
 	}
 
-	$f->add_element(array("type"=>"hidden",
-	                             "name"=>"user_id",
-	                             "value"=>$user_id));
+	userauth_to_form($uid, 'u', $f);
+
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
@@ -55,13 +67,13 @@ do{
 
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
-				if (!$data->update_ACL_of_user($user_id, $config->domain, $row, $_POST["chk_".$row]?'set':'del', $errors)) break;
+				if (!$data->update_ACL_of_user($uid, $row, $_POST["chk_".$row]?'set':'del', $errors)) break;
 			}
 		}
 
 		if (isset($errors) and $errors) break;
 
-        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
+        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&m_acl_updated=1"));
 		page_close();
 		exit;
 	}
@@ -75,32 +87,22 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 print_html_head();
 $page_attributes['selected_tab']="users.php";
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+if(!$ACL_control) $ACL_control = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_by_ref('ACL_control', $ACL_control);
+
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
+
+$smarty->assign('uname', $uid->uname);
+
+$smarty->display('a_acl.tpl');
+
 ?>
-
-<h2 class="swTitle">Access control list of user: <?echo $user_id;?></h2>
-
-<?if (is_array($ACL_control) and count($ACL_control)){?>
-<div class="swForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-<?	foreach ($ACL_control as $row){ ?>
-	<tr>
-	<td><label for="<?echo "chk_".$row;?>"><?echo $row;?></label></td>
-	<td><?$f->show_element("chk_".$row);?></td>
-	</tr>
-<?	} ?>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish();					// Finish form?>
-</div>
-<?}else{?>
-<div class="swNumOfFoundRecords">You haven't any privileges to control ACL</div>
-<?}?>
-
-<div class="swBackToMainPage"><a href="<?$sess->purl("users.php?kvrk=".uniqid(''));?>">back to main page</a></div>
 
 <?print_html_body_end();?>
 </html>

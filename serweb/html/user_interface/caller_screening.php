@@ -1,7 +1,10 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.6 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: caller_screening.php,v 1.7 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_user_real_name', 'del_cs_caller', 'get_cs_caller',
+									'update_cs_caller', 'get_cs_callers');
 
 require "prepend.php";
 
@@ -16,10 +19,8 @@ $f = new form;                  // create a form object
 set_global('edit_caller');
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	if (isset($_GET['dele_caller'])){
-		if (!$data->del_CS_caller($auth->auth["uname"], $config->domain, $_GET['dele_caller'], $errors)) break;
+		if (!$data->del_CS_caller($serweb_auth, $_GET['dele_caller'], $errors)) break;
 
         Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")));
 		page_close();
@@ -27,7 +28,7 @@ do{
 	}
 
 	if ($edit_caller){
-		if (false === $row = $data->get_CS_caller($auth->auth["uname"], $config->domain, $edit_caller, $errors)) break;
+		if (false === $row = $data->get_CS_caller($serweb_auth, $edit_caller, $errors)) break;
 	}
 
 	//create array of options of select
@@ -71,7 +72,7 @@ do{
 		}
 
 			/* Process data */           // Data ok;
-		if (!$data->update_CS_caller($auth->auth["uname"], $config->domain, $edit_caller, $_POST['uri_re'], $_POST['action_key'], $errors)) break;
+		if (!$data->update_CS_caller($serweb_auth, $edit_caller, $_POST['uri_re'], $_POST['action_key'], $errors)) break;
 
         Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")));
 		page_close();
@@ -81,10 +82,10 @@ do{
 
 do{
 	$caller_uris=array();
-	
+
 	if ($data){
 		// get screenings
-		if (false === $caller_uris = $data->get_CS_callers($auth->auth["uname"], $config->domain, $edit_caller?$edit_caller:NULL, $errors)) break;
+		if (false === $caller_uris = $data->get_CS_callers($serweb_auth, $edit_caller?$edit_caller:NULL, $errors)) break;
 
 	}
 }while (false);
@@ -98,7 +99,7 @@ print_html_head();?>
 
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

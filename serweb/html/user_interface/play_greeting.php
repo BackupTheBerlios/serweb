@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: play_greeting.php,v 1.5 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: play_greeting.php,v 1.6 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('play_greeting', 'get_user_real_name');
 
 require "prepend.php";
 
@@ -11,40 +13,28 @@ page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Auth"));
 
 do{
-
-	@$fp=fopen($config->greetings_spool_dir.$config->default_domain."/".$auth->auth["uname"].".wav", 'rb');
-	if (!$fp){
-		//try open default greeting
-		@$fp=fopen($config->greetings_spool_dir."default.wav", 'rb');
-		if (!$fp){$errors[]="Can't open greeting"; break;}
-	}
-
-	Header("Content-Disposition: attachment;filename=".RawURLEncode("greeting.wav"));
-	Header("Content-type: audio/wav");
-
-	@fpassthru($fp);
-	@fclose($fp);
+	if (false === $data->play_greeting($serweb_auth, $errors)) break;
 
 	page_close();
 	exit;
 
 }while(false);
 
-do{
-	if (!$data = CData_Layer::create($errors)) break;
-}while(false);
-
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 $page_attributes['selected_tab']="voicemail.php";
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+
+$smarty->display('u_play_greeting.tpl');
+
 ?>
-
-<div class="swBackToMainPage"><a href="<?$sess->purl("voicemail.php?kvrk=".uniqid(""));?>">&lt;&lt;&lt; BACK</a></div>
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

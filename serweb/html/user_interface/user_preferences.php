@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.8 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: user_preferences.php,v 1.9 2004/08/09 12:21:28 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_attributes', 'get_att_values', 'update_attribute_of_user', 'get_user_real_name');
 
 require "prepend.php";
 require "../user_preferences.php";
@@ -15,17 +17,31 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 $usr_pref = new User_Preferences();
 
+function format_attributes_for_output($attributes, &$js_on_subm){
+	global $sess;
+
+	$out=array();
+	$i=0;
+	foreach($attributes as $att){
+		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");";
+
+		$out[$i]['att_name'] = $att->att_name;
+		$i++;
+	}
+	
+	return $out;
+}
+
+
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	$attributes=array();
 
 	//get list of attributes
 	if (false === $attributes = $data->get_attributes(NULL, $errors)) break;
-	
+
 	// get attributes values
-	if (false === $data->get_att_values($auth->auth["uname"], $config->domain, $attributes, $errors)) break;
+	if (false === $data->get_att_values($serweb_auth, $attributes, $errors)) break;
 
 	// add elements to form object
 	foreach($attributes as $att){
@@ -53,7 +69,7 @@ do{
 
 			//if att value is changed
 			if ($HTTP_POST_VARS[$att->att_name] != $HTTP_POST_VARS["_hidden_".$att->att_name]){
-				if (false === $data->update_attribute_of_user($auth->auth["uname"], $config->domain, $att->att_name, $HTTP_POST_VARS[$att->att_name], $errors)) break;
+				if (false === $data->update_attribute_of_user($serweb_auth, $att->att_name, $HTTP_POST_VARS[$att->att_name], $errors)) break;
 			}
 		}
 
@@ -76,37 +92,23 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
 <?
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+if(!$attributes) $attributes = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+
+$js_on_subm="";
+$smarty->assign('attributes', format_attributes_for_output($attributes, $js_on_subm));
+
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), array('before'=>$js_on_subm));
+
+$smarty->display('u_user_preferences.tpl');
 ?>
-
-<div class="swForm">
-<?if (count($attributes)){
-	$js_on_subm="";
-  $f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<?foreach($attributes as $att){
-		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");";
-	?>
-		<tr>
-		<td align="right" class="f12b"><label for="<?echo $att->att_name;?>"><?echo $att->att_name;?>:</label></td>
-		<td><?$f->show_element($att->att_name);?></td>
-		</tr>
-	<?}//foreach?>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right"><?$f->show_element("okey");?></td>
-	</tr>
-	</table>
-<?$f->finish("",$js_on_subm);					// Finish form?>
-</div>
-
-<?}else{?>
-<div class="swNumOfFoundRecords">No attributes defined by admin</div>
-<?} //end if (count($attributes))?>
-
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.11 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.12 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('subscribe_event', 'unsubscribe_event', 'get_events', 'get_user_real_name');
 
 require "prepend.php";
 
@@ -10,18 +12,9 @@ put_headers();
 page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Auth"));
 
-function remove_from_events($uri){
-	global $config;
-
-	if (is_array($config->sub_not))
-		foreach ($config->sub_not as $key => $row) if ($row->uri==$uri) unset ($config->sub_not[$key]);
-}
-
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	if (isset($_GET['uri']) and isset($_GET['desc'])){
-		if (!$data->subscribe_event($auth->auth["uname"], $config->domain, $_GET['uri'], $_GET['desc'], $errors)) break;
+		if (!$data->subscribe_event($serweb_auth, $_GET['uri'], $_GET['desc'], $errors)) break;
 
         Header("Location: ".$sess->url("notification_subscription.php?kvrk=".uniqID("")));
 		page_close();
@@ -29,7 +22,7 @@ do{
 	}
 
 	if (isset($_GET['dele_id'])){
-		if (!$data->unsubscribe_event($auth->auth["uname"], $config->domain, $_GET['dele_id'], $errors)) break;
+		if (!$data->unsubscribe_event($serweb_auth, $_GET['dele_id'], $errors)) break;
 
         Header("Location: ".$sess->url("notification_subscription.php?kvrk=".uniqID("")));
 		page_close();
@@ -39,63 +32,44 @@ do{
 }while (false);
 
 do{
-	$events=array();
+	$subs_events=array();
+	$other_events=array();
+
 	if ($data){
-		if (false === $events = $data->get_events($auth->auth["uname"], $config->domain, $errors)) break;
+		if (false === $subs_events = $data->get_events($serweb_auth, $errors)) break;
+	}
+
+	//prepare associative array of other_events from $config->sub_not
+	foreach ($config->sub_not as $row){
+		$other_events[$row->uri]['description'] = $row->desc;
+		$other_events[$row->uri]['url_subsc'] = $sess->url("notification_subscription.php?kvrk=".uniqid("")."&desc=".RawURLEncode($row->desc)."&uri=".RawURLEncode($row->uri));
+	}
+	
+	//unset subsribed events from other_events
+	foreach($subs_events as $row){
+		unset($other_events[$row['uri']]);
 	}
 
 }while (false);
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=$data->get_user_name($errors);
+$page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $errors);
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+if(!$subs_events) $subs_events = array();
+if(!$other_events) $other_events = array();
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+
+$smarty->assign_by_ref('subs_events', $subs_events);
+$smarty->assign_by_ref('other_events', $other_events);
+
+$smarty->display('u_notification_subscription.tpl');
 ?>
-
-<h2 class="swTitle">your subscribed events:</h2>
-
-<?if (is_array($events) and count($events)){?>
-
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
-	<tr>
-	<th>description</th>
-	<th width="90">&nbsp;</th>
-	</tr>
-	<?foreach ($events as $row){
-	remove_from_events($row->uri)
-	?>
-	<tr valign="top">
-	<td align="left"><?echo $row->description;?></td>
-	<td align="center"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&dele_id=".$row->id);?>">unsubscribe</a></td>
-	</tr>
-	<?}//while?>
-	</table>
-
-<?}else{?>
-<div class="swNumOfFoundRecords">No subscribed events</div>
-<?}?>
-
-<h2 class="swTitle">other events:</h2>
-
-<?
-if (is_array($config->sub_not) and count($config->sub_not)){?>
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
-	<tr>
-	<th>description</th>
-	<th width="90">&nbsp;</th>
-	</tr>
-<?	foreach($config->sub_not as $row){?>
-	<tr valign="top">
-	<td align="left"><?echo $row->desc;?></td>
-	<td align="center"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&desc=".RawURLEncode($row->desc)."&uri=".RawURLEncode($row->uri));?>">subscribe</a></td>
-	</tr>
-<? }//for each?>
-	</table>
-<?}else{?>
-<div class="swNumOfFoundRecords">No other events</div>
-<?}//end if?>
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

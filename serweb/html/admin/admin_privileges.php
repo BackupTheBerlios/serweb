@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('add_privilege_to_user', 'del_privilege_of_user', 'get_privileges_of_user');
 
 require "prepend.php";
 
@@ -18,11 +20,7 @@ $ad_priv['acl_control']=array();
 $ad_priv['change_privileges']=array();
 $ad_priv['is_admin']=array();
 
-if (isset($_GET['user_domain'])) $user_domain=$_GET['user_domain'];
-elseif (isset($_POST['user_domain'])) $user_domain=$_POST['user_domain'];
-
-if (isset($_GET['user_id'])) $user_id=$_GET['user_id'];
-elseif (isset($_POST['user_id'])) $user_id=$_POST['user_id'];
+$uid = get_userauth_from_get_param('u');
 
 
 /*
@@ -31,13 +29,12 @@ elseif (isset($_POST['user_id'])) $user_id=$_POST['user_id'];
 	$priv_type - associative array
 		$priv_type['type'] - type of privilege can be 'boolean' or 'multivalue'
 		$priv_type['values'] - for 'multivalue' type used to store array of potential values
-	$user_id	 - username of user which atributes are updated
-	$user_domain - domain of user which atributes are updated
-	$db	- DB handler
+	$user_id	 - user which atributes are updated
+	$data	- DB handler
 	$errors - array in which arrors messages are returned
 */
 
-function update_db($priv_name, $priv_type, $user_id, $user_domain, $data, &$errors){
+function update_db($priv_name, $priv_type, $user_id, $data, &$errors){
 	global $_POST, $ad_priv, $config;
 
 	switch ($priv_type['type']){
@@ -47,10 +44,10 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $data, &$erro
 
 		if ($_POST["chk_".$priv_name] != $_POST["hidden_".$priv_name]){
 			if ($_POST["chk_".$priv_name]){
-				if (!$data->add_privilege_to_user($user_id, $user_domain, $priv_name, '1', isset($ad_priv[$priv_name][0]), $errors)) return false;
+				if (!$data->add_privilege_to_user($user_id, $priv_name, '1', isset($ad_priv[$priv_name][0]), $errors)) return false;
 			}
 			else{
-				if (!$data->del_privilege_of_user($user_id, $user_domain, $priv_name, NULL, $errors)) return false;
+				if (!$data->del_privilege_of_user($user_id, $priv_name, NULL, $errors)) return false;
 			}
 		}
 		break;
@@ -63,10 +60,10 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $data, &$erro
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
 				if ($_POST["chk_".$row]){
-					if (!$data->add_privilege_to_user($user_id, $user_domain, $priv_name, $row, false, $errors)) return false;
+					if (!$data->add_privilege_to_user($user_id, $priv_name, $row, false, $errors)) return false;
 				}
 				else{
-					if (!$data->del_privilege_of_user($user_id, $user_domain, $priv_name, $row, $errors)) return false;
+					if (!$data->del_privilege_of_user($user_id, $priv_name, $row, $errors)) return false;
 				}
 			}
 		}
@@ -80,12 +77,10 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $data, &$erro
 
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
-	if (!isset($user_id)) {$errors[]="unknown user"; break;}
+	if (!isset($uid)) {$errors[]="unknown user"; break;}
 
 	/* get privileges of user */
-	if (false === $privs = $data->get_privileges_of_user($user_id, $user_domain, NULL, $errors)) break;
+	if (false === $privs = $data->get_privileges_of_user($uid, NULL, $errors)) break;
 	foreach($privs as $row)	$ad_priv[$row->priv_name][]=$row->priv_value;
 
 	/* add form elements */
@@ -119,12 +114,8 @@ do{
 	                      "name"=>"hidden_is_admin",
 	                      "value"=>isset($ad_priv['is_admin'][0]) and $ad_priv['is_admin'][0]?"1":"0"));
 
-	$f->add_element(array("type"=>"hidden",
-	                             "name"=>"user_id",
-	                             "value"=>$user_id));
-	$f->add_element(array("type"=>"hidden",
-	                             "name"=>"user_domain",
-	                             "value"=>$user_domain));
+	userauth_to_form($uid, 'u', $f);
+
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
@@ -132,11 +123,11 @@ do{
 
 	if (isset($_POST['okey_x'])){					// Is there data to process?
 
-		if (!update_db('is_admin', array('type'=>'boolean'), $user_id, $user_domain, $data, $errors)) break;
-		if (!update_db('change_privileges', array('type'=>'boolean'), $user_id, $user_domain, $data, $errors)) break;
-		if (!update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $user_id, $user_domain, $data, $errors)) break;
+		if (!update_db('is_admin', array('type'=>'boolean'), $uid, $data, $errors)) break;
+		if (!update_db('change_privileges', array('type'=>'boolean'), $uid, $data, $errors)) break;
+		if (!update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $uid, $data, $errors)) break;
 		
-        Header("Location: ".$sess->url("list_of_admins.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
+        Header("Location: ".$sess->url("list_of_admins.php?kvrk=".uniqID("")."&m_priv_saved=1"));
 		page_close();
 		exit;
 	}
@@ -168,52 +159,22 @@ print_html_head();?>
 <?
 $page_attributes['selected_tab']="list_of_admins.php";
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign('grp_values', $config->grp_values);
+
+$smarty->assign_phplib_form('form', $f, 
+						array('jvs_name'=>'form',
+						      'form_name'=>'form1'));
+
+$smarty->assign('uname', $uid->uname);
+
+$smarty->display('a_admin_privileges.tpl');
+
 ?>
-
-<h2 class="swTitle">Admin privileges of <?echo $user_id;?></h2>
-
-<div class="swForm">
-<?$f->start("form", "", "", "", "form1");				// Start displaying form?>
-
-	<div class="swFieldset">
-	<fieldset class="swWidthAsTitle">
-	<legend>admin competence</legend>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="chk_is_admin">is admin</label></td>
-	<td><?$f->show_element("chk_is_admin");?></td>
-	</tr>
-	<tr>
-	<td><label for="chk_change_privileges">changes privileges of admins</label></td>
-	<td><?$f->show_element("chk_change_privileges");?></td>
-	</tr>
-	</table>
-	</fieldset>
-	</div>
-
-	<div class="swFieldset">
-	<fieldset class="swWidthAsTitle">
-	<legend>ACL control</legend>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-<?	foreach ($config->grp_values as $row){ ?>
-	<tr>
-	<td><label for="<?echo "chk_".$row;?>"><?echo $row;?></label></td>
-	<td><?$f->show_element("chk_".$row);?></td>
-	</tr>
-<?	} ?>
-	</table>
-	</fieldset>
-	</div>
-
-	<br />
-	<div align="center"><?$f->show_element("okey");?></div>
-
-<?$f->finish();					// Finish form?>
-</div>
-
-<div class="swBackToMainPage"><a href="<?$sess->purl("list_of_admins.php?kvrk=".uniqid(''));?>">back to main page</a></div>
-
-<br>
 <?print_html_body_end();?>
 <script language="JavaScript">
 <!--

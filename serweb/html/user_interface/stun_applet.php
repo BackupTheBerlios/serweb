@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: stun_applet.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: stun_applet.php,v 1.4 2004/08/09 12:21:28 kozlik Exp $
  */
 
 require "prepend.php";
