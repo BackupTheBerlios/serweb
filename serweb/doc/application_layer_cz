@@ -1,4 +1,17 @@
-$Id: application_layer_cz,v 1.1 2004/08/31 14:18:05 kozlik Exp $
+$Id: application_layer_cz,v 1.2 2004/09/02 11:31:31 kozlik Exp $
+
+*******************************************************************************
+*                            Application layer                                *
+*******************************************************************************
+
+Motivace
+--------
+
+Potreba jednoduse menit layout stranek a rozlozeni funkci serwebu na jednotlivych
+strankach. Pokud jsou pro vsechny pozadovane funkce hotove aplikacni jednotky 
+(APU), lze novou stranku ktera obsahuje libovolnou kombinaci techto funkci 
+vytvorit pomoci jednoho pomerne jednoducheho php skriptu (ktery popisuje ze 
+kterych APU se stranka sklada) a prislusne SMARTY sablony.
 
 Application layer
 -----------------
@@ -52,14 +65,6 @@ get_Instance()
 	Zajistuje generovani unikatnich identifikatoru pro kazdou instanci APU na strance,
 	i v pripade ze stranka pouziva nekolik instanci teze APU (pozn: muze byt uzitecne 
 	napr. pro user_preferences)
-
-add_submit_to_form($submit, &$form)
-	staticka metoda, vklada do formulare $form submit element popsany asociativnim 
-	polem $submit. Klice pole jsou:
-		['type'] - type of submit element 'hidden', 'button', 'image'
-		['text'] - text on button on alt on image
-		['src']  - source of image
-	
 	
 get_required_data_layer_methods()
 	vraci pole obsahujici jmena metod z data_layer se kterymi apu pracuje - ktere pozaduje
