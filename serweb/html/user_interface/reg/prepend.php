@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: prepend.php,v 1.1 2002/09/04 18:19:44 kozlik Exp $
+ * $Id: prepend.php,v 1.2 2003/10/15 09:42:48 kozlik Exp $
  *
  */
 
@@ -18,6 +18,7 @@ $_PHPLIB["libdir"]  = "../../../phplib/";
 
 require "../../config.php";
 require "../../functions.php";
+require "../../sql_and_fifo_functions.php.php";
 require "../../page.php";
 
 require($_PHPLIB["libdir"] . "db_mysql.inc");  /* Change this to match your database. */

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.16 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: confirmation.php,v 1.17 2003/10/15 09:42:48 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -34,45 +34,18 @@ do{
 		}
 		$sip_address="sip:".$row->username."@".$config->default_domain;
 
-		// get the max number alias - abs() converts string to number
-		$q="select max(abs(username)) from ".$config->table_aliases." where username REGEXP \"^[0-9]+$\"";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		$row=MySQL_Fetch_Row($res);
-		$alias=is_null($row[0])?$config->first_alias_number:($row[0]+1);
-		$alias=($alias<$config->first_alias_number)?$config->first_alias_number:$alias;
+		
+		// get the max alias number 
+		if (!$alias=get_alias_number($errors)) break;
 
 		$q="insert into ".$config->table_subscriber." select * from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-
-
-        if ($config->ul_replication) $replication="0\n";
-        else $replication="";
-
-		/* add new alias */
-		/*
-		if ($config->ul_multidomain)
-			$ul_name=$alias."@".$config->default_domain."\n";
-		else
-			$ul_name=$alias."\n";
-		*/
-		$ul_name=$alias."@".$config->default_domain."\n";
-
-		/* construct FIFO command */
-		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
-			$config->fifo_aliases_table."\n".	//table
-			$ul_name.	//user
-			$sip_address."\n".					//contact
-			$config->new_alias_expires."\n".	//expires
-			$config->new_alias_q."\n". 		//priority
-			$replication."\n";
-
-		$message=write2fifo($fifo_cmd, $errors, $status);
+		// add alias to fifo
+		$message=add_new_alias($sip_address, $alias, $errors);
 		if ($errors) break;
-		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
-
+		
 		$q="delete from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
