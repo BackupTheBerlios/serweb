@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.10 2003/05/22 11:38:08 kozlik Exp $
+ * $Id: accounting.php,v 1.11 2003/07/07 20:32:28 jiri Exp $
  */
 
 require "prepend.php";
@@ -65,6 +65,11 @@ do{
 	</tr>
 	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?while ($row=MySQL_Fetch_Object($mc_res)){
+		if ($flag==1) { 
+			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
+		} else {
+			$flag = 1; $bgc = "bgcolor=\"#EEEEEE\"";
+		}
 		$timestamp=gmmktime(substr($row->time,11,2), 	//hour
 							substr($row->time,14,2), 	//minute
 							substr($row->time,17,2), 	//second
@@ -82,7 +87,7 @@ do{
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
 	?>
-	<tr valign="top">
+	<?echo "<tr valign=top ".$bgc.">"; ?>
 	<td align="center" class="f12" width="135">
 	<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->to_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
 	<?echo htmlspecialchars($row->sip_to);?></a></td>
