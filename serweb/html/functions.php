@@ -1,12 +1,12 @@
 <?
 /*
- * $Id: functions.php,v 1.9 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: functions.php,v 1.10 2002/11/18 21:56:07 kozlik Exp $
  */
 
 
 $reg_validate_email="^[^@]+@[^.]+\.[^,;@ ]+$";
 
-$reg_validate_username="^(8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*)$";
+$reg_validate_username="^((8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*))$";
 
 class Creg{
 

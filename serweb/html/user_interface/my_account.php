@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.11 2002/10/15 03:39:09 jiri Exp $
+ * $Id: my_account.php,v 1.12 2002/11/18 21:56:07 kozlik Exp $
  */
 
 require "prepend.php";
@@ -150,6 +150,13 @@ do{
 			break;
 		}
 
+		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){
+			foreach ($config->denny_reg as $val){
+				if (Ereg($val->reg, $sip_address)) {$errors[]=$val->label; break;}
+			}
+			if ($errors) break;
+		}
+
 		/* Process data */           // Data ok; 
 
 		/* construct FIFO command */
@@ -278,6 +285,17 @@ if ($okey_x){							//data isn't valid or error in sql
 			adr.value='sip:'+adr.value;
 		}
 	}
+
+	var stun_win=null;
+	
+	function stun_applet_win(){
+		if (stun_win != null) stun_win.close();
+			stun_win=window.open("stun_applet.php","stun_win","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,top=20,left=20,width=<? echo $config->stun_applet_width; ?>,height=<? echo $config->stun_applet_height; ?>");
+			stun_win.window.focus();
+			return;
+	}
+
+
 //-->
 </script>
 </head>
@@ -433,12 +451,15 @@ if ($okey_x){							//data isn't valid or error in sql
 <?$f2->finish();					// Finish form?>
 
 <br>
+
+<?if ($config->enable_dial_voicemail or $config->enable_test_firewall){?>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<td width="50%" align="center"><?if ($config->enable_dial_voicemail){?><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a><?} else echo "&nbsp;";?></td>
-<td width="50%" align="center"><?if ($config->enable_test_firewall){?><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a><?} else echo "&nbsp;";?></td>
+<?if ($config->enable_dial_voicemail){?><td align="center"><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td><?}?>
+<?if ($config->enable_test_firewall){?><td align="center"><a href="javascript:stun_applet_win();"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td><?}?>
 </tr>
 </table>
+<?}?>
 
 <br>
 <? if ($perm->have_perm("admin") and $uid){?>
