@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.6 2003/05/05 20:44:28 kozlik Exp $
+ * $Id: index.php,v 1.7 2003/09/15 04:28:48 jiri Exp $
  */
 
 require "prepend.php";
@@ -20,10 +20,11 @@ do{
 
 		if ($config->clear_text_pw) {
 			$q="select phplib_id from ". $config->table_subscriber.
-				" where username='$uname' and password='$passw' and perms='admin'";
+				" where username='$uname' and password='$passw' and perms='admin' and domain='$config->realm'";
 		} else {
 			$ha1=md5($uname.":".$config->realm.":".$passw);
-			$q="select phplib_id from ".$config->table_subscriber." where username='$uname' and ha1='$ha1' and perms='admin'";
+			$q="select phplib_id from ".$config->table_subscriber.
+				" where username='$uname' and ha1='$ha1' and perms='admin' and domain='$config->realm'";
 		}
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}

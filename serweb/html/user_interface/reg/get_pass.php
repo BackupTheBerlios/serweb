@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.4 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: get_pass.php,v 1.5 2003/09/15 04:28:48 jiri Exp $
  */
 
 require "prepend.php";
@@ -15,7 +15,7 @@ do{
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname'";
+		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname' and domain='$config->realm'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

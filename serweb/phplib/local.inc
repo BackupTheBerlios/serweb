@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.7 2003/09/01 18:37:46 kozlik Exp $
+ * $Id: local.inc,v 1.8 2003/09/15 04:28:48 jiri Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -161,19 +161,23 @@ class phplib_Auth extends Auth {
 	    $this->db->query(sprintf("select phplib_id, perms ".
     	                         "        from %s ".
         	                     "       where username = '%s' ".
-            	                 "         and password = '%s'",
+            	                 "         and password = '%s'".
+								 "         and domain = '%s'",
                 	          $this->database_table,
                     	      addslashes($username),
-                        	  addslashes($password)));
+                        	  addslashes($password),
+							  addslashes($config->realm)));
 	}else{
 		$ha1=md5($username.":".$config->realm.":".$password);
     	
 	    $this->db->query(sprintf("select phplib_id, perms ".
     	                         "        from %s ".
         	                     "       where username = '%s' ".
+								 "        and domain = '%s'".
             	                 "         and ha1 = '%s'",
                 	          $this->database_table,
                     	      addslashes($username),
+							  addslashes($config->realm),
                         	  addslashes($ha1)));
 	}
 							
@@ -255,9 +259,10 @@ class phplib_Challenge_Auth extends Auth {
       $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
     }
     $this->db->query(sprintf("select username,perms,password ".
-                "from %s where username = '%s'",
+                "from %s where username = '%s' and domain='%s' ",
                           $this->database_table,
-                          addslashes($username)));
+                          addslashes($username),
+						  addslashes($config->realm)));
 
     if ($this->db->num_rows() == 0) {
       return false;
@@ -325,9 +330,9 @@ class phplib_Challenge_Crypt_Auth extends Auth {
     $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
     
     $this->db->query(sprintf("select username,perms,password ".
-                "from %s where username = '%s'",
+                "from %s where username = '%s' and domain='%s'",
                           $this->database_table,
-                          addslashes($username)));
+                          addslashes($username), addslashes($config->realm)));
 
     if ($this->db->num_rows() == 0) {
       return false;
