@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.5 2002/10/14 09:58:51 kozlik Exp $
+ * $Id: confirmation.php,v 1.6 2002/10/15 15:25:01 kozlik Exp $
  */
 
 require "prepend.php";
@@ -29,7 +29,8 @@ do{
 //		$user_id=$row->user_id;
 		$sip_address="sip:".$row->user_id."@".$config->default_domain;
 			
-		$q="select max(user) from ".$config->table_aliases." where user REGEXP \"^[0-9]+$\"";
+		// get the max number alias - abs() converts string to number
+		$q="select max(abs(user)) from ".$config->table_aliases." where user REGEXP \"^[0-9]+$\"";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=MySQL_Fetch_Row($res);
