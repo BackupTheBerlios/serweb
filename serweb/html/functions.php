@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.10 2002/11/18 21:56:07 kozlik Exp $
+ * $Id: functions.php,v 1.11 2003/01/07 18:32:03 kozlik Exp $
  */
 
 
@@ -16,7 +16,7 @@ class Creg{
 	var $escaped;
 	var $user_unreserved;
 	var $user;
-		
+
 	var $port;
 	var $hex4;
 	var $hexseq;
@@ -24,7 +24,7 @@ class Creg{
 	var $ipv4address;
 	var $ipv6address;
 	var $ipv6reference;
-		
+
 	var $toplabel;
 	var $domainlabel;
 	var $hostname;
@@ -37,10 +37,10 @@ class Creg{
 	var $pvalue;
 	var $uri_parameter;
 	var $uri_parameters;
-	
+
 	var $address;
 	var $sip_address;
-	
+
 	function Creg(){
 		$this->alphanum="[a-zA-Z0-9]";
 		$this->mark="[-_.!~*'()]";
@@ -48,38 +48,41 @@ class Creg{
 		$this->escaped="(%[0-9a-fA-F][0-9a-fA-F])";
 		$this->user_unreserved="[&=+$,;?/]";
 		$this->user="(".$this->unreserved."|".$this->escaped."|".$this->user_unreserved.")+";
-			
+
 		$this->port="[0-9]+";
 		$this->hex4="([0-9a-fA-F]{1,4})";
 		$this->hexseq="(".$this->hex4."(:".$this->hex4.")*)";
 		$this->hexpart="(".$this->hexseq."|(".$this->hexseq."::".$this->hexseq."?)|(::".$this->hexseq."?))";
-		$this->ipv4address="([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})";
+		$this->ipv4address="([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3})";
 		$this->ipv6address="(".$this->hexpart."(:".$this->ipv4address.")?)";
 		$this->ipv6reference="(\\[".$this->ipv6address."])";
-			
+
 		$this->toplabel="([a-zA-Z]|([a-zA-Z](~|".$this->alphanum.")*".$this->alphanum."))";
 		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."(~|".$this->alphanum.")*".$this->alphanum."))";
-		$this->hostname="((".$this->domainlabel."\.)*".$this->toplabel."(\.)?)";
+		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel."(\\.)?)";
 		$this->host="(".$this->hostname."|".$this->ipv4address."|".$this->ipv6reference.")";
-	
+
 		$this->token="(([-.!%*_+`'~]|".$this->alphanum.")+)";
-		$this->param_unreserved="[][/:&+$]";
+		$this->param_unreserved="[\\][/:&+$]";
 		$this->paramchar="(".$this->param_unreserved."|".$this->unreserved."|".$this->escaped.")";
 		$this->pname="((".$this->paramchar.")+)";
 		$this->pvalue="((".$this->paramchar.")+)";
 		$this->uri_parameter="(".$this->pname."(=".$this->pvalue.")?)";
 		$this->uri_parameters="((;".$this->uri_parameter.")*)";
-		
+
 		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
 		$this->sip_address="[sS][iI][pP]:".$this->address;
 	}
-	
+
+	function get_domainname($sip){
+		return ereg_replace($this->sip_address,"\\5", $sip);
+	}
 
 }
 
 
 function print_errors($errors){
-	if (is_Array($errors)) 
+	if (is_Array($errors))
 		foreach ($errors as $val) echo "<div class=\"errors\">".$val."</div>\n";
 }
 
@@ -89,7 +92,7 @@ function print_message($msg){
 
 function get_sess_url($url){
 	global $sess;
-	
+
 	if ($sess) return $sess->url($url);
 	else return $url;
 
@@ -120,24 +123,24 @@ function print_search_links($actual, $num, $rows, $url){
 
 function connect_to_db(){
 	global $config;
-	
+
 	@$db=MySQL_PConnect($config->db_host, $config->db_user, $config->db_pass);
 	if (! $db) return false;
-	
+
 	if (!MySQL_Select_DB($config->db_name)) return false;
 	return $db;
 }
 
 function get_status($sip_uri, &$errors){
 	global $config;
-	
+
 	$reg=new Creg;
 	if (!eregi("^sip:([^@]+@)?".$reg->host, $sip_uri, $regs)) return "<div class=\"statusunknown\">non-local</div>";
-	
+
 	if (strtolower($regs[2])!=strtolower($config->default_domain)) return "<div class=\"statusunknown\">non-local</div>";
 
 	$user=substr($regs[1],0,-1);
-	
+
 	$q="select count(*) from ".$config->table_subscriber." where user_id='$user'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
@@ -150,7 +153,7 @@ function get_status($sip_uri, &$errors){
 	$user."\n\n";	//username
 
 	$out=write2fifo($fifo_cmd, $errors, $status);
-	if ($errors) return;		
+	if ($errors) return;
 
 	if (substr($status,0,3)=="200") return "<div class=\"statusonline\">on line</div>";
 	else return "<div class=\"statusoffline\">off line</div>";
@@ -158,9 +161,9 @@ function get_status($sip_uri, &$errors){
 
 function send_mail($to, $subj, $text, $headers = ""){
 	global $config;
-	
+
 	$headers .= "From: ".$config->mail_header_from."\n";
-	
+
 	@$a= Mail($to, $subj, $text, $headers);
 	return $a;
 }
@@ -173,13 +176,13 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	if (!$fifo_handle) {
 		$errors[]="sorry -- cannot open fifo"; return;
 	}
-	
+
 	/* create fifo for replies */
 	@system("mkfifo -m 666 ".$config->reply_fifo_path );
 
 	/* add command separator */
 	$fifo_cmd=$fifo_cmd."\n";
-	
+
 	/* write fifo command */
 	if (fwrite( $fifo_handle, $fifo_cmd)==-1) {
 	    @unlink($config->reply_fifo_path);
@@ -187,7 +190,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 		$errors[]="sorry -- fifo writing error"; return;
 	}
 	@fclose($fifo_handle);
-	
+
 	/* read output now */
 	@$fp = fopen( $config->reply_fifo_path, "r");
 	if (!$fp) {
