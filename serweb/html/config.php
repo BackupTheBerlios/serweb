@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.33 2004/03/03 16:33:15 kozlik Exp $
+ * $Id: config.php,v 1.34 2004/03/03 17:52:40 kozlik Exp $
  */
 
 class Csub_not {
@@ -60,7 +60,6 @@ class Cconfig {
 	var $voice_silo_dir;
 	var $greetings_spool_dir;
 
-	var $show_voicemail_acl;
 	var $show_voice_silo;
 
 	var $enable_dial_voicemail;
@@ -271,7 +270,6 @@ class Cconfig {
 		/* experimental/incomplete features turned off: voicemail
 		   and set up a jabber account for each new SIP user too
 		*/
-		$this->show_voicemail_acl=true; /* show voicemail in ACL list */
 		$this->show_voice_silo=false; /* show voice messages in silo too */
 		$this->enable_dial_voicemail=false;
 		$this->enable_tabs[8]=true;				//enable tab voicemail

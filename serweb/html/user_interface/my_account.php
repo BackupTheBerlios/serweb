@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.28 2004/03/02 16:20:16 kozlik Exp $
+ * $Id: my_account.php,v 1.29 2004/03/03 17:52:40 kozlik Exp $
  */
 
 require "prepend.php";
@@ -49,12 +49,6 @@ do{
 	if (!$res) {$errors[]="error in SQL query (1), line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	$q="select username from ".$config->table_grp.
-		" where username='".$user_id."' and grp='voicemail' and domain='".$config->realm."'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query (2), line: ".__LINE__; break;}
-	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
-	
 	set_timezone($errors);
 	
 	$options=array();
@@ -69,10 +63,6 @@ do{
 	                             "valid_e"=>"not valid email address",
 	                             "value"=>$row->email_address,
 								 "extrahtml"=>"style='width:200px;'"));
-	$f->add_element(array("type"=>"checkbox",
-								 "checked"=>$f2vm,
-	                             "value"=>1,
-	                             "name"=>"f2voicemail"));
 	$f->add_element(array("type"=>"checkbox",
 								 "checked"=>$row->allow_find,
 	                             "value"=>1,
@@ -234,19 +224,6 @@ do{
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query(3), line: ".__LINE__; break;}
 
-		if ($config->show_voicemail_acl){ // if forwarding to voicemail checkbox is not enabled then don't change forward to voicemail state
-			if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
-				if ($f2voicemail) 
-					$q="insert into ".$config->table_grp." (username, grp,domain) values ('".$user_id."', 'voicemail', '".$config->realm."')";
-				else 
-					$q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail' and domain='".$config->realm."'";
-				
-				$res=MySQL_Query($q);
-				if (!$res) {$errors[]="error in SQL query(4), line: ".__LINE__; break;}
-			}
-		}
-		
-		
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")."&uid=".RawURLEncode($uid)));
 		page_close();
 		exit;
@@ -263,10 +240,8 @@ do{
 		if (!$aliases_res) {$errors[]="error in SQL query(5), line: ".__LINE__; break;}
 		
 		// get Access-Control-list
-		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
-		else $qc="";
 		$q="select grp from ".$config->table_grp." where domain='".$config->realm.
-			"' and username='".$user_id."'".$qc." order by grp";
+			"' and username='".$user_id."' order by grp";
 		$grp_res=MySQL_Query($q);
 		if (!$grp_res) {$errors[]="error in SQL query(6), line: ".__LINE__; break;}
 
@@ -364,13 +339,6 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("email");?></td>
 	</tr>
-<?if ($config->show_voicemail_acl){?>
-	<tr>
-	<td align="right" class="f12b">forwarding to voicemail:</td>
-	<td width="5">&nbsp;</td>
-	<td><?$f->show_element("f2voicemail");?></td>
-	</tr>
-<?}?>	
 	<tr>
 	<td align="right" class="f12b">allow find me by other users:</td>
 	<td width="5">&nbsp;</td>
