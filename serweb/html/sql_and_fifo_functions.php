@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.1 2003/10/15 09:42:48 kozlik Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.2 2003/10/15 10:00:51 kozlik Exp $
  */
 
  /*
@@ -13,7 +13,7 @@
 	// abs() converts string to number
 	$q="select max(abs(username)) from ".$config->table_aliases." where username REGEXP \"^[0-9]+$\"";
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return false;}
+	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;}
 	$row=MySQL_Fetch_Row($res);
 	$alias=is_null($row[0])?$config->first_alias_number:($row[0]+1);
 	$alias=($alias<$config->first_alias_number)?$config->first_alias_number:$alias;
@@ -49,6 +49,26 @@ function add_new_alias($sip_address, $alias, &$errors){
 	return $message;
 }
 
+ /*
+  *	add new user to table subscriber (or pending)
+  */
+
+function add_user_to_subscriber($uname, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $table, &$errors){
+ 	global $config;
+	
+	$ha1=md5($uname.":".$config->realm.":".$passwd);
+	$ha1b=md5($uname."@".$config->domainname.":".$config->realm.":".$passwd);
+
+	$q="insert into ".$table." (username, password, first_name, last_name, phone, email_address, ".
+			"datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) ".
+		"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
+			"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."', '$timezone')";
+
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;;}
+
+	return true;	
+}
 
 
 ?>
