@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.12 2004/11/10 13:05:17 kozlik Exp $
+$Id: INSTALL,v 1.13 2004/11/15 17:00:45 kozlik Exp $
 
 serweb - Installation
 
@@ -104,3 +104,6 @@ serweb - Installation
      php.ini. (Also make sure that you are changing the php.ini in
      use by your server and register_globals is not turned off
      somewhere else in the configuration file.)
+     For check real php configuration create file phpinfo.php
+     in html root with content <? phpinfo(); ?> and look to it by
+     browser. There is _all_ informations about php.
