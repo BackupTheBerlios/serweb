@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_new_alias.php,v 1.2 2004/09/22 11:08:32 kozlik Exp $
+ * $Id: method.add_new_alias.php,v 1.3 2004/12/10 14:08:17 kozlik Exp $
  */
 
 class CData_Layer_add_new_alias {
@@ -22,6 +22,24 @@ class CData_Layer_add_new_alias {
 			
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+			
+			if ($config->use_table_uri) {
+				$q="insert into ".$config->data_sql->table_uri." (user_domain, uuid) 
+					  values ('".$alias_u."@".$alias_d."', '".$user->uuid."')";
+
+				$res=$this->db->query($q);
+				if (DB::isError($res)) {log_errors($res, $errors);
+					/* we should delete inserted alias in order to DB stay consistent*/
+
+					$q="delete from ".$config->data_sql->table_uuidaliases."
+						 where username='".$alias_u."' and domain='".$alias_d."' and uuid='".$user->uuid."'";
+					$res=$this->db->query($q);
+					if (DB::isError($res)) log_errors($res, $errors);
+
+					return false;
+				}
+			}
+			
 			return '200 OK';
 		}
 		else {

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_aliases.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.delete_user_aliases.php,v 1.2 2004/12/10 14:08:17 kozlik Exp $
  */
 
 class CData_Layer_delete_user_aliases {
@@ -20,6 +20,15 @@ class CData_Layer_delete_user_aliases {
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		
+		if ($config->use_table_uri) {
+			$q="delete from ".$config->data_sql->table_uri."
+				 where uuid='".$user->uuid."'";
+
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		}
+		
 		return true;
 	}
 }

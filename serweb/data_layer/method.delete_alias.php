@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_alias.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.delete_alias.php,v 1.2 2004/12/10 14:08:17 kozlik Exp $
  */
 
 class CData_Layer_delete_alias {
@@ -21,6 +21,15 @@ class CData_Layer_delete_alias {
 				log_errors(PEAR::RaiseError("Can't delete alias ".$alias_u."@".$alias_d." of user ".$user->uuid), $errors); 
 				return false;
 			} 
+
+			if ($config->use_table_uri) {
+				$q="delete from ".$config->data_sql->table_uri."
+					 where user_domain='".$alias_u."@".$alias_d."' and uuid='".$user->uuid."'";
+
+				$res=$this->db->query($q);
+				if (DB::isError($res)) {log_errors($res, $errors); return false;}
+			}
+
 			return '200 OK';
 		}
 		
