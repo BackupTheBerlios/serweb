@@ -53,29 +53,29 @@ function print_value($name_c, $name_a, $value){
 	<table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td><img src="<? echo $config->img_src_path."invisible.gif" ?>" width="150" height="1" border="0" alt=""></td>
-		<td align="left"><?echo $min;?></td>
-		<td align="right"><?echo $max;?></td>
+		<td align="left" class="f12"><?echo $min;?></td>
+		<td align="right" class="f12"><?echo $max;?></td>
 		<td ><img src="<? echo $config->img_src_path."invisible.gif" ?>" width="60" height="1" border="0" alt=""></td>
 		<td ><img src="<? echo $config->img_src_path."invisible.gif" ?>" width="10" height="1" border="0" alt=""></td>
-		<td align="left"><?echo $min_i;?></td>
-		<td align="right"><?echo $max_i;?></td>
+		<td align="left" class="f12"><?echo $min_i;?></td>
+		<td align="right" class="f12"><?echo $max_i;?></td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-		<td ><?echo $name_c;?></td>
+		<td class="f14b"><?echo $name_c;?></td>
 		<td colspan=2><?print_bar($val, $min, $max, "blue_pixel.gif");?></td>
-		<td>&nbsp;<?echo $val;?></td>
+		<td class="f14b">&nbsp;<?echo $val;?></td>
 		<td width="10">&nbsp;</td>
 		<td colspan=2><?print_bar($val_i, $min_i, $max_i, "blue_pixel.gif");?></td>
-		<td>&nbsp;<?echo $val_i;?></td>
+		<td class="f14b">&nbsp;<?echo $val_i;?></td>
 	</tr>
 	<tr>
-		<td><?echo $name_a;?></td>
+		<td class="f14b"><?echo $name_a;?></td>
 		<td colspan=2><?print_bar($val_a, $min, $max, "red_pixel.gif");?></td>
-		<td>&nbsp;<?echo round($val_a, get_precision($val_a));?></td>
+		<td class="f14b">&nbsp;<?echo round($val_a, get_precision($val_a));?></td>
 		<td width="10">&nbsp;</td>
 		<td colspan=2><?print_bar($val_a_i, $min_i, $max_i, "red_pixel.gif");?></td>
-		<td>&nbsp;<?echo round($val_a_i, get_precision($val_a_i));?></td>
+		<td class="f14b">&nbsp;<?echo round($val_a_i, get_precision($val_a_i));?></td>
 	</tr>
 	</table>
 <?

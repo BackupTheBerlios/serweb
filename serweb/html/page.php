@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.10 2003/09/15 04:01:25 jiri Exp $
+ * $Id: page.php,v 1.11 2003/09/16 16:49:53 kozlik Exp $
  */
 
 	function put_headers(){
@@ -69,6 +69,34 @@
 
 	}
 
+	function print_admin_html_body_begin($tab_selected=null){
+		global $config, $_page_tab, $sess;
+
+		virtual($config->prolog);
+		echo "iptel.org User Management";
+		virtual($config->separator);
+
+		?>
+			<div class="f12">
+				<table width="200" align="right">
+				<td align="right">&nbsp;<a href=logout.php>Logout</a></td>
+				<td align="right">&nbsp;<a href=/phpBB/>FAQ</a></td>
+				</tr>
+				</table>
+			</div>
+			<br clear="all">
+		<?
+		
+		print_tabs_new($config->admin_tabs, $config->admin_pages_path, $tab_selected); $_page_tab=1;?>	
+
+ 		<table bgcolor="#B1C9DC" width="100%" border="0" cellspacing="0" cellpadding="1">
+		<tr><td>
+			<table bgcolor="#FFFFFF" width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr valign="top"><td>
+			
+<?	} //print_admin_html_body_begin
+
+	
 	function print_html_body_end(){
 		global $config, $_page_tab;	
 
@@ -89,35 +117,35 @@ global $config, $sess;
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr valign="top">
 <? 
-for ($i=1; $i<8; $i++){
-	if ($config->enable_tabs[$i]){
+
+//find index of last enabled tab
+$lasttab=0;
+foreach($config->enable_tabs as $i => $value) 
+	if ($value) $lasttab=$i;
+
+foreach($config->enable_tabs as $i => $value){
+	if ($value){
 		if ($tab==$i){?>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left.gif" alt="" width="7" height="25" border="0"></td>
 		<td width="78" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="78" height="1" border="0"></td>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right.gif" alt="" width="7" height="25" border="0"></td>
+<?			if ($i!=$lasttab){?>
 		<td width="2" rowspan="2"><img src="<?echo $config->img_src_path;?>title/white_pixel.gif" alt="" width="2" height="1" border="0"></td>
-<?		}
+<?			}
+		}
 		else{?>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left_w.gif" alt="" width="7" height="25" border="0"></td>
 		<td width="78" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="78" height="1" border="0"></td>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right_w.gif" alt="" width="7" height="25" border="0"></td>
+<?			if ($i!=$lasttab){?>
 		<td width="2" rowspan="2"><img src="<?echo $config->img_src_path;?>title/white_pixel.gif" alt="" width="2" height="1" border="0"></td>
-<?		}
-	}
+<?			}
+		}//if ($tab==$i)
+	
+	}// if ($value)
 }
-
-if ($config->enable_tabs[8]){
-	if ($tab==8){?>
-		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left.gif" alt="" width="7" height="25" border="0"></td>
-		<td width="80" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="80" height="1" border="0"></td>
-		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right.gif" alt="" width="7" height="25" border="0"></td>
-<?	}
-	else{?>
-		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left_w.gif" alt="" width="7" height="25" border="0"></td>
-		<td width="80" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="80" height="1" border="0"></td>
-		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right_w.gif" alt="" width="7" height="25" border="0"></td>
-<?	}
-}?>
+	
+?>
 		</tr>
 
 		<tr>
@@ -150,10 +178,74 @@ if ($config->enable_tabs[8]){
 <?}else{?>
 		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("message_store.php?kvrk=".uniqID(""));?>" class="tabl">message<br>store</a></td>
 <?}}if ($config->enable_tabs[8]){ if ($tab==8){?>
-		<td width="80" class="tab" bgcolor="#B1C9DC">voicemail</td>
+		<td width="78" class="tab" bgcolor="#B1C9DC">voicemail</td>
 <?}else{?>
-		<td width="80" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("voicemail.php?kvrk=".uniqID(""));?>" class="tabl">voicemail</a></td>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("voicemail.php?kvrk=".uniqID(""));?>" class="tabl">voicemail</a></td>
+<?}}if ($config->enable_tabs[9]){ if ($tab==9){?>
+		<td width="78" class="tab" bgcolor="#B1C9DC">charging</td>
+<?}else{?>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("charging.php?kvrk=".uniqID(""));?>" class="tabl">charging</a></td>
+<?}}if ($config->enable_tabs[10]){ if ($tab==10){?>
+		<td width="78" class="tab" bgcolor="#B1C9DC">accounting</td>
+<?}else{?>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("accounting_b.php?kvrk=".uniqID(""));?>" class="tabl">accounting</a></td>
 <?}}?>
+		</tr>
+		</table>
+
+<?
+}
+
+
+function print_tabs_new($tabs, $path="", $selected=null){
+	global $config, $sess, $PATH_TRANSLATED;
+
+	if (!$selected){
+		$selected=basename($PATH_TRANSLATED);
+	}
+?>
+		<table border="0" cellspacing="0" cellpadding="0">
+		<tr valign="top">
+<? 
+
+//find index of last enabled tab
+$lasttab=0;
+foreach($tabs as $i => $value) 
+	if ($value->enabled) $lasttab=$i;
+
+foreach($tabs as $i => $value){
+	if ($value->enabled){
+		if ($value->page==$selected){?>
+		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left.gif" alt="" width="7" height="25" border="0"></td>
+		<td width="78" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="78" height="1" border="0"></td>
+		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right.gif" alt="" width="7" height="25" border="0"></td>
+<?		}
+		else{?>
+		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left_w.gif" alt="" width="7" height="25" border="0"></td>
+		<td width="78" bgcolor="#FFFFFF" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="78" height="1" border="0"></td>
+		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right_w.gif" alt="" width="7" height="25" border="0"></td>
+<?		}//if ($value->page==$selected)
+
+		if ($i!=$lasttab){?>
+		<td width="2" rowspan="2"><img src="<?echo $config->img_src_path;?>title/white_pixel.gif" alt="" width="2" height="1" border="0"></td>
+<?		}
+	
+	}// if ($value->enabled)
+} //foreach		?>
+		</tr>
+
+		<tr>
+<?
+foreach($tabs as $i => $value){
+	if ($value->enabled){
+		if ($value->page==$selected){?>
+		<td width="78" class="tab" bgcolor="#B1C9DC"><?echo $value->name;?></td>
+<?		}
+		else{?>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl($path.$value->page."?kvrk=".uniqID(""));?>" class="tabl"><?echo $value->name;?></a></td>
+<?		}//if ($value->page==$selected)
+	}// if ($value->enabled)
+} //foreach		?>
 		</tr>
 		</table>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni.php,v 1.1 2003/04/10 23:36:42 kozlik Exp $
+ * $Id: ser_moni.php,v 1.2 2003/09/16 16:51:47 kozlik Exp $
  */
 
 require "prepend.php";
@@ -44,7 +44,7 @@ do{
 <?print_html_head();?>
 </head>
 <?
-	print_html_body_begin(false, true, true);
+	print_admin_html_body_begin();
 	echo "<br>";
 	print_errors($errors);                    // Display error
 	print_message($message);
@@ -113,10 +113,6 @@ do{
 	<tr><td>&nbsp;</td></tr>
 	<?}}?>	
 	</table>
-
-<br clear="all"><br>
-
-<a href="<?$sess->purl("users.php?kvrk=".uniqid(''));?>">back to main page</a>
 
 <?print_html_body_end();?>
 </html>

@@ -1,12 +1,25 @@
 <?
 /*
- * $Id: functions.php,v 1.22 2003/09/15 04:01:25 jiri Exp $
+ * $Id: functions.php,v 1.23 2003/09/16 16:49:53 kozlik Exp $
  */
 
 
 $reg_validate_email="^[^@]+@[^.]+\.[^,;@ ]+$";
 
 $reg_validate_username="^((8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*))$";
+
+$name_of_month[1]="Jan";
+$name_of_month[2]="Feb";
+$name_of_month[3]="Mar";
+$name_of_month[4]="Apr";
+$name_of_month[5]="May";
+$name_of_month[6]="Jun";
+$name_of_month[7]="Jul";
+$name_of_month[8]="Aug";
+$name_of_month[9]="Sep";
+$name_of_month[10]="Oct";
+$name_of_month[11]="Nov";
+$name_of_month[12]="Dec";
 
 class Creg{
 
@@ -118,12 +131,12 @@ function print_search_links($actual, $num, $rows, $url){
 	$lfrom=$actual-($links*$rows); if ($lfrom<0) $lfrom=0;
 	$lto=$actual+($links*$rows); if ($lto>$num) $lto=$num;
 
-	if ($actual>0) echo '<a href="'.get_sess_url($url.((($actual-$rows)>0)?($actual-$rows):0)).'">&lt;&lt;&lt;</a>&nbsp;';
+	if ($actual>0) echo '<a href="'.get_sess_url($url.((($actual-$rows)>0)?($actual-$rows):0)).'" class="f12">&lt;&lt;&lt;</a>&nbsp;';
 	for ($i=$lfrom; $i<$lto; $i+=$rows){
 		if ($i<=$actual and $actual<($i+$rows)) echo '<span class="f14b">'.(floor($i/$rows)+1).'</span>&nbsp;';
-		else echo '<a href="'.get_sess_url($url.$i).'">'.(floor($i/$rows)+1).'</a>&nbsp;';
+		else echo '<a href="'.get_sess_url($url.$i).'" class="f12">'.(floor($i/$rows)+1).'</a>&nbsp;';
 	}
- 	if (($actual+$rows)<$num) echo '<a href="'.get_sess_url($url.($actual+$rows)).'">&gt;&gt;&gt;</a>';
+ 	if (($actual+$rows)<$num) echo '<a href="'.get_sess_url($url.($actual+$rows)).'" class="f12">&gt;&gt;&gt;</a>';
 
 }
 
@@ -133,7 +146,18 @@ function connect_to_db(){
 	@$db=MySQL_PConnect($config->db_host, $config->db_user, $config->db_pass);
 	if (! $db) return false;
 
-	if (!MySQL_Select_DB($config->db_name)) return false;
+	if (!MySQL_Select_DB($config->db_name, $db)) return false;
+	return $db;
+}
+
+/* must be called before connect_to_db() */
+function connect_to_ppaid_db(){
+	global $config;
+
+	@$db=MySQL_PConnect($config->ppaid->db_host, $config->ppaid->db_user, $config->ppaid->db_pass);
+	if (! $db) return false;
+
+	if (!MySQL_Select_DB($config->ppaid->db_name, $db)) return false;
 	return $db;
 }
 
@@ -403,4 +427,150 @@ function click_to_dial($target, $uri, &$errors){
 	if (substr($status,0,1)!="2") {$errors[]=$status; return; }
    
 }
+
+function ptitle($title, $width=502){?>
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tr><td class="title" width="<? echo $width; ?>"><?echo $title;?></td></tr>
+</table><br>
+<?}
+
+/**************************************
+ *         find users class
+ **************************************/
+
+class Cfusers{
+	var $classname='Cfusers';
+	var $persistent_slots = array("usrnm", "fname", "lname", "email", "onlineonly", "act_row");
+
+	var $usrnm, $fname, $lname, $email, $onlineonly, $act_row=0;
+
+	var $f;
+
+	function init(){
+		global $sess, $config, $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+		if (isset($HTTP_POST_VARS['usrnm'])) $this->usrnm=$HTTP_POST_VARS['usrnm'];
+		if (isset($HTTP_POST_VARS['fname'])) $this->fname=$HTTP_POST_VARS['fname'];
+		if (isset($HTTP_POST_VARS['lname'])) $this->lname=$HTTP_POST_VARS['lname'];
+		if (isset($HTTP_POST_VARS['email'])) $this->email=$HTTP_POST_VARS['email'];
+		if (isset($HTTP_POST_VARS['okey_x'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
+
+		if (isset($HTTP_GET_VARS['act_row'])) $this->act_row=$HTTP_GET_VARS['act_row'];
+		if (isset($HTTP_POST_VARS['okey_x'])) $this->act_row=0;
+
+//		if (!$this->act_row or isset($http_get_vars['okey_x'])) $sess_act_row=0;
+		
+		$this->f = new form;                   // create a form object
+		
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"usrnm",
+									 "size"=>11,
+									 "maxlength"=>50,
+		                             "value"=>$this->usrnm,
+									 "extrahtml"=>"style='width:120px;'"));
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"fname",
+									 "size"=>11,
+									 "maxlength"=>25,
+		                             "value"=>$this->fname,
+									 "extrahtml"=>"style='width:120px;'"));
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"lname",
+									 "size"=>11,
+									 "maxlength"=>45,
+		                             "value"=>$this->lname,
+									 "extrahtml"=>"style='width:120px;'"));
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"email",
+									 "size"=>11,
+									 "maxlength"=>50,
+		                             "value"=>$this->email,
+									 "extrahtml"=>"style='width:120px;'"));
+		$this->f->add_element(array("type"=>"checkbox",
+		                             "value"=>1,
+									 "checked"=>$this->onlineonly,
+		                             "name"=>"onlineonly"));
+		
+		$this->f->add_element(array("type"=>"submit",
+		                             "name"=>"okey",
+		                             "src"=>$config->img_src_path."butons/b_find.gif",
+									 "extrahtml"=>"alt='find'"));
+	
+	}
+	
+	function get_query_where_phrase($tablename=""){
+		if ($tablename) $tablename.=".";
+	
+		$query_c="";
+		if ($this->usrnm) $query_c.=$tablename."username like '%".$this->usrnm."%' and ";
+		if ($this->fname) $query_c.=$tablename."first_name like '%".$this->fname."%' and ";
+		if ($this->lname) $query_c.=$tablename."last_name like '%".$this->lname."%' and ";
+		if ($this->email) $query_c.=$tablename."email_address like '%".$this->email."%' and ";
+		$query_c.="1 ";
+		
+		return $query_c;
+	
+	}
+	
+	function print_form(){
+		$this->f->start("form");				// Start displaying form?>
+	<table border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr>
+	<td class="f12b">username</td>
+	<td class="f12b">first name</td>
+	<td class="f12b">last name</td>
+	<td class="f12b">email</td>
+	</tr>
+	<tr>
+	<td><?$this->f->show_element("usrnm");?></td>
+	<td><?$this->f->show_element("fname");?></td>
+	<td><?$this->f->show_element("lname");?></td>
+	<td><?$this->f->show_element("email");?></td>
+	</tr>
+	<tr><td colspan="4" class="f12b">show on-line users only: <?$this->f->show_element("onlineonly");?></td></tr>
+	<tr><td colspan="4" align="right"><?$this->f->show_element("okey");?></td></tr>
+	</table>
+<?		$this->f->finish();					// Finish form
+	}
+
+}
+ 
+ 
+
+/**************************************
+ *         ppaid functions
+ **************************************/
+
+
+function pp_get_account_of_user($username, $ppaid_db, &$errors){
+	global $config;
+ 
+	$q="select ".$config->ppaid->p_account." ".
+		"from ".$config->ppaid->p_table." ".
+		"where ".$config->ppaid->p_user."='".$username."'";
+
+	$pp_res=mySQL_query($q, $ppaid_db);
+	if (!$pp_res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return null;}
+
+	if ($row=MySQL_Fetch_Array($pp_res)) $user_account=$row[$config->ppaid->p_account];
+	else $user_account=null;
+	
+	return $user_account;
+}
+
+function pp_add_funds_to_account($acid, $funds, $ppaid_db, &$errors){
+	global $config;
+
+	if (!$acid) { $errors[]="Account not specified"; return false;}
+
+	$q="update ".$config->ppaid->a_table." ".
+		"set ".$config->ppaid->a_credit."=".$config->ppaid->a_credit." + ".$funds." ".
+		"where ".$config->ppaid->a_id."='".$acid."'";
+	
+	$pp_res=mySQL_query($q, $ppaid_db);
+	if (!$pp_res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return false;}
+	
+	return true;
+}
+
 ?>
