@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.6 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: main_prepend.php,v 1.7 2004/10/12 12:52:14 kozlik Exp $
  */ 
 
 //require class defintions
@@ -39,7 +39,7 @@ require_once 'DB.php';
 //create log instance
 if ($config->enable_loging){
 	require_once 'Log.php';
-	$serwebLog  = &Log::singleton('file', $config->log_file, 'serweb', array(), PEAR_LOG_INFO);
+	eval('$serwebLog  = &Log::singleton("file", $config->log_file, "serweb", array(), '.$config->log_level.');');
 }
 else{
 	$serwebLog  = NULL;
