@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.5 2004/09/16 17:04:24 kozlik Exp $
+ * $Id: page_controler.php,v 1.6 2005/02/08 16:04:34 kozlik Exp $
  */ 
 
 /*
@@ -298,10 +298,29 @@ class page_conroler{
 		
 		}
 	}
+
+	function hack_protection(){
+	
+		if (isset($_POST) and is_array($_POST)){
+			foreach($_POST as $key=>$val){
+				$_POST[$key] = htmlspecialchars($val, ENT_QUOTES);
+			}
+		}
+
+		if (isset($_GET) and is_array($_GET)){
+			foreach($_GET as $key=>$val){
+				$_GET[$key] = htmlspecialchars($val, ENT_QUOTES);
+			}
+		}
+	}
+
 	
 	/*****************  start processing of page *******************/
 	function start(){
 		global $smarty, $lang_str, $page_attributes, $config;
+
+		/* translate chars '<', '>', etc. to &lt; &gt; etc.. */
+		$this->hack_protection();
 
 		if ($this->opt['shared_html_form']) $this->f = new form_ext;  // create a form object
 		
