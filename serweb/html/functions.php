@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
+ * $Id: functions.php,v 1.28 2004/01/18 14:12:36 jiri Exp $
  */
 
 
@@ -252,10 +252,15 @@ function get_user_name(&$errors){
 	if (!MySQL_Num_rows($res)) return false;
 	
 	$row=MySQL_Fetch_Object($res);
-	
+
+	return $row->first_name." ".$row->last_name." <".
+		$auth->auth["uname"]."@".$config->realm.">";
+
+/*
 	$name=$row->first_name;
 	if ($name) $name.=" ";
 	return $name.=$row->last_name;
+*/
 
 }
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.17 2003/12/22 20:20:12 jiri Exp $
+ * $Id: page.php,v 1.18 2004/01/18 14:12:36 jiri Exp $
  */
 
 	function put_headers(){
@@ -52,9 +52,9 @@
 		if ($user_name){?>
 			<div class="f12">
 				<table width="100%">
-				<tr><td align="left">Personal Page for: <?echo $user_name;?></td>
+				<tr><td align="left"><?echo $user_name;?></td>
 				<td align="right">&nbsp;<a href=logout.php>Logout</a></td>
-				<td align="right">&nbsp;<a href=/phpBB/>FAQ</a></td>
+				<td align="right">&nbsp;<a href=http://iptel.org/cgi-bin/fom?file=73>FAQ</a></td>
 				</tr>
 				</table>
 			</div>
