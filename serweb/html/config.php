@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.37 2004/03/04 22:47:37 kozlik Exp $
+ * $Id: config.php,v 1.38 2004/03/09 12:01:08 kozlik Exp $
  */
 
 class Csub_not {
@@ -288,6 +288,10 @@ class Cconfig {
 		
 		
 		$this->enable_tabs[11]=true;				//enable tab user_preferences
+		$this->enable_tabs[12]=true;				//enable tab speed dial
+
+		// string to which must start username from request uri in speed dial
+		$this->speed_dial_inititation="11";
 		
 		/* ------------------------------------------------------------*/
 		/* ACLs                                                        */
@@ -538,6 +542,7 @@ class Cconfig {
 		$this->table_user_preferences_types="usr_preferences_types";
 		$this->table_providers="providers";
 		$this->table_admin_privileges="admin_privileges";
+		$this->table_speed_dial="speed_dial";
 
 		/* these are table names as reffered from script and via FIFO */
 		$this->ul_table="location";
