@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.23 2003/09/15 03:13:47 jiri Exp $
+ * $Id: my_account.php,v 1.24 2003/09/15 03:49:49 jiri Exp $
  */
 
 require "prepend.php";
@@ -43,12 +43,14 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select email_address, allow_find, timezone from ".$config->table_subscriber." where username='".$user_id."'";
+	$q="select email_address, allow_find, timezone from ".$config->table_subscriber.
+		" where username='".$user_id."' and domain='".$config->realm."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query (1), line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	$q="select username from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
+	$q="select username from ".$config->table_grp.
+		" where username='".$user_id."' and grp='voicemail' and domain='".$config->realm."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query (2), line: ".__LINE__; break;}
 	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
@@ -232,8 +234,10 @@ do{
 
 		if ($config->show_voicemail_acl){ // if forwarding to voicemail checkbox is not enabled then don't change forward to voicemail state
 			if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
-				if ($f2voicemail) $q="insert into ".$config->table_grp." (username, grp) values ('".$user_id."', 'voicemail')";
-				else $q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
+				if ($f2voicemail) 
+					$q="insert into ".$config->table_grp." (username, grp,domain) values ('".$user_id."', 'voicemail', '".$config->realm."')";
+				else 
+					$q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail' and domain='".$config->realm."'";
 				
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query(4), line: ".__LINE__; break;}
@@ -251,14 +255,16 @@ do{
 	if ($db){
 
 		// get aliases
-		$q="select username from ".$config->table_aliases." where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
+		$q="select username from ".$config->table_aliases.
+			" where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
 		$aliases_res=MySQL_Query($q);
 		if (!$aliases_res) {$errors[]="error in SQL query(5), line: ".__LINE__; break;}
 		
 		// get Access-Control-list
 		if (!$config->show_voicemail_acl) $qc=" and grp!='voicemail' ";
 		else $qc="";
-		$q="select grp from ".$config->table_grp." where username='".$user_id."'".$qc." order by grp";
+		$q="select grp from ".$config->table_grp." where domain='".$config->realm.
+			"' and username='".$user_id."'".$qc." order by grp";
 		$grp_res=MySQL_Query($q);
 		if (!$grp_res) {$errors[]="error in SQL query(6), line: ".__LINE__; break;}
 
