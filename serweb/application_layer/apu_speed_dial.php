@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.2 2004/09/16 16:55:08 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.3 2004/09/21 13:33:06 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -163,7 +163,7 @@ class apu_speed_dial extends apu_base_class{
 		}
 	
 	
-		return true;
+		return array("m_sd_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 	/* this metod is called always at begining */
@@ -266,7 +266,7 @@ class apu_speed_dial extends apu_base_class{
 	function return_messages(&$msgs){
 		global $_GET;
 		
-		if (isset($_GET['m_my_apu_updated']) and $_GET['m_my_apu_updated'] == $this->opt['instance_id']){
+		if (isset($_GET['m_sd_updated']) and $_GET['m_sd_updated'] == $this->opt['instance_id']){
 			$msgs[]=&$this->opt['msg_update'];
 			$this->smarty_action="was_updated";
 		}
