@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.16 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: my_account.php,v 1.17 2003/04/03 09:57:23 kozlik Exp $
  */
 
 require "prepend.php";
@@ -135,7 +135,7 @@ do{
 		/* construct FIFO command */
 		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".		//table
-			$user_id."\n".	//username
+			$user_id."@".$config->default_domain."\n".	//username
 			$del_contact."\n\n";			//contact
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
@@ -167,7 +167,7 @@ do{
 		/* construct FIFO command */
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".			//table
-			$user_id."\n".		//username
+			$user_id."@".$config->default_domain."\n".		//username
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
 			$config->ul_priority."\n\n";		//priority
@@ -245,7 +245,7 @@ do{
 		// get UsrLoc
 		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
 		$config->ul_table."\n".		//table
-		$user_id."\n\n";	//username
+		$user_id."@".$config->default_domain."\n\n";	//username
 
 		$out=write2fifo($fifo_cmd, $err, $status);
 		if ($err or !$out) {
