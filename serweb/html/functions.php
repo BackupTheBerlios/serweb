@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.17 2003/04/29 08:12:57 kozlik Exp $
+ * $Id: functions.php,v 1.18 2003/05/26 21:16:09 jiri Exp $
  */
 
 
@@ -316,7 +316,7 @@ function filter_fl($in){
 		
 	}
 	
-	return result;
+	return $result;
 }
 
 function click_to_dial($target, $uri, &$errors){
