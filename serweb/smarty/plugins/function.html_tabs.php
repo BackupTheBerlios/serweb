@@ -49,10 +49,10 @@ function smarty_function_html_tabs($params, &$smarty){
 	foreach($tabs as $i => $value){
 		if ($value->enabled){
 			if ($value->page==$selected and !$no_select){
-				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong>'.$value->name.'</strong><div class="swTabsR"></div></li>';
+				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong><span>'.$value->name.'</span></strong><div class="swTabsR"></div></li>';
 			}
 			else{
-				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->page."?kvrk=".uniqID("")).'" class="tabl">'.$value->name.'</a><div class="swTabsR"></div></li>';
+				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->page."?kvrk=".uniqID("")).'" class="tabl"><span>'.$value->name.'</span></a><div class="swTabsR"></div></li>';
 			}//if ($value->page==$selected)
 		}// if ($value->enabled)
 	} //foreach		
