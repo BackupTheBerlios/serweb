@@ -175,6 +175,20 @@ body {
 	font-weight: bold ;
 }
 
+.f10{
+        font-size : 10px;
+}
+
+.f10i{
+        font-size : 10px;
+	font-style : italic;
+}
+
+.f10b{
+        font-size : 10px;
+	font-weight : bold;
+}
+
 .f12{
 	font-size : 12px;
 }
