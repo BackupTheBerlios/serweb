@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.23 2003/09/16 16:49:53 kozlik Exp $
+ * $Id: functions.php,v 1.24 2003/10/02 16:13:16 kozlik Exp $
  */
 
 
@@ -433,6 +433,25 @@ function ptitle($title, $width=502){?>
 <tr><td class="title" width="<? echo $width; ?>"><?echo $title;?></td></tr>
 </table><br>
 <?}
+
+
+function set_password_to_user($user_id, $passwd, &$errors){
+	global $config;
+	
+	$inp=$user_id.":".$config->realm.":".$passwd;
+	$ha1=md5($inp);
+	
+	$inpb=$user_id."@".$config->domainname.":".$config->realm.":".$passwd;
+	$ha1b=md5($inpb);
+
+	$q="update ".$config->table_subscriber." set password='$passwd', ha1='$ha1', ha1b='$ha1b' ".
+		" where username='".$user_id."' and domain='".$config->realm."'";
+
+	$res=MySQL_Query($q);
+	if (!$res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return false;}
+
+	return true;
+}
 
 /**************************************
  *         find users class
