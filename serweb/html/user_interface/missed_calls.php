@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.13 2003/06/04 09:49:09 kozlik Exp $
+ * $Id: missed_calls.php,v 1.14 2003/07/07 20:37:38 jiri Exp $
  */
 
 require "prepend.php";
@@ -109,12 +109,20 @@ do{
 							substr($row->time,0,4));	//year
 	
 		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
-		else $time=date('Y-m-d H:i',$timestamp)
+		else $time=date('Y-m-d H:i',$timestamp);
 		
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
+
+		if ($flag==1) {
+			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
+		} else {
+			$flag = 1; $bgc = "bgcolor=\"#EEEEEE\"";
+		}
+
+
+		echo "<tr valign=top ".$bgc.">";
 	?>
-	<tr valign="top">
 	<td align="left" class="f12" width="135"><a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->from_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo htmlspecialchars($row->sip_from);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
