@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.13 2002/11/30 09:45:46 jiri Exp $
+ * $Id: config.php,v 1.14 2002/12/09 21:57:01 kozlik Exp $
  */
 
 class Csub_not {
@@ -144,11 +144,11 @@ class Cconfig {
 		$this->stun_applet_width=350;				//width of NAT detection applet
 		$this->stun_applet_height=100;				//height of NAT detection applet
 		$this->stun_class="STUNClientApplet.class"; //starting class of NAT detection applet
-		$this->stun_archive="STUNClientApplet.jar"; //jar archive with NAT detection applet - optional - you can comment it if you don't use jar archive
+		$this->stun_archive="STUNClientApplet2.jar"; //jar archive with NAT detection applet - optional - you can comment it if you don't use jar archive
 
 		// applet parameters:
 		// STUN server address - must be same as web server address because the java security manager allows only this one
-		$this->stun_applet_param[]=new Capplet_params("server", "iptel.org");
+		$this->stun_applet_param[]=new Capplet_params("server", "oook");
 		
 		//STUN server port. The Default value is 1221 - optional - you can comment it if you want use default value
 //		$this->stun_applet_param[]=new Capplet_params("port", 1221);
@@ -158,6 +158,12 @@ class Cconfig {
 
 		//Specify source port of UDP packet to be sent from. The Default value is 5000 - optional - you can comment it if you want use default value
 //		$this->stun_applet_param[]=new Capplet_params("sourceport", 5000);
+
+		//Specify port for TCP dummy connection to server. This connection is used for get local IP address.
+		//Some process must listenning on this port. The Default value is 5060  - optional - you can comment it if you want use default value
+		//Because java security manager don't allow detect local ip address, applet must create some dummy tcp connection to the server 
+		//and get local ip from structures for this tcp connection
+//		$this->stun_applet_param[]=new Capplet_params("tcp_dummyport", 5060);
 
 
 		$this->grp_values[]="voicemail";
