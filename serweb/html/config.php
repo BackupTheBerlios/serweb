@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.32 2004/03/02 19:14:30 kozlik Exp $
+ * $Id: config.php,v 1.33 2004/03/03 16:33:15 kozlik Exp $
  */
 
 class Csub_not {
@@ -277,6 +277,17 @@ class Cconfig {
 		$this->enable_tabs[8]=true;				//enable tab voicemail
 		$this->setup_jabber_account=false;
 
+		$this->jserver = "bat.iptel.org";   # Jabber server hostname
+		$this->jport = "5222";     			# Jabber server port
+		$this->jcid  = 0;      				# Jabber communication ID
+		
+		# Jabber module database
+		$this->jab_db_srv="bat.iptel.org";  # database server
+		$this->jab_db_usr="s2jgw";  		# database user
+		$this->jab_db_pas="47s2jgw11";  	# database user's password
+		$this->jab_db_db="sip_jab";   		# database name
+		
+		
 		$this->enable_tabs[11]=true;				//enable tab user_preferences
 		
 		/* ------------------------------------------------------------*/
