@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.6 2004/12/01 17:43:45 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.7 2004/12/15 11:57:58 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -49,6 +49,11 @@
    'new_uri_max_chars'			(int) default: 128
      maximum number of characters in fields new_uri
 
+	 
+   'sort_asc_on_change_col'		(bool) default: true;
+     If true, sorting direction is set to ASCENDING when column by which is output sorted is changed
+	 
+	 
    'validate_funct'				(string) default: null
      name of enhanced validate function of entered uri
 	 validate function must return true or false, first parametr is reference
@@ -142,6 +147,7 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
 
+		$this->opt['sort_asc_on_change_col'] = true;	
 
 		$this->opt['validate_funct'] = null;	
 		
@@ -223,19 +229,25 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* this metod is called always at begining */
 	function init(){
-		global $sess, $sess_sd_act_row, $sess_sd_sort, $sess_sd_fill_sql_table;
+		global $sess, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir, $sess_sd_fill_sql_table;
 		parent::init();
 		
 		if (!$sess->is_registered('sess_sd_act_row')) $sess->register('sess_sd_act_row');
 		if (!$sess->is_registered('sess_sd_sort'))    $sess->register('sess_sd_sort');
+		if (!$sess->is_registered('sess_sd_sort_dir'))    $sess->register('sess_sd_sort_dir');
 		if (!$sess->is_registered('sess_sd_fill_sql_table'))    $sess->register('sess_sd_fill_sql_table');
 		if (!isset($sess_sd_act_row)) $sess_sd_act_row=0;
 		if (!isset($sess_sd_sort)) $sess_sd_sort='from_uri';
+		if (!isset($sess_sd_sort_dir)) $sess_sd_sort_dir='asc';
 		if (!isset($sess_sd_fill_sql_table)) $sess_sd_fill_sql_table=true;
 		
 		if (isset($_GET['act_row'])) $sess_sd_act_row=$_GET['act_row'];
 
 		if (isset($_GET['sd_order_by'])) {
+			// save curent sorting column
+			$sd_sort = $sess_sd_sort;
+			
+			// asign new value to $sess_sd_sort
 			switch ($_GET['sd_order_by']){
 			case "tu":
 				$sess_sd_sort = 'to_uri'; break;
@@ -247,6 +259,15 @@ class apu_speed_dial extends apu_base_class{
 				$sess_sd_sort = 'from_uri';
 			}
 			$sess_sd_act_row=0;
+			
+			// if $sd_sort = $sess_sd_sort change sorting direction
+			if ($sd_sort == $sess_sd_sort){
+				if ($sess_sd_sort_dir == 'asc')	$sess_sd_sort_dir = 'desc';
+				else $sess_sd_sort_dir = 'asc';
+			}
+			else{
+				if($this->opt['sort_asc_on_change_col']) $sess_sd_sort_dir = 'asc';
+			}
 		}
 		
 		$this->reg = new Creg;				// create regular expressions class
@@ -266,7 +287,7 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $lang_str, $sess_sd_act_row, $sess_sd_sort, $sess_sd_fill_sql_table;
+		global $data, $lang_str, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir, $sess_sd_fill_sql_table;
 		parent::create_html_form($errors);
 
 		if ($sess_sd_fill_sql_table){
@@ -275,8 +296,10 @@ class apu_speed_dial extends apu_base_class{
 			$sess_sd_fill_sql_table = false; 
 		}
 
-		$opt=array('sort' => $sess_sd_sort);
-
+		
+		$opt=array('sort' => $sess_sd_sort,
+		           'sort_desc' => ($sess_sd_sort_dir == 'asc' ? false : true));
+				   
 		$data->set_act_row($sess_sd_act_row);
 		$data->set_showed_rows(10);
 			

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_speed_dials.php,v 1.3 2004/11/29 21:32:50 kozlik Exp $
+ * $Id: method.get_speed_dials.php,v 1.4 2004/12/15 11:57:58 kozlik Exp $
  */
 
 /*
@@ -21,6 +21,9 @@
  *    sort  	(one of: 'from_uri', 'fname', 'lname', 'to_uri') default: 'from_uri'
  *      column by which the result may be sorted
  *
+ *    sort_desc  	(boolean) default: false
+ *      By default is output sorted ascending. Setting this option to true cause sorting descending
+ *
  */ 
 
 class CData_Layer_get_speed_dials {
@@ -31,7 +34,8 @@ class CData_Layer_get_speed_dials {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-    	$opt_sort   = (isset($opt['sort']))   ? $opt['sort'] : "from_uri";
+    	$opt_sort      = (isset($opt['sort']))      ? $opt['sort'] : "from_uri";
+    	$opt_sort_desc = (isset($opt['sort_desc'])) ? $opt['sort_desc'] : false;
 
 		$where_phrase = "";
 		
@@ -42,19 +46,37 @@ class CData_Layer_get_speed_dials {
 			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by ";
 			
 		/* sorting */
-		switch ($opt_sort){	/* the expressions cause that empty values are on the end */
-		case "from_uri":
-			$q .= "if(ifnull(trim(username_from_req_uri)='',1), char(255, 255, 255), username_from_req_uri)"; break;
-		case "to_uri":
-			$q .= "if(ifnull(trim(new_request_uri)='',1), char(255, 255, 255), new_request_uri)"; break;
-		case "fname":
-			$q .= "if(ifnull(trim(first_name)='',1), char(255, 255, 255), first_name)"; break;
-		case "lname":
-			$q .= "if(ifnull(trim(last_name)='',1), char(255, 255, 255), last_name)"; break;
-		default: 
-			log_errors(PEAR::raiseError("unknown sorting column: ".$opt_sort), $errors); return false;
+		if ($opt_sort_desc){    /* sorting descending*/
+			switch ($opt_sort){	
+			case "from_uri":
+				$q .= "username_from_req_uri desc"; break;
+			case "to_uri":
+				$q .= "new_request_uri desc"; break;
+			case "fname":
+				$q .= "first_name desc"; break;
+			case "lname":
+				$q .= "last_name desc"; break;
+			default: 
+				log_errors(PEAR::raiseError("unknown sorting column: ".$opt_sort), $errors); return false;
+			}
+		}
+		else{                   /* sorting ascending*/
+			switch ($opt_sort){	/* the expressions cause that empty values are on the end */
+			case "from_uri":
+				$q .= "if(ifnull(trim(username_from_req_uri)='',1), char(255, 255, 255), username_from_req_uri)"; break;
+			case "to_uri":
+				$q .= "if(ifnull(trim(new_request_uri)='',1), char(255, 255, 255), new_request_uri)"; break;
+			case "fname":
+				$q .= "if(ifnull(trim(first_name)='',1), char(255, 255, 255), first_name)"; break;
+			case "lname":
+				$q .= "if(ifnull(trim(last_name)='',1), char(255, 255, 255), last_name)"; break;
+			default: 
+				log_errors(PEAR::raiseError("unknown sorting column: ".$opt_sort), $errors); return false;
+			}
 		}
 
+		
+		
 		$q .= " limit ".$this->get_act_row().", ".$this->get_showed_rows();
 			
 		$res=$this->db->query($q);
