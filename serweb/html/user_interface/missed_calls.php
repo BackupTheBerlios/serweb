@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.10 2003/04/04 02:30:05 jiri Exp $
+ * $Id: missed_calls.php,v 1.11 2003/04/27 01:11:44 jiri Exp $
  */
 
 require "prepend.php";
@@ -26,7 +26,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
-	$q="select t1.from_uri, t1.sip_from, t1.time, t1.sip_status from ".
+	$q="select distinct t1.from_uri, t1.sip_from, t1.time, t1.sip_status from ".
 		$config->table_missed_calls." t1, ".$config->table_aliases." t2".
 		" where t1.username='".$auth->auth["uname"].
 		"' OR ('sip:".$auth->auth["uname"]."@".$config->default_domain.
