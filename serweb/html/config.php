@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.9 2002/09/24 14:59:42 kozlik Exp $
+ * $Id: config.php,v 1.10 2002/09/25 23:26:47 jiri Exp $
  */
 
 class Csub_not {
@@ -95,9 +95,9 @@ class Cconfig {
 	
 	function Cconfig(){
 		$this->db_host="localhost";					//database host
-		$this->db_name="iptel";						//database name
-		$this->db_user="root";						//database conection user
-		$this->db_pass="qwer";						//database conection password
+		$this->db_name="ser";						//database name
+		$this->db_user="ser";						//database conection user
+		$this->db_pass="heslo";						//database conection password
 
 		// names of tables
 		$this->table_subscriber="subscriber";
@@ -116,14 +116,13 @@ class Cconfig {
 		$this->enable_test_firewall=false;
 		
 		$this->grp_values[]="voicemail";
-		$this->grp_values[]="grp 1";
-		$this->grp_values[]="grp 2";
-		$this->grp_values[]="grp 3";
-		$this->grp_values[]="grp 4";
+		$this->grp_values[]="ld";
+		$this->grp_values[]="local";
+		$this->grp_values[]="int";
 		
 
-		$this->realm="iptel.org";
-		$this->domainname="iptel.org";
+		$this->realm="foo.bar";
+		$this->domainname="foo.bar";
 
 		$this->first_alias_number=18888;
 		
@@ -145,7 +144,7 @@ class Cconfig {
 		$this->ul_priority="1.00";
 
 		$this->im_length=1300;								//max length of instant message
-		$this->default_domain="iptel.org";
+		$this->default_domain="foo.bar";
 		
 		$this->root_path="/~iptel/";
 		$this->img_src_path =	$this->root_path."img/";
