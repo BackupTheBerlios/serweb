@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.4 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: of_select.inc,v 1.5 2004/09/16 17:06:47 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -28,7 +28,11 @@ class of_select extends of_element {
       $n = $this->name;
       $t = "select";
     }
-    $str .= "<$t name='$n' id='$n'";
+	
+	/* id is same as name without [] on the end */
+	$id = ereg_replace("(^[^][]+)(.*)", "\\1", $n);
+	
+    $str .= "<$t name='$n' id='$id'";
     if ($this->size) 
       $str .= " size='$this->size'";
     if ($this->extrahtml) 
