@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.8 2003/12/12 22:01:17 jiri Exp $
+ * $Id: find_user.php,v 1.9 2004/02/19 13:20:34 kozlik Exp $
  */
 
 require "prepend.php";
@@ -123,7 +123,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
-<?$f->finish("","sip_address_completion(f.sip_uri);");					// Finish form?>
+<?$f->finish("","");					// Finish form?>
 
 <?if ($find_res and MySQL_num_rows($find_res)){?>
 
