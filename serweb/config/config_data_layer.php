@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.2 2004/12/10 17:52:01 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
@@ -69,8 +69,17 @@
 		   or 'username' (for keyiing by username and domain). The right value depends on your
 		   database schema.
 		*/
-		$config->users_indexed_by= "username";
+		$config->users_indexed_by= "uuid";
 
+		/* if true, serweb will create/delete entries in table uri when alisa will be created/deleted
+		   (working only in uuidized version)
+		*/
+		$config->use_table_uri = true;
+
+		/* 	if true, serweb will add new subscriber also into aliases table instead of into subscriber table only
+		*/
+		$config->copy_new_subscribers_to_aliases_table = true;		
+		
 		/* Unless you used brute-force to change SER table names */
 		$config->data_sql->table_subscriber="subscriber";
 		$config->data_sql->table_pending="pending";
@@ -95,6 +104,8 @@
 		$config->data_sql->table_calls_forwarding="calls_forwarding";
 		$config->data_sql->table_domain="domain";
 		$config->data_sql->table_whitelist="whitelist";
+		$config->data_sql->table_lcr="lcr";
+		$config->data_sql->table_uri="uri";
 		
 
 		$config->data_layer_always_required_functions=array('check_passw_of_user',
