@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.19 2003/04/03 20:07:21 jiri Exp $
+ * $Id: my_account.php,v 1.20 2003/04/29 08:12:57 kozlik Exp $
  */
 
 require "prepend.php";
@@ -325,6 +325,7 @@ if ($okey_x){							//data isn't valid or error in sql
 
 //-->
 </script>
+<script language="JavaScript" src="ctd.js"></script>
 </head>
 <?
 	if ($perm->have_perm("admin") and $uid){
@@ -486,7 +487,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <?if ($config->enable_dial_voicemail or $config->enable_test_firewall){?>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<?if ($config->enable_dial_voicemail){?><td align="center"><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td><?}?>
+<?if ($config->enable_dial_voicemail){?><td align="center"><a href="javascript: open_ctd_win('<?echo RawURLEncode("sip:".$user_id."@".$config->default_domain); ?>');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td><?}?>
 <?if ($config->enable_test_firewall){?><td align="center"><a href="javascript:stun_applet_win();"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td><?}?>
 </tr>
 </table>

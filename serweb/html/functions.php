@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.16 2003/04/07 05:23:26 jiri Exp $
+ * $Id: functions.php,v 1.17 2003/04/29 08:12:57 kozlik Exp $
  */
 
 
@@ -278,5 +278,121 @@ function get_location($sip_adr, &$errors){
 
 	if (!$row) return "n/a";
 	return $row->location;
+}
+
+function filter_fl($in){
+	$line=0;
+	$result="";
+	
+	$in_arr=explode("\n", $in);
+	
+	foreach($in_arr as $row){
+		$line++;
+		
+		//skip body
+		if ($row=="") break;
+		
+		// uri and outbound uri at line 2,3: copy and paste
+		if ($line==1 || $line==2) {
+			$result.=$row."\n";
+			continue;
+		}
+		
+		// line 4: Route; empty if ".", copy and paste otherwise
+		if ($line==3 && $row=".") continue;
+		// if non-empty, copy and paste it
+		if ($line==3) {
+			$result.=$row."\n";
+			continue;
+		}
+
+		// filter out to header field for use in next requests	
+		if (ereg ("^(To|t):", $row)){
+			$result.=$row."\n";
+			continue;
+		}
+		
+		// anything else will be ignored
+		
+	}
+	
+	return result;
+}
+
+function click_to_dial($target, $uri, &$errors){
+	global $config;
+
+	$from="<sip:controller@foo.bar>";
+	$callidnr = uniqid("");
+	$callid = $callidnr.".fifouacctd";
+	$cseq=1;
+	$fixed_dlg="From: ".$from.";tag=".$callidnr."\nCall-ID: ".$callid."\nContact: <sip:caller@!!>";
+	$status="";
+
+
+/* initiate dummy INVITE with pre-3261 "on-hold"
+   (note the dots -- they mean in order of appearance:
+   outbound uri, end of headers, end of body; eventualy
+   the FIFO request must be terminated with an empty line) */
+	
+	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
+		"INVITE\n".
+		$uri."\n".
+		".\n".
+		"$fixed_dlg\n".
+		"To: <".$uri.">\n".
+		"CSeq: ".$cseq." INVITE\n".
+		"Content-Type: application/sdp\n".
+		".\n".
+		"v=0\n".
+		"o=click-to-dial 0 0 IN IP4 0.0.0.0\n".
+		"s=session\n".
+		"c=IN IP4 0.0.0.0\n".
+		"b=CT:1000\n".
+		"t=0 0\n".
+		"m=audio 9 RTP/AVP 0\n".
+		"a=rtpmap:0 PCMU/8000\n".
+		".\n\n";
+		
+	$dlg=write2fifo($fifo_cmd, $errors, $status);
+	if (substr($status,0,1)!="2") {$errors[]=$status; return; }
+
+	$dlg=filter_fl($dlg);
+	
+	$cseq++;
+	
+	// start reader now so that it is ready for replies
+	// immediately after a request is out
+	
+	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
+		"REFER\n".
+		$dlg.		//"\n".
+		"$fixed_dlg\n".
+		"CSeq: ".$cseq." REFER\n".
+		"Referred-By: ".$from."\n".
+		"Refer-To: ".$target."\n".
+		".\n".
+		".\n\n";
+
+	write2fifo($fifo_cmd, $errors, $status);
+	if (substr($status,0,1)!="2") {$errors[]=$status; return; }
+
+	$cseq++;
+
+/* well, URI is trying to call TARGET but still maintains the
+   dummy call we established with previous INVITE transaction:
+   tear it down */
+
+	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
+		"BYE\n".
+		$dlg."\n".
+		$fixed_dlg."\n".
+		"CSeq: ".$cseq." BYE\n".
+		".\n";
+		".\n\n";
+
+	write2fifo($fifo_cmd, $errors, $status);
+	if (substr($status,0,1)!="2") {$errors[]=$status; return; }
+   
 }
 ?>

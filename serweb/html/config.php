@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.22 2003/04/26 17:57:21 jiri Exp $
+ * $Id: config.php,v 1.23 2003/04/29 08:12:57 kozlik Exp $
  */
 
 class Csub_not {
@@ -138,6 +138,8 @@ class Cconfig {
 	var $clear_text_pw;
 	var $ul_multidomain;
 
+	var $ctd_target;
+	var $ctd_uri;
 
 	function Cconfig(){
 		////////////////////////////////////////////////////////////////
@@ -461,6 +463,18 @@ class Cconfig {
 		*/
 		$this->ser_moni_aggregation_interval=60*15;	//15 minut
 
+		/* ------------------------------------------------------------*/
+		/*            click to dial                                    */
+		/* ------------------------------------------------------------*/
+
+		/* address of the final destination to which we want to transfer
+		   initial CSeq and CallId */
+		$this->ctd_target="sip:23@192.168.2.16";
+
+		/* address of user wishing to initiate conversation */
+		$this->ctd_uri="sip:44@192.168.2.16";
+		
+		
 		/* ------------------------------------------------------------*/
 		/* Values you typically do NOT want to change unless you know  *
         /* well what you are doing                                     *
