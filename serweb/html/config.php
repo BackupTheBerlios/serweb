@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.15 2003/01/07 18:27:55 kozlik Exp $
+ * $Id: config.php,v 1.16 2003/01/21 00:17:54 kozlik Exp $
  */
 
 class Csub_not {
@@ -43,6 +43,8 @@ class Cconfig {
 	var $table_phonebook;
 	var $table_event;
 	var $table_netgeo_cache;
+	var $table_ser_mon;
+	var $table_ser_mon_ul;
 
 	var $show_voicemail_acl;
 
@@ -142,6 +144,8 @@ class Cconfig {
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
 		$this->table_netgeo_cache="netgeo_cache";
+		$this->table_ser_mon="server_monitoring";
+		$this->table_ser_mon_ul="server_monitoring_ul";
 
 
 		////////////////////////////////////////////////////////////////
