@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.11 2004/08/26 13:50:44 kozlik Exp $
+ * $Id: user_preferences.php,v 1.12 2004/08/28 10:49:54 kozlik Exp $
  */
 
 /*
@@ -214,8 +214,7 @@ class User_Preferences {
 		                             "name"=>$att_name,
 									 "size"=>1,
 	    	                         "value"=>$value,
-									 "options"=>$opt,
-									 "extrahtml"=>"style='width:120px;'"));
+									 "options"=>$opt));
 			break;
 		case 'radio':
 			$items=unserialize(is_string($type_spec)?$type_spec:"");
@@ -240,8 +239,7 @@ class User_Preferences {
 									 "maxlength"=>16,
 	    	                         "value"=>$value,
 		                             "valid_regex"=>"^[0-9]+$",
-		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_number'],
-									 "extrahtml"=>"style='width:120px;'"));
+		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_number']));
 			break;
 		case 'sip_adr':
 			$form->add_element(array("type"=>"text",
@@ -251,15 +249,14 @@ class User_Preferences {
 	    	                         "value"=>$value,
 		                             "valid_regex"=>"^".$this->reg->sip_address."$",
 		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_sip_adr'],
-									 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
+									 "extrahtml"=>"onBlur='sip_address_completion(this)'"));
 			break;
 		case 'string':
 			$form->add_element(array("type"=>"text",
 		                             "name"=>$att_name,
 									 "size"=>16,
 									 "maxlength"=>255,
-	    	                         "value"=>$value,
-									 "extrahtml"=>"style='width:120px;'"));
+	    	                         "value"=>$value));
 			break;
 		}
 	}
