@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.9 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: user_preferences.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
  */
 
 /*
@@ -73,6 +73,7 @@ class User_Preferences {
 		$this->att_types['string'] = 	new UP_att_types("String", 2);
 		$this->att_types['sip_adr'] = 	new UP_att_types("SIP address", 2);
 		$this->att_types['list'] =	 	new UP_att_types("List of values", 2);
+		$this->att_types['radio'] =	 	new UP_att_types("List of values - radio", 2);
 		$this->att_types['provider'] = 	new UP_att_types("List of providers", 2);
 		
 		$this->reg = new Creg;				// create regular expressions class
@@ -92,8 +93,9 @@ class User_Preferences {
 			break;
 		
 		case 'list':
+		case 'radio':
 		case 'provider':
-			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
+			if ($type=='list' or $type=='radio') $items=unserialize(is_string($type_spec)?$type_spec:"");
 			if ($type=='provider') $items=$this->providers->get_items();
 
 			if (is_Array($items)){
@@ -125,8 +127,9 @@ class User_Preferences {
 			break;
 		
 		case 'list':
+		case 'radio':
 		case 'provider':
-			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
+			if ($type=='list' or $type=='radio') $items=unserialize(is_string($type_spec)?$type_spec:"");
 			if ($type=='provider') $items=$this->providers->get_items();
 			
 			if (!$items) return true;
@@ -213,6 +216,22 @@ class User_Preferences {
 	    	                         "value"=>$value,
 									 "options"=>$opt,
 									 "extrahtml"=>"style='width:120px;'"));
+			break;
+		case 'radio':
+			$items=unserialize(is_string($type_spec)?$type_spec:"");
+
+			if (!is_array($items)) $items=array();
+			$opt=array();
+
+			foreach($items as $item){
+				$opt[]=array("label" => $item->label, "value" => $item->value);
+			}
+			
+			$form->add_element(array("type"=>"radio",
+		                             "name"=>$att_name,
+									 "options"=>$opt,
+	    	                         "value"=>$value));
+
 			break;
 		case 'int':
 			$form->add_element(array("type"=>"text",

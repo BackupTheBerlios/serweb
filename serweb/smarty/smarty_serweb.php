@@ -43,7 +43,19 @@ class Smarty_Serweb extends Smarty {
 		/* add elements of form to assoc array */
 		if (is_array($form->elements)){
 			foreach($form->elements as $nm => $el){
-				$f[$nm] = $form->get_element($nm);
+				/* if element is radio we must add form elements for each radio button */
+				if (get_class($el['ob']) == 'of_radio'){
+					/* values of radio buttos shold be stored in 'options' property, if they are not -> ignore this element */
+					if (isset($el['ob']->options) and is_array($el['ob']->options)){
+						foreach($el['ob']->options as $opt){
+							$f[$nm.'_'.$opt['value']] = $form->get_element($nm, $opt['value']);
+						}
+					}
+				}
+				else {
+					/* for all others elements simply add them to $f array */
+					$f[$nm] = $form->get_element($nm);
+				}
 			}
 		}
 

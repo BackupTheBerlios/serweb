@@ -1,0 +1,24 @@
+$Id: user_preferences_cz,v 1.1 2004/08/26 13:09:20 kozlik Exp $
+
+User preferences
+----------------
+
+Vkladani do smarty tamplates:
+{$form.<name>} kde <name> je jmeno prislusneho atributu
+
+Ve vygenerovanem tagu je 'name' i 'id' rovno <name>
+
+
+User preferences - radio button
+-------------------------------
+Radio buttony se trosku lisi od ostatnich attributu:
+
+Edit list items -> staci vyplnit jenom value, na label nezalezi
+
+do smarty templates se pak jednotlive radio buttony vkladaji jako:
+
+{$form.<name>_<value>} kde
+<name> je jmeno cele skupiny radio buttonu
+<value> je value prislusneho buttonu
+
+Ve vygenerovanem tagu je 'name' rovno <name> a 'id' <name>_<value>

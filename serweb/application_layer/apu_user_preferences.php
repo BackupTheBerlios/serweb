@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.2 2004/08/26 13:09:20 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -15,6 +15,7 @@
    								default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
    'smarty_attributes'			name of smarty variable - see below
    'smarty_form'				name of smarty variable - see below
+   'form_name'					name of html form
    
    Exported smarty variables:
    --------------------------
@@ -56,6 +57,9 @@ class apu_user_preferences extends apu_base_class{
 		$this->opt['smarty_attributes'] =	'attributes';
 		/* form */
 		$this->opt['smarty_form'] =			'form';
+
+		/* name of html form */
+		$this->opt['form_name'] =			'';
 	}
 
 	/* 
@@ -203,7 +207,11 @@ class apu_user_preferences extends apu_base_class{
 		
 		$js_on_subm="";
 		$smarty->assign($this->opt['smarty_attributes'], $this->format_attributes_for_output($this->opt['attributes'], $js_on_subm));
-		$smarty->assign_phplib_form($this->opt['smarty_form'], $this->f, array('jvs_name'=>'form_'.$this->opt['instance_id']), array('before'=>$js_on_subm));
+		$smarty->assign_phplib_form($this->opt['smarty_form'], 
+									$this->f, 
+									array('jvs_name'=>'form_'.$this->opt['instance_id'],
+									      'form_name'=>$this->opt['form_name']), 
+									array('before'=>$js_on_subm));
 	}
 }
 

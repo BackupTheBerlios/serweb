@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('update_att_type_spec', 'get_attribute');
@@ -48,8 +48,8 @@ do{
 	//get attrib from DB
 	if (false === $row = $data->get_attribute($attrib_name, $errors)) break;
 	
-	if ($row->att_rich_type!="list"){
-		//attrib isn't list of items -> nothing to edit -> go back to attributes editing page
+	if ($row->att_rich_type!="list" and $row->att_rich_type!="radio"){
+		//attrib isn't neither list of items nor radio -> nothing to edit -> go back to attributes editing page
 
 		Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
 		page_close();

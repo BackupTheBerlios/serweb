@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: user_preferences.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('del_attribute', 'get_attribute', 'update_attribute', 'get_attributes');
@@ -120,7 +120,7 @@ do{
 
 		if (!$data->update_attribute($att_edit, $att_name, $att_rich_type, $usr_pref->att_types[$att_rich_type]->raw_type, $default_value, $errors)) break;
 
-		if (!$att_edit and $att_rich_type=="list") 
+		if (!$att_edit and ($att_rich_type=="list" or $att_rich_type=="radio")) 
 	        Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_name)."&kvrk=".uniqID("")));
 		else
 	        Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
@@ -161,7 +161,7 @@ $smarty->assign('attributes', format_attributes_for_output($attributes, $usr_pre
 
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
 
-if($att_edit and $att_rich_type=="list")
+if($att_edit and ($att_rich_type=="list" or $att_rich_type=="radio"))
 	$smarty->assign('url_edit_list', $sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID("")));
 
 $smarty->assign_by_ref('lang_str', $lang_str);
