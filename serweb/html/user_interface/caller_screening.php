@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.1 2004/03/09 15:40:18 kozlik Exp $
+ * $Id: caller_screening.php,v 1.2 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -122,77 +122,57 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(13, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">caller uri (regular expression):</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="uri_re">caller uri (regular expression):</label></td>
 	<td><?$f->show_element("uri_re");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">action:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="action_key">action:</label></td>
 	<td><?$f->show_element("action_key");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","");					// Finish form?>
+</div>
 
 <?if ($cs_res and MySQL_num_rows($cs_res)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT">caller uri</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">action</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">&nbsp;</td>
+	<th>caller uri</th>
+	<th>action</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while ($row=MySQL_Fetch_Object($cs_res)){
 		$odd=$odd?0:1;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12">&nbsp;<?echo $row->uri_re;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12"><?echo Ccall_fw::get_label($config->calls_forwarding["screening"], $row->action, $row->param1, $row->param2);?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&edit_caller=".$row->uri_re);?>">edit</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&dele_caller=".$row->uri_re);?>">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($row->uri_re);?></td>
+	<td align="left"><?echo nbsp_if_empty(Ccall_fw::get_label($config->calls_forwarding["screening"], $row->action, $row->param1, $row->param2));?></td>
+	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&edit_caller=".$row->uri_re);?>">edit</a></td>
+	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&dele_caller=".$row->uri_re);?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 <?}else{?>
 
-<br><div align="center">No caller screenings defined</div>
+<div class="swNumOfFoundRecords">No caller screenings defined</div>
 
 <?}?>
 

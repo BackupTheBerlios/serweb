@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.11 2004/03/03 15:41:31 kozlik Exp $
+ * $Id: phonebook.php,v 1.12 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -128,12 +128,9 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
+
 <script language="JavaScript">
 <!--
 	function sip_address_completion(adr){
@@ -152,86 +149,65 @@ if ($okey_x){							//data isn't valid or error in sql
 	}
 //-->
 </script>
+
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(2, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">first name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="fname">first name:</label></td>
 	<td><?$f->show_element("fname");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">last name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="lname">last name:</label></td>
 	<td><?$f->show_element("lname");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">sip address:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="sip_uri">sip address:</label></td>
 	<td><?$f->show_element("sip_uri");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","sip_address_completion(f.sip_uri);");					// Finish form?>
+</div>
 
 <?if (is_array($pb_arr)){?>
-
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="160">name</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">sip address</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">aliases</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="85">status</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
+	<th>name</th>
+	<th>sip address</th>
+	<th>aliases</th>
+	<th>status</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	foreach($pb_arr as $row){
 		$odd=$odd?0:1;
 		$name=$row->lname;
 		if ($name) $name.=" "; $name.=$row->fname;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->sip_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo $row->sip_uri;?></a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205"><?echo implode(", ", $row->aliases)."&nbsp;";?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&edit_id=".$row->id);?>">edit</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&dele_id=".$row->id);?>">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($name);?></td>
+	<td align="left"><a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->sip_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo $row->sip_uri;?></a></td>
+	<td align="left"><?echo nbsp_if_empty(implode(", ", $row->aliases));?></td>
+	<td align="center"><?echo nbsp_if_empty($row->status);?></td>
+	<td align="center"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&edit_id=".$row->id);?>">edit</a></td>
+	<td align="center"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&dele_id=".$row->id);?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
-
 <?}?>
 
-<br><div align="center"><a href="<?$sess->purl("find_user.php?kvrk=".uniqid(""));?>">find user</a></div>
+<div class="swLinkToTabExtension"><a href="<?$sess->purl("find_user.php?kvrk=".uniqid(""));?>">find user</a></div>
 
 <br>
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -152,84 +152,63 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_admin_html_body_begin("user_preferences.php");
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
-
-	ptitle("edit items of the list");
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['selected_tab']="user_preferences.php";
+print_html_body_begin($page_attributes);
 ?>
 
+<h2 class="swTitle">edit items of the list</h2>
+
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">item label:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="item_label">item label:</label></td>
 	<td><?$f->show_element("item_label");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">item value:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="item_value">item value:</label></td>
 	<td><?$f->show_element("item_value");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">set as default:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="set_default">set as default:</label></td>
 	<td><?$f->show_element("set_default");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","");					// Finish form?>
+</div>
 
 <?if (is_array($item_list) and count($item_list)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="205">item label</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">item value</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
+	<th>item label</th>
+	<th>item value</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	foreach($item_list as $row){
 		if ($row->label==$item_edit) continue;
 		$odd=$odd?0:1;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $row->label;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $row->value;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_edit=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">edit</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_dele=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($row->label);?></td>
+	<td align="left"><?echo nbsp_if_empty($row->value);?></td>
+	<td align="center"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_edit=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">edit</a></td>
+	<td align="center"><a href="<?$sess->purl("edit_list_items.php?kvrk=".uniqID("")."&item_dele=".RawURLEncode($row->label)."&attrib_name=".RawURLEncode($attrib_name));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 
 <?}?>
 
-<br><a href="<?$sess->purl($config->admin_pages_path."user_preferences.php?kvrk=".uniqid(""));?>" class="f14">back to editing attributes</a><br>
+<div class="swBackToMainPage"><a href="<?$sess->purl($config->admin_pages_path."user_preferences.php?kvrk=".uniqid(""));?>" class="f14">back to editing attributes</a></div>
 
 <br>
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: play_greeting.php,v 1.2 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: play_greeting.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -30,22 +30,14 @@ do{
 
 }while(false);
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin(8, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();
+$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['selected_tab']="voicemail.php";
+print_html_body_begin($page_attributes);
 ?>
 
-
-<a href="<?$sess->purl("voicemail.php?kvrk=".uniqid(""));?>">&lt;&lt;&lt; BACK</a><br>
+<div class="swBackToMainPage"><a href="<?$sess->purl("voicemail.php?kvrk=".uniqid(""));?>">&lt;&lt;&lt; BACK</a></div>
 
 <br>
 <?print_html_body_end();?>

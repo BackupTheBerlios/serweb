@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.1 2004/03/04 22:47:37 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.2 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -118,52 +118,45 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_admin_html_body_begin("list_of_admins.php");
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
-
-	ptitle("Admin privileges of ".$user_id);
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['selected_tab']="list_of_admins.php";
+print_html_body_begin($page_attributes);
 ?>
 
+<h2 class="swTitle">Admin privileges of <?echo $user_id;?></h2>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
+	<fieldset class="swWidthAsTitle">
+	<legend>admin competence</legend>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td colspan="3" align="center" class="f12i">ACL control</td>
+	<td><label for="chk_change_privileges">changes privileges of admins</label></td>
+	<td><?$f->show_element("chk_change_privileges");?></td>
 	</tr>
+	</table>
+	</fieldset>
+
+	<fieldset class="swWidthAsTitle">
+	<legend>ACL control</legend>
+	<table border="0" cellspacing="0" cellpadding="0" align="center">
 <?	foreach ($config->grp_values as $row){ ?>
 	<tr>
-	<td align="right" class="f12b"><?echo $row;?></td>
-	<td width="5">&nbsp;</td>
+	<td><label for="<?echo "chk_".$row;?>"><?echo $row;?></label></td>
 	<td><?$f->show_element("chk_".$row);?></td>
 	</tr>
 <?	} ?>
-	<tr>
-	<tr>
-	<td colspan="3">&nbsp;</td>
-	</tr>
-	<td align="right" class="f12b">changes privileges of admins</td>
-	<td width="5">&nbsp;</td>
-	<td><?$f->show_element("chk_change_privileges");?></td>
-	</tr>
-	<tr>
-	<td align="center" colspan="3"><?$f->show_element("okey");?></td>
-	</tr>
 	</table>
+	</fieldset>
+	<br />
+	<div align="center"><?$f->show_element("okey");?></div>
+	
 <?$f->finish();					// Finish form?>
-<br clear="all"><br>
+</div>
 
-<a href="<?$sess->purl("list_of_admins.php?kvrk=".uniqid(''));?>">back to main page</a>
+<div class="swBackToMainPage"><a href="<?$sess->purl("list_of_admins.php?kvrk=".uniqid(''));?>">back to main page</a></div>
 
+<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

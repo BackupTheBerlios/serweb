@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.31 2004/03/03 15:41:31 kozlik Exp $
+ * $Id: functions.php,v 1.32 2004/03/11 22:30:00 kozlik Exp $
  */
 
 
@@ -115,6 +115,10 @@ function get_sess_url($url){
 	if ($sess) return $sess->url($url);
 	else return $url;
 
+}
+
+function nbsp_if_empty($str){
+	return $str?$str:"&nbsp;";
 }
 
 function print_search_links($actual, $num, $rows, $url){
@@ -565,13 +569,14 @@ class Cfusers{
 	}
 	
 	function print_form(){
+	?><div class="swForm swHorizontalForm"><?
 		$this->f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td class="f12b">username</td>
-	<td class="f12b">first name</td>
-	<td class="f12b">last name</td>
-	<td class="f12b">email</td>
+	<td><label for="usrnm">username</label></td>
+	<td><label for="fname">first name</label></td>
+	<td><label for="lname">last name</label></td>
+	<td><label for="email">email</label></td>
 	</tr>
 	<tr>
 	<td><?$this->f->show_element("usrnm");?></td>
@@ -579,10 +584,11 @@ class Cfusers{
 	<td><?$this->f->show_element("lname");?></td>
 	<td><?$this->f->show_element("email");?></td>
 	</tr>
-	<tr><td colspan="4" class="f12b">show on-line users only: <?$this->f->show_element("onlineonly");?></td></tr>
+	<tr><td colspan="4"><label for="onlineonly" style="display: inline;">show on-line users only:</label><?$this->f->show_element("onlineonly");?></td></tr>
 	<tr><td colspan="4" align="right"><?$this->f->show_element("okey");?></td></tr>
 	</table>
 <?		$this->f->finish();					// Finish form
+	?></div><?
 	}
 
 }

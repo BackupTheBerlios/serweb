@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.18 2003/11/03 01:54:27 jiri Exp $
+ * $Id: confirmation.php,v 1.19 2004/03/11 22:30:00 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -68,37 +68,26 @@ do{
 }while (false);
 
 
-
-
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin();
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();
+print_html_body_begin($page_attributes);
 
 	if ($ok==1){
 ?>
-<span class="txt_norm">Congratulations! Your <?echo $config->realm;?> account was set up!</span>
+<p>Congratulations! Your <?echo $config->realm;?> account was set up!</p>
 <? }elseif ($ok>=2 && $ok<10) {
 error_log("SERWEB:jabber registration failed: <$user_id> [$ok]\n");?>
-<span class="txt_norm">Your <?echo $config->realm;?> account was set up!<br><b>But your <?echo $config->realm;?> Jabber Gateway registration failed-
+<p>Your <?echo $config->realm;?> account was set up!<br><b>But your <?echo $config->realm;?> Jabber Gateway registration failed-
 <? echo "$ok"; ?>
-</b><br>Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</span>
+</b><br>Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</p>
 <? }elseif ($errors) {?>
-<span class="txt_norm">We regret but your <?echo $config->realm;?> confirmation attempt failed.<br>
-Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</span>
+<p>We regret but your <?echo $config->realm;?> confirmation attempt failed.<br>
+Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</p>
 <?}?>
 
 <br>
 <hr>
-<div align="center" class="txt_norm">Back to <a href="../index.php">login form</a>. </div>
+<div align="center">Back to <a href="../index.php">login form</a>.</div>
 <hr>
 
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.19 2004/03/03 13:20:55 kozlik Exp $
+ * $Id: missed_calls.php,v 1.20 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -113,37 +113,26 @@ do{
 
 }while (false);
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(3, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
 <?if (isset($mc_arr)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="135">calling subscriber</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="85">status</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">time</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">reply status</td>
+	<th>calling subscriber</th>
+	<th>status</th>
+	<th>time</th>
+	<th>reply status</th>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-	<?foreach($mc_arr as $row){
+	<?$odd=0;
+	foreach($mc_arr as $row){
+		$odd=$odd?0:1;
 		$timestamp=gmmktime(substr($row->time,11,2), 	//hour
 							substr($row->time,14,2), 	//minute
 							substr($row->time,17,2), 	//second
@@ -157,41 +146,28 @@ do{
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
 
-		if ($flag==1) {
-			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
-		} else {
-			$flag = 1; $bgc = "bgcolor=\"#EEEEEE\"";
-		}
-
-
-		echo "<tr valign=top ".$bgc.">";
 	?>
-	<td align="left" class="f12" width="135">
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left">
 		<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->from_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
 		<?echo htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1", $row->sip_from));?>
 		</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $time;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $row->sip_status;?></td>
+	<td align="center"><?echo nbsp_if_empty($row->status);?></td>
+	<td align="center"><?echo nbsp_if_empty($time);?></td>
+	<td align="center"><?echo nbsp_if_empty($row->sip_status);?></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
-<br>
-<div align="center"><a href="<?$sess->purl("missed_calls.php?kvrk=".uniqID("")."&delete_calls=1&page_loaded_timestamp=".time());?>"><img src="<?echo $config->img_src_path;?>butons/b_delete_calls.gif" width="165" height="16" border="0"></a></div>
+<br><div align="center"><a href="<?$sess->purl("missed_calls.php?kvrk=".uniqID("")."&delete_calls=1&page_loaded_timestamp=".time());?>"><img src="<?echo $config->img_src_path;?>butons/b_delete_calls.gif" width="165" height="16" border="0"></a></div>
 <?}?>
 
 <? if ($num_rows){?>
-<p align="center" class="f12">Missed calls <?echo ($sess_mc_act_row+1)." - ".((($sess_mc_act_row+$config->num_of_showed_items)<$num_rows)?($sess_mc_act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?>
+<div class="swNumOfFoundRecords">Missed calls <?echo ($sess_mc_act_row+1)." - ".((($sess_mc_act_row+$config->num_of_showed_items)<$num_rows)?($sess_mc_act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?></div>
 <?}else{?>
-<div align="center">No missed calls</div>
+<div class="swNumOfFoundRecords">No missed calls</div>
 <?}?><br>
 
-<div align="left">&nbsp;
+<div class="swSearchLinks">&nbsp;
 <?
 	$url="missed_calls.php?kvrk=".uniqid("")."&act_row=";
 	print_search_links($sess_mc_act_row, $num_rows, $config->num_of_showed_items, $url);

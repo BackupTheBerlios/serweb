@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.9 2003/11/03 01:54:27 jiri Exp $
+ * $Id: index.php,v 1.10 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -69,33 +69,26 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin();
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();
+unset ($page_attributes['tab_collection']);
+print_html_body_begin($page_attributes);
 ?>
 
-
-<center>
+<div class="swLPTitle">
 <h1><?echo $config->realm;?> Adminlogin</h1>
 Please enter your username and password :<br>
-</center>
+</div>
+
+<div class="swForm swLoginForm">
 <?$f->start("form");				// Start displaying form?>
 <table border="0" cellspacing="0" cellpadding="4" align="center" bgcolor="#75C5F0">
 <tr valign=top align=left>
-<td>Username:</td>
+<td><label for="uname">Username:</label></td>
 <td><?$f->show_element("uname");?></td>
 </tr>
 <tr valign=top align=left>
-<td>Password:</td>
+<td><label for="passw">Password:</label></td>
 <td><?$f->show_element("passw");?></td>
 </tr>
 <tr>
@@ -103,15 +96,8 @@ Please enter your username and password :<br>
 <td align=right><?$f->show_element("okey");?></td>
 </tr>
 </table>
+</div>
 
-<!-- <br>
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td><a href="<?$sess->purl("reg/get_pass.php");?>">Forgot Password?</a></td>
-<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td><a href="<?$sess->purl("reg/index.php");?>">Subscribe!</a></td>
-</tr>
-</table> -->
 <?$f->finish();					// Finish form?>
 
 <br>

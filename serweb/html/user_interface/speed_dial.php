@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.3 2004/03/09 16:08:45 kozlik Exp $
+ * $Id: speed_dial.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -111,12 +111,8 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript">
 <!--
 	function sip_address_completion(adr){
@@ -136,74 +132,58 @@ if ($okey_x){							//data isn't valid or error in sql
 //-->
 </script>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(12, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">username from request uri:</td>
-	<td width="5">&nbsp;</td>
+	<td align="right"><label for="usrnm_from_uri">username from request uri:</label></td>
 	<td><?$f->show_element("usrnm_from_uri");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">domain from request uri:</td>
-	<td width="5">&nbsp;</td>
+	<td align="right"><label for="domain_from_uri">domain from request uri:</label></td>
 	<td><?$f->show_element("domain_from_uri");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">new request uri:</td>
-	<td width="5">&nbsp;</td>
+	<td align="right"><label for="new_uri">new request uri:</label></td>
 	<td><?$f->show_element("new_uri");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","sip_address_completion(f.new_uri);");					// Finish form?>
+</div>
 
 <?if ($sd_res and MySQL_num_rows($sd_res)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT">request uri</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">new request uri</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT">&nbsp;</td>
+	<th>request uri</th>
+	<th>new request uri</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while ($row=MySQL_Fetch_Object($sd_res)){
 		$odd=$odd?0:1;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12">&nbsp;<?echo $row->username_from_req_uri."@".$row->domain_from_req_uri;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12"><?echo $row->new_request_uri;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&edit_sd=".$row->username_from_req_uri."&edit_sd_dom=".$row->domain_from_req_uri);?>">edit</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&dele_sd=".$row->username_from_req_uri."&dele_sd_dom=".$row->domain_from_req_uri);?>">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($row->username_from_req_uri."@".$row->domain_from_req_uri);?></td>
+	<td align="left"><?echo nbsp_if_empty($row->new_request_uri);?></td>
+	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&edit_sd=".$row->username_from_req_uri."&edit_sd_dom=".$row->domain_from_req_uri);?>">edit</a></td>
+	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&dele_sd=".$row->username_from_req_uri."&dele_sd_dom=".$row->domain_from_req_uri);?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 <?}else{?>
 
-<br><div align="center">No speed dials defined</div>
+<div class="swNumOfFoundRecords">No speed dials defined</div>
 
 <?}?>
 

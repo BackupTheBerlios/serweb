@@ -1,16 +1,13 @@
 <?
 /*
- * $Id: stun_applet.php,v 1.2 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: stun_applet.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
+
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head($config->realm." -- FW/NAT detection applet");
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->realm;?> -- FW/NAT detection applet</title>
-<?print_html_head();?>
-</head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
  
 <applet
@@ -31,7 +28,5 @@ require "prepend.php";
 }?>
 
 </applet>
-
-
 </body>
 </html>

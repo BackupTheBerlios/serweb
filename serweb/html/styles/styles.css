@@ -1,0 +1,586 @@
+/*
+	main DIV
+*/
+
+
+.swMain{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size : 0.8em;
+	background : White;
+	color : Black;
+}
+
+.swMain A:link{
+	color : #33CCFF;
+}
+
+.swMain A:visited{
+	color : #33CCFF;
+}
+
+.swMain A:active{
+	color : #33CCFF;
+}
+
+/*
+	popup window
+*/
+.swPopUpWin{
+	background-color: #B1C9DC;
+	color: black;
+}
+
+/*
+	heading above TABs
+*/
+
+.swHeadingUser{
+	font-size : 1.2em;
+	float : left;
+	margin-left: 1em;
+}
+
+.swHeadingLogout{
+	font-size : 1.2em;
+	float : right;
+	margin-right: 1em;
+}
+
+/*
+	TABs defintions
+*/
+
+div#swTabs{
+	padding: 0.4em;
+	text-align: left;
+}
+
+div#swTabs ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+div#swTabs ul li {
+	display: block;
+	margin-left : 0.1em;
+	margin-right : 0.1em;
+	font-size : 10px;
+	font-weight : bold;
+	text-decoration : none;
+	text-align : center;
+	vertical-align : middle;
+	float : left;
+	width: 94px;
+	fposition: relative;
+	fheight : 25px;
+}
+
+div.swTabsL{
+	float : left;
+	width : 7px;
+	height : 25px;
+	background-image : url(/img/tab/tab_left_w.gif);
+}
+
+div.swTabsR{
+	float : left;
+	width : 7px;
+	height : 25px;
+	background-image : url(/img/tab/tab_right_w.gif);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsL{
+	background-image : url(/img/tab/tab_left.gif);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsR{
+	background-image : url(/img/tab/tab_right.gif);
+}
+
+div#swTabs ul li a, div#swTabs ul li strong {
+	display : block;
+	float : left;
+	border-top : 1px solid #B1C9DC;
+	width : 80px;
+	text-decoration : none;
+	color : Black;
+}
+
+div#swTabs ul li strong{
+	background-color : #B1C9DC;
+	height: 24px;
+}
+
+
+/*
+	main content
+*/
+
+div#swContent{
+	border : 1px solid #B1C9DC;
+	padding : 20px;
+	clear : both;
+}
+
+/*
+	main content if tabs aren't displayed
+*/
+
+div#swContentNoTabs{
+	padding : 20px;
+	clear : both;
+}
+
+/*
+	form
+*/
+
+.swForm{
+}
+
+div.swForm table{
+	margin-left : auto;
+	margin-right : auto;
+}
+
+.swForm label{
+	font-weight : bold;
+	margin-right : 0.5em;
+	text-align : right;
+	padding : 0.2em;
+	display : block;
+}
+
+.swForm fieldset{
+	margin-left: auto;
+	margin-right: auto;	
+}
+
+.swForm legend{
+	font-style : italic;
+}
+
+.swHorizontalForm label{
+	text-align: left;
+}
+
+.swFormElementInvisible{
+	border:0; 
+	background-color:#FFFFFF; 
+	font-size:12px;
+	color: black;
+}
+
+.swLoginForm table{
+	background-color : #75C5F0;
+	padding : 4px;
+}
+
+.swLoginForm table td{
+	padding : 4px;
+}
+
+div.swRegForm{
+}
+
+.swRegForm table{
+	padding : 4px;
+	background-color : #B1C9DC;
+}
+
+
+/*
+	description in registration form 
+*/
+
+.swRegFormDesc{
+	width: 250px;	
+}
+
+/*
+	tables
+*/
+
+table.swTable{
+	border : 1px solid #C1D773;
+	border-bottom : 2px solid #C1D773;
+}
+
+table.swTable th{
+	border: 1px solid #C1D773;
+	border-bottom : 2px solid #C1D773;
+	color: #000000;
+	text-align: justify ;
+	font-weight: bold ;
+	background-color: #B1C9DC;
+}
+
+table.swTable td{
+	border: none;
+	border-left : 1px solid #C1D773;
+	border-right : 1px solid #C1D773;
+	color: #000000;
+	vertical-align : top;
+}
+
+table.swTable tr.swTrEven{
+	background-color : White;
+}
+
+table.swTable tr.swTrOdd{
+	background-color : #EAF0F4;
+}
+
+/*
+	instant message
+*/
+
+.swInstantMessage{
+	width: 500px;
+	border : 2px solid #C1D773;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 1em;
+}
+
+.swIMtitle{
+	background-color: #B1C9DC;
+	font-weight: bold;
+}
+
+.swIMtitle a, .swIMtitle a:link, .swIMtitle a:visited, .swIMtitle a:active, .swIMtitle a:hover{
+	width: 4em;
+	float: right;
+	text-align: center;
+	color: Black;
+}
+
+.swIMtime{
+	width: 11em;
+	float: right;
+	text-align: center;	
+}
+
+.swIMSrcAdr{
+	
+}
+
+/*
+	title
+*/
+
+.swTitle{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+	color: #75C5F0;
+	text-decoration: none;
+	text-align: left;
+	border: none;
+	border-bottom: 2px solid #C1D773;
+	border-left: 2px solid #C1D773;
+	margin-bottom : 1em;
+	margin-top : 1em;
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2px;
+}
+
+/*
+	this class is used for elements which should have same width as title
+*/
+
+.swWidthAsTitle{
+	width: 504px;		/* width + border */
+}
+
+/*
+	Number of founded records
+*/
+
+.swNumOfFoundRecords{
+	text-align: center;
+	margin : 1em;
+}
+
+/*
+	Strip with links to next found records if search return too many records
+*/
+
+.swSearchLinks{
+	text-align: left;	
+}
+
+/*
+	Link to other pages of tab like 'find user' in phonebook etc.
+*/
+
+.swLinkToTabExtension{
+	text-align: center;
+	margin : 1em;
+}
+
+/*
+	Link to back to main tab
+*/
+
+.swBackToMainTab{
+	
+}
+
+/*
+	Login Page - title
+*/
+
+.swLPTitle{
+	text-align: center;
+	margin-bottom : 1em;
+}
+
+/*
+	Login Page - Subscribe and Forgot password links
+*/
+
+.swLPSubscLinks{
+	width: 300px;
+	margin-left : auto;
+	margin-right : auto;
+	text-align: center;
+}
+
+.swLPForgotPass{
+	text-align: left;
+	float : left;
+}
+
+.swLPSubscribe{
+	text-align: right;	
+	float: right;
+}
+
+/*
+	Forgot password page - text at top
+*/
+.swForgotPassw{
+	width: 550px;
+	background-color: #B1C9DC;
+	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.swForgotPassw h2{
+	text-align: center;
+}
+
+
+/*
+	MyAccount - Aliases table
+*/
+
+#swMAAliasesTable{
+	float: left;
+	width: 49%;
+	text-align: center;
+}
+
+#swMAAliasesTable table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+	MyAccount - ACL table
+*/
+
+#swMAACLTable{
+	float: right;	
+	width: 49%;
+	text-align: center;
+}
+
+#swMAACLTable table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+	floating box cleaner
+*/
+
+.swCleaner{
+   clear: both;
+   height: 1px;
+   border: none;
+   margin: -1em 0 0 0;
+   visibility: hidden;
+}
+
+
+/*
+	errors and messages
+*/
+
+.errors{
+	font-size : 12px;
+	color : Red;
+	text-align : center;
+	font-weight : bold;
+}
+
+.message{
+	font-size : 12px;
+	font-style : italic;
+	color : #993300;
+	text-align : center;
+}
+
+
+/*
+	server monitoring statistics
+*/
+
+.swSMgdval{
+	position: relative;
+	height: 1.4em;
+	width: 49em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.swSMgval, .swSMdval{
+	position: absolute;
+	width: 11em;
+	text-align: center;
+}
+
+.swSMgval{
+	left: 13.5em;
+}
+
+.swSMdval{
+	left: 31.5em;
+}
+
+.swSMOneStat{
+	position: relative;
+	height: 4.5em;
+	width: 49em;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.swSMOneStat em{
+	display: none;
+}
+
+.swSMOneStat br, .swSMOneStat hr{
+	display: none;
+}
+
+.swSMVal strong, .swSMValA strong{
+	display: block;
+	width: 13em;
+	position: absolute;
+}
+
+.swSMVal{
+	position: relative;
+	top: 1.4em;
+}
+
+.swSMValA{
+	position: relative;
+	top: 2.8em;
+}
+
+.swSMVal strong{
+}
+
+.swSMValA strong{
+}
+
+.swSMStatMinVal, .swSMStatMaxVal, .swSMStatMinValI, .swSMStatMaxValI, .swSMStatValue, .swSMStatValueI{
+	display: block;
+	width: 6em;
+	position: absolute;
+}
+
+.swSMStatMinVal{
+	left: 13.5em;
+	top: -1.4em;
+}
+
+.swSMStatMaxVal{
+	left: 18.5em;
+	top: -1.4em;
+	text-align: right;
+}
+
+.swSMStatMinValI{
+	left: 31.5em;
+	top: -1.4em;
+}
+
+.swSMStatMaxValI{
+	left: 36.5em;
+	top: -1.4em;
+	text-align: right;
+}
+
+.swSMStatValue{
+	left: 25em;	
+}
+
+.swSMStatValueI{
+	left: 43em;	
+}
+
+.swSMbar, .swSMbarI{
+	display: block;
+	position: absolute;
+	width: 11em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+.swSMbar{
+	left: 13.5em;
+}
+
+.swSMbarI{
+	left: 31.5em;
+}
+
+/* bars at server monitoring page*/
+
+.swBarCurrentBorder, .swBarAverageBorder{
+	border : 1px solid;
+	width: 100%;
+	height: 5px;
+}
+
+.swBarCurrent, .swBarAverage{
+	height: 5px;
+	margin-left: 0px;
+	overflow: hidden;
+}
+
+.swBarAverageBorder{
+	border-color : Red;
+}
+
+.swBarAverage{
+	background-color: Red;
+}
+
+.swBarCurrentBorder{
+	border-color : Blue;
+}
+
+.swBarCurrent{
+	background-color: Blue;
+}

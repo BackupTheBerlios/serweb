@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.29 2004/03/03 17:52:40 kozlik Exp $
+ * $Id: my_account.php,v 1.30 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -21,14 +21,14 @@ if ($perm->have_perm("admin")){
 	else $user_id=$auth->auth["uname"];
 }
 else $user_id=$auth->auth["uname"];
-				 
+
 $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
 
 class Cusrloc {
 	var $uri, $q, $expires, $geo_loc;
-	
+
 	function Cusrloc ($uri, $q, $expires, $geo_loc){
 		$this->uri=$uri;
 		$this->q=$q;
@@ -50,11 +50,11 @@ do{
 	$row=mysql_fetch_object($res);
 
 	set_timezone($errors);
-	
+
 	$options=array();
 	$opt=get_time_zones($errors);
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
-	
+
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"email",
 								 "size"=>16,
@@ -94,7 +94,7 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_change.gif",
 								 "extrahtml"=>"alt='change'"));
-								 
+
 	$f2->add_element(array("type"=>"text",
 	                             "name"=>"sip_address",
 								 "size"=>16,
@@ -108,13 +108,13 @@ do{
 	$options = array(array("label"=>"one hour","value"=>3600),
 					array("label"=>"one day","value"=>86400),
 					array("label"=>"permanent","value"=>FOREVER));
-	
+
 	$f2->add_element(array("type"=>"select",
 								"name"=>"expires",
 								"options"=>$options,
 								"size"=>1,
 								"value"=>3600));
-	
+
 	$f2->add_element(array("type"=>"hidden",
 	                             "name"=>"uid",
 	                             "value"=>$uid));
@@ -123,16 +123,16 @@ do{
 	                             "name"=>"okey2",
 	                             "src"=>$config->img_src_path."butons/b_add.gif",
 								 "extrahtml"=>"alt='add'"));
-	
+
 	if ($del_contact){
 		/* construct FIFO command */
 		/*
-		if ($config->ul_multidomain) 
-			$ul_name=$user_id."@".$config->default_domain."\n";	
-		else 
+		if ($config->ul_multidomain)
+			$ul_name=$user_id."@".$config->default_domain."\n";
+		else
 			$ul_name=$user_id."\n";
 		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";	
+		$ul_name=$user_id."@".$config->default_domain."\n";
 		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".		//table
 			$ul_name.
@@ -142,11 +142,11 @@ do{
 		if ($errors) break;
 		/* we accept any 2xx as ok */
 		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
-		
+
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
 		exit;
-	
+
 	}
 
 	if (isset($okey2_x)){								// Is there data to process?
@@ -155,42 +155,42 @@ do{
 			break;
 		}
 
-		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){ 
-			foreach ($config->denny_reg as $val){ 
+		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){
+			foreach ($config->denny_reg as $val){
 				if (Ereg($val->reg, $sip_address)) {$errors[]=$val->label; break;}
 			}
 			if ($errors) break;
 		}
 
-		/* Process data */           // Data ok; 
+		/* Process data */           // Data ok;
 
 		if ($config->ul_replication) $replication="0\n";
 		else $replication="";
 
 		/* construct FIFO command */
 		/*
-		if ($config->ul_multidomain) 
-			$ul_name=$user_id."@".$config->default_domain."\n";	
-		else 
+		if ($config->ul_multidomain)
+			$ul_name=$user_id."@".$config->default_domain."\n";
+		else
 			$ul_name=$user_id."\n";
 		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";	
+		$ul_name=$user_id."@".$config->default_domain."\n";
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".			//table
 			$ul_name.
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
 			$config->ul_priority."\n".	// priority
-			$replication."\n";		
+			$replication."\n";
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
 		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
-		
+
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
 		exit;
-	
+
 	}
 
 	if (isset($okey_x)){								// Is there data to process?
@@ -203,20 +203,20 @@ do{
 			$errors[]="passwords not match"; break;
 		}
 
-			/* Process data */           // Data ok; 
+			/* Process data */           // Data ok;
 
 		$qpass="";
 		if ($passwd){
-			
+
 			$inp=$user_id.":".$config->realm.":".$passwd;
 			$ha1=md5($inp);
-		
+
 			$inpb=$user_id."@".$config->domainname.":".$config->realm.":".$passwd;
 			$ha1b=md5($inpb);
-			
+
 			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
 		}
-		
+
  		$q="update ".$config->table_subscriber.
 			" set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
 			" where username='".$user_id."' and domain='".$config->realm."'";
@@ -238,7 +238,7 @@ do{
 			" where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
 		$aliases_res=MySQL_Query($q);
 		if (!$aliases_res) {$errors[]="error in SQL query(5), line: ".__LINE__; break;}
-		
+
 		// get Access-Control-list
 		$q="select grp from ".$config->table_grp." where domain='".$config->realm.
 			"' and username='".$user_id."' order by grp";
@@ -247,12 +247,12 @@ do{
 
 		// get UsrLoc
 		/*
-		if ($config->ul_multidomain) 
-			$ul_name=$user_id."@".$config->default_domain."\n";	
-		else 
+		if ($config->ul_multidomain)
+			$ul_name=$user_id."@".$config->default_domain."\n";
+		else
 			$ul_name=$user_id."\n";
 		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";	
+		$ul_name=$user_id."@".$config->default_domain."\n";
 		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
 		$config->ul_table."\n".		//table
 		$ul_name."\n";	//username
@@ -263,11 +263,11 @@ do{
 			break;
 		}
 		if (!$out) break;
-		
+
 		if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; break; }
 
 		$out_arr=explode("\n", $out);
-		
+
 		foreach($out_arr as $val){
 			if (!ereg("^[[:space:]]*$", $val)){
 				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
@@ -277,24 +277,20 @@ do{
 		}
 
 	}
-						 
+
 }while (false);
 
 if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();?>
 <script language="JavaScript">
 <!--
 	function sip_address_completion(adr){
 		var default_domain='<?echo $config->default_domain;?>';
-		
+
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;
@@ -308,7 +304,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	}
 
 	var stun_win=null;
-	
+
 	function stun_applet_win(){
 		if (stun_win != null) stun_win.close();
 			stun_win=window.open("stun_applet.php","stun_win","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,top=20,left=20,width=<? echo $config->stun_applet_width; ?>,height=<? echo $config->stun_applet_height; ?>");
@@ -320,47 +316,47 @@ if ($okey_x){							//data isn't valid or error in sql
 //-->
 </script>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	if ($perm->have_perm("admin") and $uid){
-		print_admin_html_body_begin("users.php");
-		echo "user: ".$uid."<br>";
-	}
-	else print_html_body_begin(1, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+if ($perm->have_perm("admin") and $uid){
+	$page_attributes=array(
+		'title' => $config->realm." admin interface",
+		'tab_collection' => $config->admin_tabs,
+		'path_to_pages' => $config->admin_pages_path,
+		'selected_tab' => "users.php"
+	);
+	print_html_body_begin($page_attributes);
+	echo "user: ".$uid."<br>";
+}
+else {
+	$page_attributes['user_name']=get_user_name($errors);
+	print_html_body_begin($page_attributes);
+}
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">your email:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="email">your email:</label></td>
 	<td><?$f->show_element("email");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">allow find me by other users:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="allow_find">allow find me by other users:</label></td>
 	<td><?$f->show_element("allow_find");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">your timezone:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="timezone">your timezone:</label></td>
 	<td><?$f->show_element("timezone");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">your password:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="passwd">your password:</label></td>
 	<td><?$f->show_element("passwd");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">retype password:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="passwd_r">retype password:</label></td>
 	<td><?$f->show_element("passwd_r");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
@@ -372,104 +368,76 @@ if ($okey_x){							//data isn't valid or error in sql
 		return (false);
 	}
 ");					// Finish form?>
-<!-- </td></tr>
-</table>
- --><br clear="all"><br>
+</div>
 
-<table border="0" cellspacing="0" cellpadding="0" align="center" width="100%">
-<tr valign="top"><td width="50%">
+
 <?if ($aliases_res and MySQL_num_rows($aliases_res)){?>
-	<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-	<tr><td>
-		<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
-		<tr><td class="titleT">your aliases:</td></tr>
-		<tr><td height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-		<?while ($row=MySQL_Fetch_Object($aliases_res)){?>
-		<tr><td align="center" class="f12"><?echo $row->username;?>&nbsp;</td></tr>
-		<?}?>
-		</table>
-	</td></tr>
+	<div id="swMAAliasesTable">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
+	<tr><th>your aliases:</th></tr>
+	<?while ($row=MySQL_Fetch_Object($aliases_res)){?>
+	<tr><td align="center"><?echo nbsp_if_empty($row->username);?></td></tr>
+	<?}?>
 	</table>
+	</div>
 <?}?>
-&nbsp;
-</td><td width="50%">
+
 <?if ($grp_res and MySQL_num_rows($grp_res)){?>
-	<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-	<tr><td>
-		<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
-		<tr><td class="titleT">Access-Control-list:</td></tr>
-		<tr><td height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-		<?while ($row=MySQL_Fetch_Object($grp_res)){?>
-		<tr><td align="center" class="f12"><?echo $row->grp;?>&nbsp;</td></tr>
-		<?}?>
-		</table>
-	</td></tr>
+	<div id="swMAACLTable">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
+	<tr><th>Access-Control-list:</td></tr>
+	<?while ($row=MySQL_Fetch_Object($grp_res)){?>
+	<tr><td align="center"><?echo nbsp_if_empty($row->grp);?></td></tr>
+	<?}?>
 	</table>
+	</div>
 <?}?>
-&nbsp;
-</td></tr>
-</table>
+
+<br class="swCleaner"><br>
 
 <?if (is_array($usrloc)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="125">contact</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">expires</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="60">priority</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">location</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="63">&nbsp;</td>
+	<th>contact</th>
+	<th>expires</th>
+	<th>priority</th>
+	<th>location</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?foreach($usrloc as $row){
 		$expires=date('Y-m-d H:i',time()+$row->expires);
-		
+
 		if (Substr($expires,0,10)==date('Y-m-d')) $date=Substr($expires,11,5);
 		else $date=Substr($expires,0,10);
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="125">&nbsp;<?echo $row->uri;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><?echo $date;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="60"><?echo $row->q;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><?echo $row->geo_loc;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->uri));?>">delete</a></td>
+	<td align="left"><?echo nbsp_if_empty($row->uri);?></td>
+	<td align="center"><?echo nbsp_if_empty($date);?></td>
+	<td align="center"><?echo nbsp_if_empty($row->q);?></td>
+	<td align="center"><?echo nbsp_if_empty($row->geo_loc);?></td>
+	<td align="center"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->uri));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
-
 <?}?>
-<br><br>
+
+<h2 class="swTitle">add new contact:</h2>
+
+<div class="swForm">
 <?$f2->start("form2");				// Start displaying form?>
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td>
-	<table border="0" cellspacing="0" cellpadding="0" align="left">
-	<tr><td class="title" width="506">add new contact:</td></tr>
-	</table>
-</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>
-	<table border="0" cellspacing="0" cellpadding="0" align="left">
-	<tr><td class="f12b">sip address:</td><td>&nbsp;&nbsp;</td><td><?$f2->show_element("sip_address");?></td><td>&nbsp;&nbsp;</td>
-	<td class="f12b">expires:</td><td>&nbsp;&nbsp;</td><td><?$f2->show_element("expires");?></td><td>&nbsp;&nbsp;</td>
+	<table border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr>
+	<td><label for="sip_address">sip address:</label></td>
+	<td><?$f2->show_element("sip_address");?></td>
+	<td><label for="expires">expires:</label></td>
+	<td><?$f2->show_element("expires");?></td>
 	<td><?$f2->show_element("okey2");?></td></tr>
 	</table>
-</td></tr>
-</table>
 <?$f2->finish();					// Finish form?>
+</div>
 
-<br>
+
 
 <?if ($config->enable_dial_voicemail or $config->enable_test_firewall){?>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -480,10 +448,10 @@ if ($okey_x){							//data isn't valid or error in sql
 </table>
 <?}?>
 
-<br>
 <? if ($perm->have_perm("admin") and $uid){?>
-	<a href="<?$sess->purl($config->admin_pages_path."users.php?kvrk=".uniqid(""));?>" class="f14">back to main page</a><br>
+	<div class="swBackToMainPage"><a href="<?$sess->purl($config->admin_pages_path."users.php?kvrk=".uniqid(""));?>" class="f14">back to main page</a></div>
 <?}?>
+<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

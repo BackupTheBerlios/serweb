@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.16 2003/11/04 00:36:17 jiri Exp $
+ * $Id: accounting.php,v 1.17 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -33,44 +33,28 @@ do{
 
 }while (false);
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(4, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
 <?if ($mc_res and MySQL_num_rows($mc_res)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="135">destination</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">call id</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">time</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">length of call</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">hang up</td>
+	<th>destination</th>
+	<th>call id</th>
+	<th>time</th>
+	<th>length of call</th>
+	<th>hang up</th>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-	<?while ($row=MySQL_Fetch_Object($mc_res)){
-		if ($flag==1) {
-			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
-		} else {
-			$flag = 1; $bgc = "bgcolor=\"#EEEEEE\"";
-		}
+	<?$odd=0;
+	while ($row=MySQL_Fetch_Object($mc_res)){
+		$odd=$odd?0:1;
+
 		$timestamp=gmmktime(substr($row->time,11,2), 	//hour
 							substr($row->time,14,2), 	//minute
 							substr($row->time,17,2), 	//second
@@ -88,26 +72,20 @@ do{
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
 	?>
-	<?echo "<tr valign=top ".$bgc.">"; ?>
-	<td align="center" class="f12" width="135">
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left">
 	<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->to_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
 	<?echo htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$row->sip_to));?></a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $row->sip_callid;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $time;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $row->length;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $hangup;?></td>
+	<td align="left"><?echo nbsp_if_empty($row->sip_callid);?></td>
+	<td align="left"><?echo nbsp_if_empty($time);?></td>
+	<td align="left"><?echo nbsp_if_empty($row->length);?></td>
+	<td align="center"><?echo nbsp_if_empty($hangup);?></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 
 <?}else{?>
-<div align="center">No calls</div>
+<div class="swNumOfFoundRecords">No calls</div>
 <?}?>
 
 <br>

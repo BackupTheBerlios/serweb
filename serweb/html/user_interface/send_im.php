@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: send_im.php,v 1.11 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -37,7 +37,7 @@ do{
 								 "value"=>$config->im_length,
 								 "size"=>5,
 								 "maxlength"=>5,
-								 "extrahtml"=>"disabled style='border:0; background-color:#FFFFFF; font-size:12px; width:33px'"));
+								 "extrahtml"=>"disabled class='swFormElementInvisible' style='border:0; width:33px'"));
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_send.gif",
@@ -94,12 +94,8 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript">
 <!--
 	var max_length=<?echo $config->im_length;?>;
@@ -140,43 +136,37 @@ if ($okey_x){							//data isn't valid or error in sql
 	}
 
 	function close_window(){
-		wait_win=window.open('',"wait_win");	//get reference to window
+		wait_win=window.open('',"wait_win","width=1,height=1,top=0,left=0");	//get reference to window
 		wait_win.close();						//close the window
 	}
 
 //-->
 </script>
-</head>
 <?
-	print_html_body_begin(5, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="left" class="f12b">
-		<table border="0" cellspacing="0" cellpadding="0" align="left">
+	<td align="left">
+		<table border="0" cellspacing="0" cellpadding="0" align="left" style="margin-left: 0px;">
 		<tr>
-		<td class="f12b">sip address of recipient: &nbsp;&nbsp;</td>
-		<td class="f12b"><?$f->show_element("sip_address");?></td>
+		<td><label for="sip_address">sip address of recipient:</label></td>
+		<td><?$f->show_element("sip_address");?></td>
 		</tr>
 		</table>
 	</td>
 	</tr>
 	<tr>
-	<td align="left" class="f12b">text of message:</td>
+	<td class="swHorizontalForm"><label for="instant_message">text of message:</label></td>
 	</tr>
 	<tr>
 	<td><?$f->show_element("instant_message");?></td>
 	</tr>
-	<tr><td class="f12">
-		<table border="0" cellspacing="0" cellpadding="0">
-		<tr><td class="f12">Remaining </td><td><?$f->show_element("num_chars");?></td><td class="f12">characters</td></tr>
-		</table>
-	</td></tr>
+	<tr><td align="center">Remaining <?$f->show_element("num_chars");?> characters</td></tr>
 	<tr>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
@@ -191,6 +181,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	display_window();
 
 ","sip_address_completion(f.sip_address);");					// Finish form?>
+</div>
 
 <br>
 <?print_html_body_end();?>

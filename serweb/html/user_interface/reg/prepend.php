@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: prepend.php,v 1.3 2003/10/15 10:01:51 kozlik Exp $
+ * $Id: prepend.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
  *
  */
 
@@ -37,4 +37,7 @@ require($_PHPLIB["libdir"] . "local.inc");     /* Required, contains your local 
 
 require($_PHPLIB["libdir"] . "page.inc");      /* Required, contains the page management functions. */
 
+$page_attributes=array(
+	'title' => $config->realm." user management",
+);
 ?>

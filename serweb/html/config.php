@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.39 2004/03/09 15:40:18 kozlik Exp $
+ * $Id: config.php,v 1.40 2004/03/11 22:30:00 kozlik Exp $
  */
 
 class Csub_not {
@@ -250,8 +250,11 @@ class Cconfig {
 		$this->epilog="/epilog.html";
 
 		/* content of html <title> tag */
-		$this->title="iptel.org, the IP Telephony Site";
+		$this->html_title="iptel.org, the IP Telephony Site";
 
+		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags */
+		$this->html_headers[]="";
+		
 		/* your domain name */
 		$this->realm=$this->domainname=$this->default_domain=
 			ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $_SERVER['SERVER_NAME']);
@@ -266,15 +269,6 @@ class Cconfig {
 		/* email address for questions concerning registration */
 		$this->regmail	=	"registrar@iptel.org";
 
-		/* alternate development settings ...
-		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		
-		$this->root_path="/~iptel/";
-		$this->mail_header_from="php.kk@kufr.cz";			
-		$this->voice_silo_dir = 'c:/temp/'; 
-		$this->greetings_spool_dir = 'c:/temp/';
-		$this->fifo_server="d:/temp/tmp";					//path to fifo server
-		*/
-
 
 		/* ------------------------------------------------------------*/
 		/* serweb appearance                                           */
@@ -285,13 +279,21 @@ class Cconfig {
 		   yet
 		*/
 			
-		$this->enable_tabs[1]=true;					//enable tab my account
-		$this->enable_tabs[2]=true;					//enable tab phonebook
-		$this->enable_tabs[3]=true;				//enable tab missed calls
-		$this->enable_tabs[4]=true;				//enable tab accounting
-		$this->enable_tabs[5]=true;					//enable tab send IM
-		$this->enable_tabs[6]=false;				//enable tab notification subscription
-		$this->enable_tabs[7]=true;				//enable tab message store
+		/* user tabs definitions
+			Ctab (enabled, name_of_tab, php_script)
+		*/
+
+		$this->user_tabs[]=new Ctab (true, "my account", "my_account.php");
+		$this->user_tabs[]=new Ctab (true, "phone book", "phonebook.php");
+		$this->user_tabs[]=new Ctab (true, "missed calls", "missed_calls.php");
+		$this->user_tabs[]=new Ctab (true, "accounting", "accounting.php");
+		$this->user_tabs[]=new Ctab (true, "send IM", "send_im.php");
+		$this->user_tabs[]=new Ctab (false, "notification subscription", "notification_subscription.php");
+		$this->user_tabs[]=new Ctab (true, "message store", "message_store.php");
+		$this->user_tabs[]=new Ctab (false, "voicemail", "voicemail.php");
+		$this->user_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
+		$this->user_tabs[]=new Ctab (false, "speed dial", "speed_dial.php");
+		$this->user_tabs[]=new Ctab (false, "caller screening", "caller_screening.php");
 
 		/* admin tabs definitions
 			Ctab (enabled, name_of_tab, php_script)
@@ -314,7 +316,6 @@ class Cconfig {
 		*/
 		$this->show_voice_silo=false; /* show voice messages in silo too */
 		$this->enable_dial_voicemail=false;
-		$this->enable_tabs[8]=true;				//enable tab voicemail
 		$this->setup_jabber_account=false;
 
 		$this->jserver = "bat.iptel.org";   # Jabber server hostname
@@ -327,10 +328,6 @@ class Cconfig {
 		$this->jab_db_pas="47s2jgw11";  	# database user's password
 		$this->jab_db_db="sip_jab";   		# database name
 		
-		
-		$this->enable_tabs[11]=true;				//enable tab user_preferences
-		$this->enable_tabs[12]=true;				//enable tab speed dial
-		$this->enable_tabs[13]=true;				//enable tab caller screening
 
 		// string to which must start username from request uri in speed dial
 		$this->speed_dial_inititation="11";

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.10 2004/03/03 15:41:31 kozlik Exp $
+ * $Id: find_user.php,v 1.11 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -19,11 +19,11 @@ $f = new form;                  // create a form object
 class Cuser{
 	var $first_name, $last_name, $username, $timezone, $aliases;
 	function Cuser($fname, $lname, $username, $timezone){
-		$this->first_name 	= $fname; 
-		$this->last_name 	= $lname; 
-		$this->username 	= $username; 
+		$this->first_name 	= $fname;
+		$this->last_name 	= $lname;
+		$this->username 	= $username;
 		$this->timezone 	= $timezone;
-		
+
 		$this->aliases=array();
 	}
 }
@@ -80,7 +80,7 @@ do{
 
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		
+
 		$found_users=array();
 		while ($row=MySQL_Fetch_Object($find_res)){
 			$found_users[$row->username]=new Cuser($row->first_name, $row->last_name, $row->username, $row->timezone);
@@ -94,101 +94,76 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin(2, true, true, get_user_name($errors));
-	echo "<br>";?>
-<?	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['selected_tab']="phonebook.php";
+print_html_body_begin($page_attributes);
 ?>
 
-<table width="498" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td class="title">Find user</td></tr>
-</table>
+<h2 class="swTitle">Find user</h2>
 
-
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">first name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="fname">first name:</label></td>
 	<td><?$f->show_element("fname");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">last name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="lname">last name:</label></td>
 	<td><?$f->show_element("lname");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">user name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="uname">user name:</label></td>
 	<td><?$f->show_element("uname");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">show on-line users only:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="onlineonly">show on-line users only:</label></td>
 	<td><?$f->show_element("onlineonly");?></td>
 	</tr>
 	<tr>
-	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","");					// Finish form?>
+</div>
 
 <?if (is_array($found_users) and count($found_users)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="160">name</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">sip address</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">aliases</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">timezone</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">&nbsp;</td>
+	<th>name</th>
+	<th>sip address</th>
+	<th>aliases</th>
+	<th>timezone</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	foreach($found_users as $row){
-//	while ($row=MySQL_fetch_object($find_res)){
 		$odd=$odd?0:1;
 		$name=$row->last_name;
 		if ($name) $name.=" "; $name.=$row->first_name;
 		$sip_uri="sip:".$row->username."@".$config->default_domain;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $sip_uri;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo implode(", ", $row->aliases)."&nbsp;";?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="125">&nbsp;<?echo $row->timezone;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="125"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&okey_x=1&fname=".RawURLEncode($row->first_name)."&lname=".RawURLEncode($row->last_name)."&sip_uri=".RawURLEncode($sip_uri));?>">add to phonebook</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($name);?></td>
+	<td align="left"><?echo nbsp_if_empty($sip_uri);?></td>
+	<td align="left"><?echo nbsp_if_empty(implode(", ", $row->aliases));?></td>
+	<td align="left"><?echo nbsp_if_empty($row->timezone);?></td>
+	<td align="center"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&okey_x=1&fname=".RawURLEncode($row->first_name)."&lname=".RawURLEncode($row->last_name)."&sip_uri=".RawURLEncode($sip_uri));?>">add to phonebook</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 	<?if (MySQL_num_rows($find_res)==$config->max_showed_rows){?>
-<br><div align="center">The search generated too many matches, please be more specific</div>
+	<div class="swNumOfFoundRecords">The search generated too many matches, please be more specific</div>
 <?	}?>
+<?}elseif(isset($okey_x)){?>
+	<div class="swNumOfFoundRecords">No users found</div>
 <?}?>
 
-<br>&nbsp;<a href="<?$sess->purl("phonebook.php?kvrk=".uniqid(""));?>">back to phonebook</a><br>
+<div class="swBackToMainPage"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqid(""));?>">back to phonebook</a></div>
 
 <br>
 <?print_html_body_end();?>

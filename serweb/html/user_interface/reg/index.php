@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.9 2003/11/19 11:23:21 kozlik Exp $
+ * $Id: index.php,v 1.10 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -145,95 +145,76 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin();
-	echo "<br>";
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();
+print_html_body_begin($page_attributes);
 ?>
 
-
-<span class="txt_norm">To register, please fill out the form below and click the
-submit button at the bottom of the page. <br>An email message will be sent to you
+<p>To register, please fill out the form below and click the
+submit button at the bottom of the page. An email message will be sent to you
 confirming your registration. Please contact
-<A HREF=mailto:<?echo $config->regmail;?>><?echo $config->regmail;?></A> <br>
-if you have any questions concerning registration and our free trial SIP services.</span>
+<A HREF=mailto:<?echo $config->regmail;?>><?echo $config->regmail;?></A>
+if you have any questions concerning registration and our free trial SIP services.</p>
 <br>
-<?print_errors($errors);                    // Display error?>
-<br>
+
+<div class="swForm swRegForm">
 <?$f->start("form");				// Start displaying form?>
 
-<table border="0" cellspacing="0" cellpadding="4" align="center" bgcolor="#B1C9DC"><tr><td>
-	<table border="0" cellspacing="0" cellpadding="0" align="center" >
+	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td width="160" align="right" class="f12b">first name:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("fname");?></td>
+	<td><label for="fname">first name:</label></td>
+	<td ><?$f->show_element("fname");?></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">last name:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("lname");?></td>
+	<td><label for="lname">last name:</label></td>
+	<td><?$f->show_element("lname");?></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">email:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("email");?></td>
+	<td><label for="email">email:</label></td>
+	<td><?$f->show_element("email");?></td>
 	</tr>
 	<tr>
-	<td width="160" colspan="2">&nbsp;</td>
-	<td class="f12i" width="250">Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)</td>
+	<td>&nbsp;</td>
+	<td><div class="swRegFormDesc">Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)</div></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">phone:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("phone");?></td>
+	<td><label for="phone">phone:</label></td>
+	<td><?$f->show_element("phone");?></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">your timezone:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("timezone");?></td>
+	<td><label for="timezone">your timezone:</label></td>
+	<td><?$f->show_element("timezone");?></td>
 	</tr>
 	<tr>
-	<td width="160" colspan="2">&nbsp;</td>
-	<td class="f12i" width="250">This is your PSTN phone number where you can be reached.</td>
+	<td>&nbsp;</td>
+	<td><div class="swRegFormDesc">This is your PSTN phone number where you can be reached.</div></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">pick your user name:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("uname");?></td>
+	<td><label for="uname">pick your user name:</label></td>
+	<td><?$f->show_element("uname");?></td>
 	</tr>
 	<tr>
-	<td width="160" colspan="2">&nbsp;</td>
-	<td class="f12i" width="250">Your SIP address will be username@<?echo $config->default_domain;?>. Indicate only the username part of the address. It may be either a numerical address starting with '8' (e.g., "8910") or a lower-case alphanumerical address starting with an alphabetical character (e.g., john.doe01). Do not forget your username -- you will need it to configure your phone! </td>
+	<td>&nbsp;</td>
+	<td><div class="swRegFormDesc">Your SIP address will be username@<?echo $config->default_domain;?>. Indicate only the username part of the address. It may be either a numerical address starting with '8' (e.g., "8910") or a lower-case alphanumerical address starting with an alphabetical character (e.g., john.doe01). Do not forget your username -- you will need it to configure your phone!</div></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">pick password:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("passwd");?></td>
+	<td><label for="passwd">pick password:</label></td>
+	<td><?$f->show_element("passwd");?></td>
 	</tr>
 	<tr>
-	<td width="160" colspan="2">&nbsp;</td>
-	<td class="f12i" width="250">Do not forget your password -- you will need it to configure your phone!</td>
+	<td>&nbsp;</td>
+	<td><div class="swRegFormDesc">Do not forget your password -- you will need it to configure your phone!</div></td>
 	</tr>
 	<tr>
-	<td width="160" align="right" class="f12b">confirmation password:</td>
-	<td width="5">&nbsp;</td>
-	<td width="250"><?$f->show_element("passwd_r");?></td>
+	<td><label for="passwd_r">confirmation password:</label></td>
+	<td><?$f->show_element("passwd_r");?></td>
 	</tr>
-	<tr><td colspan="3">&nbsp;</td></tr>
-	<tr><td colspan="3" class="f12b">terms and conditions</td></tr>
-	<tr><td colspan="3"><?$f->show_element("terms");?></td></tr>
-	<tr><td colspan="3"><?$f->show_element("accept");?> I accept</td></tr>
-	<tr><td colspan="3" align="right"><?$f->show_element("okey");?>&nbsp;&nbsp;&nbsp;</td></tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td colspan="2" class="swHorizontalForm"><label for="terms">terms and conditions:</label></td></tr>
+	<tr><td colspan="2"><?$f->show_element("terms");?></td></tr>
+	<tr><td colspan="2" class="swHorizontalForm"><?$f->show_element("accept");?> <label for="accept" style="display:inline;">I accept</label></td></tr>
+	<tr><td colspan="2" align="right"><?$f->show_element("okey");?>&nbsp;&nbsp;&nbsp;</td></tr>
 	</table>
-</td></tr></table>
 <?$f->finish("
 	if (f.passwd.value!=f.passwd_r.value){
 		alert('passwords not match');
@@ -247,10 +228,11 @@ if you have any questions concerning registration and our free trial SIP service
 		return (false);
 	}
 ");					// Finish form?>
+</div>
 
 <br>
 <hr>
-<div align="center" class="txt_norm">Back to <a href="<?$sess->purl("../index.php");?>">login form</a>. </div>
+<div align="center">Back to <a href="<?$sess->purl("../index.php");?>">login form</a>.</div>
 <hr>
 
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: voicemail.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: voicemail.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -63,30 +63,19 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin(8, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<h2 class="swTitle">Customize greetings:</h2>
+
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
-
-
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td class="title" width="502">Customize greetings:</td></tr>
-</table><br>
-
-<table border="0" cellspacing="0" cellpadding="0" align="center" width="502">
+<table border="0" cellspacing="0" cellpadding="0" align="center" class="swWidthAsTitle">
 <tr>
-	<td align="left" class="f12"><?$f->show_element("greeting");?></td>
+	<td align="left"><?$f->show_element("greeting");?></td>
 	<td align="right"><?$f->show_element("okey");?></td>
 </tr>
 <tr>
@@ -94,7 +83,6 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td align="right"><a href="<?$sess->purl("play_greeting.php?kvrk=".uniqid(""));?>"><img src="<?echo $config->img_src_path;?>butons/b_download_greeting.gif" width="165" height="16" border="0"></a></td>
 </tr>
 </table>
-
 <?$f->finish("
 
 	if (f.greeting.value==''){
@@ -104,6 +92,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	}
 
 ","");					// Finish form?>
+</div>
 
 <br>
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: message_store.php,v 1.3 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: message_store.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -98,120 +98,62 @@ do{
 
 }while (false);
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-
-	<style type="text/css">
-	<!--
-	.msgtitle{
-		color: black;
-		font-family: Verdana, Arial, Helvetica, sans-serif;
-		font-size: 13px;
-		font-style: normal;
-		font-weight: bold ;
-	}
-	.msgtitle:visited{
-		color: black;
-	}
-	.msgtitle:active{
-		color: black;
-	}
-	.msgtitle:hover{
-		color: black;
-	}
-	-->
-	</style>
-</head>
-<?
-	print_html_body_begin(7, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
-
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td class="title" width="502">Instant messages store:</td></tr>
-</table><br>
+<h2 class="swTitle">Instant messages store:</h2>
 
 <?if (isset($im_arr)){?>
-<table border="0" cellspacing="0" cellpadding="0" align="center">
 <?foreach($im_arr as $row){
 	if (date('Y-m-d',$row->time)==date('Y-m-d')) $time="today ".date('H:i',$row->time);
 	else $time=date('Y-m-d H:i',$row->time)
 ?>
-<tr><td>
-	<table border="0" cellspacing="0" cellpadding="2" bgcolor="#C1D773">
-	<tr><td>
-		<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-		<tr bgcolor="#B1C9DC" valign="top">
-		<td width="245" class="msgtitle"><?echo $row->src_addr;?></td>
-		<td align="right" width="135" class="msgtitle"><?echo $time;?></td>
-		<td align="center" width="60" class="msgtitle"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->src_addr));?>" class="msgtitle">reply</a></td>
-		<td align="center" width="60" class="msgtitle"><a href="<?$sess->purl("message_store.php?kvrk=".uniqid("")."&dele_im=".rawURLEncode($row->mid));?>" class="msgtitle">delete</a></td>
-		</tr>
-
-		<tr>
-		<td colspan="4" width="500"><?echo $row->body;?></td>
-		</tr>
-		</table>
-	</td></tr>
-	</table>
-</td></tr>
-<tr><td>&nbsp;</td></tr>
+	<div class="swInstantMessage">
+		<div class="swIMtitle">
+			<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->src_addr));?>" class="msgtitle">reply</a>
+			<a href="<?$sess->purl("message_store.php?kvrk=".uniqid("")."&dele_im=".rawURLEncode($row->mid));?>" class="msgtitle">delete</a>
+			<span class="swIMtime"><?echo $time;?></span>
+			<span class="swIMSrcAdr"><?echo $row->src_addr;?></span>
+		</div>
+		<div class="swIMbody"><?echo nbsp_if_empty($row->body);?></div>
+	</div>
 <?}?>
-</table>
 
 <?}else{?>
-<div align="center">No stored instant messages</div>
+<div class="swNumOfFoundRecords">No stored instant messages</div>
 <br>
 <?}?>
 
-<?if ($default->show_voice_silo) {?>
+<?if ($config->show_voice_silo) {?>
 
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td class="title" width="502">Voicemail messages store:</td></tr>
-</table><br>
+<h2 class="swTitle">Voicemail messages store:</h2>
 
 <?if (isset($vm_arr)){?>
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
 	<tr>
-	<td class="titleT" width="139">calling subscriber</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="160">subject</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="135">time</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="60">&nbsp;</td>
+	<th>calling subscriber</td>
+	<th>subject</td>
+	<th>time</td>
+	<th>&nbsp;</td>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?foreach($vm_arr as $row){
 		if (date('Y-m-d',$row->time)==date('Y-m-d')) $time="today ".date('H:i',$row->time);
 		else $time=date('Y-m-d H:i',$row->time)
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="139"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->src_addr));?>"><?echo htmlspecialchars($row->src_addr);?></a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-
-	<td align="left" class="f12" width="160"><a href="<?$sess->purl("ms_get_v_msg.php?kvrk=".uniqid("")."&mid=".rawURLEncode($row->mid));?>"><?echo $row->subject;?></a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="135"><?echo $time;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="60"><a href="<?$sess->purl("message_store.php?kvrk=".uniqid("")."&dele_vm=".rawURLEncode($row->mid));?>" class="msgtitle">delete</a></td>
+	<td align="left"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->src_addr));?>"><?echo htmlspecialchars($row->src_addr);?></a></td>
+	<td align="left"><a href="<?$sess->purl("ms_get_v_msg.php?kvrk=".uniqid("")."&mid=".rawURLEncode($row->mid));?>"><?echo nbsp_if_empty($row->subject);?></a></td>
+	<td align="center"><?echo nbsp_if_empty($time);?></td>
+	<td align="center"><a href="<?$sess->purl("message_store.php?kvrk=".uniqid("")."&dele_vm=".rawURLEncode($row->mid));?>" class="msgtitle">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 
 <?}else{?>
-<div align="center">No stored voicemail messages</div>
+<div class="swNumOfFoundRecords">No stored voicemail messages</div>
 <?}?>
 <?}?>
 

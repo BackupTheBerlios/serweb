@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.3 2004/03/02 21:07:41 kozlik Exp $
+ * $Id: user_preferences.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -107,12 +107,8 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+/* ----------------------- HTML begin ---------------------- */ 
+print_html_head();?>
 <script language="JavaScript">
 <!--
 	function sip_address_completion(adr){
@@ -132,14 +128,12 @@ if ($okey_x){							//data isn't valid or error in sql
 //-->
 </script>
 <script language="JavaScript" src="ctd.js"></script>
-</head>
 <?
-	print_html_body_begin(11, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?if (count($attributes)){
 	$js_on_subm="";
   $f->start("form");				// Start displaying form?>
@@ -148,21 +142,20 @@ if ($okey_x){							//data isn't valid or error in sql
 		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");"; 
 	?>
 		<tr>
-		<td align="right" class="f12b"><?echo $att->att_name;?></td>
-		<td width="5">&nbsp;</td>
+		<td align="right" class="f12b"><label for="<?echo $att->att_name;?>"><?echo $att->att_name;?>:</label></td>
 		<td><?$f->show_element($att->att_name);?></td>
 		</tr>
 	<?}//foreach?>
 	<tr>
 	<td>&nbsp;</td>
-	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("",$js_on_subm);					// Finish form?>
+</div>
 
 <?}else{?>
-<br><div align="center">No attributes defined by admin</div>
+<div class="swNumOfFoundRecords">No attributes defined by admin</div>
 <?} //end if (count($attributes))?>
 
 

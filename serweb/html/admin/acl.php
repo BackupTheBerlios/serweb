@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.7 2004/03/04 22:47:37 kozlik Exp $
+ * $Id: acl.php,v 1.8 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -91,47 +91,36 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_admin_html_body_begin("users.php");
-	echo "<br>";
-//	echo "user: ".$user_id."<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
-
-	ptitle("Access control list of user: ".$user_id);
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['selected_tab']="users.php";
+print_html_body_begin($page_attributes);
 ?>
 
+<h2 class="swTitle">Access control list of user: <?echo $user_id;?></h2>
 
 <?if (count($ACL_control)){?>
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 <?	foreach ($ACL_control as $row){ ?>
 	<tr>
-	<td align="right" class="f12b"><?echo $row;?></td>
-	<td width="5">&nbsp;</td>
+	<td><label for="<?echo "chk_".$row;?>"><?echo $row;?></label></td>
 	<td><?$f->show_element("chk_".$row);?></td>
 	</tr>
 <?	} ?>
 	<tr>
 	<td>&nbsp;</td>
-	<td>&nbsp;</td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish();					// Finish form?>
+</div>
 <?}else{?>
-<br><div align="center">You haven't any privileges to control ACL</div>
+<div class="swNumOfFoundRecords">You haven't any privileges to control ACL</div>
 <?}?>
-<br clear="all"><br>
 
-<a href="<?$sess->purl("users.php?kvrk=".uniqid(''));?>">back to main page</a>
+<div class="swBackToMainPage"><a href="<?$sess->purl("users.php?kvrk=".uniqid(''));?>">back to main page</a></div>
 
 <?print_html_body_end();?>
 </html>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.11 2003/11/03 01:54:27 jiri Exp $
+ * $Id: users.php,v 1.12 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -73,12 +73,9 @@ do{
 	}
 
 }while (false);
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
+
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();?>
 <script language="JavaScript">
 <!--
 function confirmDelete(theLink){
@@ -90,77 +87,54 @@ function confirmDelete(theLink){
 }
 //-->
 </script>
-</head>
 <?
-	print_admin_html_body_begin();
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+print_html_body_begin($page_attributes);
 ?>
 
-
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr><td class="title" width="480">filter:</td></tr>
-	</table>
+	<h2 class="swTitle">filter:</h2>
 
 <?$sess_fusers->print_form();?>
 
 
 <?if ($users_res and MySQL_num_rows($users_res)){?>
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="85">username</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="100">name</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="70">phone</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">email</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="40">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="63">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="55">&nbsp;</td>
+	<th>username</th>
+	<th>name</th>
+	<th>phone</th>
+	<th>email</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="13" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while ($row=MySQL_Fetch_Object($users_res)){
 		$odd=$odd?0:1;
 		$name=$row->last_name;
 		if ($name) $name.=" "; $name.=$row->first_name;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="85">&nbsp;<?echo $row->username;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="100">&nbsp;<?echo $name;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="right" class="f12" width="70"><?echo $row->phone;?>&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="125">&nbsp;<a href="mailto:<?echo $row->email_address;?>"><?echo $row->email_address;?></a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="40"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->username));?>">ACL</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl($config->user_pages_path."my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->username));?>">account</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="55"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this)">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($row->username);?></td>
+	<td align="left"><?echo nbsp_if_empty($name);?></td>
+	<td align="right"><?echo nbsp_if_empty($row->phone);?></td>
+	<td align="left"><a href="mailto:<?echo $row->email_address;?>"><?echo nbsp_if_empty($row->email_address);?></a></td>
+	<td align="center"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->username));?>">ACL</a></td>
+	<td align="center"><a href="<?$sess->purl($config->user_pages_path."my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->username));?>">account</a></td>
+	<td align="center"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this)">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 <?}?>
 
 <? if ($num_rows){?>
-<p align="center" class="f12">Showed users <?echo ($sess_fusers->act_row+1)." - ".((($sess_fusers->act_row+$config->num_of_showed_items)<$num_rows)?($sess_fusers->act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?>
+<div class="swNumOfFoundRecords">Showed users <?echo ($sess_fusers->act_row+1)." - ".((($sess_fusers->act_row+$config->num_of_showed_items)<$num_rows)?($sess_fusers->act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?></div>
 <?}else{?>
-<p align="center">No users found.
+<div class="swNumOfFoundRecords">No users found</div>
 <?}?><br>
 
 
-<div align="left">&nbsp;
+<div class="swSearchLinks">
 <?
 	$url="users.php?kvrk=".uniqid("")."&act_row=";
 	print_search_links($sess_fusers->act_row, $num_rows, $config->num_of_showed_items, $url);

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
+ * $Id: user_preferences.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -158,86 +158,60 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_admin_html_body_begin();
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
-
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+print_html_body_begin($page_attributes);
 ?>
 
+<div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td align="right" class="f12b">attribute name:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="att_name">attribute name:</label></td>
 	<td><?$f->show_element("att_name");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">attribute type:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="att_rich_type">attribute type:</label></td>
 	<td><?$f->show_element("att_rich_type");?></td>
 	</tr>
 	<tr>
-	<td align="right" class="f12b">default value:</td>
-	<td width="5">&nbsp;</td>
+	<td><label for="default_value">default value:</label></td>
 	<td><?$f->show_element("default_value");?></td>
 	</tr>
 	<tr>
-	<td align="left">&nbsp;<?
+	<td align="left"><?
 		if($att_edit and $att_rich_type=="list"){?>
 			<a href="<?$sess->purl("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID(""))?>"><img src="<?echo $config->img_src_path;?>butons/b_edit_items_of_the_list.gif" width="165" height="16" border="0"></a><?
-		}?></td>
-	<td>&nbsp;</td>
+		}else echo "&nbsp;";?></td>
 	<td align="right"><?$f->show_element("okey");?></td>
 	</tr>
 	</table>
 <?$f->finish("","");					// Finish form?>
-
+</div>
 
 <?if (MySQL_num_rows($att_res)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<td class="titleT" width="205">attribute name</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">attribute type</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="205">default value</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="50">&nbsp;</td>
+	<th>attribute name</th>
+	<th>attribute type</th>
+	<th>default value</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while($row = MySQL_Fetch_Object($att_res)){
 		$odd=$odd?0:1;
 	?>
-	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $row->att_name;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->att_types[$row->att_rich_type]->label;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->format_value_for_output($row->default_value, $row->att_rich_type, $row->att_type_spec);?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="50"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($row->att_name));?>">delete</a></td>
+	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
+	<td align="left"><?echo nbsp_if_empty($row->att_name);?></td>
+	<td align="left"><?echo nbsp_if_empty($usr_pref->att_types[$row->att_rich_type]->label);?></td>
+	<td align="left"><?echo nbsp_if_empty($usr_pref->format_value_for_output($row->default_value, $row->att_rich_type, $row->att_type_spec));?></td>
+	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
+	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($row->att_name));?>">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 
 <?}?>
 

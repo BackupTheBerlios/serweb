@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.6 2003/11/03 01:54:27 jiri Exp $
+ * $Id: notification_subscription.php,v 1.7 2004/03/11 22:30:00 kozlik Exp $
  */
 
 require "prepend.php";
@@ -58,94 +58,54 @@ do{
 
 }while (false);
 
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
-<?
-	print_html_body_begin(6, true, true, get_user_name($errors));
-	echo "<br>";
-	print_errors($errors);                    // Display error
-	print_message($message);
+/* ----------------------- HTML begin ---------------------- */
+print_html_head();
+$page_attributes['user_name']=get_user_name($errors);
+print_html_body_begin($page_attributes);
 ?>
 
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td>
-	<table border="0" cellspacing="0" cellpadding="0" align="left">
-	<tr><td class="title" width="534">your subscribed events:</td></tr>
-	</table>
-</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>
+<h2 class="swTitle">your subscribed events:</h2>
 
 <?if ($ev_res and MySQL_num_rows($ev_res)){?>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
 	<tr>
-	<td class="titleT" width="450">description</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="80">&nbsp;</td>
+	<th>description</th>
+	<th width="90">&nbsp;</th>
 	</tr>
-	<tr><td colspan="3" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?while ($row=MySQL_Fetch_Object($ev_res)){
 	remove_from_events($row->uri)
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="450"><?echo $row->description;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="80"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&dele_id=".$row->id);?>">unsubscribe</a></td>
+	<td align="left"><?echo $row->description;?></td>
+	<td align="center"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&dele_id=".$row->id);?>">unsubscribe</a></td>
 	</tr>
 	<?}?>
 	</table>
-</td></tr>
-</table>
 
 <?}else{?>
-<div align="center">No subscribed events</div>
+<div class="swNumOfFoundRecords">No subscribed events</div>
 <?}?>
-</td></tr>
-</table>
-<br>
 
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td>
-	<table border="0" cellspacing="0" cellpadding="0" align="left">
-	<tr><td class="title" width="534">other events:</td></tr>
-	</table>
-</td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><td>
+<h2 class="swTitle">other events:</h2>
+
 <?
 if (is_array($config->sub_not) and count($config->sub_not)){?>
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
-<tr><td>
-	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
 	<tr>
-	<td class="titleT" width="450">description</td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="80">&nbsp;</td>
+	<th>description</th>
+	<th width="90">&nbsp;</th>
 	</tr>
-	<tr><td colspan="3" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 <?	foreach($config->sub_not as $row){?>
 	<tr valign="top">
-	<td align="left" class="f12" width="450"><?echo $row->desc;?></td>
-	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="80"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&desc=".RawURLEncode($row->desc)."&uri=".RawURLEncode($row->uri));?>">subscribe</a></td>
+	<td align="left"><?echo $row->desc;?></td>
+	<td align="center"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&desc=".RawURLEncode($row->desc)."&uri=".RawURLEncode($row->uri));?>">subscribe</a></td>
 	</tr>
 <? }//for each?>
 	</table>
-</td></tr>
-</table>
 <?}else{?>
-<div align="center">No other events</div>
+<div class="swNumOfFoundRecords">No other events</div>
 <?}//end if?>
-</td></tr>
-</table>
 
 <br>
 <?print_html_body_end();?>
