@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: cart.inc,v 1.1 2002/09/04 18:19:50 kozlik Exp $
+ * $Id: cart.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

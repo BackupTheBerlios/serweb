@@ -4,7 +4,7 @@
  *
  * Jan 1999-2000 Alexander Aulbach for Main Media
  *
- * $Id: layout_html.inc,v 1.1 2002/09/04 18:20:18 kozlik Exp $
+ * $Id: layout_html.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
  *
  * This Lib is used for the default representation of a page.
  * It has to be extended for own layout-design

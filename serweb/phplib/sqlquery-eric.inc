@@ -5,7 +5,7 @@
  * (C) Copyright 1998 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp, Eric Ries
  *
- * $Id: sqlquery-eric.inc,v 1.1 2002/09/04 18:20:54 kozlik Exp $
+ * $Id: sqlquery-eric.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
  *
  * WARNING! This is a temporary file only and it is here to
  *          be merged with sqlquery.inc and for cleanup.

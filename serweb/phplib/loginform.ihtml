@@ -1,44 +1,42 @@
 <?
-	global $username, $config, $page_attributes;
+	global $username, $config, $page_attributes, $errors, $serweb_auth, $_POST, $smarty;
 
 	print_html_head();
 	unset ($page_attributes['tab_collection']);
+	$page_attributes['logout']=false;
 
-	$errors=array();
-	if (isset($_POST['username'])) $errors[]="Either your username or your password are invalid. Please try again!";
+	if (!isset($errors)) $errors=array();
+//	if (isset($_POST['submit']) or isset($_POST['submit_x'])) $errors[]="Your password is invalid. Please try again!";
 
 	print_html_body_begin($page_attributes);
+
+	//create copy of some options from config in order to sensitive options will not accessible via templates
+	$cfg=new stdclass();
+	$cfg->img_src_path = $config->img_src_path;
+
+	$page_attributes['errors']=&$errors;
+	$page_attributes['message']=&$message;
+	
+	$smarty->assign_by_ref('parameters', $page_attributes);
+	$smarty->assign_by_ref('config', $cfg);
+
+	$smarty->assign('form_action', $this->url());
+
+	if ($config->fully_qualified_name_on_login) 
+		$smarty->assign('form_username', $serweb_auth->uname.'@'.$serweb_auth->domain);
+	else
+		$smarty->assign('form_username', $serweb_auth->uname);
+	
+	$smarty->display('relogin.tpl');
 ?>
 
-<p align="center"><b><span style="font-size: 15px; color: Red;">Your session expired, please relogin.</span></b>
-
-<div class="swForm swLoginForm">
-<form action="<?php print $this->url() ?>" method=post>
-<table border="0" cellspacing="0" cellpadding="4" align="center" bgcolor="#75C5F0">
-<tr valign=top align=left>
-<td><label for="username">Username:</label></td>
-<td><input type="text" name="username" id="username" value="<?php if (isset($this->auth["uname"])) print htmlentities($this->auth["uname"]) ?>" size=32 maxlength=32></td>
-</tr>
-<tr valign=top align=left>
-<td><label for="password">Password:</label></td>
-<td><input type="password" name="password" id="password" size=32 maxlength=32></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td align=right><input name='submit' type="Image" src="<?echo $config->img_src_path."butons/b_login.gif";?>" border="0" alt="login"></td>
-</tr>
-</table>
-</form>
-</div>
-
-<br>
 <?print_html_body_end();?>
 <script language="JavaScript">
 <!--
-  if (document.forms[0][0].value != '') {
-      document.forms[0][1].focus();
+  if (document.forms['login_form'][0].value != '') {
+      document.forms['login_form'][1].focus();
   } else {
-      document.forms[0][0].focus();
+      document.forms['login_form'][0].focus();
   }
 // -->
 </script>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.4 2004/05/06 11:48:44 kozlik Exp $
+ * $Id: main_prepend.php,v 1.5 2004/08/09 13:04:28 kozlik Exp $
  */ 
 
 //require class defintions
@@ -19,7 +19,6 @@ $domain_config=new CDomain_config();
 //TO DO: load language
 
 //require sql access configuration and table names
-//require_once ($_SERWEB["serwebdir"] . "config_sql.php");
 require_once ($_SERWEB["serwebdir"] . "config_data_layer.php");
 
 //require other configuration
@@ -46,19 +45,18 @@ else{
 	$serwebLog  = NULL;
 }
 
+//require Smarty and create Smarty instance
+require($_SERWEB["serwebdir"]."../smarty/smarty_serweb.php");
+$smarty = new Smarty_Serweb;
+
+
 
 //require functions
 require_once ($_SERWEB["serwebdir"] . "functions.php");
 
-//require functions for work with data store
-//require_once ($_SERWEB["serwebdir"] . "sql_and_fifo_functions.php");
-
+//require data layer for work with data store and create instance of it
 require_once ($_SERWEB["serwebdir"] . "data_layer.php");
-if (file_exists($_SERWEB["serwebdir"] . "data_layer/".basename($_SERVER['PHP_SELF']))){
-	require_once ($_SERWEB["serwebdir"] . "data_layer/".basename($_SERVER['PHP_SELF']));
-}else{
-	require_once ($_SERWEB["serwebdir"] . "data_layer/__std_data_layer.php");
-}
+$data = CData_Layer::create($errors);
 
 //require page layout
 require_once ($_SERWEB["serwebdir"] . "page.php");

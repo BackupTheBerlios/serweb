@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.41 2004/05/06 11:48:44 kozlik Exp $
+ * $Id: functions.php,v 1.42 2004/08/09 13:04:28 kozlik Exp $
  */
 
 
@@ -20,6 +20,58 @@ $name_of_month[9]="Sep";
 $name_of_month[10]="Oct";
 $name_of_month[11]="Nov";
 $name_of_month[12]="Dec";
+
+$sip_status_messages_array[100]="100 Trying";
+$sip_status_messages_array[180]="180 Ringing";
+$sip_status_messages_array[181]="181 Call Is Being Forwarded";
+$sip_status_messages_array[182]="182 Queued";
+$sip_status_messages_array[183]="183 Session Progress";
+$sip_status_messages_array[200]="200 OK";
+$sip_status_messages_array[300]="300 Multiple Choices";
+$sip_status_messages_array[301]="301 Moved Permanently";
+$sip_status_messages_array[302]="302 Moved Temporarily";
+$sip_status_messages_array[305]="305 Use Proxy";
+$sip_status_messages_array[380]="380 Alternative Service";
+$sip_status_messages_array[400]="400 Bad Request";
+$sip_status_messages_array[401]="401 Unauthorized";
+$sip_status_messages_array[402]="402 Payment Required";
+$sip_status_messages_array[403]="403 Forbidden";
+$sip_status_messages_array[404]="404 Not Found";
+$sip_status_messages_array[405]="405 Method Not Allowed";
+$sip_status_messages_array[406]="406 Not Acceptable";
+$sip_status_messages_array[407]="407 Proxy Authentication Required";
+$sip_status_messages_array[408]="408 Request Timeout";
+$sip_status_messages_array[410]="410 Gone";
+$sip_status_messages_array[413]="413 Request Entity Too Large";
+$sip_status_messages_array[414]="414 Request-URI Too Long";
+$sip_status_messages_array[415]="415 Unsupported Media Type";
+$sip_status_messages_array[416]="416 Unsupported URI Scheme";
+$sip_status_messages_array[420]="420 Bad Extension";
+$sip_status_messages_array[421]="421 Extension Required";
+$sip_status_messages_array[423]="423 Interval Too Brief";
+$sip_status_messages_array[480]="480 Temporarily Unavailable";
+$sip_status_messages_array[481]="481 Call/Transaction Does Not Exist";
+$sip_status_messages_array[482]="482 Loop Detected";
+$sip_status_messages_array[483]="483 Too Many Hops";
+$sip_status_messages_array[484]="484 Address Incomplete";
+$sip_status_messages_array[485]="485 Ambiguous";
+$sip_status_messages_array[486]="486 Busy Here";
+$sip_status_messages_array[487]="487 Request Terminated";
+$sip_status_messages_array[488]="488 Not Acceptable Here";
+$sip_status_messages_array[491]="491 Request Pending";
+$sip_status_messages_array[493]="493 Undecipherable";
+$sip_status_messages_array[500]="500 Server Internal Error";
+$sip_status_messages_array[501]="501 Not Implemented";
+$sip_status_messages_array[502]="502 Bad Gateway";
+$sip_status_messages_array[503]="503 Service Unavailable";
+$sip_status_messages_array[504]="504 Server Time-out";
+$sip_status_messages_array[505]="505 Version Not Supported";
+$sip_status_messages_array[513]="513 Message Too Large";
+$sip_status_messages_array[600]="600 Busy Everywhere";
+$sip_status_messages_array[603]="603 Decline";
+$sip_status_messages_array[604]="604 Does Not Exist Anywhere";
+$sip_status_messages_array[606]="606 Not Acceptable";
+
 
 class Creg{
 
@@ -93,10 +145,19 @@ class Creg{
 		$this->sip_address="[sS][iI][pP]:".$this->address;
 	}
 
+	/* parse domain name fro sip address*/
 	function get_domainname($sip){
 		return ereg_replace($this->sip_address,"\\5", $sip);
 	}
 
+	/* parse user name fro sip address*/
+	function get_username($sip){
+
+		$uname=ereg_replace($this->sip_address,"\\1", $sip);
+
+		//remove the '@' at the end
+		return substr($uname,0,-1);
+	}
 }
 
 
@@ -122,7 +183,8 @@ function get_sess_url($url){
 */
 
 function nbsp_if_empty($str){
-	return $str?$str:"&nbsp;";
+	if (ereg('^[[:space:]]*$', $str)) return "&nbsp;";
+	else return $str;
 }
 
 /*
@@ -284,7 +346,10 @@ function click_to_dial($target, $uri, &$errors){
 	$cseq=1;
 	$fixed_dlg="From: ".$from.";tag=".$callidnr."\nCall-ID: ".$callid."\nContact: <sip:caller@!!>";
 	$status="";
-
+	$outbound_proxy=".";
+	
+	if (!empty($config->ctd_outbound_proxy)) $outbound_proxy=$config->ctd_outbound_proxy;
+	
 
 /* initiate dummy INVITE with pre-3261 "on-hold"
    (note the dots -- they mean in order of appearance:
@@ -294,7 +359,7 @@ function click_to_dial($target, $uri, &$errors){
 	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
 		"INVITE\n".
 		$uri."\n".
-		".\n".
+		$outbound_proxy."\n".
 		"$fixed_dlg\n".
 		"To: <".$uri.">\n".
 		"CSeq: ".$cseq." INVITE\n".
@@ -361,30 +426,31 @@ function click_to_dial($target, $uri, &$errors){
 class Cfusers{
 	var $classname='Cfusers';
 	var $persistent_slots = array("usrnm", "domain", "fname", "lname", "email", 
-		"onlineonly", "act_row", "adminsonly", "show_adminsonly", "show_onlineonly", "show_domain");
+		"onlineonly", "act_row", "adminsonly", "template");
 
 	var $usrnm, $fname, $lname, $email, $domain, $onlineonly=0, $act_row=0;
-	var $adminsonly=0, $show_adminsonly=false, $show_onlineonly=true, $show_domain=false;
+	var $adminsonly=0;
 
 	var $f;
+	var $smarty, $template;
 
 	function Cfusers($cfg=null){
 		if (is_array($cfg)){
-			if (isset($cfg['show_adminsonly'])){
-				if($cfg['show_adminsonly']) {	$this->show_adminsonly=true; $this->adminsonly=1;}
-				else{ $this->show_adminsonly=false; $this->adminsonly=0; }
+
+			if (isset($cfg['adminsonly']) and $cfg['adminsonly']){
+				$this->adminsonly=1;
 			}
 
-			if (isset($cfg['show_onlineonly'])){
-				if($cfg['show_onlineonly']) {$this->show_onlineonly=true; $this->onlineonly=0; }
-				else{ $this->show_onlineonly=false; $this->onlineonly=0; }
+			if (isset($cfg['onlineonly']) and $cfg['onlineonly']){
+				$this->onlineonly=1;
 			}
 
-			if (isset($cfg['show_domain'])){
-				if($cfg['show_domain']) {$this->show_domain=true; }
-				else{ $this->show_domain=false;}
+			if (isset($cfg['template'])){
+				$this->template=$cfg['template'];
 			}
 		}
+		
+		$this->smarty = new Smarty_Serweb;
 	}
 	
 	function init(){
@@ -394,20 +460,14 @@ class Cfusers{
 		if (isset($HTTP_POST_VARS['fname'])) $this->fname=$HTTP_POST_VARS['fname'];
 		if (isset($HTTP_POST_VARS['lname'])) $this->lname=$HTTP_POST_VARS['lname'];
 		if (isset($HTTP_POST_VARS['email'])) $this->email=$HTTP_POST_VARS['email'];
-		if ($this->show_domain){
-			if (isset($HTTP_POST_VARS['domain'])) $this->domain=$HTTP_POST_VARS['domain'];
-		}
+		if (isset($HTTP_POST_VARS['domain'])) $this->domain=$HTTP_POST_VARS['domain'];
 
 		if (isset($HTTP_POST_VARS['okey_x'])){
-			if ($this->show_onlineonly){
-				if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
-				else $this->onlineonly=0;
-			}
+			if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
+			else $this->onlineonly=0;
 
-			if ($this->show_adminsonly){
-				if (isset($HTTP_POST_VARS['adminsonly'])) $this->adminsonly=$HTTP_POST_VARS['adminsonly'];
-				else $this->adminsonly=0;
-			}
+			if (isset($HTTP_POST_VARS['adminsonly'])) $this->adminsonly=$HTTP_POST_VARS['adminsonly'];
+			else $this->adminsonly=0;
 		}
 
 		if (isset($HTTP_GET_VARS['act_row'])) $this->act_row=$HTTP_GET_VARS['act_row'];
@@ -441,26 +501,20 @@ class Cfusers{
 									 "maxlength"=>50,
 		                             "value"=>$this->email,
 									 "extrahtml"=>"style='width:120px;'"));
-		if ($this->show_domain){
-			$this->f->add_element(array("type"=>"text",
-			                             "name"=>"domain",
-										 "size"=>11,
-										 "maxlength"=>128,
-		        	                     "value"=>$this->domain,
-										 "extrahtml"=>"style='width:120px;'"));
-		}
-		if ($this->show_onlineonly){
-			$this->f->add_element(array("type"=>"checkbox",
-			                             "value"=>1,
-										 "checked"=>$this->onlineonly,
-		    	                         "name"=>"onlineonly"));
-		}
-		if ($this->show_adminsonly){
-			$this->f->add_element(array("type"=>"checkbox",
-			                             "value"=>1,
-										 "checked"=>$this->adminsonly,
-		    	                         "name"=>"adminsonly"));
-		}
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"domain",
+									 "size"=>11,
+									 "maxlength"=>128,
+	        	                     "value"=>$this->domain,
+									 "extrahtml"=>"style='width:120px;'"));
+		$this->f->add_element(array("type"=>"checkbox",
+		                             "value"=>1,
+									 "checked"=>$this->onlineonly,
+	    	                         "name"=>"onlineonly"));
+		$this->f->add_element(array("type"=>"checkbox",
+		                             "value"=>1,
+									 "checked"=>$this->adminsonly,
+	    	                         "name"=>"adminsonly"));
 		
 		$this->f->add_element(array("type"=>"submit",
 		                             "name"=>"okey",
@@ -477,49 +531,22 @@ class Cfusers{
 		if ($this->fname) $query_c.=$tablename."first_name like '%".$this->fname."%' and ";
 		if ($this->lname) $query_c.=$tablename."last_name like '%".$this->lname."%' and ";
 		if ($this->email) $query_c.=$tablename."email_address like '%".$this->email."%' and ";
-		if ($this->show_domain && $this->domain) $query_c.=$tablename."domain like '%".$this->domain."%' and ";
+		if ($this->domain) $query_c.=$tablename."domain like '%".$this->domain."%' and ";
 		$query_c.="1 ";
 		
 		return $query_c;
 	
 	}
 	
-	function print_form(){
-		$col_span=4;
-		if ($this->show_domain) $col_span++;
-	?><div class="swForm swHorizontalForm"><?
-		$this->f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="usrnm">username</label></td>
-<?	if ($this->show_domain){ ?>
-	<td><label for="domain">domain</label></td>
-<?	} ?>
-	<td><label for="fname">first name</label></td>
-	<td><label for="lname">last name</label></td>
-	<td><label for="email">email</label></td>
-	</tr>
-	<tr>
-	<td><?$this->f->show_element("usrnm");?></td>
-<?	if ($this->show_domain){ ?>
-	<td><?$this->f->show_element("domain");?></td>
-<?	} ?>
-	<td><?$this->f->show_element("fname");?></td>
-	<td><?$this->f->show_element("lname");?></td>
-	<td><?$this->f->show_element("email");?></td>
-	</tr>
-<?	if ($this->show_onlineonly){ ?>
-	<tr><td colspan="<?echo $col_span;?>"><label for="onlineonly" style="display: inline;">show on-line users only:</label><?$this->f->show_element("onlineonly");?></td></tr>
-<?	} ?>
-<?	if ($this->show_adminsonly){ ?>
-	<tr><td colspan="<?echo $col_span;?>"><label for="adminsonly" style="display: inline;">show admins only:</label><?$this->f->show_element("adminsonly");?></td></tr>
-<?	} ?>
-	<tr><td colspan="<?echo $col_span;?>" align="right"><?$this->f->show_element("okey");?></td></tr>
-	</table>
-<?		$this->f->finish();					// Finish form
-	?></div><?
+	function get_form(){
+		$this->smarty->assign_phplib_form('form', $this->f, array('jvs_name'=>'form'));
+		return $this->smarty->fetch($this->template);
 	}
-
+	
+	function print_form(){
+		echo $this->get_form();
+	}
+	
 }
  
  
@@ -589,5 +616,60 @@ function set_global($var){
 	if (isset($_POST[$var])) $GLOBALS[$var]=$_POST[$var];
 	elseif (isset($_GET[$var])) $GLOBALS[$var]=$_GET[$var];
 	else $GLOBALS[$var]=null;
+}
+
+/*
+	return Cserweb_auth like get param like string
+*/
+function userauth_to_get_param($user, $prefix){
+	return $prefix."_id=".RawURLencode($user->uuid)."&".
+	       $prefix."_n=".RawURLencode($user->uname)."&".
+		   $prefix."_d=".RawURLencode($user->domain);
+}
+
+/*
+	add to form hidden values Cserweb_auth 
+*/
+function userauth_to_form($user, $prefix, &$form){
+	$form->add_element(array("type"=>"hidden",
+	                         "name"=>$prefix."_id",
+	                         "value"=>$user->uuid));
+
+	$form->add_element(array("type"=>"hidden",
+	                         "name"=>$prefix."_n",
+	                         "value"=>$user->uname));
+							 
+	$form->add_element(array("type"=>"hidden",
+	                         "name"=>$prefix."_d",
+	                         "value"=>$user->domain));
+}
+
+/*
+	return user info like get param like string
+*/
+function user_to_get_param($uuid, $uname, $domain, $prefix){
+	return $prefix."_id=".RawURLencode($uuid)."&".
+	       $prefix."_n=".RawURLencode($uname)."&".
+		   $prefix."_d=".RawURLencode($domain);
+}
+
+
+/*
+	return Cserweb_auth from get or post param
+*/
+function get_userauth_from_get_param($prefix){
+	global $_GET, $_POST;
+	
+	if ( isset($_GET[$prefix."_id"]) and
+	     isset($_GET[$prefix."_n"]) and
+		 isset($_GET[$prefix."_d"])) 
+		return new Cserweb_auth($_GET[$prefix."_id"], $_GET[$prefix."_n"], $_GET[$prefix."_d"]);
+		
+	if ( isset($_POST[$prefix."_id"]) and
+	     isset($_POST[$prefix."_n"]) and
+		 isset($_POST[$prefix."_d"])) 
+		return new Cserweb_auth($_POST[$prefix."_id"], $_POST[$prefix."_n"], $_POST[$prefix."_d"]);
+	
+	return false;
 }
 ?>

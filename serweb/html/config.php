@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.46 2004/05/06 19:00:54 kozlik Exp $
+ * $Id: config.php,v 1.47 2004/08/09 13:04:28 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -34,6 +34,9 @@
 		/* content of html <title> tag */
 		$config->html_title="SIP Express Router - web interface";
 
+		/* true if should be displayed heading like 'domain.org user management' or 'domain.org admin interface' at all pages */
+		$config->display_page_heading=true;
+
 		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags
 		   for example CSS styles used in prolog.html
 		      $this->html_headers[]='<link REL="StyleSheet" HREF="http://www.mydomain.org/styles/my_styles.css" TYPE="text/css">';
@@ -50,10 +53,33 @@
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
 		$config->html_doctype="strict";
 		
-		/* initial nummerical alias for new subscriber -- don't forget to
-		   align your SER routing script to it !
+
+		/* ------------------------------------------------------------*/
+		/* aliases generation                                          */
+		/* ------------------------------------------------------------*/
+		/* Ddon't forget to align your SER routing script to it !      */
+
+		/* Nummerical aliases can be generated randomly or incrementaly.
+		   Values 'rand' or 'inc' on the next line.
+		*/
+
+		$config->alias_generation='inc';
+
+		/* initial nummerical alias for new subscriber - only if aliases
+		   are generated incrementaly
 		*/
 		$config->first_alias_number=82000;
+		
+		/* next lines are only for randomly generated aliases */
+		
+		/* prefix of generated alias */
+		$config->alias_prefix="8";
+		/* postfix of generated alias */
+		$config->alias_postfix="";
+		/* length of random part of alias */
+		$config->alias_lenght=5;
+		/* how many times will serweb try find unused alias number until error will occured */
+		$config->alias_generation_retries=10;		
 
 
 		/* ------------------------------------------------------------*/
@@ -160,13 +186,45 @@
 		   by admins of particular domains */
 
 		$config->domain_depend_config=array("mail_header_from", "web_contact", 
-			"html_title", "html_doctype", "html_headers", "first_alias_number", 
+			"html_title", "html_doctype", "html_headers", "display_page_heading", 
+			"alias_generation",	"first_alias_number", "alias_prefix", 
+			"alias_postfix", "alias_lenght", "alias_generation_retries",
 			"infomail", "regmail", "forgot_pass_subj", "mail_forgot_pass", 
 			"register_subj", "mail_register", "terms_and_conditions");
 
+			
 		/* ------------------------------------------------------------*/
 		/* serweb appearance                                           */
 		/* ------------------------------------------------------------*/
+
+		/* use fully qualified name on user login like 'username@domain'
+		   instead of 'username' only
+		*/
+
+		$config->fully_qualified_name_on_login=false;
+		
+		/* if previous option is true, you can check if given domain is supported
+		   (is in domain table)
+		*/
+		
+		$config->check_supported_domain_on_login=true;
+		
+		/* when is user firsttime authenticated, create alias to him, and
+		   create record in subscriber table
+		*/
+		
+		$config->register_user_after_first_login=false;
+
+		/* the default timezone which is assigned to user on first login - 
+		   only if register_user_after_first_login is true
+		*/		
+		
+		$config->default_timezone='America/New_York';
+
+		/* set to true if should be displayed confirmation page on deleting anything.
+		   This option is INCOPLETE and need to be supported in templates.
+		*/
+		$config->require_delete_confirmation_page=false;
 
 		/* which tabs should show in user's profile ? those set to false
 		   by default are experimental features which have not been tested
@@ -202,6 +260,7 @@
 		$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 		$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
 
+		
 		/* experimental/incomplete features turned off: voicemail
 		   and set up a jabber account for each new SIP user too
 		*/
@@ -221,6 +280,46 @@
 		$config->jab_db_pas="heslo";            # database user's password
 		$config->jab_db_db="sip_jab";           # database name
 
+
+		/* ------------------------------------------------------------*/
+		/* My account TAB                                              */
+		/* ------------------------------------------------------------*/
+		
+		$config->allow_change_email=true;
+		$config->allow_change_password=true;
+
+		/* This option is enabling checkbox 'Allow others to see whether 
+		   or not I'm online'
+		*/		
+		$config->allow_change_status_visibility=false;
+
+		/* Forwarding to voicemail by group membership. If set to false,
+		   is forwarding to voicemail done through admin privileges
+		*/		
+		$config->forwarding_to_voicemail_by_group=false;
+
+		/* This option is enabling usrloc table and form for adding contacts
+		   at my account tab
+		*/
+		$config->enable_usrloc=true;
+
+
+		/* ------------------------------------------------------------*/
+		/* accounting TAB                                              */
+		/* ------------------------------------------------------------*/
+		
+		/* display outgoing calls at accounting TAB 
+		*/
+		$config->acc_display_outgoing_calls = true;
+
+		/* display incoming calls at accounting TAB - working only 
+		   if users are indexed by UUID 
+		   '$config->users_indexed_by' option in config_data_layer.php
+		*/
+		$config->acc_display_incoming_calls = false;
+
+		/* display missed callas at accounting TAB */
+		$config->acc_display_missed_calls = false;
 
 		/* ------------------------------------------------------------*/
 		/* Loging                                                      */
@@ -383,6 +482,9 @@
 		
 		/* from header for click-to-dial request */
 		$config->ctd_from	=	"sip:controller@mydomain.org";
+		
+		/* sip address of outbound proxy - leave empty for no proxy*/
+		$config->ctd_outbound_proxy	=	"sip:proxy.domain.org:5060";
 		
 		/* ------------------------------------------------------------*/
 		/*            caller screening                                 */

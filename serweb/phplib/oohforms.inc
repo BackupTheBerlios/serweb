@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.3 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: oohforms.inc,v 1.4 2004/08/09 12:59:36 kozlik Exp $
  */
 
 class of_element {
@@ -155,6 +155,10 @@ class form {
   var $isfile;
   var $n;
 
+  function form(){
+  	$this->elements=array();
+  }
+  
   function get_start($jvs_name="",$method="",$action="",$target="",$form_name="") {
     global $PHP_SELF;
     

@@ -6,7 +6,7 @@
  *        Modified by Guarneri carmelo (carmelo@melting-soft.com)
  *	  Modified by Cameron Just     (C.Just@its.uq.edu.au)	 
  *
- * $Id: db_mssql.inc,v 1.1 2002/09/04 18:19:56 kozlik Exp $
+ * $Id: db_mssql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  */ 
 # echo "<BR>This is using the MSSQL class<BR>";
 

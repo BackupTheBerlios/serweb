@@ -8,7 +8,7 @@
  * based on db_oracle.inc by Luis Francisco Gonzalez Hernandez 
  * contains metadata() from db_oracle.inc 1.10
  *
- * $Id: db_oci8.inc,v 1.1 2002/09/04 18:19:58 kozlik Exp $
+ * $Id: db_oci8.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

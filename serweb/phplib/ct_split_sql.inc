@@ -3,7 +3,7 @@
 ## Copyright (c) 1999-2000 Internet Images srl
 ##                    Massimiliano Masserelli
 ##
-## $Id: ct_split_sql.inc,v 1.1 2002/09/04 18:19:54 kozlik Exp $
+## $Id: ct_split_sql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
 ##
 ## PHPLIB Data Storage Container using a SQL database and multiple
 ## rows for each element

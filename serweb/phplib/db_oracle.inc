@@ -4,7 +4,7 @@
  *
  * Copyright (c) 1998-2000 Luis Francisco Gonzalez Hernandez
  *
- * $Id: db_oracle.inc,v 1.1 2002/09/04 18:20:04 kozlik Exp $
+ * $Id: db_oracle.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

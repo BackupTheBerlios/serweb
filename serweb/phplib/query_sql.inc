@@ -8,7 +8,7 @@
  *     The idea is of this class is based in November 1997,
  *     it was a collection of functions for PHP/FI and mSQL.
  *
- * $Id: query_sql.inc,v 1.1 2002/09/04 18:20:43 kozlik Exp $
+ * $Id: query_sql.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
  *
  */
 

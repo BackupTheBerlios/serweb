@@ -4,7 +4,7 @@
 ## Copyright (c) 1999-2000 Internet Images srl
 ##                    Massimiliano Masserelli <negro@interim.it>
 ##
-## $Id: be_sql.inc,v 1.1 2002/09/04 18:19:47 kozlik Exp $
+## $Id: be_sql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
 ##
 ## PHPLIB Blob Engine using plain sql
 ## depends on db_sql

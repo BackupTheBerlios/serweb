@@ -8,7 +8,7 @@
 ## C a little bit better it will be placed directly in PHP3.
 ## But I can't... :-}
 ##
-## $Id: strings2.inc,v 1.1 2002/09/04 18:20:57 kozlik Exp $
+## $Id: strings2.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
 
 
 ##

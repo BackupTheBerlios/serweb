@@ -7,7 +7,7 @@
  * Copyright (c) 1999-2000 Internet Images srl
  *                    Massimiliano Masserelli
  *
- * $Id: auth.inc,v 1.1 2002/09/04 18:19:46 kozlik Exp $
+ * $Id: auth.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

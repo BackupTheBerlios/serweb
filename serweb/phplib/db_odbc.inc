@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 Cameron Taggart (cameront@wolfenet.com)
  *        Modified by Guarneri carmelo (carmelo@melting-soft.com)
  *					 
- * $Id: db_odbc.inc,v 1.1 2002/09/04 18:20:01 kozlik Exp $
+ * $Id: db_odbc.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  */ 
 
 class DB_Sql {

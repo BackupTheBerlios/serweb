@@ -7,7 +7,7 @@
  *
  * Derived from db_mysql.inc by Sascha Schumann <sascha@schumann.cx>
  *
- * $Id: db_msql.inc,v 1.1 2002/09/04 18:19:56 kozlik Exp $
+ * $Id: db_msql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.2 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: of_text.inc,v 1.3 2004/08/09 12:59:36 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -63,6 +63,8 @@ class of_text extends of_element {
 
   function self_get_js($ndx_array) {
     $str = "";
+/* 	rewrited by KK indexing elements by $ndx_array is unusable for me
+
     
     reset($ndx_array);
     while (list($k,$n) = each($ndx_array)) {
@@ -84,7 +86,26 @@ class of_text extends of_element {
         $str .= "  }\n}\n";
       }
     }
-    
+*/    
+      if ($this->length_e) {
+        $str .= "if (f.elements['".$this->name."'].value.length < $this->minlength) {\n";
+        $str .= "  alert(\"$this->length_e\");\n";
+        $str .= "  f.elements['".$this->name."'].focus();\n";
+        $str .= "  return(false);\n}\n";
+      }
+      if ($this->valid_e) {
+        $flags = ((isset($this->icase) and $this->icase) ? "gi" : "g");
+        $str .= "if (window.RegExp) {\n";
+        $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
+//        $str .= "  var reg = /$this->valid_regex/$flags;\n";
+        $str .= "  if (!reg.test(f.elements['".$this->name."'].value)) {\n";
+        $str .= "    alert(\"$this->valid_e\");\n";
+        $str .= "    f.elements['".$this->name."'].focus();\n";
+        $str .= "    return(false);\n";
+        $str .= "  }\n}\n";
+      }
+
+
     return $str;
   }
 

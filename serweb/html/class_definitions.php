@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: class_definitions.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: class_definitions.php,v 1.2 2004/08/09 13:04:28 kozlik Exp $
  */
 
 class Csub_not {
@@ -81,4 +81,16 @@ class Ccall_fw{
 class Cconfig{
 } 
  
+//class for storing authentication information
+class Cserweb_auth{
+	var $uuid, $uname, $domain;
+	var $classname='Cserweb_auth';
+	var $persistent_slots = array("uuid", "uname", "domain");
+
+	function Cserweb_auth($uuid=null, $uname=null, $domain=null){
+		$this->uuid   =	$uuid;
+		$this->uname  =	$uname;
+		$this->domain =	$domain;
+	}
+}
 ?>

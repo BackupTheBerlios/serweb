@@ -5,7 +5,7 @@
 ##
 ## Depends on ooh_forms
 ##
-## $Id: tpl_form.inc,v 1.1 2002/09/04 18:21:13 kozlik Exp $
+## $Id: tpl_form.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
 ##
 
 class tpl_form {

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.27 2004/04/23 12:29:50 kozlik Exp $
+ * $Id: page.php,v 1.28 2004/08/09 13:04:28 kozlik Exp $
  */
 
 function put_headers(){
@@ -38,7 +38,7 @@ function print_html_head($title=""){
 
 
 
-function print_html_body_begin($parameters=null){
+function print_html_body_begin(&$parameters){
 	global $config, $sess, $auth, $errors, $message;
 
 	if (!$parameters) $parameters=null;
@@ -53,48 +53,16 @@ function print_html_body_begin($parameters=null){
 
 ?>
 <div class="swMain">
+<?  	
+	return;
 
-	<?if (isset($parameters['user_name'])){?>
-	<div class="swHeadingUser"><?echo $parameters['user_name'];?></div>
-	<?}?>
-
-	<?if (isset($auth->auth["uname"]) and $auth->auth["uname"]){?>
-	<div class="swHeadingLogout"><a href=logout.php>Logout</a></div>
-	<?}?>
-
-	<br class="cleaner" /><br />
-
-	<?if (isset($parameters['tab_collection']) and $parameters['tab_collection']) { 
-		print_tabs($parameters['tab_collection'], 
-					isset($parameters['path_to_pages'])?$parameters['path_to_pages']:null, 
-					isset($parameters['selected_tab'])?$parameters['selected_tab']:null);
-
-		//count tabs
-		$num_of_tabs=0;
-		foreach($parameters['tab_collection'] as $tab)
-			if ($tab->enabled) $num_of_tabs++;
-					
-					?>
-	<div id="swContent">
-
-	<!-- contenet of div must be sufficient wide in order to tabs displays in one line -->
-	<div style="height:1px; width:<?echo ($num_of_tabs*100)- 50;?>px;">&nbsp;</div>
-	
-	<?}else{?>
-	<div id="swContentNoTabs">
-	<?}?>
-
-<?	
-	print_errors($errors);                    // Display error
-	print_message($message);
-
-	if ($errors or $message) echo "<br />";
 } //end function print_html_body_begin
 
 	
 function print_html_body_end(){
 	global $config, $_page_tab;	?>
-	</div></div>
+	</div>
+
 <?
 	virtual(multidomain_get_file($config->html_epilog));
 }

@@ -9,7 +9,7 @@
  *
  * metadata() contributed by Adelino Monteiro <adelino@infologia.pt>
  *
- * $Id: db_sybase.inc,v 1.1 2002/09/04 18:20:10 kozlik Exp $
+ * $Id: db_sybase.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

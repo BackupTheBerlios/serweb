@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: db_pgsql.inc,v 1.1 2002/09/04 18:20:05 kozlik Exp $
+ * $Id: db_pgsql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
  *
  */ 
 

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_textarea.inc,v 1.2 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: of_textarea.inc,v 1.3 2004/08/09 12:59:36 kozlik Exp $
  */
 
 class of_textarea extends of_element {

@@ -6,7 +6,7 @@
 ##
 ## Copyright (c) 1998-2000 Sascha Schumann <sascha@schumann.cx>
 ## 
-## $Id: ct_sql.inc,v 1.1 2002/09/04 18:19:54 kozlik Exp $
+## $Id: ct_sql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
 ##
 ## PHPLIB Data Storage Container using a SQL database
 ##
