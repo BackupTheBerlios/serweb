@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.4 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: data_layer.php,v 1.5 2004/09/06 09:42:45 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be difined at beginning of each php script
@@ -222,6 +222,10 @@ class CData_Layer{
 
 	function get_showed_rows(){
 		return $this->showed_rows;
+	}
+
+	function set_showed_rows($showed_rows){
+		$this->showed_rows=$showed_rows;
 	}
 
 	function get_res_from(){
