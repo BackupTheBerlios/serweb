@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.14 2002/12/09 21:57:01 kozlik Exp $
+ * $Id: config.php,v 1.15 2003/01/07 18:27:55 kozlik Exp $
  */
 
 class Csub_not {
@@ -42,6 +42,7 @@ class Cconfig {
 	var $table_accounting;
 	var $table_phonebook;
 	var $table_event;
+	var $table_netgeo_cache;
 
 	var $show_voicemail_acl;
 
@@ -57,7 +58,7 @@ class Cconfig {
 	var $stun_port;
 	var $stun_retransmit;
 	var $stun_sourceport;
-	
+
 	var $grp_values;
 
 	var $realm;
@@ -117,9 +118,16 @@ class Cconfig {
 
 	var $terms_and_conditions;
 
+	var $metar_event_uri;
+	var $metar_from_sip_uri;
+	var $metar_na_message;
+
 	function Cconfig(){
+		////////////////////////////////////////////////////////////////
+		//            configure database
+
 		$this->db_host="localhost";					//database host
-		$this->db_name="iptel";						//database name
+		$this->db_name="ser";						//database name
 		$this->db_user="root";						//database conection user
 		$this->db_pass="qwer";						//database conection password
 
@@ -133,72 +141,11 @@ class Cconfig {
 		$this->table_accounting="acc";
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
-
-		$this->show_voicemail_acl=true;				//show "voicemail" in ACL and voicemail checkbox at my account
-
-		$this->enable_dial_voicemail=false;
-
-		$this->setup_jabber_account=false;
-
-		$this->enable_test_firewall=true;			//show test firewall/NAT button
-		$this->stun_applet_width=350;				//width of NAT detection applet
-		$this->stun_applet_height=100;				//height of NAT detection applet
-		$this->stun_class="STUNClientApplet.class"; //starting class of NAT detection applet
-		$this->stun_archive="STUNClientApplet2.jar"; //jar archive with NAT detection applet - optional - you can comment it if you don't use jar archive
-
-		// applet parameters:
-		// STUN server address - must be same as web server address because the java security manager allows only this one
-		$this->stun_applet_param[]=new Capplet_params("server", "oook");
-		
-		//STUN server port. The Default value is 1221 - optional - you can comment it if you want use default value
-//		$this->stun_applet_param[]=new Capplet_params("port", 1221);
-
-		//Number of times to resend a STUN message to a STUN server. The Default is 9 times - optional - you can comment it if you want use default value
-//		$this->stun_applet_param[]=new Capplet_params("retransmit", 9);
-
-		//Specify source port of UDP packet to be sent from. The Default value is 5000 - optional - you can comment it if you want use default value
-//		$this->stun_applet_param[]=new Capplet_params("sourceport", 5000);
-
-		//Specify port for TCP dummy connection to server. This connection is used for get local IP address.
-		//Some process must listenning on this port. The Default value is 5060  - optional - you can comment it if you want use default value
-		//Because java security manager don't allow detect local ip address, applet must create some dummy tcp connection to the server 
-		//and get local ip from structures for this tcp connection
-//		$this->stun_applet_param[]=new Capplet_params("tcp_dummyport", 5060);
+		$this->table_netgeo_cache="netgeo_cache";
 
 
-		$this->grp_values[]="voicemail";
-		$this->grp_values[]="ld";
-		$this->grp_values[]="local";
-		$this->grp_values[]="int";
-
-		$this->prolog="/~iptel/prolog.html";
-		$this->separator="/~iptel/separator.html";
-		$this->epilog="/~iptel/epilog.html";
-
-		$this->realm="iptel.org";
-		$this->domainname="iptel.org";
-
-		$this->first_alias_number=18888;
-
-		$this->new_alias_expires='2020-01-01 00:00:00';
-		$this->new_alias_q=1.00;
-		$this->new_alias_callid="web_call_id@fox";
-		$this->new_alias_cseq=1;
-
-		$this->pre_uid_expires=3600;				//seconds in which expires "get pass session"
-
-		$this->psignature="Web_interface_Karel_Kozlik-0.9";
-
-		$this->web_contact="sip:daemon@iptel.org";			//address of pseudo sender
-		$this->fifo_server="d:/temp/tmp";					//path to fifo server
-		$this->reply_fifo_filename="webfifo_".rand();
-		$this->reply_fifo_path="d:/temp/".$this->reply_fifo_filename;
-
-		$this->ul_table="location";
-		$this->ul_priority="1.00";
-
-		$this->im_length=1300;								//max length of instant message
-		$this->default_domain="iptel.org";
+		////////////////////////////////////////////////////////////////
+		//            configure directories and files
 
 		$this->root_path="/~iptel/";
 		$this->root_uri="http://www.iptel.org";
@@ -207,11 +154,23 @@ class Cconfig {
 		$this->style_src_path = $this->root_path."styles/";
 		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
 
-		$this->charset="windows-1250";
 
-		$this->default_width=564;					//width of usable area
+		////////////////////////////////////////////////////////////////
+		//            configure fifo server
 
-		$this->num_of_showed_items=20;				//num of showed items in the list of users
+		$this->fifo_server="d:/temp/tmp";					//path to fifo server
+		$this->reply_fifo_filename="webfifo_".rand();
+		$this->reply_fifo_path="d:/temp/".$this->reply_fifo_filename;
+
+
+		////////////////////////////////////////////////////////////////
+		//            configure user interface
+
+                $this->show_voicemail_acl=true;                                 //show "voicemail" in ACL and voicemail checkbox at my account
+
+		$this->enable_dial_voicemail=false;
+
+		$this->setup_jabber_account=false;
 
 		$this->enable_tabs[1]=true;					//enable tab my account
 		$this->enable_tabs[2]=true;					//enable tab phonebook
@@ -220,15 +179,57 @@ class Cconfig {
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=true;					//enable tab notification subscription
 
+		$this->prolog="/~iptel/prolog.html";
+		$this->separator="/~iptel/separator.html";
+		$this->epilog="/~iptel/epilog.html";
+
+		$this->default_width=564;					//width of usable area
+
+		$this->realm="iptel.org";
+		$this->domainname="iptel.org";
+
+
+		$this->first_alias_number=18888;
+
+		$this->new_alias_expires='2020-01-01 00:00:00';
+		$this->new_alias_q=1.00;
+		$this->new_alias_callid="web_call_id@fox";
+		$this->new_alias_cseq=1;
+
+                $this->pre_uid_expires=3600;                                    //seconds in which expires "get pass session"
+
+		$this->psignature="Web_interface_Karel_Kozlik-1.0";
+
+		$this->web_contact="sip:daemon@iptel.org";			//address of pseudo sender
+
+		$this->ul_table="location";
+		$this->ul_priority="1.00";
+
+                $this->im_length=1300;                                          //max length of instant message
+		$this->default_domain="iptel.org";
+
+		$this->charset="windows-1250";
+
+                $this->num_of_showed_items=20;                                  //num of showed items in the list of users
+
+
 		//regular expression list of denny sip adresses in "add contact"
 		//if entered address match one regular expression from list, corresponding label is displayed
 		$this->denny_reg[]=new CREG_list_item("iptel\.org$","iptel contacts prohibited");
 		$this->denny_reg[]=new CREG_list_item("gateway","gateway contacts prohibited");
-		
+
 		//notification subscription
 		$this->sub_not[]=new Csub_not("sip:weather@iptel.org;type=temperature;operator=lt;value=0","temperature is too low");
 		$this->sub_not[]=new Csub_not("sip:weather@iptel.org;type=wind;operator=gt;value=10","wind is too fast");
 		$this->sub_not[]=new Csub_not("sip:weather@iptel.org;type=pressure;operator=lt;value=1000","pressure is too low");
+		$this->sub_not[]=new Csub_not("sip:weather@iptel.org;type=metar","send METAR data");
+
+		//groups
+		$this->grp_values[]="voicemail";
+		$this->grp_values[]="ld";
+		$this->grp_values[]="local";
+		$this->grp_values[]="int";
+
 
 		$this->mail_header_from="php.kk@kufr.cz";			//header From: in outgoing emails
 
@@ -306,6 +307,50 @@ class Cconfig {
 									"AND CONTEMPORANEOUS PROPOSALS, DISCUSSIONS, AGREEMENTS, UNDERSTANDINGS, AND COMMUNICATIONS, ".
 									"WHETHER WRITTEN OR ORAL AND MAY BE AMENDED ONLY IN A WRITING EXECUTED BY BOTH USER AND iptel.org. ".
 									"\n\n";
+
+
+		////////////////////////////////////////////////////////////////
+		//            configure FW/NAT detection applet
+
+		$this->enable_test_firewall=true;			//show test firewall/NAT button at my account tab
+
+		$this->stun_applet_width=350;				//width of NAT detection applet
+		$this->stun_applet_height=100;				//height of NAT detection applet
+                $this->stun_class="STUNClientApplet.class";             //starting class of NAT detection applet
+                $this->stun_archive="STUNClientApplet.jar";             //jar archive with NAT detection applet - optional - you can comment it if you don't use jar archive
+
+		// applet parameters:
+
+		// STUN server address - must be same as web server address because the java security manager allows only this one
+		$this->stun_applet_param[]=new Capplet_params("server", "oook");
+
+		//STUN server port. The Default value is 1221 - optional - you can comment it if you want use default value
+//		$this->stun_applet_param[]=new Capplet_params("port", 1221);
+
+		//Number of times to resend a STUN message to a STUN server. The Default is 9 times - optional - you can comment it if you want use default value
+//		$this->stun_applet_param[]=new Capplet_params("retransmit", 9);
+
+		//Specify source port of UDP packet to be sent from. The Default value is 5000 - optional - you can comment it if you want use default value
+//		$this->stun_applet_param[]=new Capplet_params("sourceport", 5000);
+
+		//Specify port for TCP dummy connection to server. This connection is used for get local IP address.
+		//Some process must listenning on this port. The Default value is 5060  - optional - you can comment it if you want use default value
+		//Because java security manager don't allow detect local ip address, applet must create some dummy tcp connection to the server
+		//and get local ip from structures for this tcp connection
+//		$this->stun_applet_param[]=new Capplet_params("tcp_dummyport", 5060);
+
+
+		////////////////////////////////////////////////////////////////
+		//            configure sending METAR data
+
+		//this is an identificator in event table for sending METAR data
+		$this->metar_event_uri="sip:weather@iptel.org;type=metar";
+
+		//from header in sip message
+		$this->metar_from_sip_uri="sip:daemon@iptel.org";
+
+		// N/A message - is sended to user when we can't get his location or METAR data
+		$this->metar_na_message="sorry we can't get your location or METAR data for you";
 	}
 }
 
