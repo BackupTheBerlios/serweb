@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_speed_dials.php,v 1.2 2004/11/05 19:43:33 kozlik Exp $
+ * $Id: method.get_speed_dials.php,v 1.3 2004/11/29 21:32:50 kozlik Exp $
  */
 
 /*
@@ -18,16 +18,9 @@
  *
  *  Possible options parameters:
  *
- *    from	(numeric)
- *      lower limit of numeric usernames which should be returned
+ *    sort  	(one of: 'from_uri', 'fname', 'lname', 'to_uri') default: 'from_uri'
+ *      column by which the result may be sorted
  *
- *    to  	(numeric)
- *      upeer limit of numeric usernames which should be returned
- *
- *    solid_interval_of_usernames   (bool) default:false
- *      if is true, solid interval of usernames is returned, this requires 
- *      to set 'from' and 'to' options too
- *  
  */ 
 
 class CData_Layer_get_speed_dials {
@@ -38,76 +31,61 @@ class CData_Layer_get_speed_dials {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-	    $opt_from = (isset($opt['from'])) ? $opt['from'] : "";
-    	$opt_to   = (isset($opt['to']))   ? $opt['to'] : "";
-		$opt_solid_interval = isset($opt['solid_interval_of_usernames']) ? (bool)$opt['solid_interval_of_usernames'] : false;
-
-		/* options 'from' and 'to' must be specified if we want get solid interval of usernames */
-		if ($opt_from === "" or $opt_to === "") $opt_solid_interval = false;
-		
-//		if (!is_null($sd)) $qw=" and (username_from_req_uri!='$sd' or domain_from_req_uri!='$sd_dom') "; else $qw="";
+    	$opt_sort   = (isset($opt['sort']))   ? $opt['sort'] : "from_uri";
 
 		$where_phrase = "";
-		if (!is_null($opt_from)) $where_phrase .= " and abs(username_from_req_uri) >= ".$opt_from." ";  //abs() converts string to integer
-		if (!is_null($opt_to))   $where_phrase .= " and abs(username_from_req_uri) <= ".$opt_to." ";
-
+		
+		if (false === $num_rows = $this->get_speed_dials_count($user, $where_phrase, $errors)) return false;
+		$this->set_num_rows($num_rows);
+		
 		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri, first_name, last_name from ".$config->data_sql->table_speed_dial.
-			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by username_from_req_uri";
+			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by ";
+			
+		/* sorting */
+		switch ($opt_sort){	/* the expressions cause that empty values are on the end */
+		case "from_uri":
+			$q .= "if(ifnull(trim(username_from_req_uri)='',1), char(255, 255, 255), username_from_req_uri)"; break;
+		case "to_uri":
+			$q .= "if(ifnull(trim(new_request_uri)='',1), char(255, 255, 255), new_request_uri)"; break;
+		case "fname":
+			$q .= "if(ifnull(trim(first_name)='',1), char(255, 255, 255), first_name)"; break;
+		case "lname":
+			$q .= "if(ifnull(trim(last_name)='',1), char(255, 255, 255), last_name)"; break;
+		default: 
+			log_errors(PEAR::raiseError("unknown sorting column: ".$opt_sort), $errors); return false;
+		}
+
+		$q .= " limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
 		$out=array();
-		$last_username = $opt_from - 1;
+
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			/* if should be returned solid interval, skip usernames which isn't numerical */
-			if ($opt_solid_interval and !is_numeric($row['username_from_req_uri'])) {
-				$i--; /*corect incorrect increment*/ continue;
-			}
-			
-			/* if should be returned solid interval and is there hole - fill in it */
-			if ($opt_solid_interval and 
-			      ((int)$last_username)+1 < ((int) $row['username_from_req_uri']) 
-			   )$this->sd_fill_interval($out, $i, $last_username, $row['username_from_req_uri']);
 
 			$out[$i]   = $row;
 			$out[$i]['empty']  = false;
 			$out[$i]['primary_key']  = array('username_from_req_uri' => &$out[$i]['username_from_req_uri'],
 			                                 'domain_from_req_uri' => &$out[$i]['domain_from_req_uri']);
-			$last_username = $row['username_from_req_uri'];
 		}
-		
-		/* if should be returned solid interval and last_username not equal to high limit */		
-		if ($opt_solid_interval and 
-		    ((int)$last_username) < ((int) $opt_to) ) $this->sd_fill_interval($out, $i, $last_username, $opt_to+1);
 
 		$res->free();
 		return $out;
 	}
 	
+	/* count number of entries which match to where phrase */
+	function get_speed_dials_count($user, $where_phrase, &$errors){
+		global $config;
+		$q="select count(*) from ".$config->data_sql->table_speed_dial.
+			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase;
 
-	/*
-		function add empty records to 'out' array with 'username_from_req_uri' from
-		interval ($starting_username, $ending_username) - exclude limits
-	*/
-	function sd_fill_interval(&$out, &$i, $starting_username, $ending_username){
-		/* if limits isn't numeric, return*/
-		if (!is_numeric($starting_username) or !is_numeric($ending_username)) return;
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 		
-		$starting_username = ((int)$starting_username) + 1;
-		$ending_username   = ((int)$ending_username);
-		
-		for (; $starting_username < $ending_username; $i++, $starting_username++){
-			$out[$i]['username_from_req_uri'] = sprintf("%02u", $starting_username);
-			$out[$i]['domain_from_req_uri']   = "";
-			$out[$i]['new_request_uri']       = "";
-			$out[$i]['first_name']            = "";
-			$out[$i]['last_name']             = "";
-			$out[$i]['empty']                 = true;
-			$out[$i]['primary_key']  = array('username_from_req_uri' => &$out[$i]['username_from_req_uri'],
-			                                 'domain_from_req_uri' => &$out[$i]['domain_from_req_uri']);
-		}
-	
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+		$res->free();
+		return $row[0];
 	}
-
 }
 ?>
