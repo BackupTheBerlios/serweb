@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.15 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: send_im.php,v 1.16 2004/04/23 17:42:10 kozlik Exp $
  */
 
 require "prepend.php";
@@ -12,6 +12,7 @@ page_open (array("sess" => "phplib_Session",
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
+$close_window=0;
 
 do{
 	if (!$data = CData_Layer::create($errors)) break;
@@ -43,6 +44,7 @@ do{
 
 
 	if (isset($_POST['okey_x'])){						// Is there data to process?
+		$close_window=1;
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -80,7 +82,7 @@ do{
 
 		$message="message was sent successfully to address ".$sip_address;
 
-        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($status)));
+        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($status)."&close_window=1"));
 		page_close();
 		exit;
 	}
@@ -170,10 +172,12 @@ print_html_body_begin($page_attributes);
 
 <br>
 <?print_html_body_end();?>
+<? if ($close_window or (isset($_GET['close_window']) and $_GET['close_window'])){?>
 <script language="JavaScript">
 <!--
 	close_window();
 //-->
 </script>
+<?}?>
 </html>
 <?page_close();?>
