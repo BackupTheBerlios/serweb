@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: config.php,v 1.2 2004/09/22 11:10:30 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -561,6 +561,8 @@
 		$config->ul_priority="1.00";
 		/* replication support ? (a new ser feature) */
 		$config->ul_replication=1;
+		/* flags support ? (a new ser feature) */
+		$config->ul_flags=1;
 
 		/* seconds in which expires "get pass session" */
 		$config->pre_uid_expires=3600;                
