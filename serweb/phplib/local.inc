@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.6 2003/05/05 20:44:28 kozlik Exp $
+ * $Id: local.inc,v 1.7 2003/09/01 18:37:46 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -86,6 +86,39 @@ class phplib_Session extends Session {
   var $that_class     = "phplib_CT_Sql";  ## name of data storage container class
   var $gc_probability = 5;  
   var $allowcache     = "no";              ## "public", "private", or "no"
+}
+
+class phplib_Session_Pre_Auth extends phplib_Session {
+
+  function get_id($id = "") {
+    global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $QUERY_STRING;
+	
+	if ($this->mode=="cookie"){
+		/*
+		 * if is there cookie and get or post vars then seconds are preffered
+		 */
+	    if ( "" == $id ) { 
+          $id = isset($HTTP_GET_VARS[$this->name]) ?
+                $HTTP_GET_VARS[$this->name] :
+                ( isset($HTTP_POST_VARS[$this->name]) ?
+                $HTTP_POST_VARS[$this->name] :
+                "") ;
+		}
+	    if ( "" == $id ) {
+          $id = isset($HTTP_COOKIE_VARS[$this->name]) ?
+                $HTTP_COOKIE_VARS[$this->name] : "";
+		}
+		
+		/* set the corect cookie */
+	    if ( "" == $id && ( 0 == $this->lifetime )) {
+          SetCookie($this->name, $id, 0, "/", $this->cookie_domain);
+		}
+
+	}//if
+	
+	parent::get_id($id);
+	
+  }
 }
 
 class phplib_User extends User {

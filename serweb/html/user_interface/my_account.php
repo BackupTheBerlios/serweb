@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.21 2003/05/08 07:58:10 kozlik Exp $
+ * $Id: my_account.php,v 1.22 2003/09/01 18:37:46 kozlik Exp $
  */
 
 require "prepend.php";
@@ -12,7 +12,7 @@ put_headers();
 //we must ensure to value in $HTTP_COOKIE_VARS["phplib_Session"] and $HTTP_GET_VARS["phplib_Session"] is same
 if (isset($HTTP_GET_VARS["phplib_Session"]) and isset($HTTP_COOKIE_VARS["phplib_Session"])) $HTTP_COOKIE_VARS["phplib_Session"]=$HTTP_GET_VARS["phplib_Session"];
 
-page_open (array("sess" => "phplib_Session",
+page_open (array("sess" => "phplib_Session_Pre_Auth",
 				 "auth" => "phplib_Pre_Auth",
 				 "perm" => "phplib_Perm"));
 
