@@ -13,7 +13,9 @@ do{
 	
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 	
-		$q="select phplib_id from ".$config->table_subscriber." where user_id='$uname' and password='$passw'";
+		$ha1=md5($uname.":".$config->realm.":".$passw);
+
+		$q="select phplib_id from ".$config->table_subscriber." where user_id='$uname' and ha1='$ha1'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

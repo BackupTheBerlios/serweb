@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.3 2002/09/09 17:13:20 kozlik Exp $
+ * $Id: local.inc,v 1.4 2002/09/09 17:28:11 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -116,21 +116,23 @@ class phplib_Auth extends Auth {
   }
   
   function auth_validatelogin() {
-    global $username, $password;
+    global $username, $password, $config;
 
     if(isset($username)) {
       $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
     }
     
     $uid = false;
+
+	$ha1=md5($username.":".$config->realm.":".$password);
     
     $this->db->query(sprintf("select phplib_id, perms ".
                              "        from %s ".
                              "       where user_id = '%s' ".
-                             "         and password = '%s'",
+                             "         and ha1 = '%s'",
                           $this->database_table,
                           addslashes($username),
-                          addslashes($password)));
+                          addslashes($ha1)));
 
     while($this->db->next_record()) {
       $uid = $this->db->f("phplib_id");
