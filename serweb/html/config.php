@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.38 2004/03/09 12:01:08 kozlik Exp $
+ * $Id: config.php,v 1.39 2004/03/09 15:40:18 kozlik Exp $
  */
 
 class Csub_not {
@@ -34,6 +34,47 @@ class Ctab{
 		$this->page=$page;
 		$this->enabled=$enabled;
 	}
+}
+
+class Ccall_fw{
+	var $action, $param1, $param2, $label;
+	function Ccall_fw($action, $param1, $param2, $label){
+		$this->action = $action;
+		$this->param1 = $param1;
+		$this->param2 = $param2;
+		$this->label  = $label;
+	}
+	
+	/*
+		find object with $action, $param1, $param2 in $arr and return its label
+	*/
+	function get_label($arr, $action, $param1, $param2){
+		if(is_array($arr)){
+			foreach($arr as $row){
+				if ($row->action == $action and
+					$row->param1 == $param1 and
+					$row->param2 == $param2)
+					return $row->label;
+			}
+		}
+		return $action.": ".$param1." ".$param2;
+	}
+
+	/*
+		find object with $action, $param1, $param2 in $arr and return its key
+	*/
+	function get_key($arr, $action, $param1, $param2){
+		if(is_array($arr)){
+			foreach($arr as $key => $row){
+				if ($row->action == $action and
+					$row->param1 == $param1 and
+					$row->param2 == $param2)
+					return $key;
+			}
+		}
+		return null;
+	}
+
 }
 
 class Cconfig {
@@ -289,6 +330,7 @@ class Cconfig {
 		
 		$this->enable_tabs[11]=true;				//enable tab user_preferences
 		$this->enable_tabs[12]=true;				//enable tab speed dial
+		$this->enable_tabs[13]=true;				//enable tab caller screening
 
 		// string to which must start username from request uri in speed dial
 		$this->speed_dial_inititation="11";
@@ -519,6 +561,24 @@ class Cconfig {
 		$this->ctd_from	=	"sip:controller@iptel.org";
 		
 		/* ------------------------------------------------------------*/
+		/*            caller screening                                 */
+		/* ------------------------------------------------------------*/
+
+		/*
+			this array describe how to dispose of draggers
+			$this->calls_forwarding["screening"][]=new Ccall_fw(<action>, <param1>, <param2>, <label>)
+
+			<action> is "reply" or "relay"
+			"reply" have parameters status code and phrase (e.g. ("486", "busy") or ("603", "decline"))
+			"relay" have only one parameter - address of server where to request forward
+			<label> is string which is displayed to user
+		*/
+		
+		$this->calls_forwarding["screening"][]=new Ccall_fw("reply", "603", "decline", "decline");
+		$this->calls_forwarding["screening"][]=new Ccall_fw("reply", "486", "busy", "reply you are busy");
+		$this->calls_forwarding["screening"][]=new Ccall_fw("relay", "sip:voicemail@".$this->realm, null, "forward to voicemail");
+
+		/* ------------------------------------------------------------*/
 		/* Values you typically do NOT want to change unless you know  *
         /* well what you are doing                                     *
 		/* ------------------------------------------------------------*/
@@ -543,6 +603,7 @@ class Cconfig {
 		$this->table_providers="providers";
 		$this->table_admin_privileges="admin_privileges";
 		$this->table_speed_dial="speed_dial";
+		$this->table_calls_forwarding="calls_forwarding";
 
 		/* these are table names as reffered from script and via FIFO */
 		$this->ul_table="location";
