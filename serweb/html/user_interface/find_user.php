@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.7 2003/11/03 01:54:27 jiri Exp $
+ * $Id: find_user.php,v 1.8 2003/12/12 22:01:17 jiri Exp $
  */
 
 require "prepend.php";
@@ -64,7 +64,7 @@ do{
 		else
 			$q=	"select timezone, first_name, last_name, username from ".$config->table_subscriber.
 				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' ".
-				"and username like '%$uname%' and s.domain='$config->realm' limit 0,".$config->max_showed_rows;
+				"and username like '%$uname%' and domain='$config->realm' limit 0,".$config->max_showed_rows;
 
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
