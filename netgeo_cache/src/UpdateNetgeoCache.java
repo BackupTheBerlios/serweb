@@ -19,6 +19,7 @@ public class UpdateNetgeoCache {
   String contact_col;
   int unknown_domains_max_age;
   int known_domains_max_age;
+  int lookup_dellay;
   File station_list;
 
   public static boolean DEBUG = false;
@@ -84,6 +85,14 @@ public class UpdateNetgeoCache {
     catch (NumberFormatException e){
       System.err.println("ERROR: in config file - known_domains_max_age hasn't correct integer value - using default");
       known_domains_max_age=168;
+    }
+
+    try{
+      lookup_dellay=Integer.parseInt(properties.getProperty("lookup_dellay", "1000"));
+    }
+    catch (NumberFormatException e){
+      System.err.println("ERROR: in config file - lookup_dellay hasn't correct integer value - using default");
+      known_domains_max_age=1000;
     }
 
     DEBUG=Boolean.valueOf(properties.getProperty("debug", "false")).booleanValue();
@@ -167,6 +176,14 @@ public class UpdateNetgeoCache {
         }
 
         if (res_1.getInt(1)!=0) continue;    //this domain name allready is in cache
+
+        // sleep before each lookup
+        try{
+          if (lookup_dellay>0) Thread.sleep(lookup_dellay);
+        }
+        catch (InterruptedException e){
+          //do nothing
+        }
 
         netgeo=new NetGeo(domainname);
 
