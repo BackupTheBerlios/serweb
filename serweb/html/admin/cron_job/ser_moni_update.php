@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni_update.php,v 1.1 2003/03/17 18:18:35 kozlik Exp $
+ * $Id: ser_moni_update.php,v 1.2 2003/04/10 23:36:42 kozlik Exp $
  */
 
 /*
@@ -49,7 +49,7 @@ class Ser_moni {
 	var $last_agg_increment_id;
 	
 	var $now;
-	var $marginal_preiod_begin;
+	var $marginal_period_begin;
 	var $aggregation_from;
 	
 	function Ser_moni ($param){
@@ -63,11 +63,11 @@ class Ser_moni {
 		global $config;
 
 		$now = time(); 																// n
-		$marginal_preiod_begin = $now - $config->ser_moni_marginal_period_length;	// m
+		$marginal_period_begin = $now - $config->ser_moni_marginal_period_length;	// m
 		$aggregation_from = $now - $config->ser_moni_aggregation_interval;			// x
 
 		$this->now = date("Y-m-d H:i:s", $now);
-		$this->marginal_preiod_begin = date("Y-m-d H:i:s", $marginal_preiod_begin);
+		$this->marginal_period_begin = date("Y-m-d H:i:s", $marginal_period_begin);
 		$this->aggregation_from = date("Y-m-d H:i:s", $aggregation_from);
 		
 		$this->insert_new_value($new_value);
@@ -111,6 +111,7 @@ class Ser_moni {
 		return $row[0];
 	}
 
+	// get ID of last aggregated increment
 	function get_last_agg_increment_id (){
 		global $config;
 
@@ -131,7 +132,7 @@ class Ser_moni {
 	function calculate_agg_increment_id (){
 		global $config;
 		
-		$q="select id from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_preiod_begin."' order by time desc";
+		$q="select id from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by time desc";
 		$res=MySQL_Query($q);
 		if (!$res) { echo "calculate_agg_increment_id: error in SQL query, line: ".__LINE__."\n"; return -1;}
 
@@ -159,12 +160,17 @@ class Ser_moni {
 		else $increment=abs($new_value - $this->get_last_value());
 		
 		$q="insert into ".$config->table_ser_mon." (time, id, param, value, increment) ".
-			"values ('".$this->now."', ".($this->get_last_id()+1).", '".$this->param."', ".$new_value.", ".$increment.")";
+			"values ('".$this->now."', ".					//time
+						($this->get_last_id()+1).", '".		//id
+						$this->param."', ".					//name of param
+						$new_value.", ".					//value of param
+						$increment.")";						//diferent between this value and last value
 		$res=MySQL_Query($q);
 		if (!$res) { echo "insert_new_value: error in SQL query, line: ".__LINE__."\n"; return false;}
 		return true;
 	}
-	
+
+	//drop values older then "aggregation_from"
 	function drop_old_values(){
 		global $config;
 
@@ -173,13 +179,131 @@ class Ser_moni {
 		if (!$res) { echo "drop_old_values: error in SQL query, line: ".__LINE__."\n"; return false;}
 		return true;
 	}
+
+	//return how old is first value in database in seconds
+	function get_how_old_is_first_value(){
+		global $config;
 	
+		$q="select unix_timestamp('".$this->now."') - unix_timestamp(min(time)) ".
+			"from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_how_old_is_first_value: error in SQL query, line: ".__LINE__."\n"; return 0;}
+
+		if (!MySQL_num_rows($res)) return 0;				// if no rows in database
+		
+		$row=MySQL_Fetch_Row($res);
+
+		if (is_null($row[0])) $row[0]=0;
+
+		return $row[0];
+	
+	}
+	
+	
+	//return minimum and maximum value of this param
+	//return object
+	// 		$row->min
+	//		$row->max
+	function get_min_max_value(){
+		global $config;
+	
+		$q="select min(value) as min, max(value) as max from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_min_max_value: error in SQL query, line: ".__LINE__."\n"; return false;}
+
+		if (!MySQL_num_rows($res)) return false;				// if no rows in database
+		
+		$row=MySQL_Fetch_Object($res);
+
+		if (is_null($row->min)) $row->min=0;
+		if (is_null($row->max)) $row->max=0;
+
+		return $row;
+	}
+
+	//return minimum and maximum number of increments per marginal period
+	//return object
+	// 		$row->min
+	//		$row->max
+	function get_min_max_increment(){
+		global $config;
+
+
+		$tmp_table = uniqid("tmp");
+		$marginal_funct="truncate((unix_timestamp('".$this->now."')-unix_timestamp(time))/".$config->ser_moni_marginal_period_length.", 0)";
+
+		//create temporary table where we store number of increments per marginal period
+		
+		$q=	" create temporary table ".$tmp_table.
+			" select sum(increment) as s_increment, ".$marginal_funct." as marg_f ".
+			" from ".$config->table_ser_mon.
+			" where param='".$this->param."' and time >= '".$this->aggregation_from."'".
+			" group by marg_f ";
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
+
+		//get number of oldest m. period
+		
+		$q= "select max(marg_f) from ".$tmp_table;
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$row=MySQL_Fetch_Row($res);
+		$old_m_f=$row[0];
+		
+
+		//select minimum and maximum number of increments per marginal period
+		//without oldest m. period - it may not be whole
+		
+		$q=	" select min(s_increment) as min, max(s_increment) as max ".
+			" from ".$tmp_table.
+			" where marg_f!=".$old_m_f;
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
+
+		if (!MySQL_num_rows($res)) return false;				// if no rows in database
+		
+		$row=MySQL_Fetch_Object($res);
+
+		//drop temporary table
+		$q= "drop table ".$tmp_table;
+		$res=MySQL_Query($q);
+		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";}
+
+		if (is_null($row->min)) $row->min=0;
+		if (is_null($row->max)) $row->max=0;
+		
+		return $row;
+	}
+	
+	//update table with aggregated values	
 	function update_aggregations($new_value){
 		global $config;
+		
+	/*
+		DB fields:
+		----------
+		
+		param						- name of param
+		s_value						- aggregated values form "aggregation_from" to "now"
+		s_increment					- aggregated increments from "aggregation_from" to "marginal_period_begin"
+		last_aggregated_increment	- ID of last increment added to s_increment
+		av							- average value
+		mv							- aggregated increments form "marginal_period_begin" to "now"
+		ad							- average number of increments per marginal period
+		lv							- last value
+		min_val						- minimum value
+		max_val						- maximum value
+		min_inc						- minimum number of increments per marginal period
+		max_inc						- maximum number of increments per marginal period
+		lastupdate					- when this row was updated
+		
+	*/
 	
 		$q="select s_value, s_increment, mv, last_aggregated_increment from ".$config->table_ser_mon_agg." where param='".$this->param."'";
 		$res=MySQL_Query($q);
 		if (!$res) { echo "update_aggregations: error in SQL query, line: ".__LINE__."\n"; return false;}
+
+		/*check if there is entry for this param in the table*/
 		if (MySQL_num_rows($res)){
 			$row=MySQL_Fetch_Object($res);
 			$sql_act="update";
@@ -198,10 +322,14 @@ class Ser_moni {
 			$last_agg_inc=-1;
 		}
 
+		// last value of this param
 		$last_value=$this->get_last_value();
+		
+		// $increment is diference between new value and last value
 		if (is_null($last_value)) $increment=0;
 		else $increment=abs($new_value - $this->get_last_value());
 
+		// get ID of last aggregated increment
 		$last_agg_inc=$this->get_last_agg_increment_id();
 
 		
@@ -227,11 +355,11 @@ class Ser_moni {
 			if ($last_agg_inc<0){ // no still is no time to begin aggregating increments
 				$q="";
 			} else { //yes there is increments in database which were done before T
-				$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_preiod_begin."' order by id";
+				$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by id";
 			}
 		}
 		else{
-			$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_preiod_begin."' and id > ".$last_agg_inc." order by id";
+			$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' and id > ".$last_agg_inc." order by id";
 		}
 		
 		if ($q){
@@ -253,28 +381,54 @@ class Ser_moni {
 	
 		$this->last_agg_increment_id=$last_agg_inc;
 
-		$num_of_marginal_periods=($config->ser_moni_aggregation_interval-$config->ser_moni_marginal_period_length)/$config->ser_moni_marginal_period_length;
-		
+
+//		$num_of_marginal_periods=($config->ser_moni_aggregation_interval-$config->ser_moni_marginal_period_length)/$config->ser_moni_marginal_period_length;
+		$num_of_marginal_periods=max(1, ($this->get_how_old_is_first_value()-$config->ser_moni_marginal_period_length)/$config->ser_moni_marginal_period_length);
+
 		$ad=$s_increment/$num_of_marginal_periods;
+			
 		$av=$s_value/$this->count_values();
+
+		$mm_val = $this->get_min_max_value();
+		$mm_inc = $this->get_min_max_increment();
+		
+		if ($mm_val){
+			$min_val = round(max(0, $mm_val->min - (($mm_val->max - $mm_val->min) / 4)));
+			$max_val = $mm_val->max;
+		}
+		else{
+			$min_val = 0;
+			$max_val = 0;
+		}
+
+		if ($mm_inc){
+			$min_inc = round(max(0, $mm_inc->min - (($mm_inc->max - $mm_inc->min) / 4)));
+			$max_inc = $mm_inc->max;
+		}
+		else{
+			$min_inc = 0;
+			$max_inc = 0;
+		}
 		
 		if ($sql_act=="insert"){
-			$this->insert_aggregations_sql($s_value, $s_increment, $last_agg_inc, $av, $mv, $ad, $new_value, $this->now);
+			$this->insert_aggregations_sql($s_value, $s_increment, $last_agg_inc, $av, $mv, $ad, $new_value, $min_val, $max_val, $min_inc, $max_inc, $this->now);
 		}
 		else {
-			$this->update_aggregations_sql($s_value, $s_increment, $last_agg_inc, $av, $mv, $ad, $new_value, $this->now);
+			$this->update_aggregations_sql($s_value, $s_increment, $last_agg_inc, $av, $mv, $ad, $new_value, $min_val, $max_val, $min_inc, $max_inc, $this->now);
 		}
 		
 		return true;
 		
 	}
 	
-	function update_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $lastupdate){
+	function update_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $min_val, $max_val, $min_inc, $max_inc, $lastupdate){
 		global $config;
 
 		$q="update ".$config->table_ser_mon_agg.
 		   " set s_value=".$s_value.", s_increment=".$s_increment.", last_aggregated_increment=".$last_aggregated_increment.
-		   		", av=".$av.", mv=".$mv.", ad=".$ad.", lv=".$lv.", lastupdate='".$lastupdate."' ".
+		   		", av=".$av.", mv=".$mv.", ad=".$ad.", lv=".$lv.
+				", min_val=".$min_val.", max_val=".$max_val.", min_inc=".$min_inc.", max_inc=".$max_inc.
+				", lastupdate='".$lastupdate."' ".
 		   " where param='".$this->param."'";
 		$res=MySQL_Query($q);
 		if (!$res) { echo "update_aggregations_sql: error in SQL query, line: ".__LINE__."\n"; return false;}
@@ -282,11 +436,12 @@ class Ser_moni {
 		return true;
 	}
 	
-	function insert_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $lastupdate){
+	function insert_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $min_val, $max_val, $min_inc, $max_inc, $lastupdate){
 		global $config;
 
-		$q="insert into ".$config->table_ser_mon_agg." (param, s_value, s_increment, last_aggregated_increment, av, mv, ad, lv, lastupdate) ".
-		   "values ('".$this->param."', ".$s_value.", ".$s_increment.", ".$last_aggregated_increment.", ".$av.", ".$mv.", ".$ad.", ".$lv.", '".$lastupdate."')";
+		$q="insert into ".$config->table_ser_mon_agg." (param, s_value, s_increment, last_aggregated_increment, av, mv, ad, lv, min_val, max_val, min_inc, max_inc, lastupdate) ".
+		   "values ('".$this->param."', ".$s_value.", ".$s_increment.", ".$last_aggregated_increment.", ".$av.", ".$mv.", ".$ad.", ".$lv.", ".
+		   			$min_val.", ".$max_val.", ".$min_inc.", ".$max_inc.", '".$lastupdate."')";
 		$res=MySQL_Query($q);
 		if (!$res) { echo "insert_aggregations_sql: error in SQL query, line: ".__LINE__."\n"; return false;}
 

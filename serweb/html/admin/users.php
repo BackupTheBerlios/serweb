@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: users.php,v 1.8 2003/04/10 23:36:42 kozlik Exp $
  */
 
 require "prepend.php";
@@ -146,6 +146,9 @@ function confirmDelete(theLink){
 	print_errors($errors);                    // Display error
 	print_message($message);
 ?>
+
+
+	<div align="right"><a href="<?$sess->purl("ser_moni.php?kvrk=".uniqid(''));?>">serwer monitoring</a></div><br clear="all">
 
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr><td class="title" width="480">filter:</td></tr>
