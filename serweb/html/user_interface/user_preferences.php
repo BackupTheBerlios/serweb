@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.10 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: user_preferences.php,v 1.11 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_attributes', 'get_att_values', 'update_attribute_of_user', 'get_user_real_name');
@@ -14,6 +14,7 @@ require "../user_preferences.php";
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 $usr_pref = new User_Preferences();
+$errors = array();
 
 function format_attributes_for_output($attributes, &$js_on_subm){
 	global $sess;
@@ -26,7 +27,7 @@ function format_attributes_for_output($attributes, &$js_on_subm){
 		$out[$i]['att_name'] = $att->att_name;
 		$i++;
 	}
-	
+
 	return $out;
 }
 

@@ -1,14 +1,14 @@
 <?
 /*
- * $Id: phonebook.php,v 1.18 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: phonebook.php,v 1.19 2004/11/10 13:13:06 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('del_phonebook_entry', 'get_phonebook_entry', 'get_phonebook_entries', 
+$_data_layer_required_methods=array('del_phonebook_entry', 'get_phonebook_entry', 'get_phonebook_entries',
 		'update_phonebook_entry', 'get_user_real_name');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Auth");
-						   
+
 require "prepend.php";
 
 if (!$sess->is_registered('sess_pb_act_row')) $sess->register('sess_pb_act_row');
@@ -16,9 +16,10 @@ if (!isset($sess_pb_act_row)) $sess_pb_act_row=0;
 
 if (isset($HTTP_GET_VARS['act_row'])) $sess_pb_act_row=$HTTP_GET_VARS['act_row'];
 
-				 
+
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
+$errors = array();
 
 set_global('okey_x');
 set_global('id');
@@ -32,7 +33,7 @@ else if (isset($_REQUEST['dele_id'])) $action='delete';
 
 $contact=null;
 $delete_confirmed=false;
-if (isset($_POST['dele_confirmed'])) 
+if (isset($_POST['dele_confirmed']))
 	if (isset($_POST['okey_x'])) //$_POST['okey_x'] is need for recognize which button was clicked
 		$delete_confirmed = $_POST['dele_confirmed']?true:false;
 	else
@@ -40,10 +41,10 @@ if (isset($_POST['dele_confirmed']))
 
 do{
 	if ($action=='delete'){
-	
+
 		if (!$config->require_delete_confirmation_page or $delete_confirmed){
 			if (!$data->del_phonebook_entry($serweb_auth, $_REQUEST['dele_id'], $errors)) break;
-	
+
 	        Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")."&m_contact_deleted=1"));
 			page_close();
 			exit;

@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: acl.php,v 1.14 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: acl.php,v 1.15 2004/11/10 13:13:06 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('check_admin_perms_to_user', 'get_admin_acl_privileges', 
+$_data_layer_required_methods=array('check_admin_perms_to_user', 'get_admin_acl_privileges',
 		'get_acl_of_user', 'update_acl_of_user');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
@@ -17,6 +17,7 @@ $perm->check("admin");
 $f = new form;                   // create a form object
 $grp_val=array();
 $ACL_control=array();
+$errors = array();
 
 do{
 	if (false !== $uid = get_userauth_from_get_param('u')) {
@@ -29,7 +30,7 @@ do{
 	else {
 		$errors[]=$lang_str['err_unknown_user']; break;
 	}
-	
+
 	/* get admin ACL control privileges */
 	if (false === $ACL_control = $data->get_admin_ACL_privileges($serweb_auth, $errors)) break;
 

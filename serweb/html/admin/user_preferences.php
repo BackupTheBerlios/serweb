@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
+ * $Id: user_preferences.php,v 1.11 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('del_attribute', 'get_attribute', 'update_attribute', 'get_attributes');
@@ -20,6 +20,8 @@ set_global('att_edit');
 set_global('att_name');
 set_global('att_rich_type');
 set_global('default_value');
+$errors = array();
+
 
 function format_attributes_for_output($attributes, $usr_pref){
 	global $sess;
@@ -34,7 +36,7 @@ function format_attributes_for_output($attributes, $usr_pref){
 		$out[$i]['url_edit'] = $sess->url("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($att->att_name));
 		$i++;
 	}
-	
+
 	return $out;
 }
 
@@ -51,13 +53,13 @@ do{
 	}
 
 	$att_type_spec=null;
-	
+
 	//select values of edited attribute in order to fill its to the form
 	if ($att_edit){
 		if (false === $row = $data->get_attribute($att_edit, $errors)) break;
-		
+
 		$att_type_spec=$row->att_type_spec;
-		
+
 		//if $att_type is not set by http_post (form not submited yet) set it by value in DB
 		if (!isset($att_rich_type)) $att_rich_type=$row->att_rich_type;
 	}
@@ -67,7 +69,7 @@ do{
 	foreach($usr_pref->att_types as $k => $v){
 		$opt[]=array("label" => $v->label, "value" => $k);
 	}
-	
+
 	$f = new form;                   // create a form object
 
 	$f->add_element(array("type"=>"text",
@@ -104,13 +106,13 @@ do{
         	                     "src"=>$config->img_src_path."butons/b_".($att_edit?"save":"add").".gif",
 								 "extrahtml"=>"alt='".($att_edit?"save":"add")."'"));
 
-								 
+
 	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
-		
+
 		//check and format default value of attribute
 		if (!$usr_pref->format_inputed_value($default_value, $att_rich_type, $att_type_spec)){
 			$errors[]="bad default value"; break;
@@ -120,7 +122,7 @@ do{
 
 		if (!$data->update_attribute($att_edit, $att_name, $att_rich_type, $usr_pref->att_types[$att_rich_type]->raw_type, $default_value, $errors)) break;
 
-		if (!$att_edit and ($att_rich_type=="list" or $att_rich_type=="radio")) 
+		if (!$att_edit and ($att_rich_type=="list" or $att_rich_type=="radio"))
 	        Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_name)."&kvrk=".uniqID("")));
 		else
 	        Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
@@ -129,7 +131,7 @@ do{
 		exit;
 	}
 }while (false);
-								 
+
 do{
 	$attributes = array();
 	if ($data){
@@ -155,7 +157,7 @@ $cfg->img_src_path = $config->img_src_path;
 if(!$attributes) $attributes = array();
 
 $smarty->assign_by_ref('parameters', $page_attributes);
-$smarty->assign_by_ref("config", $cfg);		
+$smarty->assign_by_ref("config", $cfg);
 
 $smarty->assign('attributes', format_attributes_for_output($attributes, $usr_pref));
 

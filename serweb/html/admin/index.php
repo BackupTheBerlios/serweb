@@ -1,12 +1,14 @@
 <?
 /*
- * $Id: index.php,v 1.18 2004/09/21 10:18:56 kozlik Exp $
+ * $Id: index.php,v 1.19 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('domain_exists', 'is_user_registered', 'get_privileges_of_user');
 $_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
+$errors = array();
+
 
 do{
 	if (isset($_POST['okey_x'])){								// Is there data to process?
@@ -40,8 +42,8 @@ do{
 
 		//check for admin privilege
 		if (false === $privileges = $data->get_privileges_of_user(
-					new Cserweb_auth($uuid, $_POST['uname'], $config->domain), 
-					array('change_privileges','is_admin'), 
+					new Cserweb_auth($uuid, $_POST['uname'], $config->domain),
+					array('change_privileges','is_admin'),
 					$errors)
 			) break;
 
@@ -54,7 +56,7 @@ do{
 		$sess->register('pre_uid');
 		$pre_uid=$uuid;
 
-		if (isset($_POST['remember_uname']) and $_POST['remember_uname']) 
+		if (isset($_POST['remember_uname']) and $_POST['remember_uname'])
 			setcookie('serwebuser', $_POST['uname'], time()+31536000); //cookie expires in one year
 		else
 			setcookie('serwebuser', '', time()); //delete cookie

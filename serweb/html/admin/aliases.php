@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: aliases.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: aliases.php,v 1.3 2004/11/10 13:13:06 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('check_admin_perms_to_user', 'delete_alias', 'is_alias_exists', 
+$_data_layer_required_methods=array('check_admin_perms_to_user', 'delete_alias', 'is_alias_exists',
 		'add_new_alias', 'get_aliases');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
@@ -15,6 +15,7 @@ require "prepend.php";
 $perm->check("admin");
 
 $f = new form;                  // create a form object
+$errors = array();
 
 $action='';
 if (isset($_REQUEST['cancel_x'])) $action='cancel';
@@ -40,10 +41,10 @@ do{
 		page_close();
 		exit;
 	}
-	
+
 	if ($action=='delete'){
 		if (false === $data->delete_alias($uid, $_GET['dele_alias'], $uid->domain, $errors)) break;
-	
+
         Header("Location: ".$sess->url("aliases.php?kvrk=".uniqID("")."&m_alias_deleted=1&".userauth_to_get_param($uid, 'u')));
 		page_close();
 		exit;
@@ -78,18 +79,18 @@ do{
 			/* Process data */           // Data ok;
 
 		if (!($action=='edit' and $_REQUEST['alias']==$_REQUEST['edit_alias'])){
-			//process data only if data was changed		
-		
+			//process data only if data was changed
+
 			//check if alias exists
 			$alias_exists = $data->is_alias_exists($_REQUEST['alias'], $uid->domain, $errors);
 			if ($alias_exists < 0) break;
 			if ($alias_exists){ $errors[]=$lang_str['err_alias_already_exists_1']." ".$_REQUEST['alias']." ".$lang_str['err_alias_already_exists_2']; break; }
-				
+
 			if ($action=='edit'){
 				//delete alias
 				if (false === $data->delete_alias($uid, $_REQUEST['edit_alias'], $uid->domain, $errors)) break;
 			}
-				
+
 			if (!$data->add_new_alias($uid, $_REQUEST['alias'], $uid->domain, $errors)) break;
 		}
 
@@ -107,7 +108,7 @@ do{
 		$al_res=array();
 		// get aliases
 		if (false === $al_res = $data->get_aliases($uid, $errors)) break;
-		
+
 		foreach($al_res as $k=>$row){
 			if ($action=='edit' and $row->username==$_REQUEST['edit_alias']) continue;
 			$aliases[$k]['username'] = $row->username;
@@ -115,7 +116,7 @@ do{
 			$aliases[$k]['url_dele'] = $sess->url("aliases.php?kvrk=".uniqID("")."&dele_alias=".$row->username."&".userauth_to_get_param($uid, 'u'));
 			$aliases[$k]['url_edit'] = $sess->url("aliases.php?kvrk=".uniqID("")."&edit_alias=".$row->username)."&".userauth_to_get_param($uid, 'u');
 		}
-		
+
 	}
 }while (false);
 

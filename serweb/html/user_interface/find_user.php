@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.17 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: find_user.php,v 1.18 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('find_users', 'get_user_real_name');
@@ -31,7 +31,7 @@ if (isset($_POST['okey_x'])){ //create new search filter if form was submited
 	if (isset($_POST['uname'])) $sess_fu_search_filter['uname'] = $_POST['uname'];
 	if (isset($_POST['sip_uri'])) $sess_fu_search_filter['sip_uri'] = $_POST['sip_uri'];
 	if (isset($_POST['alias'])) $sess_fu_search_filter['alias'] = $_POST['alias'];
-	
+
 	if (isset($_POST['onlineonly'])) $sess_fu_search_filter['onlineonly'] = '1';
 	else $sess_fu_search_filter['onlineonly'] = '0';
 }
@@ -40,6 +40,7 @@ define("max_rows",50);
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
+$errors = array();
 
 $action='';
 if (isset($_GET['act_row']) or isset($_POST['okey_x'])) $action='browse';
@@ -134,7 +135,7 @@ if(!$found_users) $found_users = array();
 
 $smarty->assign_by_ref('parameters', $page_attributes);
 $smarty->assign_by_ref('pager', $pager);
-$smarty->assign_by_ref("config", $cfg);		
+$smarty->assign_by_ref("config", $cfg);
 $smarty->assign_by_ref('found_users', $found_users);
 
 //$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));

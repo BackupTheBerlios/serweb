@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.10 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('add_privilege_to_user', 'del_privilege_of_user', 'get_privileges_of_user');
@@ -18,6 +18,8 @@ $ad_priv=array();
 $ad_priv['acl_control']=array();
 $ad_priv['change_privileges']=array();
 $ad_priv['is_admin']=array();
+$errors = array();
+
 
 $uid = get_userauth_from_get_param('u');
 
@@ -37,7 +39,7 @@ function update_db($priv_name, $priv_type, $user_id, $data, &$errors){
 	global $_POST, $ad_priv, $config;
 
 	switch ($priv_type['type']){
-	case "boolean":	
+	case "boolean":
 		//if checkbox isn't checked, assign value "0" to variable
 		if (!isset($_POST["chk_".$priv_name])) $_POST["chk_".$priv_name] = "0";
 
@@ -70,7 +72,7 @@ function update_db($priv_name, $priv_type, $user_id, $data, &$errors){
 	default:
 		$errors[]="non existent priv type"; return false;
 	}//end switch
-	
+
 	return true;
 } //end function update_db
 
@@ -125,7 +127,7 @@ do{
 		if (!update_db('is_admin', array('type'=>'boolean'), $uid, $data, $errors)) break;
 		if (!update_db('change_privileges', array('type'=>'boolean'), $uid, $data, $errors)) break;
 		if (!update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $uid, $data, $errors)) break;
-		
+
         Header("Location: ".$sess->url("list_of_admins.php?kvrk=".uniqID("")."&m_priv_saved=1"));
 		page_close();
 		exit;
@@ -165,7 +167,7 @@ $page_attributes['message']=&$message;
 $smarty->assign_by_ref('parameters', $page_attributes);
 $smarty->assign('grp_values', $config->grp_values);
 
-$smarty->assign_phplib_form('form', $f, 
+$smarty->assign_phplib_form('form', $f,
 						array('jvs_name'=>'form',
 						      'form_name'=>'form1'));
 
@@ -182,7 +184,7 @@ $smarty->display('a_admin_privileges.tpl');
 	/* disable other checkboxes if is_admin checkbox is not checked */
 
 	disable_chk(document.form1.chk_is_admin);
-	
+
 //-->
 </script>
 </html>

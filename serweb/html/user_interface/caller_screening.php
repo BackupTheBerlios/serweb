@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.8 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: caller_screening.php,v 1.9 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name', 'del_cs_caller', 'get_cs_caller',
@@ -15,6 +15,8 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
 set_global('edit_caller');
+$errors = array();
+
 
 do{
 	if (isset($_GET['dele_caller'])){

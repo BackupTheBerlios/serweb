@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.18 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: users.php,v 1.19 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('check_admin_perms_to_user', 'delete_sip_user', 'get_users');
@@ -18,6 +18,8 @@ if (!isset($sess_fusers)) $sess_fusers=new Cfusers(array('template'=>'_form_a_us
 if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_admin=1;}
 
 $sess_fusers->init();
+$errors = array();
+
 
 do{
 	if (false !== $usr = get_userauth_from_get_param('d')) { //delete user

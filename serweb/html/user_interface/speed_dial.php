@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.10 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: speed_dial.php,v 1.11 2004/11/10 13:13:06 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('get_user_real_name', 'update_sd_request', 'del_sd_request', 
+$_data_layer_required_methods=array('get_user_real_name', 'update_sd_request', 'del_sd_request',
 									'get_sd_request', 'get_sd_requests');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
@@ -16,6 +16,8 @@ $f = new form;                  // create a form object
 
 set_global('edit_sd');
 set_global('edit_sd_dom');
+$errors = array();
+
 
 do{
 	if (isset($_GET['dele_sd'])){

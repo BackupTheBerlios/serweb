@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.11 2004/09/21 10:18:56 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.12 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('update_att_type_spec', 'get_attribute');
@@ -16,12 +16,14 @@ $perm->check("admin");
 
 set_global('item_edit');
 set_global('attrib_name');
+$errors = array();
+
 
 function update_items_in_db($item_list, $attrib_name, $default_value, $data, &$errors){
 	global $config;
 
 	if (!$data->update_att_type_spec($attrib_name, serialize($item_list), $default_value, $errors)) return false;
-		
+
 	return true;
 }
 
@@ -32,14 +34,14 @@ function format_items_for_output($items, $item_edit, $attrib_name){
 	$i=0;
 	foreach($items as $item){
 		if ($item->label==$item_edit) continue;
-		
+
 		$out[$i]['label'] = $item->label;
 		$out[$i]['value'] = $item->value;
 		$out[$i]['url_dele'] = $sess->url("edit_list_items.php?kvrk=".uniqID("")."&item_dele=".RawURLEncode($item->label)."&attrib_name=".RawURLEncode($attrib_name));
 		$out[$i]['url_edit'] = $sess->url("edit_list_items.php?kvrk=".uniqID("")."&item_edit=".RawURLEncode($item->label)."&attrib_name=".RawURLEncode($attrib_name));
 		$i++;
 	}
-	
+
 	return $out;
 }
 
@@ -47,7 +49,7 @@ function format_items_for_output($items, $item_edit, $attrib_name){
 do{
 	//get attrib from DB
 	if (false === $row = $data->get_attribute($attrib_name, $errors)) break;
-	
+
 	if ($row->att_rich_type!="list" and $row->att_rich_type!="radio"){
 		//attrib isn't neither list of items nor radio -> nothing to edit -> go back to attributes editing page
 
@@ -148,9 +150,9 @@ do{
 			$item_list[]=new UP_List_Items($_POST['item_label'], $_POST['item_value']);
 
 		//update array in DB
-		if (!update_items_in_db($item_list, $attrib_name, 
-		          (isset($_POST['set_default']) and $_POST['set_default'])?$_POST['item_value']:null, 
-				   $data, $errors)) 
+		if (!update_items_in_db($item_list, $attrib_name,
+		          (isset($_POST['set_default']) and $_POST['set_default'])?$_POST['item_value']:null,
+				   $data, $errors))
 			break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));

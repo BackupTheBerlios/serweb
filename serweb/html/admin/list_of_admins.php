@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.8 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.9 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_admins');
@@ -12,6 +12,8 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 require "prepend.php";
 
 $perm->check("admin,change_priv");
+$errors = array();
+
 
 if (!$sess->is_registered('sess_list_of_admins')) $sess->register('sess_list_of_admins');
 if (!isset($sess_list_of_admins)) $sess_list_of_admins=new Cfusers(array('adminsonly'=>true, 'template'=>'_form_a_list_of_admins.tpl'));

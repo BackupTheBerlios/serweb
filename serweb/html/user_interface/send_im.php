@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.18 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: send_im.php,v 1.19 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -13,6 +13,7 @@ require "prepend.php";
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 $close_window=0;
+$errors = array();
 
 do{
 	$f->add_element(array("type"=>"text",
@@ -140,8 +141,8 @@ $page_attributes['message']=&$message;
 
 $smarty->assign_by_ref('parameters', $page_attributes);
 
-$smarty->assign_phplib_form('form', $f, 
-			array('jvs_name'=>'form'), 
+$smarty->assign_phplib_form('form', $f,
+			array('jvs_name'=>'form'),
 			array('before'=>'sip_address_completion(f.sip_address);',
 			      'after'=>"
 						if (f.instant_message.value==''){
@@ -149,7 +150,7 @@ $smarty->assign_phplib_form('form', $f,
 							f.instant_message.focus();
 							return (false);
 						}
-					
+
 						display_window();
 				  "));
 

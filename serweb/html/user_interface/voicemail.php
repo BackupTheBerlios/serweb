@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: voicemail.php,v 1.9 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: voicemail.php,v 1.10 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('store_greeting', 'get_user_real_name');
@@ -11,6 +11,8 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 require "prepend.php";
 
 $f = new form;                  // create a form object
+$errors = array();
+
 
 do{
 	$f->add_element(array("type"=>"file",
@@ -74,9 +76,9 @@ $cfg=new stdclass();
 $cfg->img_src_path = $config->img_src_path;
 
 $smarty->assign_by_ref('parameters', $page_attributes);
-$smarty->assign_by_ref("config", $cfg);		
+$smarty->assign_by_ref("config", $cfg);
 
-$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'), 
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'),
 		array('after'=>"
 			if (f.greeting.value==''){
 				alert('".addslashes($lang_str['fe_no_greeeting_file'])."');

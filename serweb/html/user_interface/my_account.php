@@ -1,11 +1,11 @@
 <?
 /*
- * $Id: my_account.php,v 1.36 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: my_account.php,v 1.37 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_sip_user_details', 'update_sip_user_details', 'del_contact',
 		'add_contact', 'get_usrloc', 'get_acl_of_user', 'get_forward_to_voicemail_grp', 'update_forward_to_voicemail_grp',
-		'check_admin_perms_to_user', 'set_timezone', 'get_time_zones', 'set_password_to_user', 'get_aliases', 
+		'check_admin_perms_to_user', 'set_timezone', 'get_time_zones', 'set_password_to_user', 'get_aliases',
 		'get_user_real_name');
 
 $_phplib_page_open = array("sess" => "phplib_Session_Pre_Auth",
@@ -21,6 +21,7 @@ require "prepend.php";
 $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
+$errors = array();
 
 
 define("FOREVER",567648000);	//number of second for forever (18 years)
@@ -40,13 +41,13 @@ do{
 				die("You can't manage user '".$uid->uname."' this user is from different domain");
 				break;
 			}
-	
+
 			$user_id=$uid;
 		}
 	}
 	else $user_id=$serweb_auth;
 
-	
+
 
 	$data->set_timezone($user_id, $errors);
 
@@ -60,7 +61,7 @@ do{
 		                             "value"=>1,
 		                             "name"=>"f2voicemail"));
 	}
-	
+
 	$options=array();
 	$opt=$data->get_time_zones($errors);
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
@@ -111,7 +112,7 @@ do{
 								 "extrahtml"=>"style='width:200px;'"));
 
 	if ($uid) userauth_to_form($uid, 'u', $f);
-	
+
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_change.gif",
@@ -127,19 +128,19 @@ do{
 		                             "valid_regex"=>"^".$reg->sip_address."$",
 		                             "valid_e"=>$lang_str['fe_not_valid_sip'],
 									 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
-	
+
 		$options = array(array("label"=>$lang_str['contact_expire_hour'],"value"=>3600),
 						array("label"=>$lang_str['contact_expire_day'],"value"=>86400),
 						array("label"=>$lang_str['contact_will_not_expire'],"value"=>FOREVER));
-	
+
 		$f2->add_element(array("type"=>"select",
 									"name"=>"expires",
 									"options"=>$options,
 									"size"=>1,
 									"value"=>3600));
-	
+
 		if ($uid) userauth_to_form($uid, 'u', $f2);
-	
+
 		$f2->add_element(array("type"=>"submit",
 		                             "name"=>"okey2",
 		                             "src"=>$config->img_src_path."butons/b_add.gif",
@@ -210,18 +211,18 @@ do{
 		}
 
 			/* Process data */           // Data ok;
-		
+
 		if (false === $data->update_sip_user_details($user_id, $email, isset($_POST['allow_find'])?1:0, $_POST['timezone'], $status_visibility, $errors)) break;
 
 		//if password should be changed
 		if (!is_null($pass)){
 			if (false === $data->set_password_to_user($user_id, $pass, $errors)) break;
 		}
-		
+
 		if ($config->forwarding_to_voicemail_by_group){
 			if (isset($_POST['f2voicemail']) and $_POST['f2voicemail']) $f2voicemail=true;
 			else $f2voicemail=false;
-			
+
 			if ($f2vm xor $f2voicemail){  // was changed forward to voicemail state?
 				if ($f2voicemail) {
 					if (false === $data->update_forward_to_voicemail_grp($user_id, 'add', $errors)) break;
@@ -231,7 +232,7 @@ do{
 				}
 			}
 		}
-		
+
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("").
 		                                             "&m_changes_saved=1".
 													 ($uid?("&".userauth_to_get_param($uid, 'u')):"")));
@@ -321,7 +322,7 @@ $cfg=new stdclass();
 $cfg->allow_change_email               = $config->allow_change_email;
 $cfg->forwarding_to_voicemail_by_group = $config->forwarding_to_voicemail_by_group;
 $cfg->allow_change_password            = $config->allow_change_password;
-$cfg->enable_dial_voicemail            = $config->enable_dial_voicemail; 
+$cfg->enable_dial_voicemail            = $config->enable_dial_voicemail;
 $cfg->enable_test_firewall             = $config->enable_test_firewall;
 $cfg->img_src_path                     = $config->img_src_path;
 $cfg->enable_usrloc                    = $config->enable_usrloc;
@@ -331,8 +332,8 @@ if (!$acl_res) 		$acl_res = array();
 if (!$usrloc) 		$usrloc = array();
 
 $smarty->assign_by_ref('parameters', $page_attributes);
-$smarty->assign_by_ref("config", $cfg);		
-$smarty->assign_by_ref("come_from_admin_interface", $come_from_admin_interface);		
+$smarty->assign_by_ref("config", $cfg);
+$smarty->assign_by_ref("come_from_admin_interface", $come_from_admin_interface);
 
 $smarty->assign_by_ref("aliases_res", $aliases_res);
 $smarty->assign_by_ref("acl_res", $acl_res);
@@ -344,8 +345,8 @@ $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvr
 
 $smarty->assign('sip_user', $user_id);
 
-$smarty->assign_phplib_form('form', $f, 
-		array('jvs_name'=>'form'), 
+$smarty->assign_phplib_form('form', $f,
+		array('jvs_name'=>'form'),
 		array("after"=>$config->allow_change_password?"
 			if (f.passwd.value!=f.passwd_r.value){
 				alert('".$lang_str['fe_passwords_not_match']."');
@@ -354,14 +355,14 @@ $smarty->assign_phplib_form('form', $f,
 			}":""));
 
 if ($config->enable_usrloc){
-	$smarty->assign_phplib_form('form2', $f2, 
+	$smarty->assign_phplib_form('form2', $f2,
 			array('jvs_name'=>'form2'));
 }
-		
+
 $smarty->assign_by_ref("lang_str", $lang_str);
 $smarty->display('u_my_account.tpl');
-		
-		
+
+
 ?>
 <?print_html_body_end();?>
 </html>

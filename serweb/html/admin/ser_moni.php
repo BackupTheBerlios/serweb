@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: ser_moni.php,v 1.10 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_ser_moni_values');
@@ -13,6 +13,7 @@ require "prepend.php";
 require "ser_moni_funct.php";
 
 $perm->check("admin");
+$errors = array();
 
 $values=array();
 do{
@@ -21,7 +22,7 @@ do{
 
 	//get values from database
 	if (false === $values = $data->get_ser_moni_values($errors)) break;
-	
+
 	//create list of usrloc stats
 	foreach($values as $row){
 		if (substr($row->param, 0, 3) == "ul_" and substr($row->param, -4) == "_reg")
@@ -91,7 +92,7 @@ $smarty->assign_by_ref('ul_params', $ul_params);
 $smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_ser_moni.tpl');
-	 
+
 ?>
 <?print_html_body_end();?>
 </html>

@@ -1,12 +1,14 @@
 <?
 /*
- * $Id: index.php,v 1.16 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: index.php,v 1.17 2004/11/10 13:13:06 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_time_zones',  'is_user_exists', 'add_user_to_subscriber');
 $_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
+
+$errors = array();
 
 do{
 	$f = new form;                   // create a form object
@@ -149,14 +151,14 @@ $page_attributes['errors']=&$errors;
 $page_attributes['message']=&$message;
 
 $smarty->assign_by_ref('parameters', $page_attributes);
-$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form', 'form_name'=>'login_form'), 
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form', 'form_name'=>'login_form'),
 		array('after'=>"
 			if (f.passwd.value!=f.passwd_r.value){
 				alert('".addslashes($lang_str['fe_passwords_not_match'])."');
 				f.passwd.focus();
 				return (false);
 			}
-			
+
 			if (!f.accept.checked){
 				alert('".addslashes($lang_str['fe_not_accepted_terms'])."');
 				f.accept.focus();
