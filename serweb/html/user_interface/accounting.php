@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.7 2003/04/03 23:37:26 jiri Exp $
+ * $Id: accounting.php,v 1.8 2003/04/04 02:26:23 jiri Exp $
  */
 
 require "prepend.php";
@@ -15,7 +15,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
-	$q="select t1.sip_to, t1.sip_callid, t1.time, ".
+	$q="select t1.to_uri, t1.sip_to, t1.sip_callid, t1.time, ".
 		"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) ".
 			"as length ".
 		"from ".$config->table_accounting." t1, ".
@@ -75,7 +75,9 @@ do{
 //		else $time=Substr($row->time,0,16);
 	?>
 	<tr valign="top">
-	<td align="center" class="f12" width="135"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_to));?>"><?echo htmlspecialchars($row->sip_to);?></a></td>
+	<td align="center" class="f12" width="135">
+	<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->to_uri));?>">
+	<?echo htmlspecialchars($row->sip_to);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="135"><?echo $row->sip_callid;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

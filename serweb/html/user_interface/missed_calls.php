@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.8 2003/04/04 02:01:37 jiri Exp $
+ * $Id: missed_calls.php,v 1.9 2003/04/04 02:26:23 jiri Exp $
  */
 
 require "prepend.php";
@@ -13,7 +13,8 @@ page_open (array("sess" => "phplib_Session",
 
 class Cmisc{
 	var $sip_from, $time, $sip_status, $status;
-	function Cmisc($sip_from, $time, $sip_status, $status){
+	function Cmisc($from_uri, $sip_from, $time, $sip_status, $status){
+		$this->from_uri=$from_uri;
 		$this->sip_from=$sip_from;
 		$this->time=$time;
 		$this->sip_status=$sip_status;
@@ -25,7 +26,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
-	$q="select t1.sip_from, t1.time, t1.sip_status from ".
+	$q="select t1.from_uri, t1.sip_from, t1.time, t1.sip_status from ".
 		$config->table_missed_calls." t1, ".$config->table_aliases." t2".
 		" where t1.username='".$auth->auth["uname"].
 		"' OR ('sip:".$auth->auth["uname"]."@".$config->default_domain.
@@ -35,7 +36,8 @@ do{
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 	while ($row=MySQL_Fetch_Object($mc_res)){
-		$mc_arr[]=new Cmisc($row->sip_from, $row->time, $row->sip_status, get_status($row->sip_from, $errors));
+		$mc_arr[]=new Cmisc($row->from_uri, $row->sip_from, $row->time, 
+			$row->sip_status, get_status($row->sip_from, $errors));
 	}
 
 	set_timezone($errors);
@@ -86,7 +88,7 @@ do{
 //		else $time=Substr($row->time,0,16);
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="135"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_from));?>"><?echo htmlspecialchars($row->sip_from);?></a></td>
+	<td align="left" class="f12" width="135"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->from_uri));?>"><?echo htmlspecialchars($row->sip_from);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
