@@ -1,4 +1,4 @@
-# $Id: cronentry,v 1.1 2003/01/22 21:15:43 jiri Exp $
+# $Id: cronentry,v 1.2 2003/09/15 03:55:35 jiri Exp $
 # shell commmand examples for running read_ser_moni scripts
 #wget -q -O - http://www.iptel.org/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
-#php -q /home/www/serweb/html/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
+#php -q /var/www/iptel/html/admin/cron_job/read_ser_moni.php | cat >> read_ser_moni.log
