@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.11 2003/07/07 20:32:28 jiri Exp $
+ * $Id: accounting.php,v 1.12 2003/09/04 18:55:48 kozlik Exp $
  */
 
 require "prepend.php";
@@ -63,7 +63,7 @@ do{
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="135">hang up</td>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?while ($row=MySQL_Fetch_Object($mc_res)){
 		if ($flag==1) { 
 			$flag=0; $bgc="bgcolor=\"#FFFFFF\"";
