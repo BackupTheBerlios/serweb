@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.14 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: index.php,v 1.15 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,27 +11,14 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
-		if (!$db = connect_to_db($errors)) break;
+		if (!$data = CData_Layer::create($errors)) break;
 
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
-		if ($config->clear_text_pw) {
-			$q="select phplib_id from ". $config->table_subscriber.
-				" where username='$uname' and password='$passw' and domain='$config->realm'";
-		} else {
-			$ha1=md5($uname.":".$config->realm.":".$passw);
-			$q="select phplib_id from ". $config->table_subscriber.
-				" where username='$uname' and domain='$config->realm' and ha1='$ha1'";
-		}
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-		if (!$res->numRows()) {$errors[]="Bad username or password"; break;}
-		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
-
+		if (false === $phplib_id = $data->check_passw_of_user($_POST['uname'], $config->domain, $_POST['passw'], $errors)) break;
+		
 		$sess->register('pre_uid');
-		$pre_uid=$row->phplib_id;
+		$pre_uid=$phplib_id;
 
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")));
 		page_close();

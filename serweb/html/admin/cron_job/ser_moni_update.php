@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni_update.php,v 1.3 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: ser_moni_update.php,v 1.4 2004/04/14 20:51:31 kozlik Exp $
  */
 
 /*
@@ -86,7 +86,7 @@ class Ser_moni {
 
 		if (! is_null($this->last_id)) return $this->last_id;
 		
-		$q="select max(id) from ".$config->table_ser_mon." where param='".$this->param."'";
+		$q="select max(id) from ".$config->data_sql->table_ser_mon." where param='".$this->param."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -106,7 +106,7 @@ class Ser_moni {
 
 		if (! is_null($this->last_value)) return $this->last_value;
 		
-		$q="select value from ".$config->table_ser_mon." where param='".$this->param."' and id=".$this->get_last_id();
+		$q="select value from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and id=".$this->get_last_id();
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -128,7 +128,7 @@ class Ser_moni {
 
 		if (! is_null($this->last_agg_increment_id)) return $this->last_agg_increment_id;
 		
-		$q="select last_aggregated_increment from ".$config->table_ser_mon_agg." where param='".$this->param."'";
+		$q="select last_aggregated_increment from ".$config->data_sql->table_ser_mon_agg." where param='".$this->param."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -147,7 +147,7 @@ class Ser_moni {
 	function calculate_agg_increment_id (){
 		global $config;
 		
-		$q="select id from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by time desc";
+		$q="select id from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by time desc";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -164,7 +164,7 @@ class Ser_moni {
 	function count_values (){
 		global $config;
 		
-		$q="select count(*) from ".$config->table_ser_mon." where param='".$this->param."' and time>'".$this->aggregation_from."'";
+		$q="select count(*) from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time>'".$this->aggregation_from."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -182,7 +182,7 @@ class Ser_moni {
 		if (is_null($last_value)) $increment=0;
 		else $increment=abs($new_value - $this->get_last_value());
 		
-		$q="insert into ".$config->table_ser_mon." (time, id, param, value, increment) ".
+		$q="insert into ".$config->data_sql->table_ser_mon." (time, id, param, value, increment) ".
 			"values ('".$this->now."', ".					//time
 						($this->get_last_id()+1).", '".		//id
 						$this->param."', ".					//name of param
@@ -201,7 +201,7 @@ class Ser_moni {
 	function drop_old_values(){
 		global $config;
 
-		$q="delete from ".$config->table_ser_mon." where param='".$this->param."' and time<'".$this->aggregation_from."'";
+		$q="delete from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time<'".$this->aggregation_from."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -216,7 +216,7 @@ class Ser_moni {
 		global $config;
 	
 		$q="select unix_timestamp('".$this->now."') - unix_timestamp(min(time)) ".
-			"from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
+			"from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -242,7 +242,7 @@ class Ser_moni {
 	function get_min_max_value(){
 		global $config;
 	
-		$q="select min(value) as min, max(value) as max from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
+		$q="select min(value) as min, max(value) as max from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -275,7 +275,7 @@ class Ser_moni {
 		
 		$q=	" create temporary table ".$tmp_table.
 			" select sum(increment) as s_increment, ".$marginal_funct." as marg_f ".
-			" from ".$config->table_ser_mon.
+			" from ".$config->data_sql->table_ser_mon.
 			" where param='".$this->param."' and time >= '".$this->aggregation_from."'".
 			" group by marg_f ";
 		$res=$this->db->query($q);
@@ -353,7 +353,7 @@ class Ser_moni {
 		
 	*/
 	
-		$q="select s_value, s_increment, mv, last_aggregated_increment from ".$config->table_ser_mon_agg." where param='".$this->param."'";
+		$q="select s_value, s_increment, mv, last_aggregated_increment from ".$config->data_sql->table_ser_mon_agg." where param='".$this->param."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -393,7 +393,7 @@ class Ser_moni {
 		
 		//select values and incremets which will be deleted and subtract them from aggregated values and increments
 		
-		$q="select value, increment from ".$config->table_ser_mon." where param='".$this->param."' and time < '".$this->aggregation_from."'";
+		$q="select value, increment from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time < '".$this->aggregation_from."'";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $dummy);
@@ -417,11 +417,11 @@ class Ser_moni {
 			if ($last_agg_inc<0){ // no still is no time to begin aggregating increments
 				$q="";
 			} else { //yes there is increments in database which were done before T
-				$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by id";
+				$q="select id, increment from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by id";
 			}
 		}
 		else{
-			$q="select id, increment from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' and id > ".$last_agg_inc." order by id";
+			$q="select id, increment from ".$config->data_sql->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' and id > ".$last_agg_inc." order by id";
 		}
 		
 		if ($q){
@@ -490,7 +490,7 @@ class Ser_moni {
 	function update_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $min_val, $max_val, $min_inc, $max_inc, $lastupdate){
 		global $config;
 
-		$q="update ".$config->table_ser_mon_agg.
+		$q="update ".$config->data_sql->table_ser_mon_agg.
 		   " set s_value=".$s_value.", s_increment=".$s_increment.", last_aggregated_increment=".$last_aggregated_increment.
 		   		", av=".$av.", mv=".$mv.", ad=".$ad.", lv=".$lv.
 				", min_val=".$min_val.", max_val=".$max_val.", min_inc=".$min_inc.", max_inc=".$max_inc.
@@ -509,7 +509,7 @@ class Ser_moni {
 	function insert_aggregations_sql($s_value, $s_increment, $last_aggregated_increment, $av, $mv, $ad, $lv, $min_val, $max_val, $min_inc, $max_inc, $lastupdate){
 		global $config;
 
-		$q="insert into ".$config->table_ser_mon_agg." (param, s_value, s_increment, last_aggregated_increment, av, mv, ad, lv, min_val, max_val, min_inc, max_inc, lastupdate) ".
+		$q="insert into ".$config->data_sql->table_ser_mon_agg." (param, s_value, s_increment, last_aggregated_increment, av, mv, ad, lv, min_val, max_val, min_inc, max_inc, lastupdate) ".
 		   "values ('".$this->param."', ".$s_value.", ".$s_increment.", ".$last_aggregated_increment.", ".$av.", ".$mv.", ".$ad.", ".$lv.", ".
 		   			$min_val.", ".$max_val.", ".$min_inc.", ".$max_inc.", '".$lastupdate."')";
 		$res=$this->db->query($q);

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.14 2004/04/05 19:31:03 kozlik Exp $
+ * $Id: index.php,v 1.15 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,40 +11,23 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
-		if (!$db = connect_to_db($errors)) break;
+		if (!$data = CData_Layer::create($errors)) break;
 
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
-		if ($config->clear_text_pw) {
-			$q="select phplib_id from ". $config->table_subscriber.
-				" where username='$uname' and password='$passw' and domain='$config->realm'";
-		} else {
-			$ha1=md5($uname.":".$config->realm.":".$passw);
-			$q="select phplib_id from ".$config->table_subscriber.
-				" where username='$uname' and ha1='$ha1' and domain='$config->realm'";
-		}
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (false === $phplib_id = $data->check_passw_of_user($_POST['uname'], $config->domain, $_POST['passw'], $errors)) break;
 
-		if (!$res->numRows()) {$errors[]="Bad username or password"; break;}
-		$row_id = $res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
-		
 		//check for admin privilege
-		
-		$q="select priv_value from ".$config->table_admin_privileges."
-			where username='$uname' and domain='$config->realm' and priv_name='is_admin'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+                if (false === $privileges = $data->get_privileges_of_user($_POST['uname'], $config->domain, array('change_privileges','is_admin'), $errors)) break;
 
-		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free(); 
-		if (!$row->priv_value) {$errors[]="Bad username or password"; break;}
-		
-		
-		
+		$is_admin=false;
+		foreach($privileges as $row)
+			if ($row->priv_name=='is_admin' and $row->priv_value) $is_admin=true;
+
+		if (!$is_admin) {$errors[]="Bad username or password"; break;}
+
 		$sess->register('pre_uid');
-		$pre_uid=$row_id->phplib_id;
+		$pre_uid=$phplib_id;
 
         Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")));
 		page_close();

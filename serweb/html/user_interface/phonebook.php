@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.15 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: phonebook.php,v 1.16 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,36 +13,17 @@ page_open (array("sess" => "phplib_Session",
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
-if (isset($_POST['okey_x'])) $okey_x=$_POST['okey_x'];
-elseif (isset($_GET['okey_x'])) $okey_x=$_GET['okey_x'];
-else $okey_x=null;
-
-
-class Cphonebook{
-	var $id;
-	var $fname;
-	var $lname;
-	var $sip_uri;
-	var $status;
-	var $aliases;
-
-	function Cphonebook($id, $fname, $lname, $sip_uri, $status='unknown'){
-		$this->id=$id;
-		$this->fname=$fname;
-		$this->lname=$lname;
-		$this->sip_uri=$sip_uri;
-		$this->status=$status;
-	}
-}
+set_global('okey_x');
+set_global('id');
+set_global('fname');
+set_global('lname');
+set_global('sip_uri');
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	if (isset($_GET['dele_id'])){
-		$q="delete from ".$config->table_phonebook." where ".
-			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and id=".$dele_id;
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->del_phonebook_entry($auth->auth["uname"], $config->domain, $_GET['dele_id'], $errors)) break;
 
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
@@ -50,12 +31,7 @@ do{
 	}
 
 	if (isset($_GET['edit_id'])){
-		$q="select fname, lname, sip_uri from ".$config->table_phonebook.
-			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and id=".$_GET['edit_id'];
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
+		if (false === $row = $data->get_phonebook_entry($auth->auth["uname"], $config->domain, $_GET['edit_id'], $errors)) break;
 	}
 
 	$f->add_element(array("type"=>"text",
@@ -95,14 +71,8 @@ do{
 
 			/* Process data */           // Data ok;
 
-		if ($id) $q="update ".$config->table_phonebook." set fname='$fname', lname='$lname', sip_uri='$sip_uri' ".
-			"where id=$id and domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, username, domain) ".
-			"values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."', '".$config->realm."')";
-
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-
+		if (!$data->update_phonebook_entry($auth->auth["uname"], $config->domain, $id, $fname, $lname, $sip_uri, $errors)) break;
+		
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
@@ -110,21 +80,10 @@ do{
 }while (false);
 
 do{
-	$pb_arr=array();
-	if ($db){
+	$pb_res=array();
+	if ($data){
 		// get phonebook
-		if (isset($_GET['edit_id'])) $qw=" and id!=".$_GET['edit_id']." "; else $qw="";
-
-		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook.
-			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by lname";
-		$phonebook_res=$db->query($q);
-		if (DB::isError($phonebook_res)) {log_errors($phonebook_res, $errors); break;}
-
-		while ($row=$phonebook_res->fetchRow(DB_FETCHMODE_OBJECT)){
-			$pb_arr[$row->id] = new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $db, $errors));
-                        $pb_arr[$row->id]->aliases = get_aliases($row->sip_uri, $db, $errors);
-		}
-		$phonebook_res->free();
+		if (false === $pb_res = $data->get_phonebook_entries($auth->auth["uname"], $config->domain, isset($_GET['edit_id'])?$_GET['edit_id']:NULL, $errors)) break;
 	}
 }while (false);
 
@@ -138,7 +97,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 print_html_body_begin($page_attributes);
 ?>
 
@@ -165,7 +124,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","sip_address_completion(f.sip_uri);");					// Finish form?>
 </div>
 
-<?if (is_array($pb_arr) and count($pb_arr)){?>
+<?if (is_array($pb_res) and count($pb_res)){?>
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>name</th>
@@ -176,7 +135,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	foreach($pb_arr as $row){
+	foreach($pb_res as $row){
 		$odd=$odd?0:1;
 		$name=$row->lname;
 		if ($name) $name.=" "; $name.=$row->fname;

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: user_preferences.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,26 +15,17 @@ page_open (array("sess" => "phplib_Session",
 				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
-if (isset($_POST['att_edit'])) $att_edit=$_POST['att_edit'];
-elseif (isset($_GET['att_edit'])) $att_edit=$_GET['att_edit'];
-else $att_edit=null;
+set_global('att_edit');
+set_global('att_name');
+set_global('att_rich_type');
+set_global('default_value');
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	//delete attrib from DB
 	if (isset($_GET['att_dele'])){
-		//delete attribute from user_preferences table
-		$q="delete from ".$config->table_user_preferences.
-			" where attribute='".$_GET['att_dele']."'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-		//delete attribute form user_preferences_types table
-		$q="delete from ".$config->table_user_preferences_types.
-			" where att_name='".$_GET['att_dele']."'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->del_attribute($_GET['att_dele'], $errors)) break;
 
         Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
 		page_close();
@@ -45,13 +36,7 @@ do{
 	
 	//select values of edited attribute in order to fill its to the form
 	if ($att_edit){
-		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
-			" where att_name='$att_edit'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
+		if (false === $row = $data->get_attribute($att_edit, $errors)) break;
 		
 		$att_type_spec=$row->att_type_spec;
 		
@@ -115,31 +100,7 @@ do{
 
 			/* Process data */           // Data ok;
 
-		if ($att_edit) 
-			$q="update ".$config->table_user_preferences_types." ".
-				"set att_name='$att_name', att_rich_type='$att_rich_type', default_value='$default_value', ".
-					"att_raw_type='".$usr_pref->att_types[$att_rich_type]->raw_type."'".
-				"where att_name='$att_edit'";
-		else 
-			$q="insert into ".$config->table_user_preferences_types." (att_name, att_rich_type, default_value, att_raw_type) ".
-				"values ('$att_name', '$att_rich_type', '$default_value', '".$usr_pref->att_types[$att_rich_type]->raw_type."')";
-
-		$res=$db->query($q);
-		if (DB::isError($res)) {
-			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
-				$errors[]="This attribute name already exists - choose another";
-			else log_errors($res, $errors); 
-			break;
-		}
-
-		//if name of attribute is changed, update user_preferences table
-		if ($att_edit and $att_edit!=$att_name){
-			$q="update ".$config->table_user_preferences." ".
-				"set attribute='$att_name' where attribute='$att_edit'";
-
-			$res=$db->query($q);
-			if (DB::isError($res)) {log_errors($res, $errors); break;}
-		}
+		if (!$data->update_attribute($att_edit, $att_name, $att_rich_type, $usr_pref->att_types[$att_rich_type]->raw_type, $default_value, $errors)) break;
 
 		if (!$att_edit and $att_rich_type=="list") 
 	        Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_name)."&kvrk=".uniqID("")));
@@ -152,14 +113,9 @@ do{
 }while (false);
 								 
 do{
-	if ($db){
-		// get attrib table
-		if ($att_edit) $qw=" att_name != '$att_edit' "; else $qw="1";
-
-		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
-			" where ".$qw." order by att_name";
-		$att_res=$db->query($q);
-		if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
+	$attributes = array();
+	if ($data){
+		if (false === $attributes = $data->get_attributes($att_edit?$att_edit:NULL, $errors)) break;
 	}
 }while (false);
 
@@ -198,7 +154,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","");					// Finish form?>
 </div>
 
-<?if (!DB::isError($att_res) and $att_res->numRows()){?>
+<?if (is_array($attributes) and count($attributes)){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -209,7 +165,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while($row = $att_res->fetchRow(DB_FETCHMODE_OBJECT)){
+	foreach($attributes as $row){
 		$odd=$odd?0:1;
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
@@ -219,8 +175,7 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
 	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($row->att_name));?>">delete</a></td>
 	</tr>
-	<?}//while
-	$att_res->free();?>
+	<?}//while?>
 	</table>
 
 <?}?>

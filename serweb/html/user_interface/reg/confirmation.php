@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.21 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: confirmation.php,v 1.22 2004/04/14 20:51:31 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -12,45 +12,26 @@ put_headers();
 if (isset($_GET['ok'])) $ok=$_GET['ok']; else $ok=null;
 if (isset($_GET['nr'])) $nr=$_GET['nr']; else $nr=null;
 
+$remove_from_subscriber=false;
 do{
 	if (isset($nr)){  // Is there data to process?
 
-		if (!$db = connect_to_db($errors)) break;
+		if (!$data = CData_Layer::create($errors)) break;
 
-		$q="select username from ".$config->table_pending." where confirmation='$nr'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-		if (!$res->numRows()){
-			$q="select username from ".$config->table_subscriber." where confirmation='$nr'";
-			$res1=$db->query($q);
-			if (DB::isError($res1)) {log_errors($res1, $errors); break;}
-			if (!$res1->numRows()){ $errors[]="Sorry. No such a confirmation number exists."; break;}
-			else { $ok=1; $errors[]="Your account has already been created."; break; }
-		}
-
-		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
-		if ($config->setup_jabber_account) {
-			$user_id=$row->username; // needed for Jabber gw reg.
-		}
-		$sip_address="sip:".$row->username."@".$config->default_domain;
-
+		if (false === $user_id=$data->move_user_from_pending_to_subscriber($nr, $errors)) break;
+		$remove_from_subscriber=true;
+		
+		$sip_address="sip:".$user_id."@".$config->domain;
 		
 		// get the max alias number 
-		if (!$alias=get_alias_number($db, $errors)) break;
-
-		$q="insert into ".$config->table_subscriber." select * from ".$config->table_pending." where confirmation='$nr'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (false === $alias=$data->get_alias_number($errors)) break;
 
 		// add alias to fifo
-		$message=add_new_alias($sip_address, $alias, $errors);
+		$message=$data->add_new_alias($sip_address, $alias, $errors);
 		if ($errors) break;
-		
-		$q="delete from ".$config->table_pending." where confirmation='$nr'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+
+		$remove_from_subscriber=false;
+		if (!$data->del_user_from_pending($nr, $errors)) break;
 
 		if ($config->setup_jabber_account) {
 			# Jabber Gateway registration
@@ -68,6 +49,8 @@ do{
 		exit;
 	}
 }while (false);
+
+if ($remove_from_subscriber) $data->del_user_from_subscriber($nr, $errors);
 
 
 /* ----------------------- HTML begin ---------------------- */ 

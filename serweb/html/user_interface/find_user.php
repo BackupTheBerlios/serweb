@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.14 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: find_user.php,v 1.15 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,20 +15,8 @@ define("max_rows",50);
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
-class Cuser{
-	var $first_name, $last_name, $username, $timezone, $aliases;
-	function Cuser($fname, $lname, $username, $timezone){
-		$this->first_name 	= $fname;
-		$this->last_name 	= $lname;
-		$this->username 	= $username;
-		$this->timezone 	= $timezone;
-
-		$this->aliases=array();
-	}
-}
-
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"fname",
@@ -65,25 +53,8 @@ do{
 		}
 
 			/* Process data */           // Data ok;
-		if ($onlineonly)
-			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username ".
-				"from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.username=l.username and s.allow_find='1' and ".
-					"s.first_name like '%$fname%' and s.last_name like '%$lname%' ".
-					"and s.username like '%$uname%' and s.domain='$config->realm' limit 0,".$config->max_showed_rows;
-		else
-			$q=	"select timezone, first_name, last_name, username from ".$config->table_subscriber.
-				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' ".
-				"and username like '%$uname%' and domain='$config->realm' limit 0,".$config->max_showed_rows;
-
-		$find_res=$db->query($q);
-		if (DB::isError($find_res)) {log_errors($find_res, $errors); break;}
-
 		$found_users=array();
-		while ($row=$find_res->fetchRow(DB_FETCHMODE_OBJECT)){
-			$found_users[$row->username]=new Cuser($row->first_name, $row->last_name, $row->username, $row->timezone);
-                        $found_users[$row->username]->aliases = get_aliases("sip:".$row->username."@".$config->realm, $db, $errors);
-		}
+		if(false === $found_users = $data->find_users($_POST['fname'], $_POST['lname'], $_POST['uname'], $config->domain, isset($_POST['onlineonly'])?1:0, $errors)) break;
 	}
 
 }while (false);
@@ -94,7 +65,7 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 $page_attributes['selected_tab']="phonebook.php";
 print_html_body_begin($page_attributes);
 ?>
@@ -154,12 +125,11 @@ print_html_body_begin($page_attributes);
 	</tr>
 	<?}?>
 	</table>
-	<?if ($find_res->numRows()==$config->max_showed_rows){?>
+	<?if (count($found_users)==$config->max_showed_rows){?>
 	<div class="swNumOfFoundRecords">The search generated too many matches, please be more specific</div>
 	<?}else{?>
 	<br />
-<?	}
-	$find_res->free();?>
+<?	}?>
 <?}elseif(isset($okey_x)){?>
 	<div class="swNumOfFoundRecords">No users found</div>
 <?}?>

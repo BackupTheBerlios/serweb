@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.6 2004/04/05 19:31:03 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -37,7 +37,7 @@ elseif (isset($_POST['user_id'])) $user_id=$_POST['user_id'];
 	$errors - array in which arrors messages are returned
 */
 
-function update_db($priv_name, $priv_type, $user_id, $user_domain, $db, &$errors){
+function update_db($priv_name, $priv_type, $user_id, $user_domain, $data, &$errors){
 	global $_POST, $ad_priv, $config;
 
 	switch ($priv_type['type']){
@@ -46,21 +46,12 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $db, &$errors
 		if (!isset($_POST["chk_".$priv_name])) $_POST["chk_".$priv_name] = "0";
 
 		if ($_POST["chk_".$priv_name] != $_POST["hidden_".$priv_name]){
-			if ($_POST["chk_".$priv_name])
-
-				if (isset($ad_priv[$priv_name][0])){ /* if privilege is in db we must update its value */
-					$q="update ".$config->table_admin_privileges." set priv_value='1' ".
-						"where domain='".$user_domain."' and username='".$user_id."' and priv_name='".$priv_name."'";
-				} else { /* otherwise we insert privilege with right value */
-					$q="insert into ".$config->table_admin_privileges." (username, domain, priv_name, priv_value) ".
-						"values ('".$user_id."', '".$user_domain."', '".$priv_name."', '1')";
-				}
-			else
-				$q="delete from ".$config->table_admin_privileges." where ".
-					"domain='".$user_domain."' and username='".$user_id."' and priv_name='".$priv_name."'";
-
-			$res=$db->query($q);
-			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+			if ($_POST["chk_".$priv_name]){
+				if (!$data->add_privilege_to_user($user_id, $user_domain, $priv_name, '1', isset($ad_priv[$priv_name][0]), $errors)) return false;
+			}
+			else{
+				if (!$data->del_privilege_of_user($user_id, $user_domain, $priv_name, NULL, $errors)) return false;
+			}
 		}
 		break;
 
@@ -71,15 +62,12 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $db, &$errors
 
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
-				if ($_POST["chk_".$row])
-					$q="insert into ".$config->table_admin_privileges." (username, domain, priv_name, priv_value) ".
-						"values ('".$user_id."', '".$user_domain."', '".$priv_name."', '".$row."')";
-				else
-					$q="delete from ".$config->table_admin_privileges." where ".
-						"domain='".$user_domain."' and username='".$user_id."' and priv_name='".$priv_name."' and priv_value='".$row."'";
-
-				$res=$db->query($q);
-				if (DB::isError($res)) {log_errors($res, $errors); return false;}
+				if ($_POST["chk_".$row]){
+					if (!$data->add_privilege_to_user($user_id, $user_domain, $priv_name, $row, false, $errors)) return false;
+				}
+				else{
+					if (!$data->del_privilege_of_user($user_id, $user_domain, $priv_name, $row, $errors)) return false;
+				}
 			}
 		}
 		break;
@@ -92,17 +80,13 @@ function update_db($priv_name, $priv_type, $user_id, $user_domain, $db, &$errors
 
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
 
-	/* get access control list of user */
-	$q="select priv_name, priv_value from ".$config->table_admin_privileges." where domain='".$user_domain."' and username='".$user_id."'";
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) $ad_priv[$row->priv_name][]=$row->priv_value;
-	$res->free();
+	/* get privileges of user */
+	if (false === $privs = $data->get_privileges_of_user($user_id, $user_domain, NULL, $errors)) break;
+	foreach($privs as $row)	$ad_priv[$row->priv_name][]=$row->priv_value;
 
 	/* add form elements */
 	foreach ($config->grp_values as $row){
@@ -148,9 +132,9 @@ do{
 
 	if (isset($_POST['okey_x'])){					// Is there data to process?
 
-		if (!update_db('is_admin', array('type'=>'boolean'), $user_id, $user_domain, $db, $errors)) break;
-		if (!update_db('change_privileges', array('type'=>'boolean'), $user_id, $user_domain, $db, $errors)) break;
-		if (!update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $user_id, $user_domain, $db, $errors)) break;
+		if (!update_db('is_admin', array('type'=>'boolean'), $user_id, $user_domain, $data, $errors)) break;
+		if (!update_db('change_privileges', array('type'=>'boolean'), $user_id, $user_domain, $data, $errors)) break;
+		if (!update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $user_id, $user_domain, $data, $errors)) break;
 		
         Header("Location: ".$sess->url("list_of_admins.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
 		page_close();

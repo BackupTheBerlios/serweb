@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: play_greeting.php,v 1.4 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: play_greeting.php,v 1.5 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -30,9 +30,14 @@ do{
 
 }while(false);
 
+do{
+	if (!$data = CData_Layer::create($errors)) break;
+}while(false);
+
+
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 $page_attributes['selected_tab']="voicemail.php";
 print_html_body_begin($page_attributes);
 ?>

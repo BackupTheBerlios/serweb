@@ -2,14 +2,14 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.2 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: load_phplib.php,v 1.3 2004/04/14 20:51:31 kozlik Exp $
  */ 
 
 
-if ($config->db_type=="mysql"){
+if ($config->data_sql->db_type=="mysql"){
 	require($_PHPLIB["libdir"] . "db_mysql.inc");  /* Load ct_sql class for MySQL database. */
 }
-elseif ($config->db_type=="pgsql"){
+elseif ($config->data_sql->db_type=="pgsql"){
 	require($_PHPLIB["libdir"] . "db_pgsql.inc");  /* Load ct_sql class for PostgreSQL database. */
 }
 else die('Invalid database in $config->db_type');

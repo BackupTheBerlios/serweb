@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.13 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: index.php,v 1.14 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -10,9 +10,11 @@ put_headers();
 page_open (array("sess" => "phplib_Session"));
 
 do{
+	if (!$data = CData_Layer::create($errors)) break;
+
 	$f = new form;                   // create a form object
 
-	$opt=get_time_zones($errors);
+	$opt=$data->get_time_zones($errors);
 	$options[]=array("label"=>"--- please select your timezone ---","value"=>"");
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
 
@@ -95,7 +97,6 @@ do{
 								 "extrahtml"=>"alt='register'"));
 
 	if (isset($_POST['okey_x'])){				// Is there data to process?
-		if (!$db = connect_to_db($errors)) break;
 
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
@@ -113,13 +114,13 @@ do{
 			/* Process data */           // Data ok;
 
 
-		$user_exists=is_user_exists($uname, $config->default_domain, $db, $errors);
+		$user_exists=$data->is_user_exists($uname, $config->default_domain, $errors);
 		if ($errors) break;
 		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
 
 		$confirm=md5(uniqid(rand()));
 
-		if (!add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $db, $errors)) break;
+		if (!$data->add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->data_sql->table_pending, $errors)) break;
 
 		$sip_address="sip:".$uname."@".$config->default_domain;
 

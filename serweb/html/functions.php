@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.36 2004/04/05 19:31:03 kozlik Exp $
+ * $Id: functions.php,v 1.37 2004/04/14 20:51:31 kozlik Exp $
  */
 
 
@@ -155,14 +155,14 @@ function print_search_links($actual, $num, $rows, $url){
 function connect_to_db(&$errors){
 	global $config;
 
-	$dsn = 	$config->db_type."://".
-			$config->db_user.":".
-			$config->db_pass."@".
-			$config->db_host.
-				(empty($config->db_port)?
+	$dsn = 	$config->data_sql->db_type."://".
+			$config->data_sql->db_user.":".
+			$config->data_sql->db_pass."@".
+			$config->data_sql->db_host.
+				(empty($config->data_sql->db_port)?
 					"":
-					":".$config->db_port)."/".
-			$config->db_name;
+					":".$config->data_sql->db_port)."/".
+			$config->data_sql->db_name;
 
 	$db = DB::connect($dsn);
 
@@ -571,5 +571,14 @@ function log_errors($err_object, &$errors){
 	$serwebLog->log($log_message, PEAR_LOG_ERR);
 
 }
-
+/*
+	sets varibale gets by $_POST or by $_GET to global
+*/
+function set_global($var){
+	global $_POST, $_GET, $GLOBALS;
+	
+	if (isset($_POST[$var])) $GLOBALS[$var]=$_POST[$var];
+	elseif (isset($_GET[$var])) $GLOBALS[$var]=$_GET[$var];
+	else $GLOBALS[$var]=null;
+}
 ?>

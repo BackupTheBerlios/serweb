@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.7 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: speed_dial.php,v 1.8 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,23 +13,14 @@ page_open (array("sess" => "phplib_Session",
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
-if (isset($_POST['edit_sd'])) $edit_sd=$_POST['edit_sd'];
-elseif (isset($_GET['edit_sd'])) $edit_sd=$_GET['edit_sd'];
-else $edit_sd=null;
-
-if (isset($_POST['edit_sd_dom'])) $edit_sd_dom=$_POST['edit_sd_dom'];
-elseif (isset($_GET['edit_sd_dom'])) $edit_sd_dom=$_GET['edit_sd_dom'];
-else $edit_sd_dom=null;
-
+set_global('edit_sd');
+set_global('edit_sd_dom');
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	if (isset($_GET['dele_sd'])){
-		$q="delete from ".$config->table_speed_dial." where ".
-			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and username_from_req_uri='".$_GET['dele_sd']."' and domain_from_req_uri='".$_GET['dele_sd_dom']."'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->del_SD_request($auth->auth["uname"], $config->domain, $_GET['dele_sd'], $_GET['dele_sd_dom'], $errors)) break;
 
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
@@ -37,12 +28,7 @@ do{
 	}
 
 	if ($edit_sd){
-		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri from ".$config->table_speed_dial.
-			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and username_from_req_uri='".$edit_sd."' and domain_from_req_uri='".$edit_sd_dom."'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
-		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
+		if (false === $row = $data->get_SD_request($auth->auth["uname"], $config->domain, $edit_sd, $edit_sd_dom, $errors)) break;
 	}
 
 	$f->add_element(array("type"=>"text",
@@ -87,19 +73,8 @@ do{
 
 			/* Process data */           // Data ok;
 
-		if ($edit_sd) $q="update ".$config->table_speed_dial." set new_request_uri='$new_uri', username_from_req_uri='$usrnm_from_uri', domain_from_req_uri='$domain_from_uri' ".
-			"where username_from_req_uri='$edit_sd' and domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-		else $q="insert into ".$config->table_speed_dial." (username, domain, username_from_req_uri, domain_from_req_uri, new_request_uri) ".
-			"values ('".$auth->auth["uname"]."', '".$config->realm."', '$usrnm_from_uri', '$domain_from_uri', '$new_uri')";
-
-		$res=$db->query($q);
-		if (DB::isError($res)) {
-			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
-				$errors[]="Record with this username and domain already exists";
-			else log_errors($res, $errors); 
-			break;
-		}
-
+		if (!$data->update_SD_request($auth->auth["uname"], $config->domain, $edit_sd, $_POST['new_uri'], $_POST['usrnm_from_uri'], $_POST['domain_from_uri'], $errors)) break;
+			
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
@@ -107,14 +82,11 @@ do{
 }while (false);
 
 do{
-	if ($db){
-		// get speed dials
-		if ($edit_sd) $qw=" and (username_from_req_uri!='$edit_sd' or domain_from_req_uri!='$edit_sd_dom') "; else $qw="";
-
-		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri from ".$config->table_speed_dial.
-			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by domain_from_req_uri, username_from_req_uri";
-		$sd_res=$db->query($q);
-		if (DB::isError($sd_res)) {log_errors($sd_res, $errors); break;}
+	$requests=array();
+	
+	if ($data){
+		// get speed dial requests
+		if (false === $requests = $data->get_SD_requests($auth->auth["uname"], $config->domain, $edit_sd?$edit_sd:NULL, $edit_sd_dom?$edit_sd_dom:NULL, $errors)) break;
 
 	}
 }while (false);
@@ -129,7 +101,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 print_html_body_begin($page_attributes);
 ?>
 
@@ -156,7 +128,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","sip_address_completion(f.new_uri);");					// Finish form?>
 </div>
 
-<?if (!DB::isError($sd_res) and $sd_res->numRows()){?>
+<?if (is_array($requests) and count($requests)){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -166,7 +138,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while ($row=$sd_res->fetchRow(DB_FETCHMODE_OBJECT)){
+	foreach($requests as $row){
 		$odd=$odd?0:1;
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
@@ -175,8 +147,7 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&edit_sd=".$row->username_from_req_uri."&edit_sd_dom=".$row->domain_from_req_uri);?>">edit</a></td>
 	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&dele_sd=".$row->username_from_req_uri."&dele_sd_dom=".$row->domain_from_req_uri);?>">delete</a></td>
 	</tr>
-	<?}//while
-	$sd_res->free();?>
+	<?}//while?>
 	</table>
 <?}else{?>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.33 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: my_account.php,v 1.34 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -29,33 +29,18 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
 
-class Cusrloc {
-	var $uri, $q, $expires, $geo_loc;
-
-	function Cusrloc ($uri, $q, $expires, $geo_loc){
-		$this->uri=$uri;
-		$this->q=$q;
-		$this->expires=$expires;
-		$this->geo_loc=$geo_loc;
-	}
-}
 
 define("FOREVER",567648000);	//number of second for forever (18 years)
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
-	$q="select email_address, allow_find, timezone from ".$config->table_subscriber.
-		" where username='".$user_id."' and domain='".$config->realm."'";
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-	$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
-	$res->free();
-
-        set_timezone($db, $errors);
-
+	$data->set_timezone($errors);
+	
+	if (false === $row = $data->get_sip_user_details($user_id, $config->domain, $errors)) break;
+	
 	$options=array();
-	$opt=get_time_zones($errors);
+	$opt=$data->get_time_zones($errors);
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
 
 	$f->add_element(array("type"=>"text",
@@ -128,28 +113,12 @@ do{
 								 "extrahtml"=>"alt='add'"));
 
 	if (isset($_GET['del_contact'])){
-		/* construct FIFO command */
-		/*
-		if ($config->ul_multidomain)
-			$ul_name=$user_id."@".$config->default_domain."\n";
-		else
-			$ul_name=$user_id."\n";
-		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";
-		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
-			$config->ul_table."\n".		//table
-			$ul_name.
-			$del_contact."\n\n";			//contact
 
-		$message=write2fifo($fifo_cmd, $errors, $status);
-		if ($errors) break;
-		/* we accept any 2xx as ok */
-		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
+		if (false === $status = $data->del_contact($user_id, $config->domain, $_GET['del_contact'], $errors)) break;
 
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
 		exit;
-
 	}
 
 	if (isset($okey2_x)){						// Is there data to process?
@@ -167,28 +136,7 @@ do{
 
 		/* Process data */           // Data ok;
 
-		if ($config->ul_replication) $replication="0\n";
-		else $replication="";
-
-		/* construct FIFO command */
-		/*
-		if ($config->ul_multidomain)
-			$ul_name=$user_id."@".$config->default_domain."\n";
-		else
-			$ul_name=$user_id."\n";
-		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";
-		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
-			$config->ul_table."\n".			//table
-			$ul_name.
-			$sip_address."\n".				//contact
-			$expires."\n".					//expires
-			$config->ul_priority."\n".	// priority
-			$replication."\n";
-
-		$message=write2fifo($fifo_cmd, $errors, $status);
-		if ($errors) break;
-		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
+		if (false === $status = $data->add_contact($user_id, $config->domain, $_POST['sip_address'], $_POST['expires'], $errors)) break;
 
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
@@ -196,36 +144,22 @@ do{
 
 	}
 
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($okey_x)){						// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
 
-		if ($passwd and ($passwd != $passwd_r)){
-			$errors[]="passwords not match"; break;
+		if ($_POST['passwd'] and ($_POST['passwd'] != $_POST['passwd_r'])){
+			$errors[]="passwords don't match"; break;
 		}
 
 			/* Process data */           // Data ok;
 
-		$qpass="";
-		if ($passwd){
+		$pass=NULL;
+		if ($_POST['passwd']) $pass=$_POST['passwd'];
 
-			$inp=$user_id.":".$config->realm.":".$passwd;
-			$ha1=md5($inp);
-
-			$inpb=$user_id."@".$config->domainname.":".$config->realm.":".$passwd;
-			$ha1b=md5($inpb);
-
-			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
-		}
-
- 		$q="update ".$config->table_subscriber.
-			" set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
-			" where username='".$user_id."' and domain='".$config->realm."'";
-
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->update_sip_user_details($user_id, $config->domain, $pass, $_POST['email'], isset($_POST['allow_find'])?1:0, $_POST['timezone'], $errors)) break;
 
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")."&uid=".RawURLEncode($uid)));
 		page_close();
@@ -234,50 +168,17 @@ do{
 }while (false);
 
 do{
-	if ($db){
+	$aliases_res = $acl_res = $usrloc = array();
+	if ($data){
 
 		// get aliases
-		$q="select username from ".$config->table_aliases.
-			" where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
-		$aliases_res=$db->query($q);
-		if (DB::isError($aliases_res)) {log_errors($aliases_res, $errors); break;}
+		if (false === $aliases_res = $data->get_aliases("sip:".$user_id."@".$config->domain, $errors)) break;
 
 		// get Access-Control-list
-		$q="select grp from ".$config->table_grp." where domain='".$config->realm.
-			"' and username='".$user_id."' order by grp";
-		$grp_res=$db->query($q);
-		if (DB::isError($grp_res)) {log_errors($grp_res, $errors); break;}
+		if (false === $acl_res = $data->get_acl($user_id, $config->domain, $errors)) break;
 
 		// get UsrLoc
-		/*
-		if ($config->ul_multidomain)
-			$ul_name=$user_id."@".$config->default_domain."\n";
-		else
-			$ul_name=$user_id."\n";
-		*/
-		$ul_name=$user_id."@".$config->default_domain."\n";
-		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
-		$config->ul_table."\n".		//table
-		$ul_name."\n";	//username
-
-		$out=write2fifo($fifo_cmd, $err, $status);
-		if ($err or !$out) {
-			$errors=array_merge($errors, $err); // No!
-			break;
-		}
-		if (!$out) break;
-
-		if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; break; }
-
-		$out_arr=explode("\n", $out);
-
-		foreach($out_arr as $val){
-			if (!ereg("^[[:space:]]*$", $val)){
-				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
-                                        $usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3], get_location($regs[1], $db, $errors));
-				else { $errors[]="sorry error -- invalid output from fifo"; break; }
-			}
-		}
+		if (false === $usrloc = $data->get_usrloc($user_id, $config->domain, $errors)) break;
 
 	}
 
@@ -315,7 +216,7 @@ if ($perm->have_perm("admin") and $uid){
 	echo "<div class=\"swNameOfUser\">user: ".$uid."</div>";
 }
 else {
-        $page_attributes['user_name']=get_user_name($db, $errors);
+		$page_attributes['user_name']=$data->get_user_name($errors);
 	print_html_body_begin($page_attributes);
 }
 ?>
@@ -358,33 +259,31 @@ else {
 </div>
 
 
-<?if (!DB::isError($aliases_res) and $aliases_res->numRows()){?>
+<?if (is_array($aliases_res) and count($aliases_res)){?>
 	<div id="swMAAliasesTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>your aliases:</th></tr>
-	<?while ($row=$aliases_res->fetchRow(DB_FETCHMODE_OBJECT)){?>
+	<?foreach($aliases_res as $row){?>
 	<tr><td align="center"><?echo nbsp_if_empty($row->username);?></td></tr>
-	<?}//while
-	$aliases_res->free();?>
+	<?}//while?>
 	</table>
 	</div>
 <?}?>
 
-<?if (!DB::isError($grp_res) and $grp_res->numRows()){?>
+<?if (is_array($acl_res) and count($acl_res)){?>
 	<div id="swMAACLTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>Access-Control-list:</td></tr>
-	<?while ($row=$grp_res->fetchRow(DB_FETCHMODE_OBJECT)){?>
+	<?foreach($acl_res as $row){?>
 	<tr><td align="center"><?echo nbsp_if_empty($row->grp);?></td></tr>
-	<?}//while
-	$grp_res->free();?>
+	<?}//while?>
 	</table>
 	</div>
 <?}?>
 
 <br class="swCleaner"><br>
 
-<?if (isset($usrloc) and is_array($usrloc)){?>
+<?if (is_array($usrloc) and count($usrloc)){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>

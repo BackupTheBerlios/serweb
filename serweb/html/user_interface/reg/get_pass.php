@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.10 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: get_pass.php,v 1.11 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,17 +11,11 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
-		if (!$db = connect_to_db($errors)) break;
+		if (!$data = CData_Layer::create($errors)) break;
 
-		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname' and domain='$config->realm'";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (false === $sip_user = $data->get_sip_user($uname, $config->domain, $errors)) break;
 
-		if (!$res->numRows()) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
-		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
-		$res->free();
-
-		$pre_uid=$row->phplib_id;
+		$pre_uid=$sip_user->phplib_id;
 		$pre_uid_expires=time()+$config->pre_uid_expires;
 
 		$my_sess=new phplib_Session();
@@ -34,7 +28,7 @@ do{
 
 		$mail_body=str_replace("#session#", $my_sess->name."=".$my_sess->id, $config->mail_forgot_pass);
 
-		if (!send_mail($row->email_address, $config->forgot_pass_subj, $mail_body)){
+		if (!send_mail($sip_user->email_address, $config->forgot_pass_subj, $mail_body)){
 			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
 		}
 

@@ -5,7 +5,7 @@
 	unset ($page_attributes['tab_collection']);
 
 	$errors=array();
-	if (isset($username)) $errors[]="Either your username or your password are invalid. Please try again!";
+	if (isset($_POST['username'])) $errors[]="Either your username or your password are invalid. Please try again!";
 
 	print_html_body_begin($page_attributes);
 ?>

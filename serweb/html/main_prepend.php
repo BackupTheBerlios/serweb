@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.2 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: main_prepend.php,v 1.3 2004/04/14 20:51:31 kozlik Exp $
  */ 
 
 //require class defintions
@@ -19,7 +19,8 @@ $domain_config=new CDomain_config();
 //TO DO: load language
 
 //require sql access configuration and table names
-require_once ($_SERWEB["serwebdir"] . "config_sql.php");
+//require_once ($_SERWEB["serwebdir"] . "config_sql.php");
+require_once ($_SERWEB["serwebdir"] . "config_data_layer.php");
 
 //require other configuration
 require_once ($_SERWEB["serwebdir"] . "config.php");
@@ -42,7 +43,14 @@ $serwebLog  = &Log::singleton('file', $config->log_file, 'serweb', array(), PEAR
 require_once ($_SERWEB["serwebdir"] . "functions.php");
 
 //require functions for work with data store
-require_once ($_SERWEB["serwebdir"] . "sql_and_fifo_functions.php");
+//require_once ($_SERWEB["serwebdir"] . "sql_and_fifo_functions.php");
+
+require_once ($_SERWEB["serwebdir"] . "data_layer.php");
+if (file_exists($_SERWEB["serwebdir"] . "data_layer/".basename($_SERVER['PHP_SELF']))){
+	require_once ($_SERWEB["serwebdir"] . "data_layer/".basename($_SERVER['PHP_SELF']));
+}else{
+	require_once ($_SERWEB["serwebdir"] . "data_layer/__std_data_layer.php");
+}
 
 //require page layout
 require_once ($_SERWEB["serwebdir"] . "page.php");

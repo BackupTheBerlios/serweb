@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.11 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: acl.php,v 1.12 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -17,27 +17,15 @@ $grp_val=array();
 $ACL_control=array();
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
 
 	/* get admin ACL control privileges */
-	$q="select priv_value from ".$config->table_admin_privileges.
-		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".
-				" and priv_name='acl_control'";
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) $ACL_control[]=$row->priv_value;
-	$res->free();
+	if (false === $ACL_control = $data->get_admin_ACL_privileges($auth->auth["uname"], $config->domain, $errors)) break;
 
 	/* get access control list of user */
-	$q="select grp from ".$config->table_grp." where domain='".$config->realm."' and username='".$user_id."'";
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) $grp_val[]=$row->grp;
-	$res->free();
+	if (false === $grp_val = $data->get_ACL_of_user($user_id, $config->domain, $errors)) break;
 
 	/* add form elements */
 	foreach ($ACL_control as $row){
@@ -67,15 +55,7 @@ do{
 
 			//if state of checkbox was changed
 			if ($_POST["chk_".$row] != $_POST["hidden_".$row]){
-				if ($_POST["chk_".$row])
-					$q="insert into ".$config->table_grp." (username, domain, grp, last_modified) ".
-						"values ('".$user_id."', '".$config->realm."', '".$row."', now())";
-				else
-					$q="delete from ".$config->table_grp." where ".
-						"domain='".$config->realm."' and username='".$user_id."' and grp='".$row."'";
-
-				$res=$db->query($q);
-				if (DB::isError($res)) {log_errors($res, $errors); break;}
+				if (!$data->update_ACL_of_user($user_id, $config->domain, $row, $_POST["chk_".$row]?'set':'del', $errors)) break;
 			}
 		}
 
@@ -99,7 +79,7 @@ print_html_body_begin($page_attributes);
 
 <h2 class="swTitle">Access control list of user: <?echo $user_id;?></h2>
 
-<?if (count($ACL_control)){?>
+<?if (is_array($ACL_control) and count($ACL_control)){?>
 <div class="swForm">
 <?$f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,38 +13,22 @@ page_open (array("sess" => "phplib_Session",
 				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
-if (isset($_POST['item_edit'])) $item_edit=$_POST['item_edit'];
-elseif (isset($_GET['item_edit'])) $item_edit=$_GET['item_edit'];
-else $item_edit=null;
+set_global('item_edit');
+set_global('attrib_name');
 
-
-function update_items_in_db($item_list, $attrib_name, $default_value, $db, &$errors){
+function update_items_in_db($item_list, $attrib_name, $default_value, $data, &$errors){
 	global $config;
 
-	$q="update ".$config->table_user_preferences_types.
-		" set att_type_spec='".serialize($item_list)."' ".
-			(is_null($default_value)?
-				"":
-				", default_value='".$default_value."'").
-		" where att_name='$attrib_name'";
-
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); return false;}
-	
+	if (!$data->update_att_type_spec($attrib_name, serialize($item_list), $default_value, $errors)) return false;
+		
 	return true;
 }
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	//get attrib from DB
-	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
-			" where att_name='$attrib_name'";
-	$res = $db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-	$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
-	$res->free();
+	if (false === $row = $data->get_attribute($attrib_name, $errors)) break;
 	
 	if ($row->att_rich_type!="list"){
 		//attrib isn't list of items -> nothing to edit -> go back to attributes editing page
@@ -67,7 +51,7 @@ do{
 			}
 		}
 		//update array in DB
-		if (!update_items_in_db($item_list, $attrib_name, null, $db, $errors)) break;
+		if (!update_items_in_db($item_list, $attrib_name, null, $data, $errors)) break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();
@@ -146,7 +130,7 @@ do{
 			$item_list[]=new UP_List_Items($item_label, $item_value);
 
 		//update array in DB
-		if (!update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null, $db, $errors)) break;
+		if (!update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null, $data, $errors)) break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();

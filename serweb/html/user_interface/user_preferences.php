@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.7 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: user_preferences.php,v 1.8 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,50 +15,19 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 $usr_pref = new User_Preferences();
 
-class Cattrib{
-	var $att_name;
-	var $att_value;
-	var $att_rich_type;
-	var $att_type_spec;
-
-	function Cattrib($att_name, $att_value, $att_rich_type, $att_type_spec){
-		$this->att_name=$att_name;
-		$this->att_value=$att_value;
-		$this->att_rich_type=$att_rich_type;
-		$this->att_type_spec=$att_type_spec;
-	}
-}
-
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	$attributes=array();
 
 	//get list of attributes
-	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
-		" order by att_name";
-	$att_res=$db->query($q);
-	if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
-
-	while ($row=$att_res->fetchRow(DB_FETCHMODE_OBJECT)){
-		$attributes[$row->att_name]=new Cattrib($row->att_name, $row->default_value, $row->att_rich_type, $row->att_type_spec);
-	}
-	$att_res->free();
-
+	if (false === $attributes = $data->get_attributes(NULL, $errors)) break;
+	
 	// get attributes values
-	$q="select attribute, value from ".$config->table_user_preferences.
-		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-	$att_res=$db->query($q);
-	if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
-
-	while ($row=$att_res->fetchRow(DB_FETCHMODE_OBJECT)){
-		$attributes[$row->attribute]->att_value = $row->value;
-	}
-	$att_res->free();
+	if (false === $data->get_att_values($auth->auth["uname"], $config->domain, $attributes, $errors)) break;
 
 	// add elements to form object
-
 	foreach($attributes as $att){
 		$usr_pref->form_element($f, $att->att_name, $att->att_value, $att->att_rich_type, $att->att_type_spec);
 	}
@@ -84,12 +53,7 @@ do{
 
 			//if att value is changed
 			if ($HTTP_POST_VARS[$att->att_name] != $HTTP_POST_VARS["_hidden_".$att->att_name]){
-				//insert into DB
-				$q="replace into ".$config->table_user_preferences." (username, domain, attribute, value) ".
-					"values ('".$auth->auth["uname"]."', '".$config->realm."', '".$att->att_name."', '".$HTTP_POST_VARS[$att->att_name]."')";
-
-				$res=$db->query($q);
-				if (DB::isError($res)) {log_errors($res, $errors); break;}
+				if (false === $data->update_attribute_of_user($auth->auth["uname"], $config->domain, $att->att_name, $HTTP_POST_VARS[$att->att_name], $errors)) break;
 			}
 		}
 
@@ -112,7 +76,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
 <?
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 print_html_body_begin($page_attributes);
 ?>
 

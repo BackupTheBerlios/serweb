@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: ser_moni.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,23 +15,19 @@ $perm->check("admin");
 
 $values=array();
 do{
-	if (!$db = connect_to_db($errors)) break;
+	$values=array();
+	$ul_params=array();
 
+	if (!$data = CData_Layer::create($errors)) break;
+	
 	//get values from database
-	$q="select param, lv, av, mv, ad, min_val, max_val, min_inc, max_inc  from ".$config->table_ser_mon_agg;
-	$res=$db->query($q);
-	if (DB::isError($res)) {log_errors($res, $errors); break;}
-
-	//create assoc. array
-	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) {
-		$values[$row->param]=$row;
-
-		//create list of usrloc stats
+	if (false === $values = $data->get_ser_moni_values($errors)) break;
+	
+	//create list of usrloc stats
+	foreach($values as $row){
 		if (substr($row->param, 0, 3) == "ul_" and substr($row->param, -4) == "_reg")
 			$ul_params[]=substr($row->param, 3, -4);
-
-	}//while
-	$res->free();
+	}
 
 }while (false);
 

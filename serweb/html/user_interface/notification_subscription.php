@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.10 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.11 2004/04/14 20:51:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -18,13 +18,10 @@ function remove_from_events($uri){
 }
 
 do{
-	if (!$db = connect_to_db($errors)) break;
+	if (!$data = CData_Layer::create($errors)) break;
 
 	if (isset($_GET['uri']) and isset($_GET['desc'])){
-		$q="insert into ".$config->table_event." (uri, description, username, domain) ".
-			"values ('".$_GET['uri']."', '".$_GET['desc']."', '".$auth->auth["uname"]."' , '".$config->realm."')";
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->subscribe_event($auth->auth["uname"], $config->domain, $_GET['uri'], $_GET['desc'], $errors)) break;
 
         Header("Location: ".$sess->url("notification_subscription.php?kvrk=".uniqID("")));
 		page_close();
@@ -32,10 +29,7 @@ do{
 	}
 
 	if (isset($_GET['dele_id'])){
-		$q="delete from ".$config->table_event.
-			" where username='".$auth->auth["uname"]."' and domain='".$config->realm."'  and id=".$_GET['dele_id'];
-		$res=$db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$data->unsubscribe_event($auth->auth["uname"], $config->domain, $_GET['dele_id'], $errors)) break;
 
         Header("Location: ".$sess->url("notification_subscription.php?kvrk=".uniqID("")));
 		page_close();
@@ -45,41 +39,36 @@ do{
 }while (false);
 
 do{
-	if ($db){
-		$q="select id, uri, description ".
-			"from ".$config->table_event." ".
-			"where username='".$auth->auth["uname"]."' and domain='".$config->realm."'";
-
-		$ev_res=$db->query($q);
-		if (DB::isError($ev_res)) {log_errors($ev_res, $errors); break;}
+	$events=array();
+	if ($data){
+		if (false === $events = $data->get_events($auth->auth["uname"], $config->domain, $errors)) break;
 	}
 
 }while (false);
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($db, $errors);
+$page_attributes['user_name']=$data->get_user_name($errors);
 print_html_body_begin($page_attributes);
 ?>
 
 <h2 class="swTitle">your subscribed events:</h2>
 
-<?if (!DB::isError($ev_res) and $ev_res->numRows()){?>
+<?if (is_array($events) and count($events)){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable swWidthAsTitle">
 	<tr>
 	<th>description</th>
 	<th width="90">&nbsp;</th>
 	</tr>
-	<?while ($row=$ev_res->fetchRow(DB_FETCHMODE_OBJECT)){
+	<?foreach ($events as $row){
 	remove_from_events($row->uri)
 	?>
 	<tr valign="top">
 	<td align="left"><?echo $row->description;?></td>
 	<td align="center"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqid("")."&dele_id=".$row->id);?>">unsubscribe</a></td>
 	</tr>
-	<?}//while
-	$ev_res->free();?>
+	<?}//while?>
 	</table>
 
 <?}else{?>

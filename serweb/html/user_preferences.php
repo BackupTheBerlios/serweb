@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: user_preferences.php,v 1.7 2004/04/14 20:51:31 kozlik Exp $
  */
 
 /*
@@ -45,13 +45,10 @@ class UP_providers{
 		get list of providers from db to varible "items"
 	*/	
 	function get_from_db(){
-		global $config, $errors, $db;
-		
-		$q="select id, name from ".$config->table_providers;
-		$res=$db->query($q); 
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
-		while ($row=$res->fetchRow(DB_FETCHMODE_OBJECT)) $this->items[]=new UP_List_Items($row->name, $row->id);
-		$res->free();
+		global $config, $errors, $data;
+
+		if (false === $providers = $data->get_providers($errors)) return false;
+		$this->items = &$providers;
 	}
 	
 	function get_items(){
