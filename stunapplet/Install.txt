@@ -1,0 +1,141 @@
+*************************************************************************
+				STUN 
+		Simple Traversal of UDP over NAT.
+
+This file contains information about the requirements and procedures
+to use the STUN implementation.
+
+For any bugs or problems please contact Peter Thermos at :
+	pt81@columbia.edu
+
+*************************************************************************
+		REQUIREMENTS
+
+In order to run the code you will need to download and install
+Java Runtime Environment 1.4 or later from 
+	http://java.sun.com/j2se/1.4/download.html
+
+
+If you want to recompile the code then you will need to download
+and install the Java 2 comipler from the same site as mentioned
+above.
+
+		EXECUTION
+
+This implementation includes the STUN server and client that 
+is required by a multimedia application to use in order to detect
+it's NAT settings.
+
+
+[Server options]
+The server provides the following options:
+
+	[-p] Sets the local server port, if the default port is used or undesired
+	     for use.
+
+	[-s] Configures the STUN server to communicate with another STUN server
+	     in order to help respond when a cleint sends a request with the
+	     "change-address" attribute set. In such case the current STUN server
+	     will send another request to the consigurted remote STN server, using the 
+	     "-s" option,  with the "RESPONSE-ADDRESS" set to the client IP address
+	     so the remote STUN server can properly route the response.
+
+	[-r] Set's ythe remote STUN server's port to communicate.
+
+	[-d] Generate debbuging messages.
+
+	[-h] Help, this listing.
+	
+
+[Running The Server]
+	
+	To run the server you need to execute the following command:
+	
+	(Assuming that your runtime environment binaries are
+	in c:\jdk1.4\bin\java.)
+
+	c:\jdk1.4\bin\java STUNd
+
+	You will see a response such as:
+	[local IP] STUN Server listening on port 1221
+
+	The server will start at the default port 1221. 
+	You may specify an alternate port by issuing the -p option at the command line.
+	For example:
+	
+	c:\jdk1.4\bin\java STUNd -p 2000
+	
+	You will see a response such as:
+	[local IP] STUN Server listening on port 2000
+
+
+
+
+[Running The Client]
+The client has two modes of execution:
+
+	a) Automatic discovery: In this mode the client performs various tests
+	   to identify what type of NAT configuration exists.
+
+	b) Options mode: In this mode the controling application can invoke the client
+	   with various options. Some of the options are not required or in some cases
+	   not permited to be send by the client, but they can be used for testing purposes.
+
+	To run the client you need to execute the following command:
+	
+	(Assuming that your runtime environment binaries are
+	in c:\jdk1.4\bin\java.)
+
+	c:\jdk1.4\bin\java STUNClient -a -s127.0.0.1 -p1221
+
+	Where -a incidates "automatic discovery", -s indicates the destination IP address 
+	of the STUN server and -p1221 is its port.
+
+
+[Client options]
+
+
+	[-d] Turn Debugging messages on.
+	[-a] Automates the discovery of NAT's based on the STUN proposal algorithm.
+	[-h] Help, this listing.
+	[-x] Turn on REPORT MODE. Additional messages are printed on stdout.
+	[-n] Number of times to resend a STUN message to a STUN server.
+     	     The Default is 9 times.
+	[-f] Set the FLAGS in a STUN message
+     	     The available flags are:
+    		1 - set the change-IP flag
+    		2 - set the change-port flag
+    		3 - Discard
+    		4 - set change port and IP
+	
+	Set the type of flag in a STUN message. Available coices are:
+	[-m]    MAPPED-ADDRESS
+	[-r]    RESPONSE-ADDRESS     
+	[-o]    SOURCE-ADDRESS 
+    	
+	These flags require three parameters 
+    		1) port - the remote port to send the STUN response
+    		2) family - The address familiy 1 for IPv4, 2 for IPv6
+    		3) IP address - the remote IP address to send the STUN response
+    
+	No spaces are required in between  when setting these parameters, only a comma 
+    	for example, -r 1221,1,127.0.0.1  where 
+	1221      = port 
+ 	1 	  = family 
+	127.0.0.1 = IP
+
+
+When you run the client it will print various responses based on the options that were
+supplied when it was invoked. The typical output from a STUN request is as follows:
+
+		<IP address>[space]<port>[space]<NAT Type (*) >
+         
+ 
+	(*) Where NAT type is substitued by:
+          	FC = full cone
+      	  	RC = Restricted Cone
+	      	PR = Port restricted cone
+          	SN = Symmetric NAT
+		NN = Not behind NAT
+		NU = No UDP accesibility
+
