@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.13 2004/11/15 17:00:45 kozlik Exp $
+$Id: INSTALL,v 1.14 2005/01/31 09:12:11 kozlik Exp $
 
 serweb - Installation
 
@@ -12,6 +12,15 @@ serweb - Installation
 		see http://pear.php.net/manual/en/installation.getting.php for details
   - MySQL 4.0 (we use UNIONs)
   - running SER with MySQL support
+
+  Important:
+  ----------
+  
+  	Please keep in mind that using latest CVS version isn't recomended
+  	and it is on your own risc. This version is developer and may be unstable.
+  	For get latest stable version use this command:
+  	
+  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -d serweb -r rel_0_8_12 iptel
 
 
   Quick Install:
