@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.2 2004/09/22 11:08:32 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {
@@ -33,7 +33,7 @@ class CData_Layer_get_usrloc {
 		$i=0;	
 		foreach($out_arr as $val){
 			if (!ereg("^[[:space:]]*$", $val)){
-				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs)){
+				if (ereg("<([^>]*)>;q=([0-9.]*);expires=(-?[0-9]*)", $val, $regs)){
 
 					$expires=date('Y-m-d H:i',time()+$regs[3]);
 			
