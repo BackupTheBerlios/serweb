@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.43 2004/04/23 11:55:05 kozlik Exp $
+ * $Id: config.php,v 1.44 2004/04/23 12:16:18 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -24,7 +24,7 @@
 
 		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
 			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
-		$this->html_doctype="strict";
+		$config->html_doctype="strict";
 		
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
