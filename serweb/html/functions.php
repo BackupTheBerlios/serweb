@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.51 2004/12/21 19:40:05 kozlik Exp $
+ * $Id: functions.php,v 1.52 2005/01/30 20:52:20 kozlik Exp $
  */
 
 
@@ -512,32 +512,27 @@ class Cfusers{
 		                             "name"=>"usrnm",
 									 "size"=>11,
 									 "maxlength"=>50,
-		                             "value"=>$this->usrnm,
-									 "extrahtml"=>"style='width:120px;'"));
+		                             "value"=>$this->usrnm));
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"fname",
 									 "size"=>11,
 									 "maxlength"=>25,
-		                             "value"=>$this->fname,
-									 "extrahtml"=>"style='width:120px;'"));
+		                             "value"=>$this->fname));
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"lname",
 									 "size"=>11,
 									 "maxlength"=>45,
-		                             "value"=>$this->lname,
-									 "extrahtml"=>"style='width:120px;'"));
+		                             "value"=>$this->lname));
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"email",
 									 "size"=>11,
 									 "maxlength"=>50,
-		                             "value"=>$this->email,
-									 "extrahtml"=>"style='width:120px;'"));
+		                             "value"=>$this->email));
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"domain",
 									 "size"=>11,
 									 "maxlength"=>128,
-	        	                     "value"=>$this->domain,
-									 "extrahtml"=>"style='width:120px;'"));
+	        	                     "value"=>$this->domain));
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "value"=>1,
 									 "checked"=>$this->onlineonly,
@@ -549,7 +544,7 @@ class Cfusers{
 		
 		$this->f->add_element(array("type"=>"submit",
 		                             "name"=>"okey",
-		                             "src"=>$config->img_src_path."butons/b_find.gif",
+		                             "src"=>$config->img_src_path."buttons/btn_find.gif",
 									 "extrahtml"=>"alt='find'"));
 	
 	}
