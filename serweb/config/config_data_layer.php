@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.2 2004/12/10 17:52:01 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.3 2005/01/13 16:23:47 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
@@ -89,6 +89,7 @@
 		$config->data_sql->table_location="location";
 		$config->data_sql->table_missed_calls="missed_calls";
 		$config->data_sql->table_accounting="acc";
+		$config->data_sql->table_cdr="cdr";
 		$config->data_sql->table_phonebook="phonebook";
 		$config->data_sql->table_event="event";
 		$config->data_sql->table_netgeo_cache="netgeo_cache";

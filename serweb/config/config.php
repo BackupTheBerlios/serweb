@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.7 2004/12/21 19:42:18 kozlik Exp $
+ * $Id: config.php,v 1.8 2005/01/13 16:23:47 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -339,6 +339,11 @@
 		/* accounting TAB                                              */
 		/* ------------------------------------------------------------*/
 		
+		/* Leave true to display corelated entries from cdr instead of 
+		   raw entries from acc table
+		*/
+		$config->acc_use_cdr_table = false;
+
 		/* display outgoing calls at accounting TAB 
 		*/
 		$config->acc_display_outgoing_calls = true;
@@ -349,7 +354,9 @@
 		*/
 		$config->acc_display_incoming_calls = false;
 
-		/* display missed callas at accounting TAB */
+		/* display missed calls at accounting TAB - only when 
+		   $config->acc_use_cdr_table is false 
+  		 */
 		$config->acc_display_missed_calls = false;
 
 		/* ------------------------------------------------------------*/

@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: accounting.php,v 1.25 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: accounting.php,v 1.26 2005/01/13 16:23:47 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('check_admin_perms_to_user', 'set_timezone', 'get_acc_entries', 'get_user_real_name');
+$_data_layer_required_methods=array('check_admin_perms_to_user', 'set_timezone', 'get_acc_entries', 'get_cdr_entries', 'get_user_real_name');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Auth",
@@ -40,7 +40,12 @@ do{
 
 	$data->set_act_row($sess_acc_act_row);
 
-	if (false === $acc_res=$data->get_acc_entries($user_id, $errors)) break;
+	if ($config->acc_use_cdr_table){
+		if (false === $acc_res=$data->get_cdr_entries($user_id, array(), $errors)) break;
+	}
+	else {
+		if (false === $acc_res=$data->get_acc_entries($user_id, array(), $errors)) break;
+	}
 
 }while (false);
 
