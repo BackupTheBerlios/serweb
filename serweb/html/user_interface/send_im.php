@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.8 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: send_im.php,v 1.9 2003/04/04 03:09:04 jiri Exp $
  */
 
 require "prepend.php";
@@ -63,13 +63,15 @@ do{
 		/* Process data */           // Data ok; 
 
 		/* construct FIFO command */
-		$fifo_cmd=":t_uac_from:".$config->reply_fifo_filename."\n".
+		$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
 		    "MESSAGE\n".
-			"sip:".$auth->auth["uname"]."@".$config->default_domain."\n".
 			$sip_address."\n".
+			".\n".
+			"From: sip:".$auth->auth["uname"]."@".$config->default_domain."\n".
+			"To: <".$sip_address.">\n".
 		    "p-version: ".$config->psignature."\n".
-		    "Contact: ".$config->web_contact."\n".
-		    "Content-Type: text/plain; charset=UTF-8\n\n".
+		    "Contact: <".$config->web_contact.">\n".
+		    "Content-Type: text/plain; charset=UTF-8\n.\n".
 		    str_Replace("\n.\n","\n. \n",$instant_message)."\n.\n\n";
 
 
