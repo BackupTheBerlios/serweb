@@ -1,28 +1,25 @@
 <?
 /*
- * $Id: index.php,v 1.15 2004/08/09 11:37:12 kozlik Exp $
+ * $Id: index.php,v 1.16 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_time_zones',  'is_user_exists', 'add_user_to_subscriber');
+$_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session"));
 
 do{
 	$f = new form;                   // create a form object
 
 	$opt=$data->get_time_zones($errors);
-	$options[]=array("label"=>"--- please select your timezone ---","value"=>"");
+	$options[]=array("label"=>$lang_str['choose_timezone'],"value"=>"");
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
 
 	$f->add_element(array("type"=>"select",
 								 "name"=>"timezone",
 								 "options"=>$options,
 								 "size"=>1,
-	                             "valid_e"=>"select your timezone please",
+	                             "valid_e"=>$lang_str['fe_not_choosed_timezone'],
 								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"uname",
@@ -30,9 +27,9 @@ do{
 								 "maxlength"=>50,
 	                             "value"=>"",
 								 "minlength"=>1,
-								 "length_e"=>"you must fill username",
+								 "length_e"=>$lang_str['fe_not_filled_username'],
 	                             "valid_regex"=>$reg_validate_username,
-	                             "valid_e"=>"username does not follow suggested conventions",
+	                             "valid_e"=>$lang_str['fe_uname_not_follow_conventions'],
 								 "extrahtml"=>"autocomplete'off' style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"passwd",
@@ -41,7 +38,7 @@ do{
 								 "maxlength"=>25,
 								 "pass"=>1,
 								 "minlength"=>1,
-								 "length_e"=>"you must fill password",
+								 "length_e"=>$lang_str['fe_not_filled_password'],
 								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"passwd_r",
@@ -56,7 +53,7 @@ do{
 								 "maxlength"=>25,
 	                             "value"=>"",
 								 "minlength"=>1,
-								 "length_e"=>"you must fill your first name",
+								 "length_e"=>$lang_str['fe_not_filled_your_fname'],
 								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"lname",
@@ -64,7 +61,7 @@ do{
 								 "maxlength"=>45,
 	                             "value"=>"",
 								 "minlength"=>1,
-								 "length_e"=>"you must fill your last name",
+								 "length_e"=>$lang_str['fe_not_filled_your_lname'],
 								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"email",
@@ -72,7 +69,7 @@ do{
 								 "maxlength"=>50,
 	                             "value"=>"",
 	                             "valid_regex"=>$reg_validate_email,
-	                             "valid_e"=>"not valid email address",
+	                             "valid_e"=>$lang_str['fe_not_valid_email'],
 								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"phone",
@@ -104,11 +101,11 @@ do{
 		}
 
 		if ($passwd and ($passwd != $passwd_r)){
-			$errors[]="passwords not match"; break;
+			$errors[]=$lang_str['fe_passwords_not_match']; break;
 		}
 
 		if (!$accept){
-			$errors[]="You don't accept terms and conditions"; break;
+			$errors[]=$lang_str['fe_not_accepted_terms']; break;
 		}
 
 			/* Process data */           // Data ok;
@@ -116,7 +113,7 @@ do{
 
 		$user_exists=$data->is_user_exists($uname, $config->default_domain, $errors);
 		if ($errors) break;
-		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
+		if ($user_exists) {$errors[]=$lang_str['fe_uname_already_choosen_1']." '$uname' ".$lang_str['fe_uname_already_choosen_2']; break;}
 
 		$confirm=md5(uniqid(rand()));
 
@@ -128,7 +125,7 @@ do{
 		$mail_body=str_replace("#sip_address#", $sip_address, $mail_body);
 
 		if (!send_mail($email, $config->register_subj, $mail_body)){
-			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
+			$errors[]=$lang_str['err_sending_mail']; break;
 		}
 
         Header("Location: ".$sess->url("finish.php?sip_address=".RawURLEncode($sip_address)));
@@ -147,93 +144,32 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form', 'form_name'=>'login_form'), 
+		array('after'=>"
+			if (f.passwd.value!=f.passwd_r.value){
+				alert('".addslashes($lang_str['fe_passwords_not_match'])."');
+				f.passwd.focus();
+				return (false);
+			}
+			
+			if (!f.accept.checked){
+				alert('".addslashes($lang_str['fe_not_accepted_terms'])."');
+				f.accept.focus();
+				return (false);
+			}
+		"));
+$smarty->assign('domain',$config->domain);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
+
+$smarty->display('ur_index.tpl');
+
 ?>
-
-<p>To register, please fill out the form below and click the
-submit button at the bottom of the page. An email message will be sent to you
-confirming your registration. Please contact
-<A HREF=mailto:<?echo $config->regmail;?>><?echo $config->regmail;?></A>
-if you have any questions concerning registration and our free trial SIP services.</p>
-<br>
-
-<div class="swForm swRegForm">
-<?$f->start("form");				// Start displaying form?>
-
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="fname">first name:</label></td>
-	<td ><?$f->show_element("fname");?></td>
-	</tr>
-	<tr>
-	<td><label for="lname">last name:</label></td>
-	<td><?$f->show_element("lname");?></td>
-	</tr>
-	<tr>
-	<td><label for="email">email:</label></td>
-	<td><?$f->show_element("email");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td><div class="swRegFormDesc">Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)</div></td>
-	</tr>
-	<tr>
-	<td><label for="phone">phone:</label></td>
-	<td><?$f->show_element("phone");?></td>
-	</tr>
-	<tr>
-	<td><label for="timezone">your timezone:</label></td>
-	<td><?$f->show_element("timezone");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td><div class="swRegFormDesc">This is your PSTN phone number where you can be reached.</div></td>
-	</tr>
-	<tr>
-	<td><label for="uname">pick your user name:</label></td>
-	<td><?$f->show_element("uname");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td><div class="swRegFormDesc">Your SIP address will be username@<?echo $config->default_domain;?>. Indicate only the username part of the address. It may be either a numerical address starting with '8' (e.g., "8910") or a lower-case alphanumerical address starting with an alphabetical character (e.g., john.doe01). Do not forget your username -- you will need it to configure your phone!</div></td>
-	</tr>
-	<tr>
-	<td><label for="passwd">pick password:</label></td>
-	<td><?$f->show_element("passwd");?></td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td><div class="swRegFormDesc">Do not forget your password -- you will need it to configure your phone!</div></td>
-	</tr>
-	<tr>
-	<td><label for="passwd_r">confirmation password:</label></td>
-	<td><?$f->show_element("passwd_r");?></td>
-	</tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr><td colspan="2" class="swHorizontalForm"><label for="terms">terms and conditions:</label></td></tr>
-	<tr><td colspan="2"><?$f->show_element("terms");?></td></tr>
-	<tr><td colspan="2" class="swHorizontalForm"><?$f->show_element("accept");?> <label for="accept" style="display:inline;">I accept</label></td></tr>
-	<tr><td colspan="2" align="right"><?$f->show_element("okey");?>&nbsp;&nbsp;&nbsp;</td></tr>
-	</table>
-<?$f->finish("
-	if (f.passwd.value!=f.passwd_r.value){
-		alert('passwords not match');
-		f.passwd.focus();
-		return (false);
-	}
-
-	if (!f.accept.checked){
-		alert('You don\'t accept terms and conditions');
-		f.accept.focus();
-		return (false);
-	}
-");					// Finish form?>
-</div>
-
-<br>
-<hr>
-<div align="center">Back to <a href="<?$sess->purl("../index.php");?>">login form</a>.</div>
-<hr>
-
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

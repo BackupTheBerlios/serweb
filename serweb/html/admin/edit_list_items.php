@@ -1,18 +1,17 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('update_att_type_spec', 'get_attribute');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
 require "../user_preferences.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
 set_global('item_edit');
@@ -96,7 +95,7 @@ do{
 								 "size"=>16,
 								 "maxlength"=>255,
 								 "minlength"=>1,
-								 "length_e"=>"you must fill attribute name",
+								 "length_e"=>$lang_str['fe_not_filled_item_label'],
 								 "extrahtml"=>"style='width:120px;'"));
 
 	$f->add_element(array("type"=>"text",
@@ -105,7 +104,7 @@ do{
 								 "size"=>16,
 								 "maxlength"=>255,
 								 "minlength"=>1,
-								 "length_e"=>"you must fill item value",
+								 "length_e"=>$lang_str['fe_not_filled_item_value'],
 								 "extrahtml"=>"style='width:120px;'"));
 
 	$f->add_element(array("type"=>"checkbox",
@@ -177,6 +176,8 @@ $smarty->assign_by_ref('parameters', $page_attributes);
 $smarty->assign('item_list', format_items_for_output($item_list, $item_edit, $attrib_name));
 
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_edit_list_items.tpl');
 ?>

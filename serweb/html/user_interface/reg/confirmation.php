@@ -1,10 +1,12 @@
 <?
 /*
- * $Id: confirmation.php,v 1.23 2004/08/09 11:37:12 kozlik Exp $
+ * $Id: confirmation.php,v 1.24 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('move_user_from_pending_to_subscriber', 'get_new_alias_number', 'add_new_alias',
 									'del_user_from_pending', 'del_user_from_subscriber',);
+
+$_phplib_page_open = array("sess" => "phplib_Session");
 
 include "reg_jab.php";
 require "prepend.php";
@@ -20,8 +22,6 @@ do{
 
 		if (false === $user_id=$data->move_user_from_pending_to_subscriber($nr, $errors)) break;
 		$remove_from_subscriber=true;
-		
-///		$sip_address="sip:".$user_id."@".$config->domain;
 		
 		// generate alias number 
 		if (false === $alias=$data->get_new_alias_number($user_id->domain, $errors)) break;
@@ -52,28 +52,25 @@ do{
 
 if ($remove_from_subscriber) $data->del_user_from_subscriber($nr, $errors);
 
+if ($ok>=2 && $ok<10)
+	error_log("SERWEB:jabber registration failed: <".$user_id->uname."> [$ok]\n");
 
 /* ----------------------- HTML begin ---------------------- */ 
 print_html_head();
 print_html_body_begin($page_attributes);
 
-	if ($ok==1){
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign('domain',$config->domain);
+$smarty->assign('result',$ok);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
+
+$smarty->display('ur_confirmation.tpl');
 ?>
-<p>Congratulations! Your <?echo $config->realm;?> account was set up!</p>
-<? }elseif ($ok>=2 && $ok<10) {
-error_log("SERWEB:jabber registration failed: <".$user_id->uname."> [$ok]\n");?>
-<p>Your <?echo $config->realm;?> account was set up!<br><b>But your <?echo $config->realm;?> Jabber Gateway registration failed-
-<? echo "$ok"; ?>
-</b><br>Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</p>
-<? }elseif ($errors) {?>
-<p>We regret but your <?echo $config->realm;?> confirmation attempt failed.<br>
-Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</p>
-<?}?>
-
-<br>
-<hr>
-<div align="center">Back to <a href="../index.php">login form</a>.</div>
-<hr>
-
 <?print_html_body_end();?>
 </html>
+<?page_close();?>
+

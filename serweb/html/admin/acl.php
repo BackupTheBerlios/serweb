@@ -1,18 +1,17 @@
 <?
 /*
- * $Id: acl.php,v 1.13 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: acl.php,v 1.14 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('check_admin_perms_to_user', 'get_admin_acl_privileges', 
 		'get_acl_of_user', 'update_acl_of_user');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
 $f = new form;                   // create a form object
@@ -23,12 +22,12 @@ do{
 	if (false !== $uid = get_userauth_from_get_param('u')) {
 		if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $uid, $errors))) break;
 		if (!$pp){
-			$errors[]="You can't manage user '".$uid->uname."' this user is from different domain";
+			$errors[]=$lang_str['err_admin_can_not_manage_user_1']." '".$uid->uname."' ".$lang_str['err_admin_can_not_manage_user_2'];
 			break;
 		}
 	}
 	else {
-		$errors[]="unknown user"; break;
+		$errors[]=$lang_str['err_unknown_user']; break;
 	}
 	
 	/* get admin ACL control privileges */
@@ -99,6 +98,8 @@ $smarty->assign_by_ref('ACL_control', $ACL_control);
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
 
 $smarty->assign('uname', $uid->uname);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_acl.tpl');
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_vsilo.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.delete_user_vsilo.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
  */
 
 class CData_Layer_delete_user_vsilo {
@@ -15,8 +15,8 @@ class CData_Layer_delete_user_vsilo {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-		if ($config->users_indexed_by=='uuid') $q="delete from ".$config->data_sql->table_voice_silo." where r_uri like 'sip:".$user->uname."@".$user->domain."%'";
-		else $q="delete from ".$config->data_sql->table_voice_silo." where uuid='".$user->uuid."'";
+		if ($config->users_indexed_by=='uuid') $q="delete from ".$config->data_sql->table_voice_silo." where uuid='".$user->uuid."'";
+		else $q="delete from ".$config->data_sql->table_voice_silo." where r_uri like 'sip:".$user->uname."@".$user->domain."%'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

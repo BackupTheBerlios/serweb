@@ -1,13 +1,11 @@
 <?
 /*
- * $Id: logout.php,v 1.4 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: logout.php,v 1.5 2004/08/10 17:33:50 kozlik Exp $
  */
 
+$_phplib_page_open = array("sess" => "phplib_Session");
+
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session"));
 
 $sess->unregister("auth");
 $sess->unregister("sess_admin");

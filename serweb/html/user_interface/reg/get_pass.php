@@ -1,15 +1,12 @@
 <?
 /*
- * $Id: get_pass.php,v 1.12 2004/08/09 11:37:12 kozlik Exp $
+ * $Id: get_pass.php,v 1.13 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_sip_user');
+$_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($_POST['okey_x'])){								// Is there data to process?
@@ -64,34 +61,18 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
+
+$page_attributes['errors']=&$errors;
+$page_attributes['message']=&$message;
+
+$smarty->assign_by_ref('parameters', $page_attributes);
+$smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form', 'form_name'=>'login_form'), array());
+$smarty->assign('domain',$config->domain);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
+
+$smarty->display('ur_get_pass.tpl');
 ?>
-
-
-<div class="swForgotPassw">
-	<h2><font face="Arial" color="#000000">Forgot Password?</font></h2>
-	If you have forgotten your password, please enter your username in the form below.
-	An email containing your password will then be sent to the email-address you have
-	registered with!
-</div>
-
-<hr size=1>
-
-<div class="swForm swHorizontalForm">
-<?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0" align="center"><tr>
-	<td><label for="uname">Username:</label></td>
-	<td><?$f->show_element("uname");?></td>
-	<td><?$f->show_element("okey");?></td>
-	</tr></table>
-<?$f->finish();					// Finish form?>
-</div>
-
-<hr size=1>
-
-<div align="center">Back to <a href="<?$sess->purl("../index.php");?>">login form</a>.</div>
-
-
-<br>
 <?print_html_body_end();?>
 </html>
 <?page_close();?>

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_user_preferences.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: a_user_preferences.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -7,15 +7,15 @@
 {$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="att_name">attribute name:</label></td>
+	<td><label for="att_name">{$lang_str.ff_att_name}:</label></td>
 	<td>{$form.att_name}</td>
 	</tr>
 	<tr>
-	<td><label for="att_rich_type">attribute type:</label></td>
+	<td><label for="att_rich_type">{$lang_str.ff_att_type}:</label></td>
 	<td>{$form.att_rich_type}</td>
 	</tr>
 	<tr>
-	<td><label for="default_value">default value:</label></td>
+	<td><label for="default_value">{$lang_str.ff_att_default_value}:</label></td>
 	<td>{$form.default_value}</td>
 	</tr>
 	<tr>
@@ -36,9 +36,9 @@
 	{if $smarty.foreach.attributes.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>attribute name</th>
-	<th>attribute type</th>
-	<th>default value</th>
+	<th>{$lang_str.th_att_name}</th>
+	<th>{$lang_str.th_att_type}</th>
+	<th>{$lang_str.th_att_default_value}</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	</tr>
@@ -48,8 +48,8 @@
 	<td align="left">{$row.att_name|empty2nbsp}</td>
 	<td align="left">{$row.att_type|empty2nbsp}</td>
 	<td align="left">{$row.def_value|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_edit}">edit</a></td>
-	<td align="center"><a href="{$row.url_dele}">delete</a></td>
+	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.attributes.last}
 	</table>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.1 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -19,11 +19,13 @@
 /* ------------------------------------------------------------*/
 
 $lang_str['user_management'] = 					"user management";
+$lang_str['admin_interface'] = 					"admin interface";
 $lang_str['user'] = 							"user";
 $lang_str['from'] = 							"from";
 $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"edit";
+$lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_back_to_main'] = 					"back to main page";
 $lang_str['l_back'] = 							"back";
@@ -32,6 +34,9 @@ $lang_str['status_nonlocal'] = 					"non-local";
 $lang_str['status_nonexists'] = 				"non-existent";
 $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
+$lang_str['search_filter'] = 					"filter";
+$lang_str['showed_users'] = 					"Showed users";
+$lang_str['no_users_found'] = 					"No users found";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -40,6 +45,8 @@ $lang_str['status_offline'] = 					"off line";
 $lang_str['fe_not_valid_email'] =	 			"not valid email address";
 $lang_str['fe_not_valid_sip'] = 				"not valid sip address";
 $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";
+$lang_str['fe_passwords_not_match'] =			"passwords not match";
+$lang_str['fe_not_filled_username'] = 			"You must fill username";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -48,6 +55,10 @@ $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";
 $lang_str['ff_first_name'] = 					"first name";
 $lang_str['ff_last_name'] = 					"last name";
 $lang_str['ff_sip_address'] = 					"sip address";
+$lang_str['ff_your_timezone'] = 				"your timezone";
+$lang_str['ff_username'] = 						"username";
+$lang_str['ff_email'] = 						"email";
+$lang_str['ff_show_online_only'] = 				"show on-line users only";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -60,18 +71,19 @@ $lang_str['th_status'] = 						"status";
 $lang_str['th_timezone'] = 						"timezone";
 $lang_str['th_calling_subscriber'] = 			"calling subscriber";
 $lang_str['th_time'] = 							"time";
+$lang_str['th_username'] = 						"username";
+$lang_str['th_email'] = 						"email";
 
 /* ------------------------------------------------------------*/
 /*      login messages                                         */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_not_filled_username'] = 			"You must fill username";
 $lang_str['bad_username'] = 					"Bad username or password";
 $lang_str['msg_logout_s'] = 					"Loged out";
 $lang_str['msg_logout_l'] = 					"You have loged out. To login again, type your username and password bellow";
 $lang_str['userlogin'] = 						"Userlogin";
+$lang_str['adminlogin'] = 						"Adminlogin";
 $lang_str['enter_username_and_passw'] = 		"Please enter your username and password";
-$lang_str['ff_username'] = 						"Username";
 $lang_str['ff_password'] = 						"Password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
 $lang_str['l_subscribe'] = 						"Subscribe!";
@@ -80,7 +92,6 @@ $lang_str['l_subscribe'] = 						"Subscribe!";
 /*      my account                                             */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['msg_changes_saved_s'] = 				"Changes saved";
 $lang_str['msg_changes_saved_l'] = 				"Your changes have been saved";
 $lang_str['msg_loc_contact_deleted_s'] = 		"Contact deleted";
@@ -90,7 +101,6 @@ $lang_str['msg_loc_contact_added_l'] = 			"Your contact have been added";
 $lang_str['ff_your_email'] = 					"your email";
 $lang_str['ff_fwd_to_voicemail'] = 				"forwarding to voicemail";
 $lang_str['ff_allow_lookup_for_me'] = 			"allow find me by other users";
-$lang_str['ff_your_timezone'] = 				"your timezone";
 $lang_str['ff_your_password'] = 				"your password";
 $lang_str['ff_retype_password'] = 				"retype password";
 $lang_str['your_aliases'] = 					"your aliases";
@@ -124,7 +134,6 @@ $lang_str['l_find_user'] = 						"find user";
 
 $lang_str['find_user'] = 						"Find user";
 $lang_str['ff_username'] = 						"user name";
-$lang_str['ff_show_online_only'] = 				"show on-line users only";
 $lang_str['l_add_to_phonebook'] = 				"add to phonebook";
 $lang_str['no_users_found'] = 					"No users found";
 $lang_str['l_back_to_phonebook'] = 				"back to phonebook";
@@ -238,5 +247,163 @@ $lang_str['th_caller_uri'] = 					"caller uri";
 $lang_str['th_action'] = 						"action";
 $lang_str['no_caller_screenings_defined'] = 	"No caller screenings defined";
 $lang_str['err_screening_already_exists'] = 	"Record with this caller uri already exists";
+
+/* ------------------------------------------------------------*/
+/*      registration                                           */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_not_accepted_terms'] = 			"You don't accept terms and conditions";
+$lang_str['choose_timezone'] = 					"--- please select your timezone ---";
+$lang_str['fe_not_choosed_timezone'] = 			"select your timezone please";
+$lang_str['fe_uname_not_follow_conventions'] = 	"username does not follow suggested conventions";
+$lang_str['fe_not_filled_password'] = 			"you must fill password";
+$lang_str['fe_not_filled_your_fname'] = 		"you must fill your first name";
+$lang_str['fe_not_filled_your_lname'] = 		"you must fill your last name";
+$lang_str['fe_uname_already_choosen_1'] = 		"Sorry, the user name";
+$lang_str['fe_uname_already_choosen_2'] = 		"has already been chosen. Try again";
+$lang_str['err_sending_mail'] = 				"Sorry, there was an error when sending mail. Please try again later";
+$lang_str['registration_introduction'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> if you have any questions concerning registration and our free trial SIP services.";
+$lang_str['reg_email_desc'] = 					"Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)";
+$lang_str['ff_phone'] = 						"phone";
+$lang_str['reg_phone_desc'] = 					"This is your PSTN phone number where you can be reached.";
+$lang_str['ff_pick_username'] = 				"pick your user name";
+$lang_str['reg_username_desc'] = 				"Your SIP address will be username@".$config->domain.". Indicate only the username part of the address. It may be either a numerical address starting with '8' (e.g., '8910') or a lower-case alphanumerical address starting with an alphabetical character (e.g., john.doe01). Do not forget your username -- you will need it to configure your phone!";
+$lang_str['ff_pick_password'] = 				"pick password";
+$lang_str['reg_password_desc'] = 				"Do not forget your password -- you will need it to configure your phone!";
+$lang_str['ff_confirm_password'] = 				"confirmation password";
+$lang_str['ff_terms_and_conditions'] = 			"terms and conditions";
+$lang_str['ff_i_accept'] = 						"I accept";
+$lang_str['l_back_to_loginform'] = 				"Back to login form";
+
+/* ------------------------------------------------------------*/
+/*      registration - finished                                */
+/* ------------------------------------------------------------*/
+
+$lang_str['reg_finish_thanks'] = 				"Thank you for registering with ".$config->domain;
+$lang_str['reg_finish_app_forwarded'] = 		"Your application was forwarded for approval.";
+$lang_str['reg_finish_confirm_msg'] = 			"Expect a confirmation message shortly.";
+$lang_str['reg_finish_sip_address'] = 			"We are reserving the following SIP address for you:";
+$lang_str['reg_finish_questions'] = 			"If you have any further questions please feel free to send";
+$lang_str['reg_finish_infomail'] = 				"an email to <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+
+/* ------------------------------------------------------------*/
+/*      registration - confirmation                            */
+/* ------------------------------------------------------------*/
+
+$lang_str['reg_conf_congratulations'] = 		"Congratulations! Your ".$config->domain." account was set up!";
+$lang_str['reg_conf_set_up'] = 					"Your ".$config->domain." account was set up!";
+$lang_str['reg_conf_jabber_failed'] = 			"But your ".$config->domain." Jabber Gateway registration failed.";
+$lang_str['reg_conf_contact_infomail'] = 		"Please contact <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> for further assistance.";
+$lang_str['reg_conf_failed'] = 					"We regret but your ".$config->domain." confirmation attempt failed.";
+
+/* ------------------------------------------------------------*/
+/*      registration - forgot password                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['forgot_pass_head'] = 				"Forgot Password?";
+$lang_str['forgot_pass_introduction'] = 		"If you have forgotten your password, please enter your username in the form below. An email containing your password will then be sent to the email-address you have registered with!";
+
+/* ------------------------------------------------------------*/
+/*      admin - users management                               */
+/* ------------------------------------------------------------*/
+
+$lang_str['err_admin_can_not_delete_user_1'] = 	"You can't delete user";
+$lang_str['err_admin_can_not_delete_user_2'] = 	"this user is from different domain";
+$lang_str['msg_acl_updated_s'] = 				"ACL updated";
+$lang_str['msg_acl_updated_l'] = 				"Access control list of user has been updated";
+$lang_str['msg_user_deleted_s'] = 				"User deleted";
+$lang_str['msg_user_deleted_l1'] = 				"User";
+$lang_str['msg_user_deleted_l2'] = 				"has been deleted";
+$lang_str['th_phone'] = 						"phone";
+$lang_str['l_acl'] = 							"ACL";
+$lang_str['l_account'] = 						"account";
+$lang_str['l_accounting'] = 					"accounting";
+
+/* ------------------------------------------------------------*/
+/*      admin - ACL, aliases                                   */
+/* ------------------------------------------------------------*/
+
+$lang_str['err_admin_can_not_manage_user_1'] = 	"You can't manage user";
+$lang_str['err_admin_can_not_manage_user_2'] = 	"this user is from different domain";
+$lang_str['err_unknown_user'] = 				"unknown user";
+$lang_str['access_control_list_of_user'] = 		"Access control list of user";
+$lang_str['have_not_privileges_to_acl'] = 		"You haven't any privileges to control ACL";
+$lang_str['err_alias_already_exists_1'] = 		"The alias:";
+$lang_str['err_alias_already_exists_2'] = 		"already exists";
+$lang_str['msg_alias_deleted_s'] = 				"Alias Deleted";
+$lang_str['msg_alias_deleted_l'] = 				"The Alias of user has been deleted";
+$lang_str['msg_alias_updated_s'] = 				"Alias Updated";
+$lang_str['msg_alias_updated_l'] = 				"Your changes have been saved";
+$lang_str['msg_alias_added_s'] = 				"Alias Added";
+$lang_str['msg_alias_added_l'] = 				"The Alias has been added to user";
+$lang_str['change_aliases_of_user'] = 			"Change aliases of user";
+$lang_str['ff_alias'] = 						"Alias";
+$lang_str['th_alias'] = 						"alias";
+$lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
+$lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";
+
+/* ------------------------------------------------------------*/
+/*      admin privileges                                       */
+/* ------------------------------------------------------------*/
+
+$lang_str['admin_privileges_of'] = 				"Admin privileges of";
+$lang_str['admin_competence'] = 				"admin competence";
+$lang_str['ff_is_admin'] = 						"is admin";
+$lang_str['ff_change_privileges'] = 			"changes privileges of admins";
+$lang_str['acl_control'] = 						"ACL control";
+$lang_str['msg_privileges_updated_s'] = 		"Privileges updated";
+$lang_str['msg_privileges_updated_l'] = 		"The privileges of user has been updated";
+$lang_str['list_of_users'] = 					"List of users";
+$lang_str['th_domain'] = 						"domain";
+$lang_str['l_change_privileges'] = 				"change privileges";
+$lang_str['ff_domain'] = 						"domain";
+$lang_str['ff_show_admins_only'] = 				"show admins only";
+
+/* ------------------------------------------------------------*/
+/*      server minitoring                                      */
+/* ------------------------------------------------------------*/
+
+$lang_str['ser_moni_current'] = 				"current";
+$lang_str['ser_moni_average'] = 				"average";
+$lang_str['ser_moni_waiting_cur'] = 			"waiting current";
+$lang_str['ser_moni_waiting_avg'] = 			"waiting average";
+$lang_str['ser_moni_total_cur'] = 				"total current";
+$lang_str['ser_moni_total_avg'] = 				"total average";
+$lang_str['ser_moni_local_cur'] = 				"local current";
+$lang_str['ser_moni_local_avg'] = 				"local average";
+$lang_str['ser_moni_replies_cur'] = 			"replied localy current";
+$lang_str['ser_moni_replies_avg'] = 			"replied localy average";
+$lang_str['ser_moni_registered_cur'] = 			"registered current";
+$lang_str['ser_moni_registered_avg'] = 			"registered average";
+$lang_str['ser_moni_expired_cur'] = 			"expired current";
+$lang_str['ser_moni_expired_avg'] = 			"expired average";
+$lang_str['ser_moni_general_values'] = 			"general values";
+$lang_str['ser_moni_diferencial_values'] = 		"diferencial values";
+$lang_str['ser_moni_transaction_statistics'] = 	"Transaction Statistics";
+$lang_str['ser_moni_completion_status'] = 		"Completion status";
+$lang_str['ser_moni_stateless_server_statis'] = "Stateless Server Statistics";
+$lang_str['ser_moni_usrLoc_stats'] = 			"UsrLoc Statistics";
+$lang_str['domain'] = 							"domain";
+
+
+$lang_str['fe_not_filled_name_of_attribute'] = 	"you must fill attribute name";
+$lang_str['ff_att_name'] = 						"attribute name";
+$lang_str['ff_att_type'] = 						"attribute type";
+$lang_str['ff_att_default_value'] = 			"default value";
+$lang_str['th_att_name'] = 						"attribute name";
+$lang_str['th_att_type'] = 						"attribute type";
+$lang_str['th_att_default_value'] = 			"default value";
+$lang_str['fe_not_filled_item_label'] = 		"you must fill item label";
+$lang_str['fe_not_filled_item_value'] = 		"you must fill item value";
+$lang_str['edit_items_of_the_list'] = 			"edit items of the list";
+$lang_str['ff_item_label'] = 					"item label";
+$lang_str['ff_item_value'] = 					"item value";
+$lang_str['ff_set_as_default'] = 				"set as default";
+$lang_str['th_item_label'] = 					"item label";
+$lang_str['th_item_value'] = 					"item value";
+$lang_str['l_back_to_editing_attributes'] = 	"back to editing attributes";
+$lang_str[''] = 					"";
+$lang_str[''] = 					"";
+$lang_str[''] = 					"";
 $lang_str[''] = 					"";
 ?>

@@ -1,17 +1,15 @@
 <?
 /*
- * $Id: users.php,v 1.17 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: users.php,v 1.18 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('check_admin_perms_to_user', 'delete_sip_user', 'get_users');
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
 
 require "prepend.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
 if (!$sess->is_registered('sess_fusers')) $sess->register('sess_fusers');
@@ -25,13 +23,13 @@ do{
 	if (false !== $usr = get_userauth_from_get_param('d')) { //delete user
 		if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $usr, $errors))) break;
 		if (!$pp){
-			$errors[]="You can't delete user '".$usr->uname."' this user is from different domain";
+			$errors[]=$lang_str['err_admin_can_not_delete_user_1']." '".$usr->uname."' ".$lang_str['err_admin_can_not_delete_user_2'];
 			break;
 		}
 
 		if (!$data->delete_sip_user($usr, $errors)) break;
 
-        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user deleted succesfully")));
+        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&m_user_deleted=".RawURLEncode($usr->uname."@".$usr->domain)));
 		page_close();
 		exit;
 	}
@@ -50,8 +48,13 @@ do{
 }while (false);
 
 if (isset($_GET['m_acl_updated'])){
-	$message['short']="ACL updated";
-	$message['long']="Access control list of user has been updated";
+	$message['short'] = $lang_str['msg_acl_updated_s'];
+	$message['long']  = $lang_str['msg_acl_updated_l'];
+}
+
+if (isset($_GET['m_user_deleted'])){
+	$message['short'] = $lang_str['msg_user_deleted_s'];
+	$message['long']  = $lang_str['msg_user_deleted_l1']." ".$_GET['m_user_deleted']." ".$lang_str['msg_user_deleted_l2'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -78,6 +81,8 @@ $smarty->assign_by_ref('pager', $pager);
 $smarty->assign_by_ref('users', $users);
 
 $smarty->assign('form', $sess_fusers->get_form());
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_users.tpl');
 

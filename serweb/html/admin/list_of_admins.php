@@ -1,17 +1,16 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.7 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.8 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_admins');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin,change_priv");
 
 if (!$sess->is_registered('sess_list_of_admins')) $sess->register('sess_list_of_admins');
@@ -29,8 +28,8 @@ do{
 }while (false);
 
 if (isset($_GET['m_priv_saved'])){
-	$message['short']="Privileges updated";
-	$message['long']="The privileges of user has been updated";
+	$message['short'] = $lang_str['msg_privileges_updated_s'];
+	$message['long']  = $lang_str['msg_privileges_updated_l'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -54,6 +53,8 @@ $smarty->assign_by_ref('pager', $pager);
 $smarty->assign_by_ref('admins', $admins);
 
 $smarty->assign('form', $sess_list_of_admins->get_form());
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_list_of_admins.tpl');
 

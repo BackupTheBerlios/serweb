@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.42 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: functions.php,v 1.43 2004/08/10 17:33:50 kozlik Exp $
  */
 
 
@@ -539,7 +539,9 @@ class Cfusers{
 	}
 	
 	function get_form(){
+		global $lang_str;
 		$this->smarty->assign_phplib_form('form', $this->f, array('jvs_name'=>'form'));
+		$this->smarty->assign_by_ref('lang_str', $lang_str);
 		return $this->smarty->fetch($this->template);
 	}
 	

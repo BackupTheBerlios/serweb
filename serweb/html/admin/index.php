@@ -1,15 +1,12 @@
 <?
 /*
- * $Id: index.php,v 1.16 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: index.php,v 1.17 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('domain_exists', 'is_user_registered', 'get_privileges_of_user');
+$_phplib_page_open = array("sess" => "phplib_Session");
 
 require "prepend.php";
-
-put_headers();
-
-page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
@@ -24,13 +21,13 @@ do{
 
 				if ($config->check_supported_domain_on_login){
 					if (true !== $data->domain_exists($domain, $errors)){
-						$errors[]="Bad username or password";
+						$errors[]=$lang_str['bad_username'];
 						break;
 					}
 				}
 			}
 			else {
-				$errors[]="Bad username or password";
+				$errors[]=$lang_str['bad_username'];
 				break;
 			}
 		}
@@ -52,7 +49,7 @@ do{
 		foreach($privileges as $row)
 			if ($row->priv_name=='is_admin' and $row->priv_value) $is_admin=true;
 
-		if (!$is_admin) {$errors[]="Bad username or password"; break;}
+		if (!$is_admin) {$errors[]=$lang_str['bad_username']; break;}
 
 		$sess->register('pre_uid');
 		$pre_uid=$uuid;
@@ -79,7 +76,7 @@ $f->add_element(array("type"=>"text",
 							 "maxlength"=>50,
                              "value"=>$cookie_uname,
 							 "minlength"=>1,
-							 "length_e"=>"you must fill username",
+							 "length_e"=>$lang_str['fe_not_filled_username'],
 							 "extrahtml"=>"autocomplete='off' style='width:250px;'".
 							 	($config->fully_qualified_name_on_login ? " onBlur='login_completion(this)'" : "")));
 
@@ -108,8 +105,8 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 }
 
 if (isset($_GET['logout'])){
-	$message['short']="Signed out";
-	$message['long']="You have signed out. To sign in again, type your email address and password bellow.";
+	$message['short'] = $lang_str['msg_logout_s'];
+	$message['long']  = $lang_str['msg_logout_l'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -130,6 +127,8 @@ if ($config->fully_qualified_name_on_login) $js_on_submit='login_completion(f.un
 $smarty->assign_by_ref('parameters', $page_attributes);
 $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form', 'form_name'=>'login_form'), array('before'=>$js_on_submit));
 $smarty->assign('domain',$config->domain);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_index.tpl');
 ?>

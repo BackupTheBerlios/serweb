@@ -1,20 +1,19 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: user_preferences.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('del_attribute', 'get_attribute', 'update_attribute', 'get_attributes');
+
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
 
 require "prepend.php";
 require "../user_preferences.php";
 
 $usr_pref = new User_Preferences();
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
 set_global('att_edit');
@@ -77,7 +76,7 @@ do{
 								 "size"=>16,
 								 "maxlength"=>32,
 								 "minlength"=>1,
-								 "length_e"=>"you must fill attribute name",
+								 "length_e"=>$lang_str['fe_not_filled_name_of_attribute'],
 //	                             "valid_regex"=>"^[a-zA-Z_][a-zA-Z0-9_]*$",
 //	                             "valid_e"=>"in attribut name use only charakters 'A-Z', '0-9' and '_'",
 								 "extrahtml"=>"style='width:120px;'"));
@@ -164,6 +163,8 @@ $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
 
 if($att_edit and $att_rich_type=="list")
 	$smarty->assign('url_edit_list', $sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID("")));
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_user_preferences.tpl');
 ?>

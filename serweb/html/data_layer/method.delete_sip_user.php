@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_sip_user.php,v 1.1 2004/08/09 11:40:59 kozlik Exp $
+ * $Id: method.delete_sip_user.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
  */
 
 class CData_Layer_delete_sip_user {
@@ -24,7 +24,8 @@ class CData_Layer_delete_sip_user {
 		if (false === $this->delete_user_admin_privileges($user, $errors)) return false;
 		if (false === $this->delete_user_aliases($user, $errors)) return false;
 		if (false === $this->delete_user_from_subscriber($user, $errors)) return false;
-
+		
+		return true;
 	}
 	
 }

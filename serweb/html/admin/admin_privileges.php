@@ -1,17 +1,16 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.8 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.9 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('add_privilege_to_user', 'del_privilege_of_user', 'get_privileges_of_user');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin,change_priv");
 
 $f = new form;                   // create a form object
@@ -171,6 +170,8 @@ $smarty->assign_phplib_form('form', $f,
 						      'form_name'=>'form1'));
 
 $smarty->assign('uname', $uid->uname);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_admin_privileges.tpl');
 

@@ -1,18 +1,17 @@
 <?
 /*
- * $Id: aliases.php,v 1.1 2004/08/09 13:08:10 kozlik Exp $
+ * $Id: aliases.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('check_admin_perms_to_user', 'delete_alias', 'is_alias_exists', 
 		'add_new_alias', 'get_aliases');
 
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Pre_Auth",
+						   "perm" => "phplib_Perm");
+
 require "prepend.php";
 
-put_headers();
-
-page_open (array("sess" => "phplib_Session",
-				 "auth" => "phplib_Pre_Auth",
-				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
 $f = new form;                  // create a form object
@@ -28,12 +27,12 @@ do{
 	if (false !== $uid = get_userauth_from_get_param('u')) {
 		if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $uid, $errors))) break;
 		if (!$pp){
-			$errors[]="You can't manage user '".$uid->uname."' this user is from different domain";
+			$errors[]=$lang_str['err_admin_can_not_manage_user_1']." '".$uid->uname."' ".$lang_str['err_admin_can_not_manage_user_2'];
 			break;
 		}
 	}
 	else {
-		$errors[]="unknown user"; break;
+		$errors[]=$lang_str['err_unknown_user']; break;
 	}
 
 	if ($action=='cancel') {
@@ -84,7 +83,7 @@ do{
 			//check if alias exists
 			$alias_exists = $data->is_alias_exists($_REQUEST['alias'], $uid->domain, $errors);
 			if ($alias_exists < 0) break;
-			if ($alias_exists){ $errors[]="The Phone Number: ".$_REQUEST['alias']." already exists"; break; }
+			if ($alias_exists){ $errors[]=$lang_str['err_alias_already_exists_1']." ".$_REQUEST['alias']." ".$lang_str['err_alias_already_exists_2']; break; }
 				
 			if ($action=='edit'){
 				//delete alias
@@ -125,18 +124,18 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 }
 
 if (isset($_GET['m_alias_deleted'])){
-	$message['short']="Phone Number Deleted";
-	$message['long']="The Phone Number of user has been deleted";
+	$message['short'] = $lang_str['msg_alias_deleted_s'];
+	$message['long']  = $lang_str['msg_alias_deleted_l'];
 }
 
 if (isset($_GET['m_alias_updated'])){
-	$message['short']="Phone Number Updated";
-	$message['long']="Your changes have been saved.";
+	$message['short'] = $lang_str['msg_alias_updated_s'];
+	$message['long']  = $lang_str['msg_alias_updated_l'];
 }
 
 if (isset($_GET['m_alias_added'])){
-	$message['short']="Phone Number Added";
-	$message['long']="The Phone Number has been added to user";
+	$message['short'] = $lang_str['msg_alias_added_s'];
+	$message['long']  = $lang_str['msg_alias_added_l'];
 }
 
 /* ----------------------- HTML begin ---------------------- */
@@ -156,6 +155,8 @@ $smarty->assign_phplib_form('form', $f, array('jvs_name'=>'form'));
 
 $smarty->assign('uname', $uid->uname);
 $smarty->assign_by_ref('action', $action);
+
+$smarty->assign_by_ref('lang_str', $lang_str);
 
 $smarty->display('a_aliases.tpl');
 

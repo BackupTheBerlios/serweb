@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: prepend.php,v 1.4 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: prepend.php,v 1.5 2004/08/10 17:33:50 kozlik Exp $
  */ 
 
 $_SERWEB = array();
@@ -13,6 +13,7 @@ $_PHPLIB["libdir"]  = "../../phplib/";
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");
+require($_SERWEB["serwebdir"] . "load_lang.php");
 
 require("page_attributes.php");
 ?>

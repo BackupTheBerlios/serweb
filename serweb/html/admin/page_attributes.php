@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.2 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: page_attributes.php,v 1.3 2004/08/10 17:33:50 kozlik Exp $
  */ 
 
 function _remove_admin_privileges_from_tabs(&$page_attributes){
@@ -13,7 +13,7 @@ function _remove_admin_privileges_from_tabs(&$page_attributes){
 }
 
 $page_attributes=array(
-	'title' => $config->display_page_heading ? $config->domain." admin interface" : null,
+	'title' => $config->display_page_heading ? $config->domain." ".$lang_str['admin_interface'] : null,
 	'tab_collection' => $config->admin_tabs,
 	'path_to_pages' => $config->admin_pages_path,
 	'run_at_html_body_begin' => '_remove_admin_privileges_from_tabs',

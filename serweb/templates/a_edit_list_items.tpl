@@ -1,23 +1,23 @@
 {* Smarty *}
-{* $Id: a_edit_list_items.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: a_edit_list_items.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">edit items of the list</h2>
+<h2 class="swTitle">{$lang_str.edit_items_of_the_list}</h2>
 
 <div class="swForm">
 {$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="item_label">item label:</label></td>
+	<td><label for="item_label">{$lang_str.ff_item_label}:</label></td>
 	<td>{$form.item_label}</td>
 	</tr>
 	<tr>
-	<td><label for="item_value">item value:</label></td>
+	<td><label for="item_value">{$lang_str.ff_item_value}:</label></td>
 	<td>{$form.item_value}</td>
 	</tr>
 	<tr>
-	<td><label for="set_default">set as default:</label></td>
+	<td><label for="set_default">{$lang_str.ff_set_as_default}:</label></td>
 	<td>{$form.set_default}</td>
 	</tr>
 	<tr>
@@ -32,8 +32,8 @@
 	{if $smarty.foreach.item_list.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>item label</th>
-	<th>item value</th>
+	<th>{$lang_str.th_item_label}</th>
+	<th>{$lang_str.th_item_value}</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	</tr>
@@ -42,8 +42,8 @@
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.label|empty2nbsp}</td>
 	<td align="left">{$row.value|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_edit}">edit</a></td>
-	<td align="center"><a href="{$row.url_dele}">delete</a></td>
+	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
 	</tr>
 
 	{if $smarty.foreach.item_list.last}
@@ -51,7 +51,7 @@
 	{/if}
 {/foreach}
 
-<div class="swBackToMainPage"><a href="{url url='user_preferences.php' uniq=1}">back to editing attributes</a></div>
+<div class="swBackToMainPage"><a href="{url url='user_preferences.php' uniq=1}">{$lang_str.l_back_to_editing_attributes}</a></div>
 
 <br>
 {include file='_tail.tpl'}

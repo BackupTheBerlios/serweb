@@ -1,9 +1,9 @@
 {* Smarty *}
-{* $Id: a_acl.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: a_acl.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">Access control list of user: {$uname}</h2>
+<h2 class="swTitle">{$lang_str.access_control_list_of_user}: {$uname}</h2>
 
 {foreach from=$ACL_control item='row' name='acl_control'}
 	{if $smarty.foreach.acl_control.first}
@@ -30,9 +30,9 @@
 	</div>
 	{/if}
 {foreachelse}
-<div class="swNumOfFoundRecords">You haven't any privileges to control ACL</div>
+<div class="swNumOfFoundRecords">{$lang_str.have_not_privileges_to_acl}</div>
 {/foreach}
 
-<div class="swBackToMainPage"><a href="{url url='users.php' uniq=1}">back to main page</a></div>
+<div class="swBackToMainPage"><a href="{url url='users.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 
 {include file='_tail.tpl'}
