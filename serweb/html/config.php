@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.29 2003/11/26 23:18:54 kozlik Exp $
+ * $Id: config.php,v 1.30 2003/12/12 22:03:10 jiri Exp $
  */
 
 class Csub_not {
@@ -177,7 +177,9 @@ class Cconfig {
 		*/
 		$this->root_path="/iptel/html/";
 		/* roo uri of your server */
-		$this->root_uri="http://192.168.2.16";
+		/* $this->root_uri="http://192.168.2.16"; */
+		$this->root_uri="http://".$_SERVER['SERVER_NAME'];
+
 		/* where is your zone file on your server ? */
 		$this->zonetab_file =   "/usr/share/zoneinfo/zone.tab";
 		/* serweb will send confirmation emails and SIP IMs -- what sender 
