@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: send_im.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 require "prepend.php";
 require "../../phplib/oohforms.inc";
 
@@ -68,11 +72,12 @@ do{
 		    str_Replace("\n.\n","\n. \n",$instant_message)."\n.\n\n";
 
 
-		write2fifo($fifo_cmd, $errors);
-
-		if ($errors) break;		
+		$message=write2fifo($fifo_cmd, $errors);
+		if ($errors) break;
 		
-        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode("message was send successfully to address ".$sip_address)));
+		if ($message=="200 OK") $message="message was send successfully to address ".$sip_address;
+		
+        Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($message)));
 		page_close();
 		exit;
 	}

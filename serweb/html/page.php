@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: page.php,v 1.6 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 	function put_headers(){
 		Header("Pragma:  no-cache");
 		Header("Cache-Control: no-cache");

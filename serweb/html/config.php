@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: config.php,v 1.6 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 class Csub_not {
 	var $uri, $desc;
 	function Csub_not($uri, $desc){
@@ -24,6 +28,9 @@ class Cconfig {
 	var $table_event;
 	
 	var $show_voicemail_acl;
+
+	var $enable_dial_voicemail;
+	var $enable_test_firewall;
 
 	var $grp_values;
 
@@ -102,7 +109,10 @@ class Cconfig {
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
 
-		$this->show_voicemail_acl=true;				//show "voicemail" in ACL at my account
+		$this->show_voicemail_acl=false;				//show "voicemail" in ACL and voicemail checkbox at my account 
+
+		$this->enable_dial_voicemail=false;
+		$this->enable_test_firewall=false;
 		
 		$this->grp_values[]="voicemail";
 		$this->grp_values[]="grp 1";

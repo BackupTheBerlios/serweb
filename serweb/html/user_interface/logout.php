@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: logout.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 require "prepend.php";
 
 put_headers();

@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: functions.php,v 1.7 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 
 $reg_validate_email="^[^@]+@[^.]+\.[^,;@ ]+$";
 
@@ -188,18 +192,15 @@ function write2fifo($fifo_cmd, &$errors){
 		$errors[]="sorry -- fifo reading error"; return;
 	}
 
-	$rd=fread($fp,255);
-	if (!eregi("200 *OK",$rd)){
+	$rd=fread($fp,8192);
+	if (eregi("^ERROR:",$rd)){ 
 	    @unlink($config->reply_fifo_path);
-		if (!$rd) $errors[]="sorry -- fifo reading error";
-		/* just write it out as you get it in; -jiri
-		else $errors[]="sorry error ".$rd; 
-		*/
-		else $errors[]=$rd;
+		$errors[]=$rd;
 		return;
 	}
-
 	@unlink($config->reply_fifo_path);
+	
+	return $rd;
 }
 
 function write2fifo_with_output($fifo_cmd, &$errors){
@@ -232,7 +233,7 @@ function write2fifo_with_output($fifo_cmd, &$errors){
 		$errors[]="sorry -- fifo reading error"; return false;
 	}
 
-	$rd=fread($fp,255);
+	$rd=fread($fp,8192);
 
 	@unlink($config->reply_fifo_path);
 	return $rd;

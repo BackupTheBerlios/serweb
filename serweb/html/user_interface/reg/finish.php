@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: finish.php,v 1.2 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 require "prepend.php";
 require "../../../phplib/oohforms.inc";
 

@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: my_account.php,v 1.7 2002/09/10 15:59:35 kozlik Exp $
+ */
+
 require "prepend.php";
 require "../../phplib/oohforms.inc";
 
@@ -114,11 +118,10 @@ do{
 			$user_id."\n".	//username
 			$del_contact."\n\n";			//contact
 
-		write2fifo($fifo_cmd, $errors);
-
-		if ($errors) break;		
+		$message=write2fifo($fifo_cmd, $errors);
+		if ($errors) break;
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
 		page_close();
 		exit;
 	
@@ -140,11 +143,10 @@ do{
 			$expires."\n".					//expires
 			$config->ul_priority."\n\n";		//priority
 
-		write2fifo($fifo_cmd, $errors);
-
-		if ($errors) break;		
+		$message=write2fifo($fifo_cmd, $errors);
+		if ($errors) break;
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
 		page_close();
 		exit;
 	
@@ -215,10 +217,15 @@ do{
 			$config->ul_table."\n".		//table
 			$user_id."\n\n";	//username
 
+/* write2fifo_with_output() is now needless
 		$out=write2fifo_with_output($fifo_cmd, $errors);
 
 		if ($errors or !$out) break;		
 		if (ereg("^ERROR:",$out)){ $errors[]=$out; break;}
+*/
+
+		$out=write2fifo($fifo_cmd, $errors);
+		if ($errors or !$out) break;		
 
 		$out_arr=explode("\n", $out);
 		
@@ -282,11 +289,13 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("email");?></td>
 	</tr>
+<?if ($config->show_voicemail_acl){?>
 	<tr>
 	<td align="right" class="f12b">forwarding to voicemail:</td>
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("f2voicemail");?></td>
 	</tr>
+<?}?>	
 	<tr>
 	<td align="right" class="f12b">your password:</td>
 	<td width="5">&nbsp;</td>
@@ -406,8 +415,8 @@ if ($okey_x){							//data isn't valid or error in sql
 <br>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<td width="50%" align="center"><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td>
-<td width="50%" align="center"><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td>
+<td width="50%" align="center"><?if ($config->enable_dial_voicemail){?><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a><?} else echo "&nbsp;";?></td>
+<td width="50%" align="center"><?if ($config->enable_test_firewall){?><a href="javascript:alert('not implemented yet!');"><img src="<?echo $config->img_src_path;?>butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a><?} else echo "&nbsp;";?></td>
 </tr>
 </table>
 
