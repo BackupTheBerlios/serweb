@@ -31,36 +31,49 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"usrnm",
-								 "size"=>11,
-								 "maxlength"=>50,
-	                             "value"=>$sess_usrnm,
-								 "extrahtml"=>"style='width:120px;'"));
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"fname",
-								 "size"=>11,
-								 "maxlength"=>25,
-	                             "value"=>$sess_fname,
-								 "extrahtml"=>"style='width:120px;'"));
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"lname",
-								 "size"=>11,
-								 "maxlength"=>45,
-	                             "value"=>$sess_lname,
-								 "extrahtml"=>"style='width:120px;'"));
-	$f->add_element(array("type"=>"text",
-	                             "name"=>"email",
-								 "size"=>11,
-								 "maxlength"=>50,
-	                             "value"=>$sess_email,
-								 "extrahtml"=>"style='width:120px;'"));
-	$f->add_element(array("type"=>"submit",
-	                             "name"=>"okey",
-	                             "src"=>$config->img_src_path."butons/b_find.gif",
-								 "extrahtml"=>"alt='find'"));
+	if ($dele_id){ //delete user
+		$q="delete from ".$config->table_aliases." where contact='sip:".$dele_id."@".$config->default_domain."'";
+		$res=MySQL_Query($q);
+		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
+		$q="delete from ".$config->table_subscriber." where user_id='$dele_id'";
+		$res=MySQL_Query($q);
+		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		
+        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user seleted succesfully")));
+		page_close();
+		exit;
+	}
 }while (false);
+	
+$f->add_element(array("type"=>"text",
+                             "name"=>"usrnm",
+							 "size"=>11,
+							 "maxlength"=>50,
+                             "value"=>$sess_usrnm,
+							 "extrahtml"=>"style='width:120px;'"));
+$f->add_element(array("type"=>"text",
+                             "name"=>"fname",
+							 "size"=>11,
+							 "maxlength"=>25,
+                             "value"=>$sess_fname,
+							 "extrahtml"=>"style='width:120px;'"));
+$f->add_element(array("type"=>"text",
+                             "name"=>"lname",
+							 "size"=>11,
+							 "maxlength"=>45,
+                             "value"=>$sess_lname,
+							 "extrahtml"=>"style='width:120px;'"));
+$f->add_element(array("type"=>"text",
+                             "name"=>"email",
+							 "size"=>11,
+							 "maxlength"=>50,
+                             "value"=>$sess_email,
+							 "extrahtml"=>"style='width:120px;'"));
+$f->add_element(array("type"=>"submit",
+                             "name"=>"okey",
+                             "src"=>$config->img_src_path."butons/b_find.gif",
+							 "extrahtml"=>"alt='find'"));
 
 do{
 	if ($db){
@@ -94,6 +107,17 @@ do{
 <head>
 <title>iptel.org, the IP Telephony Site</title>
 <?print_html_head();?>
+<script language="JavaScript">
+<!--
+function confirmDelete(theLink){
+    var is_confirmed = confirm("Realy you want delete user?");
+    if (is_confirmed) {
+        theLink.href;
+    }
+    return is_confirmed;
+}
+//-->
+</script>
 </head>
 <?
 	print_html_body_begin(false, true, true);
@@ -133,17 +157,19 @@ do{
 	<tr>
 	<td class="titleT" width="85">username</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="125">name</td>
+	<td class="titleT" width="100">name</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td class="titleT" width="100">phone</td>
+	<td class="titleT" width="70">phone</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="125">email</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="40">&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="63">&nbsp;</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="55">&nbsp;</td>
 	</tr>
-	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<tr><td colspan="13" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while ($row=MySQL_Fetch_Object($users_res)){
 		$odd=$odd?0:1;
@@ -153,15 +179,17 @@ do{
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="85">&nbsp;<?echo $row->user_id;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="125">&nbsp;<?echo $name;?></td>
+	<td align="left" class="f12" width="100">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="right" class="f12" width="100"><?echo $row->phone;?>&nbsp;</td>
+	<td align="right" class="f12" width="70"><?echo $row->phone;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="125">&nbsp;<a href="mailto:<?echo $row->email_address;?>"><?echo $row->email_address;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="40"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->user_id));?>">ACL</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="63"><a href="<?$sess->purl("../user_interface/my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->user_id));?>">account</a></td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="center" class="f12" width="55"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->user_id));?>" onclick="return confirmDelete(this)">delete</a></td>
 	</tr>
 	<?}?>
 	</table>
