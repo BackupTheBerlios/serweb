@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.6 2004/12/10 17:50:54 kozlik Exp $
+ * $Id: config.php,v 1.7 2004/12/21 19:42:18 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -539,6 +539,22 @@
 		
 		/* sip address of outbound proxy - leave empty for no proxy*/
 		$config->ctd_outbound_proxy	=	"sip:proxy.domain.org:5060";
+
+		/* header field 'secret' for CTD request - leave empty for no use this field
+		   
+		   in SER script should be something like this:
+
+				if (search("Secret: heslo")) { 
+				    remove_hf("Secret");
+				    setflag(xy)l
+				};
+
+			and in authentication block:
+			
+				if is)flagset(xz) breakl;		   
+		   
+		 */
+		$config->ctd_secret	=	"heslo";
 		
 		/* ------------------------------------------------------------*/
 		/*            caller screening                                 */
