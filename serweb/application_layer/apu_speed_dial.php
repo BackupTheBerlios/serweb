@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.4 2004/11/18 15:47:12 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.5 2004/11/29 21:38:12 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -27,10 +27,10 @@
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
 
-	'blacklist'					default: null
+   'blacklist'					default: null
 	 if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
 
-	'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
+   'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
 	 error message that is displayed if URI is blacklisted
    								
    'form_name'					(string) default: ''
@@ -39,11 +39,25 @@
    'form_submit'				(assoc)
      assotiative array describe submit element of form. For details see description 
 	 of method add_submit in class form_ext
+	 
+   'fname_max_chars'			(int) default: 128
+     maximum number of characters in fields fname
+
+   'lname_max_chars'			(int) default: 128
+     maximum number of characters in fields lname
+
+   'new_uri_max_chars'			(int) default: 128
+     maximum number of characters in fields new_uri
 
    'smarty_form'				name of smarty variable - see below
    'smarty_speed_dials'			name of smarty variable - see below
    'smarty_pager'				name of smarty variable - see below
    'smarty_action'				name of smarty variable - see below
+   'smarty_sort_from_uri'		name of smarty variable - see below
+   'smarty_sort_to_uri'			name of smarty variable - see below
+   'smarty_sort_fname'			name of smarty variable - see below
+   'smarty_sort_lname'			name of smarty variable - see below
+   
    
    Exported smarty variables:
    --------------------------
@@ -61,6 +75,13 @@
    	  'default' - 
 	  'was_updated' - when user submited form and data was succefully stored
 
+	  
+   	opt['smarty_sort_from_uri'] 	(url_sort_from_uri)
+	opt['smarty_sort_to_uri']   	(url_sort_to_uri)
+	opt['smarty_sort_fname']   		(url_sort_fname)
+	opt['smarty_sort_lname']   		(url_sort_lname)
+		contain URL for change sorting
+
 */
 
 
@@ -72,7 +93,7 @@ class apu_speed_dial extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_speed_dials', 'update_speed_dial');
+		return array('get_speed_dials', 'update_speed_dial', 'speed_dial_create_empty_entries');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -110,12 +131,24 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['smarty_form'] =			'form';
 		/* smarty action */
 		$this->opt['smarty_action'] =		'action';
+
+		/* URLs for change sorting */
+		$this->opt['smarty_sort_from_uri'] =	'url_sort_from_uri';
+		$this->opt['smarty_sort_to_uri'] = 		'url_sort_to_uri';
+		$this->opt['smarty_sort_fname'] = 		'url_sort_fname';
+		$this->opt['smarty_sort_lname'] = 		'url_sort_lname';
+
 		/* name of html form */
 		$this->opt['form_name'] =			'';
 
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => 'save',
 										'src'  => $config->img_src_path."butons/b_save.gif");
+										
+		$this->opt['fname_max_chars'] =		128;
+		$this->opt['lname_max_chars'] =		128;
+		$this->opt['new_uri_max_chars'] =	128;
+		
 
 	}
 
@@ -167,14 +200,32 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* this metod is called always at begining */
 	function init(){
-		global $sess, $sess_sd_act_row;
+		global $sess, $sess_sd_act_row, $sess_sd_sort, $sess_sd_fill_sql_table;
 		parent::init();
 		
 		if (!$sess->is_registered('sess_sd_act_row')) $sess->register('sess_sd_act_row');
+		if (!$sess->is_registered('sess_sd_sort'))    $sess->register('sess_sd_sort');
+		if (!$sess->is_registered('sess_sd_fill_sql_table'))    $sess->register('sess_sd_fill_sql_table');
 		if (!isset($sess_sd_act_row)) $sess_sd_act_row=0;
+		if (!isset($sess_sd_sort)) $sess_sd_sort='from_uri';
+		if (!isset($sess_sd_fill_sql_table)) $sess_sd_fill_sql_table=true;
 		
 		if (isset($_GET['act_row'])) $sess_sd_act_row=$_GET['act_row'];
 
+		if (isset($_GET['sd_order_by'])) {
+			switch ($_GET['sd_order_by']){
+			case "tu":
+				$sess_sd_sort = 'to_uri'; break;
+			case "fn":
+				$sess_sd_sort = 'fname'; break;
+			case "ln":
+				$sess_sd_sort = 'lname'; break;
+			default:
+				$sess_sd_sort = 'from_uri';
+			}
+			$sess_sd_act_row=0;
+		}
+		
 		$this->reg = new Creg;				// create regular expressions class
 	}
 	
@@ -192,26 +243,29 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $lang_str, $sess_sd_act_row;
+		global $data, $lang_str, $sess_sd_act_row, $sess_sd_sort, $sess_sd_fill_sql_table;
 		parent::create_html_form($errors);
 
-		$opt=array('solid_interval_of_usernames' => true,
-		           'from' => $sess_sd_act_row,
-				   'to' => $sess_sd_act_row+9);
-		
-		if (false === $this->speed_dials = $data->get_speed_dials($this->user_id, $opt, $errors)) return false;
+		if ($sess_sd_fill_sql_table){
+			$opt=array('set_domain' => $this->opt['domain_for_requests']);
+			if (false === $data->speed_dial_create_empty_entries($this->user_id, 0, 99, $opt, $errors)) return false;
+			$sess_sd_fill_sql_table = false; 
+		}
 
-		// configure pager - in this case $data->get_speed_dials doesn't depend on methods set* bellow
+		$opt=array('sort' => $sess_sd_sort);
+
 		$data->set_act_row($sess_sd_act_row);
-		$data->set_num_rows(100);
 		$data->set_showed_rows(10);
+			
+		if (false === $this->speed_dials = $data->get_speed_dials($this->user_id, $opt, $errors)) return false;
+		
 		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 		$this->pager['pos']=$data->get_act_row();
 		$this->pager['items']=$data->get_num_rows();
 		$this->pager['limit']=$data->get_showed_rows();
 		$this->pager['from']=$data->get_res_from();
 		$this->pager['to']=$data->get_res_to();
-
+		
 		
 		/* fill in 'domain_from_req_uri' for entries which aren't in DB */
 		foreach ($this->speed_dials as $key => $val){
@@ -227,7 +281,7 @@ class apu_speed_dial extends apu_base_class{
 			$element_new_uri = array("type"=>"text",
 			                             "name"=>"new_uri_".$index,
 										 "size"=>16,
-										 "maxlength"=>128,
+										 "maxlength"=>$this->opt['new_uri_max_chars'],
 			                             "value"=>$val['new_request_uri']);
 										 
 			if ($this->opt['username_in_target_only']){
@@ -252,13 +306,13 @@ class apu_speed_dial extends apu_base_class{
 			$this->f->add_element(array("type"=>"text",
 			                             "name"=>"fname_".$index,
 										 "size"=>16,
-										 "maxlength"=>128,
+										 "maxlength"=>$this->opt['fname_max_chars'],
 			                             "value"=>$val['first_name']));
 										 
 			$this->f->add_element(array("type"=>"text",
 			                             "name"=>"lname_".$index,
 										 "size"=>16,
-										 "maxlength"=>128,
+										 "maxlength"=>$this->opt['lname_max_chars'],
 			                             "value"=>$val['last_name']));
 
 			if ($this->opt['blacklist']){ //perform regex check against entered URIs
@@ -327,10 +381,15 @@ class apu_speed_dial extends apu_base_class{
 
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
 		$smarty->assign_by_ref($this->opt['smarty_speed_dials'], $this->speed_dials);
+
+		$smarty->assign_by_ref($this->opt['smarty_sort_from_uri'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=fu"));
+		$smarty->assign_by_ref($this->opt['smarty_sort_to_uri'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=tu"));
+		$smarty->assign_by_ref($this->opt['smarty_sort_fname'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=fn"));
+		$smarty->assign_by_ref($this->opt['smarty_sort_lname'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=ln"));
 	}
 	
 	/* return info need to assign html form to smarty */
