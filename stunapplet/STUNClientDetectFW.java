@@ -1,5 +1,5 @@
 /*
- *$Id: STUNClientDetectFW.java,v 1.1 2002/11/18 22:03:25 kozlik Exp $
+ *$Id: STUNClientDetectFW.java,v 1.2 2002/12/09 22:02:35 kozlik Exp $
  */
 
 /**
@@ -12,12 +12,12 @@
  */
 
 import java.net.*;
+import java.io.*;
 import java.util.*;
 
 public class STUNClientDetectFW extends Thread {
   static boolean DEBUG = false;
   STUNClientApplet pappy;
-STUNClient sPacket__;
 
   public STUNClientDetectFW(STUNClientApplet pappy) {
     this.pappy=pappy;
@@ -45,6 +45,31 @@ STUNClient sPacket__;
 
     STUNClient SClient = new STUNClient();
     SClient.DEBUG = DEBUG; // Set the default debugging flag.
+
+    String localIP="";
+
+    // get local IP
+    try{
+      localIP=getLocalIP();
+    }
+    catch (UnknownHostException e){
+      System.out.println("Can't create dummy tcp connection, unknown host: "+pappy.server_param);
+      System.out.println(e);
+
+      pappy.label1.setText("Can't connect to server");
+      pappy.label2.setText("It may means that");
+      pappy.label3.setText("this client is behind firewall");
+      return;
+    }
+    catch (IOException e){
+      System.out.println("Can't create dummy tcp connection");
+      System.out.println(e);
+
+      pappy.label1.setText("Can't connect to server");
+      pappy.label2.setText("It may means that");
+      pappy.label3.setText("this client is behind firewall");
+      return;
+    }
 
     /***********************************/
     /* Format the client STUN request. */
@@ -115,7 +140,7 @@ STUNClient sPacket__;
      * we are not allowed to route UDP packets.
      */
     if ( udpPacket == null ) {
-      System.out.println(UDPC.getLocalIP()+" "+UDPC.getLocalPort()+" NU");
+      System.out.println(localIP+" "+UDPC.getLocalPort()+" NU");
       pappy.label2.setText("No UDP accesibility");
       return;
       //      System.exit(0);
@@ -163,7 +188,7 @@ STUNClient sPacket__;
 
     if ( DEBUG == true ) {
       System.out.println("Local IP ["
-                         +UDPC.getLocalIP()
+                         +localIP
                          +":"
                          +UDPC.getLocalPort()
                          +"]");
@@ -180,11 +205,14 @@ STUNClient sPacket__;
     StringTokenizer st_response = new StringTokenizer(r_response,":");
     String mappedIP  = st_response.nextToken();
 
-    if ((UDPC.getLocalIP()).compareTo(mappedIP) == 0) {
+
+//    if ((UDPC.getLocalIP()).compareTo(mappedIP) == 0) {
+    if (localIP.compareTo(mappedIP) == 0) {
+//    if (!NAT) {
       if ( REPORT_MODE == true ) {
         System.out.println("This Client is not behind a NAT");
         System.out.println("Local IP ["
-                           +UDPC.getLocalIP()
+                           +localIP
                            +":"
                            +UDPC.getLocalPort()
                            +"]");
@@ -194,7 +222,7 @@ STUNClient sPacket__;
 
         pappy.label1.setText("This Client is not behind a NAT");
         pappy.label2.setText("Local IP ["
-                           +UDPC.getLocalIP()
+                           +localIP
                            +":"
                            +UDPC.getLocalPort()
                            +"]");
@@ -215,7 +243,7 @@ STUNClient sPacket__;
     } // if
     else { // This client is behind a NAT
       System.out.println("This Client is behind a NAT");
-      System.out.println("Local IP ["+UDPC.getLocalIP()
+      System.out.println("Local IP ["+localIP
                          +":"
                          +UDPC.getLocalPort()
                          +"]");
@@ -225,7 +253,7 @@ STUNClient sPacket__;
                          +"]");
 
       pappy.label1.setText("This Client is behind a NAT");
-      pappy.label2.setText("Local IP ["+UDPC.getLocalIP()
+      pappy.label2.setText("Local IP ["+localIP
                            +":"
                            +UDPC.getLocalPort()
                            +"]");
@@ -233,5 +261,41 @@ STUNClient sPacket__;
                            +SClient.getMappedAddress(SRPacket)
                            +"]");
     }
+  }
+
+
+  String getLocalIP () throws UnknownHostException, IOException {
+    Socket sock;
+
+    sock=new Socket(pappy.server_param, pappy.tcp_dummyport_param);
+    return sock.getLocalAddress().getHostAddress();
+  }
+
+  ArrayList getLocalIPs (){
+    Enumeration networkInterfaces;
+    Enumeration inetAddresses;
+
+    ArrayList IPs = new ArrayList();
+
+    NetworkInterface netInterface;
+    InetAddress inaddr;
+
+    try{
+      networkInterfaces = NetworkInterface.getNetworkInterfaces();
+      while (networkInterfaces.hasMoreElements()){
+        netInterface = (NetworkInterface)networkInterfaces.nextElement();
+
+        inetAddresses = netInterface.getInetAddresses();
+        while (inetAddresses.hasMoreElements()){
+          inaddr=(InetAddress)inetAddresses.nextElement();
+          IPs.add(inaddr.getHostAddress());
+        }
+      }
+    }
+    catch(SocketException e){
+      System.out.println(e);
+    }
+
+    return IPs;
   }
 }

@@ -1,5 +1,5 @@
 /*
- *$Id: STUNClientApplet.java,v 1.1 2002/11/18 22:03:25 kozlik Exp $
+ *$Id: STUNClientApplet.java,v 1.2 2002/12/09 22:02:35 kozlik Exp $
  */
 
 /**
@@ -29,6 +29,8 @@ public class STUNClientApplet extends Applet {
                          * the client.
                          */
   int sourceport_param; // User specified source port for the UDP packet
+
+  int tcp_dummyport_param;
 
   Label label1 = new Label();
   Label label2 = new Label();
@@ -68,6 +70,12 @@ public class STUNClientApplet extends Applet {
     }
     try {
       sourceport_param = Integer.parseInt(this.getParameter("sourceport", "5000"));
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      tcp_dummyport_param = Integer.parseInt(this.getParameter("tcp_dummyport", "5060"));
     }
     catch(Exception e) {
       e.printStackTrace();
@@ -120,6 +128,7 @@ public class STUNClientApplet extends Applet {
       {"port", "int", "optional - STUN server port. The Default value is 1221"},
       {"retransmit", "int", "optional - Number of times to resend a STUN message to a STUN server. The Default is 9 times"},
       {"sourceport", "int", "optional - Specify source port of UDP packet to be sent from. The Default value is 5000"},
+      {"tcp_dummyport", "int", "optional - Specify port for TCP dummy connection to server. This connection is used for get local IP address.  The Default value is 5060"},
       };
     return pinfo;
   }
