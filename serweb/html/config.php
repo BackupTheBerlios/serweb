@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.25 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: config.php,v 1.26 2003/10/16 12:36:36 kozlik Exp $
  */
 
 class Csub_not {
@@ -257,7 +257,6 @@ class Cconfig {
 		*/
 		$this->admin_tabs[]=new Ctab (true, "users", "users.php");
 		$this->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
-		$this->admin_tabs[]=new Ctab (false, "prepaid", "ppaid.php");
 
 		$this->default_width=564;					//width of usable area
 
@@ -533,6 +532,7 @@ class Cconfig {
 		$this->style_src_path = $this->root_path."styles/";
 		$this->user_pages_path = $this->root_path."user/";
 		$this->admin_pages_path = $this->root_path."admin/";
+		$this->resell_pages_path = $this->root_path."reseller/";
 
 		/* values used for names of reply fifos -- they change radnomly */
 		$this->reply_fifo_filename="webfifo_".rand();
