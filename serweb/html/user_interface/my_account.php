@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.24 2003/09/15 03:49:49 jiri Exp $
+ * $Id: my_account.php,v 1.25 2003/09/16 16:54:40 kozlik Exp $
  */
 
 require "prepend.php";
@@ -346,7 +346,7 @@ if ($okey_x){							//data isn't valid or error in sql
 </head>
 <?
 	if ($perm->have_perm("admin") and $uid){
-		print_html_body_begin(false, true, true);
+		print_admin_html_body_begin("users.php");
 		echo "user: ".$uid."<br>";
 	}
 	else print_html_body_begin(1, true, true, get_user_name($errors));
@@ -512,7 +512,7 @@ if ($okey_x){							//data isn't valid or error in sql
 
 <br>
 <? if ($perm->have_perm("admin") and $uid){?>
-	<a href="<?$sess->purl("../admin/users.php?kvrk=".uniqid(""));?>">back to main page</a><br>
+	<a href="<?$sess->purl($config->admin_pages_path."users.php?kvrk=".uniqid(""));?>" class="f14">back to main page</a><br>
 <?}?>
 <?print_html_body_end();?>
 </html>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.23 2003/04/29 08:12:57 kozlik Exp $
+ * $Id: config.php,v 1.24 2003/09/16 16:58:55 kozlik Exp $
  */
 
 class Csub_not {
@@ -24,6 +24,15 @@ class Capplet_params {
 	function Capplet_params($name, $value){
 		$this->name=$name;
 		$this->value=$value;
+	}
+}
+
+class Ctab{
+	var $name, $page, $enabled;
+	function Ctab($enabled, $name, $page){
+		$this->name=$name;
+		$this->page=$page;
+		$this->enabled=$enabled;
 	}
 }
 
@@ -233,6 +242,13 @@ class Cconfig {
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=false;				//enable tab notification subscription
 		$this->enable_tabs[7]=true;				//enable tab message store
+
+		/* admin tabs definitions
+			Ctab (enabled, name_of_tab, php_script)
+		*/
+		$this->admin_tabs[]=new Ctab (true, "users", "users.php");
+		$this->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
+		$this->admin_tabs[]=new Ctab (false, "prepaid", "ppaid.php");
 
 		$this->default_width=564;					//width of usable area
 
@@ -504,6 +520,8 @@ class Cconfig {
 		$this->img_src_path =	$this->root_path."img/";
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
+		$this->user_pages_path = $this->root_path."user/";
+		$this->admin_pages_path = $this->root_path."admin/";
 
 		/* values used for names of reply fifos -- they change radnomly */
 		$this->reply_fifo_filename="webfifo_".rand();
