@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: page_controler.php,v 1.2 2004/08/28 15:40:23 kozlik Exp $
  */ 
 
 /*
@@ -11,6 +11,14 @@
    user_auth	assigned to $this->user_id - associative array containing username, domain and uuid
                         of user loged in or of user which datails admin is examining
    come_from_admin_interface    assigned to $come_from_admin_interface
+   cfg			assigned to $config (contain only these properties:
+					img_src_path
+					js_src_path
+					style_src_path
+					user_pages_path
+					admin_pages_path
+					domains_path
+   				)
 */
  
 class page_conroler{
@@ -118,6 +126,16 @@ class page_conroler{
 		$smarty->assign_by_ref('user_auth', $this->user_id);
 		$smarty->assign_by_ref('come_from_admin_interface', $this->come_from_admin_interface);
 
+		
+		$cfg=new stdclass();
+		$cfg->img_src_path = 		$config->img_src_path;
+		$cfg->js_src_path =    		$config->js_src_path;
+		$cfg->style_src_path = 		$config->style_src_path;
+		$cfg->user_pages_path = 	$config->user_pages_path;
+		$cfg->admin_pages_path =	$config->admin_pages_path;
+		$cfg->domains_path =		$config->domains_path;
+		$smarty->assign_by_ref("cfg", $cfg);		
+		
 		//page atributes - get user real name
 		
 		$page_attributes['errors']=&$this->errors;	
