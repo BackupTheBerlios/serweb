@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.25 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: functions.php,v 1.26 2003/10/16 09:27:20 kozlik Exp $
  */
 
 
@@ -554,42 +554,5 @@ class Cfusers{
 
 }
  
- 
-
-/**************************************
- *         ppaid functions
- **************************************/
-
-
-function pp_get_account_of_user($username, $ppaid_db, &$errors){
-	global $config;
- 
-	$q="select ".$config->ppaid->p_account." ".
-		"from ".$config->ppaid->p_table." ".
-		"where ".$config->ppaid->p_user."='".$username."'";
-
-	$pp_res=mySQL_query($q, $ppaid_db);
-	if (!$pp_res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return null;}
-
-	if ($row=MySQL_Fetch_Array($pp_res)) $user_account=$row[$config->ppaid->p_account];
-	else $user_account=null;
-	
-	return $user_account;
-}
-
-function pp_add_funds_to_account($acid, $funds, $ppaid_db, &$errors){
-	global $config;
-
-	if (!$acid) { $errors[]="Account not specified"; return false;}
-
-	$q="update ".$config->ppaid->a_table." ".
-		"set ".$config->ppaid->a_credit."=".$config->ppaid->a_credit." + ".$funds." ".
-		"where ".$config->ppaid->a_id."='".$acid."'";
-	
-	$pp_res=mySQL_query($q, $ppaid_db);
-	if (!$pp_res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return false;}
-	
-	return true;
-}
 
 ?>
