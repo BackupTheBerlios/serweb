@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.19 2003/05/26 21:23:49 jiri Exp $
+ * $Id: functions.php,v 1.20 2003/05/26 23:00:34 jiri Exp $
  */
 
 
@@ -388,7 +388,7 @@ function click_to_dial($target, $uri, &$errors){
 		$dlg.  // "\n".
 		$fixed_dlg."\n".
 		"CSeq: ".$cseq." BYE\n".
-		".\n";
+		".\n".
 		".\n\n";
 
 	write2fifo($fifo_cmd, $errors, $status);
