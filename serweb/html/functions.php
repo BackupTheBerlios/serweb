@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.35 2004/04/04 19:42:14 kozlik Exp $
+ * $Id: functions.php,v 1.36 2004/04/05 19:31:03 kozlik Exp $
  */
 
 
@@ -359,12 +359,33 @@ function click_to_dial($target, $uri, &$errors){
 
 class Cfusers{
 	var $classname='Cfusers';
-	var $persistent_slots = array("usrnm", "fname", "lname", "email", "onlineonly", "act_row");
+	var $persistent_slots = array("usrnm", "domain", "fname", "lname", "email", 
+		"onlineonly", "act_row", "adminsonly", "show_adminsonly", "show_onlineonly", "show_domain");
 
-	var $usrnm, $fname, $lname, $email, $onlineonly, $act_row=0;
+	var $usrnm, $fname, $lname, $email, $domain, $onlineonly=0, $act_row=0;
+	var $adminsonly=0, $show_adminsonly=false, $show_onlineonly=true, $show_domain=false;
 
 	var $f;
 
+	function Cfusers($cfg=null){
+		if (is_array($cfg)){
+			if (isset($cfg['show_adminsonly'])){
+				if($cfg['show_adminsonly']) {	$this->show_adminsonly=true; $this->adminsonly=1;}
+				else{ $this->show_adminsonly=false; $this->adminsonly=0; }
+			}
+
+			if (isset($cfg['show_onlineonly'])){
+				if($cfg['show_onlineonly']) {$this->show_onlineonly=true; $this->onlineonly=0; }
+				else{ $this->show_onlineonly=false; $this->onlineonly=0; }
+			}
+
+			if (isset($cfg['show_domain'])){
+				if($cfg['show_domain']) {$this->show_domain=true; }
+				else{ $this->show_domain=false;}
+			}
+		}
+	}
+	
 	function init(){
 		global $sess, $config, $HTTP_POST_VARS, $HTTP_GET_VARS;
 
@@ -372,9 +393,21 @@ class Cfusers{
 		if (isset($HTTP_POST_VARS['fname'])) $this->fname=$HTTP_POST_VARS['fname'];
 		if (isset($HTTP_POST_VARS['lname'])) $this->lname=$HTTP_POST_VARS['lname'];
 		if (isset($HTTP_POST_VARS['email'])) $this->email=$HTTP_POST_VARS['email'];
-		if (isset($HTTP_POST_VARS['okey_x']))
-			if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
-			else $this->onlineonly=0;
+		if ($this->show_domain){
+			if (isset($HTTP_POST_VARS['domain'])) $this->domain=$HTTP_POST_VARS['domain'];
+		}
+
+		if (isset($HTTP_POST_VARS['okey_x'])){
+			if ($this->show_onlineonly){
+				if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
+				else $this->onlineonly=0;
+			}
+
+			if ($this->show_adminsonly){
+				if (isset($HTTP_POST_VARS['adminsonly'])) $this->adminsonly=$HTTP_POST_VARS['adminsonly'];
+				else $this->adminsonly=0;
+			}
+		}
 
 		if (isset($HTTP_GET_VARS['act_row'])) $this->act_row=$HTTP_GET_VARS['act_row'];
 		if (isset($HTTP_POST_VARS['okey_x'])) $this->act_row=0;
@@ -407,10 +440,26 @@ class Cfusers{
 									 "maxlength"=>50,
 		                             "value"=>$this->email,
 									 "extrahtml"=>"style='width:120px;'"));
-		$this->f->add_element(array("type"=>"checkbox",
-		                             "value"=>1,
-									 "checked"=>$this->onlineonly,
-		                             "name"=>"onlineonly"));
+		if ($this->show_domain){
+			$this->f->add_element(array("type"=>"text",
+			                             "name"=>"domain",
+										 "size"=>11,
+										 "maxlength"=>128,
+		        	                     "value"=>$this->domain,
+										 "extrahtml"=>"style='width:120px;'"));
+		}
+		if ($this->show_onlineonly){
+			$this->f->add_element(array("type"=>"checkbox",
+			                             "value"=>1,
+										 "checked"=>$this->onlineonly,
+		    	                         "name"=>"onlineonly"));
+		}
+		if ($this->show_adminsonly){
+			$this->f->add_element(array("type"=>"checkbox",
+			                             "value"=>1,
+										 "checked"=>$this->adminsonly,
+		    	                         "name"=>"adminsonly"));
+		}
 		
 		$this->f->add_element(array("type"=>"submit",
 		                             "name"=>"okey",
@@ -427,6 +476,7 @@ class Cfusers{
 		if ($this->fname) $query_c.=$tablename."first_name like '%".$this->fname."%' and ";
 		if ($this->lname) $query_c.=$tablename."last_name like '%".$this->lname."%' and ";
 		if ($this->email) $query_c.=$tablename."email_address like '%".$this->email."%' and ";
+		if ($this->show_domain && $this->domain) $query_c.=$tablename."domain like '%".$this->domain."%' and ";
 		$query_c.="1 ";
 		
 		return $query_c;
@@ -434,23 +484,36 @@ class Cfusers{
 	}
 	
 	function print_form(){
+		$col_span=4;
+		if ($this->show_domain) $col_span++;
 	?><div class="swForm swHorizontalForm"><?
 		$this->f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
 	<td><label for="usrnm">username</label></td>
+<?	if ($this->show_domain){ ?>
+	<td><label for="domain">domain</label></td>
+<?	} ?>
 	<td><label for="fname">first name</label></td>
 	<td><label for="lname">last name</label></td>
 	<td><label for="email">email</label></td>
 	</tr>
 	<tr>
 	<td><?$this->f->show_element("usrnm");?></td>
+<?	if ($this->show_domain){ ?>
+	<td><?$this->f->show_element("domain");?></td>
+<?	} ?>
 	<td><?$this->f->show_element("fname");?></td>
 	<td><?$this->f->show_element("lname");?></td>
 	<td><?$this->f->show_element("email");?></td>
 	</tr>
-	<tr><td colspan="4"><label for="onlineonly" style="display: inline;">show on-line users only:</label><?$this->f->show_element("onlineonly");?></td></tr>
-	<tr><td colspan="4" align="right"><?$this->f->show_element("okey");?></td></tr>
+<?	if ($this->show_onlineonly){ ?>
+	<tr><td colspan="<?echo $col_span;?>"><label for="onlineonly" style="display: inline;">show on-line users only:</label><?$this->f->show_element("onlineonly");?></td></tr>
+<?	} ?>
+<?	if ($this->show_adminsonly){ ?>
+	<tr><td colspan="<?echo $col_span;?>"><label for="adminsonly" style="display: inline;">show admins only:</label><?$this->f->show_element("adminsonly");?></td></tr>
+<?	} ?>
+	<tr><td colspan="<?echo $col_span;?>" align="right"><?$this->f->show_element("okey");?></td></tr>
 	</table>
 <?		$this->f->finish();					// Finish form
 	?></div><?

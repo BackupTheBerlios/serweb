@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.14 2004/03/24 21:21:39 kozlik Exp $
+ * $Id: local.inc,v 1.15 2004/04/05 19:31:03 kozlik Exp $
  *
  */ 
 
@@ -125,7 +125,7 @@ class phplib_Auth extends Auth {
     $uid = false;
 
 	if ($config->clear_text_pw){
-	    $this->db->query(sprintf("select phplib_id, perms ".
+	    $this->db->query(sprintf("select phplib_id ".
     	                         "        from %s ".
         	                     "       where username = '%s' ".
             	                 "         and password = '%s'".
@@ -137,7 +137,7 @@ class phplib_Auth extends Auth {
 	}else{
 		$ha1=md5($username.":".$config->realm.":".$password);
     	
-	    $this->db->query(sprintf("select phplib_id, perms ".
+	    $this->db->query(sprintf("select phplib_id ".
     	                         "        from %s ".
         	                     "       where username = '%s' ".
 								 "        and domain = '%s'".
@@ -151,38 +151,48 @@ class phplib_Auth extends Auth {
 
     while($this->db->next_record()) {
       $uid = $this->db->f("phplib_id");
-      $this->auth["perm"] = $this->db->f("perms");
     }
-	
-	if ($this->auth["perm"]=='admin'){
-		$this->check_for_privilege_change_privileges();
-	}
+
+	$this->check_for_privileges();
 	
     return $uid;
   }
 
   /*
-  	method checks if user have privilege 'change_privileges'
+  	method checks user permisions
   */
-  function check_for_privilege_change_privileges(){
-    global $username, $config;
+	function check_for_privileges(){
+		global $config;
 
-    $this->db->query(sprintf("select priv_value ".
-   	                         "        from %s ".
-       	                     "       where username = '%s' ".
-							 "        and domain = '%s'".
-           	                 "        and priv_name = 'change_privileges'",
-               	          $config->table_admin_privileges,
-                   	      addslashes($this->auth["uname"]),
-						  addslashes($config->realm)));
+	    $this->db->query(sprintf("select priv_name, priv_value ".
+   		                         "        from %s ".
+       		                     "       where username = '%s' ".
+								 "        and domain = '%s'".
+           	    	             "        and (priv_name = 'change_privileges' or priv_name = 'is_admin')",
+               	    	      $config->table_admin_privileges,
+                   	    	  addslashes($this->auth["uname"]),
+							  addslashes($config->realm)));
 
-    while($this->db->next_record()) {
-		if ($this->db->f("priv_value")) {
-			if ($this->auth["perm"]) $this->auth["perm"].=",";
-			$this->auth["perm"].="change_priv";
+		while($this->db->next_record()) {
+			switch ($this->db->f("priv_name")){
+			case 'is_admin':
+				if ($this->db->f("priv_value")) {
+					if ($this->auth["perm"]) $this->auth["perm"].=",";
+					$this->auth["perm"].="admin";
+				}
+				break;
+
+			case 'change_privileges':
+				if ($this->db->f("priv_value")) {
+					if ($this->auth["perm"]) $this->auth["perm"].=",";
+					$this->auth["perm"].="change_priv";
+				}
+				break;
+
+			}//switch
 		}
-    }
-  }
+	
+	} //function check_for_privileges()
 }
 
 class phplib_Pre_Auth extends phplib_Auth {
@@ -198,7 +208,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 	
 			if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
 			
-		    $this->db->query(sprintf("select username, perms ".
+		    $this->db->query(sprintf("select username ".
 		                             "        from %s ".
 		                             "       where phplib_id = '%s' ",
 		                          $this->database_table,
@@ -207,13 +217,10 @@ class phplib_Pre_Auth extends phplib_Auth {
 		    $uid=0;
 		    while($this->db->next_record())	{
 		      $this->auth["uname"] = $this->db->f("username");
-		      $this->auth["perm"] = $this->db->f("perms");
 			  $uid=$pre_uid;
 		    }
 	
-			if ($this->auth["perm"]=='admin'){
-				$this->check_for_privilege_change_privileges();
-			}
+			$this->check_for_privileges();
 			
 			return $uid;
 		}
