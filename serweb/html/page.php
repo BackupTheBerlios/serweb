@@ -114,21 +114,36 @@
 			</table>
 		</td>
 		</tr>
-		<tr> 
+<!-- 		<tr> 
 		<td colspan="3" height="48"><img src="<?echo $config->img_src_path;?>title/login.gif" width="156" height="55" border="0"></td>
+		</tr> -->
+		<tr> 
+		<td colspan="3" height="20"><img src="<?echo $config->img_src_path;?>title/logout_up.gif" width="156" height="20" border="0"></td>
 		</tr>
 		<tr> 
-		<td width="22" height="11"><img src="<?echo $config->img_src_path;?>title/login_left.gif" width="22" height="14" border="0"></td>
- 		<td width="77" height="11"><img src="<?echo $config->img_src_path;?>login_mitte.gif"></td>
-		<td width="57" height="11"><img src="<?echo $config->img_src_path;?>title/login_right.gif" width="57" height="14" border="0"></td>
+		<td width="22" height="14"><img src="<?echo $config->img_src_path;?>title/logout_left.gif" width="22" height="14" border="0"></td>
+		<?if ($show_logout){?>
+		<td width="77" height="14"><a href="<?$sess->purl("logout.php");?>" onMouseOver="image6.src='<?echo $config->img_src_path;?>preload/logout_a.gif';" onMouseOut="image6.src='<?echo $config->img_src_path;?>preload/logout.gif';"><img name="image6" src="<?echo $config->img_src_path;?>preload/logout.gif" border="0" alt="logout"></td>
+		<?}else{?>
+ 		<td width="77" height="14"><img src="<?echo $config->img_src_path;?>title/logout_mitte.gif" width="77" height="14" border="0"></td>
+		<?}?>
+		<td width="57" height="14"><img src="<?echo $config->img_src_path;?>title/logout_right.gif" width="57" height="14" border="0"></td>
+		</tr>
+		<tr> 
+		<td colspan="3" height="21"><img src="<?echo $config->img_src_path;?>title/logout_down.gif" width="156" height="21" border="0"></td>
+		</tr>
+		<tr> 
+		<td width="22" height="14"><img src="<?echo $config->img_src_path;?>title/login_left.gif" width="22" height="14" border="0"></td>
+ 		<td width="77" height="14"><img src="<?echo $config->img_src_path;?>login_mitte.gif"></td>
+		<td width="57" height="14"><img src="<?echo $config->img_src_path;?>title/login_right.gif" width="57" height="14" border="0"></td>
 		</tr>
 		<tr> 
 		<td colspan="3"><img src="<?echo $config->img_src_path;?>title/password.gif" width="156" height="21" border="0"></td>
 		</tr>
 		<tr> 
-		<td width="22" height="11"><img src="<?echo $config->img_src_path;?>title/password_left.gif" width="22" height="14" border="0"></td>
-		<td width="77" height="11"><img src="<?echo $config->img_src_path;?>password_mitte.gif"></td>
-		<td width="57" height="11"><img src="<?echo $config->img_src_path;?>title/password_right.gif" width="57" height="14" border="0"></td>
+		<td width="22" height="14"><img src="<?echo $config->img_src_path;?>title/password_left.gif" width="22" height="14" border="0"></td>
+		<td width="77" height="14"><img src="<?echo $config->img_src_path;?>password_mitte.gif"></td>
+		<td width="57" height="14"><img src="<?echo $config->img_src_path;?>title/password_right.gif" width="57" height="14" border="0"></td>
 		</tr>
 		<tr> 
 		<td colspan="2" height="15"><img src="<?echo $config->img_src_path;?>title/forgot_left.gif" width="99" height="71"></td>
@@ -142,13 +157,9 @@
 		<td colspan="3"><img src="<?echo $config->img_src_path;?>title/search.gif" width="156" height="65"></td>
 		</tr>
 		<tr>
-		<td width="22" height="11"><img src="<?echo $config->img_src_path;?>title/search_left.gif" width="22" height="14"></td>
-		<?if ($show_logout){?>
-		<td width="77" height="11"><a href="<?$sess->purl("logout.php");?>" onMouseOver="image6.src='<?echo $config->img_src_path;?>preload/logout_a.gif';" onMouseOut="image6.src='<?echo $config->img_src_path;?>preload/logout.gif';"><img name="image6" src="<?echo $config->img_src_path;?>preload/logout.gif" border="0" alt="logout"></td>
-		<?}else{?>
- 		<td width="77" height="11"><img src="<?echo $config->img_src_path;?>search_mitte.gif"></td>
-		<?}?>
-		<td width="57" height="11"><img src="<?echo $config->img_src_path;?>title/search_right.gif" width="57" height="14"></td>
+		<td width="22" height="14"><img src="<?echo $config->img_src_path;?>title/search_left.gif" width="22" height="14"></td>
+ 		<td width="77" height="14"><img src="<?echo $config->img_src_path;?>search_mitte.gif"></td>
+		<td width="57" height="14"><img src="<?echo $config->img_src_path;?>title/search_right.gif" width="57" height="14"></td>
 		</tr>
 		<tr>
 		<td colspan="3" height="15"><img src="<?echo $config->img_src_path;?>preload/advanced.gif"></td>
