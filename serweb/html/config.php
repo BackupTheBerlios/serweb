@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.41 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: config.php,v 1.42 2004/04/04 19:59:45 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -8,11 +8,11 @@
 		/* ------------------------------------------------------------*/
 		/* you need to align these values to your local server settings */
 
-		/* serweb will send confirmation emails and SIP IMs -- what sender 
+		/* serweb will send confirmation emails and SIP IMs -- what sender
 		   address should it claim ?
 		   should appear in them ?
 		*/
-		$config->mail_header_from="registrar@mydomain.org";			
+		$config->mail_header_from="registrar@mydomain.org";
 		$config->web_contact="sip:daemon@192.168.2.16";
 
 		/* content of html <title> tag */
@@ -21,7 +21,7 @@
 		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags */
 		$config->html_headers=array();
 		$config->html_headers[]="";
-		
+
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/
@@ -42,7 +42,7 @@
 		   by default are experimental features which have not been tested
 		   yet
 		*/
-			
+
 		/* user tabs definitions
 			Ctab (enabled, name_of_tab, php_script)
 		*/
@@ -73,7 +73,7 @@
 		$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
 
 		/* show test firewall/NAT button (see also advanced FW/NAT settings bellow */
-		$config->enable_test_firewall=true;           
+		$config->enable_test_firewall=true;
 
 		/* experimental/incomplete features turned off: voicemail
 		   and set up a jabber account for each new SIP user too
@@ -85,20 +85,27 @@
 		$config->jserver = "bat.iptel.org";   # Jabber server hostname
 		$config->jport = "5222";     			# Jabber server port
 		$config->jcid  = 0;      				# Jabber communication ID
-		
+
 		# Jabber module database
-		$config->jab_db_srv="bat.iptel.org";  # database server
-		$config->jab_db_usr="s2jgw";  		# database user
-		$config->jab_db_pas="47s2jgw11";  	# database user's password
-		$config->jab_db_db="sip_jab";   		# database name
-		
+                $config->jab_db_type="mysql";           # type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
+                $config->jab_db_srv="localhost";        # database server
+                $config->jab_db_port="";                # database port - leave empty for default
+                $config->jab_db_usr="ser";              # database user
+                $config->jab_db_pas="heslo";            # database user's password
+                $config->jab_db_db="sip_jab";           # database name
+
 		/* this array contain list of config parameter which can be modified
 		   by admins of particular domains */
-		
-		$config->domain_depend_config=array("mail_header_from", "web_contact", "html_title", 
-			"html_headers", "first_alias_number", "infomail", "regmail", "forgot_pass_subj", 
+
+		$config->domain_depend_config=array("mail_header_from", "web_contact", "html_title",
+			"html_headers", "first_alias_number", "infomail", "regmail", "forgot_pass_subj",
 			"mail_forgot_pass", "register_subj", "mail_register", "terms_and_conditions");
-		
+
+                /*
+                  log file
+                */
+                $config->log_file="/var/spool/log/serweb";
+
 		/* ------------------------------------------------------------*/
 		/* Speed dial                                                  */
 		/* ------------------------------------------------------------*/
@@ -122,7 +129,7 @@
 		$config->denny_reg[]=new CREG_list_item("iptel\.org$","local forwarding prohibited");
 		$config->denny_reg[]=new CREG_list_item("gateway","gateway contacts prohibited");
 
-		/* SER configuration script may check for group membership of users 
+		/* SER configuration script may check for group membership of users
 		   identified using digest authentication; e.g., it may only allow
 		   international calls to callers who are members of 'int' group;
 		   this is a list of groups that serweb allows to set -- they need to
