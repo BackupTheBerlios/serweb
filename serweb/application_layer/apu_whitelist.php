@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.6 2004/11/24 11:51:31 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.7 2004/11/29 21:45:53 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -33,6 +33,12 @@
 
    'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
 	 error message that is displayed if URI is blacklisted
+
+   'max_entries'				(integer) default: null
+     if is set, it is max number of entries in whitelist
+
+   'max_entries_e'				default: $lang_str['fe_max_entries_reached']
+	 error message that is displayed if max_entries is reached
    
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
@@ -109,7 +115,11 @@ class apu_whitelist extends apu_base_class{
 		/* blacklist */
 		$this->opt['blacklist'] = null;
 		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
-		
+
+		/* maximum entires */
+		$this->opt['max_entries'] = null;
+		$this->opt['max_entries_e'] = &$lang_str['fe_max_entries_reached'];
+
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
@@ -252,6 +262,13 @@ class apu_whitelist extends apu_base_class{
 		global $lang_str;
 
 		if (isset($_POST['whitelist']) and is_array($_POST['whitelist'])){
+	
+			/* check max number of entries */
+			if ($this->opt['max_entries'] and $this->opt['max_entries'] < count($_POST['whitelist'])){
+				$errors[] = $this->opt['max_entries_e'];
+				return false;
+			}
+
 			/* check all entered values if they are correct */
 			foreach ($_POST['whitelist'] as $key => $val){
 
@@ -347,7 +364,16 @@ class apu_whitelist extends apu_base_class{
 		}
 
 		$validate_fumct =
-			"function wlist_validate(value){\n".
+			"function wlist_validate(sel_el, txt_el, hidden_el){\n".
+			"	var value = txt_el.value;\n".
+			"	\n".
+			($this->opt['max_entries']?(
+				"	if (hidden_el.value == '' && sel_el.length >= ".$this->opt['max_entries']."){\n".  // (hidden_el.value == '') - if we adding new item (not editing)
+				"		alert('".$this->opt['max_entries_e']."');\n".
+				"		return false;\n".
+				"	}\n\n")
+				:"").
+			"	\n".
 			"	var re =  new RegExp('".$v_regex."', 'g');\n".
 			"	if (!re.test(value)) {\n".
 			"		alert('".$v_msg."');\n".

@@ -1,5 +1,5 @@
 /*
- * $Id: whitelist.js,v 1.3 2004/11/18 15:47:12 kozlik Exp $
+ * $Id: whitelist.js,v 1.4 2004/11/29 21:45:53 kozlik Exp $
  */
  
 function select_all_options(sel_element){
@@ -31,13 +31,13 @@ function update_option(sel_el, new_val, old_val){
 function wlist_add(sel_el, txt_el, hidden_el){
 	/* not value entered */
 	if (txt_el.value==''){
-		hidden_el.value='';	/* be sure that tehere is nothing */
+		hidden_el.value='';	/* be sure that there is nothing */
 		return;
 	}
 
 	/* if exists validating function, validate url */
 	if (window.wlist_validate){
-		if (!window.wlist_validate(txt_el.value)){
+		if (!window.wlist_validate(sel_el, txt_el, hidden_el)){
 			txt_el.focus();
 			return;
 		}
