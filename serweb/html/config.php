@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.21 2003/04/03 20:07:21 jiri Exp $
+ * $Id: config.php,v 1.22 2003/04/26 17:57:21 jiri Exp $
  */
 
 class Csub_not {
@@ -52,6 +52,7 @@ class Cconfig {
 	var $greetings_spool_dir;
 
 	var $show_voicemail_acl;
+	var $show_voice_silo;
 
 	var $enable_dial_voicemail;
 	var $setup_jabber_account;
@@ -146,7 +147,7 @@ class Cconfig {
 		   the SER account for MySQl, you need to update here 
 		*/
 
-		$this->db_host="localhost";		//database host
+		$this->db_host="192.168.2.16";		//database host
 		$this->db_name="ser";			//database name
 		$this->db_user="ser";			//database conection user
 		$this->db_pass="heslo";			//database conection password
@@ -165,7 +166,7 @@ class Cconfig {
 		*/
 		$this->root_path="/iptel/html/";
 		/* roo uri of your server */
-		$this->root_uri="http://www.mydomain.org";
+		$this->root_uri="http://192.168.2.16";
 		/* where is your zone file on your server ? */
 		$this->zonetab_file =   "/usr/share/zoneinfo/zone.tab";
 		/* serweb will send confirmation emails and SIP IMs -- what sender 
@@ -173,7 +174,7 @@ class Cconfig {
 		   should appear in them ?
 		*/
 		$this->mail_header_from="registrar@mydomain.org";			
-		$this->web_contact="sip:daemon@mydomain.org";
+		$this->web_contact="sip:daemon@192.168.2.16";
 		/* spool directory with voicemail messages */
 		$this->voice_silo_dir = '/var/spool/voicemail/'; 
 		/* directory with voicemail greetings */
@@ -195,9 +196,9 @@ class Cconfig {
 		$this->separator="/separator.html";
 		$this->epilog="/epilog.html";
 		/* your domain name */
-		$this->realm="mydomain.org";
-		$this->domainname="mydomain.org";
-		$this->default_domain="mydomain.org"; // used with ul_fifo
+		$this->realm="192.168.2.16";
+		$this->domainname="192.168.2.16";
+		$this->default_domain="192.168.2.16"; // used with ul_fifo
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/
@@ -225,11 +226,11 @@ class Cconfig {
 			
 		$this->enable_tabs[1]=true;					//enable tab my account
 		$this->enable_tabs[2]=true;					//enable tab phonebook
-		$this->enable_tabs[3]=false;				//enable tab missed calls
-		$this->enable_tabs[4]=false;				//enable tab accounting
+		$this->enable_tabs[3]=true;				//enable tab missed calls
+		$this->enable_tabs[4]=true;				//enable tab accounting
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=false;				//enable tab notification subscription
-		$this->enable_tabs[7]=false;				//enable tab message store
+		$this->enable_tabs[7]=true;				//enable tab message store
 
 		$this->default_width=564;					//width of usable area
 
@@ -242,9 +243,10 @@ class Cconfig {
 		/* experimental/incomplete features turned off: voicemail
 		   and set up a jabber account for each new SIP user too
 		*/
-		$this->show_voicemail_acl=false; /* show voicemail in ACL list */
+		$this->show_voicemail_acl=true; /* show voicemail in ACL list */
+		$this->show_voice_silo=false; /* show voice messages in silo too */
 		$this->enable_dial_voicemail=false;
-		$this->enable_tabs[8]=false;				//enable tab voicemail
+		$this->enable_tabs[8]=true;				//enable tab voicemail
 		$this->setup_jabber_account=false;
 
 		/* ------------------------------------------------------------*/

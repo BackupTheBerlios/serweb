@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: message_store.php,v 1.1 2003/02/19 22:16:35 kozlik Exp $
+ * $Id: message_store.php,v 1.2 2003/04/26 17:57:21 jiri Exp $
  */
 
 require "prepend.php";
@@ -34,7 +34,7 @@ class Cvoice_mess{
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
 	if (isset($dele_im)){
 		$q="delete from ".$config->table_message_silo." where mid=$dele_im and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
@@ -67,20 +67,31 @@ do{
 
 do{
 	if ($db){
-		$q="select mid, src_addr, inc_time, body from ".$config->table_message_silo." where r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
+		$q="select mid, src_addr, inc_time, body from ".
+			$config->table_message_silo.
+			" where r_uri like 'sip:".$auth->auth["uname"].
+			"@".$config->default_domain."%'";
 		$im_res=mySQL_query($q);
 		if (!$im_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	
 		while ($row=MySQL_Fetch_Object($im_res)){
-			$im_arr[]=new Cinst_mess($row->mid, $row->src_addr, $row->inc_time, $row->body);
+			$im_arr[]=new Cinst_mess($row->mid, $row->src_addr, 
+				$row->inc_time, $row->body);
 		}
-	
-		$q="select mid, src_addr, inc_time, subject, file from ".$config->table_voice_silo." where r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
-		$vm_res=mySQL_query($q);
-		if (!$vm_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	
-		while ($row=MySQL_Fetch_Object($vm_res)){
-			$vm_arr[]=new Cvoice_mess($row->mid, $row->src_addr, $row->inc_time, $row->subject, $row->file);
+
+		if ($config->show_voice_silo) {	
+			$q="select mid, src_addr, inc_time, subject, file from ".
+				$config->table_voice_silo." where r_uri like 'sip:".
+				$auth->auth["uname"]."@".$config->default_domain."%'";
+			$vm_res=mySQL_query($q);
+			if (!$vm_res) {
+				$errors[]="error in SQL query, line: ".__LINE__; 
+				break;
+			}
+			while ($row=MySQL_Fetch_Object($vm_res)){
+				$vm_arr[]=new Cvoice_mess($row->mid, $row->src_addr, 
+					$row->inc_time, $row->subject, $row->file);
+			}
 		}
 		set_timezone($errors);
 	}
@@ -160,6 +171,8 @@ do{
 <br>
 <?}?>
 
+<?if ($default->show_voice_silo) {?>
+
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr><td class="title" width="502">Voicemail messages store:</td></tr>
 </table><br>
@@ -199,6 +212,7 @@ do{
 
 <?}else{?>
 <div align="center">No stored voicemail messages</div>
+<?}?>
 <?}?>
 
 <br>
