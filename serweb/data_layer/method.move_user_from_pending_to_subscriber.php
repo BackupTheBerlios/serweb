@@ -1,13 +1,23 @@
 <?
 /*
- * $Id: method.move_user_from_pending_to_subscriber.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.move_user_from_pending_to_subscriber.php,v 1.2 2004/08/26 09:23:33 kozlik Exp $
  */
+
+/**
+ * move user's entry from table pending to table subscriber
+ *
+ * @param $confirmation - confirmation string
+ * @param $errors
+ * @return Cserweb_auth of user
+ *         TRUE if entry already has been moved
+ *	       FALSE on error
+ */ 
 
 class CData_Layer_move_user_from_pending_to_subscriber {
 	var $required_methods = array();
 	
 	function move_user_from_pending_to_subscriber($confirmation, &$errors){
-		global $config;
+		global $config, $lang_str;
 
 		if (!$this->connect_to_db($errors)) return false;
 
@@ -22,8 +32,8 @@ class CData_Layer_move_user_from_pending_to_subscriber {
 			$q="select username from ".$config->data_sql->table_subscriber." where confirmation='".$confirmation."'";
 			$res1=$this->db->query($q);
 			if (DB::isError($res1)) {log_errors($res1, $errors); return false;}
-			if (!$res1->numRows()){ $errors[]="Sorry. No such a confirmation number exists."; return false;}
-			else { $ok=1; $errors[]="Your account has already been created."; return false; }
+			if (!$res1->numRows()){ $errors[] = $lang_str['err_reg_conf_not_exists_conf_num']; return false;}
+			else { $errors[] = $lang_str['err_reg_conf_already_created']; return true; }
 		}
 
 		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);

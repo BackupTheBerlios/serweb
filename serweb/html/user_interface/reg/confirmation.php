@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.24 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: confirmation.php,v 1.25 2004/08/26 09:23:34 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('move_user_from_pending_to_subscriber', 'get_new_alias_number', 'add_new_alias',
@@ -21,6 +21,7 @@ do{
 	if (isset($nr)){  // Is there data to process?
 
 		if (false === $user_id=$data->move_user_from_pending_to_subscriber($nr, $errors)) break;
+		if (true === $user_id) {$ok=1; break;}
 		$remove_from_subscriber=true;
 		
 		// generate alias number 
