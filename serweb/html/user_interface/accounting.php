@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.17 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: accounting.php,v 1.18 2004/03/23 21:55:05 kozlik Exp $
  */
 
 require "prepend.php";
@@ -16,15 +16,17 @@ do{
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 
 	$q="select t1.to_uri, t1.sip_to, t1.sip_callid, t1.time, ".
-		"t1.fromtag as invft, t2.fromtag as byeft, t2.totag as byett, ".
-		"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) ".
-			"as length ".
-		"from ".$config->table_accounting." t1, ".
-			$config->table_accounting." t2 ".
+			"t1.fromtag as invft, t2.fromtag as byeft, t2.totag as byett, ".
+			"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, ".
+			"t2.sip_callid as byecid ".
+		"from ".$config->table_accounting." t1 left outer join ".$config->table_accounting." t2 on ".
+			"t1.sip_callid=t2.sip_callid and ".
+            "((t1.totag=t2.totag and t1.fromtag=t2.fromtag) or ".
+            " (t1.totag=t2.fromtag and t1.fromtag=t2.totag)) and ".
+			"t2.sip_method='BYE' ".
 		"where t1.username='".$auth->auth["uname"]."' and ".
 			"t1.domain='".$config->realm."' and ".
-			"t1.sip_callid=t2.sip_callid and ".
-			"t1.sip_method='INVITE' and t2.sip_method='BYE' ".
+			"t1.sip_method='INVITE'  ".
 		"order by t1.time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -65,9 +67,16 @@ print_html_body_begin($page_attributes);
 		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
 		else $time=date('Y-m-d H:i',$timestamp);
 
-		if ($row->invft==$row->byeft) $hangup="caller";
-		else if ($row->invft==$row->byett) $hangup="callee";
-		else $hangup="n/a";
+
+		if (is_null($row->byecid)){ //unpaired record, only INVITE
+			$row->length="n/a";
+			$hangup="n/a";
+		}
+		else{
+			if ($row->invft==$row->byeft) $hangup="caller";
+			else if ($row->invft==$row->byett) $hangup="callee";
+			else $hangup="n/a";
+		}
 
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
