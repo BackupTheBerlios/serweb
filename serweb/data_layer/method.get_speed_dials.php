@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_speed_dials.php,v 1.1 2004/09/06 11:03:13 kozlik Exp $
+ * $Id: method.get_speed_dials.php,v 1.2 2004/11/05 19:43:33 kozlik Exp $
  */
 
 /*
@@ -52,7 +52,7 @@ class CData_Layer_get_speed_dials {
 		if (!is_null($opt_to))   $where_phrase .= " and abs(username_from_req_uri) <= ".$opt_to." ";
 
 		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri, first_name, last_name from ".$config->data_sql->table_speed_dial.
-			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by domain_from_req_uri, username_from_req_uri";
+			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by username_from_req_uri";
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
