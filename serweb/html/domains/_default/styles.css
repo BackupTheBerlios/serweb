@@ -161,6 +161,11 @@ div.swForm table{
 	margin-right: auto;	
 }
 
+/* needed to center fieldsets in IE5 */
+.swFieldset{
+	text-align: center;
+}
+
 .swForm legend{
 	font-style : italic;
 }
