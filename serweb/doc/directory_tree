@@ -1,0 +1,25 @@
+/
+|- application_layer	- backend for application units
+|- config		- serweb configuration
+|- data_layer		- function for get/store data to DB
+|  |- customized	- may contain customized data layer functions
+|- doc			- some minor documentation. I writed it
+|			  primarily only for myself meanwhile
+|- html
+|  |- admin		- admin interface
+|  |- domains		- some configuration depending on domain
+|  |- img		- images (subtree of this directory will be
+|  |			  reduced)
+|  |- js		- some javascript functions
+|  |- user		- user interface rewrited to application units
+|  |- user_interface	- old user interface (will be removed)
+|  |  |- reg		- scripts for registration of new user
+|- lang 		- directory contain internationalized messages
+|- lang_maintenance	- scripts for maintenance files in lang dir
+|- phplib		- library phplib
+|  |- local		- scripts for adapt behaviour of phplib
+|- scripts		- some scripts for shell
+|  |- cron_job		- scripts runned by cron
+|- smarty		- template engine (http://smarty.php.net)
+|- templates		- templates
+
