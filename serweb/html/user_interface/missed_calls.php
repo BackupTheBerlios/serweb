@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.7 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: missed_calls.php,v 1.8 2003/04/04 02:01:37 jiri Exp $
  */
 
 require "prepend.php";
@@ -23,9 +23,14 @@ class Cmisc{
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
-	$q="select sip_from, time, sip_status from ".$config->table_missed_calls." where username='".$auth->auth["uname"]."' order by time desc";
+	$q="select t1.sip_from, t1.time, t1.sip_status from ".
+		$config->table_missed_calls." t1, ".$config->table_aliases." t2".
+		" where t1.username='".$auth->auth["uname"].
+		"' OR ('sip:".$auth->auth["uname"]."@".$config->default_domain.
+			"'=t2.contact AND t2.username=t1.username) ".
+		" order by time desc";
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
