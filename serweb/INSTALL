@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.1 2002/10/21 17:02:32 kozlik Exp $
+$Id: INSTALL,v 1.2 2002/12/31 09:46:19 jiri Exp $
 
 serweb - Installation
 
@@ -19,3 +19,14 @@ serweb - Installation
         in your browser. Serweb should now display a login screen.
 
 
+
+Frequently Asked Installation Questions:
+Q: What is the zone.tab file and where is it located.
+A: zone.tab describes timezones -- information needed to
+   interpret time information correctly. Where it is stored
+   depends on your OS, many distributions store it at
+   /usr/share/zoneinfo/zone.tab. The file contains line-by-line
+   country code, coordinates, names and optional comments, e.g.
+   CZ+5005+01426Europe/Prague
+   (You may want to get the file from other places like 
+    http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab)
