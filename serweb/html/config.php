@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.31 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: config.php,v 1.32 2004/03/02 19:14:30 kozlik Exp $
  */
 
 class Csub_not {
@@ -252,7 +252,6 @@ class Cconfig {
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=false;				//enable tab notification subscription
 		$this->enable_tabs[7]=true;				//enable tab message store
-		$this->enable_tabs[11]=true;				//enable tab user_preferences
 
 		/* admin tabs definitions
 			Ctab (enabled, name_of_tab, php_script)
@@ -278,6 +277,8 @@ class Cconfig {
 		$this->enable_tabs[8]=true;				//enable tab voicemail
 		$this->setup_jabber_account=false;
 
+		$this->enable_tabs[11]=true;				//enable tab user_preferences
+		
 		/* ------------------------------------------------------------*/
 		/* ACLs                                                        */
 		/* ------------------------------------------------------------*/
@@ -524,8 +525,9 @@ class Cconfig {
 		$this->table_ser_mon_agg="server_monitoring_agg";
 		$this->table_message_silo="silo";
 		$this->table_voice_silo="voice_silo";
-		$this->table_user_preferences="user_preferences";
-		$this->table_user_preferences_types="user_preferences_types";
+		$this->table_user_preferences="usr_preferences";
+		$this->table_user_preferences_types="usr_preferences_types";
+		$this->table_providers="providers";
 
 		/* these are table names as reffered from script and via FIFO */
 		$this->ul_table="location";
