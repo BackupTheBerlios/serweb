@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.43 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: functions.php,v 1.44 2004/09/06 09:44:16 kozlik Exp $
  */
 
 
@@ -143,6 +143,12 @@ class Creg{
 
 		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
 		$this->sip_address="[sS][iI][pP]:".$this->address;
+		
+		/* regex for phonenumber which could contain some characters as: - / <space> this characters should be removed */		
+		$this->phonenumber="\\+?[-/ 1-9]+";
+
+		/* strict phonenumber - only numbers and optional initial + */
+		$this->phonenumber_strict="\\+?[1-9]+";
 	}
 
 	/* parse domain name fro sip address*/
@@ -157,6 +163,12 @@ class Creg{
 
 		//remove the '@' at the end
 		return substr($uname,0,-1);
+	}
+	
+	/* converts string which can be accepted by regex $this->phonenumber to 
+	   string which can be accepted by regex $this->phonenumber_strict */
+	function convert_phonenumber_to_strict($phonenumber){
+		return str_replace(array('-', '/', ' '), "", $phonenumber);
 	}
 }
 
@@ -604,6 +616,7 @@ function log_errors($err_object, &$errors){
 		$log_message= "file: ".$last_frame['file'].":".$last_frame['line'].": ".$err_object->getMessage()." - ".$err_object->getUserInfo();
 		//remove endlines from the log message
 		$log_message=str_replace(array("\n", "\r"), "", $log_message);
+		$log_message=ereg_replace("[[:space:]]{2,}", " ", $log_message);
 		$serwebLog->log($log_message, PEAR_LOG_ERR);
 		
 	}
