@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.6 2003/11/18 12:06:12 jiri Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.7 2003/11/19 11:23:21 kozlik Exp $
  */
 
  /*
@@ -79,16 +79,16 @@ function is_user_exists($uname, $udomain, &$errors){
   *	add new user to table subscriber (or pending)
   */
 
-function add_user_to_subscriber($uname, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $table, &$errors){
+function add_user_to_subscriber($uname, $domain, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $table, &$errors){
  	global $config;
 	
-	$ha1=md5($uname.":".$config->realm.":".$passwd);
-	$ha1b=md5($uname."@".$config->domainname.":".$config->realm.":".$passwd);
+	$ha1=md5($uname.":".$domain.":".$passwd);
+	$ha1b=md5($uname."@".$config->domainname.":".$domain.":".$passwd);
 
 	$q="insert into ".$table." (username, password, first_name, last_name, phone, email_address, ".
 			"datetime_created, datetime_modified, confirmation, ha1, ha1b, domain, phplib_id, timezone) ".
 		"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
-			"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."', '$timezone')";
+			"'$ha1', '$ha1b','$domain', '".md5(uniqid('fvkiore'))."', '$timezone')";
 
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;;}

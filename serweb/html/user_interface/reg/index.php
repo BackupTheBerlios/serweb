@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.8 2003/11/03 01:54:27 jiri Exp $
+ * $Id: index.php,v 1.9 2003/11/19 11:23:21 kozlik Exp $
  */
 
 require "prepend.php";
@@ -121,7 +121,7 @@ do{
 		
 		$confirm=md5(uniqid(rand()));
 
-		if (!add_user_to_subscriber($uname, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
+		if (!add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
 
 		$sip_address="sip:".$uname."@".$config->default_domain;
 
