@@ -4,7 +4,7 @@
 		Header("Cache-Control: no-cache");
 		Header("Expires: ".GMDate("D, d M Y H:i:s")." GMT");
 	}
-
+	
 	function print_html_head(){
 		global $config;	?>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?echo $config->charset;?>">

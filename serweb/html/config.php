@@ -6,7 +6,7 @@ class Csub_not {
 		$this->desc=$desc;
 	}
 }
-
+	
 class Cconfig {
 	var $db_host;
 	var $db_name;
