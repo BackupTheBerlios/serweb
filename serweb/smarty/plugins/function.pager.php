@@ -33,6 +33,7 @@
       @param    string    $class_text      - class for the texts
       @param    string    $separator       - string to put between the 1 2 3 pages (1 separator 2 separator);
       @param    string    $display         - if is 'always', the pager even if the items are too few
+      @param    string    $link_special_html   - special html attribs for <a href="">
       */
 
 	global $sess;
@@ -46,6 +47,7 @@
 	$txt_prev     = 'previous';            // previous
 	$txt_next     = 'next';                // next
 	$display      = '';
+	$link_special_html = '';
 	
 	foreach($params as $key=>$value) {
 		if ($key == 'page') continue;
@@ -78,7 +80,7 @@
 	$lfrom=$pos-($link_limit*$limit); if ($lfrom<0) $lfrom=0;
 	$lto=$pos+(($link_limit+1)*$limit); if ($lto>$items) $lto=$items;
 
-	if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'">'.$txt_prev.'</a>'.$separator;
+	if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
 	elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
 
 	for ($i=$lfrom; $i<$lto; $i+=$limit){
@@ -88,11 +90,11 @@
 		if ($i<=$pos and $pos<($i+$limit)) 
 			$out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>';
 		else 
-			$out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'">'.(floor($i/$limit)+1).'</a>';
+			$out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'" '.$link_special_html.'>'.(floor($i/$limit)+1).'</a>';
 	}
 	
  	if (($pos+$limit)<$items) 
-		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'">'.$txt_next.'</a>';
+		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_next.'</a>';
 	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>'.$separator;
 	
 	return $out;  
