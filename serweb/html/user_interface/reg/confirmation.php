@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.13 2003/04/26 04:08:36 jiri Exp $
+ * $Id: confirmation.php,v 1.14 2003/05/28 15:33:50 jiri Exp $
  */
 
 include "reg_jab.php";
@@ -110,7 +110,8 @@ do{
 	if ($ok==1){
 ?>
 <span class="txt_norm">Congratulations! Your iptel.org account was set up!</span>
-<? }elseif ($ok>=2 && $ok<10) {?>
+<? }elseif ($ok>=2 && $ok<10) {
+error_log("SERWEB:jabber registration failed: <$user_id> [$ok]\n");?>
 <span class="txt_norm">Your iptel.org account was set up!<br><b>But your iptel.org Jabber Gateway registration failed-
 <? echo "$ok"; ?>
 </b><br>Please contact <a href="mailto:info@iptel.org">info@iptel.org</a> for further assistance.</span>
