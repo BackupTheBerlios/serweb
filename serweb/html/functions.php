@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.13 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: functions.php,v 1.14 2003/04/03 19:41:52 jiri Exp $
  */
 
 
@@ -180,6 +180,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	/* create fifo for replies */
 	@system("mkfifo -m 666 ".$config->reply_fifo_path );
 
+
 	/* add command separator */
 	$fifo_cmd=$fifo_cmd."\n";
 
@@ -267,12 +268,15 @@ function get_location($sip_adr, &$errors){
 	
 	$domainname=$reg->get_domainname($sip_adr);
 	
-	$q="select location from ".$config->table_netgeo_cache." where domainname='".$domainname."'";
+	$q="select location from ".$config->table_netgeo_cache.
+		" where domainname='".$domainname."'";
 	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
+	/* if this query failed netgeo is probably not installed -- ignore */
+	if (!$res) return "";
+	/* {$errors[]="error in SQL query, line: ".__LINE__; return;} */
 	$row=mysql_fetch_object($res);
 
 	if (!$row) return "";
-	else return $row->location;
+	return $row->location;
 }
 ?>
