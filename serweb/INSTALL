@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.8 2003/08/15 00:59:58 jiri Exp $
+$Id: INSTALL,v 1.9 2003/12/12 21:59:48 jiri Exp $
 
 serweb - Installation
 
@@ -16,6 +16,10 @@ serweb - Installation
         the values for host, database name, user and password and
         other values to fit your environment. Refer to and define files 
         (prolog, separator, epilog) that define layout of your webpages.
+		A simplistic layout can be defined as follows:
+			echo "<body><h1>" > html/prolog.html
+			echo "</h1><hr>" > html/separator.html
+			echo "</body>" > html/epilog.html
 	[4] make sure your php.ini includes the following values:
 	    - short_open_tag = on
 		- register_globals = on
