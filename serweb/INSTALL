@@ -1,10 +1,10 @@
-$Id: INSTALL,v 1.6 2003/06/04 22:00:01 jiri Exp $
+$Id: INSTALL,v 1.7 2003/08/13 22:14:09 jiri Exp $
 
 serweb - Installation
 
   Requirements:
   - Apache web server
-  - php 4.x
+  - php 4.x and support for mysql (php-mysql package)
   - MySQL
   - running SER with MySQL support
 
@@ -14,7 +14,8 @@ serweb - Installation
         the HTML tree on your server.
     [3] Open the file config.php in your favourite editor and change
         the values for host, database name, user and password and
-        other values to fit your environment.
+        other values to fit your environment. Refer to and define files 
+        (prolog, separator, epilog) that define layout of your webpages.
 	[4] make sure your php.ini includes the following values:
 	    - short_open_tag = on
 		- register_globals = on
@@ -25,6 +26,7 @@ serweb - Installation
 
 
 Frequently Asked Installation Questions:
+
 Q: What is the zone.tab file and where is it located.
 A: zone.tab describes timezones -- information needed to
    interpret time information correctly. Where it is stored
@@ -35,3 +37,13 @@ A: zone.tab describes timezones -- information needed to
    (You may want to get the file from other places like
     http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab
     or ftp://elsie.nci.nih.gov/pub/)
+
+Q: I get this error: "call to undefined function :mysql-pconnect()"
+A: Do install php-mysql. Really.
+
+Q: All my login attempts lead to the previous screen without any
+   kind of progress or error indication.
+A: Really make sure that register_globals is turned on in your
+   php.ini. (Also make sure that you are changing the php.ini in
+   use by your server and register_globals is not turned off
+   somewhere else in the configuration file.)
