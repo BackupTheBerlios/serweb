@@ -1,0 +1,291 @@
+$Id: application_layer_cz,v 1.1 2004/08/31 14:18:05 kozlik Exp $
+
+Application layer
+-----------------
+
+Sklada se z tzv. aplikacnich jednotek (application unit - APU). Zakald tvori dve tridy:
+- page_controler
+- apu_base_class
+
+Page_controler ridi zpracovani cele stranky, postupne vola metosy vsech APU.
+Apu_base_class je rodicem vsech APU, kazda nove vytvarena APU ji musi dedit.
+
+===============================================================================
+                              page_controler
+===============================================================================
+
+metody:
+add_apu($apu) 
+	prida do vnitrniho seznamu dalsi APU se kterou se bude pracovat
+	$apu je instance (potomka) tridy apu_base_class
+				
+set_template_name($template)
+	nastavi jmeno soubouru se smarty sablonou pro prislusnou stranku
+	
+set_opt($opt_name, $val)
+	uzivatelske nastaveni ovlivnujici chovani tridy:
+	$opt_name - jmeno nastaveni
+	$val - jeho hodnota
+	
+	mozne jmena nastaveni:
+	----------------------
+	'shared_html_form'		(boolean), default: false
+		rika ze vsechny APU budou sdilet jeden html formular
+	'smarty_form'			(string), default: "form"
+		jmeno smarty promenne pod kterym je dostupny sdileny html formular
+	'form_name'				(string), default: ""
+		name atribut <form> tagu
+	'form_submit'			(assoc), default: array('type' => 'hidden')
+		asocitivni pole popisujici submit element, detaily viz. metoda add_submit_to_form()
+		
+start()
+	spousti zpracovani stranky
+	
+	
+===============================================================================
+                              apu_base_class
+===============================================================================
+
+metody:
+get_Instance()
+	staticka metoda, NEMELA!! by se uzivatelem nijak explicitne volat
+	Zajistuje generovani unikatnich identifikatoru pro kazdou instanci APU na strance,
+	i v pripade ze stranka pouziva nekolik instanci teze APU (pozn: muze byt uzitecne 
+	napr. pro user_preferences)
+
+add_submit_to_form($submit, &$form)
+	staticka metoda, vklada do formulare $form submit element popsany asociativnim 
+	polem $submit. Klice pole jsou:
+		['type'] - type of submit element 'hidden', 'button', 'image'
+		['text'] - text on button on alt on image
+		['src']  - source of image
+	
+	
+get_required_data_layer_methods()
+	vraci pole obsahujici jmena metod z data_layer se kterymi apu pracuje - ktere pozaduje
+	aby se includovali
+	
+get_required_javascript()
+	vraci pole obsahujici jmena souboru s javascriptem za adresare /html/js ktere stranka 
+	potrebuje pro svou funkci
+	
+set_opt($opt_name, $val)
+	uzivatelske nastaveni ovlivnujici chovani tridy:
+	$opt_name - jmeno nastaveni
+	$val - jeho hodnota
+	
+	globalni nastaveni pro vsechny APU
+	----------------------------------
+	'instance_id'		(string), default: automaticka hodnota generovana metodou get_Instance()
+		viz: popis metody get_Instance()
+	'form_submit'		(assoc), default: array('type' => 'hidden')
+		asocitivni pole popisujici submit element, detaily viz. metoda add_submit_to_form()
+		
+init()
+	inicializace APU, pokud potomek pretezuje tuto metodu nemel by zapomenout zavolat ji ze 
+	sveho rodice: parent::init()
+	
+	
+determine_action()
+	urcuje jaka akce se bude provadet na zaklade parametru predanuch pres $_POST resp. $_GET - 
+	zpracovani hodnot z formulare apod.
+	
+	nastavuje vlastnost $this->action
+	
+	action je asociativni pole obsahujici tyto klice:
+	['action'] 			(string)
+		jmeno akce ktera se provede, APU by mela obsahovat metodu 'action_<action>'
+		kde <action> je obsah ['action']. Priklad: pokud ['action'] = 'foo', APU musi
+		obsahovat metodu action_foo(&$errors). 
+		Popis action_ metod, viz. action_*(&$errors)
+	['validate_form'] 	(boolean) 
+		rika zda se ma pri teto akci volat metoda pro validaci formulare (validate_form())
+	['reload']			(boolean)
+		udava zda se po vykonani metody action_ odesle hlavicka 'Location:' a ukonci
+		vykonavani skriptu. Pokud na strance existuje vice APU a alespon jedna z nich ma 
+		['reload'] nastaveny na true, pak se volaji action_ metody jen tech APU ktere meli
+		['reload'] = true
+
+action_*(&$errors)
+	skupina metod slouzici k vykonani nejake akce, do pole $errors muze metoda pridat
+	text chyby ke ktere doslo a tento se zobrazi na strance uzivateli. Pokud se po provedeni
+	akce ma odeslat hlavicka "Location' (rozlisuje se podle toho co vratila metoda determine_action)
+	muze metoda vratil pole GET parametru ktere maji byt v url v hlavicce uvedeny. Pri chybe vraci 
+	false -> zpusobi ze k presmerovani hlavickou 'Location' nedojde
+		
+action_default(&$errors)
+	defaultni akce ktera se provadi, napr. ziskani tabulky z databaze
+	
+create_html_form(&$errors)
+	vytvari html formular - vic info v manualu k phplib - oohforms
+	pokud potomek pretezuje tuto metodu nemel by zapomenout zavolat ji ze 
+	sveho rodice: parent::create_html_form($errors)
+	
+	create_html_form ve tride apu_base_class vklada do formulare submit element 
+	definovany pomoci opt['form_submit'] a hidden element 'apu_name' potrebny 
+	pro overeni ktery formular byl submitnut
+	
+validate_form(&$errors)
+	validace formulre, vraci TRUE pokud validace probehla v poradku a muze se zavolat metoda
+	ktera se urcila pri determine_action(), jinak FALSE
+	pokud potomek pretezuje tuto metodu nemel by zapomenout zavolat ji ze 
+	sveho rodice: parent::validate_form($errors)
+	
+was_form_submited()
+	vraci boolean - zjistuje jestli byl odeslan formular od teto APU
+	
+return_messages(&$msgs)
+	pokud se ma uzivateli zobrazit nejaka zprava o probehnute akci vraci asociativni pole
+	s touto zpravou. Klice pole jsou:
+	['short'] - kratka zprava
+	['long']  - podrobnejsi zprava
+
+pass_values_to_html()
+	predani potrebnych promennych SMARTY
+	
+pass_form_to_html()
+	vraci asociativni pole s informacemi nutnymi k vytvoreni html formulare
+	pokud APU nepouzi html formular, vraci false
+	
+	Klice pole jsou:
+	['smarty_name'] - jmeno smarty promenne pod kterou bude formular pristupny
+	['form_name']   - (volitelny) name atribut tagu form - ma vliv pouse pokud APU nesdileji jeden 
+	                  dokument, jinak ho urcuje controler
+	['before']      - (volitelny) javascript ktery je spousten pred automaticky generovanym validacnim kodem
+	['after']       - (volitelny) javascript ktery je spousten po automaticky generovanem validacnim kodu
+	
+===============================================================================
+                          Vytvareni vlastnich APU
+===============================================================================
+
+Metody ktere by mela APU pretizit:
+----------------------------------
+constructor  -  inicializace vlastnich uzivatelsych nastaveni ($this->opt)
+get_required_data_layer_methods
+get_required_javascript
+action_update
+init
+determine_action
+create_html_form
+validate_form
+return_messages
+pass_values_to_html
+
+
+Poznamky k formularum
+---------------------
+
+
+Prubeh zpracovani APU page_controlerem
+--------------------------------------
+
+* volani metod init() vsech APU
+* volani metod determine_Action() vsech APU
+* volani metod create_html_form() vsech APU
+????
+* pro APU u nichz je $action['validate_form'] true se vola metoda validate_form()
+* volani metod action_*() prislusne akce, pokud ma nektera APU $acton['reload']
+  true, pak se volaji action_*() metody jen tech metod ktere maji 
+  $acton['reload'] true, odesle se hlavicka location a ukonci zpracovani skriptu.
+  Jinak se volaji action_*() metody vsech APU
+* volani metod return_messages() vsech APU
+* volani metod pass_values_to_html() vsech APU
+* volani metod pass_form_to_html() vsech APU
+* prirazeni spolecnych smarty promennych
+* zobrazeni stranky
+  
+
+===============================================================================
+                      Sablona pro vytvareni vlastnich APU
+===============================================================================
+
+class apu_my_apu extends apu_base_class{
+	var $smarty_action='default';
+
+	/* return required data layer methods - static class */
+	function get_required_data_layer_methods(){
+		return array();
+	}
+
+	/* return array of strings - requred javascript files */
+	function get_required_javascript(){
+		return array();
+	}
+	
+	/* constructor */
+	function apu_my_apu(){
+		global $lang_str;
+		parent::apu_base_class();
+
+		/* set default values to $this->opt */		
+
+		/* message on attributes update */
+		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
+		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
+		
+		/*** names of variables assigned to smarty ***/
+		/* form */
+		$this->opt['smarty_form'] =			'form';
+		/* smarty action */
+		$this->opt['smarty_action'] =		'action';
+		/* name of html form */
+		$this->opt['form_name'] =			'';
+	}
+
+	function action_update(&$errors){
+		return true;
+	}
+	
+	/* this metod is called always at begining */
+	function init(){
+		parent::init();
+	}
+	
+	/* check _get and _post arrays and determine what we will do */
+	function determine_action(){
+		if (isset($_POST['okey_x']) and isset($_POST['apu_name']) and 
+			(is_array($_POST['apu_name'])?
+				in_array($this->opt['instance_id'], $_POST['apu_name']):
+				$_POST['apu_name']==$this->opt['instance_id'])){	// Is there data to process?
+			$this->action=array('action'=>"update",
+			                    'validate_form'=>true);
+		}
+		else $this->action=array('action'=>"default",
+			                     'validate_form'=>false);
+	}
+	
+	/* create html form */
+	function create_html_form(&$errors){
+		parent::create_html_form($errors);
+	}
+
+	/* validate html form */
+	function validate_form(&$errors){
+		if (false === parent::validate_form($errors)) return false;
+		return true;
+	}
+	
+	
+	/* add messages to given array */
+	function return_messages(&$msgs){
+		global $_GET;
+		
+		if (isset($_GET['m_my_apu_updated']) and $_GET['m_my_apu_updated'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_update'];
+			$this->smarty_action="was_updated";
+		}
+	}
+
+	/* assign variables to smarty */
+	function pass_values_to_html(){
+		global $smarty;
+		
+		$smarty->assign_phplib_form($this->opt['smarty_form'], 
+									$this->f, 
+									array('jvs_name'=>'form_'.$this->opt['instance_id'],
+									      'form_name'=>$this->opt['form_name']), 
+									array();
+		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+	}
+}
+
