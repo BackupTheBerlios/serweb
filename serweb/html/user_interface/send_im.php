@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.5 2002/09/19 22:45:47 jiri Exp $
+ * $Id: send_im.php,v 1.6 2002/09/20 20:02:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -30,7 +30,7 @@ do{
 								 "rows"=>6,
 								 "cols"=>40,
 								 "wrap"=>"soft",
-								 "extrahtml"=>"onBlur='countit(this.form)' onChange='countit(this.form)' onClick='countit(this.form)' onFocus='countit(this.form)' onKeyUp='countit(this.form)'"));
+								 "extrahtml"=>"onBlur='countit(this.form);' onChange='countit(this.form);' onClick='countit(this.form);' onFocus='countit(this.form);' onKeyUp='countit(this.form);'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"num_chars",
 								 "value"=>$config->im_length,
@@ -43,7 +43,7 @@ do{
 								 "extrahtml"=>"alt='send'"));
 	
 	
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($okey_x)){						// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -72,18 +72,15 @@ do{
 		    str_Replace("\n.\n","\n. \n",$instant_message)."\n.\n\n";
 
 
-		$message=write2fifo($fifo_cmd, $errors);
+		write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
+		if (substr($status,0,3)!="200") {$errors[]=$status; break; }
 		
-		if ($message=="200 OK") $message="message was sent successfully to address ".$sip_address;
+		$message="message was sent successfully to address ".$sip_address;
 		
         Header("Location: ".$sess->url("send_im.php?kvrk=".uniqID("")."&message=".RawURLencode($message)));
 		page_close();
 		exit;
-	}
-	else{			// no data
-
-	
 	}
 						 
 }while (false);
@@ -120,18 +117,29 @@ if ($okey_x){							//data isn't valid or error in sql
 		var default_domain='<?echo $config->default_domain;?>';
 		
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-//		var re = new RegExp("^<?echo $reg->user;?>$","i");
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;
 		}
 
 		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-//		var re = new RegExp("^<?echo $reg->address;?>$","i");
 		var re2= /^sip:/i;
 		if (re.test(adr.value) && !re2.test(adr.value)) {
 			adr.value='sip:'+adr.value;
 		}
 	}
+
+	function display_window(){
+		var left=window.screen.width-350;
+		wait_win=window.open('',"wait_win","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=50,width=300,height=130,left="+left);
+		wait_win.document.write('<html><head><title>please wait!</title></head><body><div align="center">sending message<br>please wait!</div><div align="center"><img src="<?echo $config->img_src_path;?>send_im.gif" border="0"></div></body></html>');
+		wait_win.document.close();
+	}
+	
+	function close_window(){
+		wait_win=window.open('',"wait_win");	//get reference to window
+		wait_win.close();						//close the window
+	}
+
 //-->
 </script>
 </head>
@@ -175,9 +183,17 @@ if ($okey_x){							//data isn't valid or error in sql
 		f.instant_message.focus();
 		return (false);
 	}
+	
+	display_window();
+
 ","sip_address_completion(f.sip_address);");					// Finish form?>
 
 <br>
 <?print_html_body_end();?>
+<script language="JavaScript">
+<!--
+	close_window();
+//-->
+</script>
 </html>
 <?page_close();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.7 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: my_account.php,v 1.8 2002/09/20 20:02:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -38,7 +38,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select email_address from ".$config->table_subscriber." where user_id='".$user_id."'";
+	$q="select email_address, allow_find from ".$config->table_subscriber." where user_id='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
@@ -60,6 +60,10 @@ do{
 								 "checked"=>$f2vm,
 	                             "value"=>1,
 	                             "name"=>"f2voicemail"));
+	$f->add_element(array("type"=>"checkbox",
+								 "checked"=>$row->allow_find,
+	                             "value"=>1,
+	                             "name"=>"allow_find"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"passwd",
 	                             "value"=>"",
@@ -118,8 +122,9 @@ do{
 			$user_id."\n".	//username
 			$del_contact."\n\n";			//contact
 
-		$message=write2fifo($fifo_cmd, $errors);
+		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
+		if (substr($status,0,3)!="200") {$errors[]=$status; break; }
 		
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
 		page_close();
@@ -143,8 +148,9 @@ do{
 			$expires."\n".					//expires
 			$config->ul_priority."\n\n";		//priority
 
-		$message=write2fifo($fifo_cmd, $errors);
+		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
+		if (substr($status,0,3)!="200") {$errors[]=$status; break; }
 		
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
 		page_close();
@@ -176,7 +182,7 @@ do{
 			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
 		}
 		
- 		$q="update ".$config->table_subscriber." set email_address='$email', datetime_modified=now()".$qpass.
+ 		$q="update ".$config->table_subscriber." set email_address='$email', allow_find='".($allow_find?1:0)."', datetime_modified=now()".$qpass.
 			" where user_id='".$user_id."'";
 
 		$res=MySQL_Query($q);
@@ -217,15 +223,9 @@ do{
 			$config->ul_table."\n".		//table
 			$user_id."\n\n";	//username
 
-/* write2fifo_with_output() is now needless
-		$out=write2fifo_with_output($fifo_cmd, $errors);
-
+		$out=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors or !$out) break;		
-		if (ereg("^ERROR:",$out)){ $errors[]=$out; break;}
-*/
-
-		$out=write2fifo($fifo_cmd, $errors);
-		if ($errors or !$out) break;		
+		if (substr($status,0,3)!="200" and substr($status,0,3)!="404") {$errors[]=$status; break; }
 
 		$out_arr=explode("\n", $out);
 		
@@ -256,13 +256,11 @@ if ($okey_x){							//data isn't valid or error in sql
 		var default_domain='<?echo $config->default_domain;?>';
 		
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-//		var re = new RegExp("^<?echo $reg->user;?>$","i");
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;
 		}
 
 		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-//		var re = new RegExp("^<?echo $reg->address;?>$","i");
 		var re2= /^sip:/i;
 		if (re.test(adr.value) && !re2.test(adr.value)) {
 			adr.value='sip:'+adr.value;
@@ -296,6 +294,11 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td><?$f->show_element("f2voicemail");?></td>
 	</tr>
 <?}?>	
+	<tr>
+	<td align="right" class="f12b">allow find me by other users:</td>
+	<td width="5">&nbsp;</td>
+	<td><?$f->show_element("allow_find");?></td>
+	</tr>
 	<tr>
 	<td align="right" class="f12b">your password:</td>
 	<td width="5">&nbsp;</td>

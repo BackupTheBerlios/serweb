@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: phonebook.php,v 1.5 2002/09/20 20:02:33 kozlik Exp $
  */
 
 require "prepend.php";
@@ -91,8 +91,6 @@ do{
 		if ($id) $q="update ".$config->table_phonebook." set fname='$fname', lname='$lname', sip_uri='$sip_uri' where id=$id and user='".$auth->auth["uname"]."'";
 		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, user) values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."')";
 		
-//		echo "".$q;
-		
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -135,13 +133,11 @@ if ($okey_x){							//data isn't valid or error in sql
 		var default_domain='<?echo $config->default_domain;?>';
 		
 		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-//		var re = new RegExp("^<?echo $reg->user;?>$","i");
 		if (re.test(adr.value)) {
 			adr.value=adr.value+'@'+default_domain;
 		}
 
 		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-//		var re = new RegExp("^<?echo $reg->address;?>$","i");
 		var re2= /^sip:/i;
 		if (re.test(adr.value) && !re2.test(adr.value)) {
 			adr.value='sip:'+adr.value;
@@ -199,11 +195,13 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td class="titleT" width="50">&nbsp;</td>
 	</tr>
 	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
-	<?foreach($pb_arr as $row){
+	<?$odd=0;
+	foreach($pb_arr as $row){
+		$odd=$odd?0:1;
 		$name=$row->lname;
 		if ($name) $name.=" "; $name.=$row->fname;
 	?>
-	<tr valign="top">
+	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: alert('click to dial not implemented');"><?echo $row->sip_uri;?></a></td>
@@ -221,6 +219,7 @@ if ($okey_x){							//data isn't valid or error in sql
 
 <?}?>
 
+<br><div align="center"><a href="<?$sess->purl("find_user.php?kvrk=".uniqid(""));?>">find user</a></div>
 
 <br>
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.7 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: functions.php,v 1.8 2002/09/20 20:02:33 kozlik Exp $
  */
 
 
@@ -162,7 +162,7 @@ function send_mail($to, $subj, $text, $headers = ""){
 	return $a;
 }
 
-function write2fifo($fifo_cmd, &$errors){
+function write2fifo($fifo_cmd, &$errors, &$status){
 	global $config;
 
 	/* open fifo now */
@@ -192,50 +192,15 @@ function write2fifo($fifo_cmd, &$errors){
 		$errors[]="sorry -- fifo reading error"; return;
 	}
 
-	$rd=fread($fp,8192);
-	if (eregi("^ERROR:",$rd)){ 
+	$status=fgetS($fp,256);
+	if (!$status) {
 	    @unlink($config->reply_fifo_path);
-		$errors[]=$rd;
-		return;
+		$errors[]="sorry -- fifo reading error"; return;
 	}
+	
+	$rd=fread($fp,8192);
 	@unlink($config->reply_fifo_path);
 	
-	return $rd;
-}
-
-function write2fifo_with_output($fifo_cmd, &$errors){
-	global $config;
-
-	/* open fifo now */
-	$fifo_handle=fopen( $config->fifo_server, "w" );
-	if (!$fifo_handle) {
-		$errors[]="sorry -- cannot open fifo"; return false;
-	}
-	
-	/* create fifo for replies */
-	@system("mkfifo -m 666 ".$config->reply_fifo_path );
-
-	/* add command separator */
-	$fifo_cmd=$fifo_cmd."\n";
-	
-	/* write fifo command */
-	if (fwrite( $fifo_handle, $fifo_cmd)==-1) {
-	    @unlink($config->reply_fifo_path);
-	    @fclose($fifo_handle);
-		$errors[]="sorry -- fifo writing error"; return false;
-	}
-	@fclose($fifo_handle);
-	
-	/* read output now */
-	@$fp = fopen( $config->reply_fifo_path, "r");
-	if (!$fp) {
-	    @unlink($config->reply_fifo_path);
-		$errors[]="sorry -- fifo reading error"; return false;
-	}
-
-	$rd=fread($fp,8192);
-
-	@unlink($config->reply_fifo_path);
 	return $rd;
 }
 

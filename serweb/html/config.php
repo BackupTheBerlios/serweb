@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.6 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: config.php,v 1.7 2002/09/20 20:02:33 kozlik Exp $
  */
 
 class Csub_not {
@@ -109,7 +109,7 @@ class Cconfig {
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
 
-		$this->show_voicemail_acl=false;				//show "voicemail" in ACL and voicemail checkbox at my account 
+		$this->show_voicemail_acl=true;				//show "voicemail" in ACL and voicemail checkbox at my account 
 
 		$this->enable_dial_voicemail=false;
 		$this->enable_test_firewall=false;
