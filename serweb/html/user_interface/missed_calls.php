@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.11 2003/04/27 01:11:44 jiri Exp $
+ * $Id: missed_calls.php,v 1.12 2003/05/22 11:38:08 kozlik Exp $
  */
 
 require "prepend.php";
@@ -50,6 +50,7 @@ do{
 <head>
 <title>iptel.org, the IP Telephony Site</title>
 <?print_html_head();?>
+<script language="JavaScript" src="ctd.js"></script>
 </head>
 <?
 	print_html_body_begin(3, true, true, get_user_name($errors));
@@ -88,7 +89,7 @@ do{
 //		else $time=Substr($row->time,0,16);
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="135"><a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->from_uri));?>"><?echo htmlspecialchars($row->sip_from);?></a></td>
+	<td align="left" class="f12" width="135"><a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->from_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo htmlspecialchars($row->sip_from);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

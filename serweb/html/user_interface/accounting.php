@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.9 2003/04/05 16:00:35 jiri Exp $
+ * $Id: accounting.php,v 1.10 2003/05/22 11:38:08 kozlik Exp $
  */
 
 require "prepend.php";
@@ -38,6 +38,7 @@ do{
 <head>
 <title>iptel.org, the IP Telephony Site</title>
 <?print_html_head();?>
+<script language="JavaScript" src="ctd.js"></script>
 </head>
 <?
 	print_html_body_begin(4, true, true, get_user_name($errors));
@@ -83,7 +84,7 @@ do{
 	?>
 	<tr valign="top">
 	<td align="center" class="f12" width="135">
-	<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->to_uri));?>">
+	<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->to_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
 	<?echo htmlspecialchars($row->sip_to);?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="135"><?echo $row->sip_callid;?></td>
