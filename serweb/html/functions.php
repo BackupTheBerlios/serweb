@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.30 2004/03/02 16:20:16 kozlik Exp $
+ * $Id: functions.php,v 1.31 2004/03/03 15:41:31 kozlik Exp $
  */
 
 
@@ -315,6 +315,28 @@ function get_location($sip_adr, &$errors){
 
 	if (!$row) return "n/a";
 	return $row->location;
+}
+
+/*
+	return array of aliases of user with $username and $domain
+*/
+
+function get_aliases($sip_uri, &$errors){
+	global $config;
+	$q=	"select username ".
+		"from ".$config->table_aliases." ".
+		"where contact='".$sip_uri."'";
+	$res=mySQL_query($q);
+	if (!$res) {
+		$errors[]="error in SQL query - ".__FILE__.":".__LINE__;
+		return array();
+	}
+	$out=array();
+	
+	while ($row=MySQL_Fetch_Object($res)){
+		$out[]=$row->username;
+	}
+	return $out;
 }
 
 function filter_fl($in){

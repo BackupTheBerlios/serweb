@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: phonebook.php,v 1.11 2004/03/03 15:41:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,6 +20,7 @@ class Cphonebook{
 	var $lname;
 	var $sip_uri;
 	var $status;
+	var $aliases;
 
 	function Cphonebook($id, $fname, $lname, $sip_uri, $status='unknown'){
 		$this->id=$id;
@@ -116,7 +117,8 @@ do{
 		if (!$phonebook_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 		while ($row=MySQL_Fetch_Object($phonebook_res)){
-			$pb_arr[]=new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $errors));
+			$pb_arr[$row->id] = new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $errors));
+			$pb_arr[$row->id]->aliases = get_aliases($row->sip_uri, $errors);
 		}
 
 	}
@@ -194,13 +196,15 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="205">sip address</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="205">aliases</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="85">status</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="50">&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="50">&nbsp;</td>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	foreach($pb_arr as $row){
 		$odd=$odd?0:1;
@@ -211,6 +215,8 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->sip_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo $row->sip_uri;?></a></td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="left" class="f12" width="205"><?echo implode(", ", $row->aliases)."&nbsp;";?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

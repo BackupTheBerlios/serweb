@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.9 2004/02/19 13:20:34 kozlik Exp $
+ * $Id: find_user.php,v 1.10 2004/03/03 15:41:31 kozlik Exp $
  */
 
 require "prepend.php";
@@ -15,6 +15,18 @@ define("max_rows",50);
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
+
+class Cuser{
+	var $first_name, $last_name, $username, $timezone, $aliases;
+	function Cuser($fname, $lname, $username, $timezone){
+		$this->first_name 	= $fname; 
+		$this->last_name 	= $lname; 
+		$this->username 	= $username; 
+		$this->timezone 	= $timezone;
+		
+		$this->aliases=array();
+	}
+}
 
 do{
 	$db = connect_to_db();
@@ -68,6 +80,12 @@ do{
 
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		
+		$found_users=array();
+		while ($row=MySQL_Fetch_Object($find_res)){
+			$found_users[$row->username]=new Cuser($row->first_name, $row->last_name, $row->username, $row->timezone);
+			$found_users[$row->username]->aliases = get_aliases("sip:".$row->username."@".$config->realm, $errors);
+		}
 	}
 
 }while (false);
@@ -125,7 +143,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	</table>
 <?$f->finish("","");					// Finish form?>
 
-<?if ($find_res and MySQL_num_rows($find_res)){?>
+<?if (is_array($found_users) and count($found_users)){?>
 
 <table border="0" cellpadding="2" cellspacing="0" bgcolor="#C1D773" align="center">
 <tr><td>
@@ -135,13 +153,16 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="205">sip address</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="205">aliases</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="125">timezone</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="125">&nbsp;</td>
 	</tr>
 	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
-	while ($row=MySQL_fetch_object($find_res)){
+	foreach($found_users as $row){
+//	while ($row=MySQL_fetch_object($find_res)){
 		$odd=$odd?0:1;
 		$name=$row->last_name;
 		if ($name) $name.=" "; $name.=$row->first_name;
@@ -151,6 +172,8 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="205">&nbsp;<?echo $sip_uri;?></td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="left" class="f12" width="205">&nbsp;<?echo implode(", ", $row->aliases)."&nbsp;";?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="125">&nbsp;<?echo $row->timezone;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
