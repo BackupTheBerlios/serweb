@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.54 2005/03/03 11:40:06 kozlik Exp $
+ * @version   $Id: functions.php,v 1.55 2005/03/14 11:45:46 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -150,10 +150,10 @@ class Creg{
 		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
 		$this->sip_address="[sS][iI][pP]:".$this->address;
 		
-		/* regex for phonenumber which could contain some characters as: - / <space> this characters should be removed */		
+		/** regex for phonenumber which could contain some characters as: - / <space> this characters should be removed */		
 		$this->phonenumber = $config->phonenumber_regex;		// "\\+?[-/ 1-9]+"
 
-		/* strict phonenumber - only numbers and optional initial + */
+		/** strict phonenumber - only numbers and optional initial + */
 		$this->phonenumber_strict = $config->strict_phonenumber_regex;		// "\\+?[1-9]+"
 		
 		$this->serweb_username = $reg_validate_username;
@@ -184,15 +184,21 @@ class Creg{
 		return substr($uname,0,-1);
 	}
 	
-	/* converts string which can be accepted by regex $this->phonenumber to 
-	   string which can be accepted by regex $this->phonenumber_strict */
+	/** converts string which can be accepted by regex $this->phonenumber to string which can be accepted by regex $this->phonenumber_strict 
+	 *
+	 *	@param string $phonenumber
+	 *	@return string
+	 */
 	function convert_phonenumber_to_strict($phonenumber){
 		return str_replace(array('-', '/', ' ', '(', ')'), "", $phonenumber);
 	}
 	
-	/* return javascript which do the same as function above 
-	   $in_var is name of js variable with string for conversion 
-	   $out_var is name of js variable to which converted string will be stored */
+	/** return javascript which do the same as method {@link convert_phonenumber_to_strict} 
+	 *
+	 *	@param string $in_var 	name of js variable with string for conversion 
+	 *	@param string $out_var	name of js variable to which converted string will be stored 
+	 *	@return string 			line of javascript code
+	 */
 	function convert_phonenumber_to_strict_js($in_var, $out_var){
 		return $out_var." = ".$in_var.".replace(/[-\\/ ()]/g, '')";
 	}
@@ -246,6 +252,14 @@ function send_mail($to, $subj, $text, $headers = ""){
 	return $a;
 }
 
+/**
+ *	Write command to FIFO
+ *
+ *	@param string $fifo		fifo command
+ *	@param array $errors	if some error occur during calling this function is writed here
+ *	@param string $status	put result of command execution here
+ *	$return string			result of the fifo command
+ */
 function write2fifo($fifo_cmd, &$errors, &$status){
 	global $config;
 
@@ -289,7 +303,13 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	return $rd;
 }
 
-
+/**
+ *	Filter result of calling fifo command t_uac_dlg. Is used by function {@link click_to_dial}
+ *
+ * 	@param string $in
+ *	@result string
+ *	@access private
+ */
 function filter_fl($in){
 	$line=0;
 	$result="";
@@ -329,6 +349,13 @@ function filter_fl($in){
 	return $result;
 }
 
+/**
+ *	Initiate dial request to $target from $uri
+ *
+ *	@param string $target	sip uri of callee
+ *	@param string $uri		sip uri of caller
+ *	@param array $errors	if some error occur during calling this function is writed here
+ */
 function click_to_dial($target, $uri, &$errors){
 	global $config;
 
@@ -541,14 +568,179 @@ class Cfusers{
 	
 }
  
- 
+/**
+ *	Return path to file from directory for concrete domain
+ *
+ *	Path in this case mean path in html tree. If file is not found in directory
+ *	for specified domain, path to file for default domain directory is returned.
+ *
+ *	@param string $filename
+ *	@retrun string
+ */ 
 function multidomain_get_file($filename){
 	global $config;
 	
 	$dir=dirname(__FILE__)."/domains/";
 
-	if (file_exists($dir.$config->domain."/".$filename)) return $config->domains_path.$config->domain."/".$filename;
-	else return $config->domains_path."_default/".$filename;
+	if (file_exists($dir.$config->domain."/".$filename)) 
+		return $config->domains_path.$config->domain."/".$filename;
+	else {
+		sw_log("Useing file from default domain for filename: ".$filename, PEAR_LOG_INFO);
+		return $config->domains_path."_default/".$filename;
+	}
+}
+
+/**
+ *	Return path to text file for specified language mutation and concrete domain
+ *
+ *	Path in this case mean filesystem path. This function searching in some 
+ *  directories and if corresponfing file is found, retrun path to it. Directories
+ *	are scanned in this order:
+ *		- dir for specified domain and specified language
+ *		- dir for specified domain and default language
+ *		- dir for default domain and specified language
+ *		- dir for default domain and default language
+ *	If file isn't found, function return false
+ *
+ *	@param string $filename		name of file is searching for
+ *	@param string $ddir			subdirectory in of domain dir
+ *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
+ *	@retrun string				path to file on success, false on error
+ */
+function multidomain_get_lang_file($filename, $ddir, $lang){
+	global $config, $reference_language, $available_languages;
+	
+	$dir=dirname(__FILE__)."/domains/";
+	$ln = $available_languages[$lang][2];
+	$ref_ln = $available_languages[$reference_language][2]."/";
+
+	if (!empty($ddir) and substr($ddir, -1) != "/") $ddir.="/";
+
+	if (file_exists($dir.$config->domain."/".$ddir.$ln."/".$filename)) 
+		return $dir.$config->domain."/".$ddir.$ln."/".$filename;
+	
+	else if (file_exists($dir.$config->domain."/".$ddir.$ref_ln."/".$filename)){
+		sw_log("Useing file in default language (".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		return $dir.$config->domain."/".$ddir.$ref_ln."/".$filename;
+	}
+		
+	else if (file_exists($dir."_default/".$ddir.$ln."/".$filename)){
+		sw_log("Useing file from default domain for filename: ".$filename, PEAR_LOG_INFO);
+		return $dir."_default/".$ddir.$ln."/".$filename;
+	}
+
+	else if (file_exists($dir."_default/".$ddir.$ref_ln."/".$filename)){
+		sw_log("Useing file from default domain and in default language (".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		return $dir."_default/".$ddir.$ref_ln."/".$filename;
+	}
+
+	else {
+		sw_log("Text file not found. Filename:".$filename.", Language:".$ln.", Subdir:".$ddir, PEAR_LOG_ERR);	
+		return false;
+	}
+}
+
+/**
+ * 	Read txt file in specified language mutation, parse and saparate to headers and body and do replacements.
+ *
+ *	For more info about choice txt file read {@link multidomain_get_lang_file}
+ *	Txt files in serweb (as emails, terms and conditions etc.) are stored in 
+ *	special format. At the beginning (but only at beginning) of these files may 
+ *	be comments. Lines with comments begins by "#". Rest of file is separated
+ *	into two parts separated by empty line: headers and body. 
+ *
+ *	Each header contain header name and header value. Each header must be on
+ *	own line. Header name and header value is separated by ":".
+ *
+ *	Body is the rest of txt file after first empty line.
+ *
+ *	When txt file is readed, function replace all strings in form #@#some_name#@#
+ *	by replacement. The parametr $replacements is array of pairs. First element
+ *	of each pair is name of replacement and second element from pair is value
+ *	by which is replaced.
+ *
+ *	Function's finding replacements in body and in header values.
+ *
+ *	Function return array with two keys: "headers" and "body". Body is only 
+ *	string. Headers contain associative array with header names as kayes.
+ *
+ *	@param string $filename		name of file is searching for
+ *	@param string $ddir			subdirectory in of domain dir
+ *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
+ *	@param array $replacements	see above
+ *	@retrun array				parsed file or false on error
+ */
+function read_lang_txt_file($filename, $ddir, $lang, $replacements){
+	$f = multidomain_get_lang_file($filename, $ddir, $lang);
+	if (!$f) {
+		sw_log("Can't find txt file ".$filename.", subdir:".$ddir.", lang:".$lang, PEAR_LOG_ERR);
+		return false;
+	}
+	
+	$fp = fopen($f, "r");
+	if (!$fp){
+		sw_log("Can't open txt file ".$filename.", subdir:".$ddir.", lang:".$lang, PEAR_LOG_ERR);
+		return false;
+	}
+
+	$fcontent = "";
+	$accept_comments = true;
+	$reading_headers = true;
+	$headers = array();
+	$body = "";
+
+	while (!feof($fp)){
+		$line = fgets($fp);
+		if ((substr($line, 0, 1) == "#") and $accept_comments) continue;
+		
+		/* accept comments only on begin of file */
+		$accept_comments = false;
+		
+		/* after empty line begins body */
+		if (trim($line) == "") $reading_headers = false;
+		
+		if ($reading_headers){
+			$h = split(':', $line, 2);
+			$headers[strtolower(trim($h[0]))] = trim($h[1]);  
+		}
+		else{
+			/* trim ends of lines of non empty lines */
+			if (trim($line) != "") $line = rtrim($line)." ";
+			$body .= $line;
+		}
+	}
+	fclose($fp);
+
+	foreach($replacements as $row){
+		//do replace in body
+		$body=str_replace("#@#".$row[0]."#@#", $row[1], $body);
+
+		//do replace in headers
+		foreach($headers as $k => $v){
+			$headers[$k] = str_replace("#@#".$row[0]."#@#", $row[1], $headers[$k]);
+		}
+	}
+	
+	return array('headers' => $headers,
+				 'body' => $body);
+}
+
+/**
+ *	Write to serweb log if logging is enabled
+ *
+ *	@param mixed $message  		String or object containing the message to log.
+ *	@param mixed $priority  	The priority of the message. Valid values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT, PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING, PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
+ *	@return boolean 			True on success or false on failure
+ */
+ 
+function sw_log($message, $priority = null){
+	global $serwebLog;
+	if ($serwebLog){ 
+		return $serwebLog->log($message, $priority);
+	}
+	else {
+		return true;
+	}
 }
 
 /**

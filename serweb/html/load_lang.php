@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.2 2005/03/03 11:38:21 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.3 2005/03/14 11:45:46 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -11,6 +11,7 @@ require_once($_SERWEB["serwebdir"]."../lang/config_lang.php");
 
 /**
  *	Change names of tabs according to $lang_str
+ *  @access  private
  */
 
 function internationalize_tabs(){
@@ -54,7 +55,7 @@ function lang_detect($str = '', $envType = ''){
 } 
 
 
- 
+// Register session variable 
 if (!$sess->is_registered("sess_lang")) $sess->register("sess_lang");
 
 // Lang forced
@@ -92,5 +93,8 @@ if (empty($sess_lang)) {
 require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$sess_lang][1].".php");
 
 internationalize_tabs();
+
+/* set value of $lang_set[ldir] by avaiable_languages array */
+$lang_set['ldir'] = $available_languages[$sess_lang][2];
 
 ?>

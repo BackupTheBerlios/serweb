@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.7 2005/02/10 10:46:27 kozlik Exp $
+ * $Id: page_controler.php,v 1.8 2005/03/14 11:45:46 kozlik Exp $
  */ 
 
 /*
@@ -17,6 +17,7 @@
    --------------------------
    parameters 	assigned to $page_attributes
    lang_str 	assigned to $lang_str
+   lang_set 	assigned to $lang_set
    user_auth	assigned to $this->user_id - associative array containing username, domain and uuid
                         of user loged in or of user which datails admin is examining
    come_from_admin_interface    assigned to $come_from_admin_interface
@@ -328,7 +329,7 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $page_attributes, $config;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config;
 
 		/* translate chars '<', '>', etc. to &lt; &gt; etc.. */
 		$this->hack_protection();
@@ -374,6 +375,7 @@ class page_conroler{
 
 		$smarty->assign_by_ref('parameters', $page_attributes);
 		$smarty->assign_by_ref('lang_str', $lang_str);
+		$smarty->assign_by_ref('lang_set', $lang_set);
 		$smarty->assign_by_ref('user_auth', $this->user_id);
 		$smarty->assign_by_ref('come_from_admin_interface', $this->come_from_admin_interface);
 

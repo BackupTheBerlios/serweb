@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.1 2005/03/02 14:10:07 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.2 2005/03/14 11:45:46 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -112,6 +112,7 @@
 	   a word-smith, a diplomat or a translator to get it right :)
 	*/
 
+/** @todo: tuto sekci odstranit a odstranit ji ze vsech conf. souboru */
 
 	/* text of password-reminder email */
 	$config->forgot_pass_subj="your login information";

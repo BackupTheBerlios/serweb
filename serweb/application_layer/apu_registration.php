@@ -1,59 +1,68 @@
 <?
-
-/*
- * $Id: apu_registration.php,v 1.2 2005/01/30 20:56:38 kozlik Exp $
+/**
+ * Application unit registration
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: apu_registration.php,v 1.3 2005/03/14 11:45:46 kozlik Exp $
+ * @package   serweb
  */ 
 
-/* Application unit registration */
 
-/*
-   This application unit is used for registration new users
-   
-   Configuration:
-   --------------
-
-   'domain'					(string) default: $config->domain
-     domain to which users will be registered
-	 
-   'mail_body'				(string) default: $config->mail_register
-     body of mail which is send after successfull registration
-   
-   'mail_subject'			(string) default: $config->register_subj
-     subject of mail which is send after successfull registration
-   
-   'terms'					(string) default: $config->terms_and_conditions
-     terms and conditions
-   
-   'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
-     message which should be showed on attributes update - assoc array with keys 'short' and 'long'
-   								
-   'form_name'					(string) default: ''
-     name of html form
-   
-   'form_submit'				(assoc)
-     assotiative array describe submit element of form. For details see description 
-	 of method add_submit in class form_ext
-
-   'smarty_form'				name of smarty variable - see below
-   'smarty_action'				name of smarty variable - see below
-   'smarty_reg_adress'
-   
-   Exported smarty variables:
-   --------------------------
-   opt['smarty_form'] 			(form)			
-     phplib html form
-	 
-   opt['smarty_action']			(action)
-	  tells what should smarty display. Values:
-   	  'default' - 
-	  'finished' - when user submited form and data was succefully stored
-
-   opt['smarty_reg_adress']		(reg_sip_address)
-      contain sip uri of user who registered (avaiable only if smarty_action == finished)
-*/
+/** 
+ *	Application unit registration 
+ *
+ *
+ *	This application unit is used for registration new users
+ *	
+ *	Configuration:
+ *	--------------
+ *	
+ *	'domain'					(string) default: $config->domain
+ *	 domain to which users will be registered
+ *	 
+ *	'mail_file'					(string) default: mail_register.txt
+ *	 name of file contining text of mail which is send after successfull registration
+ *	
+ *	'terms_file					(string) default: terms.txt
+ *	 name of file containing terms and conditions
+ *
+ *	'confirmation_script'		(string) default: reg/confirmation.php
+ *	 name of script within user directory for confirmation of registration
+ *	
+ *	'msg_update'				default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+ *								
+ *	'form_name'					(string) default: ''
+ *	 name of html form
+ *	
+ *	'form_submit'				(assoc)
+ *	 assotiative array describe submit element of form. For details see description 
+ *	 of method add_submit in class form_ext
+ *	
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_reg_adress'			name of smarty variable - see below
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_form'] 			(form)			
+ *	 phplib html form
+ *	 
+ *	opt['smarty_action']		(action)
+ *	  tells what should smarty display. Values:
+ *	  'default' - 
+ *	  'finished' - when user submited form and data was succefully stored
+ *	
+ *	opt['smarty_reg_adress']	(reg_sip_address)
+ *	  contain sip uri of user who registered (avaiable only if smarty_action == finished)
+ *
+ *
+ *	@package   serweb
+ */
 
 class apu_registration extends apu_base_class{
 	var $smarty_action='default';
+	var $terms = "";
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -72,11 +81,12 @@ class apu_registration extends apu_base_class{
 
 		/* set default values to $this->opt */		
 
-		$this->opt['domain'] =			$config->domain;
-		$this->opt['mail_body'] =		$config->mail_register;
-		$this->opt['mail_subject'] =	$config->register_subj;
-		$this->opt['terms'] =			$config->terms_and_conditions;
-		
+		$this->opt['domain'] =				$config->domain;
+		$this->opt['mail_file'] =			"mail_register.txt";
+		$this->opt['terms_file'] =			"terms.txt";
+		$this->opt['confirmation_script'] =	"reg/confirmation.php";
+
+ 		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
@@ -98,7 +108,7 @@ class apu_registration extends apu_base_class{
 	}
 
 	function action_register(&$errors){
-		global $config, $data, $lang_str;
+		global $config, $data, $lang_str, $sess_lang;
 		
 		$confirm=md5(uniqid(rand()));
 
@@ -107,11 +117,27 @@ class apu_registration extends apu_base_class{
 											$confirm, $config->data_sql->table_pending, $errors)) return false;
 
 		$sip_address="sip:".$_POST['uname']."@".$this->opt['domain'];
+		$confirmation_url = $config->root_uri.
+							$config->user_pages_path.
+							$this->opt['confirmation_script'].
+							"?nr=".$confirm;
 
-		$mail_body=str_replace("#confirm#", $confirm, $this->opt['mail_body']);
-		$mail_body=str_replace("#sip_address#", $sip_address, $mail_body);
+		$mail = read_lang_txt_file($this->opt['mail_file'], "txt", $sess_lang, 
+					array(array("domain", $config->domain),
+					      array("sip_address", $sip_address),
+						  array("confirmation_url", $confirmation_url)));
+					
 
-		if (!send_mail($_POST['email'], $this->opt['mail_subject'], $mail_body)){
+		if ($mail === false){ 
+			/* needn't write message to log. It's written by function read_lang_txt_file */
+			$errors[]=$lang_str['err_sending_mail']; 
+			return false;	
+		}
+
+		/* if subject isn't defined in txt file */
+		if (!isset($mail['headers']['subject'])) $mail['headers']['subject'] = "";
+
+		if (!send_mail($_POST['email'], $mail['headers']['subject'], $mail['body'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			
 			$this->controler->_form_load_defaults();
@@ -129,9 +155,16 @@ class apu_registration extends apu_base_class{
 	
 	/* this metod is called always at begining */
 	function init(){
+		global $sess_lang, $config;
 		parent::init();
 
 		$this->reg = new Creg;				// create regular expressions class
+
+		/* read txt files */
+		$t = read_lang_txt_file($this->opt['terms_file'], "txt", $sess_lang, array(array("domain", $config->domain)));
+		if ($t !== false){
+ 			$this->terms = $t['body'];
+		}
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -224,7 +257,7 @@ class apu_registration extends apu_base_class{
 									 "extrahtml"=>"style='width:250px;'"));
 		$this->f->add_element(array("type"=>"textarea",
 		                             "name"=>"terms",
-		                             "value"=>$this->opt['terms'],
+		                             "value"=>$this->terms,
 									 "rows"=>8,
 									 "cols"=>38,
 		                             "wrap"=>"soft",
