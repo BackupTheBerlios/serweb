@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.1 2004/03/09 12:01:08 kozlik Exp $
+ * $Id: speed_dial.php,v 1.2 2004/03/09 12:18:25 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,16 +13,6 @@ page_open (array("sess" => "phplib_Session",
 
 $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
-
-class Cspeeddial{
-	var $username_from_req_uri;
-	var $new_request_uri;
-
-	function Cspeeddial($username_from_req_uri, $new_request_uri){
-		$this->username_from_req_uri=$username_from_req_uri;
-		$this->new_request_uri=$new_request_uri;
-	}
-}
 
 do{
 	$db = connect_to_db();
@@ -105,10 +95,6 @@ do{
 		$sd_res=MySQL_Query($q);
 		if (!$sd_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-/*		while ($row=MySQL_Fetch_Object($res)){
-			$sd_arr[$row->id] = new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $errors));
-		}
-*/
 	}
 }while (false);
 
