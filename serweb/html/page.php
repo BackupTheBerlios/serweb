@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.18 2004/01/18 14:12:36 jiri Exp $
+ * $Id: page.php,v 1.19 2004/02/24 08:53:08 kozlik Exp $
  */
 
 	function put_headers(){
@@ -224,6 +224,10 @@ foreach($config->enable_tabs as $i => $value){
 		<td width="78" class="tab" bgcolor="#B1C9DC">accounting</td>
 <?}else{?>
 		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("accounting_b.php?kvrk=".uniqID(""));?>" class="tabl">accounting</a></td>
+<?}}if ($config->enable_tabs[11]){ if ($tab==11){?>
+		<td width="78" class="tab" bgcolor="#B1C9DC">user preferences</td>
+<?}else{?>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID(""));?>" class="tabl">user preferences</a></td>
 <?}}?>
 		</tr>
 		</table>

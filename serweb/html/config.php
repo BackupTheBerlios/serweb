@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.30 2003/12/12 22:03:10 jiri Exp $
+ * $Id: config.php,v 1.31 2004/02/24 08:53:08 kozlik Exp $
  */
 
 class Csub_not {
@@ -252,12 +252,14 @@ class Cconfig {
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=false;				//enable tab notification subscription
 		$this->enable_tabs[7]=true;				//enable tab message store
+		$this->enable_tabs[11]=true;				//enable tab user_preferences
 
 		/* admin tabs definitions
 			Ctab (enabled, name_of_tab, php_script)
 		*/
 		$this->admin_tabs[]=new Ctab (true, "users", "users.php");
 		$this->admin_tabs[]=new Ctab (true, "server monitoring", "ser_moni.php");
+		$this->admin_tabs[]=new Ctab (true, "user preferences", "user_preferences.php");
 
 		$this->default_width=564;					//width of usable area
 
@@ -522,6 +524,8 @@ class Cconfig {
 		$this->table_ser_mon_agg="server_monitoring_agg";
 		$this->table_message_silo="silo";
 		$this->table_voice_silo="voice_silo";
+		$this->table_user_preferences="user_preferences";
+		$this->table_user_preferences_types="user_preferences_types";
 
 		/* these are table names as reffered from script and via FIFO */
 		$this->ul_table="location";
