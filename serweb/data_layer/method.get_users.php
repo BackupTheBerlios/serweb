@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_users.php,v 1.2 2004/12/06 19:29:59 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -13,13 +13,17 @@ class CData_Layer_get_users {
 	
 		$query_c=$fusers->get_query_where_phrase('s');
 
+		if ($domain) {
+			$query_c .= " and s.domain='".$domain."'";
+		}
+
 		/* get num rows */		
 		if ($fusers->onlineonly)
 			$q="select distinct s.username from ".$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and s.domain='".$domain."' and ".$query_c;
+				" where s.username=l.username and s.domain=l.domain and ".$query_c;
 		else
 			$q="select s.username from ".$config->data_sql->table_subscriber." s ".
-				" where s.domain='".$domain."' and ".$query_c;
+				" where ".$query_c;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -37,11 +41,11 @@ class CData_Layer_get_users {
 		if ($fusers->onlineonly)
 			$q="select distinct s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".
 				$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and s.domain='".$domain."' and ".$query_c.
+				" where s.username=l.username and s.domain=l.domain and ".$query_c.
 				" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
 		else
 			$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".$config->data_sql->table_subscriber." s ".
-				" where s.domain='".$domain."' and ".$query_c.
+				" where ".$query_c.
 				" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
 
 		$res=$this->db->query($q);
