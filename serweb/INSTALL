@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.5 2003/05/28 15:02:18 jiri Exp $
+$Id: INSTALL,v 1.6 2003/06/04 22:00:01 jiri Exp $
 
 serweb - Installation
 
@@ -6,6 +6,7 @@ serweb - Installation
   - Apache web server
   - php 4.x
   - MySQL
+  - running SER with MySQL support
 
   Quick Install:
     [1] Untar the distribution (be sure to untar the subdirectories)
