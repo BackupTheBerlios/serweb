@@ -1,0 +1,221 @@
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+}
+
+.txt_norm {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: left;
+}
+.title {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: normal;
+	color: #75C5F0;
+	text-decoration: none;
+	text-align: left;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-color: black black #C1D773 #C1D773;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 2px;
+	border-left-width: 2px;
+	font-weight: bold
+}
+.arrow {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	color: #C1D773;
+	text-decoration: none;
+	text-align: left;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-color: black black #C1D773;
+	font-weight: bold ;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 2px;
+	border-left-width: 0px
+}
+.title2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: justify ;
+	font-weight: bold
+}
+.txt_small {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: italic;
+	color: #000000;
+	text-decoration: none;
+	text-align: justify
+}
+.link {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: justify
+}
+.titleT {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: justify ;
+	font-weight: bold ;
+	background-color: #B1C9DC
+}
+.titleBig {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: left;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-color: black black #C1D773 #C1D773;
+	font-weight: bold ;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px
+}
+.txt_tit {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-align: justify ;
+	font-weight: bold
+}
+.titleB2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: left;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	border-color: black black #C1D773 #C1D773;
+	font-weight: bold ;
+	border-style: solid;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px
+}
+
+.tab {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	text-align: center;
+	font-weight: bold ;
+}
+
+.tabl{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold ;
+}
+.tabl:active{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold ;
+}
+.tabl:visited{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold ;
+}
+.tabl:hover{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold ;
+}
+
+.f12{
+	font-size : 12px;
+}
+
+.f12i{
+	font-size : 12px;
+	font-style : italic;
+}
+
+.f12b{
+	font-size : 12px;
+	font-weight : bold;
+}
+
+.f14b{
+	font-size : 14px;
+	font-weight : bold;
+}
+
+.errors{
+	font-size : 12px;
+	color : Red;
+	text-align : center;
+	font-weight : bold;
+}
+
+.message{
+	font-size : 12px;
+	font-style : italic;
+	color : #993300;
+	text-align : center;
+}
+
+.statusunknown{
+	font-style : italic;
+}
+
+.statusonline{
+	color: Blue;
+}
+
+.statusoffline{
+	color: red;
+}
