@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.8 2003/04/04 02:26:23 jiri Exp $
+ * $Id: accounting.php,v 1.9 2003/04/05 16:00:35 jiri Exp $
  */
 
 require "prepend.php";
@@ -16,6 +16,7 @@ do{
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
 	
 	$q="select t1.to_uri, t1.sip_to, t1.sip_callid, t1.time, ".
+		"t1.fromtag as invft, t2.fromtag as byeft, t2.totag as byett, ".
 		"sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) ".
 			"as length ".
 		"from ".$config->table_accounting." t1, ".
@@ -51,13 +52,15 @@ do{
 <tr><td>
 	<table border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" align="center">
 	<tr>
-	<td class="titleT" width="135">call subscriber</td>
+	<td class="titleT" width="135">destination</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="135">call id</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="135">time</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="135">length of call</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="135">hang up</td>
 	</tr>
 	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?while ($row=MySQL_Fetch_Object($mc_res)){
@@ -69,7 +72,11 @@ do{
 							substr($row->time,0,4));	//year
 	
 		if (date('Y-m-d',$timestamp)==date('Y-m-d')) $time="today ".date('H:i',$timestamp);
-		else $time=date('Y-m-d H:i',$timestamp)
+		else $time=date('Y-m-d H:i',$timestamp);
+
+		if ($row->invft==$row->byeft) $hangup="caller";
+		else if ($row->invft==$row->byett) $hangup="calleer";
+		else $hangup="n/a";
 
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
 //		else $time=Substr($row->time,0,16);
@@ -84,6 +91,8 @@ do{
 	<td align="center" class="f12" width="135"><?echo $time;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="135"><?echo $row->length;?></td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="center" class="f12" width="135"><?echo $hangup;?></td>
 	</tr>
 	<?}?>
 	</table>
