@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.15 2003/11/04 23:11:51 jiri Exp $
+ * $Id: page.php,v 1.16 2003/11/26 23:18:54 kozlik Exp $
  */
 
 	function put_headers(){
@@ -120,7 +120,7 @@
 		else
 			$tabs=$config->ppaid->r_tabs;
 		
-		print_tabs_new($tabs, $config->resell_pages_path, $tab_selected); $_page_tab=1;?>	
+		print_tabs_new($tabs, $config->ppaid->resell_pages_path, $tab_selected); $_page_tab=1;?>	
 
  		<table bgcolor="#B1C9DC" width="100%" border="0" cellspacing="0" cellpadding="1">
 		<tr><td>

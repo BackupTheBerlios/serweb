@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.28 2003/11/04 10:50:26 jiri Exp $
+ * $Id: config.php,v 1.29 2003/11/26 23:18:54 kozlik Exp $
  */
 
 class Csub_not {
@@ -531,7 +531,6 @@ class Cconfig {
 		$this->style_src_path = $this->root_path."styles/";
 		$this->user_pages_path = $this->root_path."user/";
 		$this->admin_pages_path = $this->root_path."admin/";
-		$this->resell_pages_path = $this->root_path."reseller/";
 
 		/* values used for names of reply fifos -- they change radnomly */
 		$this->reply_fifo_filename="webfifo_".rand();
