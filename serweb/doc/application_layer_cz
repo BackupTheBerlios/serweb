@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.3 2004/09/06 09:41:04 kozlik Exp $
+$Id: application_layer_cz,v 1.4 2004/09/06 11:07:05 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -203,6 +203,43 @@ Prubeh zpracovani APU page_controlerem
 ===============================================================================
                       Sablona pro vytvareni vlastnich APU
 ===============================================================================
+
+/*
+ * $Id: application_layer_cz,v 1.4 2004/09/06 11:07:05 kozlik Exp $
+ */ 
+
+/* Application unit my_apu */
+
+/*
+   This application unit is used for .............
+   
+   Configuration:
+   --------------
+   
+   'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+     message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+   								
+   'form_name'					(string) default: ''
+     name of html form
+   
+   'form_submit'				(assoc)
+     assotiative array describe submit element of form. For details see description 
+	 of method add_submit in class form_ext
+
+   'smarty_form'				name of smarty variable - see below
+   'smarty_action'				name of smarty variable - see below
+   
+   Exported smarty variables:
+   --------------------------
+   opt['smarty_form'] 			(form)			
+     phplib html form
+	 
+   opt['smarty_action']			(action)
+	  tells what should smarty display. Values:
+   	  'default' - 
+	  'was_updated' - when user submited form and data was succefully stored
+
+*/
 
 class apu_my_apu extends apu_base_class{
 	var $smarty_action='default';
