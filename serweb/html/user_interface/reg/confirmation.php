@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.14 2003/05/28 15:33:50 jiri Exp $
+ * $Id: confirmation.php,v 1.15 2003/09/15 03:13:47 jiri Exp $
  */
 
 include "reg_jab.php";
@@ -52,10 +52,13 @@ do{
         else $replication="";
 
 		/* add new alias */
+		/*
 		if ($config->ul_multidomain) 
 			$ul_name=$alias."@".$config->default_domain."\n";
 		else
 			$ul_name=$alias."\n";
+		*/
+		$ul_name=$alias."@".$config->default_domain."\n";
 
 		/* construct FIFO command */
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
