@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.7 2002/11/30 10:03:25 jiri Exp $
+ * $Id: confirmation.php,v 1.8 2003/01/28 09:56:29 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -46,12 +46,18 @@ do{
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
+		/* add new alias */
+		/* construct FIFO command */
+		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
+			$config->fifo_aliases_table."\n".	//table
+			$alias."\n".						//user
+			$sip_address."\n".					//contact
+			$config->new_alias_expires."\n".	//expires
+			$config->new_alias_q."\n\n";		//priority
 
-		$q="insert into ".$config->table_aliases." (user, contact, expires, q, callid, cseq) ".
-			"values ('$alias', '$sip_address', '".$config->new_alias_expires."', ".$config->new_alias_q.", '".$config->new_alias_callid."', ".$config->new_alias_cseq.")";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
+		$message=write2fifo($fifo_cmd, $errors, $status);
+		if ($errors) break;
+		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
 
 		$q="delete from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.16 2003/01/21 00:17:54 kozlik Exp $
+ * $Id: config.php,v 1.17 2003/01/28 09:56:51 kozlik Exp $
  */
 
 class Csub_not {
@@ -45,7 +45,11 @@ class Cconfig {
 	var $table_netgeo_cache;
 	var $table_ser_mon;
 	var $table_ser_mon_ul;
+	var $table_message_silo;
+	var $table_voice_silo;
 
+	var $voice_silo_dir;
+		
 	var $show_voicemail_acl;
 
 	var $enable_dial_voicemail;
@@ -82,6 +86,7 @@ class Cconfig {
 	var $reply_fifo_filename;
 	var $reply_fifo_path;
 
+	var $fifo_aliases_table;
 	var $ul_table;
 	var $ul_priority;
 
@@ -146,6 +151,8 @@ class Cconfig {
 		$this->table_netgeo_cache="netgeo_cache";
 		$this->table_ser_mon="server_monitoring";
 		$this->table_ser_mon_ul="server_monitoring_ul";
+		$this->table_message_silo="silo"; 
+		$this->table_voice_silo="voice_silo";
 
 
 		////////////////////////////////////////////////////////////////
@@ -157,6 +164,7 @@ class Cconfig {
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
 		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
+		$this->voice_silo_dir = '/var/spool/voice_silo';					//directory where are stored voice mail messages
 
 
 		////////////////////////////////////////////////////////////////
@@ -182,6 +190,7 @@ class Cconfig {
 		$this->enable_tabs[4]=true;					//enable tab accounting
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=true;					//enable tab notification subscription
+		$this->enable_tabs[7]=true;					//enable tab message store
 
 		$this->prolog="/~iptel/prolog.html";
 		$this->separator="/~iptel/separator.html";
@@ -199,8 +208,9 @@ class Cconfig {
 		$this->new_alias_q=1.00;
 		$this->new_alias_callid="web_call_id@fox";
 		$this->new_alias_cseq=1;
+		$this->fifo_aliases_table="aliases";
 
-                $this->pre_uid_expires=3600;                                    //seconds in which expires "get pass session"
+		$this->pre_uid_expires=3600;                                    //seconds in which expires "get pass session"
 
 		$this->psignature="Web_interface_Karel_Kozlik-1.0";
 
