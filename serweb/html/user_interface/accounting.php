@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.22 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: accounting.php,v 1.23 2004/04/23 15:04:06 kozlik Exp $
  */
 
 require "prepend.php";
@@ -35,7 +35,6 @@ print_html_body_begin($page_attributes);
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>destination</th>
-	<th>call id</th>
 	<th>time</th>
 	<th>length of call</th>
 	<th>hang up</th>
@@ -48,7 +47,6 @@ print_html_body_begin($page_attributes);
 	<td align="left">
 	<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->to_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->domain); ?>');">
 	<?echo htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$row->sip_to));?></a></td>
-	<td align="left"><?echo nbsp_if_empty($row->sip_callid);?></td>
 	<td align="left"><?echo nbsp_if_empty($row->time);?></td>
 	<td align="left"><?echo nbsp_if_empty($row->length);?></td>
 	<td align="center"><?echo nbsp_if_empty($row->hangup);?></td>
