@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.15 2003/04/03 20:07:21 jiri Exp $
+ * $Id: functions.php,v 1.16 2003/04/07 05:23:26 jiri Exp $
  */
 
 
@@ -174,7 +174,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	/* open fifo now */
 	$fifo_handle=fopen( $config->fifo_server, "w" );
 	if (!$fifo_handle) {
-		$errors[]="sorry -- cannot open fifo"; return;
+		$errors[]="sorry -- cannot open write fifo"; return;
 	}
 
 	/* create fifo for replies */
@@ -196,13 +196,13 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	@$fp = fopen( $config->reply_fifo_path, "r");
 	if (!$fp) {
 	    @unlink($config->reply_fifo_path);
-		$errors[]="sorry -- fifo reading error"; return;
+		$errors[]="sorry -- reply fifo opening error"; return;
 	}
 
 	$status=fgetS($fp,256);
 	if (!$status) {
 	    @unlink($config->reply_fifo_path);
-		$errors[]="sorry -- fifo reading error"; return;
+		$errors[]="sorry -- reply fifo reading error"; return;
 	}
 	
 	$rd=fread($fp,8192);
