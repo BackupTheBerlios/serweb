@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.2 2003/10/15 10:00:51 kozlik Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.3 2003/10/15 11:25:23 kozlik Exp $
  */
 
  /*
@@ -47,6 +47,30 @@ function add_new_alias($sip_address, $alias, &$errors){
 	if (substr($status,0,1)!="2") {$errors[]=$status; return false; }
 
 	return $message;
+}
+
+/*
+ *	check if user exists
+ */
+
+function is_user_exists($uname, &$errors){
+ 	global $config;
+
+	$q="select count(*) from ".$config->table_subscriber." where lower(username)=lower('$uname')";
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return -1;}
+
+	$row=MySQL_Fetch_Row($res);
+	if ($row[0]) return true;
+	
+	$q="select count(*) from ".$config->table_pending." where lower(username)=lower('$uname')";
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return -1;}
+
+	$row=MySQL_Fetch_Row($res);
+	if ($row[0]) return true;
+	
+	return false;
 }
 
  /*

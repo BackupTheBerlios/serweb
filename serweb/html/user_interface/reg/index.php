@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.6 2003/10/15 10:06:19 kozlik Exp $
+ * $Id: index.php,v 1.7 2003/10/15 11:25:23 kozlik Exp $
  */
 
 require "prepend.php";
@@ -114,20 +114,11 @@ do{
 
 			/* Process data */           // Data ok;
 
-		$q="select count(*) from ".$config->table_subscriber." where lower(username)=lower('$uname')";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
-		$row=MySQL_Fetch_Row($res);
-		if ($row[0]) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
-
-		$q="select count(*) from ".$config->table_pending." where lower(username)=lower('$uname')";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
-		$row=MySQL_Fetch_Row($res);
-		if ($row[0]) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
-
+			
+		$user_exists=is_user_exists($uname, $errors);
+		if ($errors) break;
+		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
+		
 		$confirm=md5(uniqid(rand()));
 
 		if (!add_user_to_subscriber($uname, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
