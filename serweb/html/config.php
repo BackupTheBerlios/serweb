@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.42 2004/04/04 19:59:45 kozlik Exp $
+ * $Id: config.php,v 1.43 2004/04/23 11:55:05 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -22,6 +22,10 @@
 		$config->html_headers=array();
 		$config->html_headers[]="";
 
+		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
+			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
+		$this->html_doctype="strict";
+		
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/
@@ -97,7 +101,7 @@
 		/* this array contain list of config parameter which can be modified
 		   by admins of particular domains */
 
-		$config->domain_depend_config=array("mail_header_from", "web_contact", "html_title",
+		$config->domain_depend_config=array("mail_header_from", "web_contact", "html_title", "html_doctype", 
 			"html_headers", "first_alias_number", "infomail", "regmail", "forgot_pass_subj",
 			"mail_forgot_pass", "register_subj", "mail_register", "terms_and_conditions");
 
