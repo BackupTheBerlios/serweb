@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.10 2002/09/25 23:26:47 jiri Exp $
+ * $Id: config.php,v 1.11 2002/10/15 03:39:09 jiri Exp $
  */
 
 class Csub_not {
@@ -60,6 +60,7 @@ class Cconfig {
 	var $default_domain;
 
 	var $root_path;
+	var $root_uri;
 	var $img_src_path;
 	var $js_src_path;
 	var $style_src_path;
@@ -90,11 +91,17 @@ class Cconfig {
 	var $forgot_pass_subj;
 	var $mail_register;
 	var $register_subj;
+
+	// web pages which should be virtually included  in beginning and 
+	// end of every serweb page
+	var $prolog;
+	var $separator;
+	var $epilog;
 	
 	var $terms_and_conditions;
 	
 	function Cconfig(){
-		$this->db_host="localhost";					//database host
+		$this->db_host="dbhost";					//database host
 		$this->db_name="ser";						//database name
 		$this->db_user="ser";						//database conection user
 		$this->db_pass="heslo";						//database conection password
@@ -110,7 +117,7 @@ class Cconfig {
 		$this->table_phonebook="phonebook";
 		$this->table_event="event";
 
-		$this->show_voicemail_acl=true;				//show "voicemail" in ACL and voicemail checkbox at my account 
+		$this->show_voicemail_acl=false;				//show "voicemail" in ACL and voicemail checkbox at my account 
 
 		$this->enable_dial_voicemail=false;
 		$this->enable_test_firewall=false;
@@ -119,16 +126,20 @@ class Cconfig {
 		$this->grp_values[]="ld";
 		$this->grp_values[]="local";
 		$this->grp_values[]="int";
+
+		$this->prolog="/prolog.html";
+		$this->separator="/separator.html";
+		$this->epilog="/epilog.html";
 		
 
-		$this->realm="foo.bar";
-		$this->domainname="foo.bar";
+		$this->realm="iptel.org";
+		$this->domainname="iptel.org";
 
-		$this->first_alias_number=18888;
+		$this->first_alias_number=81000;
 		
 		$this->new_alias_expires='2020-01-01 00:00:00';
 		$this->new_alias_q=1.00;
-		$this->new_alias_callid="";
+		$this->new_alias_callid="web_call_id@fox";
 		$this->new_alias_cseq=1;
 		
 		$this->pre_uid_expires=3600;				//seconds in which expires "get pass session"
@@ -136,21 +147,23 @@ class Cconfig {
 		$this->psignature="Web_interface_Karel_Kozlik-0.9";
 
 		$this->web_contact="sip:daemon@iptel.org";			//address of pseudo sender
-		$this->fifo_server="d:/temp/tmp";					//path to fifo server
+		$this->fifo_server="/tmp/ser_fifo";					//path to fifo server
 		$this->reply_fifo_filename="webfifo_".rand();
-		$this->reply_fifo_path="d:/temp/".$this->reply_fifo_filename;
+		$this->reply_fifo_path="/tmp/".$this->reply_fifo_filename;
 		
-		$this->ul_table="table";
+		$this->ul_table="location";
 		$this->ul_priority="1.00";
 
 		$this->im_length=1300;								//max length of instant message
-		$this->default_domain="foo.bar";
+		$this->default_domain="iptel.org";
 		
-		$this->root_path="/~iptel/";
+		$this->root_path="/";
+		$this->root_uri="http://www.iptel.org";
 		$this->img_src_path =	$this->root_path."img/";
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
-		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
+		//$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
+		$this->zonetab_file = "/usr/share/zoneinfo/zone.tab";
 
 		$this->charset="windows-1250";
 
@@ -160,10 +173,10 @@ class Cconfig {
 
 		$this->enable_tabs[1]=true;					//enable tab my account
 		$this->enable_tabs[2]=true;					//enable tab phonebook
-		$this->enable_tabs[3]=true;					//enable tab missed calls
-		$this->enable_tabs[4]=true;					//enable tab accounting
+		$this->enable_tabs[3]=false;					//enable tab missed calls
+		$this->enable_tabs[4]=false;					//enable tab accounting
 		$this->enable_tabs[5]=true;					//enable tab send IM
-		$this->enable_tabs[6]=true;					//enable tab notification subscription
+		$this->enable_tabs[6]=false;					//enable tab notification subscription
 
 		//notification subscription
 		$this->sub_not[]=new Csub_not("sip:weather@iptel.org;type=temperature;operator=lt;value=0","temperature is too low");
@@ -181,12 +194,13 @@ class Cconfig {
 		$this->link_abstract=$this->root_path."info/abstract.html";
 		$this->link_home=$this->root_path."index.html";
 		
-		$this->mail_header_from="php.kk@kufr.cz";			//header From: in outgoing emails
+		$this->mail_header_from="registrar@iptel.org";			//header From: in outgoing emails
 
 		$this->forgot_pass_subj="your login information";
 		$this->mail_forgot_pass="Hi,\n".
 					"now you can access to your account at the folowing URL within 1 hour:\n".
-					"http://oook/~iptel/user_interface/my_account.php?#session#\n\n".
+					$this->root_uri.$this->root_path.
+					"/user/my_account.php?#session#\n\n".
 					"we recommend change your password after you login\n".
 					"iptel.org\n";
 					
@@ -194,7 +208,7 @@ class Cconfig {
 		$this->mail_register="Thank you for registering with iptel.org.\n\n".
 							"We are reserving the following SIP address for you: #sip_address#\n\n".
 							"To finalize your registration please check the following URL within 24 hours:\n".
-							"http://oook/~iptel/user_interface/reg/confirmation.php?nr=#confirm#\n\n".
+							$this->root_uri.$this->root_path."/user/reg/confirmation.php?nr=#confirm#\n\n".
 							"(If you confirm later you will have to re-register.)\n\n".
 							"Windows Messenger users may look at additional configuration hints at\n".
 							"http://www.iptel.org/phpBB/viewtopic.php?topic=11&forum=1&0\n";

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.3 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: users.php,v 1.4 2002/10/15 03:39:09 jiri Exp $
  */
 
 require "prepend.php";
@@ -191,7 +191,7 @@ function confirmDelete(theLink){
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="40"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->user_id));?>">ACL</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="center" class="f12" width="63"><a href="<?$sess->purl("../user_interface/my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->user_id));?>">account</a></td>
+	<td align="center" class="f12" width="63"><a href="<?$sess->purl("../user/my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->user_id));?>">account</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="55"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->user_id));?>" onclick="return confirmDelete(this)">delete</a></td>
 	</tr>

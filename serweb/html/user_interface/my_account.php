@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.10 2002/09/24 14:53:53 kozlik Exp $
+ * $Id: my_account.php,v 1.11 2002/10/15 03:39:09 jiri Exp $
  */
 
 require "prepend.php";
@@ -260,7 +260,7 @@ if ($okey_x){							//data isn't valid or error in sql
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>iptel.org, the IP Telephony Site</title>
+<title>iptel.org -- My Account </title>
 <?print_html_head();?>
 <script language="JavaScript">
 <!--
