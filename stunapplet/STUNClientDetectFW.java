@@ -1,5 +1,5 @@
 /*
- *$Id: STUNClientDetectFW.java,v 1.2 2002/12/09 22:02:35 kozlik Exp $
+ *$Id: STUNClientDetectFW.java,v 1.3 2002/12/10 17:56:04 kozlik Exp $
  */
 
 /**
@@ -266,9 +266,13 @@ public class STUNClientDetectFW extends Thread {
 
   String getLocalIP () throws UnknownHostException, IOException {
     Socket sock;
+    String localIP;
 
     sock=new Socket(pappy.server_param, pappy.tcp_dummyport_param);
-    return sock.getLocalAddress().getHostAddress();
+    localIP=sock.getLocalAddress().getHostAddress();
+    sock.close();
+
+    return localIP;
   }
 
   ArrayList getLocalIPs (){
