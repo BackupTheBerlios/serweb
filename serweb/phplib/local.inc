@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.13 2004/03/04 22:47:37 kozlik Exp $
+ * $Id: local.inc,v 1.14 2004/03/24 21:21:39 kozlik Exp $
  *
  */ 
 
@@ -192,29 +192,34 @@ class phplib_Pre_Auth extends phplib_Auth {
 	    global $sess;
 	    global $pre_uid, $pre_uid_expires;
 
-		$sess->unregister('pre_uid');
-		$sess->unregister('pre_uid_expires');
-
-		if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
-		
-	    $this->db->query(sprintf("select username, perms ".
-	                             "        from %s ".
-	                             "       where phplib_id = '%s' ",
-	                          $this->database_table,
-	                          addslashes($pre_uid)));
-
-	    $uid=0;
-	    while($this->db->next_record())	{
-	      $this->auth["uname"] = $this->db->f("username");
-	      $this->auth["perm"] = $this->db->f("perms");
-		  $uid=$pre_uid;
-	    }
-
-		if ($this->auth["perm"]=='admin'){
-			$this->check_for_privilege_change_privileges();
+		if (isset($pre_uid)){
+			$sess->unregister('pre_uid');
+			$sess->unregister('pre_uid_expires');
+	
+			if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
+			
+		    $this->db->query(sprintf("select username, perms ".
+		                             "        from %s ".
+		                             "       where phplib_id = '%s' ",
+		                          $this->database_table,
+		                          addslashes($pre_uid)));
+	
+		    $uid=0;
+		    while($this->db->next_record())	{
+		      $this->auth["uname"] = $this->db->f("username");
+		      $this->auth["perm"] = $this->db->f("perms");
+			  $uid=$pre_uid;
+		    }
+	
+			if ($this->auth["perm"]=='admin'){
+				$this->check_for_privilege_change_privileges();
+			}
+			
+			return $uid;
 		}
-		
-		return $uid;
+		else{
+			return false;
+		}
 	}
 }
 
