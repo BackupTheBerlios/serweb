@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.12 2003/09/04 18:55:48 kozlik Exp $
+ * $Id: accounting.php,v 1.13 2003/10/10 04:11:06 jiri Exp $
  */
 
 require "prepend.php";
@@ -81,7 +81,7 @@ do{
 		else $time=date('Y-m-d H:i',$timestamp);
 
 		if ($row->invft==$row->byeft) $hangup="caller";
-		else if ($row->invft==$row->byett) $hangup="calleer";
+		else if ($row->invft==$row->byett) $hangup="callee";
 		else $hangup="n/a";
 
 //		if (Substr($row->time,0,10)==date('Y-m-d')) $time="today ".Substr($row->time,11,5);
