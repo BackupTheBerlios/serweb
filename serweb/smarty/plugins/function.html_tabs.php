@@ -18,6 +18,7 @@
  *         - path = path to pages (optional, default "")
  *         - selected = selected tab (optional, default actual page)
  *         - no_select = no tab is selected (optional, default false)
+ *         - anchor_extra_html = extra html into <A> tags (optional , default '')
  *
  * Examples: {html_tabs tabs=$tabs}
  * @author   Karel Kozlik <kozlik@kufr.cz>
@@ -32,6 +33,7 @@ function smarty_function_html_tabs($params, &$smarty){
     $path = '';
     $selected = NULL;
     $no_select = false;
+	$anchor_extra_html = '';
 
     extract($params);
 	
@@ -52,7 +54,7 @@ function smarty_function_html_tabs($params, &$smarty){
 				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong><span>'.$value->name.'</span></strong><div class="swTabsR"></div></li>';
 			}
 			else{
-				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->page."?kvrk=".uniqID("")).'" class="tabl"><span>'.$value->name.'</span></a><div class="swTabsR"></div></li>';
+				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->page."?kvrk=".uniqID("")).'" '.$anchor_extra_html.' class="tabl"><span>'.$value->name.'</span></a><div class="swTabsR"></div></li>';
 			}//if ($value->page==$selected)
 		}// if ($value->enabled)
 	} //foreach		
