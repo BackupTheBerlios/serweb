@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.37 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: functions.php,v 1.38 2004/04/23 15:35:01 kozlik Exp $
  */
 
 
@@ -106,7 +106,7 @@ function print_errors($errors){
 }
 
 function print_message($msg){
-	if ($msg) echo "<div class=\"message\">".$msg."</div>\n";
+	if ($msg) echo "<div class=\"message\">".htmlspecialchars($msg)."</div>\n";
 }
 
 function get_sess_url($url){
