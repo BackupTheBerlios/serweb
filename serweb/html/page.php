@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.26 2004/04/22 13:08:20 kozlik Exp $
+ * $Id: page.php,v 1.27 2004/04/23 12:29:50 kozlik Exp $
  */
 
 function put_headers(){
@@ -13,8 +13,12 @@ function print_html_head($title=""){
 	global $config;	
 	
 	if (!$title) $title=$config->html_title;
-		
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+	if ($config->html_doctype=='strict'){
+		?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?	}elseif ($config->html_doctype=='transitional'){
+		?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<?	}?>
 <html>
 <head>
 <?if ($title){?><title><?echo $title;?></title><?}?>
