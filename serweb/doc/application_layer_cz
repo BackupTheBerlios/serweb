@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.4 2004/09/06 11:07:05 kozlik Exp $
+$Id: application_layer_cz,v 1.5 2004/09/16 17:13:56 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -110,6 +110,9 @@ determine_action()
 		vykonavani skriptu. Pokud na strance existuje vice APU a alespon jedna z nich ma 
 		['reload'] nastaveny na true, pak se volaji action_ metody jen tech APU ktere meli
 		['reload'] = true
+	['alone']			(boolean) default:false
+		vynuti si zpracovani pouze teto jedne APU. Metody ostatnich APU se nevolaji (s vyjimkou 
+		init() a determine_action())
 
 action_*(&$errors)
 	skupina metod slouzici k vykonani nejake akce, do pole $errors muze metoda pridat
@@ -205,7 +208,7 @@ Prubeh zpracovani APU page_controlerem
 ===============================================================================
 
 /*
- * $Id: application_layer_cz,v 1.4 2004/09/06 11:07:05 kozlik Exp $
+ * $Id: application_layer_cz,v 1.5 2004/09/16 17:13:56 kozlik Exp $
  */ 
 
 /* Application unit my_apu */
