@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.25 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: page.php,v 1.26 2004/04/22 13:08:20 kozlik Exp $
  */
 
 function put_headers(){
@@ -63,8 +63,19 @@ function print_html_body_begin($parameters=null){
 	<?if (isset($parameters['tab_collection']) and $parameters['tab_collection']) { 
 		print_tabs($parameters['tab_collection'], 
 					isset($parameters['path_to_pages'])?$parameters['path_to_pages']:null, 
-					isset($parameters['selected_tab'])?$parameters['selected_tab']:null);?>
+					isset($parameters['selected_tab'])?$parameters['selected_tab']:null);
+
+		//count tabs
+		$num_of_tabs=0;
+		foreach($parameters['tab_collection'] as $tab)
+			if ($tab->enabled) $num_of_tabs++;
+					
+					?>
 	<div id="swContent">
+
+	<!-- contenet of div must be sufficient wide in order to tabs displays in one line -->
+	<div style="height:1px; width:<?echo ($num_of_tabs*100)- 50;?>px;">&nbsp;</div>
+	
 	<?}else{?>
 	<div id="swContentNoTabs">
 	<?}?>
