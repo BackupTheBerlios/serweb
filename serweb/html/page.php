@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.16 2003/11/26 23:18:54 kozlik Exp $
+ * $Id: page.php,v 1.17 2003/12/22 20:20:12 jiri Exp $
  */
 
 	function put_headers(){
@@ -35,7 +35,9 @@
 	function clickSwapImg() {}
 	//-->
 	</script>
+	<!--
 	<script language="JavaScript" src="/preload.js"></script>
+	-->
 <?	}
 
 	$_page_tab=0;
