@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.12 2002/11/18 21:56:07 kozlik Exp $
+ * $Id: my_account.php,v 1.13 2002/12/02 12:49:58 kozlik Exp $
  */
 
 require "prepend.php";
@@ -150,8 +150,8 @@ do{
 			break;
 		}
 
-		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){
-			foreach ($config->denny_reg as $val){
+		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){ 
+			foreach ($config->denny_reg as $val){ 
 				if (Ereg($val->reg, $sip_address)) {$errors[]=$val->label; break;}
 			}
 			if ($errors) break;
@@ -242,8 +242,13 @@ do{
 		$config->ul_table."\n".		//table
 		$user_id."\n\n";	//username
 
-		$out=write2fifo($fifo_cmd, $errors, $status);
-		if ($errors or !$out) break;		
+		$out=write2fifo($fifo_cmd, $err, $status);
+		if ($err or !$out) {
+			$errors=array_merge($errors, $err); // No!
+			break;
+		}
+		if (!$out) break;
+		
 		if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; break; }
 
 		$out_arr=explode("\n", $out);
