@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.17 2003/01/28 09:56:51 kozlik Exp $
+ * $Id: config.php,v 1.18 2003/02/19 22:16:35 kozlik Exp $
  */
 
 class Csub_not {
@@ -49,7 +49,7 @@ class Cconfig {
 	var $table_voice_silo;
 
 	var $voice_silo_dir;
-		
+
 	var $show_voicemail_acl;
 
 	var $enable_dial_voicemail;
@@ -151,7 +151,7 @@ class Cconfig {
 		$this->table_netgeo_cache="netgeo_cache";
 		$this->table_ser_mon="server_monitoring";
 		$this->table_ser_mon_ul="server_monitoring_ul";
-		$this->table_message_silo="silo"; 
+		$this->table_message_silo="silo";
 		$this->table_voice_silo="voice_silo";
 
 
@@ -164,7 +164,7 @@ class Cconfig {
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
 		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
-		$this->voice_silo_dir = '/var/spool/voice_silo';					//directory where are stored voice mail messages
+                $this->voice_silo_dir = 'c:/temp/';                                     //directory where are stored voice mail messages
 
 
 		////////////////////////////////////////////////////////////////
