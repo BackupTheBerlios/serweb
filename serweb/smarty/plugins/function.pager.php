@@ -82,15 +82,18 @@
 	elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
 
 	for ($i=$lfrom; $i<$lto; $i+=$limit){
+		/* do not add separateor before first number */
+		if ($i != $lfrom) $out .= $separator;
+
 		if ($i<=$pos and $pos<($i+$limit)) 
-			$out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>'.$separator;
+			$out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>';
 		else 
-			$out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'">'.(floor($i/$limit)+1).'</a>'.$separator;
+			$out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'">'.(floor($i/$limit)+1).'</a>';
 	}
 	
  	if (($pos+$limit)<$items) 
-		$out.='<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'">'.$txt_next.'</a>';
-	elseif ($display=='always') $out.='<span class="'.$class_text.'">'.$txt_next.'</span>'.$separator;
+		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'">'.$txt_next.'</a>';
+	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>'.$separator;
 	
 	return $out;  
 }
