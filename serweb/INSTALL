@@ -1,0 +1,21 @@
+$Id: INSTALL,v 1.1 2002/10/21 17:02:32 kozlik Exp $
+
+serweb - Installation
+
+  Requirements:
+  - Apache web server
+  - php 4.x
+  - MySQL
+
+  Quick Install:
+    [1] Untar the distribution (be sure to untar the subdirectories)
+    [2] It is recommended that you don't place the phplib directory in
+        the HTML tree on your server.
+    [3] Open the file config.php in your favourite editor and change
+        the values for host, database name, user and password and
+        other values to fit your environment.
+    [4] Open the file <your-host>/<your-install-dir>/admin/index.php
+        or <your-host>/<your-install-dir>/user_interface/index.php
+        in your browser. Serweb should now display a login screen.
+
+
