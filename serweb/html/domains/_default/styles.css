@@ -246,6 +246,7 @@ table.swTable tr.swTrOdd{
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 1em;
+	text-align: left;
 }
 
 .swIMtitle{
