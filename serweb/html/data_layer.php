@@ -366,11 +366,11 @@ class CDL_common{
 		case 'sql':
 			if ($config->clear_text_pw) {
 				$q="select phplib_id from ". $config->data_sql->table_subscriber.
-					" where username='".$user."' and password='".$passw."' and domain='".$domain."'";
+					" where username='".addslashes($user)."' and password='".addslashes($passw)."' and domain='".addslashes($domain)."'";
 			} else {
 				$ha1=md5($uname.":".$config->realm.":".$passw);
 				$q="select phplib_id from ". $config->data_sql->table_subscriber.
-					" where username='".$user."' and domain='".$domain."' and ha1='".$ha1."'";
+					" where username='".addslashes($user)."' and domain='".addslashes($domain)."' and ha1='".$ha1."'";
 			}
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {log_errors($res, $errors); return false;}
