@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.18 2003/04/03 19:47:10 jiri Exp $
+ * $Id: my_account.php,v 1.19 2003/04/03 20:07:21 jiri Exp $
  */
 
 require "prepend.php";
@@ -133,9 +133,13 @@ do{
 	
 	if ($del_contact){
 		/* construct FIFO command */
+		if ($config->ul_multidomain) 
+			$ul_name=$user_id."@".$config->default_domain."\n";	
+		else 
+			$ul_name=$user_id."\n";
 		$fifo_cmd=":ul_rm_contact:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".		//table
-			$user_id."@".$config->default_domain."\n".	//username
+			$ul_name.
 			$del_contact."\n\n";			//contact
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
@@ -168,9 +172,13 @@ do{
 		else $replication="";
 
 		/* construct FIFO command */
+		if ($config->ul_multidomain) 
+			$ul_name=$user_id."@".$config->default_domain."\n";	
+		else 
+			$ul_name=$user_id."\n";
 		$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
 			$config->ul_table."\n".			//table
-			$user_id."@".$config->default_domain."\n".		//username
+			$ul_name.
 			$sip_address."\n".				//contact
 			$expires."\n".					//expires
 			$config->ul_priority."\n".	// priority
@@ -247,9 +255,13 @@ do{
 		if (!$grp_res) {$errors[]="error in SQL query(6), line: ".__LINE__; break;}
 
 		// get UsrLoc
+		if ($config->ul_multidomain) 
+			$ul_name=$user_id."@".$config->default_domain."\n";	
+		else 
+			$ul_name=$user_id."\n";
 		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
 		$config->ul_table."\n".		//table
-		$user_id."@".$config->default_domain."\n\n";	//username
+		$ul_name."\n";	//username
 
 		$out=write2fifo($fifo_cmd, $err, $status);
 		if ($err or !$out) {

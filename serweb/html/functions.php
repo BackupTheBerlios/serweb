@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.14 2003/04/03 19:41:52 jiri Exp $
+ * $Id: functions.php,v 1.15 2003/04/03 20:07:21 jiri Exp $
  */
 
 
@@ -272,11 +272,11 @@ function get_location($sip_adr, &$errors){
 		" where domainname='".$domainname."'";
 	$res=mySQL_query($q);
 	/* if this query failed netgeo is probably not installed -- ignore */
-	if (!$res) return "";
+	if (!$res) return "n/a";
 	/* {$errors[]="error in SQL query, line: ".__LINE__; return;} */
 	$row=mysql_fetch_object($res);
 
-	if (!$row) return "";
+	if (!$row) return "n/a";
 	return $row->location;
 }
 ?>

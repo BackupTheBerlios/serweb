@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.20 2003/04/03 19:40:46 jiri Exp $
+ * $Id: config.php,v 1.21 2003/04/03 20:07:21 jiri Exp $
  */
 
 class Csub_not {
@@ -135,6 +135,7 @@ class Cconfig {
 	var $ser_moni_marginal_period_length;
 	var $ser_moni_aggregation_interval;
 	var $clear_text_pw;
+	var $ul_multidomain;
 
 
 	function Cconfig(){
@@ -509,6 +510,9 @@ class Cconfig {
 		$this->ul_priority="1.00";
 		/* replication support ? (a new ser feature) */
 		$this->ul_replication=1;
+		/* fifo expects usernames AND domainnames ? make sure this
+		   option is synchronized with usrloc's use_domain option	*/
+		$this->ul_multidomain=0;
 
 		/* seconds in which expires "get pass session" */
 		$this->pre_uid_expires=3600;                
