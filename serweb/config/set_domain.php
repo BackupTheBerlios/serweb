@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: set_domain.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: set_domain.php,v 1.2 2004/09/22 09:58:30 kozlik Exp $
  */ 
 
 /* set domain name */
@@ -16,8 +16,8 @@ else{
 	comment next line, uncomment the next one and replace 'mydomain.org' string.
 */
 
-	#$config->domain = ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $_SERVER['SERVER_NAME']);
-	$config->domain = "earthlink.net";
+	$config->domain = ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $_SERVER['SERVER_NAME']);
+//	$config->domain = "mydomain.org";
 
 }
 unset($set_domain_developer);
