@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.8 2005/01/11 14:11:11 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.9 2005/03/02 15:37:10 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -12,6 +12,7 @@
  * 'err' - error
  */
 
+$lang_set['charset'] = "iso-8859-1";
 
 
 /* ------------------------------------------------------------*/
