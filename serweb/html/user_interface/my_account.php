@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.20 2003/04/29 08:12:57 kozlik Exp $
+ * $Id: my_account.php,v 1.21 2003/05/08 07:58:10 kozlik Exp $
  */
 
 require "prepend.php";
@@ -224,12 +224,14 @@ do{
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query(3), line: ".__LINE__; break;}
 
-		if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
-			if ($f2voicemail) $q="insert into ".$config->table_grp." (username, grp) values ('".$user_id."', 'voicemail')";
-			else $q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
-			
-			$res=MySQL_Query($q);
-			if (!$res) {$errors[]="error in SQL query(4), line: ".__LINE__; break;}
+		if ($config->show_voicemail_acl){ // if forwarding to voicemail checkbox is not enabled then don't change forward to voicemail state
+			if ($f2vm xor $f2voicemail){  // change forward to voicemai state?
+				if ($f2voicemail) $q="insert into ".$config->table_grp." (username, grp) values ('".$user_id."', 'voicemail')";
+				else $q="delete from ".$config->table_grp." where username='".$user_id."' and grp='voicemail'";
+				
+				$res=MySQL_Query($q);
+				if (!$res) {$errors[]="error in SQL query(4), line: ".__LINE__; break;}
+			}
 		}
 		
 		
