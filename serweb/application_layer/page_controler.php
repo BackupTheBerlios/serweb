@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.3 2004/08/31 14:16:13 kozlik Exp $
+ * $Id: page_controler.php,v 1.4 2004/09/01 10:56:21 kozlik Exp $
  */ 
 
 /*
@@ -10,7 +10,7 @@
    smarty_form			name of smarty variable - see below - used only if shared_html_form is true
    form_name			name of html form - used only if shared_html_form is true
    form_submit			assotiative array describe submit element of shared form. 
-   							For details see description of method add_submit_to_form in class apu_base_class
+   							For details see description of method add_submit in class form_ext
    
 
    Exported smarty variables:
@@ -105,7 +105,7 @@ class page_conroler{
 	}
 
 	/* add application unit to $apu_objects array*/
-	function add_apu($class){
+	function add_apu(&$class){
 		$this->apu_objects[] = $class;
 	}
 	
@@ -148,7 +148,7 @@ class page_conroler{
 										 "multiple"=>true,
 			                             "value"=>$this->form_apu_names));
 
-			apu_base_class::add_submit_to_form($this->opt['form_submit'], $this->f);
+			$this->f->add_submit($this->opt['form_submit']);
 		}
 	}
 	
@@ -289,7 +289,7 @@ class page_conroler{
 	function start(){
 		global $smarty, $lang_str, $page_attributes, $config;
 
-		if ($this->opt['shared_html_form']) $this->f = new form;  // create a form object
+		if ($this->opt['shared_html_form']) $this->f = new form_ext;  // create a form object
 		
 		/* propagate user_id and reference to this to all application units */
 		foreach($this->apu_objects as $key=>$val){

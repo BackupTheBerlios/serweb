@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: load_apu.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: load_apu.php,v 1.2 2004/09/01 10:56:21 kozlik Exp $
  */ 
 
 function _apu_require($_required_apu){
@@ -22,6 +22,7 @@ function _apu_require($_required_apu){
 	$data->add_method($reguired_data_layer);
 } 
 
+require_once ($_SERWEB["serwebdir"] . "../application_layer/oohform_ext.php");
 require_once ($_SERWEB["serwebdir"] . "../application_layer/apu_base_class.php");
 require_once ($_SERWEB["serwebdir"] . "../application_layer/page_controler.php");
 

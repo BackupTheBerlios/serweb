@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_base_class.php,v 1.2 2004/08/31 14:16:13 kozlik Exp $
+ * $Id: apu_base_class.php,v 1.3 2004/09/01 10:56:21 kozlik Exp $
  */ 
 
 /* The main parent of all application units */
@@ -10,7 +10,7 @@
    --------------
    instance_id			unique identificator of instance of application unit
    form_submit			assotiative array describe submit element of form. 
-   						for details see description of method add_submit_to_form
+   						for details see description of method add_submit in class form_ext
  */							
 
 class apu_base_class{
@@ -37,36 +37,6 @@ class apu_base_class{
 	    return $instance_counter;
 	}
 
-	/* static method - add submit element to from 
-		$submit - associative array describing submit element
-		$form   - phplib form
-		
-		Keys of $submit array:
-			['type'] - type of submit element 'hidden', 'button', 'image'
-			['text'] - text on button on alt on image
-			['src']  - source of image
-	 */
-	function add_submit_to_form($submit, &$form){
-		switch ($submit['type']){
-		case "image":
-			$form->add_element(array("type"=>"submit",
-			                             "name"=>"okey",
-			                             "src"=>$submit['src'],
-										 "extrahtml"=>"alt='".$submit['text']."'"));
-			break;
-		case "button":
-			$form->add_element(array("type"=>"submit",
-			                             "name"=>"okey_x",
-										 "value"=>$submit['text']));
-			break;
-		case "hidden":
-		default:
-			$form->add_element(array("type"=>"hidden",
-			                             "name"=>"okey_x",
-			                             "value"=>'1'));
-		}
-	}
-	
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
 		return array();
@@ -87,7 +57,7 @@ class apu_base_class{
 		/* if html form is common for all apu, reference this->f to controler form */
 		if ($this->controler->opt['shared_html_form']) $this->f = &$this->controler->f;
 		/* else create own form object */
-		else	$this->f = new form;                
+		else	$this->f = new form_ext;
 	}
 
 	function action_default(&$errors){
@@ -112,7 +82,7 @@ class apu_base_class{
 			                             "name"=>"apu_name",
 			                             "value"=>$this->opt['instance_id']));
 		/* and also add submit element */
-			apu_base_class::add_submit_to_form($this->opt['form_submit'], $this->f);
+			$this->f->add_submit($this->opt['form_submit']);
 		}
 	}
 	
