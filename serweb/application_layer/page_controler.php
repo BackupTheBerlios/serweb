@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.4 2004/09/01 10:56:21 kozlik Exp $
+ * $Id: page_controler.php,v 1.5 2004/09/16 17:04:24 kozlik Exp $
  */ 
 
 /*
@@ -106,7 +106,7 @@ class page_conroler{
 
 	/* add application unit to $apu_objects array*/
 	function add_apu(&$class){
-		$this->apu_objects[] = $class;
+		$this->apu_objects[] = &$class;
 	}
 	
 	/* set name of template */
@@ -133,6 +133,20 @@ class page_conroler{
 				$this->send_header_location=true;
 			if (isset($this->apu_objects[$key]->action['validate_form']) and $this->apu_objects[$key]->action['validate_form'])
 				$this->validate_html_form=true;
+
+			/* if should be this APU processed alone */
+			if (isset($this->apu_objects[$key]->action['alone']) and $this->apu_objects[$key]->action['alone']){
+				$this->validate_html_form = isset($this->apu_objects[$key]->action['validate_form'])?$this->apu_objects[$key]->action['validate_form']:false;
+				$this->send_header_location = isset($this->apu_objects[$key]->action['reload'])?$this->apu_objects[$key]->action['reload']:false;
+
+				/* save this APU */
+				$temp = &$this->apu_objects[$key];
+				/* unset all other APUs */				
+				$this->apu_objects = array();
+				$this->add_apu($temp);
+				
+				break;
+			}
 		}
 	}
 	
