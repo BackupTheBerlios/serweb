@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.3 2003/02/26 21:00:35 kozlik Exp $
+ * $Id: find_user.php,v 1.4 2003/03/17 18:18:35 kozlik Exp $
  */
 
 require "prepend.php";
@@ -57,10 +57,10 @@ do{
 			/* Process data */           // Data ok; 
 		if ($onlineonly)
 			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.user_id=l.user and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.user_id like '%$uname%' limit 0,".max_rows;
+				" where s.user_id=l.user and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.user_id like '%$uname%' limit 0,".$config->max_showed_rows;
 		else
 			$q=	"select timezone, first_name, last_name, user_id from ".$config->table_subscriber.
-				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".max_rows;
+				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".$config->max_showed_rows;
 		
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -156,7 +156,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	</table>
 </td></tr>
 </table>
-	<?if (MySQL_num_rows($find_res)==max_rows){?>
+	<?if (MySQL_num_rows($find_res)==$config->max_showed_rows){?>
 <br><div align="center">The search generated too many matches, please be more specific</div>
 <?	}?>
 <?}?>

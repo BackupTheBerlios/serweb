@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.18 2003/02/19 22:16:35 kozlik Exp $
+ * $Id: config.php,v 1.19 2003/03/17 18:18:35 kozlik Exp $
  */
 
 class Csub_not {
@@ -44,11 +44,12 @@ class Cconfig {
 	var $table_event;
 	var $table_netgeo_cache;
 	var $table_ser_mon;
-	var $table_ser_mon_ul;
+	var $table_ser_mon_agg;
 	var $table_message_silo;
 	var $table_voice_silo;
 
 	var $voice_silo_dir;
+	var $greetings_spool_dir;
 
 	var $show_voicemail_acl;
 
@@ -105,6 +106,7 @@ class Cconfig {
 	var $default_width;
 
 	var $num_of_showed_items;
+	var $max_showed_rows;
 
 	var $enable_tabs;
 
@@ -128,6 +130,9 @@ class Cconfig {
 	var $metar_event_uri;
 	var $metar_from_sip_uri;
 	var $metar_na_message;
+	
+	var $ser_moni_marginal_period_length;
+	var $ser_moni_aggregation_interval;
 
 	function Cconfig(){
 		////////////////////////////////////////////////////////////////
@@ -150,7 +155,7 @@ class Cconfig {
 		$this->table_event="event";
 		$this->table_netgeo_cache="netgeo_cache";
 		$this->table_ser_mon="server_monitoring";
-		$this->table_ser_mon_ul="server_monitoring_ul";
+		$this->table_ser_mon_agg="server_monitoring_agg";
 		$this->table_message_silo="silo";
 		$this->table_voice_silo="voice_silo";
 
@@ -164,7 +169,8 @@ class Cconfig {
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
 		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";		//TZ zone descriptions file, usually: /usr/share/zoneinfo/zone.tab
-                $this->voice_silo_dir = 'c:/temp/';                                     //directory where are stored voice mail messages
+		$this->voice_silo_dir = 'c:/temp/';                                 //directory where are stored voice mail messages
+		$this->greetings_spool_dir = 'c:/temp/';                            //directory where are stored users greetings
 
 
 		////////////////////////////////////////////////////////////////
@@ -191,6 +197,7 @@ class Cconfig {
 		$this->enable_tabs[5]=true;					//enable tab send IM
 		$this->enable_tabs[6]=true;					//enable tab notification subscription
 		$this->enable_tabs[7]=true;					//enable tab message store
+		$this->enable_tabs[8]=true;					//enable tab voicemail
 
 		$this->prolog="/~iptel/prolog.html";
 		$this->separator="/~iptel/separator.html";
@@ -224,8 +231,8 @@ class Cconfig {
 
 		$this->charset="windows-1250";
 
-                $this->num_of_showed_items=20;                                  //num of showed items in the list of users
-
+        $this->num_of_showed_items=20;                                  //num of showed items in the list of users
+		$this->max_showed_rows=50;									//maximum of showed items in "user find"
 
 		//regular expression list of denny sip adresses in "add contact"
 		//if entered address match one regular expression from list, corresponding label is displayed
@@ -365,6 +372,20 @@ class Cconfig {
 
 		// N/A message - is sended to user when we can't get his location or METAR data
 		$this->metar_na_message="sorry we can't get your location or METAR data for you";
+
+
+		////////////////////////////////////////////////////////////////
+		//            configure server monitoring
+
+		// if you change this values, please delete all data from table	"table_ser_mon_agg" and "table_ser_mon"
+		// by reason that the aggregated data may be calculated bad if you don't do it
+
+		// length of marginal period in seconds
+		$this->ser_moni_marginal_period_length=60*5;   //5 minut
+		
+		// length of interval (in seconds) for which will data stored, data older then this interval will be deleted
+		$this->ser_moni_aggregation_interval=60*15;	//15 minut
+
 	}
 }
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.8 2003/02/13 13:04:13 kozlik Exp $
+ * $Id: page.php,v 1.9 2003/03/17 18:18:35 kozlik Exp $
  */
 
 	function put_headers(){
@@ -89,7 +89,7 @@ global $config, $sess;
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr valign="top">
 <? 
-for ($i=1; $i<7; $i++){
+for ($i=1; $i<8; $i++){
 	if ($config->enable_tabs[$i]){
 		if ($tab==$i){?>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left.gif" alt="" width="7" height="25" border="0"></td>
@@ -106,8 +106,8 @@ for ($i=1; $i<7; $i++){
 	}
 }
 
-if ($config->enable_tabs[7]){
-	if ($tab==7){?>
+if ($config->enable_tabs[8]){
+	if ($tab==8){?>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_left.gif" alt="" width="7" height="25" border="0"></td>
 		<td width="80" bgcolor="#B1C9DC" height="1"><img src="<?echo $config->img_src_path;?>title/background_pixel.gif" alt="" width="80" height="1" border="0"></td>
 		<td width="7" rowspan="2"><img src="<?echo $config->img_src_path;?>tab/tab_right.gif" alt="" width="7" height="25" border="0"></td>
@@ -146,9 +146,13 @@ if ($config->enable_tabs[7]){
 <?}else{?>
 		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("notification_subscription.php?kvrk=".uniqID(""));?>" class="tabl">notification<br>subscription</a></td>
 <?}}if ($config->enable_tabs[7]){ if ($tab==7){?>
-		<td width="80" class="tab" bgcolor="#B1C9DC">message<br>store</td>
+		<td width="78" class="tab" bgcolor="#B1C9DC">message<br>store</td>
 <?}else{?>
-		<td width="80" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("message_store.php?kvrk=".uniqID(""));?>" class="tabl">message<br>store</a></td>
+		<td width="78" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("message_store.php?kvrk=".uniqID(""));?>" class="tabl">message<br>store</a></td>
+<?}}if ($config->enable_tabs[8]){ if ($tab==8){?>
+		<td width="80" class="tab" bgcolor="#B1C9DC">voicemail</td>
+<?}else{?>
+		<td width="80" class="tab" bgcolor="#FFFFFF"><a href="<?$sess->purl("voicemail.php?kvrk=".uniqID(""));?>" class="tabl">voicemail</a></td>
 <?}}?>
 		</tr>
 		</table>
