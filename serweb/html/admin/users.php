@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.5 2003/02/13 13:04:13 kozlik Exp $
+ * $Id: users.php,v 1.6 2003/02/19 21:27:51 kozlik Exp $
  */
 
 require "prepend.php";
@@ -98,7 +98,7 @@ do{
 	
 		// get num of users
 		if ($sess_onlineonly)
-			$q1="select s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
+			$q1="select distinct s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
 				" where s.user_id=l.user and ".$query_c;
 		else
 			$q1="select s.user_id from ".$config->table_subscriber." s ".
