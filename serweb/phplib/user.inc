@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: user.inc,v 1.1 2002/09/04 18:21:13 kozlik Exp $
+ * $Id: user.inc,v 1.2 2003/11/25 19:10:56 kozlik Exp $
  *
  */ 
 
@@ -62,14 +62,14 @@ class User extends Session {
 
     $str="";
 
-    $this->serialize("this->in",&$str);
-    $this->serialize("this->pt",&$str);
+    $this->serialize("this->in", $str);
+    $this->serialize("this->pt", $str);
 
     reset($this->pt);
     while ( list($thing) = each($this->pt) ) {
       $thing=trim($thing);
       if ( $thing ) {
-        $this->serialize("GLOBALS['".$thing."']",&$str);
+        $this->serialize("GLOBALS['".$thing."']", $str);
       }
     }
 
