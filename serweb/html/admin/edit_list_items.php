@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.11 2004/09/21 10:18:56 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('update_att_type_spec', 'get_attribute');
@@ -139,16 +139,19 @@ do{
 			//find item in array and replace it by new item
 			foreach($item_list as $key=>$row){
 				if ($row->label==$item_edit){
-					$item_list[$key]=new UP_List_Items($item_label, $item_value);
+					$item_list[$key]=new UP_List_Items($_POST['item_label'], $_POST['item_value']);
 					break;
 				}
 			}
 		}
 		else //insert new item
-			$item_list[]=new UP_List_Items($item_label, $item_value);
+			$item_list[]=new UP_List_Items($_POST['item_label'], $_POST['item_value']);
 
 		//update array in DB
-		if (!update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null, $data, $errors)) break;
+		if (!update_items_in_db($item_list, $attrib_name, 
+		          (isset($_POST['set_default']) and $_POST['set_default'])?$_POST['item_value']:null, 
+				   $data, $errors)) 
+			break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();

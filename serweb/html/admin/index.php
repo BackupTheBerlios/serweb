@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.17 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: index.php,v 1.18 2004/09/21 10:18:56 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('domain_exists', 'is_user_registered', 'get_privileges_of_user');
@@ -9,7 +9,7 @@ $_phplib_page_open = array("sess" => "phplib_Session");
 require "prepend.php";
 
 do{
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){								// Is there data to process?
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
 		//if fully quantified username is given
