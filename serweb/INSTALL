@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.4 2003/05/07 07:38:31 kozlik Exp $
+$Id: INSTALL,v 1.5 2003/05/28 15:02:18 jiri Exp $
 
 serweb - Installation
 
@@ -14,7 +14,9 @@ serweb - Installation
     [3] Open the file config.php in your favourite editor and change
         the values for host, database name, user and password and
         other values to fit your environment.
-    [4] Check if register_globals is set to On in your php.ini file
+	[4] make sure your php.ini includes the following values:
+	    - short_open_tag = on
+		- register_globals = on
     [5] Open the file <your-host>/<your-install-dir>/admin/index.php
         or <your-host>/<your-install-dir>/user_interface/index.php
         in your browser. Serweb should now display a login screen.
