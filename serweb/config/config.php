@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.3 2004/09/22 11:50:10 kozlik Exp $
+ * $Id: config.php,v 1.4 2004/10/12 13:25:04 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -360,6 +360,18 @@
 
 		$config->enable_loging = false;
 		$config->log_file = "/var/log/serweb";
+
+		/* Log messages up to and including this level. Possible values:
+			  PEAR_LOG_EMERG, PEAR_LOG_ALERT, PEAR_LOG_CRIT, PEAR_LOG_ERR, 
+			  PEAR_LOG_WARNING, PEAR_LOG_NOTICE, PEAR_LOG_INFO, PEAR_LOG_DEBUG
+		   see http://www.indelible.org/pear/Log/guide.php#log-levels for more info
+		 */
+		$config->log_level = "PEAR_LOG_INFO";
+		
+		/* If location where error was occured should be returned to user
+		   html output, set this to true
+		 */
+		$config->log_error_return_location_of_error_to_html = false;
 
 		/* ------------------------------------------------------------*/
 		/* Speed dial                                                  */
