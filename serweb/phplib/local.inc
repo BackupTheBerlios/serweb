@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.5 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: local.inc,v 1.6 2003/05/05 20:44:28 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -124,15 +124,26 @@ class phplib_Auth extends Auth {
     
     $uid = false;
 
-	$ha1=md5($username.":".$config->realm.":".$password);
-    
-    $this->db->query(sprintf("select phplib_id, perms ".
-                             "        from %s ".
-                             "       where username = '%s' ".
-                             "         and ha1 = '%s'",
-                          $this->database_table,
-                          addslashes($username),
-                          addslashes($ha1)));
+	if ($config->clear_text_pw){
+	    $this->db->query(sprintf("select phplib_id, perms ".
+    	                         "        from %s ".
+        	                     "       where username = '%s' ".
+            	                 "         and password = '%s'",
+                	          $this->database_table,
+                    	      addslashes($username),
+                        	  addslashes($password)));
+	}else{
+		$ha1=md5($username.":".$config->realm.":".$password);
+    	
+	    $this->db->query(sprintf("select phplib_id, perms ".
+    	                         "        from %s ".
+        	                     "       where username = '%s' ".
+            	                 "         and ha1 = '%s'",
+                	          $this->database_table,
+                    	      addslashes($username),
+                        	  addslashes($ha1)));
+	}
+							
 
     while($this->db->next_record()) {
       $uid = $this->db->f("phplib_id");

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.5 2003/03/17 20:01:25 kozlik Exp $
+ * $Id: index.php,v 1.6 2003/05/05 20:44:28 kozlik Exp $
  */
 
 require "prepend.php";
@@ -17,9 +17,14 @@ do{
 	
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 	
-		$ha1=md5($uname.":".$config->realm.":".$passw);
 
-		$q="select phplib_id from ".$config->table_subscriber." where username='$uname' and ha1='$ha1' and perms='admin'";
+		if ($config->clear_text_pw) {
+			$q="select phplib_id from ". $config->table_subscriber.
+				" where username='$uname' and password='$passw' and perms='admin'";
+		} else {
+			$ha1=md5($uname.":".$config->realm.":".$passw);
+			$q="select phplib_id from ".$config->table_subscriber." where username='$uname' and ha1='$ha1' and perms='admin'";
+		}
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
