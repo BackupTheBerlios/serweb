@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.2 2003/01/20 19:38:01 kozlik Exp $
+ * $Id: find_user.php,v 1.3 2003/02/26 21:00:35 kozlik Exp $
  */
 
 require "prepend.php";
@@ -56,10 +56,10 @@ do{
 
 			/* Process data */           // Data ok; 
 		if ($onlineonly)
-			$q=	"select distinct s.first_name, s.last_name, s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
+			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
 				" where s.user_id=l.user and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.user_id like '%$uname%' limit 0,".max_rows;
 		else
-			$q=	"select first_name, last_name, user_id from ".$config->table_subscriber.
+			$q=	"select timezone, first_name, last_name, user_id from ".$config->table_subscriber.
 				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".max_rows;
 		
 		$find_res=MySQL_Query($q);
@@ -131,9 +131,11 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="205">sip address</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="125">timezone</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="125">&nbsp;</td>
 	</tr>
-	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<tr><td colspan="11" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?$odd=0;
 	while ($row=MySQL_fetch_object($find_res)){
 		$odd=$odd?0:1;
@@ -145,6 +147,8 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="left" class="f12" width="205">&nbsp;<?echo $sip_uri;?></td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="left" class="f12" width="125">&nbsp;<?echo $row->timezone;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="125"><a href="<?$sess->purl("phonebook.php?kvrk=".uniqID("")."&okey_x=1&fname=".RawURLEncode($row->first_name)."&lname=".RawURLEncode($row->last_name)."&sip_uri=".RawURLEncode($sip_uri));?>">add to phonebook</a></td>
 	</tr>
