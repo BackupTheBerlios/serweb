@@ -16,15 +16,25 @@ function reg_jab($sipname)
 	# check if is already registered with Jabber gateway
 	# -----
 	$sipuri = "sip:".$sipname."@".$sipdomain;
-	$dblink = mysql_connect($config->jab_db_srv, $config->jab_db_usr, $config->jab_db_pas);
-	if(!$dblink) return 1;
-	$res = mysql_select_db($config->jab_db_db, $dblink);
-	if(!$res) return 2;
+
+	$dsn = 	$config->jab_db_type."://".
+			$config->jab_db_usr.":".
+			$config->jab_db_pas."@".
+			$config->jab_db_srv.
+				(empty($config->jab_db_port)?
+					"":
+					":".$config->jab_db_port)."/".
+			$config->jab_db_db;
+
+	$db = DB::connect($dsn);
+	if (DB::isError($db)) {	log_errors($db, $dummy); return 1; }
+
 	# ----
 	$query = "SELECT jab_id FROM jusers WHERE sip_id='$sipuri'";
-	$result = mysql_query($query, $dblink);
-	if(!$result) return 3;
-	if(mysql_num_rows($result) == 0)
+	$result = $db->query($query);
+	if (DB::isError($result)) {log_errors($result, $dummy); return 3;}
+
+	if($result->numRows() == 0)
 	{ // no Jabber account - create one
 		$fd = jab_connect($config->jserver, $config->jport);
 		if(!$fd)
@@ -54,7 +64,7 @@ function reg_jab($sipname)
 		}
 		if(stristr($buf_recv, " id='$jcid'") && stristr($buf_recv, " type='error'"))
 		{
-			mysql_close($dblink);
+			$db->disconnect();
 			jab_disconnect($fd);
 			return 5;
 		}
@@ -62,10 +72,11 @@ function reg_jab($sipname)
 		# Add user in database
 		# -----
 		$query = "INSERT INTO jusers (jab_id, jab_passwd, sip_id) VALUES ('$sipname', '$new_passwd', '$sipuri')";
-		$result = mysql_query($query, $dblink);
-		if(mysql_affected_rows() != 1)
+		$result = $db->query($query);
+
+		if($db->affectedRows() != 1)
 		{
-			mysql_close($dblink);
+			$db->disconnect();
 			jab_disconnect($fd);
 			return 6;
 		}

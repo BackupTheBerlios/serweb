@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.20 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: confirmation.php,v 1.21 2004/04/04 19:42:14 kozlik Exp $
  */
 
 include "reg_jab.php";
@@ -15,23 +15,22 @@ if (isset($_GET['nr'])) $nr=$_GET['nr']; else $nr=null;
 do{
 	if (isset($nr)){  // Is there data to process?
 
-		$db = connect_to_db();
-		if (!$db){ $errors[]="cannot connect to sql server"; break;}
-
+		if (!$db = connect_to_db($errors)) break;
 
 		$q="select username from ".$config->table_pending." where confirmation='$nr'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-		if (!MySQL_Num_Rows($res)){
+		if (!$res->numRows()){
 			$q="select username from ".$config->table_subscriber." where confirmation='$nr'";
-			$res=mySQL_query($q);
-			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-			if (!MySQL_Num_Rows($res)){ $errors[]="Sorry. No such a confirmation number exists."; break;}
+			$res1=$db->query($q);
+			if (DB::isError($res1)) {log_errors($res1, $errors); break;}
+			if (!$res1->numRows()){ $errors[]="Sorry. No such a confirmation number exists."; break;}
 			else { $ok=1; $errors[]="Your account has already been created."; break; }
 		}
 
-		$row=MySQL_Fetch_Object($res);
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 		if ($config->setup_jabber_account) {
 			$user_id=$row->username; // needed for Jabber gw reg.
 		}
@@ -39,19 +38,19 @@ do{
 
 		
 		// get the max alias number 
-		if (!$alias=get_alias_number($errors)) break;
+		if (!$alias=get_alias_number($db, $errors)) break;
 
 		$q="insert into ".$config->table_subscriber." select * from ".$config->table_pending." where confirmation='$nr'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
 		// add alias to fifo
 		$message=add_new_alias($sip_address, $alias, $errors);
 		if ($errors) break;
 		
 		$q="delete from ".$config->table_pending." where confirmation='$nr'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
 		if ($config->setup_jabber_account) {
 			# Jabber Gateway registration

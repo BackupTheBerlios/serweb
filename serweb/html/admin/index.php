@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.12 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: index.php,v 1.13 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,11 +11,9 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
-		$db = connect_to_db();
-		if (!$db){ $errors[]="cannot connect to sql server"; break;}
+		if (!$db = connect_to_db($errors)) break;
 
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
-
 
 		if ($config->clear_text_pw) {
 			$q="select phplib_id from ". $config->table_subscriber.
@@ -25,11 +23,12 @@ do{
 			$q="select phplib_id from ".$config->table_subscriber.
 				" where username='$uname' and ha1='$ha1' and perms='admin' and domain='$config->realm'";
 		}
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-		if (!MySQL_Num_Rows($res)) {$errors[]="Bad username or password"; break;}
-		$row=MySQL_Fetch_Object($res);
+		if (!$res->numRows()) {$errors[]="Bad username or password"; break;}
+		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 
 		$sess->register('pre_uid');
 		$pre_uid=$row->phplib_id;
@@ -95,9 +94,8 @@ Please enter your username and password :<br>
 <td align=right><?$f->show_element("okey");?></td>
 </tr>
 </table>
-</div>
-
 <?$f->finish();					// Finish form?>
+</div>
 
 <br>
 <?print_html_body_end();?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: speed_dial.php,v 1.6 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: speed_dial.php,v 1.7 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -23,14 +23,13 @@ else $edit_sd_dom=null;
 
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (isset($_GET['dele_sd'])){
 		$q="delete from ".$config->table_speed_dial." where ".
 			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and username_from_req_uri='".$_GET['dele_sd']."' and domain_from_req_uri='".$_GET['dele_sd_dom']."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
@@ -40,9 +39,10 @@ do{
 	if ($edit_sd){
 		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri from ".$config->table_speed_dial.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and username_from_req_uri='".$edit_sd."' and domain_from_req_uri='".$edit_sd_dom."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		$row=mysql_fetch_object($res);
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 	}
 
 	$f->add_element(array("type"=>"text",
@@ -92,9 +92,13 @@ do{
 		else $q="insert into ".$config->table_speed_dial." (username, domain, username_from_req_uri, domain_from_req_uri, new_request_uri) ".
 			"values ('".$auth->auth["uname"]."', '".$config->realm."', '$usrnm_from_uri', '$domain_from_uri', '$new_uri')";
 
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
+		$res=$db->query($q);
+		if (DB::isError($res)) {
+			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
+				$errors[]="Record with this username and domain already exists";
+			else log_errors($res, $errors); 
+			break;
+		}
 
         Header("Location: ".$sess->url("speed_dial.php?kvrk=".uniqID("")));
 		page_close();
@@ -109,8 +113,8 @@ do{
 
 		$q="select username_from_req_uri, domain_from_req_uri, new_request_uri from ".$config->table_speed_dial.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by domain_from_req_uri, username_from_req_uri";
-		$sd_res=MySQL_Query($q);
-		if (!$sd_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$sd_res=$db->query($q);
+		if (DB::isError($sd_res)) {log_errors($sd_res, $errors); break;}
 
 	}
 }while (false);
@@ -125,7 +129,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 
@@ -152,7 +156,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","sip_address_completion(f.new_uri);");					// Finish form?>
 </div>
 
-<?if ($sd_res and MySQL_num_rows($sd_res)){?>
+<?if (!DB::isError($sd_res) and $sd_res->numRows()){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -162,7 +166,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while ($row=MySQL_Fetch_Object($sd_res)){
+	while ($row=$sd_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$odd=$odd?0:1;
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
@@ -171,7 +175,8 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&edit_sd=".$row->username_from_req_uri."&edit_sd_dom=".$row->domain_from_req_uri);?>">edit</a></td>
 	<td align="center"><a href="<?$sess->purl("speed_dial.php?kvrk=".uniqID("")."&dele_sd=".$row->username_from_req_uri."&dele_sd_dom=".$row->domain_from_req_uri);?>">delete</a></td>
 	</tr>
-	<?}?>
+	<?}//while
+	$sd_res->free();?>
 	</table>
 <?}else{?>
 

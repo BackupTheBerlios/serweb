@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.6 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: user_preferences.php,v 1.7 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -31,30 +31,31 @@ class Cattrib{
 
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	$attributes=array();
 
 	//get list of attributes
 	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 		" order by att_name";
-	$att_res=MySQL_Query($q);
-	if (!$att_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	$att_res=$db->query($q);
+	if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
 
-	while ($row=MySQL_Fetch_Object($att_res)){
+	while ($row=$att_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$attributes[$row->att_name]=new Cattrib($row->att_name, $row->default_value, $row->att_rich_type, $row->att_type_spec);
 	}
+	$att_res->free();
 
 	// get attributes values
 	$q="select attribute, value from ".$config->table_user_preferences.
 		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-	$att_res=MySQL_Query($q);
-	if (!$att_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	$att_res=$db->query($q);
+	if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
 
-	while ($row=MySQL_Fetch_Object($att_res)){
+	while ($row=$att_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$attributes[$row->attribute]->att_value = $row->value;
 	}
+	$att_res->free();
 
 	// add elements to form object
 
@@ -87,8 +88,8 @@ do{
 				$q="replace into ".$config->table_user_preferences." (username, domain, attribute, value) ".
 					"values ('".$auth->auth["uname"]."', '".$config->realm."', '".$att->att_name."', '".$HTTP_POST_VARS[$att->att_name]."')";
 
-				$res=MySQL_Query($q);
-				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+				$res=$db->query($q);
+				if (DB::isError($res)) {log_errors($res, $errors); break;}
 			}
 		}
 
@@ -111,7 +112,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
 <?
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.4 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: caller_screening.php,v 1.5 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -18,14 +18,13 @@ elseif (isset($_GET['edit_caller'])) $edit_caller=$_GET['edit_caller'];
 else $edit_caller=null;
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (isset($_GET['dele_caller'])){
 		$q="delete from ".$config->table_calls_forwarding." where ".
 			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and purpose='screening' and uri_re='".$_GET['dele_caller']."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")));
 		page_close();
@@ -35,9 +34,10 @@ do{
 	if ($edit_caller){
 		$q="select uri_re, action, param1, param2 from ".$config->table_calls_forwarding.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and purpose='screening' and uri_re='".$edit_caller."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		$row=mysql_fetch_object($res);
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 	}
 
 	//create array of options of select
@@ -98,9 +98,13 @@ do{
 					'".$config->calls_forwarding["screening"][$action_key]->param1."',
 					'".$config->calls_forwarding["screening"][$action_key]->param2."')";
 
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
+		$res=$db->query($q);
+		if (DB::isError($res)) {
+			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
+				$errors[]="Record with this caller uri already exists";
+			else log_errors($res, $errors); 
+			break;
+		}
 
         Header("Location: ".$sess->url("caller_screening.php?kvrk=".uniqID("")));
 		page_close();
@@ -115,8 +119,8 @@ do{
 
 		$q="select uri_re, action, param1, param2 from ".$config->table_calls_forwarding.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and purpose='screening'".$qw." order by uri_re";
-		$cs_res=MySQL_Query($q);
-		if (!$cs_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$cs_res=$db->query($q);
+		if (DB::isError($cs_res)) {log_errors($cs_res, $errors); break;}
 
 	}
 }while (false);
@@ -130,7 +134,7 @@ print_html_head();?>
 
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 
@@ -153,7 +157,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","");					// Finish form?>
 </div>
 
-<?if ($cs_res and MySQL_num_rows($cs_res)){?>
+<?if (!DB::isError($cs_res) and $cs_res->numRows()){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -163,7 +167,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while ($row=MySQL_Fetch_Object($cs_res)){
+	while ($row=$cs_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$odd=$odd?0:1;
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
@@ -172,7 +176,8 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&edit_caller=".$row->uri_re);?>">edit</a></td>
 	<td align="center"><a href="<?$sess->purl("caller_screening.php?kvrk=".uniqID("")."&dele_caller=".$row->uri_re);?>">delete</a></td>
 	</tr>
-	<?}?>
+	<?}//while
+	$cs_res->free();?>
 	</table>
 <?}else{?>
 

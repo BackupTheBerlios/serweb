@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.12 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: index.php,v 1.13 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -95,8 +95,7 @@ do{
 								 "extrahtml"=>"alt='register'"));
 
 	if (isset($_POST['okey_x'])){				// Is there data to process?
-		$db = connect_to_db();
-		if (!$db){ $errors[]="cannot connect to sql server"; break;}
+		if (!$db = connect_to_db($errors)) break;
 
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
@@ -114,13 +113,13 @@ do{
 			/* Process data */           // Data ok;
 
 
-		$user_exists=is_user_exists($uname, $config->default_domain, $errors);
+		$user_exists=is_user_exists($uname, $config->default_domain, $db, $errors);
 		if ($errors) break;
 		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
 
 		$confirm=md5(uniqid(rand()));
 
-		if (!add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
+		if (!add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $db, $errors)) break;
 
 		$sip_address="sip:".$uname."@".$config->default_domain;
 

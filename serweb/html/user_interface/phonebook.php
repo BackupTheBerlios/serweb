@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.14 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: phonebook.php,v 1.15 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -36,14 +36,13 @@ class Cphonebook{
 }
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (isset($_GET['dele_id'])){
 		$q="delete from ".$config->table_phonebook." where ".
 			"username='".$auth->auth["uname"]."' and domain='".$config->realm."' and id=".$dele_id;
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
@@ -53,9 +52,10 @@ do{
 	if (isset($_GET['edit_id'])){
 		$q="select fname, lname, sip_uri from ".$config->table_phonebook.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."' and id=".$_GET['edit_id'];
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		$row=mysql_fetch_object($res);
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 	}
 
 	$f->add_element(array("type"=>"text",
@@ -100,9 +100,8 @@ do{
 		else $q="insert into ".$config->table_phonebook." (fname, lname, sip_uri, username, domain) ".
 			"values ('$fname', '$lname', '$sip_uri', '".$auth->auth["uname"]."', '".$config->realm."')";
 
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("phonebook.php?kvrk=".uniqID("")));
 		page_close();
@@ -118,14 +117,14 @@ do{
 
 		$q="select id, fname, lname, sip_uri from ".$config->table_phonebook.
 			" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".$qw." order by lname";
-		$phonebook_res=MySQL_Query($q);
-		if (!$phonebook_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$phonebook_res=$db->query($q);
+		if (DB::isError($phonebook_res)) {log_errors($phonebook_res, $errors); break;}
 
-		while ($row=MySQL_Fetch_Object($phonebook_res)){
-			$pb_arr[$row->id] = new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $errors));
-			$pb_arr[$row->id]->aliases = get_aliases($row->sip_uri, $errors);
+		while ($row=$phonebook_res->fetchRow(DB_FETCHMODE_OBJECT)){
+			$pb_arr[$row->id] = new Cphonebook($row->id, $row->fname, $row->lname, $row->sip_uri, get_status($row->sip_uri, $db, $errors));
+                        $pb_arr[$row->id]->aliases = get_aliases($row->sip_uri, $db, $errors);
 		}
-
+		$phonebook_res->free();
 	}
 }while (false);
 
@@ -139,7 +138,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.14 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: users.php,v 1.15 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,17 +20,11 @@ if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_a
 $sess_fusers->init();
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (isset($_GET['dele_id'])){ //delete user
-		$q="delete from ".$config->table_aliases." where contact='sip:".$_GET['dele_id']."@".$config->default_domain."'";
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-		$q="delete from ".$config->table_subscriber." where username='".$_GET['dele_id']."' and domain='$config->default_domain'";
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		if (!dele_sip_user($_GET['dele_id'], $config->default_domain, $db, $errors)) break;
 
         Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&message=".RawURLEncode("user deleted succesfully")));
 		page_close();
@@ -51,10 +45,11 @@ do{
 			$q1="select s.username from ".$config->table_subscriber." s ".
 				" where s.domain='$config->realm' and ".$query_c;
 
-		$res=MySQL_Query($q1);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q1);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-		$num_rows=MySQL_Num_Rows($res);
+		$num_rows=$res->numRows();
+		$res->free();
 
 		// get users
 		if ($sess_fusers->onlineonly)
@@ -66,8 +61,9 @@ do{
 			$q="select s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s ".
 				" where s.domain='$config->realm' and ".$query_c.
 				" order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
-		$users_res=MySQL_Query($q);
-		if (!$users_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+
+		$user_res=$db->query($q);
+		if (DB::isError($user_res)) {log_errors($user_res, $errors); break;}
 
 	}
 
@@ -85,8 +81,7 @@ print_html_body_begin($page_attributes);
 
 <?$sess_fusers->print_form();?>
 
-
-<?if ($users_res and MySQL_num_rows($users_res)){?>
+<?if (!DB::isError($user_res) and $user_res->numRows()){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -99,7 +94,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while ($row=MySQL_Fetch_Object($users_res)){
+	while ($row=$user_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$odd=$odd?0:1;
 		$name=$row->last_name;
 		if ($name) $name.=" "; $name.=$row->first_name;
@@ -113,23 +108,22 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl($config->user_pages_path."my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->username));?>">account</a></td>
 	<td align="center"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this, 'Realy you want delete user?')">delete</a></td>
 	</tr>
-	<?}?>
+	<?} //while
+	$user_res->free();?>
 	</table>
-<?}?>
+	
+	<? if ($num_rows){?>
+	<div class="swNumOfFoundRecords">Showed users <?echo ($sess_fusers->act_row+1)." - ".((($sess_fusers->act_row+$config->num_of_showed_items)<$num_rows)?($sess_fusers->act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?></div>
 
-<? if ($num_rows){?>
-<div class="swNumOfFoundRecords">Showed users <?echo ($sess_fusers->act_row+1)." - ".((($sess_fusers->act_row+$config->num_of_showed_items)<$num_rows)?($sess_fusers->act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?></div>
+	<div class="swSearchLinks"><?
+		$url="users.php?kvrk=".uniqid("")."&act_row=";
+		print_search_links($sess_fusers->act_row, $num_rows, $config->num_of_showed_items, $url);
+	?></div>
+	<?} // if ($num_rows)?>
+	
 <?}else{?>
 <div class="swNumOfFoundRecords">No users found</div>
-<?}?><br>
-
-
-<div class="swSearchLinks">
-<?
-	$url="users.php?kvrk=".uniqid("")."&act_row=";
-	print_search_links($sess_fusers->act_row, $num_rows, $config->num_of_showed_items, $url);
-?>
-</div>
+<?} // if (!DB::isError($user_res) and $user_res->numRows())?>
 
 <br>
 <?print_html_body_end();?>

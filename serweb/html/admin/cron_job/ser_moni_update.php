@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni_update.php,v 1.2 2003/04/10 23:36:42 kozlik Exp $
+ * $Id: ser_moni_update.php,v 1.3 2004/04/04 19:42:14 kozlik Exp $
  */
 
 /*
@@ -16,7 +16,7 @@
 - vstup do cron-jobu (ktery je zpusteny #-krat za hodinu)
   - soucasna hodnota (sample): v[n]
 
-- pomocne promenne popisujici stav v "minulcy kolech" jsou ulozene v mysql
+- pomocne promenne popisujici stav v "minulcy kolech" jsou ulozene v databazi
   a aktualizuji se v kazdem kole
   - posledni cas: n
     aktualizace: n=n+1
@@ -52,11 +52,14 @@ class Ser_moni {
 	var $marginal_period_begin;
 	var $aggregation_from;
 	
-	function Ser_moni ($param){
+	var $db;
+	
+	function Ser_moni ($param, &$db){
 		$this->param=$param;
 		$this->last_id=null;
 		$this->last_value=null;
 		$this->last_agg_increment_id=null;
+		$this->db=$db;
 	}
 	
 	function update ($new_value){
@@ -84,9 +87,13 @@ class Ser_moni {
 		if (! is_null($this->last_id)) return $this->last_id;
 		
 		$q="select max(id) from ".$config->table_ser_mon." where param='".$this->param."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_last_id: error in SQL query, line: ".__LINE__."\n"; return -1;}
-		$row=MySQL_Fetch_Row($res);
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_last_id: error in SQL query, line: ".__LINE__."\n"; 
+			return -1;
+		}
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		$this->last_id=$row[0];
 
 		if (is_null($this->last_id)) $this->last_id=0;		// if no matching rows in database
@@ -100,12 +107,16 @@ class Ser_moni {
 		if (! is_null($this->last_value)) return $this->last_value;
 		
 		$q="select value from ".$config->table_ser_mon." where param='".$this->param."' and id=".$this->get_last_id();
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_last_value: error in SQL query, line: ".__LINE__."\n"; return -1;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_last_value: error in SQL query, line: ".__LINE__."\n";
+			return -1;
+		}
 
-		if (!MySQL_num_rows($res)) return null;				// if no matching rows in database
+		if (!$res->numRows()) return null;				// if no matching rows in database
 	
-		$row=MySQL_Fetch_Row($res);
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		$this->last_value=$row[0];
 
 		return $row[0];
@@ -118,12 +129,16 @@ class Ser_moni {
 		if (! is_null($this->last_agg_increment_id)) return $this->last_agg_increment_id;
 		
 		$q="select last_aggregated_increment from ".$config->table_ser_mon_agg." where param='".$this->param."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_last_agg_increment_id: error in SQL query, line: ".__LINE__."\n"; return -1;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_last_agg_increment_id: error in SQL query, line: ".__LINE__."\n";
+			return -1;
+		}
 
-		if (!MySQL_num_rows($res)) return -1;				// if no matching rows in database
+		if (!$res->numRows()) return -1;				// if no matching rows in database
 		
-		$row=MySQL_Fetch_Row($res);
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		$this->last_agg_increment_id=$row[0];
 
 		return $row[0];
@@ -133,12 +148,16 @@ class Ser_moni {
 		global $config;
 		
 		$q="select id from ".$config->table_ser_mon." where param='".$this->param."' and time <= '".$this->marginal_period_begin."' order by time desc";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "calculate_agg_increment_id: error in SQL query, line: ".__LINE__."\n"; return -1;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "calculate_agg_increment_id: error in SQL query, line: ".__LINE__."\n";
+			return -1;
+		}
 
-		if (!MySQL_num_rows($res)) return -1;				// if no matching rows in database
+		if (!$res->numRows()) return -1;				// if no matching rows in database
 		
-		$row=MySQL_Fetch_Row($res);
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		return $row[0];
 	}
 
@@ -146,9 +165,13 @@ class Ser_moni {
 		global $config;
 		
 		$q="select count(*) from ".$config->table_ser_mon." where param='".$this->param."' and time>'".$this->aggregation_from."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "count_values: error in SQL query, line: ".__LINE__."\n"; return -1;}
-		$row=MySQL_Fetch_Row($res);
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "count_values: error in SQL query, line: ".__LINE__."\n";
+			return -1;
+		}
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		return $row[0];
 	}
 
@@ -165,8 +188,12 @@ class Ser_moni {
 						$this->param."', ".					//name of param
 						$new_value.", ".					//value of param
 						$increment.")";						//diferent between this value and last value
-		$res=MySQL_Query($q);
-		if (!$res) { echo "insert_new_value: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "insert_new_value: error in SQL query, line: ".__LINE__."\n"; 
+			return false;
+		}
 		return true;
 	}
 
@@ -175,8 +202,12 @@ class Ser_moni {
 		global $config;
 
 		$q="delete from ".$config->table_ser_mon." where param='".$this->param."' and time<'".$this->aggregation_from."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "drop_old_values: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "drop_old_values: error in SQL query, line: ".__LINE__."\n"; 
+			return false;
+		}
 		return true;
 	}
 
@@ -186,12 +217,16 @@ class Ser_moni {
 	
 		$q="select unix_timestamp('".$this->now."') - unix_timestamp(min(time)) ".
 			"from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_how_old_is_first_value: error in SQL query, line: ".__LINE__."\n"; return 0;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_how_old_is_first_value: error in SQL query, line: ".__LINE__."\n";
+			return 0;
+		}
 
-		if (!MySQL_num_rows($res)) return 0;				// if no rows in database
+		if (!$res->numRows()) return 0;				// if no rows in database
 		
-		$row=MySQL_Fetch_Row($res);
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 
 		if (is_null($row[0])) $row[0]=0;
 
@@ -208,12 +243,16 @@ class Ser_moni {
 		global $config;
 	
 		$q="select min(value) as min, max(value) as max from ".$config->table_ser_mon." where param='".$this->param."' and time >= '".$this->aggregation_from."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_min_max_value: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_min_max_value: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
-		if (!MySQL_num_rows($res)) return false;				// if no rows in database
+		if (!$res->numRows()) return false;				// if no rows in database
 		
-		$row=MySQL_Fetch_Object($res);
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
 
 		if (is_null($row->min)) $row->min=0;
 		if (is_null($row->max)) $row->max=0;
@@ -239,15 +278,23 @@ class Ser_moni {
 			" from ".$config->table_ser_mon.
 			" where param='".$this->param."' and time >= '".$this->aggregation_from."'".
 			" group by marg_f ";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
 		//get number of oldest m. period
 		
 		$q= "select max(marg_f) from ".$tmp_table;
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
-		$row=MySQL_Fetch_Row($res);
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
 		$old_m_f=$row[0];
 		
 
@@ -257,17 +304,24 @@ class Ser_moni {
 		$q=	" select min(s_increment) as min, max(s_increment) as max ".
 			" from ".$tmp_table.
 			" where marg_f!=".$old_m_f;
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
-		if (!MySQL_num_rows($res)) return false;				// if no rows in database
+		if (!$res->numRows()) return false;				// if no rows in database
 		
-		$row=MySQL_Fetch_Object($res);
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
 
 		//drop temporary table
 		$q= "drop table ".$tmp_table;
-		$res=MySQL_Query($q);
-		if (!$res) { echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "get_min_max_increment: error in SQL query, line: ".__LINE__."\n";
+		}
 
 		if (is_null($row->min)) $row->min=0;
 		if (is_null($row->max)) $row->max=0;
@@ -300,12 +354,16 @@ class Ser_moni {
 	*/
 	
 		$q="select s_value, s_increment, mv, last_aggregated_increment from ".$config->table_ser_mon_agg." where param='".$this->param."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "update_aggregations: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "update_aggregations: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
 		/*check if there is entry for this param in the table*/
-		if (MySQL_num_rows($res)){
-			$row=MySQL_Fetch_Object($res);
+		if ($res->numRows()){
+			$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
 			$sql_act="update";
 			
 			$s_value=$row->s_value;
@@ -336,12 +394,16 @@ class Ser_moni {
 		//select values and incremets which will be deleted and subtract them from aggregated values and increments
 		
 		$q="select value, increment from ".$config->table_ser_mon." where param='".$this->param."' and time < '".$this->aggregation_from."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "update_aggregations: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "update_aggregations: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
 		$old_values=0;
 		$old_increments=0;
-		while ($row=MySQL_fetch_object($res)){
+		while ($row=$res->fetchRow(DB_FETCHMODE_OBJECT)){
 			$old_values+=$row->value;
 			$old_increments+=$row->increment;
 		}	
@@ -349,7 +411,7 @@ class Ser_moni {
 		//select increments which now will be before T
 		//and subtract them from mv and add them to s_increment
 
-		$m_incremetns=0;
+		$m_increments=0;
 		if ($last_agg_inc<0) {	//no icrements has been aggregated yet, check if now is time to do it
 			$last_agg_inc=$this->calculate_agg_increment_id(); 
 			if ($last_agg_inc<0){ // no still is no time to begin aggregating increments
@@ -363,10 +425,14 @@ class Ser_moni {
 		}
 		
 		if ($q){
-			$res=MySQL_Query($q);
-			if (!$res) { echo "update_aggregations: error in SQL query, line: ".__LINE__."\n"; return false;}
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {
+				log_errors($res, $dummy);
+				echo "update_aggregations: error in SQL query, line: ".__LINE__."\n";
+				return false;
+			}
 
-			while ($row=MySQL_fetch_object($res)){
+			while ($row=$res->fetchRow(DB_FETCHMODE_OBJECT)){
 				$m_increments+=$row->increment;
 				$last_agg_inc=$row->id;
 			}	
@@ -430,8 +496,12 @@ class Ser_moni {
 				", min_val=".$min_val.", max_val=".$max_val.", min_inc=".$min_inc.", max_inc=".$max_inc.
 				", lastupdate='".$lastupdate."' ".
 		   " where param='".$this->param."'";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "update_aggregations_sql: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "update_aggregations_sql: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
 		return true;
 	}
@@ -442,8 +512,12 @@ class Ser_moni {
 		$q="insert into ".$config->table_ser_mon_agg." (param, s_value, s_increment, last_aggregated_increment, av, mv, ad, lv, min_val, max_val, min_inc, max_inc, lastupdate) ".
 		   "values ('".$this->param."', ".$s_value.", ".$s_increment.", ".$last_aggregated_increment.", ".$av.", ".$mv.", ".$ad.", ".$lv.", ".
 		   			$min_val.", ".$max_val.", ".$min_inc.", ".$max_inc.", '".$lastupdate."')";
-		$res=MySQL_Query($q);
-		if (!$res) { echo "insert_aggregations_sql: error in SQL query, line: ".__LINE__."\n"; return false;}
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			log_errors($res, $dummy);
+			echo "insert_aggregations_sql: error in SQL query, line: ".__LINE__."\n";
+			return false;
+		}
 
 		return true;
 	}

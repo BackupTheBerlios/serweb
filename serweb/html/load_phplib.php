@@ -2,12 +2,18 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: load_phplib.php,v 1.2 2004/04/04 19:42:14 kozlik Exp $
  */ 
 
 
- 
-require($_PHPLIB["libdir"] . "db_mysql.inc");  /* Change this to match your database. */
+if ($config->db_type=="mysql"){
+	require($_PHPLIB["libdir"] . "db_mysql.inc");  /* Load ct_sql class for MySQL database. */
+}
+elseif ($config->db_type=="pgsql"){
+	require($_PHPLIB["libdir"] . "db_pgsql.inc");  /* Load ct_sql class for PostgreSQL database. */
+}
+else die('Invalid database in $config->db_type');
+
 require($_PHPLIB["libdir"] . "ct_sql.inc");    /* Change this to match your data storage container */
 require($_PHPLIB["libdir"] . "session.inc");   /* Required for everything below.      */
 require($_PHPLIB["libdir"] . "auth.inc");      /* Disable this, if you are not using authentication. */

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.9 2004/03/24 21:39:47 kozlik Exp $
+ * $Id: get_pass.php,v 1.10 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,15 +11,15 @@ page_open (array("sess" => "phplib_Session"));
 
 do{
 	if (isset($okey_x)){								// Is there data to process?
-		$db = connect_to_db();
-		if (!$db){ $errors[]="cannot connect to sql server"; break;}
+		if (!$db = connect_to_db($errors)) break;
 
 		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname' and domain='$config->realm'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-		if (!MySQL_Num_Rows($res)) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
-		$row=MySQL_Fetch_Object($res);
+		if (!$res->numRows()) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 
 		$pre_uid=$row->phplib_id;
 		$pre_uid_expires=time()+$config->pre_uid_expires;
@@ -42,26 +42,7 @@ do{
 		page_close();
 		exit;
 
-//		echo "oook/~iptel/user_interface/my_account.php?".$my_sess->name."=".$my_sess->id;
-//		exit;
-/*
-		$q="select password, email_address from ".$config->table_subscriber." where username='$uname'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-
-		if (!MySQL_Num_Rows($res)) {$errors[]="Sorry, '$uname' is not a registered username! Please try again."; break;}
-		$row=MySQL_Fetch_Object($res);
-
-		$mail_body=str_replace("#password#", $row->password, $config->mail_forgot_pass);
-
-		if (!send_mail($row->email_address, $config->forgot_pass_subj, $mail_body)){
-			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
-		}
-
-        Header("Location: ".$sess->url("../index.php?kvrk=".uniqID("")."&message=".RawURLEncode("Your password was send to your email address")));
-		page_close();
-		exit;
-*/	}
+	}
 }while (false);
 
 $f = new form;                   // create a form object
@@ -101,7 +82,7 @@ print_html_body_begin($page_attributes);
 
 <div class="swForm swHorizontalForm">
 <?$f->start("form");				// Start displaying form?>
-	<table border="0" cellspacing="0" cellpadding="0"><tr>
+	<table border="0" cellspacing="0" cellpadding="0" align="center"><tr>
 	<td><label for="uname">Username:</label></td>
 	<td><?$f->show_element("uname");?></td>
 	<td><?$f->show_element("okey");?></td>

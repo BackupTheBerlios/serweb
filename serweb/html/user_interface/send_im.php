@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.13 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: send_im.php,v 1.14 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -14,8 +14,7 @@ $reg = new Creg;				// create regular expressions class
 $f = new form;                  // create a form object
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"sip_address",
@@ -129,7 +128,7 @@ print_html_head();?>
 <script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
 <?
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

@@ -2,7 +2,7 @@
 /*
  * this script should be run after midnight - sends missed calls of previous day
  *
- * $Id: send_daily_missed_calls.php,v 1.1 2004/03/04 14:04:44 kozlik Exp $
+ * $Id: send_daily_missed_calls.php,v 1.2 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -10,7 +10,7 @@ require "prepend.php";
 /*
 	function sends missed calls of user with $username and $domain to $email_address
 */
-function send_missed_calls($email_address, $username, $domain, &$errors){
+function send_missed_calls($email_address, $username, $domain, &$errors, $db){
 	global $config;
 	/* get missed calls */
 
@@ -26,9 +26,9 @@ function send_missed_calls($email_address, $username, $domain, &$errors){
 				"date_format(t1.time, '%Y-%m-%d')=date_format(DATE_SUB(CURDATE(), INTERVAL 1 DAY), '%Y-%m-%d') ) ".
 		"ORDER BY time DESC ";
 
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return;}
-	if (!MySQL_num_rows($res)) return; //there are no missed calls
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); return;}
+	if (!$res->numRows()) return; //there are no missed calls
 
 	$table='<html><body><table border="1" cellspacing="0" cellpadding="1">'."\n";
 	$table.='<tr>';
@@ -37,13 +37,15 @@ function send_missed_calls($email_address, $username, $domain, &$errors){
 	$table.='<th>reply status</th>';
 	$table.='</tr>'."\n";
 
-	while($row=MySQL_Fetch_Object($res)){
+	while($row=$res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$table.='<tr>';
 		$table.='<td>'.$row->from_uri.'&nbsp;</td>';
 		$table.='<td>'.$row->time.'&nbsp;</td>';
 		$table.='<td>'.$row->sip_status.'&nbsp;</td>';
 		$table.='</tr>'."\n";
 	}
+	$res->free();
+
 	$table.='</table></body></html>'."\n";
 	
 	$envelope["From"]=$config->infomail;
@@ -71,31 +73,32 @@ function send_missed_calls($email_address, $username, $domain, &$errors){
 }
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	/*get default value*/
 	$q="select default_value from ".$config->table_user_preferences_types.
 		" where att_name='".$config->up_send_daily_missed_calls."'";
-	$res=mySQL_query($q);
+	$res=$db->query($q);
 
-	if (!$res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; break;}
-	if (!$row=MySQL_Fetch_Object($res)) {$errors[]="not found attribute '".$config->up_send_daily_missed_calls."' in user preferences"; break;}
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
+	if (!$row=$res->fetchRow(DB_FETCHMODE_OBJECT)) {$errors[]="not found attribute '".$config->up_send_daily_missed_calls."' in user preferences"; break;}
 	$default_value=$row->default_value;
+	$res->free();
 
 	/* get list of users and values of theirs attributes up_send_daily_missed_calls */		
 	$q="select s.username, s.domain, s.email_address, p.value ".
 		"from ".$config->table_subscriber." s left outer join ".$config->table_user_preferences." p ".
 				" on s.username=p.username and s.domain=p.domain and p.attribute='".$config->up_send_daily_missed_calls."'";
 
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; break;}
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-	while ($row=MySQL_Fetch_Object($res)){
+	while ($row=$res->fetchRow(DB_FETCHMODE_OBJECT)){
 		if (is_null($row->value)) $row->value=$default_value;
 		
-		if ($row->value) send_missed_calls($row->email_address, $row->username, $row->domain, $errors);
+		if ($row->value) send_missed_calls($row->email_address, $row->username, $row->domain, $errors, $db);
 	}
+	$res->free();
 
 } while (false);
 

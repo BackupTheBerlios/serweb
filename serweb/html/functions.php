@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.34 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: functions.php,v 1.35 2004/04/04 19:42:14 kozlik Exp $
  */
 
 
@@ -117,16 +117,24 @@ function get_sess_url($url){
 
 }
 
+/*
+	return '&nbsp;' if $str is empty, otherwise return $str
+*/
+
 function nbsp_if_empty($str){
 	return $str?$str:"&nbsp;";
 }
 
+/*
+	print links to other results of search
+
+	actual - from each item it is printed
+	num - how many items total
+	rows - how many items on one page
+	url - href in <a> takgs
+*/
+
 function print_search_links($actual, $num, $rows, $url){
-// print bar for search
-// actual - from each item it is printed
-// num - how many items total
-// rows - how many items on one page
-// url - href in <a> takgs
 
 	$links=10; //max num of links at one page
 
@@ -144,13 +152,22 @@ function print_search_links($actual, $num, $rows, $url){
 
 }
 
-function connect_to_db(){
+function connect_to_db(&$errors){
 	global $config;
 
-	@$db=MySQL_PConnect($config->db_host, $config->db_user, $config->db_pass);
-	if (! $db) return false;
+	$dsn = 	$config->db_type."://".
+			$config->db_user.":".
+			$config->db_pass."@".
+			$config->db_host.
+				(empty($config->db_port)?
+					"":
+					":".$config->db_port)."/".
+			$config->db_name;
 
-	if (!MySQL_Select_DB($config->db_name, $db)) return false;
+	$db = DB::connect($dsn);
+
+	if (DB::isError($db)) {	log_errors($db, $errors); return false; }
+	
 	return $db;
 }
 
@@ -165,34 +182,6 @@ function connect_to_ppaid_db(){
 	return $db;
 }
 
-function get_status($sip_uri, &$errors){
-	global $config;
-
-	$reg=new Creg;
-	if (!eregi("^sip:([^@]+@)?".$reg->host, $sip_uri, $regs)) return "<div class=\"statusunknown\">non-local</div>";
-
-	if (strtolower($regs[2])!=strtolower($config->default_domain)) return "<div class=\"statusunknown\">non-local</div>";
-
-	$user=substr($regs[1],0,-1);
-
-	$q="select count(*) from ".$config->table_subscriber.
-		" where username='$user' and domain='$config->realm'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
-	$row=mysql_fetch_row($res);
-	if (!$row[0]) return "<div class=\"statusunknown\">non-existent</div>";
-
-
-	$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
-	$config->ul_table."\n".		//table
-	$user."@".$config->default_domain."\n\n";	//username
-
-	$out=write2fifo($fifo_cmd, $errors, $status);
-	if ($errors) return;
-
-	if (substr($status,0,3)=="200") return "<div class=\"statusonline\">on line</div>";
-	else return "<div class=\"statusoffline\">off line</div>";
-}
 
 function send_mail($to, $subj, $text, $headers = ""){
 	global $config;
@@ -246,103 +235,6 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	return $rd;
 }
 
-function get_user_name(&$errors){
-	global $auth, $config;
-
-	$q="select first_name, last_name from ".$config->table_subscriber.
-		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-	@$res=MySQL_Query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return false;}
-	if (!MySQL_Num_rows($res)) return false;
-	
-	$row=MySQL_Fetch_Object($res);
-
-	return $row->first_name." ".$row->last_name." &lt;".$auth->auth["uname"]."@".$config->realm."&gt;";
-
-/*
-	$name=$row->first_name;
-	if ($name) $name.=" ";
-	return $name.=$row->last_name;
-*/
-
-}
-
-function get_time_zones(&$errors){
-	global $config;
-
-	@$fp=fopen($config->zonetab_file, "r");
-	if (!$fp) {$errors[]="Cannot open zone.tab file"; return array();}
-	
-	while (!feof($fp)){
-		$line=FgetS($fp, 512);
-		if (substr($line,0,1)=="#") continue; //skip comments
-		if (!$line) continue; //skip blank lines
-		
-		$line_a=explode("\t", $line);
-		
-		$line_a[2]=trim($line_a[2]);
-		if ($line_a[2]) $out[]=$line_a[2];
-	}
-
-	fclose($fp);
-	sort($out);
-	return $out;
-}
-
-function set_timezone(&$errors){
-	global $config, $auth;
-
-	$q="select timezone from ".$config->table_subscriber.
-		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
-	$row=mysql_fetch_object($res);
-
-	putenv("TZ=".$row->timezone); //set timezone	
-}
-
-//get location of domainname in sip_adr from netgeo_cache
-function get_location($sip_adr, &$errors){
-	global $config;
-	static $reg;
-	
-	$reg = new Creg();
-	
-	$domainname=$reg->get_domainname($sip_adr);
-	
-	$q="select location from ".$config->table_netgeo_cache.
-		" where domainname='".$domainname."'";
-	$res=mySQL_query($q);
-	/* if this query failed netgeo is probably not installed -- ignore */
-	if (!$res) return "n/a";
-	/* {$errors[]="error in SQL query, line: ".__LINE__; return;} */
-	$row=mysql_fetch_object($res);
-
-	if (!$row) return "n/a";
-	return $row->location;
-}
-
-/*
-	return array of aliases of user with $username and $domain
-*/
-
-function get_aliases($sip_uri, &$errors){
-	global $config;
-	$q=	"select username ".
-		"from ".$config->table_aliases." ".
-		"where contact='".$sip_uri."'";
-	$res=mySQL_query($q);
-	if (!$res) {
-		$errors[]="error in SQL query - ".__FILE__.":".__LINE__;
-		return array();
-	}
-	$out=array();
-	
-	while ($row=MySQL_Fetch_Object($res)){
-		$out[]=$row->username;
-	}
-	return $out;
-}
 
 function filter_fl($in){
 	$line=0;
@@ -381,12 +273,6 @@ function filter_fl($in){
 	}
 	
 	return $result;
-}
-
-function mylog($st) {
-	$handle=fopen("/tmp/fff", 'a');
-	fwrite($handle, $st);
-	fclose($handle);
 }
 
 function click_to_dial($target, $uri, &$errors){
@@ -466,30 +352,6 @@ function click_to_dial($target, $uri, &$errors){
    
 }
 
-function ptitle($title, $width=502){?>
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr><td class="title" width="<? echo $width; ?>"><?echo $title;?></td></tr>
-</table><br>
-<?}
-
-
-function set_password_to_user($user_id, $passwd, &$errors){
-	global $config;
-	
-	$inp=$user_id.":".$config->realm.":".$passwd;
-	$ha1=md5($inp);
-	
-	$inpb=$user_id."@".$config->domainname.":".$config->realm.":".$passwd;
-	$ha1b=md5($inpb);
-
-	$q="update ".$config->table_subscriber." set password='$passwd', ha1='$ha1', ha1b='$ha1b' ".
-		" where username='".$user_id."' and domain='".$config->realm."'";
-
-	$res=MySQL_Query($q);
-	if (!$res) {$errors[]="error in SQL query - ".__FILE__.":".__LINE__; return false;}
-
-	return true;
-}
 
 /**************************************
  *         find users class
@@ -604,6 +466,47 @@ function multidomain_get_file($filename){
 
 	if (file_exists($dir.$config->domain."/".$filename)) return $config->domains_path.$config->domain."/".$filename;
 	else return $config->domains_path."_default/".$filename;
+}
+
+/*
+	get error message from PEAR_Error object and write it to errors array and to error log
+*/
+
+function log_errors($err_object, &$errors){
+	global $serwebLog;
+
+	//get name of function from which log_errors is called
+	$backtrace=debug_backtrace();
+	if (isset($backtrace[1]['function'])) $funct=$backtrace[1]['function'];
+	else $funct=null;
+
+	//get backtrace frame from err_object which correspond to function from which log_errors is called
+	$backtrace=$err_object->getBacktrace();
+	$last_frame=end($backtrace);
+	
+	if ($funct and $funct!=__FUNCTION__){
+		do{
+			if ($last_frame['function']==$funct){
+				$last_frame=prev($backtrace);
+				break;
+			}
+		}while($last_frame=prev($backtrace));
+
+		//if matchng frame is not found, use last_frame	
+		if (!$last_frame) { 
+			echo "log_errors - spatny parametr $funct"; // !!!!!!!!!!!!!!!!!!!! tohle pridat do logu
+			$last_frame=end($backtrace);
+		}
+	}
+	
+	$errors[]=$err_object->getMessage().", file: ".$last_frame['file'].":".$last_frame['line'];
+
+
+	$log_message= "file: ".$last_frame['file'].":".$last_frame['line'].": ".$err_object->getMessage()." - ".$err_object->getUserInfo();
+	//remove endlines from the log message
+	$log_message=str_replace(array("\n", "\r"), "", $log_message);
+	$serwebLog->log($log_message, PEAR_LOG_ERR);
+
 }
 
 ?>

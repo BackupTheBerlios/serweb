@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.5 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: user_preferences.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,22 +20,21 @@ elseif (isset($_GET['att_edit'])) $att_edit=$_GET['att_edit'];
 else $att_edit=null;
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	//delete attrib from DB
 	if (isset($_GET['att_dele'])){
 		//delete attribute from user_preferences table
 		$q="delete from ".$config->table_user_preferences.
 			" where attribute='".$_GET['att_dele']."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
 		//delete attribute form user_preferences_types table
 		$q="delete from ".$config->table_user_preferences_types.
 			" where att_name='".$_GET['att_dele']."'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
 		page_close();
@@ -48,9 +47,11 @@ do{
 	if ($att_edit){
 		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where att_name='$att_edit'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		$row=mysql_fetch_object($res);
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
+
+		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 		
 		$att_type_spec=$row->att_type_spec;
 		
@@ -123,16 +124,21 @@ do{
 			$q="insert into ".$config->table_user_preferences_types." (att_name, att_rich_type, default_value, att_raw_type) ".
 				"values ('$att_name', '$att_rich_type', '$default_value', '".$usr_pref->att_types[$att_rich_type]->raw_type."')";
 
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {
+			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
+				$errors[]="This attribute name already exists - choose another";
+			else log_errors($res, $errors); 
+			break;
+		}
 
 		//if name of attribute is changed, update user_preferences table
 		if ($att_edit and $att_edit!=$att_name){
 			$q="update ".$config->table_user_preferences." ".
 				"set attribute='$att_name' where attribute='$att_edit'";
 
-			$res=MySQL_Query($q);
-			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+			$res=$db->query($q);
+			if (DB::isError($res)) {log_errors($res, $errors); break;}
 		}
 
 		if (!$att_edit and $att_rich_type=="list") 
@@ -152,8 +158,8 @@ do{
 
 		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where ".$qw." order by att_name";
-		$att_res=MySQL_Query($q);
-		if (!$att_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$att_res=$db->query($q);
+		if (DB::isError($att_res)) {log_errors($att_res, $errors); break;}
 	}
 }while (false);
 
@@ -192,7 +198,7 @@ print_html_body_begin($page_attributes);
 <?$f->finish("","");					// Finish form?>
 </div>
 
-<?if (MySQL_num_rows($att_res)){?>
+<?if (!DB::isError($att_res) and $att_res->numRows()){?>
 
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -203,7 +209,7 @@ print_html_body_begin($page_attributes);
 	<th>&nbsp;</th>
 	</tr>
 	<?$odd=0;
-	while($row = MySQL_Fetch_Object($att_res)){
+	while($row = $att_res->fetchRow(DB_FETCHMODE_OBJECT)){
 		$odd=$odd?0:1;
 	?>
 	<tr valign="top" <?echo $odd?'class="swTrOdd"':'class="swTrEven"';?>>
@@ -213,7 +219,8 @@ print_html_body_begin($page_attributes);
 	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
 	<td align="center"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_dele=".RawURLEncode($row->att_name));?>">delete</a></td>
 	</tr>
-	<?}?>
+	<?}//while
+	$att_res->free();?>
 	</table>
 
 <?}?>

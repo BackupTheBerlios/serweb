@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: voicemail.php,v 1.5 2004/03/24 21:39:47 kozlik Exp $
+ * $Id: voicemail.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,8 +13,7 @@ page_open (array("sess" => "phplib_Session",
 $f = new form;                  // create a form object
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	$f->add_element(array("type"=>"file",
 	                             "name"=>"greeting",
@@ -64,7 +63,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

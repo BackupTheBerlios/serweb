@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.10 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: acl.php,v 1.11 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -17,8 +17,7 @@ $grp_val=array();
 $ACL_control=array();
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
 
@@ -26,17 +25,19 @@ do{
 	$q="select priv_value from ".$config->table_admin_privileges.
 		" where domain='".$config->realm."' and username='".$auth->auth["uname"]."'".
 				" and priv_name='acl_control'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-	while ($row=MySQL_Fetch_Object($res)) $ACL_control[]=$row->priv_value;
+	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) $ACL_control[]=$row->priv_value;
+	$res->free();
 
 	/* get access control list of user */
 	$q="select grp from ".$config->table_grp." where domain='".$config->realm."' and username='".$user_id."'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
 
-	while ($row=MySQL_Fetch_Object($res)) $grp_val[]=$row->grp;
+	while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) $grp_val[]=$row->grp;
+	$res->free();
 
 	/* add form elements */
 	foreach ($ACL_control as $row){
@@ -73,8 +74,8 @@ do{
 					$q="delete from ".$config->table_grp." where ".
 						"domain='".$config->realm."' and username='".$user_id."' and grp='".$row."'";
 
-				$res=MySQL_Query($q);
-				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+				$res=$db->query($q);
+				if (DB::isError($res)) {log_errors($res, $errors); break;}
 			}
 		}
 

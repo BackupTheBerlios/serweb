@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.32 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: my_account.php,v 1.33 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -18,7 +18,7 @@ page_open (array("sess" => "phplib_Session_Pre_Auth",
 if (isset($_POST["uid"])) $uid=$_POST["uid"];
 elseif (isset($_GET["uid"])) $uid=$_GET["uid"];
 else $uid=null;
-				 
+
 if ($perm->have_perm("admin")){
 	if ($uid) $user_id=$uid;
 	else $user_id=$auth->auth["uname"];
@@ -43,16 +43,16 @@ class Cusrloc {
 define("FOREVER",567648000);	//number of second for forever (18 years)
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	$q="select email_address, allow_find, timezone from ".$config->table_subscriber.
 		" where username='".$user_id."' and domain='".$config->realm."'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query (1), line: ".__LINE__; break;}
-	$row=mysql_fetch_object($res);
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
+	$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+	$res->free();
 
-	set_timezone($errors);
+        set_timezone($db, $errors);
 
 	$options=array();
 	$opt=get_time_zones($errors);
@@ -152,7 +152,7 @@ do{
 
 	}
 
-	if (isset($okey2_x)){								// Is there data to process?
+	if (isset($okey2_x)){						// Is there data to process?
 		if ($err = $f2->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
 			break;
@@ -224,8 +224,8 @@ do{
 			" set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
 			" where username='".$user_id."' and domain='".$config->realm."'";
 
-		$res=MySQL_Query($q);
-		if (!$res) {$errors[]="error in SQL query(3), line: ".__LINE__; break;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
         Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")."&uid=".RawURLEncode($uid)));
 		page_close();
@@ -239,14 +239,14 @@ do{
 		// get aliases
 		$q="select username from ".$config->table_aliases.
 			" where lower(contact)=lower('sip:".$user_id."@".$config->default_domain."') order by username";
-		$aliases_res=MySQL_Query($q);
-		if (!$aliases_res) {$errors[]="error in SQL query(5), line: ".__LINE__; break;}
+		$aliases_res=$db->query($q);
+		if (DB::isError($aliases_res)) {log_errors($aliases_res, $errors); break;}
 
 		// get Access-Control-list
 		$q="select grp from ".$config->table_grp." where domain='".$config->realm.
 			"' and username='".$user_id."' order by grp";
-		$grp_res=MySQL_Query($q);
-		if (!$grp_res) {$errors[]="error in SQL query(6), line: ".__LINE__; break;}
+		$grp_res=$db->query($q);
+		if (DB::isError($grp_res)) {log_errors($grp_res, $errors); break;}
 
 		// get UsrLoc
 		/*
@@ -274,7 +274,7 @@ do{
 		foreach($out_arr as $val){
 			if (!ereg("^[[:space:]]*$", $val)){
 				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
-					$usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3], get_location($regs[1], $errors));
+                                        $usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3], get_location($regs[1], $db, $errors));
 				else { $errors[]="sorry error -- invalid output from fifo"; break; }
 			}
 		}
@@ -315,7 +315,7 @@ if ($perm->have_perm("admin") and $uid){
 	echo "<div class=\"swNameOfUser\">user: ".$uid."</div>";
 }
 else {
-	$page_attributes['user_name']=get_user_name($errors);
+        $page_attributes['user_name']=get_user_name($db, $errors);
 	print_html_body_begin($page_attributes);
 }
 ?>
@@ -358,24 +358,26 @@ else {
 </div>
 
 
-<?if ($aliases_res and MySQL_num_rows($aliases_res)){?>
+<?if (!DB::isError($aliases_res) and $aliases_res->numRows()){?>
 	<div id="swMAAliasesTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>your aliases:</th></tr>
-	<?while ($row=MySQL_Fetch_Object($aliases_res)){?>
+	<?while ($row=$aliases_res->fetchRow(DB_FETCHMODE_OBJECT)){?>
 	<tr><td align="center"><?echo nbsp_if_empty($row->username);?></td></tr>
-	<?}?>
+	<?}//while
+	$aliases_res->free();?>
 	</table>
 	</div>
 <?}?>
 
-<?if ($grp_res and MySQL_num_rows($grp_res)){?>
+<?if (!DB::isError($grp_res) and $grp_res->numRows()){?>
 	<div id="swMAACLTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>Access-Control-list:</td></tr>
-	<?while ($row=MySQL_Fetch_Object($grp_res)){?>
+	<?while ($row=$grp_res->fetchRow(DB_FETCHMODE_OBJECT)){?>
 	<tr><td align="center"><?echo nbsp_if_empty($row->grp);?></td></tr>
-	<?}?>
+	<?}//while
+	$grp_res->free();?>
 	</table>
 	</div>
 <?}?>

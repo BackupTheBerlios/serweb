@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.5 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -18,7 +18,7 @@ elseif (isset($_GET['item_edit'])) $item_edit=$_GET['item_edit'];
 else $item_edit=null;
 
 
-function update_items_in_db($item_list, $attrib_name, $default_value){
+function update_items_in_db($item_list, $attrib_name, $default_value, $db, &$errors){
 	global $config;
 
 	$q="update ".$config->table_user_preferences_types.
@@ -28,21 +28,24 @@ function update_items_in_db($item_list, $attrib_name, $default_value){
 				", default_value='".$default_value."'").
 		" where att_name='$attrib_name'";
 
-	$res=MySQL_Query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); return false;}
+	
+	return true;
 }
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	//get attrib from DB
 	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where att_name='$attrib_name'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	$row=mysql_fetch_object($res);
+	$res = $db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
 
+	$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
+	$res->free();
+	
 	if ($row->att_rich_type!="list"){
 		//attrib isn't list of items -> nothing to edit -> go back to attributes editing page
 
@@ -64,7 +67,7 @@ do{
 			}
 		}
 		//update array in DB
-		update_items_in_db($item_list, $attrib_name, null);
+		if (!update_items_in_db($item_list, $attrib_name, null, $db, $errors)) break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();
@@ -143,7 +146,7 @@ do{
 			$item_list[]=new UP_List_Items($item_label, $item_value);
 
 		//update array in DB
-		update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null);
+		if (!update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null, $db, $errors)) break;
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();

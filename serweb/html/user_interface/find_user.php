@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.13 2004/03/25 21:13:33 kozlik Exp $
+ * $Id: find_user.php,v 1.14 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -28,9 +28,7 @@ class Cuser{
 }
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="cannot connect to sql server"; break;}
-
+	if (!$db = connect_to_db($errors)) break;
 
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"fname",
@@ -59,7 +57,7 @@ do{
 								 "extrahtml"=>"alt='find'"));
 
 	$found_users=array();
-								 
+
 	if (isset($_POST['okey_x'])){				// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
@@ -78,13 +76,13 @@ do{
 				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' ".
 				"and username like '%$uname%' and domain='$config->realm' limit 0,".$config->max_showed_rows;
 
-		$find_res=MySQL_Query($q);
-		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$find_res=$db->query($q);
+		if (DB::isError($find_res)) {log_errors($find_res, $errors); break;}
 
 		$found_users=array();
-		while ($row=MySQL_Fetch_Object($find_res)){
+		while ($row=$find_res->fetchRow(DB_FETCHMODE_OBJECT)){
 			$found_users[$row->username]=new Cuser($row->first_name, $row->last_name, $row->username, $row->timezone);
-			$found_users[$row->username]->aliases = get_aliases("sip:".$row->username."@".$config->realm, $errors);
+                        $found_users[$row->username]->aliases = get_aliases("sip:".$row->username."@".$config->realm, $db, $errors);
 		}
 	}
 
@@ -96,7 +94,7 @@ if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 $page_attributes['selected_tab']="phonebook.php";
 print_html_body_begin($page_attributes);
 ?>
@@ -156,9 +154,12 @@ print_html_body_begin($page_attributes);
 	</tr>
 	<?}?>
 	</table>
-	<?if (MySQL_num_rows($find_res)==$config->max_showed_rows){?>
+	<?if ($find_res->numRows()==$config->max_showed_rows){?>
 	<div class="swNumOfFoundRecords">The search generated too many matches, please be more specific</div>
-<?	}?>
+	<?}else{?>
+	<br />
+<?	}
+	$find_res->free();?>
 <?}elseif(isset($okey_x)){?>
 	<div class="swNumOfFoundRecords">No users found</div>
 <?}?>

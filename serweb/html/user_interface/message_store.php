@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: message_store.php,v 1.5 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: message_store.php,v 1.6 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -32,13 +32,12 @@ class Cvoice_mess{
 }
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can't connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	if (isset($dele_im)){
 		$q="delete from ".$config->table_message_silo." where mid=$dele_im and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
 		Header("Location: ".$sess->url("message_store.php?kvrk=".uniqID("")));
 		page_close();
@@ -47,16 +46,18 @@ do{
 
 	if (isset($dele_vm)){
 		$q="select file from ".$config->table_voice_silo." where mid=".$dele_vm." and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-		if (!MySQL_num_rows($res)) {$errors[]="Message not found or you haven't access to message"; break;}
-		$row=MySQL_Fetch_Object($res);
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
+		if (!$res->numRows()) {$errors[]="Message not found or you haven't access to message"; break;}
+		$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+		$res->free();
 
-		@unlink($config->voice_silo_dir.$row->file);
+		@$unl=unlink($config->voice_silo_dir.$row->file);
+		if (!$unl and file_exists($config->voice_silo_dir.$row->file)) {$errors[]="Error when deleting message"; break;}
 
 		$q="delete from ".$config->table_voice_silo." where mid=$dele_vm";
-		$res=mySQL_query($q);
-		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__;}
+		$res=$db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); break;}
 
 		Header("Location: ".$sess->url("message_store.php?kvrk=".uniqID("")));
 		page_close();
@@ -70,36 +71,36 @@ do{
 			$config->table_message_silo.
 			" where r_uri like 'sip:".$auth->auth["uname"].
 			"@".$config->default_domain."%'";
-		$im_res=mySQL_query($q);
-		if (!$im_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+		$im_res=$db->query($q);
+		if (DB::isError($im_res)) {log_errors($im_res, $errors); break;}
 
-		while ($row=MySQL_Fetch_Object($im_res)){
+		while ($row=$im_res->fetchRow(DB_FETCHMODE_OBJECT)){
 			$im_arr[]=new Cinst_mess($row->mid, $row->src_addr,
 				$row->inc_time, $row->body);
 		}
+		$im_res->free();
 
 		if ($config->show_voice_silo) {
 			$q="select mid, src_addr, inc_time, subject, file from ".
 				$config->table_voice_silo." where r_uri like 'sip:".
 				$auth->auth["uname"]."@".$config->default_domain."%'";
-			$vm_res=mySQL_query($q);
-			if (!$vm_res) {
-				$errors[]="error in SQL query, line: ".__LINE__;
-				break;
-			}
-			while ($row=MySQL_Fetch_Object($vm_res)){
+			$vm_res=$db->query($q);
+			if (DB::isError($vm_res)) {log_errors($vm_res, $errors); break;}
+
+			while ($row=$vm_res->fetchRow(DB_FETCHMODE_OBJECT)){
 				$vm_arr[]=new Cvoice_mess($row->mid, $row->src_addr,
 					$row->inc_time, $row->subject, $row->file);
 			}
+			$vm_res->free();
 		}
-		set_timezone($errors);
+                set_timezone($db, $errors);
 	}
 
 }while (false);
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 print_html_body_begin($page_attributes);
 ?>
 

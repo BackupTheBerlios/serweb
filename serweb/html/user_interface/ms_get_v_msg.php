@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ms_get_v_msg.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: ms_get_v_msg.php,v 1.5 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,15 +11,15 @@ page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Auth"));
 
 do{
-	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db = connect_to_db($errors)) break;
 
 	$q="select subject, file from ".$config->table_voice_silo.
 		" where mid=".$mid." and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
-	if (!MySQL_num_rows($res)) {$errors[]="Message not found or you haven't access to read message"; break;}
-	$row=MySQL_Fetch_Object($res);
+	$res=$db->query($q);
+	if (DB::isError($res)) {log_errors($res, $errors); break;}
+	if (!$res->numRows()) {$errors[]="Message not found or you haven't access to read message"; break;}
+	$row=$res->fetchRow(DB_FETCHMODE_OBJECT);
+	$res->free();
 
 	@$fp=fopen($config->voice_silo_dir.$row->file,'r');
 
@@ -36,9 +36,9 @@ do{
 
 }while(false);
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 $page_attributes['selected_tab']="message_store.php";
 print_html_body_begin($page_attributes);
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: play_greeting.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: play_greeting.php,v 1.4 2004/04/04 19:42:14 kozlik Exp $
  */
 
 require "prepend.php";
@@ -30,9 +30,9 @@ do{
 
 }while(false);
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
-$page_attributes['user_name']=get_user_name($errors);
+$page_attributes['user_name']=get_user_name($db, $errors);
 $page_attributes['selected_tab']="voicemail.php";
 print_html_body_begin($page_attributes);
 ?>
