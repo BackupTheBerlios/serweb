@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.3 2005/01/13 16:23:47 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.4 2005/02/01 09:36:25 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
@@ -69,7 +69,7 @@
 		   or 'username' (for keyiing by username and domain). The right value depends on your
 		   database schema.
 		*/
-		$config->users_indexed_by= "uuid";
+		$config->users_indexed_by= "username";
 
 		/* if true, serweb will create/delete entries in table uri when alisa will be created/deleted
 		   (working only in uuidized version)
