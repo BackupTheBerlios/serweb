@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.5 2004/08/28 15:38:19 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.6 2004/08/31 14:16:13 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -49,11 +49,11 @@
 */
  
 class apu_user_preferences extends apu_base_class{
-	var $f; 			//html form
 	var $reg;			//Creg class
 	var $usr_pref;		//User_preferences class
 	var $attributes;	//array of cattrib objects
 	var $smarty_action='default';
+	var $js_on_subm=""; //javascript which is called on form submit
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -114,43 +114,8 @@ class apu_user_preferences extends apu_base_class{
 		return $out;
 	}
 	
-
 	function action_update(&$errors){
-		global $_POST, $_SERVER, $lang_str, $data, $sess;
-	
-		if ($err = $this->f->validate()) {			// Is the data valid?
-			$errors=array_merge($errors, $err); // No!
-			return false;
-		}
-
-		// Process data            // Data ok;
-
-		//check values of attributes and format its
-		foreach($this->opt['attributes'] as $att){
-			if (!$this->usr_pref->format_inputed_value($_POST[$this->attributes[$att]->att_name], 
-														$this->attributes[$att]->att_rich_type, 
-														$this->attributes[$att]->att_type_spec)){
-				// value of attribute is wrong
-				// if is set error message for this attribut, add it to $errors array
-				// otherwise add to $errors array default message: $lang_str['fe_invalid_value_of_attribute']
-				
-				if (isset($this->opt['error_messages'][$this->attributes[$att]->att_name]))
-					$errors[]=$this->opt['error_messages'][$this->attributes[$att]->att_name];
-				else
-					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attributes[$att]->att_name; 
-
-				return false;
-			}
-		}
-		
-
-		//value of attributes seems to be ok, try to call user checking function yet
-		if (!empty($this->opt['validate_funct']) and
-			!call_user_func_array($this->opt['validate_funct'], array(&$_POST, $this->opt['error_messages'], &$errors))){
-				//user checking function returned false -> value of attribute is wrong
-				return false;
-		}
-			
+		global $_POST, $_SERVER, $data, $sess;
 
 		//update all changed attributes
 		foreach($this->opt['attributes'] as $att){
@@ -164,34 +129,39 @@ class apu_user_preferences extends apu_base_class{
 			}
 		}
 
-        Header("Location: ".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&m_usr_pref_updated=".RawURLEncode($this->opt['instance_id'])));
-		page_close();
-		exit;
+		return array("m_usr_pref_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 		
 	/* this metod is called always at begining */
 	function init(){
 		global $_SERWEB;
+		parent::init();
+
 		require_once ($_SERWEB["serwebdir"] . "user_preferences.php");
 		
 		$this->reg = new Creg;				// create regular expressions class
-		$this->f = new form;                // create a form object
 		$this->usr_pref = new User_Preferences();
 
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
-		if (isset($_POST['okey_x']) and isset($_POST['apu_name']) and $_POST['apu_name']==$this->opt['instance_id']){	// Is there data to process?
-			$this->action="update";
+		if ($this->was_form_submited()){	// Is there data to process?
+			$this->action=array('action'=>"update",
+			                    'validate_form'=>true,
+								'reload'=>true);
 		}
-		else $this->action="";
+		else $this->action=array('action'=>"default",
+			                     'validate_form'=>false,
+								 'reload'=>false);
 	}
 	
-	/* realize action */
-	function execute(&$errors){
+	/* create html form */
+	function create_html_form(&$errors){
 		global $data, $config;
+		parent::create_html_form($errors);
+
 		do{		
 			//get list of attributes
 			if (false === $this->attributes = $data->get_attributes(NULL, $errors)) break;
@@ -224,22 +194,42 @@ class apu_user_preferences extends apu_base_class{
 								$this->attributes[$att]->att_type_spec);
 			}
 		
-			$this->f->add_element(array("type"=>"hidden",
-			                             "name"=>"apu_name",
-			                             "value"=>$this->opt['instance_id']));
-
-			$this->f->add_element(array("type"=>"submit",
-			                             "name"=>"okey",
-			                             "src"=>$config->img_src_path."butons/b_save.gif",
-										 "extrahtml"=>"alt='save'"));
-										 
-			if ($this->action == 'update') 
-				if (false === $this->action_update($errors)) {
-					//data isn't valid or error in sql - Load form with submitted data
-					$this->f->load_defaults(); 
-					break;
-				}
 		} while (false);
+
+	}
+
+	/* validate html form */
+	function validate_form(&$errors){
+		global $_POST, $lang_str;
+		if (false === parent::validate_form($errors)) return false;
+
+		//check values of attributes and format its
+		foreach($this->opt['attributes'] as $att){
+			if (!$this->usr_pref->format_inputed_value($_POST[$this->attributes[$att]->att_name], 
+														$this->attributes[$att]->att_rich_type, 
+														$this->attributes[$att]->att_type_spec)){
+				// value of attribute is wrong
+				// if is set error message for this attribut, add it to $errors array
+				// otherwise add to $errors array default message: $lang_str['fe_invalid_value_of_attribute']
+				
+				if (isset($this->opt['error_messages'][$this->attributes[$att]->att_name]))
+					$errors[]=$this->opt['error_messages'][$this->attributes[$att]->att_name];
+				else
+					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attributes[$att]->att_name; 
+
+				return false;
+			}
+		}
+		
+
+		//value of attributes seems to be ok, try to call user checking function yet
+		if (!empty($this->opt['validate_funct']) and
+			!call_user_func_array($this->opt['validate_funct'], array(&$_POST, $this->opt['error_messages'], &$errors))){
+				//user checking function returned false -> value of attribute is wrong
+				return false;
+		}
+
+		return true;
 	}
 	
 	/* add messages to given array */
@@ -257,15 +247,19 @@ class apu_user_preferences extends apu_base_class{
 	function pass_values_to_html(){
 		global $smarty;
 		
-		$js_on_subm="";
-		$smarty->assign($this->opt['smarty_attributes'], $this->format_attributes_for_output($this->opt['attributes'], $js_on_subm));
-		$smarty->assign_phplib_form($this->opt['smarty_form'], 
-									$this->f, 
-									array('jvs_name'=>'form_'.$this->opt['instance_id'],
-									      'form_name'=>$this->opt['form_name']), 
-									array('before'=>$js_on_subm));
+		$smarty->assign($this->opt['smarty_attributes'], 
+		                $this->format_attributes_for_output($this->opt['attributes'], $this->js_on_subm));
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 	}
+
+	/* return info need to assign html form to smarty */
+	function pass_form_to_html(){
+		return array('smarty_name' => $this->opt['smarty_form'],
+		             'form_name'   => $this->opt['form_name'],
+		             'before'      => $this->js_on_subm
+		            );
+	}
+
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_accounting.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: apu_accounting.php,v 1.2 2004/08/31 14:16:13 kozlik Exp $
  */ 
 
 /* Application unit accounting */
@@ -37,6 +37,8 @@ class apu_accounting extends apu_base_class{
 	}
 	
 	function apu_accounting(){
+		parent::apu_base_class();
+
 		/*** names of variables assigned to smarty ***/
 		/* array containing accounting table */
 		$this->opt['smarty_result'] =	'acc_res';
@@ -47,6 +49,7 @@ class apu_accounting extends apu_base_class{
 	/* this metod is called always at begining */
 	function init(){
 		global $sess, $sess_acc_act_row, $_GET;
+		parent::init();
 		
 		if (!$sess->is_registered('sess_acc_act_row')) $sess->register('sess_acc_act_row');
 		if (!isset($sess_acc_act_row)) $sess_acc_act_row=0;
@@ -56,18 +59,14 @@ class apu_accounting extends apu_base_class{
 		$this->acc_res=array();
 	}
 	
-	/* check _get and _post arrays and determine what we will do */
-	function determine_action(){
-	}
-	
 	/* realize action */
-	function execute(&$errors){
+	function action_default(&$errors){
 		global $data, $sess_acc_act_row;
 		
 		do{
 			$data->set_timezone($this->user_id, $errors);
 			$data->set_act_row($sess_acc_act_row);
-			if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $errors)) break;
+			if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $errors)) return false;
 
 			$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 			$this->pager['pos']=$data->get_act_row();
@@ -78,10 +77,6 @@ class apu_accounting extends apu_base_class{
 		}while (false);
 	}
 	
-	/* add messages to given array */
-	function return_messages(&$msgs){
-	}
-
 	/* assign variables to smarty */
 	function pass_values_to_html(){
 		global $smarty, $_SERVER, $data;
