@@ -2,7 +2,7 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.5 2004/08/09 23:04:57 kozlik Exp $
+ * $Id: load_phplib.php,v 1.6 2004/10/01 11:36:23 kozlik Exp $
  */ 
 
 
@@ -25,7 +25,7 @@ require($_PHPLIB["libdir"] . "perm.inc");      /* Disable this, if you are not u
 
 /* Additional require statements go before this line */
 
-require($_PHPLIB["libdir"] . "local.inc");     /* Required, contains your local configuration. */
+require($_PHPLIB["libdir"] . "local/local.inc");     /* Required, contains your local configuration. */
 
 require($_PHPLIB["libdir"] . "page.inc");      /* Required, contains the page management functions. */
 

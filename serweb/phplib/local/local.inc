@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.18 2004/09/02 11:20:21 kozlik Exp $
+ * $Id: local.inc,v 1.1 2004/10/01 11:36:23 kozlik Exp $
  *
  */
 
@@ -122,7 +122,7 @@ class phplib_Auth extends Auth {
 	}
 
 	//else display relogin form
-    include($_PHPLIB["libdir"] . "loginform.ihtml");
+    include($_PHPLIB["libdir"] . "local/loginform.ihtml");
   }
 
   function auth_validatelogin() {
@@ -222,7 +222,7 @@ class phplib_Perm extends Perm {
     global $perm, $auth, $sess;
     global $_PHPLIB;
 
-    include($_PHPLIB["libdir"] . "perminvalid.ihtml");
+    include($_PHPLIB["libdir"] . "local/perminvalid.ihtml");
   }
 }
 

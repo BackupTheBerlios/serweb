@@ -18,7 +18,7 @@
   This fixes the problems some browsers have with overwriting the content of 
   a password type input tag. <andre@rolemaster-source.net> 
 
-  $Id: crloginform.ihtml,v 1.2 2004/08/09 12:59:35 kozlik Exp $
+  $Id: crloginform.ihtml,v 1.1 2004/10/01 11:36:23 kozlik Exp $
 -->
 <html>
 <head>
