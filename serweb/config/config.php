@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.4 2004/10/12 13:25:04 kozlik Exp $
+ * $Id: config.php,v 1.5 2004/11/25 10:08:15 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -250,7 +250,7 @@
 		   after form submition)
 		*/
 		
-		$config->phonenumber_regex = "\\+?[-/ 1-9]+";
+		$config->phonenumber_regex = "\\+?[-/ ()1-9]+";
 		$config->strict_phonenumber_regex = "\\+?[1-9]+";
 		
 		/* which tabs should show in user's profile ? those set to false
