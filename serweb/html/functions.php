@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.18 2003/05/26 21:16:09 jiri Exp $
+ * $Id: functions.php,v 1.19 2003/05/26 21:23:49 jiri Exp $
  */
 
 
@@ -385,7 +385,7 @@ function click_to_dial($target, $uri, &$errors){
 
 	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
 		"BYE\n".
-		$dlg."\n".
+		$dlg.  // "\n".
 		$fixed_dlg."\n".
 		"CSeq: ".$cseq." BYE\n".
 		".\n";
