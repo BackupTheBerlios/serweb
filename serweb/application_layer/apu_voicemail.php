@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_voicemail.php,v 1.2 2004/09/02 11:48:58 kozlik Exp $
+ * $Id: apu_voicemail.php,v 1.3 2005/01/30 20:56:38 kozlik Exp $
  */ 
 
 /* Application unit voicemail */
@@ -32,7 +32,7 @@
 	Form fields
 	-----------
 	greeting								for upload greeting file
-	which_greeting							radio buton for select if should be used standard or customized greeting
+	which_greeting							radio button for select if should be used standard or customized greeting
 											(values: standard, customized)
 	_hidden_customized_greeting_exists		for internal use						
 													
@@ -77,7 +77,7 @@ class apu_voicemail extends apu_base_class{
 
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => 'upload greeting',
-										'src'  => $config->img_src_path."butons/b_upload_greeting.gif");
+										'src'  => $config->img_src_path."buttons/btn_upload_greeting.gif");
 	}
 
 	

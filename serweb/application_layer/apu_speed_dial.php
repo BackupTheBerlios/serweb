@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.7 2004/12/15 11:57:58 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.8 2005/01/30 20:56:38 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -172,7 +172,7 @@ class apu_speed_dial extends apu_base_class{
 
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => 'save',
-										'src'  => $config->img_src_path."butons/b_save.gif");
+										'src'  => $config->img_src_path."buttons/btn_submit.gif");
 										
 		$this->opt['fname_max_chars'] =		128;
 		$this->opt['lname_max_chars'] =		128;

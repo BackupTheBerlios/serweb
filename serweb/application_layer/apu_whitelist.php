@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.8 2004/12/09 22:26:50 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.9 2005/01/30 20:56:39 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -146,7 +146,7 @@ class apu_whitelist extends apu_base_class{
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => 'save',
-										'src'  => $config->img_src_path."butons/b_save.gif");
+										'src'  => $config->img_src_path."buttons/btn_submit.gif");
 
 	}
 

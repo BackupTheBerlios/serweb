@@ -1,7 +1,7 @@
 <?
 
 /*
- * $Id: apu_registration.php,v 1.1 2004/12/10 14:09:38 kozlik Exp $
+ * $Id: apu_registration.php,v 1.2 2005/01/30 20:56:38 kozlik Exp $
  */ 
 
 /* Application unit registration */
@@ -93,7 +93,7 @@ class apu_registration extends apu_base_class{
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => 'save',
-										'src'  => $config->img_src_path."butons/b_save.gif");
+										'src'  => $config->img_src_path."buttons/btn_submit.gif");
 		
 	}
 
