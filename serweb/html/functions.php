@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.50 2004/12/07 10:25:26 kozlik Exp $
+ * $Id: functions.php,v 1.51 2004/12/21 19:40:05 kozlik Exp $
  */
 
 
@@ -378,6 +378,8 @@ function click_to_dial($target, $uri, &$errors){
 	
 	if (!empty($config->ctd_outbound_proxy)) $outbound_proxy=$config->ctd_outbound_proxy;
 	
+	if (!empty($config->ctd_secret)) $secret = "Secret: ".$config->ctd_secret."\n";
+	else $secret = "";
 
 /* initiate dummy INVITE with pre-3261 "on-hold"
    (note the dots -- they mean in order of appearance:
@@ -388,7 +390,8 @@ function click_to_dial($target, $uri, &$errors){
 		"INVITE\n".
 		$uri."\n".
 		$outbound_proxy."\n".
-		"$fixed_dlg\n".
+		$secret.
+		$fixed_dlg."\n".
 		"To: <".$uri.">\n".
 		"CSeq: ".$cseq." INVITE\n".
 		'Reject-Contact: *;automata="YES"'."\n".
@@ -417,7 +420,7 @@ function click_to_dial($target, $uri, &$errors){
 	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
 		"REFER\n".
 		$dlg.		//"\n".
-		"$fixed_dlg\n".
+		$fixed_dlg."\n".
 		"CSeq: ".$cseq." REFER\n".
 		"Referred-By: ".$from."\n".
 		"Refer-To: ".$target."\n".
