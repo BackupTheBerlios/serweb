@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.14 2005/01/31 09:12:11 kozlik Exp $
+$Id: INSTALL,v 1.15 2005/02/01 09:34:19 kozlik Exp $
 
 serweb - Installation
 
@@ -17,7 +17,7 @@ serweb - Installation
   ----------
   
   	Please keep in mind that using latest CVS version isn't recomended
-  	and it is on your own risc. This version is developer and may be unstable.
+  	and it is on your own risc. This version is developer and may be unstable and buggy.
   	For get latest stable version use this command:
   	
   	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -d serweb -r rel_0_8_12 iptel
