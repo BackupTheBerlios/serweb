@@ -1,4 +1,4 @@
-$Id: serweb_variables,v 1.1 2004/08/25 10:11:28 kozlik Exp $
+$Id: serweb_variables,v 1.2 2005/03/02 15:31:06 kozlik Exp $
 
 Global variables
 ----------------
@@ -7,6 +7,7 @@ $config
 $controler
 $data
 $lang_str
+$lang_set
 $page_attributes
 $serweb_auth
 $sess
