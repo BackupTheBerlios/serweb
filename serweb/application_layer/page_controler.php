@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_controler.php,v 1.6 2005/02/08 16:04:34 kozlik Exp $
+ * $Id: page_controler.php,v 1.7 2005/02/10 10:46:27 kozlik Exp $
  */ 
 
 /*
@@ -299,18 +299,29 @@ class page_conroler{
 		}
 	}
 
+	function convert_htmlspecialchars(&$var){
+		if (is_array($var)){
+			foreach($var as $k => $v)
+				$var[$k] = $this->convert_htmlspecialchars($v);
+		}
+		elseif (is_object($var)){
+			//object shouldn't be here
+			//do nothing
+		}
+		else{
+			$var = htmlspecialchars($var, ENT_QUOTES);
+		}
+		return $var;
+	}
+
+
 	function hack_protection(){
-	
-		if (isset($_POST) and is_array($_POST)){
-			foreach($_POST as $key=>$val){
-				$_POST[$key] = htmlspecialchars($val, ENT_QUOTES);
-			}
+		if (isset($_POST)){
+			$_POST = $this->convert_htmlspecialchars($_POST);
 		}
 
-		if (isset($_GET) and is_array($_GET)){
-			foreach($_GET as $key=>$val){
-				$_GET[$key] = htmlspecialchars($val, ENT_QUOTES);
-			}
+		if (isset($_GET)){
+			$_GET = $this->convert_htmlspecialchars($_GET);
 		}
 	}
 
