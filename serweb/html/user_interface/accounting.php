@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.15 2003/11/03 01:54:27 jiri Exp $
+ * $Id: accounting.php,v 1.16 2003/11/04 00:36:17 jiri Exp $
  */
 
 require "prepend.php";
@@ -91,7 +91,7 @@ do{
 	<?echo "<tr valign=top ".$bgc.">"; ?>
 	<td align="center" class="f12" width="135">
 	<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->to_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
-	<?echo htmlspecialchars($row->sip_to);?></a></td>
+	<?echo htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$row->sip_to));?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="135"><?echo $row->sip_callid;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

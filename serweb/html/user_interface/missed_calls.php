@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.17 2003/11/03 01:54:27 jiri Exp $
+ * $Id: missed_calls.php,v 1.18 2003/11/04 00:36:17 jiri Exp $
  */
 
 require "prepend.php";
@@ -138,7 +138,10 @@ do{
 
 		echo "<tr valign=top ".$bgc.">";
 	?>
-	<td align="left" class="f12" width="135"><a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->from_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');"><?echo htmlspecialchars($row->sip_from);?></a></td>
+	<td align="left" class="f12" width="135">
+		<a href="javascript: open_ctd_win2('<?echo rawURLEncode($row->from_uri);?>', '<?echo RawURLEncode("sip:".$auth->auth["uname"]."@".$config->default_domain); ?>');">
+		<?echo htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1", $row->sip_from));?>
+		</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
