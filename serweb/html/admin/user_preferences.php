@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.1 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: user_preferences.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
  */
 
 require "prepend.php";
@@ -43,7 +43,7 @@ do{
 	
 	//select values of edited attribute in order to fill its to the form
 	if ($att_edit){
-		$q="select att_name, att_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
+		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where att_name='$att_edit'";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -52,13 +52,13 @@ do{
 		$att_type_spec=$row->att_type_spec;
 		
 		//if $att_type is not set by http_post (form not submited yet) set it by value in DB
-		if (!isset($att_type)) $att_type=$row->att_type;
+		if (!isset($att_rich_type)) $att_rich_type=$row->att_rich_type;
 	}
 
 	//create array of options of select
 	$opt=array();
 	foreach($usr_pref->att_types as $k => $v){
-		$opt[]=array("label" => $v, "value" => $k);
+		$opt[]=array("label" => $v->label, "value" => $k);
 	}
 	
 	$f = new form;                   // create a form object
@@ -75,8 +75,8 @@ do{
 								 "extrahtml"=>"style='width:120px;'"));
 
 	$f->add_element(array("type"=>"select",
-    	                         "name"=>"att_type",
-	                             "value"=>$row->att_type?$row->att_type:"",
+    	                         "name"=>"att_rich_type",
+	                             "value"=>$row->att_rich_type?$row->att_rich_type:"",
 								 "size"=>1,
 								 "options"=>$opt,
 								 "extrahtml"=>"style='width:120px;'"));
@@ -94,8 +94,8 @@ do{
 
 	$f->add_element(array("type"=>"submit",
     	                         "name"=>"okey",
-        	                     "src"=>$config->img_src_path."butons/b_save.gif",
-								 "extrahtml"=>"alt='save'"));
+        	                     "src"=>$config->img_src_path."butons/b_".($att_edit?"save":"add").".gif",
+								 "extrahtml"=>"alt='".($att_edit?"save":"add")."'"));
 
 								 
 	if (isset($okey_x)){								// Is there data to process?
@@ -105,7 +105,7 @@ do{
 		}
 		
 		//check and format default value of attribute
-		if (!$usr_pref->format_inputed_value($default_value, $att_type, $att_type_spec)){
+		if (!$usr_pref->format_inputed_value($default_value, $att_rich_type, $att_type_spec)){
 			$errors[]="bad default value"; break;
 		}
 
@@ -113,11 +113,12 @@ do{
 
 		if ($att_edit) 
 			$q="update ".$config->table_user_preferences_types." ".
-				"set att_name='$att_name', att_type='$att_type', default_value='$default_value' ".
+				"set att_name='$att_name', att_rich_type='$att_rich_type', default_value='$default_value', ".
+					"att_raw_type='".$usr_pref->att_types[$att_rich_type]->raw_type."'".
 				"where att_name='$att_edit'";
 		else 
-			$q="insert into ".$config->table_user_preferences_types." (att_name, att_type, default_value) ".
-				"values ('$att_name', '$att_type', '$default_value')";
+			$q="insert into ".$config->table_user_preferences_types." (att_name, att_rich_type, default_value, att_raw_type) ".
+				"values ('$att_name', '$att_rich_type', '$default_value', '".$usr_pref->att_types[$att_rich_type]->raw_type."')";
 
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -131,7 +132,7 @@ do{
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		}
 
-		if (!$att_edit and $att_type=="list") 
+		if (!$att_edit and $att_rich_type=="list") 
 	        Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($att_name)."&kvrk=".uniqID("")));
 		else
 	        Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
@@ -146,7 +147,7 @@ do{
 		// get attrib table
 		if ($att_edit) $qw=" att_name != '$att_edit' "; else $qw="1";
 
-		$q="select att_name, att_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
+		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where ".$qw." order by att_name";
 		$att_res=MySQL_Query($q);
 		if (!$att_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -182,7 +183,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	<tr>
 	<td align="right" class="f12b">attribute type:</td>
 	<td width="5">&nbsp;</td>
-	<td><?$f->show_element("att_type");?></td>
+	<td><?$f->show_element("att_rich_type");?></td>
 	</tr>
 	<tr>
 	<td align="right" class="f12b">default value:</td>
@@ -191,7 +192,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	</tr>
 	<tr>
 	<td align="left">&nbsp;<?
-		if($att_edit and $att_type=="list"){?>
+		if($att_edit and $att_rich_type=="list"){?>
 			<a href="<?$sess->purl("edit_list_items.php?attrib_name=".RawURLEncode($att_edit)."&kvrk=".uniqID(""))?>"><img src="<?echo $config->img_src_path;?>butons/b_edit_items_of_the_list.gif" width="165" height="16" border="0"></a><?
 		}?></td>
 	<td>&nbsp;</td>
@@ -225,9 +226,9 @@ if ($okey_x){							//data isn't valid or error in sql
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="205">&nbsp;<?echo $row->att_name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->att_types[$row->att_type];?></td>
+	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->att_types[$row->att_rich_type]->label;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->format_value_for_output($row->default_value, $row->att_type, $row->att_type_spec);?></td>
+	<td align="left" class="f12" width="205">&nbsp;<?echo $usr_pref->format_value_for_output($row->default_value, $row->att_rich_type, $row->att_type_spec);?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="50"><a href="<?$sess->purl("user_preferences.php?kvrk=".uniqID("")."&att_edit=".RawURLEncode($row->att_name));?>">edit</a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

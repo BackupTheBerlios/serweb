@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.1 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
  */
 
 require "prepend.php";
@@ -14,11 +14,14 @@ page_open (array("sess" => "phplib_Session",
 				 "perm" => "phplib_Perm"));
 $perm->check("admin");
 
-function update_items_in_db($item_list, $attrib_name){
+function update_items_in_db($item_list, $attrib_name, $default_value){
 	global $config;
 
 	$q="update ".$config->table_user_preferences_types.
 		" set att_type_spec='".serialize($item_list)."' ".
+			(is_null($default_value)?
+				"":
+				", default_value='".$default_value."'").
 		" where att_name='$attrib_name'";
 	
 	$res=MySQL_Query($q);
@@ -30,13 +33,13 @@ do{
 	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 	//get attrib from DB
-	$q="select att_name, att_type, att_type_spec from ".$config->table_user_preferences_types.
+	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 			" where att_name='$attrib_name'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	if ($row->att_type!="list"){ 
+	if ($row->att_rich_type!="list"){ 
 		//attrib isn't list of items -> nothing to edit -> go back to attributes editing page
         
 		Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
@@ -45,6 +48,7 @@ do{
 	}
 	
 	$item_list=unserialize($row->att_type_spec);
+	$default_value=$row->default_value;
 
 	//if user want delete item
 	if ($item_dele){
@@ -56,7 +60,7 @@ do{
 			}
 		}
 		//update array in DB
-		update_items_in_db($item_list, $attrib_name);
+		update_items_in_db($item_list, $attrib_name, null);
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();
@@ -94,6 +98,11 @@ do{
 								 "length_e"=>"you must fill item value",
 								 "extrahtml"=>"style='width:120px;'"));
 
+	$f->add_element(array("type"=>"checkbox",
+    	                         "name"=>"set_default",
+	                             "value"=>"1",
+								 "checked"=>(isset($it_val) and $it_val==$default_value)?1:0));
+
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"item_edit",
 	                             "value"=>$item_edit?$item_edit:""));
@@ -104,8 +113,8 @@ do{
 
 	$f->add_element(array("type"=>"submit",
     	                         "name"=>"okey",
-        	                     "src"=>$config->img_src_path."butons/b_save.gif",
-								 "extrahtml"=>"alt='save'"));
+        	                     "src"=>$config->img_src_path."butons/b_".($item_edit?"save":"add").".gif",
+								 "extrahtml"=>"alt='".($item_edit?"save":"add")."'"));
 
 	if (isset($okey_x)){								// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
@@ -130,7 +139,7 @@ do{
 			$item_list[]=new UP_List_Items($item_label, $item_value);
 
 		//update array in DB
-		update_items_in_db($item_list, $attrib_name);
+		update_items_in_db($item_list, $attrib_name, $set_default?$item_value:null);
 
         Header("Location: ".$sess->url("edit_list_items.php?attrib_name=".RawURLEncode($attrib_name)."&kvrk=".uniqID("")));
 		page_close();
@@ -170,6 +179,11 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td align="right" class="f12b">item value:</td>
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("item_value");?></td>
+	</tr>
+	<tr>
+	<td align="right" class="f12b">set as default:</td>
+	<td width="5">&nbsp;</td>
+	<td><?$f->show_element("set_default");?></td>
 	</tr>
 	<tr>
 	<td>&nbsp;</td>

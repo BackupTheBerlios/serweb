@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.1 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: user_preferences.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
  */
 
 class UP_List_Items{
@@ -10,6 +10,23 @@ class UP_List_Items{
 		$this->value=$value;
 	}
 } 
+
+/*
+	class UP_att_types contains labels and raw_types to rich_type
+	
+	raw_types is int values:
+	   1 - integer value
+	   2 - string value
+*/
+
+class UP_att_types{
+	var $label, $raw_type;
+	
+	function UP_att_types($label, $raw_type){
+		$this->label=$label;
+		$this->raw_type=$raw_type;
+	}
+}
  
 class User_Preferences {
 	var $att_types;
@@ -17,11 +34,11 @@ class User_Preferences {
 
 	function User_Preferences(){
 
-		$this->att_types['boolean'] = 	"Boolean";
-		$this->att_types['int'] = 		"Integer";
-		$this->att_types['string'] = 	"String";
-		$this->att_types['sip_adr'] = 	"SIP address";
-		$this->att_types['list'] =	 	"List of values";
+		$this->att_types['boolean'] = 	new UP_att_types("Boolean", 1);
+		$this->att_types['int'] = 		new UP_att_types("Integer", 1);
+		$this->att_types['string'] = 	new UP_att_types("String", 2);
+		$this->att_types['sip_adr'] = 	new UP_att_types("SIP address", 2);
+		$this->att_types['list'] =	 	new UP_att_types("List of values", 2);
 		
 		$this->reg = new Creg;				// create regular expressions class
 	

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.1 2004/02/24 08:53:08 kozlik Exp $
+ * $Id: user_preferences.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
  */
 
 require "prepend.php";
@@ -19,13 +19,13 @@ $usr_pref = new User_Preferences();
 class Cattrib{
 	var $att_name;
 	var $att_value;
-	var $att_type;
+	var $att_rich_type;
 	var $att_type_spec;
 
-	function Cattrib($att_name, $att_value, $att_type, $att_type_spec){
+	function Cattrib($att_name, $att_value, $att_rich_type, $att_type_spec){
 		$this->att_name=$att_name;
 		$this->att_value=$att_value;
-		$this->att_type=$att_type;
+		$this->att_rich_type=$att_rich_type;
 		$this->att_type_spec=$att_type_spec;
 	}
 }
@@ -38,13 +38,13 @@ do{
 	$attributes=array();
 	
 	//get list of attributes
-	$q="select att_name, att_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
+	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 		" order by att_name";
 	$att_res=MySQL_Query($q);
 	if (!$att_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 	while ($row=MySQL_Fetch_Object($att_res)){
-		$attributes[$row->att_name]=new Cattrib($row->att_name, $row->default_value, $row->att_type, $row->att_type_spec);
+		$attributes[$row->att_name]=new Cattrib($row->att_name, $row->default_value, $row->att_rich_type, $row->att_type_spec);
 	}
 
 	// get attributes values
@@ -60,7 +60,7 @@ do{
 	// add elements to form object
 		
 	foreach($attributes as $att){
-		$usr_pref->form_element($f, $att->att_name, $att->att_value, $att->att_type, $att->att_type_spec);
+		$usr_pref->form_element($f, $att->att_name, $att->att_value, $att->att_rich_type, $att->att_type_spec);
 	}
 
 	$f->add_element(array("type"=>"submit",
@@ -78,7 +78,7 @@ do{
 			
 		//check values of attributes and format its
 		foreach($attributes as $att){
-			if (!$usr_pref->format_inputed_value($HTTP_POST_VARS[$att->att_name], $att->att_type, $att->att_type_spec)){
+			if (!$usr_pref->format_inputed_value($HTTP_POST_VARS[$att->att_name], $att->att_rich_type, $att->att_type_spec)){
 				$errors[]="invalid value of attribute ".$att->att_name; break;
 			}
 		
@@ -142,7 +142,7 @@ if ($okey_x){							//data isn't valid or error in sql
   $f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<?foreach($attributes as $att){
-		if ($att->att_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");"; 
+		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");"; 
 	?>
 		<tr>
 		<td align="right" class="f12b"><?echo $att->att_name;?></td>
