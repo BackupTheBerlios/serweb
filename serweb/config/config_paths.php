@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.1 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: config_paths.php,v 1.2 2004/11/25 10:02:31 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
@@ -12,7 +12,10 @@
 		$config->root_path="/serweb/";
 
 		/* roo uri of your server */
-		$config->root_uri="http://".$_SERVER['SERVER_NAME'];
+		if (isset($_SERVER['SERVER_NAME']))
+			$config->root_uri="http://".$_SERVER['SERVER_NAME'];
+		else
+			$config->root_uri="";
 
 		/* where is your zone file on your server ? */
 		$config->zonetab_file =   "/usr/share/zoneinfo/zone.tab";
@@ -58,5 +61,17 @@
 		$config->html_prolog="prolog.html";
 		$config->html_separator="separator.html";
 		$config->html_epilog="epilog.html";
+
+
+
+/*
+ * load developer config if exists
+ */
+ 
+$config_paths_developer = dirname(__FILE__) . "/config_paths.developer.php";
+if (file_exists($config_paths_developer)){
+	require_once ($config_paths_developer);
+}
+unset($config_paths_developer);
  
 ?>
