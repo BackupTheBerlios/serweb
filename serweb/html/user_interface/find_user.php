@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.1 2002/09/20 20:02:33 kozlik Exp $
+ * $Id: find_user.php,v 1.2 2003/01/20 19:38:01 kozlik Exp $
  */
 
 require "prepend.php";
@@ -39,6 +39,9 @@ do{
 								 "maxlength"=>50,
 	                             "value"=>"",
 								 "extrahtml"=>"style='width:120px;'"));
+	$f->add_element(array("type"=>"checkbox",
+	                             "value"=>1,
+	                             "name"=>"onlineonly"));
 	$f->add_element(array("type"=>"submit",
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_find.gif",
@@ -52,8 +55,12 @@ do{
 		}
 
 			/* Process data */           // Data ok; 
-
-		$q="select first_name, last_name, user_id from ".$config->table_subscriber." where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".max_rows;
+		if ($onlineonly)
+			$q=	"select distinct s.first_name, s.last_name, s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.user_id=l.user and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.user_id like '%$uname%' limit 0,".max_rows;
+		else
+			$q=	"select first_name, last_name, user_id from ".$config->table_subscriber.
+				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and user_id like '%$uname%' limit 0,".max_rows;
 		
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -100,6 +107,11 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	<td align="right" class="f12b">user name:</td>
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("uname");?></td>
+	</tr>
+	<tr>
+	<td align="right" class="f12b">show on-line users only:</td>
+	<td width="5">&nbsp;</td>
+	<td><?$f->show_element("onlineonly");?></td>
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
