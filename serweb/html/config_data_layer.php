@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.2 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.3 2004/09/16 17:05:17 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
@@ -94,6 +94,7 @@
 		$config->data_sql->table_speed_dial="speed_dial";
 		$config->data_sql->table_calls_forwarding="calls_forwarding";
 		$config->data_sql->table_domain="domain";
+		$config->data_sql->table_whitelist="whitelist";
 		
 
 		$config->data_layer_always_required_functions=array('check_passw_of_user',
