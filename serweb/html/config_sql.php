@@ -1,16 +1,18 @@
 <?
 /*
- * $Id: config_sql.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: config_sql.php,v 1.2 2004/04/04 19:50:54 kozlik Exp $
  */
 
 		////////////////////////////////////////////////////////////////
 		//            configure database
 
 		/* these are the defaults with which SER installs; if you changed
-		   the SER account for MySQl, you need to update here 
+		   the SER account for SQL database, you need to update here 
 		*/
 
+		$config->db_type="mysql";			//type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
 		$config->db_host="localhost";		//database host
+		$config->db_port="";				//database port - leave empty for default
 		$config->db_name="ser";				//database name
 		$config->db_user="ser";				//database conection user
 		$config->db_pass="heslo";			//database conection password

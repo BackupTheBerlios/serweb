@@ -1,32 +1,27 @@
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<title><?echo $config->title;?></title>
-<?print_html_head();?>
-</head>
 <?
-	global $username, $config;
+	global $username, $config, $page_attributes;
+
+	print_html_head();
+	unset ($page_attributes['tab_collection']);
+
 	$errors=array();
-	
-	print_html_body_begin(false, true);
-	echo "<br>";
 	if (isset($username)) $errors[]="Either your username or your password are invalid. Please try again!";
 
-	print_errors($errors);                    // Display error
-//	print_message($message);
+	print_html_body_begin($page_attributes);
 ?>
 
 <p align="center"><b><span style="font-size: 15px; color: Red;">Your session expired, please relogin.</span></b>
 
+<div class="swForm swLoginForm">
 <form action="<?php print $this->url() ?>" method=post>
 <table border="0" cellspacing="0" cellpadding="4" align="center" bgcolor="#75C5F0">
 <tr valign=top align=left>
-<td>Username:</td>
-<td><input type="text" name="username" value="<?php if (isset($this->auth["uname"])) print htmlentities($this->auth["uname"]) ?>" size=32 maxlength=32></td>
+<td><label for="username">Username:</label></td>
+<td><input type="text" name="username" id="username" value="<?php if (isset($this->auth["uname"])) print htmlentities($this->auth["uname"]) ?>" size=32 maxlength=32></td>
 </tr>
 <tr valign=top align=left>
-<td>Password:</td>
-<td><input type="password" name="password" size=32 maxlength=32></td>
+<td><label for="password">Password:</label></td>
+<td><input type="password" name="password" id="password" size=32 maxlength=32></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
@@ -34,6 +29,8 @@
 </tr>
 </table>
 </form>
+</div>
+
 <br>
 <?print_html_body_end();?>
 <script language="JavaScript">
