@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.4 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: missed_calls.php,v 1.5 2002/09/24 14:53:53 kozlik Exp $
  */
 
 require "prepend.php";
@@ -69,7 +69,7 @@ do{
 		else $time=Substr($row->time,0,16);
 	?>
 	<tr valign="top">
-	<td align="left" class="f12" width="135">&nbsp;<a href="javascript: alert('click to dial not implemented');"><?echo $row->sip_from;?></a></td>
+	<td align="left" class="f12" width="135">&nbsp;<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_from));?>"><?echo $row->sip_from;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>

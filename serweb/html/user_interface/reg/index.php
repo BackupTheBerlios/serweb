@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.2 2002/09/10 15:59:35 kozlik Exp $
+ * $Id: index.php,v 1.3 2002/09/24 14:53:53 kozlik Exp $
  */
 
 require "prepend.php";
@@ -13,6 +13,16 @@ page_open (array("sess" => "phplib_Session"));
 do{
 	$f = new form;                   // create a form object
 	
+	$opt=get_time_zones($errors);
+	$options[]=array("label"=>"--- please select your timezone ---","value"=>"");
+	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
+
+	$f->add_element(array("type"=>"select",
+								 "name"=>"timezone",
+								 "options"=>$options,
+								 "size"=>1,
+	                             "valid_e"=>"select your timezone please",
+								 "extrahtml"=>"style='width:250px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"uname",
 								 "size"=>23,
@@ -123,10 +133,10 @@ do{
 		$confirm=md5(uniqid(rand()));
 		
 		$q="insert into ".$config->table_pending." (user_id, password, first_name, last_name, phone, email_address, ".
-				"datetime_created, datetime_modified, confirmation, ha1, ha1b, realm, phplib_id) ".
+				"datetime_created, datetime_modified, confirmation, ha1, ha1b, realm, phplib_id, timezone) ".
 			"values ('$uname', '$passwd', '$fname', '$lname', '$phone', '$email', now(), now(), '$confirm', ".
-				"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."')";
-			
+				"'$ha1', '$ha1b','".$config->realm."', '".md5(uniqid('fvkiore'))."', '$timezone')";
+
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			
@@ -201,6 +211,11 @@ if you have any questions concerning registration and our free trial SIP service
 	<td width="160" align="right" class="f12b">phone:</td>
 	<td width="5">&nbsp;</td>
 	<td width="250"><?$f->show_element("phone");?></td>
+	</tr>
+	<tr>
+	<td width="160" align="right" class="f12b">your timezone:</td>
+	<td width="5">&nbsp;</td>
+	<td width="250"><?$f->show_element("timezone");?></td>
 	</tr>
 	<tr>
 	<td width="160" colspan="2">&nbsp;</td>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.8 2002/09/20 20:02:33 kozlik Exp $
+ * $Id: functions.php,v 1.9 2002/09/24 14:53:53 kozlik Exp $
  */
 
 
@@ -144,12 +144,15 @@ function get_status($sip_uri, &$errors){
 	$row=mysql_fetch_row($res);
 	if (!$row[0]) return "<div class=\"statusunknown\">non-existent</div>";
 
-	$q="select count(*) from ".$config->table_location." where user='$user'";
-	$res=mySQL_query($q);
-	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
-	$row=mysql_fetch_row($res);
-	
-	if ($row[0]) return "<div class=\"statusonline\">on line</div>";
+
+	$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
+	$config->ul_table."\n".		//table
+	$user."\n\n";	//username
+
+	$out=write2fifo($fifo_cmd, $errors, $status);
+	if ($errors) return;		
+
+	if (substr($status,0,3)=="200") return "<div class=\"statusonline\">on line</div>";
 	else return "<div class=\"statusoffline\">off line</div>";
 }
 
@@ -219,4 +222,37 @@ function get_user_name(&$errors){
 	return $name.=$row->last_name;
 
 }
+
+function get_time_zones(&$errors){
+	global $config;
+
+	@$fp=fopen($config->zonetab_file, "r");
+	if (!$fp) {$errors[]="Can´t open zone.tab file"; return false;}
+	
+	while (!feof($fp)){
+		$line=FgetS($fp, 512);
+		if (substr($line,0,1)=="#") continue; //skip comments
+		
+		$line_a=explode("\t", $line);
+		
+		$line_a[2]=trim($line_a[2]);
+		if ($line_a[2]) $out[]=$line_a[2];
+	}
+
+	fclose($fp);
+	sort($out);
+	return $out;
+}
+
+function set_timezone(&$errors){
+	global $config, $auth;
+
+	$q="select timezone from ".$config->table_subscriber." where user_id='".$auth->auth["uname"]."'";
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
+	$row=mysql_fetch_object($res);
+
+	putenv("TZ=".$row->timezone); //set timezone	
+}
+
 ?>

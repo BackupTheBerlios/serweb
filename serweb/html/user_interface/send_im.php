@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: send_im.php,v 1.7 2002/09/21 10:03:37 jiri Exp $
+ * $Id: send_im.php,v 1.8 2002/09/24 14:53:53 kozlik Exp $
  */
 
 require "prepend.php";
@@ -20,6 +20,7 @@ do{
 	
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"sip_address",
+	                             "value"=>$sip_addr,
 								 "size"=>16,
 								 "maxlength"=>128,
 	                             "valid_regex"=>"^".$reg->sip_address."$",

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.9 2002/09/21 10:03:37 jiri Exp $
+ * $Id: my_account.php,v 1.10 2002/09/24 14:53:53 kozlik Exp $
  */
 
 require "prepend.php";
@@ -38,7 +38,7 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select email_address, allow_find from ".$config->table_subscriber." where user_id='".$user_id."'";
+	$q="select email_address, allow_find, timezone from ".$config->table_subscriber." where user_id='".$user_id."'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
@@ -48,6 +48,11 @@ do{
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$f2vm=MySQL_Num_Rows($res); //forward to voicemail ????
 	
+	set_timezone($errors);
+	
+	$opt=get_time_zones($errors);
+	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
+	
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"email",
 								 "size"=>16,
@@ -55,7 +60,7 @@ do{
 	                             "valid_regex"=>$reg_validate_email,
 	                             "valid_e"=>"not valid email address",
 	                             "value"=>$row->email_address,
-								 "extrahtml"=>"style='width:120px;'"));
+								 "extrahtml"=>"style='width:200px;'"));
 	$f->add_element(array("type"=>"checkbox",
 								 "checked"=>$f2vm,
 	                             "value"=>1,
@@ -70,14 +75,20 @@ do{
 								 "size"=>16,
 								 "maxlength"=>25,
 								 "pass"=>1,
-								 "extrahtml"=>"style='width:120px;'"));
+								 "extrahtml"=>"style='width:200px;'"));
 	$f->add_element(array("type"=>"text",
 	                             "name"=>"passwd_r",
 	                             "value"=>"",
 								 "size"=>16,
 								 "maxlength"=>25,
 								 "pass"=>1,
-								 "extrahtml"=>"style='width:120px;'"));
+								 "extrahtml"=>"style='width:200px;'"));
+	$f->add_element(array("type"=>"select",
+								 "name"=>"timezone",
+								 "options"=>$options,
+								 "size"=>1,
+	                             "value"=>$row->timezone,
+								 "extrahtml"=>"style='width:200px;'"));
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"uid",
 	                             "value"=>$uid));
@@ -183,7 +194,7 @@ do{
 			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
 		}
 		
- 		$q="update ".$config->table_subscriber." set email_address='$email', allow_find='".($allow_find?1:0)."', datetime_modified=now()".$qpass.
+ 		$q="update ".$config->table_subscriber." set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
 			" where user_id='".$user_id."'";
 
 		$res=MySQL_Query($q);
@@ -221,8 +232,8 @@ do{
 
 		// get UsrLoc
 		$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
-			$config->ul_table."\n".		//table
-			$user_id."\n\n";	//username
+		$config->ul_table."\n".		//table
+		$user_id."\n\n";	//username
 
 		$out=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors or !$out) break;		
@@ -299,6 +310,11 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td align="right" class="f12b">allow find me by other users:</td>
 	<td width="5">&nbsp;</td>
 	<td><?$f->show_element("allow_find");?></td>
+	</tr>
+	<tr>
+	<td align="right" class="f12b">your timezone:</td>
+	<td width="5">&nbsp;</td>
+	<td><?$f->show_element("timezone");?></td>
 	</tr>
 	<tr>
 	<td align="right" class="f12b">your password:</td>

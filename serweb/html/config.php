@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.7 2002/09/20 20:02:33 kozlik Exp $
+ * $Id: config.php,v 1.8 2002/09/24 14:53:53 kozlik Exp $
  */
 
 class Csub_not {
@@ -63,6 +63,7 @@ class Cconfig {
 	var $img_src_path;
 	var $js_src_path;
 	var $style_src_path;
+	var $zonetab_file;
 
 	var $charset;
 
@@ -150,6 +151,7 @@ class Cconfig {
 		$this->img_src_path =	$this->root_path."img/";
 		$this->js_src_path =    $this->root_path."styles/";
 		$this->style_src_path = $this->root_path."styles/";
+		$this->zonetab_file =	"d:/data/http/iptel/_data/zone.tab";
 
 		$this->charset="windows-1250";
 

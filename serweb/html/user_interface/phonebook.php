@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: phonebook.php,v 1.5 2002/09/20 20:02:33 kozlik Exp $
+ * $Id: phonebook.php,v 1.6 2002/09/24 14:53:53 kozlik Exp $
  */
 
 require "prepend.php";
@@ -204,7 +204,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	<tr valign="top" <?echo $odd?'bgcolor="#FFFFFF"':'bgcolor="#EAF0F4"';?>>
 	<td align="left" class="f12" width="160">&nbsp;<?echo $name;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
-	<td align="left" class="f12" width="205">&nbsp;<a href="javascript: alert('click to dial not implemented');"><?echo $row->sip_uri;?></a></td>
+	<td align="left" class="f12" width="205">&nbsp;<a href="<?$sess->purl("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->sip_uri));?>"><?echo $row->sip_uri;?></a></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="85"><?echo $row->status;?></td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
