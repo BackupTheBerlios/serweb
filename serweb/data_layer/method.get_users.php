@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.2 2004/12/06 19:29:59 kozlik Exp $
+ * $Id: method.get_users.php,v 1.3 2004/12/13 14:02:29 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -18,9 +18,14 @@ class CData_Layer_get_users {
 		}
 
 		/* get num rows */		
-		if ($fusers->onlineonly)
-			$q="select distinct s.username from ".$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and ".$query_c;
+		if ($fusers->onlineonly){
+			if ($config->users_indexed_by=='uuid')
+				$q="select distinct s.username from ".$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
+					" where s.uuid=l.uuid and ".$query_c;
+			else
+				$q="select distinct s.username from ".$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
+					" where s.username=l.username and s.domain=l.domain and ".$query_c;
+		}
 		else
 			$q="select s.username from ".$config->data_sql->table_subscriber." s ".
 				" where ".$query_c;
@@ -38,11 +43,18 @@ class CData_Layer_get_users {
 		else $attribute='s.phplib_id';
 		
 		/* get users */
-		if ($fusers->onlineonly)
-			$q="select distinct s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".
-				$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and ".$query_c.
-				" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
+		if ($fusers->onlineonly){
+			if ($config->users_indexed_by=='uuid')
+				$q="select distinct s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".
+					$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
+					" where s.uuid=l.uuid and ".$query_c.
+					" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			else
+				$q="select distinct s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".
+					$config->data_sql->table_subscriber." s, ".$config->data_sql->table_location." l ".
+					" where s.username=l.username and s.domain=l.domain and ".$query_c.
+					" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
+		}
 		else
 			$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid from ".$config->data_sql->table_subscriber." s ".
 				" where ".$query_c.

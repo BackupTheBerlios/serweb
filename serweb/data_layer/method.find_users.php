@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.find_users.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.find_users.php,v 1.2 2004/12/13 14:02:29 kozlik Exp $
  */
 
 class CData_Layer_find_users {
@@ -60,10 +60,13 @@ class CData_Layer_find_users {
 		
 		
 		/* get num rows */		
-		if ($filter['onlineonly'])
+		if ($filter['onlineonly']){
 			$q=	"select count(distinct s.username, s.domain) ". 
-				"from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and ".$q_where;
+				"from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ";
+
+			if ($config->users_indexed_by=='uuid')	$q .= " where s.uuid=l.uuid and ".$q_where;
+			else $q .= " where s.username=l.username and s.domain=l.domain and ".$q_where;
+		}
 		else
 			$q=	"select count(distinct s.username, s.domain) from ".$config->data_sql->table_subscriber." s ".$q_from.
 				" where ".$q_where;
@@ -78,11 +81,15 @@ class CData_Layer_find_users {
 		$this->correct_act_row();
 
 
-		if ($filter['onlineonly'])
+		if ($filter['onlineonly']){
 			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username, s.domain ".
-				"from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ".
-				" where s.username=l.username and s.domain=l.domain and ".$q_where.
-				" limit ".$this->get_act_row().", ".$this->get_showed_rows();
+				"from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ";
+
+			if ($config->users_indexed_by=='uuid')	$q .= " where s.uuid=l.uuid and ".$q_where;
+			else $q .= " where s.username=l.username and s.domain=l.domain and ".$q_where;
+
+			$q .= " limit ".$this->get_act_row().", ".$this->get_showed_rows();
+		}
 		else
 			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username, s.domain from ".$config->data_sql->table_subscriber." s ".$q_from.
 				" where ".$q_where.
