@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.12 2003/05/22 11:38:08 kozlik Exp $
+ * $Id: missed_calls.php,v 1.13 2003/06/04 09:49:09 kozlik Exp $
  */
 
 require "prepend.php";
@@ -25,6 +25,32 @@ class Cmisc{
 do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can't connect to sql server"; break;}
+	
+	if ($delete_calls==1){
+	
+		$q="select username from ".$config->table_aliases.
+			" where 'sip:".$auth->auth["uname"]."@".$config->default_domain."'=contact";
+
+		$res=mySQL_query($q);
+		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+
+		$usernames_arr= Array();
+		
+		while ($row=MySQL_Fetch_Object($res)){
+			$usernames_ar[]=$row->username;
+		}
+		$usernames_ar[]=$auth->auth["uname"];
+		
+		$usernames_ar=array_unique($usernames_ar);
+		
+		foreach($usernames_ar as $row){
+			$q="delete from ".$config->table_missed_calls." where username='".$row."' and time<'".gmdate("Y-m-d H:i:s", $page_loaded_timestamp)."'";
+			$res=mySQL_query($q);
+			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; }
+		}
+	
+	}
+	
 	
 	$q="select distinct t1.from_uri, t1.sip_from, t1.time, t1.sip_status from ".
 		$config->table_missed_calls." t1, ".$config->table_aliases." t2".
@@ -101,6 +127,8 @@ do{
 	</table>
 </td></tr>
 </table>
+<br>
+<div align="center"><a href="<?$sess->purl("missed_calls.php?kvrk=".uniqID("")."&delete_calls=1&page_loaded_timestamp=".time());?>"><img src="<?echo $config->img_src_path;?>butons/b_delete_calls.gif" width="165" height="16" border="0"></a></div>
 
 <?}else{?>
 <div align="center">No missed calls</div>
