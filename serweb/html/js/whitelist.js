@@ -1,5 +1,5 @@
 /*
- * $Id: whitelist.js,v 1.1 2004/09/17 17:34:11 kozlik Exp $
+ * $Id: whitelist.js,v 1.2 2004/09/23 14:02:33 kozlik Exp $
  */
  
 function select_all_options(sel_element){
@@ -28,13 +28,21 @@ function update_option(sel_el, new_val, old_val){
 	return true;
 }
 
-function wlist_add(sel_el, txt_el, hidden_el){
+function wlist_add(sel_el, txt_el, hidden_el, regex_str, err_msg){
 	/* not value entered */
 	if (txt_el.value==''){
 		hidden_el.value='';	/* be sure that tehere is nothing */
 		return;
 	}
 
+	/* validate given value */
+	var re =  new RegExp(regex_str, "g");
+	if (!re.test(txt_el.value)) {
+		alert(err_msg);
+		txt_el.focus();
+		return;
+	}
+	
 	/* if we editing item */
 	if (hidden_el.value != ''){
 		/* try update */
@@ -54,11 +62,13 @@ function wlist_add(sel_el, txt_el, hidden_el){
 }
 
 function wlist_edit(sel_el, txt_el, hidden_el){
+	if (sel_el.selectedIndex < 0) return; /* nothing selected */
 	hidden_el.value = sel_el.options[sel_el.selectedIndex].value;
 	txt_el.value = sel_el.options[sel_el.selectedIndex].text;
 }
 
 function wlist_drop(sel_el, txt_el, hidden_el){
+	if (sel_el.selectedIndex < 0) return; /* nothing selected */
 	sel_el.remove(sel_el.selectedIndex);
 }
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.1 2004/09/17 17:34:11 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.2 2004/09/23 14:02:33 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -235,7 +235,7 @@ class apu_whitelist extends apu_base_class{
 				if ($this->opt['username_in_target_only']){
 					if ($this->opt['numerical_target_only']){
 						if (!ereg("^(".$this->reg->phonenumber.")?$", $val)){
-							$erors[]=$lang_str['fe_not_valid_phonenumber'];
+							$errors[]=$lang_str['fe_not_valid_phonenumber'].": ".$val;
 							return false;
 						}
 						/* if user enter phonenumbers, convert it to strict phonenumber */
@@ -244,7 +244,7 @@ class apu_whitelist extends apu_base_class{
 				}
 				else{
 					if (!ereg("^(".$this->reg->sip_address.")?$", $val)){
-						$errors[]=$lang_str['fe_not_valid_sip'];
+						$errors[]=$lang_str['fe_not_valid_sip'].": ".$val;
 						return false;
 					}
 				}
@@ -256,11 +256,11 @@ class apu_whitelist extends apu_base_class{
 	function load_default_select_entries(){
 		$opt=array();
 		foreach((array)$_POST['whitelist'] as $val){
-			$opt[] = array('label' => $val[$uri_field],
-		                   'value' => $val[$uri_field]);
+			$opt[] = array('label' => $val,
+		                   'value' => $val);
 		}
 	
-		$this->f->elements['whitelist']['ob']->options = &$opt[];
+		$this->f->elements['whitelist']['ob']->options = &$opt;
 	}
 	
 	/* validate html form */
@@ -290,14 +290,32 @@ class apu_whitelist extends apu_base_class{
 
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $lang_str;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 
 		$form_fields = "document.".$this->opt['form_name'].".whitelist, ".
 		               "document.".$this->opt['form_name'].".editfield, ".
 		               "document.".$this->opt['form_name'].".hidden_edit_field";
+
+
+		/* prepare validating regex and error msg depending on options */					   
+		$v_regex = ".*";
+		$v_msg = '';
+
+		if ($this->opt['username_in_target_only']){
+			if ($this->opt['numerical_target_only']){
+				$v_regex = "^(".$this->reg->phonenumber.")?$";
+				$v_msg = $lang_str['fe_not_valid_phonenumber'];
+			}
+		}
+		else{
+			$v_regex = "^(".$this->reg->sip_address.")?$";
+			$v_msg = $lang_str['fe_not_valid_sip'];
+		}
+
+
 					   
-		$smarty->assign($this->opt['smarty_js_add'],  "javascript: wlist_add(".$form_fields.");");
+		$smarty->assign($this->opt['smarty_js_add'],  "javascript: wlist_add(".$form_fields.", '".$v_regex."', '".$v_msg."');");
 		$smarty->assign($this->opt['smarty_js_edit'], "javascript: wlist_edit(".$form_fields.");");
 		$smarty->assign($this->opt['smarty_js_drop'], "javascript: wlist_drop(".$form_fields.");");
 
