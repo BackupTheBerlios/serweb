@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.3 2004/09/21 13:33:06 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.4 2004/11/18 15:47:12 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -26,6 +26,12 @@
 
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+
+	'blacklist'					default: null
+	 if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
+
+	'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
+	 error message that is displayed if URI is blacklisted
    								
    'form_name'					(string) default: ''
      name of html form
@@ -62,6 +68,7 @@ class apu_speed_dial extends apu_base_class{
 	var $smarty_action='default';
 	var $pager = array();
 	var $speed_dials = array();
+	var $js_blacklist = array();
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -85,6 +92,10 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
 
 		$this->opt['domain_for_requests'] = $controler->user_id->domain;
+
+		/* blacklist */
+		$this->opt['blacklist'] = null;
+		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
 		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -111,18 +122,6 @@ class apu_speed_dial extends apu_base_class{
 
 	function action_default(&$errors){
 		global $data, $sess_sd_act_row;
-
-		// configure pager		
-		$data->set_act_row($sess_sd_act_row);
-		$data->set_num_rows(100);
-		$data->set_showed_rows(10);
-		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
-		$this->pager['pos']=$data->get_act_row();
-		$this->pager['items']=$data->get_num_rows();
-		$this->pager['limit']=$data->get_showed_rows();
-		$this->pager['from']=$data->get_res_from();
-		$this->pager['to']=$data->get_res_to();
-		
 		return true;
 	}
 
@@ -202,6 +201,18 @@ class apu_speed_dial extends apu_base_class{
 		
 		if (false === $this->speed_dials = $data->get_speed_dials($this->user_id, $opt, $errors)) return false;
 
+		// configure pager - in this case $data->get_speed_dials doesn't depend on methods set* bellow
+		$data->set_act_row($sess_sd_act_row);
+		$data->set_num_rows(100);
+		$data->set_showed_rows(10);
+		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
+		$this->pager['pos']=$data->get_act_row();
+		$this->pager['items']=$data->get_num_rows();
+		$this->pager['limit']=$data->get_showed_rows();
+		$this->pager['from']=$data->get_res_from();
+		$this->pager['to']=$data->get_res_to();
+
+		
 		/* fill in 'domain_from_req_uri' for entries which aren't in DB */
 		foreach ($this->speed_dials as $key => $val){
 			if ($val['empty']) $this->speed_dials[$key]['domain_from_req_uri'] = $this->opt['domain_for_requests'];
@@ -250,6 +261,25 @@ class apu_speed_dial extends apu_base_class{
 										 "maxlength"=>128,
 			                             "value"=>$val['last_name']));
 
+			if ($this->opt['blacklist']){ //perform regex check against entered URIs
+				$js_tmp = "if (window.RegExp) {\n".
+						  " 	var blacklistreg = /".str_replace('/','\/',$this->opt['blacklist'])."/gi\n\n";
+				/* if we are using phonenumbers, convert it to strict form */
+				if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only'])
+					$js_tmp .= "	".$this->reg->convert_phonenumber_to_strict_js("f.elements['new_uri_".$index."'].value", "blklist_tmp_uri").";\n";
+				else 
+					$js_tmp .= "	blklist_tmp_uri = f.elements['new_uri_".$index."'].value;\n";
+					
+					
+				$js_tmp .= "	if (blacklistreg.test(blklist_tmp_uri)) {\n".
+							"		alert('".addslashes($this->opt['blacklist_e'])."');\n".
+							"		f.elements['new_uri_".$index."'].focus();\n".
+							"		return(false);\n".
+							"	}\n}\n";
+										
+				$this->js_blacklist[] = $js_tmp;
+			}
+										 
 			$i++;
 		}
 
@@ -258,6 +288,29 @@ class apu_speed_dial extends apu_base_class{
 	/* validate html form */
 	function validate_form(&$errors){
 		if (false === parent::validate_form($errors)) return false;
+		
+		if ($this->opt['blacklist']){ //perform regex check against entered URIs
+
+			foreach ($this->speed_dials as $key => $val){
+				$new_uri = $_POST['new_uri_'.$val['index']];
+
+				/* skip empty fields */
+				if (!empty($new_uri)){
+
+					/* if we are using phonenumbers, convert it to strict form */
+					if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only']){
+						$new_uri = $this->reg->convert_phonenumber_to_strict($new_uri);
+					}
+				
+					/* check against blacklist */
+					if (ereg($this->opt['blacklist'], $new_uri)){
+						$errors[] = $this->opt['blacklist_e'];
+						return false;
+					}
+				}
+			}
+		}
+		
 		return true;
 	}
 	
@@ -282,9 +335,10 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* return info need to assign html form to smarty */
 	function pass_form_to_html(){
+
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
-		             'after'       => '',
+		             'after'       => implode($this->js_blacklist, ""),
 					 'before'      => '');
 	}
 	

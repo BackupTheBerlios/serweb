@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.4 2004/11/05 19:44:36 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.5 2004/11/18 15:47:12 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -21,6 +21,11 @@
    'domain_for_targets'			(string) default: domain of loged in user
      see description of option 'username_in_target_only'
 
+   'blacklist'					default: null
+	 if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
+
+   'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
+	 error message that is displayed if URI is blacklisted
    
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
@@ -37,6 +42,7 @@
    'smarty_js_add'				name of smarty variable - see below
    'smarty_js_edit'				name of smarty variable - see below
    'smarty_js_drop'				name of smarty variable - see below
+   'smarty_js_validate_funct'	name of smarty variable - see below
    
    Exported smarty variables:
    --------------------------
@@ -57,6 +63,8 @@
    opt['smarty_js_drop'] 		(js_url_drop)			
      contain url for drop uri from whitelist
 
+   opt['smarty_js_validate_funct'] (js_validate_funct)
+     contain function for validating URLs, don't forget insert it to template !!!
 */
 
 class apu_whitelist extends apu_base_class{
@@ -85,6 +93,9 @@ class apu_whitelist extends apu_base_class{
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
 
+		/* blacklist */
+		$this->opt['blacklist'] = null;
+		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
 		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -100,7 +111,7 @@ class apu_whitelist extends apu_base_class{
 		$this->opt['smarty_js_add'] =		'js_url_add';
 		$this->opt['smarty_js_edit'] =		'js_url_edit';
 		$this->opt['smarty_js_drop'] =		'js_url_drop';
-
+		$this->opt['smarty_js_validate_funct'] = 'js_validate_funct';
 		
 		/* name of html form */
 		$this->opt['form_name'] =			'';
@@ -248,7 +259,17 @@ class apu_whitelist extends apu_base_class{
 						return false;
 					}
 				}
-			}
+				
+				/* check against blacklist */
+				if ($this->opt['blacklist']){
+					/* checking $_POST['whitelist'][$key] instead $val is necesary because value 
+					   may be changed by $this->reg->convert_phonenumber_to_strict above */
+					if (ereg($this->opt['blacklist'], $_POST['whitelist'][$key])){
+						$errors[] = $this->opt['blacklist_e'];
+						return false;
+					}
+				}
+			} //foreach
 		}
 		return true;
 	}
@@ -313,11 +334,33 @@ class apu_whitelist extends apu_base_class{
 			$v_msg = $lang_str['fe_not_valid_sip'];
 		}
 
-
+		$validate_fumct =
+			"function wlist_validate(value){\n".
+			"	var re =  new RegExp('".$v_regex."', 'g');\n".
+			"	if (!re.test(value)) {\n".
+			"		alert('".$v_msg."');\n".
+			"		return false;\n".
+			"	}\n\n";
+			
+		if ($this->opt['blacklist']){
+			/* if we are using phonenumbers, convert it to strict form */
+			if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only']){
+				$validate_fumct .= "	".$this->reg->convert_phonenumber_to_strict_js("value", "value").";\n";
+			}
+			$validate_fumct.=
+				"	var blacklistre =  new RegExp('".addslashes($this->opt['blacklist'])."', 'g');\n".
+				"	if (blacklistre.test(value)) {\n".
+				"		alert('".addslashes($this->opt['blacklist_e'])."');\n".
+				"		return false;\n".
+				"	}\n\n";
+		}
+		$validate_fumct .= "return true;\n}\n";
+		
 					   
-		$smarty->assign($this->opt['smarty_js_add'],  "javascript: wlist_add(".$form_fields.", '".$v_regex."', '".$v_msg."');");
+		$smarty->assign($this->opt['smarty_js_add'],  "javascript: wlist_add(".$form_fields.");");
 		$smarty->assign($this->opt['smarty_js_edit'], "javascript: wlist_edit(".$form_fields.");");
 		$smarty->assign($this->opt['smarty_js_drop'], "javascript: wlist_drop(".$form_fields.");");
+		$smarty->assign($this->opt['smarty_js_validate_funct'], $validate_fumct);
 
 		$this->js_before = "wlist_add(".$form_fields.", '".$v_regex."', '".$v_msg."');\n".
 		                   $this->js_before;
