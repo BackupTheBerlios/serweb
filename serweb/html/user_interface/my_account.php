@@ -243,7 +243,7 @@ if ($okey_x){							//data isn't valid or error in sql
 		print_html_body_begin(false, true, true);
 		echo "user: ".$uid."<br>";
 	}
-	else print_html_body_begin(1, true, true);
+	else print_html_body_begin(1, true, true, get_user_name($errors));
 	echo "<br>";
 	print_errors($errors);                    // Display error
 	print_message($message);

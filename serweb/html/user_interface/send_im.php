@@ -131,7 +131,7 @@ if ($okey_x){							//data isn't valid or error in sql
 </script>
 </head>
 <?
-	print_html_body_begin(5, true, true);
+	print_html_body_begin(5, true, true, get_user_name($errors));
 	echo "<br>";
 	print_errors($errors);                    // Display error
 	print_message($message);

@@ -39,7 +39,7 @@ do{
 <?print_html_head();?>
 </head>
 <?
-	print_html_body_begin(3, true, true);
+	print_html_body_begin(3, true, true, get_user_name($errors));
 	echo "<br>";
 	print_errors($errors);                    // Display error
 	print_message($message);

@@ -195,4 +195,20 @@ function write2fifo($fifo_cmd, &$errors){
 
 	@unlink($config->reply_fifo_path);
 }
+
+function get_user_name(&$errors){
+	global $auth, $config;
+
+	$q="select first_name, last_name from ".$config->table_subscriber." where user_id='".$auth->auth["uname"]."'";
+	@$res=MySQL_Query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return false;}
+	if (!MySQL_Num_rows($res)) return false;
+	
+	$row=MySQL_Fetch_Object($res);
+	
+	$name=$row->first_name;
+	if ($name) $name.=" ";
+	return $name.=$row->last_name;
+
+}
 ?>

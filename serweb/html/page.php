@@ -18,7 +18,7 @@
 
 	$_page_tab=0;
 
-	function print_html_body_begin($tab=false, $target_blank=false, $show_logout=false){
+	function print_html_body_begin($tab=false, $target_blank=false, $show_logout=false, $user_name=""){
 		global $config, $_page_tab, $sess;	?>
 <body bgcolor="#FFFFFF" text="#000000" link="#33CCFF" vlink="#33CCCC" alink="#33FFFF" MARGINHEIGHT="0" MARGINWIDTH="0" leftmargin="0" topmargin="0">
 <table bgcolor=#B1C9DC width="100%" border="0" cellspacing="0" cellpadding="0"> 
@@ -179,6 +179,10 @@
 		<table width="<?echo $config->default_width?>" border="0" cellspacing="0" cellpadding="0">
 		<tr><td><img src="<?echo $config->img_src_path;?>title/white_pixel.gif" width="<?echo $config->default_width?>" height="1"></td></tr>
 		</table>
+
+<?if ($user_name){?>
+		<div class="f12">Personal Page for: <?echo $user_name;?></div><br>
+<?}?>
 		
 <? if ($tab) { print_tabs($tab); $_page_tab=1;?>	
 
