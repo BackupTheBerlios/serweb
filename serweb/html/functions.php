@@ -1,7 +1,11 @@
 <?
-/*
- * $Id: functions.php,v 1.53 2005/03/02 15:48:06 kozlik Exp $
- */
+/**
+ * Miscellaneous functions and variable definitions
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: functions.php,v 1.54 2005/03/03 11:40:06 kozlik Exp $
+ * @package   serweb
+ */ 
 
 
 $reg_validate_email="^[^@]+@[^.]+\.[^,;@ ]+$";
@@ -156,12 +160,22 @@ class Creg{
 		$this->email = $reg_validate_email;
 	}
 
-	/* parse domain name fro sip address*/
+	/**
+	 * parse domain name from sip address
+	 *
+	 * @param string $sip sip address
+	 * @return string domain name
+	 */
 	function get_domainname($sip){
 		return ereg_replace($this->sip_address,"\\5", $sip);
 	}
 
-	/* parse user name fro sip address*/
+	/**
+	 * parse user name from sip address
+	 *
+	 * @param string $sip sip address
+	 * @return string username
+	 */
 	function get_username($sip){
 
 		$uname=ereg_replace($this->sip_address,"\\1", $sip);
@@ -184,63 +198,6 @@ class Creg{
 	}
 }
 
-
-function print_errors($errors, $html=true){
-	if (is_Array($errors)){
-		foreach ($errors as $val){
-			if ($html) echo "<div class=\"errors\">".$val."</div>\n";
-			else echo $val."\n";
-		}
-	}
-}
-
-function print_message($msg){
-	if ($msg) echo "<div class=\"message\">".htmlspecialchars($msg)."</div>\n";
-}
-
-function get_sess_url($url){
-	global $sess;
-
-	if ($sess) return $sess->url($url);
-	else return $url;
-
-}
-
-/*
-	return '&nbsp;' if $str is empty, otherwise return $str
-*/
-
-function nbsp_if_empty($str){
-	if (ereg('^[[:space:]]*$', $str)) return "&nbsp;";
-	else return $str;
-}
-
-/*
-	print links to other results of search
-
-	actual - from each item it is printed
-	num - how many items total
-	rows - how many items on one page
-	url - href in <a> takgs
-*/
-
-function print_search_links($actual, $num, $rows, $url){
-
-	$links=10; //max num of links at one page
-
-	if ($num<=$rows) return;
-
-	$lfrom=$actual-($links*$rows); if ($lfrom<0) $lfrom=0;
-	$lto=$actual+($links*$rows); if ($lto>$num) $lto=$num;
-
-	if ($actual>0) echo '<a href="'.get_sess_url($url.((($actual-$rows)>0)?($actual-$rows):0)).'" class="f12">&lt;&lt;&lt;</a>&nbsp;';
-	for ($i=$lfrom; $i<$lto; $i+=$rows){
-		if ($i<=$actual and $actual<($i+$rows)) echo '<span class="f14b">'.(floor($i/$rows)+1).'</span>&nbsp;';
-		else echo '<a href="'.get_sess_url($url.$i).'" class="f12">'.(floor($i/$rows)+1).'</a>&nbsp;';
-	}
- 	if (($actual+$rows)<$num) echo '<a href="'.get_sess_url($url.($actual+$rows)).'" class="f12">&gt;&gt;&gt;</a>';
-
-}
 
 /* obsoleted - should be removed */
 
@@ -265,25 +222,27 @@ function connect_to_db(&$errors){
 }
 
 
-
-/* must be called before connect_to_db() */
-function connect_to_ppaid_db(){
-	global $config;
-
-	@$db=MySQL_PConnect($config->ppaid->db_host, $config->ppaid->db_user, $config->ppaid->db_pass);
-	if (! $db) return false;
-
-	if (!MySQL_Select_DB($config->ppaid->db_name, $db)) return false;
-	return $db;
-}
-
-
+/**
+ * send email
+ *
+ * same as PHP function mail(), but additionaly is set header "From" by 
+ * config option {@link $config->mail_header_from}
+ *
+ * @param string $to address of recipient
+ * @param string $subj subject of email
+ * @param string $text email body
+ * @param string $headers email headers
+ * @return boolean TRUE if the mail was successfully accepted for delivery, FALSE otherwise
+ *
+ * @todo add error logging/reporting
+ */
+ 
 function send_mail($to, $subj, $text, $headers = ""){
 	global $config;
 
 	$headers .= "From: ".$config->mail_header_from."\n";
 
-	@$a= Mail($to, $subj, $text, $headers);
+	@$a= mail($to, $subj, $text, $headers);
 	return $a;
 }
 
@@ -592,9 +551,12 @@ function multidomain_get_file($filename){
 	else return $config->domains_path."_default/".$filename;
 }
 
-/*
-	get error message from PEAR_Error object and write it to errors array and to error log
-*/
+/**
+ *	get error message from PEAR_Error object and write it to $errors array and to error log
+ *
+ *	@param object $err_object PEAR_Error object
+ *	@param array $errors array of error messages
+ */
 
 function log_errors($err_object, &$errors){
 	global $serwebLog, $config;
@@ -645,9 +607,11 @@ function log_errors($err_object, &$errors){
 	}
 
 }
-/*
-	sets varibale gets by $_POST or by $_GET to global
-*/
+
+/**
+ *	sets varibale getted by $_POST or by $_GET to global
+ */
+ 
 function set_global($var){
 	global $_POST, $_GET, $GLOBALS;
 	
@@ -656,18 +620,28 @@ function set_global($var){
 	else $GLOBALS[$var]=null;
 }
 
-/*
-	return Cserweb_auth like get param like string
-*/
+/**
+ *	convert Cserweb_auth to string which may be used in get params
+ * 
+ *	@param object $user Cserweb_auth object
+ *	@param string $prefix name of get params
+ *	@return string
+ */
+ 
 function userauth_to_get_param($user, $prefix){
 	return $prefix."_id=".RawURLencode($user->uuid)."&".
 	       $prefix."_n=".RawURLencode($user->uname)."&".
 		   $prefix."_d=".RawURLencode($user->domain);
 }
 
-/*
-	add to form hidden values Cserweb_auth 
-*/
+/**
+ *	convert Cserweb_auth to form hidden fields
+ * 
+ *	@param object $user Cserweb_auth object
+ *	@param string $prefix name of form fields
+ *	@param object $form phplib form object
+ */
+
 function userauth_to_form($user, $prefix, &$form){
 	$form->add_element(array("type"=>"hidden",
 	                         "name"=>$prefix."_id",
@@ -682,9 +656,18 @@ function userauth_to_form($user, $prefix, &$form){
 	                         "value"=>$user->domain));
 }
 
-/*
-	return user info like get param like string
-*/
+/**
+ *	convert user info to string which may be used in get params
+ *
+ *	function is similiar to function {@link userauth_to_get_param}
+ * 
+ *	@param string $uuid uuid of user
+ *	@param string $uname username of user
+ *	@param string $domain domain fo user
+ *	@param string $prefix name of get params
+ *	@return string
+ */
+
 function user_to_get_param($uuid, $uname, $domain, $prefix){
 	return $prefix."_id=".RawURLencode($uuid)."&".
 	       $prefix."_n=".RawURLencode($uname)."&".
@@ -692,9 +675,13 @@ function user_to_get_param($uuid, $uname, $domain, $prefix){
 }
 
 
-/*
-	return Cserweb_auth from get or post param
-*/
+/**
+ *	Obtain user identification from GET or POST params
+ *
+ *	@param string $prefix name of GET or POST params
+ *	@return object Cserweb_auth object on success FALSE on error
+ */
+
 function get_userauth_from_get_param($prefix){
 	global $_GET, $_POST;
 	
@@ -711,6 +698,14 @@ function get_userauth_from_get_param($prefix){
 	return false;
 }
 
+/**
+ *	Convert string to CSV format
+ *
+ *	@param string $str string to convert
+ *	@param string $delim delimiter
+ *	@return string 
+ */
+ 
 function toCSV($str, $delim=','){
 	$str = str_replace('"', '""', $str);	//double alll quotes
 	$pos1 = strpos($str, '"');				// if $str contains quote or delim, quote it
