@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: session.inc,v 1.3 2004/09/24 09:44:58 kozlik Exp $
  *
  */
 
@@ -19,7 +19,6 @@ class Session {
   var $mode = "cookie";               ## We propagate session IDs with cookies
   var $fallback_mode;                 ## If this doesn't work, fall back...
   var $lifetime = 0;                  ## 0 = do session cookies, else minutes
-
   var $cookie_domain = "";            ## If set, the domain for which the
                                       ## session cookie is set.
 
@@ -33,6 +32,8 @@ class Session {
   var $allowcache = "no";             ## "passive", "no", "private" or "public"
   var $allowcache_expire = 1440;      ## If you allowcache, data expires in this
                                       ## many minutes.
+  var $block_alien_sid  = true;       ## do not accept IDs in URL for session creation
+
   var $that_class = "";               ## Name of data storage container
 
   ##
@@ -41,6 +42,7 @@ class Session {
 
   var $name;                          ## Session name
   var $id;                            ## Unique Session ID
+  var $newid;                         ## Newly Generated ID Flag
   var $that;
 
   var $pt = array();                  ## This Array contains the registered things
@@ -85,13 +87,13 @@ class Session {
   ## one may provide the new session id as a parameter (not recommended).
 
   function get_id($id = "") {
-    global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $QUERY_STRING;
-    $newid=true;
+    global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_SERVER_VARS;
+    $this->newid=true;
 
     $this->name = $this->cookiename==""?$this->classname:$this->cookiename;
 
     if ( "" == $id ) {
-      $newid=false;
+      $this->newid=false;
       switch ($this->mode) {
         case "get":
           $id = isset($HTTP_GET_VARS[$this->name]) ?
@@ -110,14 +112,22 @@ class Session {
       }
     }
 
+    ### do not accept user provided ids for creation
+    if($id != "" && $this->block_alien_sid) {   # somehow an id was provided by the user
+       if($this->that->ac_get_value($id, $this->name) == "") {
+          # no - the id doesn't exist in the database: Ignore it!
+          $id = "";
+       }
+    }
+
     if ( "" == $id ) {
-      $newid=true;
+      $this->newid=true;
       $id = $this->that->ac_newid(md5(uniqid($this->magic)), $this->name);
     }
 
     switch ($this->mode) {
       case "cookie":
-        if ( $newid && ( 0 == $this->lifetime ) ) {
+        if ( $this->newid && ( 0 == $this->lifetime ) ) {
           SetCookie($this->name, $id, 0, "/", $this->cookie_domain);
         }
         if ( 0 < $this->lifetime ) {
@@ -125,17 +135,27 @@ class Session {
         }
 
         // Remove session ID info from QUERY String - it is in cookie
-        if ( isset($QUERY_STRING) && ("" != $QUERY_STRING) ) {
-          $QUERY_STRING = ereg_replace(
-            "(^|&)".quotemeta(urlencode($this->name))."=".$id."(&|$)",
-            "\\1", $QUERY_STRING);
+        if ( isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]) ) {
+          $HTTP_SERVER_VARS["QUERY_STRING"] = ereg_replace(
+            "(^|&)".quotemeta(urlencode($this->name))."=(.)*(&|$)", ## subst *any* preexistent sess 
+            "\\1", $HTTP_SERVER_VARS["QUERY_STRING"]);
         }
       break;
       case "get":
-        if ( isset($QUERY_STRING) && ("" != $QUERY_STRING) ) {
-          $QUERY_STRING = ereg_replace(
-            "(^|&)".quotemeta(urlencode($this->name))."=".$id."(&|$)",
-            "\\1", $QUERY_STRING);
+        #we don't trust user input; session in url doesn't
+        #mean cookies are disabled
+        if ($this->newid &&( 0 == $this->lifetime ))  {   ## even if not a newid
+          SetCookie($this->name, $id, 0, "/", $this->cookie_domain);
+        }
+        if ( 0 < $this->lifetime ) {
+          SetCookie($this->name, $id, time()+$this->lifetime*60, "/", $this->cookie_domain);
+        }
+
+        if ( isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]) ) {
+          $HTTP_SERVER_VARS["QUERY_STRING"] = ereg_replace(
+#            "(^|&)".quotemeta(urlencode($this->name))."=".$id."(&|$)",
+            "(^|&)".quotemeta(urlencode($this->name))."=(.)*(&|$)", ## subst *any* preexistent sess 
+            "\\1", $HTTP_SERVER_VARS["QUERY_STRING"]);
         }
       break;
       default:
@@ -182,7 +202,8 @@ class Session {
   function url($url) {
     // Remove existing session info from url
     $url = ereg_replace(
-      "([&?])".quotemeta(urlencode($this->name))."=".$this->id."(&|$)",
+#      "([&?])".quotemeta(urlencode($this->name))."=".$this->id."(&|$)",
+      "([&?])".quotemeta(urlencode($this->name))."=(.)*(&|$)", # we clean any(also bogus) sess in url
       "\\1", $url);
 
     // Remove trailing ?/& if needed
@@ -209,10 +230,11 @@ class Session {
   }
 
   function self_url() {
-    global $PHP_SELF, $QUERY_STRING;
+    global $HTTP_SERVER_VARS;
 
-    return $this->url($PHP_SELF.
-           ((isset($QUERY_STRING) && ("" != $QUERY_STRING)) ? "?".$QUERY_STRING : ""));
+    return $this->url($HTTP_SERVER_VARS["PHP_SELF"] . 
+      ((isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]))
+        ? "?" . $HTTP_SERVER_VARS["QUERY_STRING"] : ""));
   }
 
   function pself_url() {
@@ -225,10 +247,10 @@ class Session {
   }
 
   function add_query($qarray) {
-    global $PHP_SELF;
-    global $QUERY_STRING;
+    global $HTTP_SERVER_VARS;
 
-    if ((isset($QUERY_STRING) && ("" != $QUERY_STRING))
+    if ((isset($HTTP_SERVER_VARS["QUERY_STRING"]) 
+      && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]))
       || ($this->mode == "get")) {
       $sep_char = "&";
     } else {
@@ -383,39 +405,34 @@ class Session {
 
   function release_token($sid = "") {
     global $HTTP_COOKIE_VARS, $HTTP_POST_VARS, $HTTP_GET_VARS,
-           $HTTP_HOST, $HTTPS;
-
+           $HTTP_SERVER_VARS;
+    # set the  mode for this run
     if ( isset($this->fallback_mode)
       && ("get" == $this->fallback_mode)
       && ("cookie" == $this->mode)
       && (! isset($HTTP_COOKIE_VARS[$this->name])) ) {
-
-      // Looks like no cookie here - check GET/POST params
-      if ( isset($HTTP_GET_VARS[$this->name])
-        || isset($HTTP_POST_VARS[$this->name]) ) {
-        // Session info passed via GET/POST - go to fallback_mode
-        $this->mode = $this->fallback_mode;
-      } else {
-        // It seems to be the first load of this page -
-        // no cookie and no GET/POST params
-
-        // Generate session ID and setup cookie.
-        $this->get_id($sid);
-
-        // Next line is to generate correct self_url() later
-        $this->mode = $this->fallback_mode;
-
-        if ( isset($HTTPS) && $HTTPS == 'on' ) {
-          ## You will need to fix suexec as well, if you 
-          ## use Apache and CGI PHP
-          $PROTOCOL='https';
-        } else {
-          $PROTOCOL='http';
-        }
-        header("Status: 302 Moved Temporarily");
-        header("Location: ". $PROTOCOL. "://".$HTTP_HOST.$this->self_url());
-        exit;
+      $this->mode = $this->fallback_mode;
       }
+
+    if ($this->mode=="get") ## now it catches also when primary mode is get
+      {
+      $this->get_id($sid);
+      if ($this->newid)
+        {
+        if ( isset($HTTP_SERVER_VARS["HTTPS"]) 
+           && $HTTP_SERVER_VARS["HTTPS"] == 'on' ) {
+           ## You will need to fix suexec as well, if you 
+           ## use Apache and CGI PHP
+             $PROTOCOL = 'https';
+        } else {
+             $PROTOCOL = 'http';
+        }
+        $this->freeze();
+        header("Status: 302 Moved Temporarily");
+        header("Location: " . $PROTOCOL . "://" .
+        $HTTP_SERVER_VARS["HTTP_HOST"] . $this->self_url());
+        exit;
+        }
     }
   }
 
@@ -446,7 +463,7 @@ class Session {
         header("Expires: " . $exp_gmt);
         header("Last-Modified: " . $mod_gmt);
         header("Cache-Control: public");
-        header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
+        header("Cache-Control: max-age=" . $this->allowcache_expire * 60, false);
       break;
 
       case "private":
@@ -454,15 +471,15 @@ class Session {
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . $mod_gmt);
         header("Cache-Control: private");
-        header("Cache-Control: max-age=" . $this->allowcache_expire * 60);
-        header("Cache-Control: pre-check=" . $this->allowcache_expire * 60);
+        header("Cache-Control: max-age=" . $this->allowcache_expire * 60, false);
+        header("Cache-Control: pre-check=" . $this->allowcache_expire * 60, false);
       break;
 
       default:
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
         header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
         header("Cache-Control: no-cache");
-        header("Cache-Control: post-check=0, pre-check=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
       break;
     }
