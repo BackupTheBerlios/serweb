@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: local.inc,v 1.8 2003/09/15 04:28:48 jiri Exp $
+ * $Id: local.inc,v 1.9 2003/10/13 18:41:23 kozlik Exp $
  *
  * All functions in this file are example classes, which can be used
  * by your application to get you going. Once you get the hang of it,
@@ -25,6 +25,21 @@ class DB_phplib extends DB_Sql {
 	$this->Database = $config->db_name;
 	$this->User     = $config->db_user;
 	$this->Password = $config->db_pass;
+  }
+}
+
+class DB_ppaid extends DB_Sql {
+  var $Host;
+  var $Database;
+  var $User;
+  var $Password;
+  
+  function DB_ppaid(){
+  	global $config;
+	$this->Host     = $config->ppaid->db_host;
+	$this->Database = $config->ppaid->db_name;
+	$this->User     = $config->ppaid->db_user;
+	$this->Password = $config->ppaid->db_pass;
   }
 }
 
@@ -219,6 +234,84 @@ class phplib_Pre_Auth extends phplib_Auth {
 	}
 }
 
+#
+# classes for authenticate resellers
+#
+
+class phplib_resell_auth extends phplib_Auth {
+  var $classname      = "phplib_resell_auth";
+
+  var $database_class = "DB_ppaid";
+
+  function phplib_resell_Auth(){
+  	global $config;
+	$this->database_table = $config->ppaid->r_table;
+  }
+
+  function auth_validatelogin() {
+    global $username, $password, $config;
+
+    if(isset($username)) {
+      $this->auth["uname"]=$username;        ## This provides access for "loginform.ihtml"
+    }
+    
+    $uid = false;
+
+    $this->db->query(sprintf("select %s ".
+   	                         "        from %s ".
+       	                     "       where %s = '%s' ".
+           	                 "         and %s = '%s'",
+						  $config->ppaid->r_phplib_id,
+               	          $this->database_table,
+						  $config->ppaid->r_id,
+                   	      addslashes($username),
+						  $config->ppaid->r_pass,
+                       	  addslashes($password)));
+
+    while($this->db->next_record()) {
+      $uid = $this->db->f($config->ppaid->r_phplib_id);
+      $this->auth["perm"] = ($username==$config->ppaid->operator_id)?"operator":"";
+    }
+    return $uid;
+  }
+}
+
+
+class phplib_resell_Pre_Auth extends phplib_resell_auth {
+	var $classname = "phplib_resell_Pre_Auth";
+
+	function auth_preauth()	{
+	    global $sess, $config;
+	    global $pre_uid, $pre_uid_expires;
+
+		$sess->unregister('pre_uid');
+		$sess->unregister('pre_uid_expires');
+
+		if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
+
+	    $this->db->query(sprintf("select %s ".
+	                             "        from %s ".
+	                             "       where %s = '%s' ",
+							  $config->ppaid->r_id,
+	                          $this->database_table,
+							  $config->ppaid->r_phplib_id,
+	                          addslashes($pre_uid)));
+
+	    $uid=0;
+	    while($this->db->next_record())	{
+	      $this->auth["uname"] = $this->db->f($config->ppaid->r_id);
+	      $this->auth["perm"] = ($this->auth["uname"]==$config->ppaid->operator_id)?"operator":"";
+		  $uid=$pre_uid;
+	    }
+
+		return $uid;
+	}
+}
+
+
+
+
+
 
 class phplib_Default_Auth extends phplib_Auth {
   var $classname = "phplib_Default_Auth";
@@ -374,6 +467,26 @@ class phplib_Perm extends Perm {
   
   var $permissions = array(
                             "admin"      => 1
+                          );
+
+  function perm_invalid($does_have, $must_have) {
+    global $perm, $auth, $sess;
+    global $_PHPLIB;
+    
+    include($_PHPLIB["libdir"] . "perminvalid.ihtml");
+  }
+}
+
+
+#
+# Perm subclass used in ppaid module
+#
+
+class phplib_resell_Perm extends Perm {
+  var $classname = "phplib_resell_Perm";
+  
+  var $permissions = array(
+                            "operator"      => 1
                           );
 
   function perm_invalid($does_have, $must_have) {
