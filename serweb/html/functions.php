@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.39 2004/04/23 17:19:36 kozlik Exp $
+ * $Id: functions.php,v 1.40 2004/04/26 21:15:45 jiri Exp $
  */
 
 
@@ -292,13 +292,13 @@ function click_to_dial($target, $uri, &$errors){
    the FIFO request must be terminated with an empty line) */
 	
 	$fifo_cmd=":t_uac_dlg:".$config->reply_fifo_filename."\n".
-		'Reject-Contact: *;automata="YES"'."\n".
 		"INVITE\n".
 		$uri."\n".
 		".\n".
 		"$fixed_dlg\n".
 		"To: <".$uri.">\n".
 		"CSeq: ".$cseq." INVITE\n".
+		'Reject-Contact: *;automata="YES"'."\n".
 		"Content-Type: application/sdp\n".
 		".\n".
 		"v=0\n".
