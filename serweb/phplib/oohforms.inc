@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.4 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: oohforms.inc,v 1.5 2004/08/26 13:50:44 kozlik Exp $
  */
 
 class of_element {
@@ -283,7 +283,7 @@ class form {
     if (true == $flag_nametranslation)
       $el->name = $org_name; 
 
-    if (false == $value) 
+    if (false === $value) 
        $value = $el->value; 
 
     if (isset($this->elements[$name]["frozen"]) and $this->elements[$name]["frozen"])

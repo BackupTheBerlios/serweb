@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.10 2004/08/26 13:09:20 kozlik Exp $
+ * $Id: user_preferences.php,v 1.11 2004/08/26 13:50:44 kozlik Exp $
  */
 
 /*
@@ -136,7 +136,7 @@ class User_Preferences {
 			if (!is_array($items)) return true;
 			
 			//if not $value, return first of items
-			if (!$value){
+			if ($value==""){
 				reset($items);
 				$item=current($items);
 				$value = $item->value;

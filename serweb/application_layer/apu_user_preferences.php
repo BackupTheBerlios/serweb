@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.2 2004/08/26 13:09:20 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.3 2004/08/26 13:50:44 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -103,7 +103,7 @@ class apu_user_preferences extends apu_base_class{
 				$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attributes[$att]->att_name; return false;
 			}
 
-			//if att value is changed
+			//if att value is changedz
 			if ($_POST[$this->attributes[$att]->att_name] != $_POST["_hidden_".$this->attributes[$att]->att_name]){
 				if (false === $data->update_attribute_of_user($this->user_id, 
 																$this->attributes[$att]->att_name, 
