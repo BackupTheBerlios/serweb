@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: index.php,v 1.14 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: index.php,v 1.15 2004/08/09 11:37:12 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_time_zones',  'is_user_exists', 'add_user_to_subscriber');
 
 require "prepend.php";
 
@@ -10,8 +12,6 @@ put_headers();
 page_open (array("sess" => "phplib_Session"));
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	$f = new form;                   // create a form object
 
 	$opt=$data->get_time_zones($errors);

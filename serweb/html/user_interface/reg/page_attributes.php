@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.1 2004/03/24 21:39:47 kozlik Exp $
+ * $Id: page_attributes.php,v 1.2 2004/08/09 11:37:12 kozlik Exp $
  */ 
 
 $page_attributes=array(

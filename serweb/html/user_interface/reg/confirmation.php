@@ -1,10 +1,12 @@
 <?
 /*
- * $Id: confirmation.php,v 1.22 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: confirmation.php,v 1.23 2004/08/09 11:37:12 kozlik Exp $
  */
 
-include "reg_jab.php";
+$_data_layer_required_methods=array('move_user_from_pending_to_subscriber', 'get_new_alias_number', 'add_new_alias',
+									'del_user_from_pending', 'del_user_from_subscriber',);
 
+include "reg_jab.php";
 require "prepend.php";
 
 put_headers();
@@ -16,18 +18,16 @@ $remove_from_subscriber=false;
 do{
 	if (isset($nr)){  // Is there data to process?
 
-		if (!$data = CData_Layer::create($errors)) break;
-
 		if (false === $user_id=$data->move_user_from_pending_to_subscriber($nr, $errors)) break;
 		$remove_from_subscriber=true;
 		
-		$sip_address="sip:".$user_id."@".$config->domain;
+///		$sip_address="sip:".$user_id."@".$config->domain;
 		
-		// get the max alias number 
-		if (false === $alias=$data->get_alias_number($errors)) break;
+		// generate alias number 
+		if (false === $alias=$data->get_new_alias_number($user_id->domain, $errors)) break;
 
 		// add alias to fifo
-		$message=$data->add_new_alias($sip_address, $alias, $errors);
+		$message=$data->add_new_alias($user_id, $alias, $user_id->domain, $errors);
 		if ($errors) break;
 
 		$remove_from_subscriber=false;
@@ -35,7 +35,7 @@ do{
 
 		if ($config->setup_jabber_account) {
 			# Jabber Gateway registration
-			$res = reg_jab($user_id);
+			$res = reg_jab($user_id->uname);
 			if($res!=0) {
 				$res=$res+1; Header("Location: confirmation.php?ok=$res");
 			} else {
@@ -61,7 +61,7 @@ print_html_body_begin($page_attributes);
 ?>
 <p>Congratulations! Your <?echo $config->realm;?> account was set up!</p>
 <? }elseif ($ok>=2 && $ok<10) {
-error_log("SERWEB:jabber registration failed: <$user_id> [$ok]\n");?>
+error_log("SERWEB:jabber registration failed: <".$user_id->uname."> [$ok]\n");?>
 <p>Your <?echo $config->realm;?> account was set up!<br><b>But your <?echo $config->realm;?> Jabber Gateway registration failed-
 <? echo "$ok"; ?>
 </b><br>Please contact <a href="mailto:<?echo $config->infomail;?>"><?echo $config->infomail;?></a> for further assistance.</p>

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: prepend.php,v 1.2 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: prepend.php,v 1.3 2004/08/09 11:37:50 kozlik Exp $
  */ 
 
 $_SERWEB = array();

@@ -1,7 +1,9 @@
 <?
 /*
- * $Id: get_pass.php,v 1.11 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: get_pass.php,v 1.12 2004/08/09 11:37:12 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_sip_user');
 
 require "prepend.php";
 
@@ -10,12 +12,12 @@ put_headers();
 page_open (array("sess" => "phplib_Session"));
 
 do{
-	if (isset($okey_x)){								// Is there data to process?
+	if (isset($_POST['okey_x'])){								// Is there data to process?
 		if (!$data = CData_Layer::create($errors)) break;
 
-		if (false === $sip_user = $data->get_sip_user($uname, $config->domain, $errors)) break;
+		if (false === $sip_user = $data->get_sip_user($_POST['uname'], $config->domain, $errors)) break;
 
-		$pre_uid=$sip_user->phplib_id;
+		$pre_uid=$sip_user['uuid'];
 		$pre_uid_expires=time()+$config->pre_uid_expires;
 
 		$my_sess=new phplib_Session();
@@ -28,7 +30,7 @@ do{
 
 		$mail_body=str_replace("#session#", $my_sess->name."=".$my_sess->id, $config->mail_forgot_pass);
 
-		if (!send_mail($sip_user->email_address, $config->forgot_pass_subj, $mail_body)){
+		if (!send_mail($sip_user['email'], $config->forgot_pass_subj, $mail_body)){
 			$errors[]="Sorry, there was an error when sending mail. Please try again later."; break;
 		}
 
@@ -55,7 +57,7 @@ $f->add_element(array("type"=>"submit",
 							 "extrahtml"=>"alt='get password'"));
 
 
-if (isset($okey_x)){							//data isn't valid or error in sql
+if (isset($_POST['okey_x'])){			//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 

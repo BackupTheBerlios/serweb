@@ -2,18 +2,20 @@
 /*
  * this script should be run after midnight - sends missed calls of previous day
  *
- * $Id: send_daily_missed_calls.php,v 1.3 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: send_daily_missed_calls.php,v 1.4 2004/08/09 11:37:50 kozlik Exp $
  */
+
+$_data_layer_required_methods=array('get_missed_calls_of_yesterday', 'get_send_mc_default_value', 'get_send_mc_list_of_users');
 
 require "prepend.php";
 
 /*
-	function sends missed calls of user with $username and $domain to $email_address
+	function sends missed calls of $user  to $email_address
 */
-function send_missed_calls($email_address, $username, $domain, $data, &$errors){
+function send_missed_calls($email_address, $user, $data, &$errors){
 	global $config;
 	/* get missed calls */
-	if (false === ($missed_calls = $data->get_missed_calls($username, $domain, $errors))) return;
+	if (false === ($missed_calls = $data->get_missed_calls_of_yesterday($user, $errors))) return;
 	if (!count($missed_calls)) return; //there are no missed calls
 	
 	$table='<html><body><table border="1" cellspacing="0" cellpadding="1">'."\n";
@@ -58,8 +60,6 @@ function send_missed_calls($email_address, $username, $domain, $data, &$errors){
 }
 
 do{
-	if (!$data = CData_Layer::create($errors)) break;
-
 	/*get default value*/
 	if (0 > ($default_value = $data->get_send_MC_default_value($errors))) break;
 
@@ -69,7 +69,9 @@ do{
 	foreach($users as $row){
 		if (is_null($row->value)) $row->value=$default_value;
 		
-		if ($row->value) send_missed_calls($row->email_address, $row->username, $row->domain, $data, $errors);
+		if ($row->value) 
+			send_missed_calls($row->email_address, new Cserweb_auth($row->uuid, $row->username, $row->domain), $data, $errors);
+
 	}
 
 } while (false);
