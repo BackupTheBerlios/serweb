@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.3 2004/03/02 19:14:30 kozlik Exp $
+ * $Id: user_preferences.php,v 1.4 2004/03/02 21:07:41 kozlik Exp $
  */
 
 /*
@@ -181,6 +181,10 @@ class User_Preferences {
 	*/
 
 	function form_element(&$form, $att_name, $value, $type, $type_spec){
+		$form->add_element(array("type"=>"hidden",
+	                             "name"=>"_hidden_".$att_name,
+		                         "value"=>$value));
+
 		switch ($type){
 		case 'boolean':
 			$form->add_element(array("type"=>"checkbox",

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.2 2004/03/02 18:04:08 kozlik Exp $
+ * $Id: user_preferences.php,v 1.3 2004/03/02 21:07:41 kozlik Exp $
  */
 
 require "prepend.php";
@@ -82,12 +82,15 @@ do{
 				$errors[]="invalid value of attribute ".$att->att_name; break;
 			}
 		
-			//insert into DB
-			$q="replace into ".$config->table_user_preferences." (username, domain, attribute, value) ".
-				"values ('".$auth->auth["uname"]."', '".$config->realm."', '".$att->att_name."', '".$HTTP_POST_VARS[$att->att_name]."')";
-
-			$res=MySQL_Query($q);
-			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+			//if att value is changed
+			if ($HTTP_POST_VARS[$att->att_name] != $HTTP_POST_VARS["_hidden_".$att->att_name]){
+				//insert into DB
+				$q="replace into ".$config->table_user_preferences." (username, domain, attribute, value) ".
+					"values ('".$auth->auth["uname"]."', '".$config->realm."', '".$att->att_name."', '".$HTTP_POST_VARS[$att->att_name]."')";
+	
+				$res=MySQL_Query($q);
+				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+			}
 		}
 		
 		if ($errors) break;		
