@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.44 2004/09/06 09:44:16 kozlik Exp $
+ * $Id: functions.php,v 1.45 2004/09/22 11:49:04 kozlik Exp $
  */
 
 
@@ -107,6 +107,8 @@ class Creg{
 	var $sip_address;
 
 	function Creg(){
+		global $config;
+		
 		$this->alphanum="[a-zA-Z0-9]";
 		$this->mark="[-_.!~*'()]";
 		$this->unreserved="(".$this->alphanum."|".$this->mark.")";
@@ -145,10 +147,10 @@ class Creg{
 		$this->sip_address="[sS][iI][pP]:".$this->address;
 		
 		/* regex for phonenumber which could contain some characters as: - / <space> this characters should be removed */		
-		$this->phonenumber="\\+?[-/ 1-9]+";
+		$this->phonenumber = $config->phonenumber_regex;		// "\\+?[-/ 1-9]+"
 
 		/* strict phonenumber - only numbers and optional initial + */
-		$this->phonenumber_strict="\\+?[1-9]+";
+		$this->phonenumber_strict = $config->strict_phonenumber_regex;		// "\\+?[1-9]+"
 	}
 
 	/* parse domain name fro sip address*/
