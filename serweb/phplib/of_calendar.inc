@@ -104,7 +104,7 @@ class of_calendar extends of_element {
             $this->yearPos = array_search("y",$formatArr);
         }
 
-        echo "<br>Month Fromat:".$this->monthFormat;
+//        echo "<br>Month Fromat:".$this->monthFormat;
 
     $this->js_function = '
       function checkCalendar(f,calName,year_from,year_to,comp_e,valid_e)  {
@@ -239,9 +239,9 @@ class of_calendar extends of_element {
     }
 
 
-    echo "<br>dayPos:".$this->dayPos;
-    echo "<br>monthPos:".$this->monthPos;
-    echo "<br>yearPos:".$this->yearPos;
+//    echo "<br>dayPos:".$this->dayPos;
+//    echo "<br>monthPos:".$this->monthPos;
+//    echo "<br>yearPos:".$this->yearPos;
 
     $ii=0;
     while($ii < 3) {
