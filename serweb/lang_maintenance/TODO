@@ -1,0 +1,9 @@
+$Id: TODO,v 1.1 2004/10/01 11:37:02 kozlik Exp $
+
+To Do
+-----
+
+- charset recoding
+- maintenance:
+   - synchronization of lang files
+   - adding / deleting phrases from lang files
