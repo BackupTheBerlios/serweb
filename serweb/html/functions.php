@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.52 2005/01/30 20:52:20 kozlik Exp $
+ * $Id: functions.php,v 1.53 2005/03/02 15:48:06 kozlik Exp $
  */
 
 
@@ -242,24 +242,29 @@ function print_search_links($actual, $num, $rows, $url){
 
 }
 
+/* obsoleted - should be removed */
+
 function connect_to_db(&$errors){
 	global $config;
 
-	$dsn = 	$config->data_sql->db_type."://".
-			$config->data_sql->db_user.":".
-			$config->data_sql->db_pass."@".
-			$config->data_sql->db_host.
+	$i = 0;
+	$dsn =  $config->data_sql->type."://".
+			$config->data_sql->host[$i]['user'].":".
+			$config->data_sql->host[$i]['pass']."@".
+			$config->data_sql->host[$i]['host'].
 				(empty($config->data_sql->db_port)?
 					"":
 					":".$config->data_sql->db_port)."/".
-			$config->data_sql->db_name;
-
+			$config->data_sql->host[$i]['name'];
+			
 	$db = DB::connect($dsn);
 
-	if (DB::isError($db)) {	log_errors($db, $errors); return false; }
-	
+	if (DB::isError($db)) { log_errors($db, $errors); return false; }
+
 	return $db;
 }
+
+
 
 /* must be called before connect_to_db() */
 function connect_to_ppaid_db(){
