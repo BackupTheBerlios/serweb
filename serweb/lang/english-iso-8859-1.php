@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.2 2004/08/10 17:33:50 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.3 2004/08/10 21:33:31 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -86,7 +86,7 @@ $lang_str['adminlogin'] = 						"Adminlogin";
 $lang_str['enter_username_and_passw'] = 		"Please enter your username and password";
 $lang_str['ff_password'] = 						"Password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
-$lang_str['l_subscribe'] = 						"Subscribe!";
+$lang_str['l_register'] = 						"Subscribe!";
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */
@@ -133,9 +133,7 @@ $lang_str['l_find_user'] = 						"find user";
 /* ------------------------------------------------------------*/
 
 $lang_str['find_user'] = 						"Find user";
-$lang_str['ff_username'] = 						"user name";
 $lang_str['l_add_to_phonebook'] = 				"add to phonebook";
-$lang_str['no_users_found'] = 					"No users found";
 $lang_str['l_back_to_phonebook'] = 				"back to phonebook";
 $lang_str['found_users'] = 						"Users";
 

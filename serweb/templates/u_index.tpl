@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_index.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_index.tpl,v 1.3 2004/08/10 21:33:31 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -30,7 +30,7 @@
 
 <div class="swLPSubscLinks">
 	<span class="swLPForgotPass"><a href="{url url='reg/get_pass.php'}">{$lang_str.l_forgot_passw}</a></span>
-	<span class="swLPSubscribe"><a href="{url url='reg/index.php'}">{$lang_str.l_subscribe}</a></span>
+	<span class="swLPSubscribe"><a href="{url url='reg/index.php'}">{$lang_str.l_register}</a></span>
 </div>
 
 <br>
