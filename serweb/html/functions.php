@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.45 2004/09/22 11:49:04 kozlik Exp $
+ * $Id: functions.php,v 1.46 2004/10/12 12:49:07 kozlik Exp $
  */
 
 
@@ -580,7 +580,7 @@ function multidomain_get_file($filename){
 */
 
 function log_errors($err_object, &$errors){
-	global $serwebLog;
+	global $serwebLog, $config;
 
 	//get name of function from which log_errors is called
 	$backtrace=debug_backtrace();
@@ -610,7 +610,11 @@ function log_errors($err_object, &$errors){
 		}
 	}
 	
-	$errors[]=$err_object->getMessage().", file: ".$last_frame['file'].":".$last_frame['line'];
+	$err_message = $err_object->getMessage();
+	if ($config->log_error_return_location_of_error_to_html){
+		$err_message .= ", file: ".$last_frame['file'].":".$last_frame['line'];
+	}
+	$errors[] = $err_message;
 
 	//if logging is enabled
 	if ($serwebLog){ 
