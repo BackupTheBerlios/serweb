@@ -1,0 +1,29 @@
+$Id: Readme,v 1.1 2003/01/07 18:00:18 kozlik Exp $
+
+This program sends meteorological data to users which have subscribed this
+service. Program uses netgeo cache to get locator of nearest metar station.
+
+usage:
+------
+
+  you must put this script to your html tree and use wget utility
+  see wget man page for more details
+
+  use parameter serweb_config to specifi serweb config file for example:
+
+    send_metar.php?serweb_config=path/to/serweb/config/file/config.php
+
+
+requirements:
+-------------
+
+- serweb
+- phpweather 2.0 or later       (http://phpweather.sourceforge.net)
+
+
+Instalation:
+------------
+
+- install phpweather to subdirectory "phpweather" in your send_metar directory
+- configure phpweather, see documentation of it for more details
+- change values in serweb config file
