@@ -1,10 +1,10 @@
-$Id: INSTALL,v 1.11 2004/05/10 15:51:40 kozlik Exp $
+$Id: INSTALL,v 1.12 2004/11/10 13:05:17 kozlik Exp $
 
 serweb - Installation
 
   Requirements:
   -------------
-  
+
   - Apache web server
   - php 4.3 and later with support for mysql (php-mysql package)
   - PEAR package DB (should be included in PHP release 4.3 and later)
@@ -13,55 +13,56 @@ serweb - Installation
   - MySQL 4.0 (we use UNIONs)
   - running SER with MySQL support
 
-  
+
   Quick Install:
   --------------
-  
+
     [1] Untar the distribution (be sure to untar the subdirectories)
     [2] It is recommended that you don't place the phplib directory in
         the HTML tree on your server.
     [3] Open the file config_data_layer.php in your favourite editor and change
         the values for db_type, db_host, db_name, db_user and db_pass
-	[4] Open the file config_paths.php and change value for root_path
-	    to fit directory in html tree where serweb is installed. Also change
-	    other values to fit your environment.
-	[5] Open the file config.php and see if you wish to change some setting.
-	    If you want enable loging, make sure that you have installed
-	    PEAR package LOG
-	[6] In subdirectory /your/serweb/dir/html/domains create 
-	    directories named as domains you are hosting a copy to them content 
-	    of subdir /your/serweb/dir/html/domains/_default. In this 
-	    directories is files for domain depended configuration and layout 
-	    of pages for each domain. If some file isn't found in directory
-	    /your/serweb/dir/html/domains/<domain> is used the one from 
-	    /your/serweb/dir/html/domains/_default
-	[7] Open config.php for each domain 
-	    (/your/serweb/dir/html/domains/*/config.php) and change setting
-	    to fit your environment. Don't forget change email address 
-		(mail_header_from, infomail, regmail) and contact address of instant 
-		messages (web_contact)
-	[8] make sure your php.ini includes the following values:
-	    - short_open_tag = on
-		- register_globals = on
+    [4] Open the file config_paths.php and change value for root_path
+        to fit directory in html tree where serweb is installed. Also change
+        other values to fit your environment.
+    [5] Open the file config.php and see if you wish to change some setting.
+        If you want enable loging, make sure that you have installed
+        PEAR package LOG
+    [6] In subdirectory /your/serweb/dir/html/domains create
+        directories named as domains you are hosting a copy to them content
+        of subdir /your/serweb/dir/html/domains/_default. In this
+        directories is files for domain depended configuration and layout
+        of pages for each domain. If some file isn't found in directory
+        /your/serweb/dir/html/domains/<domain> is used the one from
+        /your/serweb/dir/html/domains/_default
+    [7] Open config.php for each domain
+        (/your/serweb/dir/html/domains/*/config.php) and change setting
+        to fit your environment. Don't forget change email address
+        (mail_header_from, infomail, regmail) and contact address of instant
+        messages (web_contact)
+    [8] make sure your php.ini includes the following values:
+            - short_open_tag = on
+            - register_globals = on     (in PHP4 is disabled by default)
+            - register_long_arrays = on (in PHP5 is disabled by default)
     [9] Open the file <your-host>/<your-install-dir>/admin/index.php
         or <your-host>/<your-install-dir>/user_interface/index.php
         in your browser. Serweb should now display a login screen.
-		The initial username is 'admin' with password 'heslo'. Its strongly
-		recomended to change this password after first login.
-	[10] If everything work, is now time to create cronjobs. Type command 
-	    'crontab -e' at command line which open your crontab file and insert 
-		lines said in file 
-		/your/serweb/dir/html/admin/cron_job/cronentry
-	[11] You should forbid access to from whole internet to corn_job
-	    directory. This is done in .htaccess file in this directory, but
-		you must allow process of this in your apache configuration by
-		directive:
-			<Directory "/your/serweb/dir/html/admin/cron_job">
-		        AllowOverride Limit
-			</Directory>
-			
+        The initial username is 'admin' with password 'heslo'. Its strongly
+        recomended to change this password after first login.
+    [10] If everything work, is now time to create cronjobs. Type command
+        'crontab -e' at command line which open your crontab file and insert
+        lines said in file
+        /your/serweb/dir/html/admin/cron_job/cronentry
+    [11] You should forbid access to from whole internet to corn_job
+         directory. This is done in .htaccess file in this directory, but
+         you must allow process of this in your apache configuration by
+         directive:
+             <Directory "/your/serweb/dir/html/admin/cron_job">
+                 AllowOverride Limit
+             </Directory>
 
-		
+
+
   Config files notes:
   -------------------
 
@@ -70,12 +71,12 @@ serweb - Installation
 	2. config_data_layer.php
 	3. config.php
 	4. domains/<domain>/config.php
-	
-  In domain depending config.php can be changed only values said 
+
+  In domain depending config.php can be changed only values said
   in variable 'domain_depend_config' in main config.php. This is
   in order to admins of individual domains can't change other
   config values.
-  
+
   If you aren't settle for automatic seting domain by server name in
   http request, you can change it in file set_domain.php.
 
