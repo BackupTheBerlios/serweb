@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.9 2005/03/02 15:37:10 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.10 2005/03/03 11:37:13 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -51,6 +51,27 @@ $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
 $lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address";
 $lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
+
+/* ------------------------------------------------------------*/
+/*      tabs                                                   */
+/* ------------------------------------------------------------*/
+
+$lang_str['tab_my_account'] =		 			"my account";
+$lang_str['tab_phonebook'] =		 			"phone book";
+$lang_str['tab_missed_calls'] =	 				"missed calls";
+$lang_str['tab_accounting'] =	 				"accounting";
+$lang_str['tab_send_im'] =	 					"send IM";
+$lang_str['tab_notification_subscription'] =	"notification subscription";
+$lang_str['tab_message_store'] =	 			"message store";
+$lang_str['tab_voicemail'] =	 				"voicemail";
+$lang_str['tab_user_preferences'] =	 			"user preferences";
+$lang_str['tab_speed_dial'] =	 				"speed dial";
+$lang_str['tab_caller_screening'] =	 			"caller screening";
+
+$lang_str['tab_users'] =	 					"users";
+$lang_str['tab_admin_privileges'] =	 			"admin privileges";
+$lang_str['tab_ser_moni'] =	 					"server monitoring";
+$lang_str['tab_user_preferences'] =	 			"user preferences";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
