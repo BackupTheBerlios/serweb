@@ -1,0 +1,31 @@
+$Id: README,v 1.1 2003/01/07 16:20:28 kozlik Exp $
+
+This program gets domains from sip addresses in usrloc, find icao locator
+for them and store it in netgeo cache
+
+usage:
+------
+java UpdateNetgeoCache [config file]
+
+See netgeo_cache.cfg file, for detail about configuration
+
+Reqirements:
+------------
+
+- Java 2 Runtime Environment 1.4 or later                  (http://java.sun.com/downloads/)
+- MySQL Connector/J 2.0.14 or later                        (http://www.mysql.com/downloads/api-jdbc-stable.html)
+- Package com.stevesoft.pat v. 1.5.3 or later              (http://www.javaregex.com)
+- File fith database of METAR stations and its locations   (http://www.nws.noaa.gov/pub/stninfo/nsd_cccc.txt)
+
+
+Installation:
+-------------
+
+- Install MySQL Connector/J and com.stevesoft.pat package to your classpath,
+  either by adding the FULL path to its to your CLASSPATH enviornment variable.
+  See Readme files of MySQL Connector/J and com.stevesoft.pat for more info.
+
+- Untar the distribution (be sure to untar the subdirectories)
+
+- Open the file netgeo_cache.cfg in your favourite editor and change
+  values to fit your environment.
