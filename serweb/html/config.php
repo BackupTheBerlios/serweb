@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.12 2002/11/18 21:56:07 kozlik Exp $
+ * $Id: config.php,v 1.13 2002/11/30 09:45:46 jiri Exp $
  */
 
 class Csub_not {
@@ -46,6 +46,7 @@ class Cconfig {
 	var $show_voicemail_acl;
 
 	var $enable_dial_voicemail;
+	var $setup_jabber_account;
 
 	var $enable_test_firewall;
 	var $stun_applet_width;
@@ -136,6 +137,8 @@ class Cconfig {
 		$this->show_voicemail_acl=true;				//show "voicemail" in ACL and voicemail checkbox at my account
 
 		$this->enable_dial_voicemail=false;
+
+		$this->setup_jabber_account=false;
 
 		$this->enable_test_firewall=true;			//show test firewall/NAT button
 		$this->stun_applet_width=350;				//width of NAT detection applet
