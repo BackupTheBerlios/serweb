@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.6 2004/09/22 10:10:05 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.7 2004/11/29 22:13:56 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -48,6 +48,8 @@ $lang_str['fe_not_valid_phonenumber'] = 		"not valid phonenumber";
 $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";
 $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
+$lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address"
+$lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
