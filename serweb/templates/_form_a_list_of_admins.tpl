@@ -1,5 +1,15 @@
 {* Smarty *}
-{* $Id: _form_a_list_of_admins.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
+{* $Id: _form_a_list_of_admins.tpl,v 1.3 2005/01/31 08:56:44 kozlik Exp $ *}
+
+{literal}
+<style type="text/css">
+	#usrnm {width:120px;}
+	#domain {width:120px;}
+	#fname {width:120px;}
+	#lname {width:120px;}
+	#email {width:120px;}
+</style>	
+{/literal}
 
 <div class="swForm swHorizontalForm">
 {$form.start}
