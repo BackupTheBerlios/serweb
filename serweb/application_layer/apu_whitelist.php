@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.7 2004/11/29 21:45:53 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.8 2004/12/09 22:26:50 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -39,7 +39,10 @@
 
    'max_entries_e'				default: $lang_str['fe_max_entries_reached']
 	 error message that is displayed if max_entries is reached
-   
+
+   'duplicate_e'				default: $lang_str['err_whitelist_already_exists']
+	 error message that is displayed if duplicated entries is inserted
+      
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								
@@ -111,7 +114,7 @@ class apu_whitelist extends apu_base_class{
 		
 		$this->opt['phonenumber_check_regex'] = $this->reg->phonenumber;
 		$this->opt['phonenumber_check_e'] = &$lang_str['fe_not_valid_phonenumber'];
-		
+
 		/* blacklist */
 		$this->opt['blacklist'] = null;
 		$this->opt['blacklist_e'] = &$lang_str['fe_not_allowed_uri'];
@@ -120,6 +123,8 @@ class apu_whitelist extends apu_base_class{
 		$this->opt['max_entries'] = null;
 		$this->opt['max_entries_e'] = &$lang_str['fe_max_entries_reached'];
 
+		$this->opt['duplicate_e'] = &$lang_str['err_whitelist_already_exists'];
+		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
@@ -299,6 +304,23 @@ class apu_whitelist extends apu_base_class{
 					}
 				}
 			} //foreach
+			
+			
+			/* check for duplicities */
+			$sorted_whitelist = $_POST['whitelist'];
+			asort($sorted_whitelist);
+
+			reset($sorted_whitelist);
+			$current = current($sorted_whitelist);
+			
+			while (false !== $next = next($sorted_whitelist)){
+				if ($current == $next){
+					$errors[] = $this->opt['duplicate_e']." (".$current.")";
+					return false;				
+				}
+				$current = $next;
+			}
+			
 		}
 		return true;
 	}
@@ -366,7 +388,14 @@ class apu_whitelist extends apu_base_class{
 		$validate_fumct =
 			"function wlist_validate(sel_el, txt_el, hidden_el){\n".
 			"	var value = txt_el.value;\n".
+
+			/* if we are using phonenumbers, convert it to strict form */
+			(($this->opt['username_in_target_only'] and $this->opt['numerical_target_only'])?(
+				"	".$this->reg->convert_phonenumber_to_strict_js("value", "value").";\n")
+				:"").
 			"	\n".
+			
+			// test for max entries
 			($this->opt['max_entries']?(
 				"	if (hidden_el.value == '' && sel_el.length >= ".$this->opt['max_entries']."){\n".  // (hidden_el.value == '') - if we adding new item (not editing)
 				"		alert('".$this->opt['max_entries_e']."');\n".
@@ -374,17 +403,28 @@ class apu_whitelist extends apu_base_class{
 				"	}\n\n")
 				:"").
 			"	\n".
+			
+			// test for correct format
 			"	var re =  new RegExp('".$v_regex."', 'g');\n".
 			"	if (!re.test(value)) {\n".
 			"		alert('".$v_msg."');\n".
 			"		return false;\n".
-			"	}\n\n";
+			"	}\n\n".
+
+			// test for duplicities
+			"	var i, sel_val;\n".
+			"	for (i=0; i<sel_el.length; i++){\n".
+				(($this->opt['username_in_target_only'] and $this->opt['numerical_target_only'])?(
+					"		".$this->reg->convert_phonenumber_to_strict_js("sel_el.options[i].value", "sel_val").";\n")
+					:"		sel_val = sel_el.options[i].value;\n").
+			"		if (sel_val == value && sel_el.options[i].value != hidden_el.value){\n".
+			"			alert('".$this->opt['duplicate_e']."');\n".
+			"			return false;\n".
+			"		}\n".
+			"	}\n".
+			"	\n";
 			
 		if ($this->opt['blacklist']){
-			/* if we are using phonenumbers, convert it to strict form */
-			if ($this->opt['username_in_target_only'] and $this->opt['numerical_target_only']){
-				$validate_fumct .= "	".$this->reg->convert_phonenumber_to_strict_js("value", "value").";\n";
-			}
 			$validate_fumct.=
 				"	var blacklistre =  new RegExp('".addslashes($this->opt['blacklist'])."', 'g');\n".
 				"	if (blacklistre.test(value)) {\n".
