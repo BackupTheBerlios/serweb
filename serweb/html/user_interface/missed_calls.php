@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.9 2003/04/04 02:26:23 jiri Exp $
+ * $Id: missed_calls.php,v 1.10 2003/04/04 02:30:05 jiri Exp $
  */
 
 require "prepend.php";
@@ -37,7 +37,7 @@ do{
 
 	while ($row=MySQL_Fetch_Object($mc_res)){
 		$mc_arr[]=new Cmisc($row->from_uri, $row->sip_from, $row->time, 
-			$row->sip_status, get_status($row->sip_from, $errors));
+			$row->sip_status, get_status($row->from_uri, $errors));
 	}
 
 	set_timezone($errors);
