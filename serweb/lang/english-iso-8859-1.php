@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.7 2004/11/29 22:13:56 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.8 2005/01/11 14:11:11 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -10,10 +10,10 @@
  * 'l' - link
  * 'th' - table heading
  * 'err' - error
- */ 
+ */
 
 
- 
+
 /* ------------------------------------------------------------*/
 /*      common messages                                        */
 /* ------------------------------------------------------------*/
@@ -48,7 +48,7 @@ $lang_str['fe_not_valid_phonenumber'] = 		"not valid phonenumber";
 $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";
 $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
-$lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address"
+$lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address";
 $lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
 
 /* ------------------------------------------------------------*/
