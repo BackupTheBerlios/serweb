@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
+ * $Id: config.php,v 1.28 2003/11/04 10:50:26 jiri Exp $
  */
 
 class Csub_not {
@@ -212,7 +212,7 @@ class Cconfig {
 
 		/* your domain name */
 		$this->realm=$this->domainname=$this->default_domain=
-			ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $hostname, $_SERVER['SERVER_NAME']);
+			ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $_SERVER['SERVER_NAME']);
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/
