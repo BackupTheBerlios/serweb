@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.18 2003/11/04 00:36:17 jiri Exp $
+ * $Id: missed_calls.php,v 1.19 2004/03/03 13:20:55 kozlik Exp $
  */
 
 require "prepend.php";
@@ -11,6 +11,12 @@ put_headers();
 page_open (array("sess" => "phplib_Session",
 				 "auth" => "phplib_Auth"));
 
+if (!$sess->is_registered('sess_mc_act_row')) $sess->register('sess_mc_act_row');
+if (!isset($sess_mc_act_row)) $sess_mc_act_row=0;
+
+if (isset($HTTP_GET_VARS['act_row'])) $sess_mc_act_row=$HTTP_GET_VARS['act_row'];
+
+				 
 class Cmisc{
 	var $sip_from, $time, $sip_status, $status;
 	function Cmisc($from_uri, $sip_from, $time, $sip_status, $status){
@@ -49,7 +55,7 @@ do{
 		/* foreach($usernames_ar as $row){ */
 
 		reset($usernames_ar);reset($domain_ar);
-		while(list(,$row)=each($usernames_ar) && list(,$dom)=each($domain_ar)) {
+		while(list(,$row)=each($usernames_ar) and list(,$dom)=each($domain_ar)) {
 
 			$q="delete from ".$config->table_missed_calls.
 				" where username='".$row."' and domain='".$dom."' ".
@@ -57,21 +63,43 @@ do{
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; }
 		}
+		$sess_mc_act_row=0;
 
+        Header("Location: ".$sess->url("missed_calls.php?kvrk=".uniqID("")."&message=".RawURLEncode("calls deleted succesfully")));
+		page_close();
+		exit;
 	}
 
 	/* we have here a UNION statement -- that speeds up queries a lot as
 	   opposed to having an OR condition; it takes mysql 4.0.0 at least
 	*/
 	$q="(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status  ".
-			"FROM missed_calls t1 ".
+			"FROM ".$config->table_missed_calls." t1 ".
 			"WHERE t1.username='".$auth->auth["uname"]."' and t1.domain='".$config->default_domain."' ) ".
 		"UNION ".
 		"(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
-			"FROM missed_calls t1, aliases t2 ".
+			"FROM ".$config->table_missed_calls." t1, ".$config->table_aliases." t2 ".
+			"WHERE 'sip:".$auth->auth["uname"]."@".$config->default_domain."'".
+				"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain ) ";
+
+	$mc_res=mySQL_query($q);
+	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
+
+	$num_rows=MySQL_Num_Rows($mc_res);
+
+	if ($sess_mc_act_row >= $num_rows) $sess_mc_act_row=max(0, $num_rows-$config->num_of_showed_items);
+
+
+	$q="(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status  ".
+			"FROM ".$config->table_missed_calls." t1 ".
+			"WHERE t1.username='".$auth->auth["uname"]."' and t1.domain='".$config->default_domain."' ) ".
+		"UNION ".
+		"(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
+			"FROM ".$config->table_missed_calls." t1, ".$config->table_aliases." t2 ".
 			"WHERE 'sip:".$auth->auth["uname"]."@".$config->default_domain."'".
 				"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain ) ".
-		"ORDER BY time DESC";
+		"ORDER BY time DESC ".
+		"limit ".$sess_mc_act_row.", ".$config->num_of_showed_items;
 
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -155,10 +183,20 @@ do{
 </table>
 <br>
 <div align="center"><a href="<?$sess->purl("missed_calls.php?kvrk=".uniqID("")."&delete_calls=1&page_loaded_timestamp=".time());?>"><img src="<?echo $config->img_src_path;?>butons/b_delete_calls.gif" width="165" height="16" border="0"></a></div>
+<?}?>
 
+<? if ($num_rows){?>
+<p align="center" class="f12">Missed calls <?echo ($sess_mc_act_row+1)." - ".((($sess_mc_act_row+$config->num_of_showed_items)<$num_rows)?($sess_mc_act_row+$config->num_of_showed_items):$num_rows);?> from <?echo $num_rows;?>
 <?}else{?>
 <div align="center">No missed calls</div>
-<?}?>
+<?}?><br>
+
+<div align="left">&nbsp;
+<?
+	$url="missed_calls.php?kvrk=".uniqid("")."&act_row=";
+	print_search_links($sess_mc_act_row, $num_rows, $config->num_of_showed_items, $url);
+?>
+</div>
 
 <br>
 <?print_html_body_end();?>
