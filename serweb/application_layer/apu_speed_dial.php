@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.1 2004/09/06 11:03:13 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.2 2004/09/16 16:55:08 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -21,6 +21,9 @@
    'domain_for_targets'			(string) default: domain of loged in user
      see description of option 'username_in_target_only'
    
+   'domain_for_requests'		(string) default: domain of loged in user
+     domain which is used for request URIs (column 'domain_from_req_uri' in DB table)
+
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								
@@ -80,6 +83,8 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['numerical_target_only'] =		false;
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
+
+		$this->opt['domain_for_requests'] = $controler->user_id->domain;
 		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -196,6 +201,11 @@ class apu_speed_dial extends apu_base_class{
 				   'to' => $sess_sd_act_row+9);
 		
 		if (false === $this->speed_dials = $data->get_speed_dials($this->user_id, $opt, $errors)) return false;
+
+		/* fill in 'domain_from_req_uri' for entries which aren't in DB */
+		foreach ($this->speed_dials as $key => $val){
+			if ($val['empty']) $this->speed_dials[$key]['domain_from_req_uri'] = $this->opt['domain_for_requests'];
+		}
 		
 		$i=0;
 		foreach ($this->speed_dials as $key => $val){
