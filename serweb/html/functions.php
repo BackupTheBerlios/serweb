@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.47 2004/10/14 19:26:05 kozlik Exp $
+ * $Id: functions.php,v 1.48 2004/11/18 11:03:27 kozlik Exp $
  */
 
 
@@ -170,7 +170,7 @@ class Creg{
 	/* converts string which can be accepted by regex $this->phonenumber to 
 	   string which can be accepted by regex $this->phonenumber_strict */
 	function convert_phonenumber_to_strict($phonenumber){
-		return str_replace(array('-', '/', ' '), "", $phonenumber);
+		return str_replace(array('-', '/', ' ', '(', ')'), "", $phonenumber);
 	}
 }
 
