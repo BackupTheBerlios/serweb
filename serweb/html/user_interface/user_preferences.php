@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: user_preferences.php,v 1.5 2004/03/24 21:39:47 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 require "../user_preferences.php";
 
 put_headers();
@@ -36,7 +35,7 @@ do{
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
 	$attributes=array();
-	
+
 	//get list of attributes
 	$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->table_user_preferences_types.
 		" order by att_name";
@@ -58,7 +57,7 @@ do{
 	}
 
 	// add elements to form object
-		
+
 	foreach($attributes as $att){
 		$usr_pref->form_element($f, $att->att_name, $att->att_value, $att->att_rich_type, $att->att_type_spec);
 	}
@@ -67,7 +66,7 @@ do{
 	                             "name"=>"okey",
 	                             "src"=>$config->img_src_path."butons/b_save.gif",
 								 "extrahtml"=>"alt='save'"));
-								 
+
 	if (isset($okey_x)){								// Is there data to process?
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
@@ -75,31 +74,31 @@ do{
 		}
 
 			// Process data            // Data ok;
-			
+
 		//check values of attributes and format its
 		foreach($attributes as $att){
 			if (!$usr_pref->format_inputed_value($HTTP_POST_VARS[$att->att_name], $att->att_rich_type, $att->att_type_spec)){
 				$errors[]="invalid value of attribute ".$att->att_name; break;
 			}
-		
+
 			//if att value is changed
 			if ($HTTP_POST_VARS[$att->att_name] != $HTTP_POST_VARS["_hidden_".$att->att_name]){
 				//insert into DB
 				$q="replace into ".$config->table_user_preferences." (username, domain, attribute, value) ".
 					"values ('".$auth->auth["uname"]."', '".$config->realm."', '".$att->att_name."', '".$HTTP_POST_VARS[$att->att_name]."')";
-	
+
 				$res=MySQL_Query($q);
 				if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 			}
 		}
-		
-		if ($errors) break;		
+
+		if ($errors) break;
 
         Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
 	}
-	
+
 }while (false);
 
 
@@ -107,27 +106,10 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
-<script language="JavaScript">
-<!--
-	function sip_address_completion(adr){
-		var default_domain='<?echo $config->default_domain;?>';
+<script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
 
-		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-		if (re.test(adr.value)) {
-			adr.value=adr.value+'@'+default_domain;
-		}
-
-		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-		var re2= /^sip:/i;
-		if (re.test(adr.value) && !re2.test(adr.value)) {
-			adr.value='sip:'+adr.value;
-		}
-	}
-//-->
-</script>
-<script language="JavaScript" src="ctd.js"></script>
 <?
 $page_attributes['user_name']=get_user_name($errors);
 print_html_body_begin($page_attributes);
@@ -139,7 +121,7 @@ print_html_body_begin($page_attributes);
   $f->start("form");				// Start displaying form?>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<?foreach($attributes as $att){
-		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");"; 
+		if ($att->att_rich_type == "sip_adr") $js_on_subm.="sip_address_completion(f.".$att->att_name.");";
 	?>
 		<tr>
 		<td align="right" class="f12b"><label for="<?echo $att->att_name;?>"><?echo $att->att_name;?>:</label></td>

@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: index.php,v 1.10 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: index.php,v 1.11 2004/03/24 21:39:47 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -114,11 +113,11 @@ do{
 
 			/* Process data */           // Data ok;
 
-			
+
 		$user_exists=is_user_exists($uname, $config->default_domain, $errors);
 		if ($errors) break;
 		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
-		
+
 		$confirm=md5(uniqid(rand()));
 
 		if (!add_user_to_subscriber($uname, $config->realm, $passwd, $fname, $lname, $phone, $email, $timezone, $confirm, $config->table_pending, $errors)) break;
@@ -145,7 +144,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
 ?>

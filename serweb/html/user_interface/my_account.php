@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: my_account.php,v 1.30 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: my_account.php,v 1.31 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -286,23 +285,9 @@ if ($okey_x){							//data isn't valid or error in sql
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
+
 <script language="JavaScript">
 <!--
-	function sip_address_completion(adr){
-		var default_domain='<?echo $config->default_domain;?>';
-
-		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-		if (re.test(adr.value)) {
-			adr.value=adr.value+'@'+default_domain;
-		}
-
-		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-		var re2= /^sip:/i;
-		if (re.test(adr.value) && !re2.test(adr.value)) {
-			adr.value='sip:'+adr.value;
-		}
-	}
-
 	var stun_win=null;
 
 	function stun_applet_win(){
@@ -311,21 +296,19 @@ print_html_head();?>
 			stun_win.window.focus();
 			return;
 	}
-
-
 //-->
 </script>
-<script language="JavaScript" src="ctd.js"></script>
+<script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
+<script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
 if ($perm->have_perm("admin") and $uid){
-	$page_attributes=array(
-		'title' => $config->realm." admin interface",
-		'tab_collection' => $config->admin_tabs,
-		'path_to_pages' => $config->admin_pages_path,
-		'selected_tab' => "users.php"
-	);
+
+	/* script is called from admin interface, load page attributes of admin interface */
+	require ("../admin/page_attributes.php");
+	$page_attributes['selected_tab']="users.php";
+
 	print_html_body_begin($page_attributes);
-	echo "user: ".$uid."<br>";
+	echo "<div class=\"swNameOfUser\">user: ".$uid."</div>";
 }
 else {
 	$page_attributes['user_name']=get_user_name($errors);

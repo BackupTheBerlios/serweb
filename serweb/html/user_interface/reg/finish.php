@@ -1,16 +1,15 @@
 <?
 /*
- * $Id: finish.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: finish.php,v 1.5 2004/03/24 21:39:47 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../../phplib/oohforms.inc";
 
 put_headers();
 
 page_open (array("sess" => "phplib_Session"));
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
 ?>

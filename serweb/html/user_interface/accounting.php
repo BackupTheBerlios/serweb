@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: accounting.php,v 1.19 2004/03/24 21:12:45 kozlik Exp $
+ * $Id: accounting.php,v 1.20 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
+
 
 put_headers();
 
@@ -46,8 +46,8 @@ do{
 	where t2.username='".$auth->auth["uname"]."' and t2.domain='".$config->realm."' and t2.sip_method='BYE' and isnull(t1.username) )
 
    order by ttime desc";
-	
 
+   
 	$mc_res=mySQL_query($q);
 	if (!$mc_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -55,9 +55,10 @@ do{
 
 }while (false);
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
-<script language="JavaScript" src="ctd.js"></script>
+
+<script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
 $page_attributes['user_name']=get_user_name($errors);
 print_html_body_begin($page_attributes);

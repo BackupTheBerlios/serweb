@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: send_im.php,v 1.11 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: send_im.php,v 1.12 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -94,7 +93,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
 <script language="JavaScript">
 <!--
@@ -113,21 +112,6 @@ print_html_head();?>
 			f.num_chars.value=max_length-im_len;
 	}
 
-	function sip_address_completion(adr){
-		var default_domain='<?echo $config->default_domain;?>';
-
-		var re = /^<?echo str_replace('/','\/',$reg->user);?>$/i;
-		if (re.test(adr.value)) {
-			adr.value=adr.value+'@'+default_domain;
-		}
-
-		var re = /^<?echo str_replace('/','\/',$reg->address);?>$/i
-		var re2= /^sip:/i;
-		if (re.test(adr.value) && !re2.test(adr.value)) {
-			adr.value='sip:'+adr.value;
-		}
-	}
-
 	function display_window(){
 		var left=window.screen.width-350;
 		wait_win=window.open('',"wait_win","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=50,width=300,height=130,left="+left);
@@ -142,6 +126,8 @@ print_html_head();?>
 
 //-->
 </script>
+<script language="JavaScript" src="<?echo $config->js_src_path;?>sip_address_completion.js.php"></script>
+
 <?
 $page_attributes['user_name']=get_user_name($errors);
 print_html_body_begin($page_attributes);

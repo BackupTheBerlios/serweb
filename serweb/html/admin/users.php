@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: users.php,v 1.12 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: users.php,v 1.13 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -76,17 +75,8 @@ do{
 
 /* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
-<script language="JavaScript">
-<!--
-function confirmDelete(theLink){
-    var is_confirmed = confirm("Realy you want delete user?");
-    if (is_confirmed) {
-        theLink.href;
-    }
-    return is_confirmed;
-}
-//-->
-</script>
+
+<script language="JavaScript" src="<?echo $config->js_src_path;?>functions.js"></script>
 <?
 print_html_body_begin($page_attributes);
 ?>
@@ -121,7 +111,7 @@ print_html_body_begin($page_attributes);
 	<td align="left"><a href="mailto:<?echo $row->email_address;?>"><?echo nbsp_if_empty($row->email_address);?></a></td>
 	<td align="center"><a href="<?$sess->purl("acl.php?kvrk=".uniqid('')."&user_id=".rawURLEncode($row->username));?>">ACL</a></td>
 	<td align="center"><a href="<?$sess->purl($config->user_pages_path."my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($row->username));?>">account</a></td>
-	<td align="center"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this)">delete</a></td>
+	<td align="center"><a href="<?$sess->purl("users.php?kvrk=".uniqid('')."&dele_id=".rawURLEncode($row->username));?>" onclick="return confirmDelete(this, 'Realy you want delete user?')">delete</a></td>
 	</tr>
 	<?}?>
 	</table>

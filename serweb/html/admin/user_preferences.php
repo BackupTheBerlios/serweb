@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: user_preferences.php,v 1.4 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 require "../user_preferences.php";
 
 $usr_pref = new User_Preferences();

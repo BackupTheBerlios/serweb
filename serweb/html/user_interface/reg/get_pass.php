@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: get_pass.php,v 1.8 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: get_pass.php,v 1.9 2004/03/24 21:39:47 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -85,7 +84,7 @@ if (isset($okey_x)){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
 print_html_body_begin($page_attributes);
 ?>

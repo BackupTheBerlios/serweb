@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.2 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.3 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -56,7 +55,7 @@ do{
 	$f->add_element(array("type"=>"hidden",
 	                      "name"=>"hidden_change_privileges",
 	                      "value"=>$ad_priv['change_privileges'][0]?"1":"0"));
-	
+
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"user_id",
 	                             "value"=>$user_id));
@@ -92,7 +91,7 @@ do{
 		if ($_POST["chk_change_privileges"] != "1") $_POST["chk_change_privileges"] != "0";
 		if ($_POST["chk_change_privileges"] != $_POST["hidden_change_privileges"]){
 			if ($_POST["chk_change_privileges"])
-				
+
 				if (isset($ad_priv['change_privileges'])){ /* if privilege is in db we must update its value */
 					$q="update ".$config->table_admin_privileges." set priv_value='1' ".
 						"where domain='".$user_domain."' and username='".$user_id."' and priv_name='change_privileges'";
@@ -107,7 +106,7 @@ do{
 			$res=MySQL_Query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		}
-		
+
         Header("Location: ".$sess->url("list_of_admins.php?kvrk=".uniqID("")."&message=".RawURLencode("values changed successfully")));
 		page_close();
 		exit;
@@ -150,7 +149,7 @@ print_html_body_begin($page_attributes);
 	</fieldset>
 	<br />
 	<div align="center"><?$f->show_element("okey");?></div>
-	
+
 <?$f->finish();					// Finish form?>
 </div>
 

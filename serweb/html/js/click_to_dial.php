@@ -1,8 +1,11 @@
 <?
 /*
- * $Id: ctd.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: click_to_dial.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
  */
-require "prepend.php";
+
+$_SERWEB = array();
+$_SERWEB["serwebdir"]  = "../";
+require($_SERWEB["serwebdir"] . "main_prepend.php");
 
 put_headers();
 

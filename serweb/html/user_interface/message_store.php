@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: message_store.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: message_store.php,v 1.5 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 

@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: index.php,v 1.11 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: index.php,v 1.12 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -14,7 +13,7 @@ do{
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
 		if (!$db){ $errors[]="can't connect to sql server"; break;}
-	
+
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
 		if ($config->clear_text_pw) {
@@ -30,7 +29,7 @@ do{
 
 		if (!MySQL_Num_Rows($res)) {$errors[]="Bad username or password"; break;}
 		$row=MySQL_Fetch_Object($res);
-	
+
 		$sess->register('pre_uid');
 		$pre_uid=$row->phplib_id;
 
@@ -61,14 +60,14 @@ $f->add_element(array("type"=>"submit",
                              "name"=>"okey",
                              "src"=>$config->img_src_path."butons/b_login.gif",
 							 "extrahtml"=>"alt='login'"));
-	
+
 
 if ($okey_x){							//data isn't valid or error in sql
 	$passw="";
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
 unset ($page_attributes['tab_collection']);
 print_html_body_begin($page_attributes);

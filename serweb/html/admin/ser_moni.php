@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ser_moni.php,v 1.4 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: ser_moni.php,v 1.5 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
@@ -108,7 +108,7 @@ print_html_body_begin($page_attributes);
 	</div>
 
 	<?foreach($ul_params as $row){?>
-	<div class="swSMgdval"><em>domain:</em> <strong><?echo $row;?></strong></div>
+	<div class="swSMdomain"><em>domain:</em> <strong><?echo $row;?></strong></div>
 	<? print_value ("registered current", "registered average", $values['ul_'.$row.'_reg']);?>
 	<? print_value ("expired current", "expired average", $values['ul_'.$row.'_exp']);?>
 	<br />

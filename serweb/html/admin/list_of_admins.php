@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.2 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.3 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 

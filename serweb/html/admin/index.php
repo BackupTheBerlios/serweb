@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: index.php,v 1.10 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: index.php,v 1.11 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -69,7 +68,7 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();
 unset ($page_attributes['tab_collection']);
 print_html_body_begin($page_attributes);

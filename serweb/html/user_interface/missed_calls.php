@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.20 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: missed_calls.php,v 1.21 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -16,7 +15,7 @@ if (!isset($sess_mc_act_row)) $sess_mc_act_row=0;
 
 if (isset($HTTP_GET_VARS['act_row'])) $sess_mc_act_row=$HTTP_GET_VARS['act_row'];
 
-				 
+
 class Cmisc{
 	var $sip_from, $time, $sip_status, $status;
 	function Cmisc($from_uri, $sip_from, $time, $sip_status, $status){
@@ -113,9 +112,10 @@ do{
 
 }while (false);
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
-<script language="JavaScript" src="ctd.js"></script>
+
+<script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
 $page_attributes['user_name']=get_user_name($errors);
 print_html_body_begin($page_attributes);

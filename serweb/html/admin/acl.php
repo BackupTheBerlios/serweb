@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: acl.php,v 1.8 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: acl.php,v 1.9 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -31,7 +30,7 @@ do{
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
 	while ($row=MySQL_Fetch_Object($res)) $ACL_control[]=$row->priv_value;
-	
+
 	/* get access control list of user */
 	$q="select grp from ".$config->table_grp." where domain='".$config->realm."' and username='".$user_id."'";
 	$res=mySQL_query($q);
@@ -50,7 +49,7 @@ do{
 		                      "name"=>"hidden_".$row,
 		                      "value"=>in_array($row, $grp_val)?"1":"0"));
 	}
-	
+
 	$f->add_element(array("type"=>"hidden",
 	                             "name"=>"user_id",
 	                             "value"=>$user_id));

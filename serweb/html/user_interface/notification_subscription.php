@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.7 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.8 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 

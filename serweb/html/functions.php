@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.32 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: functions.php,v 1.33 2004/03/24 21:39:46 kozlik Exp $
  */
 
 
@@ -593,5 +593,14 @@ class Cfusers{
 
 }
  
+ 
+function multidomain_get_file($filename){
+	global $config;
+	
+	$dir=dirname(__FILE__)."/domains/";
+
+	if (file_exists($dir.$config->domain."/".$filename)) return $config->domains_path.$config->domain."/".$filename;
+	else return $config->domains_path."_default/".$filename;
+}
 
 ?>

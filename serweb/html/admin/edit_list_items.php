@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.3 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.4 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 require "../user_preferences.php";
 
 put_headers();
@@ -23,7 +22,7 @@ function update_items_in_db($item_list, $attrib_name, $default_value){
 				"":
 				", default_value='".$default_value."'").
 		" where att_name='$attrib_name'";
-	
+
 	$res=MySQL_Query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 }
@@ -39,14 +38,14 @@ do{
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	$row=mysql_fetch_object($res);
 
-	if ($row->att_rich_type!="list"){ 
+	if ($row->att_rich_type!="list"){
 		//attrib isn't list of items -> nothing to edit -> go back to attributes editing page
-        
+
 		Header("Location: ".$sess->url("user_preferences.php?kvrk=".uniqID("")));
 		page_close();
 		exit;
 	}
-	
+
 	$item_list=unserialize($row->att_type_spec);
 	$default_value=$row->default_value;
 
@@ -66,18 +65,18 @@ do{
 		page_close();
 		exit;
 	}
-	
+
 	//if user want edit item
 	if ($item_edit){
 		//find value of item in order to we can fill it in the form
 		foreach($item_list as $row){
 			if ($row->label==$item_edit){
-				$it_val=$row->value;				
+				$it_val=$row->value;
 				break;
 			}
 		}
 	}
-	
+
 	$f = new form;                   // create a form object
 
 	$f->add_element(array("type"=>"text",
@@ -121,7 +120,7 @@ do{
 			$errors=array_merge($errors, $err); // No!
 			break;
 		}
-		
+
 
 			/* Process data */           // Data ok;
 
@@ -146,7 +145,7 @@ do{
 		exit;
 	}
 }while (false);
-								 
+
 
 if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data

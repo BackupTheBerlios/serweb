@@ -1,10 +1,9 @@
 <?
 /*
- * $Id: caller_screening.php,v 1.2 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: caller_screening.php,v 1.3 2004/03/24 21:39:46 kozlik Exp $
  */
 
 require "prepend.php";
-require "../../phplib/oohforms.inc";
 
 put_headers();
 
@@ -55,9 +54,9 @@ do{
 	                             "name"=>"action_key",
 								 "size"=>1,
 	                             "value"=>$row->action?(
-								 			Ccall_fw::get_key($config->calls_forwarding["screening"], 
-																$row->action, 
-																$row->param1, 
+								 			Ccall_fw::get_key($config->calls_forwarding["screening"],
+																$row->action,
+																$row->param1,
 																$row->param2)
 											):"",
 								 "options"=>$opt,
@@ -87,10 +86,10 @@ do{
 			"where uri_re='$edit_caller' and purpose='screening' and domain='".$config->realm."' and username='".$auth->auth["uname"]."'";
 
 		else $q="insert into ".$config->table_calls_forwarding." (username, domain, uri_re, purpose, action, param1, param2) ".
-			"values ('".$auth->auth["uname"]."', 
-					'".$config->realm."', 
-					'$uri_re', 
-					'screening', 
+			"values ('".$auth->auth["uname"]."',
+					'".$config->realm."',
+					'$uri_re',
+					'screening',
 					'".$config->calls_forwarding["screening"][$action_key]->action."',
 					'".$config->calls_forwarding["screening"][$action_key]->param1."',
 					'".$config->calls_forwarding["screening"][$action_key]->param2."')";
@@ -122,9 +121,10 @@ if ($okey_x){							//data isn't valid or error in sql
 	$f->load_defaults();				// Load form with submitted data
 }
 
-/* ----------------------- HTML begin ---------------------- */ 
+/* ----------------------- HTML begin ---------------------- */
 print_html_head();?>
-<script language="JavaScript" src="ctd.js"></script>
+
+<script language="JavaScript" src="<?echo $config->js_src_path;?>click_to_dial.js.php"></script>
 <?
 $page_attributes['user_name']=get_user_name($errors);
 print_html_body_begin($page_attributes);

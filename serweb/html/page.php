@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.23 2004/03/11 22:30:00 kozlik Exp $
+ * $Id: page.php,v 1.24 2004/03/24 21:39:46 kozlik Exp $
  */
 
 function put_headers(){
@@ -25,7 +25,7 @@ function print_html_head($title=""){
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Expires" content="<?echo GMDate("D, d M Y H:i:s")." GMT";?>"> 
 
-	<LINK REL="StyleSheet" HREF="<?echo $config->style_src_path;?>styles.css" TYPE="text/css">
+	<LINK REL="StyleSheet" HREF="<?echo multidomain_get_file("styles.css");?>" TYPE="text/css">
 
 <?	if (is_array($config->html_headers)) foreach($config->html_headers as $v) echo $v."\n"; ?>
 </head>
@@ -38,10 +38,14 @@ function print_html_body_begin($parameters=null){
 	global $config, $sess, $auth, $errors, $message;
 
 	if (!$parameters) $parameters=null;
+
+	// call user defined function at html body begin
+	if (isset($parameters['run_at_html_body_begin']) and function_exists($parameters['run_at_html_body_begin']))
+		$parameters['run_at_html_body_begin']($parameters);
 	
-	virtual($config->prolog);
+	virtual(multidomain_get_file($config->html_prolog));
 	if ($parameters['title']) echo $parameters['title'];
-	virtual($config->separator);
+	virtual(multidomain_get_file($config->html_separator));
 
 ?>
 <div class="swMain">
@@ -74,7 +78,8 @@ function print_html_body_begin($parameters=null){
 function print_html_body_end(){
 	global $config, $_page_tab;	?>
 	</div></div>
-<?	virtual($config->epilog);
+<?
+	virtual(multidomain_get_file($config->html_epilog));
 }
 
 function print_tabs($tabs, $path="", $selected=null){
