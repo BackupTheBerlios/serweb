@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.5 2004/11/25 10:08:15 kozlik Exp $
+ * $Id: config.php,v 1.6 2004/12/10 17:50:54 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -75,6 +75,10 @@
 		/* aliases generation                                          */
 		/* ------------------------------------------------------------*/
 		/* Ddon't forget to align your SER routing script to it !      */
+
+		/* If true, serweb will create numeric alias for new subscribers
+		*/
+		$config->create_numeric_alias_to_new_users = true;
 
 		/* Nummerical aliases can be generated randomly or incrementaly.
 		   Values 'rand' or 'inc' on the next line.
