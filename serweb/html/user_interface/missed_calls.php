@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: missed_calls.php,v 1.16 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: missed_calls.php,v 1.17 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -28,23 +28,32 @@ do{
 
 	if ($delete_calls==1){
 
-		$q="select username from ".$config->table_aliases.
+		$q="select username, domain from ".$config->table_aliases.
 			" where 'sip:".$auth->auth["uname"]."@".$config->default_domain."'=contact";
 
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-		$usernames_arr= Array();
+		$usernames_ar= Array();
+		$domain_ar= Array();
 
 		while ($row=MySQL_Fetch_Object($res)){
 			$usernames_ar[]=$row->username;
+			$domain_ar[]=$row->domain;
 		}
 		$usernames_ar[]=$auth->auth["uname"];
+		$domain_ar[]=$config->realm;
 
-		$usernames_ar=array_unique($usernames_ar);
+		/* $usernames_ar=array_unique($usernames_ar); */
 
-		foreach($usernames_ar as $row){
-			$q="delete from ".$config->table_missed_calls." where username='".$row."' and time<'".gmdate("Y-m-d H:i:s", $page_loaded_timestamp)."'";
+		/* foreach($usernames_ar as $row){ */
+
+		reset($usernames_ar);reset($domain_ar);
+		while(list(,$row)=each($usernames_ar) && list(,$dom)=each($domain_ar)) {
+
+			$q="delete from ".$config->table_missed_calls.
+				" where username='".$row."' and domain='".$dom."' ".
+				" and time<'".gmdate("Y-m-d H:i:s", $page_loaded_timestamp)."'";
 			$res=mySQL_query($q);
 			if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; }
 		}
@@ -54,14 +63,14 @@ do{
 	/* we have here a UNION statement -- that speeds up queries a lot as
 	   opposed to having an OR condition; it takes mysql 4.0.0 at least
 	*/
-	$q="(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
+	$q="(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status  ".
 			"FROM missed_calls t1 ".
-			"WHERE t1.username='".$auth->auth["uname"]."') ".
+			"WHERE t1.username='".$auth->auth["uname"]."' and t1.domain='".$config->default_domain."' ) ".
 		"UNION ".
 		"(SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
 			"FROM missed_calls t1, aliases t2 ".
 			"WHERE 'sip:".$auth->auth["uname"]."@".$config->default_domain."'".
-				"=t2.contact AND t2.username=t1.username  ) ".
+				"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain ) ".
 		"ORDER BY time DESC";
 
 	$mc_res=mySQL_query($q);

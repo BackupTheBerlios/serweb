@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.10 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: users.php,v 1.11 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -22,14 +22,14 @@ $sess_fusers->init();
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 	if ($dele_id){ //delete user
 		$q="delete from ".$config->table_aliases." where contact='sip:".$dele_id."@".$config->default_domain."'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
-		$q="delete from ".$config->table_subscriber." where username='$dele_id'";
+		$q="delete from ".$config->table_subscriber." where username='$dele_id' and domain='$config->default_domain'";
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -47,10 +47,10 @@ do{
 		// get num of users
 		if ($sess_fusers->onlineonly)
 			$q1="select distinct s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.username=l.username and ".$query_c;
+				" where s.username=l.username and s.domain=l.domain and s.domain='$config->realm' and ".$query_c;
 		else
 			$q1="select s.username from ".$config->table_subscriber." s ".
-				" where ".$query_c;
+				" where s.domain='$config->realm' and ".$query_c;
 
 		$res=MySQL_Query($q1);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
@@ -59,11 +59,14 @@ do{
 
 		// get users
 		if ($sess_fusers->onlineonly)
-			$q="select distinct s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.username=l.username and ".$query_c." order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
+			$q="select distinct s.username, s.first_name, s.last_name, s.phone, s.email_address from ".
+				$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.username=l.username and s.domain=l.domain and ".$query_c.
+				" order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
 		else
 			$q="select s.username, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s ".
-				" where ".$query_c." order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
+				" where s.domain='$config->realm' and ".$query_c.
+				" order by s.username limit ".$sess_fusers->act_row.", ".$config->num_of_showed_items;
 		$users_res=MySQL_Query($q);
 		if (!$users_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 

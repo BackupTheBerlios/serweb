@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.26 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: my_account.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -41,7 +41,7 @@ define("FOREVER",567648000);	//number of second for forever (18 years)
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 	$q="select email_address, allow_find, timezone from ".$config->table_subscriber.
 		" where username='".$user_id."' and domain='".$config->realm."'";
@@ -226,8 +226,9 @@ do{
 			$qpass=", password='$passwd', ha1='$ha1', ha1b='$ha1b'";
 		}
 		
- 		$q="update ".$config->table_subscriber." set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
-			" where username='".$user_id."'";
+ 		$q="update ".$config->table_subscriber.
+			" set email_address='$email', allow_find='".($allow_find?1:0)."', timezone='$timezone', datetime_modified=now()".$qpass.
+			" where username='".$user_id."' and domain='".$config->realm."'";
 
 		$res=MySQL_Query($q);
 		if (!$res) {$errors[]="error in SQL query(3), line: ".__LINE__; break;}

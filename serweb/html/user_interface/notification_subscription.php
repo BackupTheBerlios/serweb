@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: notification_subscription.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: notification_subscription.php,v 1.6 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -23,7 +23,8 @@ do{
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
 	if ($uri and $desc){
-		$q="insert into ".$config->table_event." (uri, description, username) values ('$uri', '$desc', '".$auth->auth["uname"]."')";
+		$q="insert into ".$config->table_event." (uri, description, username, domain) ".
+			"values ('$uri', '$desc', '".$auth->auth["uname"]."' , '".$config->realm."')";
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -33,7 +34,8 @@ do{
 	}
 
 	if (isset($dele_id)){
-		$q="delete from ".$config->table_event." where username='".$auth->auth["uname"]."' and id=".$dele_id;
+		$q="delete from ".$config->table_event.
+			" where username='".$auth->auth["uname"]."' and domain='".$config->realm."'  and id=".$dele_id;
 		$res=mySQL_query($q);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 
@@ -48,7 +50,7 @@ do{
 	if ($db){
 		$q="select id, uri, description ".
 			"from ".$config->table_event." ".
-			"where username='".$auth->auth["uname"]."'";
+			"where username='".$auth->auth["uname"]."' and domain='".$config->realm."'";
 
 		$ev_res=mySQL_query($q);
 		if (!$ev_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}

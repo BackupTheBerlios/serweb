@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.7 2003/10/15 11:25:23 kozlik Exp $
+ * $Id: index.php,v 1.8 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -97,7 +97,7 @@ do{
 
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
-		if (!$db){ $errors[]="can´t connect to sql server"; break;}
+		if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 		if ($err = $f->validate()) {			// Is the data valid?
 			$errors=array_merge($errors, $err); // No!
@@ -115,7 +115,7 @@ do{
 			/* Process data */           // Data ok;
 
 			
-		$user_exists=is_user_exists($uname, $errors);
+		$user_exists=is_user_exists($uname, $config->default_domain, $errors);
 		if ($errors) break;
 		if ($user_exists) {$errors[]="Sorry, the user name '$uname' has already been chosen. Try again."; break;}
 		

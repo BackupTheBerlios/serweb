@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.26 2003/10/16 12:36:36 kozlik Exp $
+ * $Id: config.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
  */
 
 class Csub_not {
@@ -211,9 +211,8 @@ class Cconfig {
 		$this->title="iptel.org, the IP Telephony Site";
 
 		/* your domain name */
-		$this->realm="192.168.2.16";
-		$this->domainname="192.168.2.16";
-		$this->default_domain="192.168.2.16"; // used with ul_fifo
+		$this->realm=$this->domainname=$this->default_domain=
+			ereg_replace( "(www\.|sip\.)?(.*)", "\\2",  $hostname, $_SERVER['SERVER_NAME']);
 		/* initial nummerical alias for new subscriber -- don't forget to
 		   align your SER routing script to it !
 		*/

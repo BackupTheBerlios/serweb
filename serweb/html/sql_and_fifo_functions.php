@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: sql_and_fifo_functions.php,v 1.3 2003/10/15 11:25:23 kozlik Exp $
+ * $Id: sql_and_fifo_functions.php,v 1.4 2003/11/03 01:54:27 jiri Exp $
  */
 
  /*
@@ -11,7 +11,7 @@
  	global $config;
  
 	// abs() converts string to number
-	$q="select max(abs(username)) from ".$config->table_aliases." where username REGEXP \"^[0-9]+$\"";
+	$q="select max(abs(username)) from ".$config->table_aliases." where domain='".$config->realm."' and username REGEXP \"^[0-9]+$\"";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, file: ".__FILE__.":".__LINE__; return false;}
 	$row=MySQL_Fetch_Row($res);
@@ -53,17 +53,19 @@ function add_new_alias($sip_address, $alias, &$errors){
  *	check if user exists
  */
 
-function is_user_exists($uname, &$errors){
+function is_user_exists($uname, $udomain, &$errors){
  	global $config;
 
-	$q="select count(*) from ".$config->table_subscriber." where lower(username)=lower('$uname')";
+	$q="select count(*) from ".$config->table_subscriber.
+		" where lower(username)=lower('$uname') and lower(domain)=lower('$domain')";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return -1;}
 
 	$row=MySQL_Fetch_Row($res);
 	if ($row[0]) return true;
 	
-	$q="select count(*) from ".$config->table_pending." where lower(username)=lower('$uname')";
+	$q="select count(*) from ".$config->table_pending.
+		" where lower(username)=lower('$uname') and lower(domain)=lower('$domain')";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return -1;}
 

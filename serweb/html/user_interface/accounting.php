@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.14 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: accounting.php,v 1.15 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -22,6 +22,7 @@ do{
 		"from ".$config->table_accounting." t1, ".
 			$config->table_accounting." t2 ".
 		"where t1.username='".$auth->auth["uname"]."' and ".
+			"t1.domain='".$config->realm."' and ".
 			"t1.sip_callid=t2.sip_callid and ".
 			"t1.sip_method='INVITE' and t2.sip_method='BYE' ".
 		"order by t1.time desc";

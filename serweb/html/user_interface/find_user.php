@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: find_user.php,v 1.6 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: find_user.php,v 1.7 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -18,7 +18,7 @@ $f = new form;                  // create a form object
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 
 	$f->add_element(array("type"=>"text",
@@ -56,11 +56,15 @@ do{
 
 			/* Process data */           // Data ok;
 		if ($onlineonly)
-			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username from ".$config->table_subscriber." s, ".$config->table_location." l ".
-				" where s.username=l.username and s.allow_find='1' and s.first_name like '%$fname%' and s.last_name like '%$lname%' and s.username like '%$uname%' limit 0,".$config->max_showed_rows;
+			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username ".
+				"from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.username=l.username and s.allow_find='1' and ".
+					"s.first_name like '%$fname%' and s.last_name like '%$lname%' ".
+					"and s.username like '%$uname%' and s.domain='$config->realm' limit 0,".$config->max_showed_rows;
 		else
 			$q=	"select timezone, first_name, last_name, username from ".$config->table_subscriber.
-				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' and username like '%$uname%' limit 0,".$config->max_showed_rows;
+				" where allow_find='1' and first_name like '%$fname%' and last_name like '%$lname%' ".
+				"and username like '%$uname%' and s.domain='$config->realm' limit 0,".$config->max_showed_rows;
 
 		$find_res=MySQL_Query($q);
 		if (!$find_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}

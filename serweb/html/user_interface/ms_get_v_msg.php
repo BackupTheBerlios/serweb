@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: ms_get_v_msg.php,v 1.2 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: ms_get_v_msg.php,v 1.3 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -14,7 +14,8 @@ do{
 	$db = connect_to_db();
 	if (!$db){ $errors[]="can´t connect to sql server"; break;}
 
-	$q="select subject, file from ".$config->table_voice_silo." where mid=".$mid." and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
+	$q="select subject, file from ".$config->table_voice_silo.
+		" where mid=".$mid." and r_uri like 'sip:".$auth->auth["uname"]."@".$config->default_domain."%'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 	if (!MySQL_num_rows($res)) {$errors[]="Message not found or you haven't access to read message"; break;}

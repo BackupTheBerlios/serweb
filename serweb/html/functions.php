@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.26 2003/10/16 09:27:20 kozlik Exp $
+ * $Id: functions.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
  */
 
 
@@ -171,7 +171,8 @@ function get_status($sip_uri, &$errors){
 
 	$user=substr($regs[1],0,-1);
 
-	$q="select count(*) from ".$config->table_subscriber." where username='$user'";
+	$q="select count(*) from ".$config->table_subscriber.
+		" where username='$user' and domain='$config->realm'";
 	$res=mySQL_query($q);
 	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return "<div class=\"statusunknown\">unknown</div>";}
 	$row=mysql_fetch_row($res);
@@ -180,7 +181,7 @@ function get_status($sip_uri, &$errors){
 
 	$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
 	$config->ul_table."\n".		//table
-	$user."\n\n";	//username
+	$user."@".$config->default_domain."\n\n";	//username
 
 	$out=write2fifo($fifo_cmd, $errors, $status);
 	if ($errors) return;
@@ -262,7 +263,7 @@ function get_time_zones(&$errors){
 	global $config;
 
 	@$fp=fopen($config->zonetab_file, "r");
-	if (!$fp) {$errors[]="Can´t open zone.tab file"; return false;}
+	if (!$fp) {$errors[]="Cannot open zone.tab file"; return false;}
 	
 	while (!feof($fp)){
 		$line=FgetS($fp, 512);
@@ -349,6 +350,12 @@ function filter_fl($in){
 	}
 	
 	return $result;
+}
+
+function mylog($st) {
+	$handle=fopen("/tmp/fff", 'a');
+	fwrite($handle, $st);
+	fclose($handle);
 }
 
 function click_to_dial($target, $uri, &$errors){

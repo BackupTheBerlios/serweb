@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.6 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: get_pass.php,v 1.7 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -13,7 +13,7 @@ page_open (array("sess" => "phplib_Session"));
 do{
 	if (isset($okey_x)){								// Is there data to process?
 		$db = connect_to_db();
-		if (!$db){ $errors[]="can´t connect to sql server"; break;}
+		if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 		$q="select phplib_id, email_address from ".$config->table_subscriber." where username='$uname' and domain='$config->realm'";
 		$res=mySQL_query($q);

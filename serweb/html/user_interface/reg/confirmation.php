@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.17 2003/10/15 09:42:48 kozlik Exp $
+ * $Id: confirmation.php,v 1.18 2003/11/03 01:54:27 jiri Exp $
  */
 
 include "reg_jab.php";
@@ -13,7 +13,7 @@ do{
 	if (isset($nr)){  // Is there data to process?
 
 		$db = connect_to_db();
-		if (!$db){ $errors[]="can´t connect to sql server"; break;}
+		if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 
 		$q="select username from ".$config->table_pending." where confirmation='$nr'";

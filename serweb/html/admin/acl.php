@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.5 2003/10/13 19:56:43 kozlik Exp $
+ * $Id: acl.php,v 1.6 2003/11/03 01:54:27 jiri Exp $
  */
 
 require "prepend.php";
@@ -17,7 +17,7 @@ $f = new form;                   // create a form object
 
 do{
 	$db = connect_to_db();
-	if (!$db){ $errors[]="can´t connect to sql server"; break;}
+	if (!$db){ $errors[]="cannot connect to sql server"; break;}
 
 	if (!isset($user_id)) {$errors[]="unknown user"; break;}
 
