@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.3 2004/08/10 21:33:31 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.4 2004/08/25 10:19:48 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -215,6 +215,8 @@ $lang_str['err_can_not_open_greeting'] = 		"Can't open greeting";
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_invalid_value_of_attribute'] = 	"invalid value of attribute";
+$lang_str['fe_is_not_number'] = 				"is not valid number";
+$lang_str['fe_is_not_sip_adr'] = 				"is not valid sip address";
 $lang_str['no_attributes_defined'] = 			"No attributes defined by admin";
 
 /* ------------------------------------------------------------*/

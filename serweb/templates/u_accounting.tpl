@@ -1,5 +1,9 @@
 {* Smarty *}
-{* $Id: u_accounting.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_accounting.tpl,v 1.3 2004/08/25 10:19:48 kozlik Exp $ *}
+
+{if $come_from_admin_interface}
+<div class="swNameOfUser">{$lang_str.user}: {$user_auth->uname}</div>
+{/if}
 
 {include file='_head.tpl'}
 

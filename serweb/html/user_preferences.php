@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.8 2004/08/09 13:04:28 kozlik Exp $
+ * $Id: user_preferences.php,v 1.9 2004/08/25 10:19:48 kozlik Exp $
  */
 
 /*
@@ -182,6 +182,8 @@ class User_Preferences {
 	*/
 
 	function form_element(&$form, $att_name, $value, $type, $type_spec){
+		global $lang_str;
+		
 		$form->add_element(array("type"=>"hidden",
 	                             "name"=>"_hidden_".$att_name,
 		                         "value"=>$value));
@@ -219,7 +221,7 @@ class User_Preferences {
 									 "maxlength"=>16,
 	    	                         "value"=>$value,
 		                             "valid_regex"=>"^[0-9]+$",
-		                             "valid_e"=>$att_name." is not valid number",
+		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_number'],
 									 "extrahtml"=>"style='width:120px;'"));
 			break;
 		case 'sip_adr':
@@ -229,7 +231,7 @@ class User_Preferences {
 									 "maxlength"=>255,
 	    	                         "value"=>$value,
 		                             "valid_regex"=>"^".$this->reg->sip_address."$",
-		                             "valid_e"=>$att_name." is not valid sip address",
+		                             "valid_e"=>$att_name." ".$lang_str['fe_is_not_sip_adr'],
 									 "extrahtml"=>"onBlur='sip_address_completion(this)' style='width:120px;'"));
 			break;
 		case 'string':
