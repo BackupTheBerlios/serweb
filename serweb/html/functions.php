@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.40 2004/04/26 21:15:45 jiri Exp $
+ * $Id: functions.php,v 1.41 2004/05/06 11:48:44 kozlik Exp $
  */
 
 
@@ -558,18 +558,26 @@ function log_errors($err_object, &$errors){
 
 		//if matchng frame is not found, use last_frame	
 		if (!$last_frame) { 
-			echo "log_errors - spatny parametr $funct"; // !!!!!!!!!!!!!!!!!!!! tohle pridat do logu
+			//if logging is enabled
+			if ($serwebLog){ 
+				$serwebLog->log("function: LOG ERRORS - bad parametr ".$funct, PEAR_LOG_ERR);
+			}
+
 			$last_frame=end($backtrace);
 		}
 	}
 	
 	$errors[]=$err_object->getMessage().", file: ".$last_frame['file'].":".$last_frame['line'];
 
-
-	$log_message= "file: ".$last_frame['file'].":".$last_frame['line'].": ".$err_object->getMessage()." - ".$err_object->getUserInfo();
-	//remove endlines from the log message
-	$log_message=str_replace(array("\n", "\r"), "", $log_message);
-	$serwebLog->log($log_message, PEAR_LOG_ERR);
+	//if logging is enabled
+	if ($serwebLog){ 
+	
+		$log_message= "file: ".$last_frame['file'].":".$last_frame['line'].": ".$err_object->getMessage()." - ".$err_object->getUserInfo();
+		//remove endlines from the log message
+		$log_message=str_replace(array("\n", "\r"), "", $log_message);
+		$serwebLog->log($log_message, PEAR_LOG_ERR);
+		
+	}
 
 }
 /*

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.44 2004/04/23 12:16:18 kozlik Exp $
+ * $Id: config.php,v 1.45 2004/05/06 11:48:44 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -91,12 +91,12 @@
 		$config->jcid  = 0;      				# Jabber communication ID
 
 		# Jabber module database
-                $config->jab_db_type="mysql";           # type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
-                $config->jab_db_srv="localhost";        # database server
-                $config->jab_db_port="";                # database port - leave empty for default
-                $config->jab_db_usr="ser";              # database user
-                $config->jab_db_pas="heslo";            # database user's password
-                $config->jab_db_db="sip_jab";           # database name
+		$config->jab_db_type="mysql";           # type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
+		$config->jab_db_srv="localhost";        # database server
+		$config->jab_db_port="";                # database port - leave empty for default
+		$config->jab_db_usr="ser";              # database user
+		$config->jab_db_pas="heslo";            # database user's password
+		$config->jab_db_db="sip_jab";           # database name
 
 		/* this array contain list of config parameter which can be modified
 		   by admins of particular domains */
@@ -105,10 +105,18 @@
 			"html_headers", "first_alias_number", "infomail", "regmail", "forgot_pass_subj",
 			"mail_forgot_pass", "register_subj", "mail_register", "terms_and_conditions");
 
-                /*
-                  log file
-                */
-                $config->log_file="/var/spool/log/serweb";
+		/* ------------------------------------------------------------*/
+		/* Loging                                                      */
+		/* ------------------------------------------------------------*/
+
+		/* I think that loging is currently useful only for developers.
+		   When you enable loging be sure if you have instaleld PEAR package
+		   Log. See http://pear.php.net/manual/en/installation.getting.php 
+		   for more information
+		*/
+
+		$config->enable_loging = false;
+		$config->log_file = "/var/spool/log/serweb";
 
 		/* ------------------------------------------------------------*/
 		/* Speed dial                                                  */

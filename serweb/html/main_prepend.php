@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.3 2004/04/14 20:51:31 kozlik Exp $
+ * $Id: main_prepend.php,v 1.4 2004/05/06 11:48:44 kozlik Exp $
  */ 
 
 //require class defintions
@@ -25,6 +25,11 @@ require_once ($_SERWEB["serwebdir"] . "config_data_layer.php");
 //require other configuration
 require_once ($_SERWEB["serwebdir"] . "config.php");
 
+//if config.developer is present, replace default config by developer config
+if (file_exists($_SERWEB["serwebdir"] . "config.developer.php")){
+	require_once ($_SERWEB["serwebdir"] . "config.developer.php");
+}
+
 //activate domain depending config
 $domain_config->activate_domain_config();
 unset($domain_config);
@@ -32,11 +37,14 @@ unset($domain_config);
 //require PEAR DB
 require_once 'DB.php';
 
-//require PEAR Log
-require_once 'Log.php';
-
 //create log instance
-$serwebLog  = &Log::singleton('file', $config->log_file, 'serweb', array(), PEAR_LOG_INFO);
+if ($config->enable_loging){
+	require_once 'Log.php';
+	$serwebLog  = &Log::singleton('file', $config->log_file, 'serweb', array(), PEAR_LOG_INFO);
+}
+else{
+	$serwebLog  = NULL;
+}
 
 
 //require functions
