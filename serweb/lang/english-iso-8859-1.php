@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.5 2004/08/26 09:23:34 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.6 2004/09/22 10:10:05 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -44,6 +44,7 @@ $lang_str['no_users_found'] = 					"No users found";
 
 $lang_str['fe_not_valid_email'] =	 			"not valid email address";
 $lang_str['fe_not_valid_sip'] = 				"not valid sip address";
+$lang_str['fe_not_valid_phonenumber'] = 		"not valid phonenumber";
 $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";
 $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
@@ -157,6 +158,7 @@ $lang_str['th_hangup'] = 						"hang up";
 $lang_str['calls_count'] = 						"Calls";
 $lang_str['no_calls'] = 						"No calls";
 
+
 /* ------------------------------------------------------------*/
 /*      send IM                                                */
 /* ------------------------------------------------------------*/
@@ -202,11 +204,6 @@ $lang_str['err_voice_msg_not_found'] = 			"Message not found or you haven't acce
 /*      voicemail                                              */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_no_greeeting_file'] = 			"you didn't select greeting file";
-$lang_str['fe_invalid_greeting_file'] = 		"greeting file is invalid";
-$lang_str['fe_greeting_file_no_wav'] = 			"greeting file type must be audio/wav";
-$lang_str['msg_greeting_stored_s'] = 			"Greeting stored";
-$lang_str['msg_greeting_stored_l'] = 			"Your greeting has been succesfully stored";
 $lang_str['customize_greetings'] = 				"Customize greetings";
 $lang_str['err_can_not_open_greeting'] = 		"Can't open greeting";
 
@@ -233,6 +230,9 @@ $lang_str['th_new_request_uri'] = 				"new request uri";
 $lang_str['no_speed_dials_defined'] = 			"No speed dials defined";
 $lang_str['fe_invalid_speed_dial'] = 			"username from request uri must contain exactly two digits";
 $lang_str['err_speed_dial_already_exists'] = 	"Record with this username and domain already exists";
+
+
+
 
 /* ------------------------------------------------------------*/
 /*      caller screening                                       */
@@ -404,6 +404,46 @@ $lang_str['ff_set_as_default'] = 				"set as default";
 $lang_str['th_item_label'] = 					"item label";
 $lang_str['th_item_value'] = 					"item value";
 $lang_str['l_back_to_editing_attributes'] = 	"back to editing attributes";
+
+
+/* ------------------------------------------------------------*/
+/* ------------------------------------------------------------*/
+/*      Application units                                      */
+/* ------------------------------------------------------------*/
+/*      strings which are used in application units or         */
+/*      data layer methods                                     */
+/* ------------------------------------------------------------*/
+
+/* ------------------------------------------------------------*/
+/*      accounting                                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['sel_item_all_calls'] = 				"All calls";
+$lang_str['sel_item_outgoing_calls'] = 			"Outgoing calls only";
+$lang_str['sel_item_incoming_cals'] = 			"Incoming calls only";
+$lang_str['acc_outgoing_call'] = 				"-&gt; Outgoing";
+$lang_str['acc_incoming_call'] = 				"&lt;- Incoming";
+
+/* ------------------------------------------------------------*/
+/*      voicemail                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_no_greeeting_file'] = 			"you didn't select greeting file";
+$lang_str['fe_invalid_greeting_file'] = 		"greeting file is invalid";
+$lang_str['fe_greeting_file_no_wav'] = 			"greeting file type must be audio/wav";
+$lang_str['fe_greeting_file_too_big'] = 		"greeting file is too big";
+$lang_str['msg_greeting_stored_s'] = 			"Greeting stored";
+$lang_str['msg_greeting_stored_l'] = 			"Your greeting has been succesfully stored";
+$lang_str['msg_greeting_deleted_s'] = 			"Greeting removed";
+$lang_str['msg_greeting_deleted_l'] = 			"Your greeting has been succesfully removed";
+
+/* ------------------------------------------------------------*/
+/*      whitelist                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['err_whitelist_already_exists'] = 	"Whitelist entry already exists";
+
+
 $lang_str[''] = 					"";
 $lang_str[''] = 					"";
 $lang_str[''] = 					"";
