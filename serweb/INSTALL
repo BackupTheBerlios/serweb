@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.2 2002/12/31 09:46:19 jiri Exp $
+$Id: INSTALL,v 1.3 2002/12/31 09:54:45 jiri Exp $
 
 serweb - Installation
 
@@ -27,6 +27,7 @@ A: zone.tab describes timezones -- information needed to
    depends on your OS, many distributions store it at
    /usr/share/zoneinfo/zone.tab. The file contains line-by-line
    country code, coordinates, names and optional comments, e.g.
-   CZ+5005+01426Europe/Prague
+   CZ  +5005+01426   Europe/Prague
    (You may want to get the file from other places like 
-    http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab)
+    http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab
+    or ftp://elsie.nci.nih.gov/pub/)
