@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.8 2002/09/20 20:02:33 kozlik Exp $
+ * $Id: my_account.php,v 1.9 2002/09/21 10:03:37 jiri Exp $
  */
 
 require "prepend.php";
@@ -124,9 +124,10 @@ do{
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
-		if (substr($status,0,3)!="200") {$errors[]=$status; break; }
+		/* we accept any 2xx as ok */
+		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
 		exit;
 	
@@ -150,9 +151,9 @@ do{
 
 		$message=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors) break;
-		if (substr($status,0,3)!="200") {$errors[]=$status; break; }
+		if (substr($status,0,1)!="2") {$errors[]=$status; break; }
 		
-        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($message)));
+        Header("Location: ".$sess->url("my_account.php?kvrk=".uniqID("")."&uid=".RawURLEncode($uid)."&message=".RawURLEncode($status)));
 		page_close();
 		exit;
 	
@@ -225,7 +226,7 @@ do{
 
 		$out=write2fifo($fifo_cmd, $errors, $status);
 		if ($errors or !$out) break;		
-		if (substr($status,0,3)!="200" and substr($status,0,3)!="404") {$errors[]=$status; break; }
+		if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; break; }
 
 		$out_arr=explode("\n", $out);
 		
