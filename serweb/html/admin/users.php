@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.4 2002/10/15 03:39:09 jiri Exp $
+ * $Id: users.php,v 1.5 2003/02/13 13:04:13 kozlik Exp $
  */
 
 require "prepend.php";
@@ -19,6 +19,7 @@ if (!$sess->is_registered('sess_usrnm')) $sess->register('sess_usrnm');
 if (!$sess->is_registered('sess_fname')) $sess->register('sess_fname');
 if (!$sess->is_registered('sess_lname')) $sess->register('sess_lname');
 if (!$sess->is_registered('sess_email')) $sess->register('sess_email');
+if (!$sess->is_registered('sess_onlineonly')) $sess->register('sess_onlineonly');
 
 if (!$sess->is_registered('sess_act_row')) $sess->register('sess_act_row');
 if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_admin=1;}
@@ -27,6 +28,7 @@ if (isset($usrnm)) $sess_usrnm=$usrnm;
 if (isset($fname)) $sess_fname=$fname;
 if (isset($lname)) $sess_lname=$lname;
 if (isset($email)) $sess_email=$email;
+if (isset($okey_x)) $sess_onlineonly=$onlineonly;
 
 if (isset($act_row)) $sess_act_row=$act_row;
 if (!$sess_act_row or isset($okey_x)) $sess_act_row=0;
@@ -74,6 +76,11 @@ $f->add_element(array("type"=>"text",
 							 "maxlength"=>50,
                              "value"=>$sess_email,
 							 "extrahtml"=>"style='width:120px;'"));
+$f->add_element(array("type"=>"checkbox",
+                             "value"=>1,
+							 "checked"=>$sess_onlineonly,
+                             "name"=>"onlineonly"));
+
 $f->add_element(array("type"=>"submit",
                              "name"=>"okey",
                              "src"=>$config->img_src_path."butons/b_find.gif",
@@ -83,22 +90,32 @@ do{
 	if ($db){
 
 		$query_c="";
-		if ($sess_usrnm) $query_c.="user_id like '%$sess_usrnm%' and ";
-		if ($sess_fname) $query_c.="first_name like '%$sess_fname%' and ";
-		if ($sess_lname) $query_c.="last_name like '%$sess_lname%' and ";
-		if ($sess_email) $query_c.="email_address like '%$sess_email%' and ";
+		if ($sess_usrnm) $query_c.="s.user_id like '%$sess_usrnm%' and ";
+		if ($sess_fname) $query_c.="s.first_name like '%$sess_fname%' and ";
+		if ($sess_lname) $query_c.="s.last_name like '%$sess_lname%' and ";
+		if ($sess_email) $query_c.="s.email_address like '%$sess_email%' and ";
 		$query_c.="1 ";
 	
 		// get num of users
-		$q="select count(*) from ".$config->table_subscriber." where ".$query_c;
-		$res=MySQL_Query($q);
+		if ($sess_onlineonly)
+			$q1="select s.user_id from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.user_id=l.user and ".$query_c;
+		else
+			$q1="select s.user_id from ".$config->table_subscriber." s ".
+				" where ".$query_c;
+			
+		$res=MySQL_Query($q1);
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
-		$row=MySQL_Fetch_Row($res);
-		$num_rows=$row[0];
+		$num_rows=MySQL_Num_Rows($res);
 	
 		// get users
-		$q="select user_id, first_name, last_name, phone, email_address from ".$config->table_subscriber." where ".$query_c." order by user_id limit $sess_act_row,".$config->num_of_showed_items;
+		if ($sess_onlineonly)
+			$q="select distinct s.user_id, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s, ".$config->table_location." l ".
+				" where s.user_id=l.user and ".$query_c." order by s.user_id limit $sess_act_row,".$config->num_of_showed_items;
+		else
+			$q="select s.user_id, s.first_name, s.last_name, s.phone, s.email_address from ".$config->table_subscriber." s ".
+				" where ".$query_c." order by s.user_id limit $sess_act_row,".$config->num_of_showed_items;
 		$users_res=MySQL_Query($q);
 		if (!$users_res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		
@@ -148,6 +165,7 @@ function confirmDelete(theLink){
 	<td><?$f->show_element("lname");?></td>
 	<td><?$f->show_element("email");?></td>
 	</tr>
+	<tr><td colspan="4" class="f12b">show on-line users only: <?$f->show_element("onlineonly");?></td></tr>
 	<tr><td colspan="4" align="right"><?$f->show_element("okey");?></td></tr>
 	</table>
 <?$f->finish();					// Finish form?>

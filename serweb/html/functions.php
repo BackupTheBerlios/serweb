@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.11 2003/01/07 18:32:03 kozlik Exp $
+ * $Id: functions.php,v 1.12 2003/02/13 13:04:13 kozlik Exp $
  */
 
 
@@ -258,4 +258,21 @@ function set_timezone(&$errors){
 	putenv("TZ=".$row->timezone); //set timezone	
 }
 
+//get location of domainname in sip_adr from netgeo_cache
+function get_location($sip_adr, &$errors){
+	global $config;
+	static $reg;
+	
+	$reg = new Creg();
+	
+	$domainname=$reg->get_domainname($sip_adr);
+	
+	$q="select location from ".$config->table_netgeo_cache." where domainname='".$domainname."'";
+	$res=mySQL_query($q);
+	if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; return;}
+	$row=mysql_fetch_object($res);
+
+	if (!$row) return "";
+	else return $row->location;
+}
 ?>

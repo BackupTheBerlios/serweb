@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.14 2003/01/06 21:27:40 kozlik Exp $
+ * $Id: my_account.php,v 1.15 2003/02/13 13:04:13 kozlik Exp $
  */
 
 require "prepend.php";
@@ -27,12 +27,13 @@ $f = new form;                   // create a form object
 $f2 = new form;                   // create a form object
 
 class Cusrloc {
-	var $uri, $q, $expires;
+	var $uri, $q, $expires, $geo_loc;
 	
-	function Cusrloc ($uri, $q, $expires){
+	function Cusrloc ($uri, $q, $expires, $geo_loc){
 		$this->uri=$uri;
 		$this->q=$q;
 		$this->expires=$expires;
+		$this->geo_loc=$geo_loc;
 	}
 }
 
@@ -260,10 +261,11 @@ do{
 		foreach($out_arr as $val){
 			if (!ereg("^[[:space:]]*$", $val)){
 				if (ereg("<([^>]*)>;q=([0-9.]*);expires=([0-9]*)", $val, $regs))
-					$usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3]);
+					$usrloc[]=new Cusrloc($regs[1], $regs[2], $regs[3], get_location($regs[1], $errors));
 				else { $errors[]="sorry error -- invalid output from fifo"; break; }
 			}
 		}
+
 	}
 						 
 }while (false);
@@ -416,9 +418,11 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="60">priority</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td class="titleT" width="125">location</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td class="titleT" width="63">&nbsp;</td>
 	</tr>
-	<tr><td colspan="7" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
+	<tr><td colspan="9" height="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td></tr>
 	<?foreach($usrloc as $row){
 		$expires=date('Y-m-d H:i',time()+$row->expires);
 		
@@ -431,6 +435,8 @@ if ($okey_x){							//data isn't valid or error in sql
 	<td align="center" class="f12" width="125"><?echo $date;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="60"><?echo $row->q;?>&nbsp;</td>
+	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
+	<td align="center" class="f12" width="125"><?echo $row->geo_loc;?>&nbsp;</td>
 	<td width="2" bgcolor="#C1D773"><img src="<?echo $config->img_src_path;?>title/green_pixel.gif" width="2" height="2"></td>
 	<td align="center" class="f12" width="63"><a href="<?$sess->purl("my_account.php?kvrk=".uniqid('')."&uid=".rawURLEncode($uid)."&del_contact=".rawURLEncode($row->uri));?>">delete</a></td>
 	</tr>
