@@ -30,6 +30,7 @@ do{
 		if (!$res) {$errors[]="error in SQL query, line: ".__LINE__; break;}
 		$row=MySQL_Fetch_Row($res);
 		$alias=is_null($row[0])?$config->first_alias_number:($row[0]+1);
+		$alias=($alias<$config->first_alias_number)?$config->first_alias_number:$alias;
 
 		$q="insert into ".$config->table_subscriber." select * from ".$config->table_pending." where confirmation='$nr'";
 		$res=mySQL_query($q);
