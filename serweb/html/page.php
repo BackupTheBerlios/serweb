@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page.php,v 1.11 2003/09/16 16:49:53 kozlik Exp $
+ * $Id: page.php,v 1.12 2003/10/13 18:53:30 kozlik Exp $
  */
 
 	function put_headers(){
@@ -88,6 +88,39 @@
 		<?
 		
 		print_tabs_new($config->admin_tabs, $config->admin_pages_path, $tab_selected); $_page_tab=1;?>	
+
+ 		<table bgcolor="#B1C9DC" width="100%" border="0" cellspacing="0" cellpadding="1">
+		<tr><td>
+			<table bgcolor="#FFFFFF" width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr valign="top"><td>
+			
+<?	} //print_admin_html_body_begin
+
+
+	function print_resell_html_body_begin($tab_selected=null){
+		global $config, $_page_tab, $sess, $auth;
+
+		virtual($config->prolog);
+		echo "iptel.org Reseller Management";
+		virtual($config->separator);
+
+		?>
+			<div class="f12">
+				<table width="200" align="right">
+				<td align="right">&nbsp;<a href=logout.php>Logout</a></td>
+				<td align="right">&nbsp;<a href=/phpBB/>FAQ</a></td>
+				</tr>
+				</table>
+			</div>
+			<br clear="all">
+		<?
+		
+		if ($auth->auth["uname"]==$config->ppaid->operator_id)
+			$tabs=$config->ppaid->op_tabs;
+		else
+			$tabs=$config->ppaid->r_tabs;
+		
+		print_tabs_new($tabs, $config->resell_pages_path, $tab_selected); $_page_tab=1;?>	
 
  		<table bgcolor="#B1C9DC" width="100%" border="0" cellspacing="0" cellpadding="1">
 		<tr><td>
