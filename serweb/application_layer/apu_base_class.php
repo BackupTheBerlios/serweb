@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_base_class.php,v 1.4 2004/09/17 17:21:47 kozlik Exp $
+ * $Id: apu_base_class.php,v 1.5 2004/11/05 19:44:36 kozlik Exp $
  */ 
 
 /* The main parent of all application units */
@@ -102,12 +102,11 @@ class apu_base_class{
 	function was_form_submited(){
 		global $_POST;
 	
-		/* check if is set $_POST['okey_x'] and if $_POST['apu_name'] contains
+		/* check if is set $_POST['apu_name'] anf if it contains
 		   instance_id of this APU
 		 */
 	
-		if (isset($_POST['okey_x']) and $_POST['okey_x'] and 
-			isset($_POST['apu_name']) and 
+		if (isset($_POST['apu_name']) and 
 			(is_array($_POST['apu_name'])?
 				in_array($this->opt['instance_id'], $_POST['apu_name']):
 				$_POST['apu_name']==$this->opt['instance_id']))

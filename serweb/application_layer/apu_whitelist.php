@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.3 2004/09/23 14:09:41 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.4 2004/11/05 19:44:36 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -319,6 +319,8 @@ class apu_whitelist extends apu_base_class{
 		$smarty->assign($this->opt['smarty_js_edit'], "javascript: wlist_edit(".$form_fields.");");
 		$smarty->assign($this->opt['smarty_js_drop'], "javascript: wlist_drop(".$form_fields.");");
 
+		$this->js_before = "wlist_add(".$form_fields.", '".$v_regex."', '".$v_msg."');\n".
+		                   $this->js_before;
 	}
 	
 	/* return info need to assign html form to smarty */
