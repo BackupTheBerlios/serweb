@@ -1,0 +1,13 @@
+2005-01-19
+	* changelog started
+	* main changes from release 0.8.12 wich I remember:
+		- support for UUID
+		- created application layer
+		- created data layer (multi db support)
+		- multilanguage support
+		- multidomain support
+		- some new tabs
+		
+2005-03-02
+	* default values for domain depending options separated from main config 
+	  file		
