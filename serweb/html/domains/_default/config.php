@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.1 2004/03/24 21:39:46 kozlik Exp $
+ * $Id: config.php,v 1.2 2004/04/23 12:37:57 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -17,6 +17,10 @@
 
 		/* content of html <title> tag */
 		$this->html_title="SIP Express Router - web interface";
+
+		/* DOCTYPE of html pages. The default value is 'strict' for XHTML 1.0 Strict. If your prolog.html and epilog.html
+			is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
+		$this->html_doctype="strict";
 
 		/* user content of <head> tag. There can be some linked CSS or javascript or <meta> tags */
 		$this->html_headers[]="";
