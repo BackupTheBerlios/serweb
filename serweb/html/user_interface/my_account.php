@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: my_account.php,v 1.27 2003/11/03 01:54:27 jiri Exp $
+ * $Id: my_account.php,v 1.28 2004/03/02 16:20:16 kozlik Exp $
  */
 
 require "prepend.php";
@@ -57,6 +57,7 @@ do{
 	
 	set_timezone($errors);
 	
+	$options=array();
 	$opt=get_time_zones($errors);
 	foreach ($opt as $v) $options[]=array("label"=>$v,"value"=>$v);
 	

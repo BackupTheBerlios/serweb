@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: functions.php,v 1.29 2004/01/18 22:15:18 jiri Exp $
+ * $Id: functions.php,v 1.30 2004/03/02 16:20:16 kozlik Exp $
  */
 
 
@@ -267,7 +267,7 @@ function get_time_zones(&$errors){
 	global $config;
 
 	@$fp=fopen($config->zonetab_file, "r");
-	if (!$fp) {$errors[]="Cannot open zone.tab file"; return false;}
+	if (!$fp) {$errors[]="Cannot open zone.tab file"; return array();}
 	
 	while (!feof($fp)){
 		$line=FgetS($fp, 512);
