@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.5 2004/11/29 21:38:12 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.6 2004/12/01 17:43:45 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -49,6 +49,26 @@
    'new_uri_max_chars'			(int) default: 128
      maximum number of characters in fields new_uri
 
+   'validate_funct'				(string) default: null
+     name of enhanced validate function of entered uri
+	 validate function must return true or false, first parametr is reference
+	 to given URI (function can change it)
+	 and second one is  is reference to errors array - function can add error message 
+	 to it which is dispayed to user
+	
+		 example:
+			function my_validate_form(&$uri, &$errors){
+				//validate only one attribute
+				if (ereg('^[0-9]+$', $uri)) return true;
+				else {
+					$errors[]="not number";
+					return false;
+				}
+			}
+	
+			set_opt('validate_funct') = 'my_validate_function';
+	 
+	 
    'smarty_form'				name of smarty variable - see below
    'smarty_speed_dials'			name of smarty variable - see below
    'smarty_pager'				name of smarty variable - see below
@@ -121,6 +141,9 @@ class apu_speed_dial extends apu_base_class{
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
 		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
+
+
+		$this->opt['validate_funct'] = null;	
 		
 		/*** names of variables assigned to smarty ***/
 		/* pager */
@@ -361,6 +384,16 @@ class apu_speed_dial extends apu_base_class{
 						$errors[] = $this->opt['blacklist_e'];
 						return false;
 					}
+				}
+			}
+		}
+		
+		//try to call user checking function yet
+		if (!empty($this->opt['validate_funct'])){
+			foreach ($this->speed_dials as $key => $val){
+				if (!call_user_func_array($this->opt['validate_funct'], array(&$_POST['new_uri_'.$val['index']], &$errors))){
+					//user checking function returned false -> number is wrong
+					return false;
 				}
 			}
 		}
