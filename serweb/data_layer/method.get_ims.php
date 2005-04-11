@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_ims.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_ims.php,v 1.2 2005/04/11 15:39:25 kozlik Exp $
  */
 
 class CData_Layer_get_ims {
@@ -11,9 +11,25 @@ class CData_Layer_get_ims {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
+
+		/* get num rows */		
+		$q="select count(*) from ".$config->data_sql->table_message_silo.
+			" where ".$this->get_indexing_sql_where_phrase($user);
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+		$this->set_num_rows($row[0]);
+		$res->free();
+
+		/* if act_row is bigger then num_rows, correct it */
+		$this->correct_act_row();
+
+
 		$q="select mid, src_addr, inc_time, body from ".
 			$config->data_sql->table_message_silo.
-			" where ".$this->get_indexing_sql_where_phrase_uri($user);
+			" where ".$this->get_indexing_sql_where_phrase($user).
+			" limit ".$this->get_act_row().", ".$this->get_showed_rows();
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
@@ -23,6 +39,8 @@ class CData_Layer_get_ims {
 			else $time=date('Y-m-d H:i',$row->inc_time);
 
 			$out[$i]['src_addr'] = htmlspecialchars($row->src_addr);
+			$out[$i]['raw_src_addr'] = $row->src_addr;
+			$out[$i]['mid'] = 	   $row->mid;
 			$out[$i]['time'] =     $time;
 			$out[$i]['body'] =     $row->body;
 			$out[$i]['url_reply']= $sess->url("send_im.php?kvrk=".uniqid("")."&sip_addr=".rawURLEncode($row->src_addr));
