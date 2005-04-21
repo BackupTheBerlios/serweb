@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: method.get_status_visibility.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_status_visibility.php,v 1.2 2005/04/21 15:09:45 kozlik Exp $
  */
 
 class CData_Layer_get_status_visibility {
-	var $required_methods = array();
+	var $required_methods = array('get_attribute_of_user', 'get_uuid_of_user');
 	
 	/*
 	 * get status visibility of sip user
@@ -14,17 +14,13 @@ class CData_Layer_get_status_visibility {
 	function get_status_visibility($user, $domain, &$errors){
 		global $config;
 
-		$q="select allow_show_status from ". $config->data_sql->table_subscriber.
-			" where username='".addslashes($user)."' and domain='".addslashes($domain)."'";
+		if (false === $uuid = $this->get_uuid_of_user($user, $domain, $errors)) return -1;
 
-		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return -1;}
+		$user_auth = new Cserweb_auth($uuid, $user, $domain);
 
-		if (!$res->numRows()) {return -1;}
-		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
-		$res->free();
+		if (false === $val = $this->get_attribute_of_user($user_auth, $config->status_vibility, null, $errors)) return -1;
 
-		return $row['allow_show_status']?true:false;
+		return $val?true:false;
 	}
 	
 }

@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.55 2005/03/14 11:45:46 kozlik Exp $
+ * @version   $Id: functions.php,v 1.56 2005/04/21 15:09:46 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -160,6 +160,22 @@ class Creg{
 		$this->email = $reg_validate_email;
 	}
 
+    /**
+     *	Attempts to return a reference to a Creg instance.
+     *	Only creating a new instance if no Creg instance currently exists.
+     *
+     *	@return object Creg		instance of Creg class
+     *	@static
+     *	@access public 
+     */
+	function &singleton(){
+		static $instance;
+		
+		if(! isset($instance)) $instance = new Creg();
+		
+		return $instance;
+	}
+
 	/**
 	 * parse domain name from sip address
 	 *
@@ -182,6 +198,28 @@ class Creg{
 
 		//remove the '@' at the end
 		return substr($uname,0,-1);
+	}
+	
+	/**
+	 *	Parse parameters from sip uri
+	 *
+	 *	@param string $sip	sip uri
+	 *	@return array 		associative array of parameters and their values
+	 */
+	function get_parameters($sip){
+		$params = explode(';', $sip);
+		//first element is containing part of sip uri before parameters
+		unset($params[0]);
+		
+		$out = array();
+		if (is_array($params)){
+			foreach($params as $param){
+				$p = explode('=', $param, 2);
+				$out[$p[0]] = $p[1];
+			}
+		}
+		
+		return $out;
 	}
 	
 	/** converts string which can be accepted by regex $this->phonenumber to string which can be accepted by regex $this->phonenumber_strict 
@@ -258,7 +296,7 @@ function send_mail($to, $subj, $text, $headers = ""){
  *	@param string $fifo		fifo command
  *	@param array $errors	if some error occur during calling this function is writed here
  *	@param string $status	put result of command execution here
- *	$return string			result of the fifo command
+ *	$return string			result of the fifo command, FALSE on error
  */
 function write2fifo($fifo_cmd, &$errors, &$status){
 	global $config;
@@ -266,7 +304,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	/* open fifo now */
 	$fifo_handle=fopen( $config->fifo_server, "w" );
 	if (!$fifo_handle) {
-		$errors[]="sorry -- cannot open write fifo"; return;
+		$errors[]="sorry -- cannot open write fifo"; return false;
 	}
 
 	/* create fifo for replies */
@@ -280,7 +318,7 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	if (fwrite( $fifo_handle, $fifo_cmd)==-1) {
 	    @unlink($config->reply_fifo_path);
 	    @fclose($fifo_handle);
-		$errors[]="sorry -- fifo writing error"; return;
+		$errors[]="sorry -- fifo writing error"; return false;
 	}
 	@fclose($fifo_handle);
 
@@ -288,13 +326,13 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 	@$fp = fopen( $config->reply_fifo_path, "r");
 	if (!$fp) {
 	    @unlink($config->reply_fifo_path);
-		$errors[]="sorry -- reply fifo opening error"; return;
+		$errors[]="sorry -- reply fifo opening error"; return false;
 	}
 
 	$status=fgetS($fp,256);
 	if (!$status) {
 	    @unlink($config->reply_fifo_path);
-		$errors[]="sorry -- reply fifo reading error"; return;
+		$errors[]="sorry -- reply fifo reading error"; return false;
 	}
 	
 	$rd=fread($fp,8192);
@@ -440,133 +478,6 @@ function click_to_dial($target, $uri, &$errors){
    
 }
 
-
-/**************************************
- *         find users class
- **************************************/
-
-class Cfusers{
-	var $classname='Cfusers';
-	var $persistent_slots = array("usrnm", "domain", "fname", "lname", "email", 
-		"onlineonly", "act_row", "adminsonly", "template");
-
-	var $usrnm, $fname, $lname, $email, $domain, $onlineonly=0, $act_row=0;
-	var $adminsonly=0;
-
-	var $f;
-	var $smarty, $template;
-
-	function Cfusers($cfg=null){
-		if (is_array($cfg)){
-
-			if (isset($cfg['adminsonly']) and $cfg['adminsonly']){
-				$this->adminsonly=1;
-			}
-
-			if (isset($cfg['onlineonly']) and $cfg['onlineonly']){
-				$this->onlineonly=1;
-			}
-
-			if (isset($cfg['template'])){
-				$this->template=$cfg['template'];
-			}
-		}
-		
-		$this->smarty = new Smarty_Serweb;
-	}
-	
-	function init(){
-		global $sess, $config, $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-		if (isset($HTTP_POST_VARS['usrnm'])) $this->usrnm=$HTTP_POST_VARS['usrnm'];
-		if (isset($HTTP_POST_VARS['fname'])) $this->fname=$HTTP_POST_VARS['fname'];
-		if (isset($HTTP_POST_VARS['lname'])) $this->lname=$HTTP_POST_VARS['lname'];
-		if (isset($HTTP_POST_VARS['email'])) $this->email=$HTTP_POST_VARS['email'];
-		if (isset($HTTP_POST_VARS['domain'])) $this->domain=$HTTP_POST_VARS['domain'];
-
-		if (isset($HTTP_POST_VARS['okey_x'])){
-			if (isset($HTTP_POST_VARS['onlineonly'])) $this->onlineonly=$HTTP_POST_VARS['onlineonly'];
-			else $this->onlineonly=0;
-
-			if (isset($HTTP_POST_VARS['adminsonly'])) $this->adminsonly=$HTTP_POST_VARS['adminsonly'];
-			else $this->adminsonly=0;
-		}
-
-		if (isset($HTTP_GET_VARS['act_row'])) $this->act_row=$HTTP_GET_VARS['act_row'];
-		if (isset($HTTP_POST_VARS['okey_x'])) $this->act_row=0;
-
-//		if (!$this->act_row or isset($http_get_vars['okey_x'])) $sess_act_row=0;
-		
-		$this->f = new form;                   // create a form object
-		
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"usrnm",
-									 "size"=>11,
-									 "maxlength"=>50,
-		                             "value"=>$this->usrnm));
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"fname",
-									 "size"=>11,
-									 "maxlength"=>25,
-		                             "value"=>$this->fname));
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"lname",
-									 "size"=>11,
-									 "maxlength"=>45,
-		                             "value"=>$this->lname));
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"email",
-									 "size"=>11,
-									 "maxlength"=>50,
-		                             "value"=>$this->email));
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"domain",
-									 "size"=>11,
-									 "maxlength"=>128,
-	        	                     "value"=>$this->domain));
-		$this->f->add_element(array("type"=>"checkbox",
-		                             "value"=>1,
-									 "checked"=>$this->onlineonly,
-	    	                         "name"=>"onlineonly"));
-		$this->f->add_element(array("type"=>"checkbox",
-		                             "value"=>1,
-									 "checked"=>$this->adminsonly,
-	    	                         "name"=>"adminsonly"));
-		
-		$this->f->add_element(array("type"=>"submit",
-		                             "name"=>"okey",
-		                             "src"=>$config->img_src_path."buttons/btn_find.gif",
-									 "extrahtml"=>"alt='find'"));
-	
-	}
-	
-	function get_query_where_phrase($tablename=""){
-		if ($tablename) $tablename.=".";
-	
-		$query_c="";
-		if ($this->usrnm) $query_c.=$tablename."username like '%".$this->usrnm."%' and ";
-		if ($this->fname) $query_c.=$tablename."first_name like '%".$this->fname."%' and ";
-		if ($this->lname) $query_c.=$tablename."last_name like '%".$this->lname."%' and ";
-		if ($this->email) $query_c.=$tablename."email_address like '%".$this->email."%' and ";
-		if ($this->domain) $query_c.=$tablename."domain like '%".$this->domain."%' and ";
-		$query_c.="1 ";
-		
-		return $query_c;
-	
-	}
-	
-	function get_form(){
-		global $lang_str;
-		$this->smarty->assign_phplib_form('form', $this->f, array('jvs_name'=>'form'));
-		$this->smarty->assign_by_ref('lang_str', $lang_str);
-		return $this->smarty->fetch($this->template);
-	}
-	
-	function print_form(){
-		echo $this->get_form();
-	}
-	
-}
  
 /**
  *	Return path to file from directory for concrete domain
@@ -591,6 +502,59 @@ function multidomain_get_file($filename){
 }
 
 /**
+ *	Return path to file for specified language mutation
+ *
+ *	Path in this case mean filesystem path. This function searching in some 
+ *  directories and if corresponfing file is found, retrun path to it. Directories
+ *	are scanned in this order:
+ *		- dir for specified language
+ *		- dir for default language
+ *	If file isn't found, function return false
+ *
+ *	This function only prefix $filename by language (in which file exists) in 
+ *	order to it can be also used as path in html tree
+ *
+ *	@param string $filename		name of file is searching for
+ *	@param string $ddir			subdirectory within html dir
+ *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
+ *	@retrun string				path to file on success, false on error
+ */
+function get_file_by_lang($filename, $ddir, $lang){
+	global $config, $reference_language, $available_languages;
+	
+	$dir=dirname(__FILE__); //html dir
+	$ln = $available_languages[$lang][2];
+	$ref_ln = $available_languages[$reference_language][2];
+
+	if (!empty($ddir) and substr($ddir, -1) != "/") $ddir.="/";
+
+	if (file_exists($dir."/".$ddir.$ln."/".$filename)) 
+		return $ln."/".$filename;
+
+	else if (file_exists($dir."/".$ddir.$ref_ln."/".$filename)){
+		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		return $ref_ln."/".$filename;
+	}
+
+	else {
+		sw_log("File not found. Filename:".$filename.", Language:".$ln.", Subdir:".$ddir, PEAR_LOG_ERR);	
+		return false;
+	}
+}
+
+/**
+ *	Return path to button image
+ *
+ *	@param string $button 	name of file with button image
+ *	@param string $lang		language in "official" ISO 639 language code see {@link config_lang.php} for more info
+ *	@return string
+ */
+function get_path_to_buttons($button, $lang){
+	global $config;
+	return $config->img_src_path."int/".get_file_by_lang("buttons/".$button, "img/int", $lang);
+}
+
+/**
  *	Return path to text file for specified language mutation and concrete domain
  *
  *	Path in this case mean filesystem path. This function searching in some 
@@ -603,7 +567,7 @@ function multidomain_get_file($filename){
  *	If file isn't found, function return false
  *
  *	@param string $filename		name of file is searching for
- *	@param string $ddir			subdirectory in of domain dir
+ *	@param string $ddir			subdirectory within domain dir
  *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
  *	@retrun string				path to file on success, false on error
  */
@@ -612,7 +576,7 @@ function multidomain_get_lang_file($filename, $ddir, $lang){
 	
 	$dir=dirname(__FILE__)."/domains/";
 	$ln = $available_languages[$lang][2];
-	$ref_ln = $available_languages[$reference_language][2]."/";
+	$ref_ln = $available_languages[$reference_language][2];
 
 	if (!empty($ddir) and substr($ddir, -1) != "/") $ddir.="/";
 
@@ -620,7 +584,7 @@ function multidomain_get_lang_file($filename, $ddir, $lang){
 		return $dir.$config->domain."/".$ddir.$ln."/".$filename;
 	
 	else if (file_exists($dir.$config->domain."/".$ddir.$ref_ln."/".$filename)){
-		sw_log("Useing file in default language (".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
 		return $dir.$config->domain."/".$ddir.$ref_ln."/".$filename;
 	}
 		
@@ -630,7 +594,7 @@ function multidomain_get_lang_file($filename, $ddir, $lang){
 	}
 
 	else if (file_exists($dir."_default/".$ddir.$ref_ln."/".$filename)){
-		sw_log("Useing file from default domain and in default language (".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file from default domain and in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
 		return $dir."_default/".$ddir.$ref_ln."/".$filename;
 	}
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.7 2004/12/15 21:49:39 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.8 2005/04/21 15:09:45 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -34,17 +34,27 @@
                                 can be used to make value of attribute optional
 								(have efect only for some types of attributes (e.g. sip_adr, int)
 								
+   'att_description'			(array) description of attributes. Keys of this array are names of attributes.
+   								Values are descriptions of attributes which are stored into keys 'att_desc' of
+   								opt['smarty_action'] array
+								
    'msg_update'					message which should be showed on attributes update - assoc array with keys 'short' and 'long'
    								default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
    'smarty_attributes'			name of smarty variable - see below
    'smarty_form'				name of smarty variable - see below
    'smarty_action'				name of smarty variable - see below
    'form_name'					name of html form
+
+   'form_submit'				(assoc)
+     assotiative array describe submit element of form. For details see description 
+	 of method add_submit in class form_ext
    
    Exported smarty variables:
    --------------------------
    opt['smarty_attributes'] 	(attributes)	associative array containing info about attributes
-   													key: 'att_name' - name of attribute
+   													keys: 
+														'att_name' - name of attribute
+														'att_desc' - human readable name of attribute
    opt['smarty_form'] 			(form)			phplib html form
    
    opt['smarty_action']			(action)		tells what should smarty display. Values:
@@ -71,11 +81,13 @@ class apu_user_preferences extends apu_base_class{
 	
 	/* constructor */
 	function apu_user_preferences(){
-		global $lang_str;
+		global $lang_str, $config;
 		parent::apu_base_class();
 
 		/* with which attributes we will work, if this array is ampty we will work with all defined attributes */		
 		$this->opt['attributes'] = array();	
+
+		$this->opt['att_description'] = array();	
 
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
@@ -112,6 +124,12 @@ class apu_user_preferences extends apu_base_class{
 		foreach($attributes as $att){
 			if ($this->attributes[$att]->att_rich_type == "sip_adr") 
 					$js_on_subm.="sip_address_completion(f.".$this->attributes[$att]->att_name.");";
+
+			// set description of attributes
+			if (isset($this->opt['att_description'][$this->attributes[$att]->att_name]))
+				$out[$i]['att_desc'] = $this->opt['att_description'][$this->attributes[$att]->att_name];
+			else
+				$out[$i]['att_desc'] = $this->attributes[$att]->att_name;
 	
 			$out[$i]['att_name'] = $this->attributes[$att]->att_name;
 			$i++;

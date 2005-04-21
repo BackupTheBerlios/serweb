@@ -78,22 +78,22 @@ div.swTabsL{
 	float : left;
 	width : 7px;
 	height : 25px;
-	background-image : url(../../img/tab/tab_left_w.gif);
+	background-image : url(img/tab/tab_left_w.gif);
 }
 
 div.swTabsR{
 	float : left;
 	width : 7px;
 	height : 25px;
-	background-image : url(../../img/tab/tab_right_w.gif);
+	background-image : url(img/tab/tab_right_w.gif);
 }
 
 div#swTabs ul li#swActiveTab div.swTabsL{
-	background-image : url(../../img/tab/tab_left.gif);
+	background-image : url(img/tab/tab_left.gif);
 }
 
 div#swTabs ul li#swActiveTab div.swTabsR{
-	background-image : url(../../img/tab/tab_right.gif);
+	background-image : url(img/tab/tab_right.gif);
 }
 
 div#swTabs ul li a, div#swTabs ul li strong {
@@ -223,6 +223,13 @@ table.swTable th{
 	text-align: justify ;
 	font-weight: bold ;
 	background-color: #B1C9DC;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+table.swTable th a:link, table.swTable th a:visited, 
+table.swTable th a:active, table.swTable th a:hover{
+	color: #000000;
 }
 
 table.swTable td{
@@ -231,6 +238,8 @@ table.swTable td{
 	border-right : 1px solid #C1D773;
 	color: #000000;
 	vertical-align : top;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 table.swTable tr.swTrEven{

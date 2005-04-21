@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.11 2005/03/03 11:38:21 kozlik Exp $
+ * $Id: config.php,v 1.12 2005/04/21 15:09:45 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -53,6 +53,13 @@
 	*/
 	$config->require_delete_confirmation_page=false;
 
+	/* name of attribute in user preference for set visibility status of user
+	   set to false if status of users should be always visible
+
+	   type of this attribute should be boolean
+	 */
+	$config->status_vibility = "sw_user_status_visible";
+
 	/* Regular expressions for check if phonenumber entered by user is valid
 	   (is used only if serweb is workong with phonenumbers instead of sip addresses)
 	   The diferent between phonenumber_regex and strict_phonenumber_regex is that 
@@ -78,7 +85,7 @@
 	$config->user_tabs[]=new Ctab (true, "tab_missed_calls", "missed_calls.php");								// $lang_str['tab_missed_calls']
 	$config->user_tabs[]=new Ctab (true, "tab_accounting", "accounting.php");									// $lang_str['tab_accounting']
 	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");											// $lang_str['tab_send_im']
-	$config->user_tabs[]=new Ctab (false, "tab_notification_subscription", "notification_subscription.php");	// $lang_str['tab_notification_subscription']
+//	$config->user_tabs[]=new Ctab (false, "tab_notification_subscription", "notification_subscription.php");	// $lang_str['tab_notification_subscription']
 	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");								// $lang_str['tab_message_store']
 	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");									// $lang_str['tab_voicemail']
 	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
@@ -248,15 +255,15 @@
 	/* subscribe-notify -- list of events to which a user can subscribe and
 	   is then notified with an instant message, if they occur; experimental
 	*/
-	$config->sub_not=array();
-	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
-		";type=temperature;operator=lt;value=0","temperature is too low");
-	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
-		";type=wind;operator=gt;value=10","wind is too fast");
-	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;".
-		"type=pressure;operator=lt;value=1000","pressure is too low");
-	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;type=metar",
-		"send METAR data");
+//	$config->sub_not=array();
+//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
+//		";type=temperature;operator=lt;value=0","temperature is too low");
+//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
+//		";type=wind;operator=gt;value=10","wind is too fast");
+//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;".
+//		"type=pressure;operator=lt;value=1000","pressure is too low");
+//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;type=metar",
+//		"send METAR data");
 
 	/* metar wheather application */
 	//this is an identificator in event table for sending METAR data

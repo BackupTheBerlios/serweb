@@ -1,33 +1,51 @@
 <?
-/*
- * $Id: apu_base_class.php,v 1.5 2004/11/05 19:44:36 kozlik Exp $
+/**
+ * The main parent of all application units
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: apu_base_class.php,v 1.6 2005/04/21 15:09:45 kozlik Exp $
+ * @package   serweb
  */ 
 
-/* The main parent of all application units */
-
-/* 
-   Configuration:
-   --------------
-   instance_id			unique identificator of instance of application unit
-   form_submit			assotiative array describe submit element of form. 
-   						for details see description of method add_submit in class form_ext
+/** 
+ *	The main parent of all application units 
+ *	
+ *	Configuration:
+ *	--------------
+ *	instance_id			unique identificator of instance of application unit
+ *	form_submit			assotiative array describe submit element of form. 
+ *						for details see description of method add_submit in class form_ext
+ *
  */							
 
 class apu_base_class{
-	var $opt=array();	//associative array of application unit options
+	/** associative array of application unit options */
+	var $opt=array();
+	
 	var $action;
-	var $instance;		//unified number of instance of this class
-	var $user_id;		//auth info of user with which setting we are workig. Usualy is same as $serweb_auth, only admin can change it
-	var $f; 			//html form
-	var $controler; 	//reference to page_controler
+	/** unified number of instance of this class */
+	var $instance;
+	/** auth info of user with which setting we are workig. Usualy is same as $serweb_auth, only admin can change it */
+	var $user_id;
+	/** html form */
+	var $f;
+	/** name of html form when multiple shared html forms is used, variable is set by controler */
+	var $form_name = null;
+	/** reference to page_controler */
+	var $controler;
 	
 
 	/* constructor */
 	function apu_base_class(){
+		global $sess_lang, $lang_str;
 		$this->action="";
 		/* set instance id for identification this object when multiple instances is used */
 		$this->opt['instance_id']=get_class($this).apu_base_class::get_Instance();
-		$this->opt['form_submit']=array('type'=>'hidden');
+
+		$this->opt['form_submit']=array('type' => 'image',
+										'text' => $lang_str['b_submit'],
+										'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang));
+	
 	}
 	
 	/* static method - generate instance number */
@@ -54,10 +72,20 @@ class apu_base_class{
 	
 	/* this metod is called always at begining */
 	function init(){
-		/* if html form is common for all apu, reference this->f to controler form */
-		if ($this->controler->opt['shared_html_form']) $this->f = &$this->controler->f;
+		/* if html form is common for more APUs, reference this->f to common form */
+		if ($this->controler->shared_html_form){
+			/* if html form was not assignet to this APU, assign default */
+			if (is_null($this->form_name)){
+				sw_log("Html form was not assigned to APU ".$this->opt['instance_id'].".  Useing default.", PEAR_LOG_DEBUG);	
+				$this->controler->assign_form_name('default', $this);
+			}
+		
+			$this->f = &$this->controler->f[$this->form_name]['form'];
+		}
 		/* else create own form object */
-		else	$this->f = new form_ext;
+		else{
+			$this->f = new form_ext();
+		}
 	}
 
 	function action_default(&$errors){
@@ -74,8 +102,8 @@ class apu_base_class{
 	/* create html form */
 	function create_html_form(&$errors){
 		/* if html form is shared by more APUs, add insatance_id to controler->form_apu_names array */
-		if ($this->controler->opt['shared_html_form'])
-			$this->controler->form_apu_names[] = $this->opt['instance_id'];
+		if ($this->controler->shared_html_form)
+			$this->controler->f[$this->form_name]['apu_names'][] = $this->opt['instance_id'];
 		else{
 		/* otherways form isn't shared - add hidden element to it */
 			$this->f->add_element(array("type"=>"hidden",
@@ -89,7 +117,7 @@ class apu_base_class{
 	/* validate html form */
 	function validate_form(&$errors){
 		/* if html form isn't shared validate it, otherwise it do controler */
-		if (!$this->controler->opt['shared_html_form']){
+		if (!$this->controler->shared_html_form){
 			if ($err = $this->f->validate()) {			// Is the data valid?
 				$errors=array_merge($errors, $err); // No!
 				return false;

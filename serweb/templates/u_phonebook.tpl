@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -26,7 +26,7 @@
 {$form.finish}
 </div>
 
-{foreach from=$pb_res item='row' name='phonebook'}
+{foreach from=$phonebook item='row' name='phonebook'}
 	{if $smarty.foreach.phonebook.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -61,7 +61,7 @@
 <div class="swNumOfFoundRecords">{$lang_str.no_records}</div>
 {/foreach}
 
-<div class="swLinkToTabExtension"><a href="{url url='find_user.php'}">{$lang_str.l_find_user}</a></div>
+<div class="swLinkToTabExtension"><a href="{url url='whitepages.php'}">{$lang_str.l_find_user}</a></div>
 
 <br>
 {include file='_tail.tpl'}

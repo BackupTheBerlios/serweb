@@ -1,15 +1,15 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.1 2004/09/06 11:03:13 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */
 
 /*
  *  Function update speed dial entry of $user by $values
  *
  *  Keys of associative array $values:
- *    new_request_uri
- *    first_name
- *    last_name
+ *    new_uri
+ *    fname
+ *    lname
  *    primary_key            - array - reflect primary key without user identification
  *
  *
@@ -37,34 +37,36 @@ class CData_Layer_update_speed_dial {
 			log_errors(PEAR::raiseError('primary key is missing'), $errors); return false;
 		}
 
+		$c = &$config->data_sql->speed_dial;
+
 
 		if ($opt_insert) {
 			$att=$this->get_indexing_sql_insert_attribs($user);
 
 			$q="insert into ".$config->data_sql->table_speed_dial." (
 			           ".$att['attributes'].", 
-					   username_from_req_uri,
-					   domain_from_req_uri, 
-					   new_request_uri, 
-					   first_name, 
-					   last_name
+					   ".$c->sd_username.",
+					   ".$c->sd_domain.", 
+					   ".$c->new_uri.", 
+					   ".$c->fname.", 
+					   ".$c->lname."
 			    ) 
 				values (
 				       ".$att['values'].", 
-					   '".$opt['primary_key']['username_from_req_uri']."',
-					   '".$opt['primary_key']['domain_from_req_uri']."',
-					   '".$values['new_request_uri']."', 
-					   '".$values['first_name']."', 
-					   '".$values['last_name']."'
+					   '".$opt['primary_key']['sd_username']."',
+					   '".$opt['primary_key']['sd_domain']."',
+					   '".$values['new_uri']."', 
+					   '".$values['fname']."', 
+					   '".$values['lname']."'
 				 )";
 		}
 		else {
 			$q="update ".$config->data_sql->table_speed_dial." 
-			    set new_request_uri='".$values['new_request_uri']."', 
-					first_name='".$values['first_name']."', 
-					last_name='".$values['last_name']."' 
-				where username_from_req_uri='".$opt['primary_key']['username_from_req_uri']."' and 
-				      domain_from_req_uri='".$opt['primary_key']['domain_from_req_uri']."' and 
+			    set ".$c->new_uri."='".$values['new_uri']."', 
+					".$c->fname."='".$values['fname']."', 
+					".$c->lname."='".$values['lname']."' 
+				where ".$c->sd_username."='".$opt['primary_key']['sd_username']."' and 
+				      ".$c->sd_domain."='".$opt['primary_key']['sd_domain']."' and 
 					  ".$this->get_indexing_sql_where_phrase($user);
 
 		}

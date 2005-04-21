@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: accounting.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -22,7 +22,18 @@ else{
 	$page_attributes['user_name'] = $data->get_user_real_name($serweb_auth, $controler->errors);
 }
 
-$acc=new apu_accounting();
+$acc			= new apu_accounting();
+
+$acc->set_opt('display_incoming', false);
+$acc->set_opt('display_outgoing', true);
+$acc->set_opt('display_missed', false);
+
+/* if you doesn't need this, disable it for perfonmance reasons */
+$acc->set_opt('get_user_status', true);
+/* if you doesn't need this, disable it for perfonmance reasons */
+$acc->set_opt('get_phonebook_names', true);
+
+$acc->set_opt('smarty_result', 'acc');
 
 
 $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvrk=".uniqid("")));

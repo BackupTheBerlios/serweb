@@ -1,17 +1,19 @@
 {* Smarty *}
-{* $Id: u_accounting.tpl,v 1.3 2004/08/25 10:19:48 kozlik Exp $ *}
+{* $Id: u_accounting.tpl,v 1.4 2005/04/21 15:09:46 kozlik Exp $ *}
+
+
+{include file='_head.tpl'}
 
 {if $come_from_admin_interface}
 <div class="swNameOfUser">{$lang_str.user}: {$user_auth->uname}</div>
 {/if}
 
-{include file='_head.tpl'}
-
-{foreach from=$acc_res item='row' name='accounting'}
+{foreach from=$acc item='row' name='accounting'}
 	{if $smarty.foreach.accounting.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>{$lang_str.th_destination}</th>
+	<th>{$lang_str.th_status}</th>
 	<th>{$lang_str.th_time}</th>
 	<th>{$lang_str.th_length_of_call}</th>
 	<th>{$lang_str.th_hangup}</th>
@@ -20,8 +22,13 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">
-	<a href="{$row.url_ctd}">{$row.sip_to|empty2nbsp}</a></td>
-	<td align="left">{$row.time|empty2nbsp}</td>
+	<a href="{$row.url_ctd}">
+		{if $row.name}{$row.name|empty2nbsp}
+		{else} {$row.sip_to|empty2nbsp}
+		{/if}
+	</a></td>
+	<td align="center">{$row.status|empty2nbsp}</td>
+	<td align="left">{$row.timestamp|my_date_format:$lang_set.date_time_format|empty2nbsp}</td>
 	<td align="left">{$row.length|empty2nbsp}</td>
 	<td align="center">{$row.hangup}</td>
 	</tr>
@@ -37,6 +44,8 @@
 {foreachelse}
 <div class="swNumOfFoundRecords">{$lang_str.no_calls}</div>
 {/foreach}
+
+<br><div align="center"><a href="{$url_delete}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_delete_calls.gif" width="165" height="16" border="0"></a></div>
 
 {if $come_from_admin_interface}
 	<br>

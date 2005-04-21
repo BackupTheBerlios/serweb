@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_sip_user.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_sip_user.php,v 1.2 2005/04/21 15:09:45 kozlik Exp $
  */
 
 class CData_Layer_get_sip_user {
@@ -12,7 +12,7 @@ class CData_Layer_get_sip_user {
 	 */
 
 	function get_sip_user($user, $domain, &$errors){
-		global $auth, $config;
+		global $auth, $config, $lang_str;
 
 		if (!$this->connect_to_db($errors)) return false;
 	
@@ -29,7 +29,7 @@ class CData_Layer_get_sip_user {
 		//query db
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
-		if (!$res->numRows()) {$errors[]='Sorry, '.$user.' is not a registered username!'; return false;}
+		if (!$res->numRows()) {$errors[] = $lang_str['err_no_user']; return false;}
 
 		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
 		$res->free();

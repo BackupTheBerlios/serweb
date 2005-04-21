@@ -1,29 +1,62 @@
 <?
 /*
- * $Id: method.get_cs_callers.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_cs_callers.php,v 1.2 2005/04/21 15:09:45 kozlik Exp $
  */
+
+/*
+ *  Function return array of associtive arrays containig caller screening entries of $user
+ *
+ *  Keys of associative arrays:
+ *	  uri_re
+ *	  action
+ *	  param1
+ *	  param2
+ *    id
+ *
+ *  Possible options parameters:
+ *
+ *    csid	(string)	default: null
+ *  
+ */ 
 
 class CData_Layer_get_cs_callers {
 	var $required_methods = array();
 	
-	function get_CS_callers($user, $uri, &$errors){
+	function get_CS_callers($user, $opt, &$errors){
 		global $config, $sess;
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-		if ($uri) $qw=" and uri_re!='$uri' "; else $qw="";
+	    $csid = (isset($opt['csid'])) ? $opt['csid'] : null;
+
+		if (!is_null($csid)) $qw=" and uri_re!='".$csid."' "; 
+		else $qw="";
+
+		$q="select count(*) from ".$config->data_sql->table_calls_forwarding.
+			" where ".$this->get_indexing_sql_where_phrase($user)." and purpose='screening'".$qw;
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+		$this->set_num_rows($row[0]);
+		$res->free();
+
+		/* if act_row is bigger then num_rows, correct it */
+		$this->correct_act_row();
+
+
 
 		$q="select uri_re, action, param1, param2 from ".$config->data_sql->table_calls_forwarding.
-			" where ".$this->get_indexing_sql_where_phrase($user)." and purpose='screening'".$qw." order by uri_re";
+			" where ".$this->get_indexing_sql_where_phrase($user)." and purpose='screening'".$qw.
+			" order by uri_re".
+			" limit ".$this->get_act_row().", ".$this->get_showed_rows();
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
 		$out=array();
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
 			$out[$i]   = $row;
-			$out[$i]['label'] 	  = Ccall_fw::get_label($config->calls_forwarding["screening"], $row['action'], $row['param1'], $row['param2']);
-			$out[$i]['url_edit']  = $sess->url("caller_screening.php?kvrk=".uniqID("")."&edit_caller=".rawURLEncode($row['uri_re']));
-			$out[$i]['url_dele']  = $sess->url("caller_screening.php?kvrk=".uniqID("")."&dele_caller=".rawURLEncode($row['uri_re']));
+			$out[$i]['id']        = $row['uri_re'];
 		}
 		$res->free();
 		return $out;

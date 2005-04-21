@@ -1,53 +1,54 @@
-{* Smarty *}
-{* $Id: u_speed_dial.tpl,v 1.1 2004/08/09 23:04:57 kozlik Exp $ *}
+
+{literal}
+<style type="text/css">
+.mmyForm input{width: 100%;}
+</style>
+{/literal}
+
 
 {include file='_head.tpl'}
 
-<div class="swForm">
-{$form.start}
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td align="right"><label for="usrnm_from_uri">{$lang_str.ff_username_from_request_uri}:</label></td>
-	<td>{$form.usrnm_from_uri}</td>
-	</tr>
-	<tr>
-	<td align="right"><label for="domain_from_uri">{$lang_str.ff_domain_from_request_uri}:</label></td>
-	<td>{$form.domain_from_uri}</td>
-	</tr>
-	<tr>
-	<td align="right"><label for="new_uri">{$lang_str.ff_new_request_uri}:</label></td>
-	<td>{$form.new_uri}</td>
-	</tr>
-	<tr>
-	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
-	</tr>
-	</table>
-{$form.finish}
-</div>
+		{$form.start}
 
 {foreach from=$speed_dials item='row' name='speed_dials'}
-	{if $smarty.foreach.speed_dials.first}
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
-	<tr>
-	<th>{$lang_str.th_request_uri}</th>
-	<th>{$lang_str.th_new_request_uri}</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	</tr>
-	{/if}
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left">{$row.username_from_req_uri}@{$row.domain_from_req_uri}</td>
-	<td align="left">{$row.new_request_uri|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
-	</tr>
-	{if $smarty.foreach.speed_dials.last}
-	</table>
-	{/if}
-{foreachelse}
-	<div class="swNumOfFoundRecords">{$lang_str.no_speed_dials_defined}</div>
+{assign var='f_name' value="fname_`$row.index`"}
+{assign var='l_name' value="lname_`$row.index`"}
+{assign var='new_uri' value="new_uri_`$row.index`"}
+{if $smarty.foreach.speed_dials.first}
+		<span class="myForm">
+		<table border="0" cellpadding="0" cellspacing="0" align="center"><tr><td>
+		<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
+		 <tr>
+		  <th ><a href="{$url_sort_from_uri}">{$lang_str.th_speed_dial}</a></th>
+		  <th ><a href="{$url_sort_fname}">{$lang_str.ff_first_name}</a></th>
+		  <th ><a href="{$url_sort_lname}">{$lang_str.ff_last_name}</a></th>
+		  <th ><a href="{$url_sort_to_uri}">{$lang_str.th_new_uri}</a></th>
+		 </tr>
+{/if}
+		 <tr class="{cycle values='swTrOdd,swTrEven'}">
+		  <td >{$row.sd_username}</td>
+		  <td >{$form.$f_name}</td>
+		  <td >{$form.$l_name}</td>
+		  <td >{$form.$new_uri}</td>
+		 </tr>
+{if $smarty.foreach.speed_dials.last}
+		</table>
+		</td></tr>
+
+		<tr><td class="swSearchLinks">&nbsp;{pager page=$pager class_text='swNavText' class_num='swNav' class_numon='swNavActual' txt_prev='&lt;&lt;&lt;' txt_next='&gt;&gt;&gt;' link_limit=4}</td></tr>
+		<tr><td align="right">{$form.okey}</td></tr>
+		</table>
+
+		</span>
+
+
+{/if}
 {/foreach}
+		
+	
+
+		
+{$form.finish}
 
 <br>
 {include file='_tail.tpl'}

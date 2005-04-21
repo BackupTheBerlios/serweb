@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.5 2004/09/16 17:13:56 kozlik Exp $
+$Id: application_layer_cz,v 1.6 2005/04/21 15:09:46 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -208,41 +208,45 @@ Prubeh zpracovani APU page_controlerem
 ===============================================================================
 
 /*
- * $Id: application_layer_cz,v 1.5 2004/09/16 17:13:56 kozlik Exp $
+ * Application unit my_apu 
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: application_layer_cz,v 1.6 2005/04/21 15:09:46 kozlik Exp $
+ * @package   serweb
  */ 
 
-/* Application unit my_apu */
-
-/*
-   This application unit is used for .............
-   
-   Configuration:
-   --------------
-   
-   'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
-     message which should be showed on attributes update - assoc array with keys 'short' and 'long'
-   								
-   'form_name'					(string) default: ''
-     name of html form
-   
-   'form_submit'				(assoc)
-     assotiative array describe submit element of form. For details see description 
-	 of method add_submit in class form_ext
-
-   'smarty_form'				name of smarty variable - see below
-   'smarty_action'				name of smarty variable - see below
-   
-   Exported smarty variables:
-   --------------------------
-   opt['smarty_form'] 			(form)			
-     phplib html form
-	 
-   opt['smarty_action']			(action)
-	  tells what should smarty display. Values:
-   	  'default' - 
-	  'was_updated' - when user submited form and data was succefully stored
-
-*/
+/* Application unit my_apu 
+ *
+ *
+ *	This application unit is used for .............
+ *	   
+ *	Configuration:
+ *	--------------
+ *	
+ *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+ *								
+ *	'form_name'					(string) default: ''
+ *	 name of html form
+ *	
+ *	'form_submit'				(assoc)
+ *	 assotiative array describe submit element of form. For details see description 
+ *	 of method add_submit in class form_ext
+ *	
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_form'] 			(form)			
+ *	 phplib html form
+ *	 
+ *	opt['smarty_action']			(action)
+ *	  tells what should smarty display. Values:
+ *	  'default' - 
+ *	  'was_updated' - when user submited form and data was succefully stored
+ *	
+ */
 
 class apu_my_apu extends apu_base_class{
 	var $smarty_action='default';
@@ -276,9 +280,6 @@ class apu_my_apu extends apu_base_class{
 		/* name of html form */
 		$this->opt['form_name'] =			'';
 		
-		$this->opt['form_submit']=array('type' => 'image',
-										'text' => 'save',
-										'src'  => $config->img_src_path."butons/b_save.gif");
 		
 	}
 

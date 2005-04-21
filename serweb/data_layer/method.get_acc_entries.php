@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.2 2004/09/16 16:59:20 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.3 2005/04/21 15:09:45 kozlik Exp $
  */
 
 /*
@@ -418,7 +418,7 @@ class CData_Layer_get_acc_entries {
 			$q[]="SELECT count(*)  ".
 					"FROM ".$config->data_sql->table_missed_calls." t1 ".
 					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."'";
-			$q[]="SELECT t1.from_uri, t1.sip_from, t1.time, t1.sip_status ".
+			$q[]="SELECT count(*) ".
 					"FROM ".$config->data_sql->table_missed_calls." t1, ".$config->data_sql->table_aliases." t2 ".
 					"WHERE 'sip:".$user->uname."@".$user->domain."'=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain";
 		}

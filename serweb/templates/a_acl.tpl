@@ -1,11 +1,11 @@
 {* Smarty *}
-{* $Id: a_acl.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
+{* $Id: a_acl.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 <h2 class="swTitle">{$lang_str.access_control_list_of_user}: {$uname}</h2>
 
-{foreach from=$ACL_control item='row' name='acl_control'}
+{foreach from=$acl_control item='row' name='acl_control'}
 	{if $smarty.foreach.acl_control.first}
 	<div class="swForm">
 	{$form.start}
@@ -13,7 +13,7 @@
 	{/if}
 
 	{* concatenate 'chk_' and $row in order to get name of form element *}
-	{assign var='f_element' value="chk_$row"}
+	{assign var='f_element' value="acl_chk_$row"}
 	
 	<tr>
 	<td><label for="{$f_element}">{$row}</label></td>

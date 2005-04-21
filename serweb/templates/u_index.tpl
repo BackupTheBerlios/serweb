@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_index.tpl,v 1.3 2004/08/10 21:33:31 kozlik Exp $ *}
+{* $Id: u_index.tpl,v 1.4 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -13,7 +13,7 @@
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<td><label for="uname">{$lang_str.ff_username}:</label></td>
+<td width="150"><label for="uname">{$lang_str.ff_username}:</label></td>
 <td>{$form.uname}</td>
 </tr>
 <tr>
@@ -23,6 +23,9 @@
 <tr>
 <td>&nbsp;</td>
 <td align=right>{$form.okey}</td>
+</tr>
+<tr>
+<td colspan="2">{$form.remember_uname}{$lang_str.remember_uname}</td>
 </tr>
 </table>
 {$form.finish}

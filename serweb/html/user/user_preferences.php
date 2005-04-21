@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.1 2004/08/25 10:19:48 kozlik Exp $
+ * $Id: user_preferences.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -12,9 +12,14 @@ $_required_apu = array('apu_user_preferences');
 require "prepend.php";
 
 
-
 $usr_pref=new apu_user_preferences();
 //$usr_pref->set_opt('attributes',array('aaa', 'aaaa'));
+
+//description of attributes
+$att_desc['fw_voicemail'] = $lang_str['ff_fwd_to_voicemail'];
+$att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
+$usr_pref->set_opt('att_description', $att_desc);
+
 
 $page_attributes['user_name']=$data->get_user_real_name($serweb_auth, $controler->errors);
 

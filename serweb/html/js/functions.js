@@ -1,5 +1,5 @@
 /*
- * $Id: functions.js,v 1.3 2004/11/29 09:25:13 kozlik Exp $
+ * $Id: functions.js,v 1.4 2005/04/21 15:09:46 kozlik Exp $
  */
 
 /* confirm click to <a href=""> */
@@ -15,6 +15,17 @@ function linkConfirmation(theLink, message){
 /* deprecated */
 function confirmDelete(theLink, message){
     return linkConfirmation(theLink, message);
+}
+
+/* show window with stun applet */
+
+var stun_win=null;
+
+function stun_applet_win(script, width, height){
+	if (stun_win != null) stun_win.close();
+		stun_win=window.open(script, "stun_win", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,top=20,left=20,width=" + width + ",height=" + height);
+		stun_win.window.focus();
+		return;
 }
 
 

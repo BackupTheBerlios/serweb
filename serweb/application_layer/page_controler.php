@@ -1,76 +1,116 @@
 <?
-/*
- * $Id: page_controler.php,v 1.8 2005/03/14 11:45:46 kozlik Exp $
+/**
+ * Page controler
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: page_controler.php,v 1.9 2005/04/21 15:09:45 kozlik Exp $
+ * @package   serweb
  */ 
 
-/*
-   Configuration:
-   --------------
-   shared_html_form		(boolean) default:false - if is true - html form is conjunct for all html forms on the page
-   smarty_form			name of smarty variable - see below - used only if shared_html_form is true
-   form_name			name of html form - used only if shared_html_form is true
-   form_submit			assotiative array describe submit element of shared form. 
-   							For details see description of method add_submit in class form_ext
-   
-
-   Exported smarty variables:
-   --------------------------
-   parameters 	assigned to $page_attributes
-   lang_str 	assigned to $lang_str
-   lang_set 	assigned to $lang_set
-   user_auth	assigned to $this->user_id - associative array containing username, domain and uuid
-                        of user loged in or of user which datails admin is examining
-   come_from_admin_interface    assigned to $come_from_admin_interface
-   cfg			assigned to $config (contain only these properties:
-					img_src_path
-					js_src_path
-					style_src_path
-					user_pages_path
-					admin_pages_path
-					domains_path
-   				)
-
-   opt['smarty_form'] 			(form)			phplib html form
-
-*/
+/**
+ *	Page controler
+ *	
+ *	Configuration:
+ *	--------------
+ *	currently none   
+ *	
+ *	 
+ *	Exported smarty variables:
+ *	--------------------------
+ *	parameters 	assigned to $page_attributes
+ *	lang_str 	assigned to $lang_str
+ *	lang_set 	assigned to $lang_set
+ *	user_auth	assigned to $this->user_id - associative array containing username, domain and uuid
+ *	                     of user loged in or of user which datails admin is examining
+ *	come_from_admin_interface    assigned to $come_from_admin_interface
+ *	cfg			assigned to $config (contain only these properties:
+ *					img_src_path
+ *					js_src_path
+ *					style_src_path
+ *					user_pages_path
+ *					admin_pages_path
+ *					domains_path
+ *				)
+ *	
+ *	Smarty variables containing html forms. For details see methods 
+ *	assign_form_name() and set_name_of_smarty_var_for_form().
+ *	
+ */
  
 class page_conroler{
-	/* array of application units */
+	/** array of application units */
 	var $apu_objects=array();
-	/* file with smarty template */
+	/** file with smarty template */
 	var $template_name;
-	/* flag which indicated that user come from admin interface */
+	/** flag which indicated that user come from admin interface */
 	var $come_from_admin_interface=false;
-	/* auth info of user with which setting we are working. Usualy is same as $serweb_auth, only admin can change it */
+	/** auth info of user with which setting we are working. Usualy is same as $serweb_auth, only admin can change it */
 	var $user_id = null;		
-	/* associative array of controller options */
+	/** associative array of controller options */
 	var $opt=array();
-	/* html form */
-	var $f = null; 			
-	/* set of apu names added to hidden form element of shared form */
-	var $form_apu_names=array();
-	/* flags which says if header 'location' will be send and if html form should be validated */
+	/** array of html forms */
+	var $f = array(); 			
+	/** flags which says if header 'location' will be send and if html form should be validated */
 	var $send_header_location = false;
+	/** flag if should be some html form validated */
 	var $validate_html_form = false;
+	/** flag if is used html form */
+	var $shared_html_form = false;
+	/** array contain required javascript files */
+	var	$required_javascript = array();
+	/** flag - is timezone already set? */
+	var $is_set_timezone = false;
+	/** js which should be placed after document body */
+	var $js_after_document = array();
+	/** url to which header location will redirect - default is self */
+	var $url_for_reload = null;
 
+	/** instance of Creg class 
+	 *	for backward compatibility, shouldn't be used
+	 *	instead of this use your own variable and Creg::singleton method
+	 *	@deprec
+	 */
+	var $reg;
+
+	var $check_perms_to_user = false;
 	var $errors=array();
 	var $messages=array();
 	
 	/* constructor */
 	function page_conroler(){
-		global $sess, $perm, $data, $serweb_auth, $sess_page_controler_user_id;
+		global $sess, $perm, $config;
+		global $serweb_auth, $sess_page_controler_user_id, $sess_xxl_selected_proxy;
 
-		$this->opt['shared_html_form'] =	false;
+		$this->reg = Creg::singleton();				// create regular expressions class
 
-		/* form */
-		$this->opt['smarty_form'] =			'form';
-		/* name of html form */
-		$this->opt['form_name'] =			'';
-		/* form submit element */
-		$this->opt['form_submit']=			array('type'=>'hidden');
+		// register session variable sess_xxl_selected_proxy
+		if (!$sess->is_registered('sess_xxl_selected_proxy')) $sess->register('sess_xxl_selected_proxy');
+		if (!isset($sess_xxl_selected_proxy)) $sess_xxl_selected_proxy=null;
+
 		
 		// get $user_id if admin want work with some setting of user
 		if (isset($perm) and $perm->have_perm("admin")){
+			
+			// set initial value of sess_xxl_selected_proxy to same proxy where user has account
+			if (is_null($sess_xxl_selected_proxy)){
+				if (false !== $proxy_uri = $GLOBALS['data_auth']->get_xxl_proxy($this->errors)){
+					$sess_xxl_selected_proxy = array('proxy' => $proxy_uri);
+				}
+			}
+
+			// in XXL version and if is set sess_xxl_selected_proxy
+			// create new instance of data_layer binded to seleceted proxy
+			// note that data_layer binded to currently logged user is still 
+			// in variable $data_auth
+			if ($config->enable_XXL and $sess_xxl_selected_proxy){
+				$GLOBALS['data_selected_proxy'] = CData_Layer::singleton("selected_proxy", $this->errors);
+				if (false === $GLOBALS['data_selected_proxy']->set_xxl_proxy($sess_xxl_selected_proxy)){
+					die("Can't connect to DB");
+					break;
+				}
+				$GLOBALS['data'] = &$GLOBALS['data_selected_proxy'];
+			}
+
 			//first try get user_id from session variable
 			if (isset($sess_page_controler_user_id)){
 				$this->user_id = $sess_page_controler_user_id;
@@ -79,11 +119,8 @@ class page_conroler{
 		
 			//second if userauth param is given, get user_id from it
 			if (false !== $uid = get_userauth_from_get_param('u')) {
-				if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $uid, $this->errors))) break;
-				if (!$pp){
-					die("You haven't permissions to manage user '".$uid->uname."'");
-					break;
-				}
+				$this->check_perms_to_user = true;
+			
 				//register session variable
 				if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
 		
@@ -98,11 +135,18 @@ class page_conroler{
 
 		}
 		else $this->user_id=$serweb_auth;
+		
+		// if $data_selected_proxy was not set, reference it to $data_auth
+		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
+			$GLOBALS['data_selected_proxy'] = &$GLOBALS['data_auth'];
 	}
 	
-	/* return required data layer methods - static class */
+	/**
+	 * return required data layer methods - static class 
+	 * @static
+	 */
 	function get_required_data_layer_methods(){
-		return array('check_admin_perms_to_user');
+		return array('check_admin_perms_to_user', 'set_timezone');
 	}
 
 	/* add application unit to $apu_objects array*/
@@ -110,7 +154,7 @@ class page_conroler{
 		$this->apu_objects[] = &$class;
 	}
 	
-	/* set name of template */
+	/* set nam1e of template */
 	function set_template_name($template){
 		$this->template_name = $template;
 	}
@@ -119,6 +163,143 @@ class page_conroler{
 	function set_opt($opt_name, $val){
 		$this->opt[$opt_name]=$val;
 	}
+
+	/**
+	 *	add massage which will be displayed on page 
+	 *
+	 *	@param array $msg	message - associative array with keys 'short' and 'long'
+	 */
+	function add_message($msg){
+		$this->messages[] = &$msg;
+	}
+
+	function set_timezone(){
+		global $data;
+		if (!$this->is_set_timezone){
+			if (false === $data->set_timezone($this->user_id, $this->errors)) return;
+			$this->is_set_timezone = true;
+		}
+	}
+
+	function set_onload_js($js){
+		$this->js_after_document[]=$js;
+	}
+
+	/**
+	 *	Do not check if admin have perms to manage user
+	 *	@access public
+	 */
+	function do_not_check_perms_of_admin(){
+		$this->check_perms_to_user = false;
+	}
+
+	/**
+	 *	Change url to which browser will be redirected by location header
+	 *
+	 *	Important: this method should be called _ONLY_ from methods action_*()
+	 *	of APU
+	 *
+	 *	@param string $url 
+	 */
+	function change_url_for_reload($url){
+		$this->url_for_reload = $url;
+	}
+
+	/**
+	 *	Add file to set of required javascript files
+	 *	
+	 *	@param string $file name of javascript file
+	 */
+	function add_reqired_javascript($file){
+		$this->required_javascript[] = $file;
+	}
+
+	/**
+	 *	Create new shared html form if still not exists and assign APU to it
+	 *
+	 *	@param string $form_name	name of html form
+	 *	@param object $apu			instance of APU
+	 */	
+	function assign_form_name($form_name, &$apu){
+		global $lang_str, $config, $sess_lang;
+		/* we are useing shared html forms */
+		$this->shared_html_form = true; 
+		/* if form of this name still not exists, create initial values */
+		if (!isset($this->f[$form_name])){
+			$this->f[$form_name]['validate'] = false;					// should be this form validated?
+			$this->f[$form_name]['submit'] = array('type' => 'image',	// submit element
+													'text' => $lang_str['b_submit'],
+													'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang));
+
+			$this->f[$form_name]['smarty_name'] = 'form_'.$form_name;	// name of smarty variable
+			$this->f[$form_name]['form'] = new form_ext();  			// form object
+			$this->f[$form_name]['apu_names'] = array();				// set of apu names added to hidden form element of this form
+			$this->f[$form_name]['js_before'] = "";
+			$this->f[$form_name]['js_after'] = "";
+			$this->f[$form_name]['msg_apu'] = array($apu->opt['instance_id']);	//APUs from which are messages displayed - default first APU assigned to this form
+		}
+		$this->f[$form_name]['apu'][] = &$apu;
+		$apu->form_name = $form_name;
+	}
+	
+	/**
+	 *	Change name of smarty variable used for html form
+	 *
+	 *	@param string $form_name	name of existing html form
+	 *	@param string $smarty_var	name of smarty variable - default value is form_&lt;$form_name&gt;
+	 *	@return bool				FALSE if form with given name still not exists, TRUE otherwise
+	 */	
+	function set_name_of_smarty_var_for_form($form_name, $smarty_var){
+		if (!isset($this->f[$form_name])){
+			sw_log("Form with name '".$form_name."' is not set. Use method assign_form_name() first.", PEAR_LOG_DEBUG);	
+			return false;
+		}
+		
+		$this->f[$form_name]['smarty_name'] = $smarty_var;
+		return true;
+	}
+
+	/**
+	 *	Change submit element for html form
+	 *
+	 *	Example creating submit element:
+	 *	<code>
+	 *		array('type' => 'image',
+	 *			  'text' => $lang_str['b_submit'],
+	 *			  'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang))
+	 *	</code>
+	 *
+	 *	@param string $form_name	name of existing html form
+	 *	@param array  $submit		assotiative array describe submit element of shared form. For details see description of method add_submit in class form_ext
+	 *	@return bool				FALSE if form with given name still not exists, TRUE otherwise
+	 */	
+	function set_submit_for_form($form_name, $submit){
+		if (!isset($this->f[$form_name])){
+			sw_log("Form with name '".$form_name."' is not set. Use method assign_form_name() first.", PEAR_LOG_DEBUG);	
+			return false;
+		}
+		
+		$this->f[$form_name]['submit'] = $submit;
+		return true;
+	}
+
+	/**
+	 *	Select APUs from which will be displayed messages 
+	 *
+	 *	@param string $form_name	name of existing html form
+	 *	@param array $apu_id		array of instance_ids of APUs from which may be displayed messages
+	 *	@return bool				FALSE if form with given name still not exists, TRUE otherwise
+	 */	
+	function set_apu_for_msgs($form_name, $apu_id){
+		if (!isset($this->f[$form_name])){
+			sw_log("Form with name '".$form_name."' is not set. Use method assign_form_name() first.", PEAR_LOG_DEBUG);	
+			return false;
+		}
+		
+		$this->f[$form_name]['msg_apu'] = $apu_id;
+		return true;
+	}
+
 
 	/* determine actions of all application units 
 	   and check if some APU needs validate form or send header 'location'
@@ -132,13 +313,28 @@ class page_conroler{
 
 			if (isset($this->apu_objects[$key]->action['reload']) and $this->apu_objects[$key]->action['reload'])
 				$this->send_header_location=true;
-			if (isset($this->apu_objects[$key]->action['validate_form']) and $this->apu_objects[$key]->action['validate_form'])
+			if (isset($this->apu_objects[$key]->action['validate_form']) and $this->apu_objects[$key]->action['validate_form']){
 				$this->validate_html_form=true;
+
+				if ($this->shared_html_form) {
+					$this->f[$val->form_name]['validate'] = true;
+				}
+			}
 
 			/* if should be this APU processed alone */
 			if (isset($this->apu_objects[$key]->action['alone']) and $this->apu_objects[$key]->action['alone']){
-				$this->validate_html_form = isset($this->apu_objects[$key]->action['validate_form'])?$this->apu_objects[$key]->action['validate_form']:false;
+				/* set send_header_location and validate_html_form flags according to action array of this apu */
 				$this->send_header_location = isset($this->apu_objects[$key]->action['reload'])?$this->apu_objects[$key]->action['reload']:false;
+				$this->validate_html_form = isset($this->apu_objects[$key]->action['validate_form'])?$this->apu_objects[$key]->action['validate_form']:false;
+
+				/* set validate flag to all forms false */
+				if ($this->shared_html_form) {
+					foreach($this->f as $fk => $fv){
+						$this->f[$fk]['validate'] = false;
+					}
+					/* only to form vith this apu set validate flag according to action['validate_form'] */
+					$this->f[$val->form_name]['validate'] = $this->validate_html_form;
+				}
 
 				/* save this APU */
 				$temp = &$this->apu_objects[$key];
@@ -157,13 +353,15 @@ class page_conroler{
 			$this->apu_objects[$key]->create_html_form($this->errors);
 		}
 
-		if ($this->opt['shared_html_form']) {
-			$this->f->add_element(array("type"=>"hidden",
+		if ($this->shared_html_form) {
+			foreach($this->f as $key => $val){
+				$this->f[$key]['form']->add_element(array("type"=>"hidden",
 			                             "name"=>"apu_name",
 										 "multiple"=>true,
-			                             "value"=>$this->form_apu_names));
+			                             "value"=>$this->f[$key]['apu_names']));
 
-			$this->f->add_submit($this->opt['form_submit']);
+				$this->f[$key]['form']->add_submit($this->f[$key]['submit']);
+			}
 		}
 	}
 	
@@ -172,11 +370,15 @@ class page_conroler{
 
 		if ($this->validate_html_form){
 
-			/* if is used shared html form, validate it */
-			if ($this->opt['shared_html_form']) {
-				if ($err = $this->f->validate()) {			// Is the data valid?
-					$this->errors = array_merge($this->errors, $err); // No!
-					return false;
+			/* if is used shared html form, valk throught all forms and validate them */
+			if ($this->shared_html_form) {
+				foreach($this->f as $key=>$val){
+					if ($val['validate']){
+						if ($err = $this->f[$key]['form']->validate()) {			// Is the data valid?
+							$this->errors = array_merge($this->errors, $err); // No!
+							return false;
+						}
+					}
 				}
 			}
 			
@@ -196,9 +398,12 @@ class page_conroler{
 	/* load default values to form */
 	function _form_load_defaults(){
 		/* if is used shared html form, load defaults to it */
-		if ($this->opt['shared_html_form']) 
-			$this->f->load_defaults();
-		/* otherwise load defaults to foem of each APU */
+		if ($this->shared_html_form) {
+			foreach($this->f as $key=>$val){
+				$this->f[$key]['form']->load_defaults();
+			}
+		}
+		/* otherwise load defaults to form of each APU */
 		else{
 			foreach($this->apu_objects as $key=>$val){
 				$this->apu_objects[$key]->f->load_defaults();
@@ -237,7 +442,9 @@ class page_conroler{
 			$send_get_param = implode('&', $send_get_param);
 			
 			/* send header */
-	        Header("Location: ".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+			if (!$this->url_for_reload) $this->url_for_reload = $_SERVER['PHP_SELF'];
+			
+	        Header("Location: ".$sess->url($this->url_for_reload."?kvrk=".uniqID("").
 								($send_get_param ? 
 									'&'.$send_get_param : 
 									'')));
@@ -273,9 +480,9 @@ class page_conroler{
 			if (!isset($form_array['after']))       $form_array['after'] = '';
 			
 			/* if html form is shared, collect after and before javascript from all APUs */
-			if ($this->opt['shared_html_form']){
-				$js_before .= $form_array['before'];
-				$js_after  .= $form_array['after'];
+			if ($this->shared_html_form){
+				$this->f[$val->form_name]['js_before'] .= $form_array['before'];
+				$this->f[$val->form_name]['js_after'] .= $form_array['after'];
 			}
 			/* otherwise create forms for all APUs */
 			else {
@@ -289,14 +496,42 @@ class page_conroler{
 		}
 		
 		/* if html form is shared, create it */
-		if ($this->opt['shared_html_form']){
-			$smarty->assign_phplib_form($this->opt['smarty_form'], 
-										$this->f, 
-										array('jvs_name'  => 'form_by_page_controler',
-										      'form_name' => $this->opt['form_name']), 
-										array('before'    => $js_before,
-										      'after'     => $js_after));
+		if ($this->shared_html_form){
+			foreach($this->f as $key=>$val){
+				$smarty->assign_phplib_form($val['smarty_name'], 
+											$this->f[$key]['form'], 
+											array('jvs_name'  => 'form_'.$key,
+											      'form_name' => $key), 
+											array('before'    => $this->f[$key]['js_before'],
+											      'after'     => $this->f[$key]['js_after']));
+			}
 		
+		}
+	}
+
+	function _get_messages(){
+		$apu_for_display_mesgs = array();
+
+		// if useing shared html form, make list of APUs from which will be displayed messages
+		if ($this->shared_html_form){
+			foreach($this->f as $k => $v){
+				$apu_for_display_mesgs = array_merge($apu_for_display_mesgs, $v['msg_apu']);
+			}
+			$apu_for_display_mesgs = array_unique($apu_for_display_mesgs);
+		}
+
+		//walk trought all APUs
+		foreach($this->apu_objects as $key=>$val){
+			$tmp_arr = array();
+			// get messages from each APU
+			$this->apu_objects[$key]->return_messages($tmp_arr);
+			
+			// assign message to output only if shared html form isn't used 
+			// or if APU is among ones in $apu_for_display_mesgs
+			if(!$this->shared_html_form or 
+				in_array($val->opt['instance_id'], $apu_for_display_mesgs)){
+				$this->messages = array_merge($this->messages, $tmp_arr);
+			}
 		}
 	}
 
@@ -329,13 +564,24 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth;
+
+		/* check if admin have perms to manage user */
+		if ($this->check_perms_to_user){
+			$pp=$GLOBALS['data']->check_admin_perms_to_user($serweb_auth, $this->user_id, $this->errors);
+
+			if (0 > $pp or !$pp){
+				if (0 > $pp) echo "Database error \n";
+
+				$sess_page_controler_user_id = $serweb_auth;
+				page_close();			
+				die("You haven't permissions to manage user '".$this->user_id->uname."'");
+			} 
+		}
 
 		/* translate chars '<', '>', etc. to &lt; &gt; etc.. */
 		$this->hack_protection();
 
-		if ($this->opt['shared_html_form']) $this->f = new form_ext;  // create a form object
-		
 		/* propagate user_id and reference to this to all application units */
 		foreach($this->apu_objects as $key=>$val){
 			$this->apu_objects[$key]->user_id=$this->user_id;
@@ -362,13 +608,11 @@ class page_conroler{
 		if ($form_valid)
 			$this->_execute_actions();
 		/* otherwise load defaults to the form(s) */
-		else
+		else 
 			$this->_form_load_defaults();
 
 		/** get messages **/
-		foreach($this->apu_objects as $key=>$val){
-			$this->apu_objects[$key]->return_messages($this->messages);
-		}
+		$this->_get_messages();
 
 		/** assign values and form(s) to smarty **/
 		$this->_smarty_assign();
@@ -395,17 +639,16 @@ class page_conroler{
 		$page_attributes['message']=&$this->messages;
 		
 		/* obtain list of required javascripts */
-		$required_javascript=array();
 		foreach($this->apu_objects as $val){
-			$required_javascript = array_merge($required_javascript, $val->get_required_javascript());
+			$this->required_javascript = array_merge($this->required_javascript, $val->get_required_javascript());
 		}
-		$required_javascript = array_unique($required_javascript);
+		$this->required_javascript = array_unique($this->required_javascript);
 		
 
 		/* ----------------------- HTML begin ---------------------- */
 		print_html_head();
 		
-		foreach($required_javascript as $val){
+		foreach($this->required_javascript as $val){
 ?><script language="JavaScript" src="<?echo $config->js_src_path.$val;?>"></script><?			 
 		}
 		print_html_body_begin($page_attributes);
@@ -413,6 +656,16 @@ class page_conroler{
 		$smarty->display($this->template_name);
 
 		print_html_body_end();
+		
+		
+		if (count($this->js_after_document)){
+			echo "\n<script language=\"JavaScript\">\n<!--\n";
+			foreach($this->js_after_document as $v){
+				echo $v;
+			}
+			echo "\n// -->\n</script>\n";
+		}
+		
 		echo "</html>\n";
 		page_close();
 	}

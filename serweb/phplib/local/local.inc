@@ -1,40 +1,9 @@
 <?php
 /*
- * Session Management for PHP3
- *
- * Copyright (c) 1998-2000 NetUSE AG
- *                    Boris Erdmann, Kristian Koehntopp
- *
- * $Id: local.inc,v 1.1 2004/10/01 11:36:23 kozlik Exp $
- *
+ * $Id: local.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */
 
-class DB_phplib extends DB_Sql {
-  var $Host;
-  var $Database;
-  var $User;
-  var $Password;
 
-  function DB_phplib(){
-  	global $config;
-	$this->Host     = $config->data_sql->host[0]['host'];
-	$this->Database = $config->data_sql->host[0]['name'];
-	$this->User     = $config->data_sql->host[0]['user'];
-	$this->Password = $config->data_sql->host[0]['pass'];
-  }
-}
-
-
-##
-## Session needs to use a storage container (ct).
-## Select exactly one of the following and set $that_class
-## in Example_Session appropriately.
-##
-
-class phplib_CT_Sql extends CT_Sql {
-  var $database_class = "DB_phplib";          ## Which database to connect...
-  var $database_table = "active_sessions"; ## and find our session data in this table.
-}
 
 ##
 ## main session class
@@ -43,14 +12,12 @@ class phplib_CT_Sql extends CT_Sql {
 class phplib_Session extends Session {
   var $classname = "phplib_Session";
 
+  var $trans_id_enabled = false;
   var $cookiename     = "";                ## defaults to classname
-  var $magic          = "Hocuspocus";      ## ID seed
   var $mode           = "cookie";          ## We propagate session IDs with cookies
   var $fallback_mode  = "get";
-  var $lifetime       = 0;                 ## 0 = do session cookies, else minutes
-  var $that_class     = "phplib_CT_Sql";  ## name of data storage container class
-  var $gc_probability = 5;
   var $allowcache     = "no";              ## "public", "private", or "no"
+  var $lifetime       = 0;                 ## 0 = do session cookies, else minutes
 }
 
 ##
@@ -97,13 +64,9 @@ class phplib_Session_Pre_Auth extends phplib_Session {
 class phplib_Auth extends Auth {
   var $classname      = "phplib_Auth";
   var $lifetime       = 20;
-  var $data;
 
   function phplib_Auth(){
   		global $config;
-		
-		if (!$data = CData_Layer::create($errors)) die($errors[0]);
-		$this->data=$data;
 		
 		$this->lifetime = $config->auth_lifetime;
   }
@@ -127,14 +90,16 @@ class phplib_Auth extends Auth {
 
   function auth_validatelogin() {
     global $config, $_POST, $errors;
-	global $serweb_auth, $sess;
+	global $serweb_auth, $sess, $data_auth;
 	
 	if (!$sess->is_registered('serweb_auth')) $sess->register('serweb_auth');
 
 	$password="";
 	if (isset($_POST['password'])) $password=$_POST['password'];
 
-	$p_uid = $this->data->check_passw_of_user($serweb_auth->uname, $serweb_auth->domain, $password, $errors);
+	$data_auth->set_xxl_user_id('sip:'.$serweb_auth->uname.'@'.$serweb_auth->domain);
+
+	$p_uid = $data_auth->check_passw_of_user($serweb_auth->uname, $serweb_auth->domain, $password, $errors);
 
 	if ($p_uid) {
 		$this->check_for_privileges($serweb_auth);
@@ -147,9 +112,9 @@ class phplib_Auth extends Auth {
   	method checks user permisions
   */
 	function check_for_privileges($user){
-		global $config, $errors;
+		global $config, $errors, $data_auth;
 
-	    if (false === $privileges = $this->data->get_privileges_of_user($user, array('change_privileges','is_admin'), $errors)) return false;
+	    if (false === $privileges = $data_auth->get_privileges_of_user($user, array('change_privileges','is_admin'), $errors)) return false;
 
 		foreach($privileges as $row) {
 			switch ($row->priv_name){
@@ -179,7 +144,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 	function auth_preauth()	{
 	    global $sess, $errors;
 	    global $pre_uid, $pre_uid_expires;
-		global $serweb_auth, $config;
+		global $serweb_auth, $config, $data_auth;
 
 		if (!$sess->is_registered('serweb_auth')) $sess->register('serweb_auth');
 		
@@ -189,7 +154,7 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 			if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
 
-			if (false === $usr = $this->data->get_user_dom_from_uid($pre_uid, $errors)) return false;
+			if (false === $usr = $data_auth->get_user_dom_from_uid($pre_uid, $errors)) return false;
 
 			$uid=$pre_uid;
 			$serweb_auth=new Cserweb_auth($uid, $usr['uname'], $usr['domain']);

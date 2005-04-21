@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.15 2005/02/01 09:34:19 kozlik Exp $
+$Id: INSTALL,v 1.16 2005/04/21 15:09:45 kozlik Exp $
 
 serweb - Installation
 
@@ -54,7 +54,7 @@ serweb - Installation
             - register_globals = on     (in PHP4 is disabled by default)
             - register_long_arrays = on (in PHP5 is disabled by default)
     [9] Open the file <your-host>/<your-install-dir>/admin/index.php
-        or <your-host>/<your-install-dir>/user_interface/index.php
+        or <your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
         The initial username is 'admin' with password 'heslo'. Its strongly
         recomended to change this password after first login.

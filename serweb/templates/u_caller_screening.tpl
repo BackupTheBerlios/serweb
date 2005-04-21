@@ -1,5 +1,13 @@
 {* Smarty *}
-{* $Id: u_caller_screening.tpl,v 1.1 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_caller_screening.tpl,v 1.2 2005/04/21 15:09:46 kozlik Exp $ *}
+
+{literal}
+<style type="text/css">
+#cs_uri_re		{width: 11em;}
+#cs_action_key	{width: 11.3em;}
+</style>
+{/literal}
+
 
 {include file='_head.tpl'}
 
@@ -7,12 +15,12 @@
 {$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="uri_re">{$lang_str.ff_screening_caller_uri}:</label></td>
-	<td>{$form.uri_re}</td>
+	<td><label for="cs_uri_re">{$lang_str.ff_screening_caller_uri}:</label></td>
+	<td>{$form.cs_uri_re}</td>
 	</tr>
 	<tr>
-	<td><label for="action_key">{$lang_str.ff_action}:</label></td>
-	<td>{$form.action_key}</td>
+	<td><label for="cs_action_key">{$lang_str.ff_action}:</label></td>
+	<td>{$form.cs_action_key}</td>
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
@@ -22,7 +30,7 @@
 {$form.finish}
 </div>
 
-{foreach from=$caller_uris item='row' name='caller_uris'}
+{foreach from=$cs item='row' name='caller_uris'}
 	{if $smarty.foreach.caller_uris.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -44,6 +52,8 @@
 {foreachelse}
 	<div class="swNumOfFoundRecords">{$lang_str.no_caller_screenings_defined}</div>
 {/foreach}
+
+<div class="swSearchLinks">&nbsp;{pager page=$pager class_text='swNavText' class_num='swNav' class_numon='swNavActual' txt_prev='&lt;&lt;&lt;' txt_next='&gt;&gt;&gt;'}</div>
 
 <br>
 {include file='_tail.tpl'}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_status.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_status.php,v 1.2 2005/04/21 15:09:45 kozlik Exp $
  */
 
 class CData_Layer_get_status {
@@ -32,7 +32,7 @@ class CData_Layer_get_status {
 		elseif(!$exists) return "<div class=\"statusunknown\">".$lang_str['status_nonexists']."</div>";
 
 		//check if others can see status of user
-		if ($config->allow_change_status_visibility){
+		if ($config->status_vibility){
 			$status_visibility=$this->get_status_visibility($user, $domain, $errors);
 			if ($status_visibility === false or $status_visibility<0) return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
 		}

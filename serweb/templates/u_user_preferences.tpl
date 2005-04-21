@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_user_preferences.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_user_preferences.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -11,7 +11,7 @@
 	{/if}
 
 		<tr>
-		<td align="right" class="f12b"><label for="{$row.att_name}">{$row.att_name}:</label></td>
+		<td align="right" class="f12b"><label for="{$row.att_name}">{$row.att_desc}:</label></td>
 		<td>{assign var='att_name' value=$row.att_name}{$form.$att_name}</td>
 		</tr>
 

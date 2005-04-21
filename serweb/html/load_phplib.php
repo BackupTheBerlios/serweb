@@ -2,7 +2,7 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.6 2004/10/01 11:36:23 kozlik Exp $
+ * $Id: load_phplib.php,v 1.7 2005/04/21 15:09:46 kozlik Exp $
  */ 
 
 
@@ -15,10 +15,10 @@ elseif ($config->data_sql->type=="pgsql"){
 else die('Invalid database type '.$config->data_sql->type);
 
 require($_PHPLIB["libdir"] . "ct_sql.inc");    /* Change this to match your data storage container */
-require($_PHPLIB["libdir"] . "session.inc");   /* Required for everything below.      */
-require($_PHPLIB["libdir"] . "auth.inc");      /* Disable this, if you are not using authentication. */
+require($_PHPLIB["libdir"] . "session4.inc");   /* Required for everything below.      */
+require($_PHPLIB["libdir"] . "auth4.inc");      /* Disable this, if you are not using authentication. */
 require($_PHPLIB["libdir"] . "perm.inc");      /* Disable this, if you are not using permission checks. */
-//require($_PHPLIB["libdir"] . "user.inc");      /* Disable this, if you are not using per-user variables. */
+//require($_PHPLIB["libdir"] . "user4.inc");      /* Disable this, if you are not using per-user variables. */
 
 /* Additional require statements go below this line */
 // require($_PHPLIB["libdir"] . "menu.inc");      /* Enable to use Menu */
@@ -27,7 +27,7 @@ require($_PHPLIB["libdir"] . "perm.inc");      /* Disable this, if you are not u
 
 require($_PHPLIB["libdir"] . "local/local.inc");     /* Required, contains your local configuration. */
 
-require($_PHPLIB["libdir"] . "page.inc");      /* Required, contains the page management functions. */
+require($_PHPLIB["libdir"] . "page4.inc");      /* Required, contains the page management functions. */
 
 require($_PHPLIB["libdir"] . "oohforms.inc");  /* Required for object oriented HTML forms. */
 

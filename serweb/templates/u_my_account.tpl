@@ -1,50 +1,62 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
+{if $come_from_admin_interface}
+<div class="swNameOfUser">{$lang_str.user}: {$user_auth->uname}</div>
+{/if}
+
 <div class="swForm">
-{$form.start}
+{$form_pd.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-{if $config->allow_change_email}
+{if $enabled_fields.email}
 	<tr>
-	<td><label for="email">{$lang_str.ff_your_email}:</label></td>
-	<td>{$form.email}</td>
-	</tr>
-{/if}
-{if $config->forwarding_to_voicemail_by_group}
-	<tr>
-	<td><label for="f2voicemail">{$lang_str.ff_fwd_to_voicemail}:</label></td>
-	<td>{$form.f2voicemail}</td>
+	<td><label for="pd_email">{$lang_str.ff_your_email}:</label></td>
+	<td>{$form_pd.pd_email}</td>
 	</tr>
 {/if}
 	<tr>
-	<td><label for="allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
-	<td>{$form.allow_find}</td>
+	<td><label for="pd_allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
+	<td>{$form_pd.pd_allow_find}</td>
+	</tr>
+
+	<tr>
+	<td><label for="fw_voicemail">{$lang_str.ff_fwd_to_voicemail}:</label></td>
+	<td>{$form_pd.fw_voicemail}</td>
+	</tr>
+
+	<tr>
+	<td><label for="sw_user_status_visible">{$lang_str.ff_status_visibility}:</label></td>
+	<td>{$form_pd.sw_user_status_visible}</td>
+	</tr>
+
+
+	<tr>
+	<td><label for="pd_timezone">{$lang_str.ff_your_timezone}:</label></td>
+	<td>{$form_pd.pd_timezone}</td>
+	</tr>
+{if $enabled_fields.pass}
+	<tr>
+	<td><label for="pd_passwd">{$lang_str.ff_your_password}:</label></td>
+	<td>{$form_pd.pd_passwd}</td>
 	</tr>
 	<tr>
-	<td><label for="timezone">{$lang_str.ff_your_timezone}:</label></td>
-	<td>{$form.timezone}</td>
-	</tr>
-{if $config->allow_change_password}
-	<tr>
-	<td><label for="passwd">{$lang_str.ff_your_password}:</label></td>
-	<td>{$form.passwd}</td>
-	</tr>
-	<tr>
-	<td><label for="passwd_r">{$lang_str.ff_retype_password}:</label></td>
-	<td>{$form.passwd_r}</td>
+	<td><label for="pd_passwd_r">{$lang_str.ff_retype_password}:</label></td>
+	<td>{$form_pd.pd_passwd_r}</td>
 	</tr>
 {/if}
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td align="right">{$form_pd.okey}</td>
 	</tr>
 	</table>
-{$form.finish}
+{$form_pd.finish}
 </div>
 
-{foreach from=$aliases_res item='row' name='aliases'}
+
+
+{foreach from=$aliases item='row' name='aliases'}
 	{if $smarty.foreach.aliases.first}
 	<div id="swMAAliasesTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -58,7 +70,7 @@
 {/foreach}
 
 	
-{foreach from=$acl_res item='row' name='acl'}
+{foreach from=$acl item='row' name='acl'}
 	{if $smarty.foreach.acl.first}
 	<div id="swMAACLTable">
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -96,32 +108,30 @@
 	{/if}
 {/foreach}
 	
-
 <h2 class="swTitle">{$lang_str.add_new_contact}:</h2>
 
 <div class="swForm">
-{$form2.start}
+{$form_ul.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
 	<td><label for="sip_address">{$lang_str.ff_sip_address}:</label></td>
-	<td>{$form2.sip_address}</td>
+	<td>{$form_ul.ul_sip_address}</td>
 	<td><label for="expires">{$lang_str.ff_expires}:</label></td>
-	<td>{$form2.expires}</td>
-	<td>{$form2.okey2}</td></tr>
+	<td>{$form_ul.ul_expires}</td>
+	<td>{$form_ul.okey}</td></tr>
 	</table>
-{$form2.finish}
+{$form_ul.finish}
 </div>
-
-
 
 {if $config->enable_dial_voicemail or $config->enable_test_firewall}
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd}"><img src="{$config->img_src_path}butons/b_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td>{/if}
-{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun}"><img src="{$config->img_src_path}butons/b_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td>{/if}
+{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td>{/if}
+{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td>{/if}
 </tr>
 </table>
 {/if}
+
 
 {if $come_from_admin_interface}
 	<div class="swBackToMainPage"><a href="{$url_admin}">{$lang_str.l_back_to_main}</a></div>

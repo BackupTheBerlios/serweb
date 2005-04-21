@@ -1,16 +1,16 @@
 {* Smarty *}
-{* $Id: u_message_store.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_message_store.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 <h2 class="swTitle">{$lang_str.instant_messages_store}:</h2>
 
-{foreach from=$im_res item='row' name='inst_msgs'}
+{foreach from=$im item='row' name='inst_msgs'}
 	<div class="swInstantMessage">
 		<div class="swIMtitle">
 			<a href="{$row.url_reply}" class="msgtitle">{$lang_str.l_reply}</a>
 			<a href="{$row.url_dele}" class="msgtitle">{$lang_str.l_delete}</a>
-			<span class="swIMtime">{$row.time}</span>
+			<span class="swIMtime">{$row.time|my_date_format:$lang_set.date_time_format|empty2nbsp}</span>
 			<span class="swIMSrcAdr">{$row.src_addr}</span>
 		</div>
 		<div class="swIMbody">{$row.body|empty2nbsp}</div>
@@ -19,6 +19,10 @@
 	<div class="swNumOfFoundRecords">{$lang_str.no_stored_instant_messages}</div>
 	<br>
 {/foreach}
+
+	<div class="swSearchLinks">&nbsp;
+	{pager page=$pager class_text='swNavText' class_num='swNav' class_numon='swNavActual' txt_prev='&lt;&lt;&lt;' txt_next='&gt;&gt;&gt;'}
+	</div>
 
 
 {if $show_voice_silo}

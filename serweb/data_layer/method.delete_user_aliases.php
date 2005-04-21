@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_aliases.php,v 1.2 2004/12/10 14:08:17 kozlik Exp $
+ * $Id: method.delete_user_aliases.php,v 1.3 2005/04/21 15:09:45 kozlik Exp $
  */
 
 class CData_Layer_delete_user_aliases {
@@ -23,7 +23,7 @@ class CData_Layer_delete_user_aliases {
 		
 		if ($config->use_table_uri) {
 			$q="delete from ".$config->data_sql->table_uri."
-				 where uuid='".$user->uuid."'";
+				 where ".$this->get_indexing_sql_where_phrase($user);
 
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {log_errors($res, $errors); return false;}

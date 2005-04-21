@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.10 2005/03/03 11:37:13 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.11 2005/04/21 15:09:46 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -12,7 +12,10 @@
  * 'err' - error
  */
 
-$lang_set['charset'] = "iso-8859-1";
+$lang_set['charset'] = 			"iso-8859-1";
+$lang_set['date_time_format'] = "Y-m-d H:i";
+$lang_set['date_format'] = 		"Y-m-d";
+$lang_set['time_format'] = 		"H:i";
 
 
 /* ------------------------------------------------------------*/
@@ -51,6 +54,20 @@ $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
 $lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address";
 $lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
+
+/* ------------------------------------------------------------*/
+/*      buttons                                                */
+/* ------------------------------------------------------------*/
+
+$lang_str['b_add'] =		 					"Add";
+$lang_str['b_save'] =		 					"Save";
+$lang_str['b_submit'] =		 					"Save";
+$lang_str['b_forgot_pass_submit'] = 			"Get password";
+$lang_str['b_upload_greeting'] =		 		"Upload greeting";
+$lang_str['b_find'] = 							"Find";
+$lang_str['b_send'] =		 					"Send";
+$lang_str['b_login'] =		 					"Login";
+$lang_str['b_register'] = 						"Register";
 
 /* ------------------------------------------------------------*/
 /*      tabs                                                   */
@@ -112,6 +129,7 @@ $lang_str['enter_username_and_passw'] = 		"Please enter your username and passwo
 $lang_str['ff_password'] = 						"Password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
 $lang_str['l_register'] = 						"Subscribe!";
+$lang_str['remember_uname'] = 					"Remember my username on this computer";
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */
@@ -125,7 +143,8 @@ $lang_str['msg_loc_contact_added_s'] = 			"Contact added";
 $lang_str['msg_loc_contact_added_l'] = 			"Your contact have been added";
 $lang_str['ff_your_email'] = 					"your email";
 $lang_str['ff_fwd_to_voicemail'] = 				"forwarding to voicemail";
-$lang_str['ff_allow_lookup_for_me'] = 			"allow find me by other users";
+$lang_str['ff_allow_lookup_for_me'] = 			"allow others to look up my SIP address";
+$lang_str['ff_status_visibility'] = 			"allow others to see whether or not I'm online";
 $lang_str['ff_your_password'] = 				"your password";
 $lang_str['ff_retype_password'] = 				"retype password";
 $lang_str['your_aliases'] = 					"your aliases";
@@ -223,6 +242,8 @@ $lang_str['th_subject'] = 						"subject";
 $lang_str['l_reply'] = 							"reply";
 $lang_str['err_can_not_open_message'] = 		"Can't open message";
 $lang_str['err_voice_msg_not_found'] = 			"Message not found or you haven't access to read message";
+$lang_str['msg_im_deleted_s'] = 				"Message deleted";
+$lang_str['msg_im_deleted_l'] = 				"Message has been successfully deleted";
 
 /* ------------------------------------------------------------*/
 /*      voicemail                                              */
@@ -246,14 +267,8 @@ $lang_str['no_attributes_defined'] = 			"No attributes defined by admin";
 
 $lang_str['msg_speed_dial_deleted_s'] = 		"Speed dial request deleted";
 $lang_str['msg_speed_dial_deleted_l'] = 		"Your speed dial request has beed deleted";
-$lang_str['ff_username_from_request_uri'] = 	"username from request uri";
-$lang_str['ff_domain_from_request_uri'] = 		"domain from request uri";
-$lang_str['ff_new_request_uri'] = 				"new request uri";
-$lang_str['th_request_uri'] = 					"request uri";
-$lang_str['th_new_request_uri'] = 				"new request uri";
-$lang_str['no_speed_dials_defined'] = 			"No speed dials defined";
-$lang_str['fe_invalid_speed_dial'] = 			"username from request uri must contain exactly two digits";
-$lang_str['err_speed_dial_already_exists'] = 	"Record with this username and domain already exists";
+$lang_str['th_speed_dial'] = 					"Speed dial";
+$lang_str['th_new_uri'] = 						"New uri";
 
 
 
@@ -264,6 +279,10 @@ $lang_str['err_speed_dial_already_exists'] = 	"Record with this username and dom
 
 $lang_str['msg_caller_screening_deleted_s'] = 	"Screened uri deleted";
 $lang_str['msg_caller_screening_deleted_l'] = 	"Screened uri has been deleted";
+$lang_str['msg_caller_screening_updated_s'] = 	"Screened uri changed";
+$lang_str['msg_caller_screening_updated_l'] = 	"Screened uri has been changed";
+$lang_str['msg_caller_screening_added_s'] = 	"Screened uri added";
+$lang_str['msg_caller_screening_added_l'] = 	"Screened uri has been added";
 $lang_str['fe_not_caller_uri'] = 				"you must fill caller uri";
 $lang_str['ff_screening_caller_uri'] = 			"caller uri (regular expression)";
 $lang_str['ff_action'] = 						"action";
@@ -271,6 +290,10 @@ $lang_str['th_caller_uri'] = 					"caller uri";
 $lang_str['th_action'] = 						"action";
 $lang_str['no_caller_screenings_defined'] = 	"No caller screenings defined";
 $lang_str['err_screening_already_exists'] = 	"Record with this caller uri already exists";
+$lang_str['cs_decline'] = 						"decline";
+$lang_str['cs_reply_busy'] = 					"reply you are busy";
+$lang_str['cs_fw_to_voicemail'] = 				"forward to voicemail";
+
 
 /* ------------------------------------------------------------*/
 /*      registration                                           */
@@ -328,6 +351,9 @@ $lang_str['err_reg_conf_already_created'] = 	"Your account has already been crea
 
 $lang_str['forgot_pass_head'] = 				"Forgot Password?";
 $lang_str['forgot_pass_introduction'] = 		"If you have forgotten your password, please enter your username in the form below. An email containing your password will then be sent to the email-address you have registered with!";
+$lang_str['msg_password_sended_s'] = 			"Login informations sended";
+$lang_str['msg_password_sended_l'] = 			"Login informations was send to your email address";
+$lang_str['err_no_user'] = 						"Sorry, this is not a registered username!";
 
 /* ------------------------------------------------------------*/
 /*      admin - users management                               */
@@ -338,8 +364,7 @@ $lang_str['err_admin_can_not_delete_user_2'] = 	"this user is from different dom
 $lang_str['msg_acl_updated_s'] = 				"ACL updated";
 $lang_str['msg_acl_updated_l'] = 				"Access control list of user has been updated";
 $lang_str['msg_user_deleted_s'] = 				"User deleted";
-$lang_str['msg_user_deleted_l1'] = 				"User";
-$lang_str['msg_user_deleted_l2'] = 				"has been deleted";
+$lang_str['msg_user_deleted_l'] = 				"User has been deleted succesfuly";
 $lang_str['th_phone'] = 						"phone";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_account'] = 						"account";
@@ -363,7 +388,7 @@ $lang_str['msg_alias_updated_l'] = 				"Your changes have been saved";
 $lang_str['msg_alias_added_s'] = 				"Alias Added";
 $lang_str['msg_alias_added_l'] = 				"The Alias has been added to user";
 $lang_str['change_aliases_of_user'] = 			"Change aliases of user";
-$lang_str['ff_alias'] = 						"Alias";
+$lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
 $lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";

@@ -1,68 +1,85 @@
 <?
-/*
- * $Id: apu_accounting.php,v 1.3 2004/09/16 17:02:36 kozlik Exp $
+/**
+ * Application unit accounting 
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: apu_accounting.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
+ * @package   serweb
  */ 
 
-/* Application unit accounting */
-
-/*
-   This application unit is used for view incoming and outgoing calls of user
-   
-   Configuration:
-   --------------
-   'use_filter'				(bool) default: false
-     if should be used filter for displaying incomming/outgoing/all calls
-	 
-   'filter_labels'	 		(associative array)
-     text labels for filter select element. 
-	 Keys of array: all, incoming, outgoing
-   
-   'get_user_status'		(bool) default: false
-     should output array contain status of user?
-   
-   'get_phonebook_names'	(bool) default: false
-     should output contain names from phonebook?
-   
-   'convert_sip_addresses_to_phonenumbers'	(bool) default: false
-     true if numerical username part of sip address should be displayed
-	 without domain and initial 'sip:'
-   
-   'cvs_export_template'	(string) default: 'acc_cvs.tpl'
-     filename of smarty template for output in CSV format
-	
-   'form_name'				(string) default: ''
-   		name of html form
-
-   'smarty_url_delete'			name of smarty variable - see below
-   'smarty_url_cvs_export'		name of smarty variable - see below
-   'smarty_result'				name of smarty variable - see below
-   'smarty_form'				name of smarty variable - see below
-   'smarty_action'				name of smarty variable - see below
-   'smarty_pager'				name of smarty variable - see below
-   
-   Exported smarty variables:
-   --------------------------
-   opt['smarty_url_delete']		(url_delete)
-     url for delete acc records of user
-	
-   opt['smarty_url_cvs_export'] (url_export)
-     url for get acc records in CSV format
-   
-   opt['smarty_form']			(form)
-     phplib html form
-	 
-   opt['smarty_action']			(action)
-     tells what should smarty display. Values:
-		'default' - 
-   
-   opt['smarty_result'] 		(acc_res)	
-     associative array containing accounting informations 
-	 The array have same keys as function get_acc_entries (from data layer) returned. 
-	 If convert_sip_addresses_to_phonenumbers is true, array extra contains key sip_address
-	 
-   opt['smarty_pager'] 			(pager)		
-     associative array containing size of result and which page is returned
-*/
+/** Application unit accounting 
+ *
+ *
+ *	This application unit is used for view incoming and outgoing calls of user
+ *	
+ *	Configuration:
+ *	--------------
+ *	'use_filter'				(bool) default: false
+ *	 if should be used filter for displaying incoming/outgoing/all calls
+ *	 
+ *	'filter_labels'	 		(associative array)
+ *	 text labels for filter select element. 
+ *	 Keys of array: all, incoming, outgoing
+ *	
+ *	'display_incoming'		(bool) default: true
+ *	 have effect only when 'use_filter' is false
+ *	 if is true, incoming calls are displayed
+ *
+ *	'display_outgoing'		(bool) default: true
+ *	 have effect only when 'use_filter' is false
+ *	 if is true, outgoing calls are displayed
+ *
+ *	'display_missed'		(bool) default: true
+ *	 have effect only when 'use_filter' is false
+ *	 if is true, missed calls are displayed
+ *	
+ *	
+ *	'get_user_status'		(bool) default: false
+ *	  should output array contain status of user?
+ *	   
+ *	'get_phonebook_names'	(bool) default: false
+ *	 should output contain names from phonebook?
+ *	
+ *	'convert_sip_addresses_to_phonenumbers'	(bool) default: false
+ *	 true if numerical username part of sip address from our domain should be 
+ *	 displayed without domain and initial 'sip:'
+ *	
+ *	'cvs_export_template'	(string) default: 'acc_cvs.tpl'
+ *	 filename of smarty template for output in CSV format
+ *	
+ *	'form_name'				(string) default: ''
+ *		name of html form
+ *	
+ *	'smarty_url_delete'			name of smarty variable - see below
+ *	'smarty_url_cvs_export'		name of smarty variable - see below
+ *	'smarty_result'				name of smarty variable - see below
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_pager'				name of smarty variable - see below
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_url_delete']		(url_delete)
+ *	 url for delete acc records of user
+ *	
+ *	opt['smarty_url_cvs_export'] (url_export)
+ *	 url for get acc records in CSV format
+ *	
+ *	opt['smarty_form']			(form)
+ *	 phplib html form
+ *	 
+ *	opt['smarty_action']			(action)
+ *	 tells what should smarty display. Values:
+ *		'default' - 
+ *	
+ *	opt['smarty_result'] 		(acc_res)	
+ *	 associative array containing accounting informations 
+ *	 The array have same keys as function get_acc_entries (from data layer) returned. 
+ *	 If convert_sip_addresses_to_phonenumbers is true, array extra contains key sip_address
+ *	 
+ *	opt['smarty_pager'] 			(pager)		
+ *	 associative array containing size of result and which page is returned
+ */
  
 class apu_accounting extends apu_base_class{
 	var $smarty_action='default';
@@ -72,7 +89,7 @@ class apu_accounting extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('set_timezone', 'get_acc_entries', 'delete_user_acc');
+		return array('get_acc_entries', 'delete_user_acc', 'delete_user_missed_calls');
 	}
 
 	/* return array of strings - required javascript files */
@@ -88,6 +105,10 @@ class apu_accounting extends apu_base_class{
 		$this->opt['filter_labels'] = array('all' => $lang_str['sel_item_all_calls'],
 		                                    'incoming' => $lang_str['sel_item_incoming_cals'],
 											'outgoing' => $lang_str['sel_item_outgoing_calls']);
+
+		$this->opt['display_incoming'] =	true;
+		$this->opt['display_outgoing'] =	true;
+		$this->opt['display_missed'] =		true;
 											
 		$this->opt['get_user_status'] = false;
 		$this->opt['get_phonebook_names'] = false;
@@ -156,14 +177,23 @@ class apu_accounting extends apu_base_class{
 				break;
 			}
 		}
+		else {
+			$opt['filter_outgoing'] = $this->opt['display_outgoing'];
+			$opt['filter_incoming'] = $this->opt['display_incoming'];
+			$opt['filter_missed']   = $this->opt['display_missed'];
+		}
 		
 		return $opt;
 	}
 	
 	function convert_sip_addresses_to_phonenumbers(){
+		global $config;
+		
 		foreach($this->acc_res as $key => $val){
 			$uname = $this->reg->get_username($val['to_uri']);
-			if (ereg($this->reg->phonenumber_strict, $uname)) $this->acc_res[$key]['sip_address'] = $uname;
+			$domain = $this->reg->get_domainname($val['to_uri']);
+			if (ereg($this->reg->phonenumber_strict, $uname) and $domain == $config->domain) 
+				$this->acc_res[$key]['sip_address'] = $uname;
 			else $this->acc_res[$key]['sip_address'] = $val['to_uri'];
 		}
 	}
@@ -173,7 +203,7 @@ class apu_accounting extends apu_base_class{
 		global $data, $sess_acc_act_row;
 		
 		do{
-			$data->set_timezone($this->user_id, $errors);
+			$this->controler->set_timezone();
 			$data->set_act_row($sess_acc_act_row);
 			
 			$opt = $this->prepare_opt_param_for_get_acc_entries();
@@ -196,7 +226,7 @@ class apu_accounting extends apu_base_class{
 	function action_export(&$errors){
 		global $data, $smarty;
 
-		$data->set_timezone($this->user_id, $errors);
+		$this->controler->set_timezone();
 			
 		$opt = $this->prepare_opt_param_for_get_acc_entries();
 		$opt['limit_query'] = false;
@@ -223,10 +253,14 @@ class apu_accounting extends apu_base_class{
 		$opt = array();
 		if (isset($_GET['timestamp'])) $opt['timestamp'] = $_GET['timestamp'];
 		
-		if (false === $data->delete_user_acc($this->user_id, $opt, $errors)) return false;
+		if ($this->opt['display_incoming'] or $this->opt['display_outgoing']){
+			$opt['del_incoming'] = $this->opt['display_incoming'];
+			$opt['del_outgoing'] = $this->opt['display_outgoing'];
+			if (false === $data->delete_user_acc($this->user_id, $opt, $errors)) return false;
+		}
 		
 		/* if missed calls are displayed, delete its too */
-		if ($config->acc_display_missed_calls){
+		if ($this->opt['display_missed']){
 			if (!$opt['timestamp']) $opt['timestamp']=null;
 			if (false === $data->delete_user_missed_calls($this->user_id, $opt['timestamp'], $errors)) return false;
 		} 

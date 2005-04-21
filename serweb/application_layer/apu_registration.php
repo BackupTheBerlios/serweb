@@ -3,7 +3,7 @@
  * Application unit registration
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.3 2005/03/14 11:45:46 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -76,7 +76,7 @@ class apu_registration extends apu_base_class{
 	
 	/* constructor */
 	function apu_registration(){
-		global $lang_str, $config;
+		global $lang_str, $config, $sess_lang;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -102,8 +102,8 @@ class apu_registration extends apu_base_class{
 		$this->opt['smarty_reg_adress'] = 	'reg_sip_address';
 		
 		$this->opt['form_submit']=array('type' => 'image',
-										'text' => 'save',
-										'src'  => $config->img_src_path."buttons/btn_submit.gif");
+										'text' => $lang_str['b_register'],
+										'src'  => get_path_to_buttons("btn_register.gif", $sess_lang));
 		
 	}
 
@@ -123,7 +123,7 @@ class apu_registration extends apu_base_class{
 							"?nr=".$confirm;
 
 		$mail = read_lang_txt_file($this->opt['mail_file'], "txt", $sess_lang, 
-					array(array("domain", $config->domain),
+					array(array("domain", $this->opt['domain']),
 					      array("sip_address", $sip_address),
 						  array("confirmation_url", $confirmation_url)));
 					
@@ -161,7 +161,7 @@ class apu_registration extends apu_base_class{
 		$this->reg = new Creg;				// create regular expressions class
 
 		/* read txt files */
-		$t = read_lang_txt_file($this->opt['terms_file'], "txt", $sess_lang, array(array("domain", $config->domain)));
+		$t = read_lang_txt_file($this->opt['terms_file'], "txt", $sess_lang, array(array("domain", $this->opt['domain'])));
 		if ($t !== false){
  			$this->terms = $t['body'];
 		}

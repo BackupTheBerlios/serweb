@@ -1,5 +1,11 @@
 {* Smarty *}
-{* $Id: u_send_im.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: u_send_im.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+
+{literal}
+<style>
+	#im_num_chars{width:33px;}	
+</style>
+{/literal}
 
 {include file='_head.tpl'}
 
@@ -11,7 +17,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" align="left" style="margin-left: 0px;">
 		<tr>
 		<td><label for="sip_address">{$lang_str.ff_sip_address_of_recipient}:</label></td>
-		<td>{$form.sip_address}</td>
+		<td>{$form.im_sip_address}</td>
 		</tr>
 		</table>
 	</td>
@@ -20,9 +26,9 @@
 	<td class="swHorizontalForm"><label for="instant_message">{$lang_str.ff_text_of_message}:</label></td>
 	</tr>
 	<tr>
-	<td>{$form.instant_message}</td>
+	<td>{$form.im_instant_message}</td>
 	</tr>
-	<tr><td align="center">{$lang_str.im_remaining} {$form.num_chars} {$lang_str.im_characters}</td></tr>
+	<tr><td align="center">{$lang_str.im_remaining} {$form.im_num_chars} {$lang_str.im_characters}</td></tr>
 	<tr>
 	<td align="right">{$form.okey}</td>
 	</tr>

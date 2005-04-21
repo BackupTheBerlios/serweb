@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_admin_privileges.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
+{* $Id: a_admin_privileges.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -13,11 +13,11 @@
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
 	<td><label for="chk_is_admin">{$lang_str.ff_is_admin}</label></td>
-	<td>{$form.chk_is_admin}</td>
+	<td>{$form.pr_chk_is_admin}</td>
 	</tr>
 	<tr>
 	<td><label for="chk_change_privileges">{$lang_str.ff_change_privileges}</label></td>
-	<td>{$form.chk_change_privileges}</td>
+	<td>{$form.pr_chk_change_privileges}</td>
 	</tr>
 	</table>
 	</fieldset>
@@ -27,9 +27,9 @@
 	<fieldset class="swWidthAsTitle">
 	<legend>{$lang_str.acl_control}</legend>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-{foreach from=$grp_values item='row' name='grp_values'}
+{foreach from=$grp item='row' name='grp_values'}
 	{* concatenate 'chk_' and $row in order to get name of form element *}
-	{assign var='f_element' value="chk_$row"}
+	{assign var='f_element' value="pr_chk_$row"}
 	<tr>
 	<td><label for="{$f_element}">{$row}</label></td>
 	<td>{$form.$f_element}</td>

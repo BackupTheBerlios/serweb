@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.8 2005/01/30 20:56:38 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.9 2005/04/21 15:09:45 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -22,7 +22,7 @@
      see description of option 'username_in_target_only'
    
    'domain_for_requests'		(string) default: domain of loged in user
-     domain which is used for request URIs (column 'domain_from_req_uri' in DB table)
+     domain which is used for request URIs (column 'sd_domain' in DB table)
 
    'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
      message which should be showed on attributes update - assoc array with keys 'short' and 'long'
@@ -170,9 +170,6 @@ class apu_speed_dial extends apu_base_class{
 		/* name of html form */
 		$this->opt['form_name'] =			'';
 
-		$this->opt['form_submit']=array('type' => 'image',
-										'text' => 'save',
-										'src'  => $config->img_src_path."buttons/btn_submit.gif");
 										
 		$this->opt['fname_max_chars'] =		128;
 		$this->opt['lname_max_chars'] =		128;
@@ -207,16 +204,16 @@ class apu_speed_dial extends apu_base_class{
 			}
 			
 			
-			if ($val['new_request_uri'] != $new_uri or
-			    $val['first_name'] != $_POST['fname_'.$val['index']] or
-			    $val['last_name']  != $_POST['lname_'.$val['index']]){
+			if ($val['new_uri'] != $new_uri or
+			    $val['fname'] != $_POST['fname_'.$val['index']] or
+			    $val['lname']  != $_POST['lname_'.$val['index']]){
 			
 				$opt = array( 'insert' => $val['empty'],
 				              'primary_key' => $val['primary_key']);
 
-				$values = array('new_request_uri' => $new_uri,
-				                'first_name' => $_POST['fname_'.$val['index']],
-								'last_name'  => $_POST['lname_'.$val['index']]);			
+				$values = array('new_uri' => $new_uri,
+				                'fname' => $_POST['fname_'.$val['index']],
+								'lname'  => $_POST['lname_'.$val['index']]);			
 								
 				if (false === $data->update_speed_dial($this->user_id, $values, $opt, $errors)) return false;
 			}
@@ -313,9 +310,9 @@ class apu_speed_dial extends apu_base_class{
 		$this->pager['to']=$data->get_res_to();
 		
 		
-		/* fill in 'domain_from_req_uri' for entries which aren't in DB */
+		/* fill in 'sd_domain' for entries which aren't in DB */
 		foreach ($this->speed_dials as $key => $val){
-			if ($val['empty']) $this->speed_dials[$key]['domain_from_req_uri'] = $this->opt['domain_for_requests'];
+			if ($val['empty']) $this->speed_dials[$key]['sd_domain'] = $this->opt['domain_for_requests'];
 		}
 		
 		$i=0;
@@ -328,11 +325,11 @@ class apu_speed_dial extends apu_base_class{
 			                             "name"=>"new_uri_".$index,
 										 "size"=>16,
 										 "maxlength"=>$this->opt['new_uri_max_chars'],
-			                             "value"=>$val['new_request_uri']);
+			                             "value"=>$val['new_uri']);
 										 
 			if ($this->opt['username_in_target_only']){
 				/* parse username from request uri */
-				$element_new_uri["value"]       = $this->reg->get_username($val['new_request_uri']);
+				$element_new_uri["value"]       = $this->reg->get_username($val['new_uri']);
 				
 				/* if user should enter only phonenumber as username part of uri, add validating regex */
 				if ($this->opt['numerical_target_only']){
@@ -341,7 +338,7 @@ class apu_speed_dial extends apu_base_class{
 				}
 			}
 			else{
-				$element_new_uri["value"]       = $val['new_request_uri'];
+				$element_new_uri["value"]       = $val['new_uri'];
 				$element_new_uri["valid_regex"] = "^(".$this->reg->sip_address.")?$";
 				$element_new_uri["valid_e"]     = $lang_str['fe_not_valid_sip'];
 				$element_new_uri["extrahtml"]   = "onBlur='sip_address_completion(this)'";
@@ -353,13 +350,13 @@ class apu_speed_dial extends apu_base_class{
 			                             "name"=>"fname_".$index,
 										 "size"=>16,
 										 "maxlength"=>$this->opt['fname_max_chars'],
-			                             "value"=>$val['first_name']));
+			                             "value"=>$val['fname']));
 										 
 			$this->f->add_element(array("type"=>"text",
 			                             "name"=>"lname_".$index,
 										 "size"=>16,
 										 "maxlength"=>$this->opt['lname_max_chars'],
-			                             "value"=>$val['last_name']));
+			                             "value"=>$val['lname']));
 
 			if ($this->opt['blacklist']){ //perform regex check against entered URIs
 				$js_tmp = "if (window.RegExp) {\n".

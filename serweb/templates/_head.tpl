@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.2 2004/08/09 23:04:57 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.domain}&gt;</div>
@@ -9,7 +9,16 @@
 	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout}</a></div>
 {/if}
 
-	<br class="cleaner" /><br />
+	<br class="cleaner" />
+	<br />
+
+{if $xxl_form}
+	<div align="right">
+	{$xxl_form.start} 
+	SIP proxy: {$xxl_form.ps_proxy}&nbsp;{$xxl_form.okey_x}&nbsp;
+	{$xxl_form.finish} 
+	</div>
+{/if}	
 
 {if $parameters.tab_collection}
 

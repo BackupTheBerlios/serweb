@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_phonebook.php,v 1.3 2005/01/30 20:56:38 kozlik Exp $
+ * $Id: apu_phonebook.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
  */ 
 
 /* Application unit phonebook */
@@ -163,10 +163,6 @@ class apu_phonebook extends apu_base_class{
 		/* name of html form */
 		$this->opt['form_name'] =			'';
 		
-		$this->opt['form_submit']=array('type' => 'image',
-										'text' => 'save',
-										'src'  => $config->img_src_path."buttons/btn_submit.gif");
-										
 	}
 
 	function get_phonebook(&$errors){
@@ -276,6 +272,14 @@ class apu_phonebook extends apu_base_class{
 		$action_delete = array('action'=>"delete",
 				                    'validate_form'=>false,
 									'reload'=>true);
+
+		/* take contact from whitepages and add to phonebook */
+		if (isset($_GET['add_from_wp'])){
+			$this->action = array('action'=>"add",
+		                    'validate_form'=>true,
+							'reload'=>true);
+			return;
+		}
 	
 		if ($this->was_form_submited()){	// Is there data to process?
 			if (isset($_REQUEST['pb_delete_ack'])){

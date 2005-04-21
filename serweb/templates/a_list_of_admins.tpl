@@ -1,15 +1,49 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 <h2 class="swTitle">{$lang_str.search_filter}:</h2>
 
-{$form}
+{literal}
+<style type="text/css">
+	#usrnm {width:120px;}
+	#domain {width:120px;}
+	#fname {width:120px;}
+	#lname {width:120px;}
+	#email {width:120px;}
+</style>	
+{/literal}
+
+<div class="swForm swHorizontalForm">
+{$form.start}
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+<td><label for="usrnm">{$lang_str.ff_username}</label></td>
+<td><label for="domain">{$lang_str.ff_domain}</label></td>
+<td><label for="fname">{$lang_str.ff_first_name}</label></td>
+<td><label for="lname">{$lang_str.ff_last_name}</label></td>
+<td><label for="email">{$lang_str.ff_email}</label></td>
+</tr>
+
+<tr>
+<td>{$form.usrnm}</td>
+<td>{$form.domain}</td>
+<td>{$form.fname}</td>
+<td>{$form.lname}</td>
+<td>{$form.email}</td>
+</tr>
+
+<tr><td colspan="5"><label for="adminsonly" style="display: inline;">{$lang_str.ff_show_admins_only}:</label>{$form.adminsonly}</td></tr>
+				
+<tr><td colspan="5" align="right">{$form.okey}</td></tr>
+</table>
+{$form.finish}
+</div>
 
 <h2 class="swTitle">{$lang_str.list_of_users}</h2>
 
-{foreach from=$admins item='row' name='admins'}
+{foreach from=$users item='row' name='admins'}
 	{if $smarty.foreach.admins.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
@@ -26,7 +60,7 @@
 	<td align="left">{$row.domain|empty2nbsp}</td>
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
-	<td align="center"><a href="{$row.url_ch_priv}">{$lang_str.l_change_privileges}</a></td>
+	<td align="center"><a href="{url url='admin_privileges.php' uniq=1}&{$row.get_param}">{$lang_str.l_change_privileges}</a></td>
 	</tr>
 	{if $smarty.foreach.admins.last}
 	</table>

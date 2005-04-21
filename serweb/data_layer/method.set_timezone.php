@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.set_timezone.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.set_timezone.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */
 
 class CData_Layer_set_timezone {
@@ -18,12 +18,12 @@ class CData_Layer_set_timezone {
 		$q="select timezone from ".$config->data_sql->table_subscriber.
 			" where ".$this->get_indexing_sql_where_phrase($user);
 		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return;}
+		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 		$row = $res->fetchRow(DB_FETCHMODE_OBJECT);
 		$res->free();
 
 		putenv("TZ=".$row->timezone); //set timezone
-		return;
+		return true;
 
 	}
 	

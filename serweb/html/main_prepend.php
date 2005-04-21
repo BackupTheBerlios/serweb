@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.8 2005/03/02 15:29:43 kozlik Exp $
+ * $Id: main_prepend.php,v 1.9 2005/04/21 15:09:46 kozlik Exp $
  */ 
 
 //require class defintions
@@ -37,6 +37,10 @@ unset($domain_config);
 //require PEAR DB
 require_once 'DB.php';
 
+//require PEAR XML_RPC class
+require_once 'XML/RPC.php';
+require_once ($_SERWEB["serwebdir"] . "xml_rpc_patch.php");
+
 //create log instance
 if ($config->enable_loging){
 	require_once 'Log.php';
@@ -57,7 +61,12 @@ require_once ($_SERWEB["serwebdir"] . "functions.php");
 
 //require data layer for work with data store and create instance of it
 require_once ($_SERWEB["serwebdir"] . "data_layer.php");
-$data = CData_Layer::create($errors);
+
+// create instance of data_layer binded to proxy where is stored account 
+// of currently authenticated user
+$data_auth = CData_Layer::singleton("auth_user", $errors);
+// reference $data to $data_auth
+$data = &$data_auth;
 
 //require page layout
 require_once ($_SERWEB["serwebdir"] . "page.php");

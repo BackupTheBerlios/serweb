@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.find_users.php,v 1.2 2004/12/13 14:02:29 kozlik Exp $
+ * $Id: method.find_users.php,v 1.3 2005/04/21 15:09:45 kozlik Exp $
  */
 
 class CData_Layer_find_users {
@@ -101,6 +101,8 @@ class CData_Layer_find_users {
 		
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_OBJECT); $i++){
 
+			$out[$i]['fname'] = $row->first_name;
+			$out[$i]['lname'] = $row->last_name;
 			$out[$i]['name'] = implode(' ', array($row->last_name, $row->first_name));
 			$out[$i]['sip_uri'] = "sip:".$row->username."@".$row->domain;
 			$out[$i]['status'] = $this->get_status($out[$i]['sip_uri'], $errors);

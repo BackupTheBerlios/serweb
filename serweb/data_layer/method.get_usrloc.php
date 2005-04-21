@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.2 2004/09/22 11:08:32 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.3 2005/04/21 15:09:46 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {
@@ -45,6 +45,7 @@ class CData_Layer_get_usrloc {
 					$out[$i]['expires']=$date;
 					$out[$i]['geo_loc']=$this->get_location($regs[1], $errors);
 	
+					/** @todo: remove this field */
 					$out[$i]['url_dele'] = $sess->url("my_account.php?kvrk=".uniqID("").
 														"&del_contact=".rawURLEncode($regs[1]).
 														($uid?("&".userauth_to_get_param($uid, 'u')):""));

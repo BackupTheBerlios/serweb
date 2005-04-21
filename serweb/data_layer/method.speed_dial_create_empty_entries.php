@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.speed_dial_create_empty_entries.php,v 1.1 2004/11/29 21:30:02 kozlik Exp $
+ * $Id: method.speed_dial_create_empty_entries.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
  */
 
 /*
@@ -31,14 +31,16 @@ class CData_Layer_speed_dial_create_empty_entries {
     	$opt_in_domain = (isset($opt['in_domain'])) ? $opt['in_domain'] : '';
     	$opt_set_domain = (isset($opt['set_domain'])) ? $opt['set_domain'] : '';
     	$opt_length = (isset($opt['length'])) ? $opt['length'] : ceil(log10($to));
+
+		$c = &$config->data_sql->speed_dial;
 		
-		$where_phrase = " and username_from_req_uri rlike '^[0-9]+$' ";	// get only numerical usernames in given range
-		$where_phrase .= " and abs(username_from_req_uri) >= ".$from." ";  //abs() converts string to integer
-		$where_phrase .= " and abs(username_from_req_uri) <= ".$to." ";
-		if ($opt_in_domain) $where_phrase .= " and domain_from_req_uri = '".$opt_in_domain."' ";
+		$where_phrase = " and ".$c->sd_username." rlike '^[0-9]+$' ";	// get only numerical usernames in given range
+		$where_phrase .= " and abs(".$c->sd_username.") >= ".$from." ";  //abs() converts string to integer
+		$where_phrase .= " and abs(".$c->sd_username.") <= ".$to." ";
+		if ($opt_in_domain) $where_phrase .= " and ".$c->sd_domain." = '".$opt_in_domain."' ";
 		
-		$q="select username_from_req_uri from ".$config->data_sql->table_speed_dial.
-			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by username_from_req_uri";
+		$q="select ".$c->sd_username." from ".$config->data_sql->table_speed_dial.
+			" where ".$this->get_indexing_sql_where_phrase($user).$where_phrase." order by ".$c->sd_username;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -46,17 +48,17 @@ class CData_Layer_speed_dial_create_empty_entries {
 		$i = $from;			
 		
 		while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)){
-			if ($i == $row['username_from_req_uri']) {$i++;}
-			elseif ($i < $row['username_from_req_uri']){
-				if (false === $this->speed_dial_cee_fill($user, $i, $row['username_from_req_uri']-1, $opt_length, $opt_set_domain, $errors)) return false;
-				$i = $row['username_from_req_uri']+1;
+			if ($i == $row[$c->sd_username]) {$i++;}
+			elseif ($i < $row[$c->sd_username]){
+				if (false === $this->speed_dial_cee_fill($user, $i, $row[$c->sd_username]-1, $opt_length, $opt_set_domain, $errors)) return false;
+				$i = $row[$c->sd_username]+1;
 			} 
 			// else nothing
 		}
 
 		if ($i <= $to){
 			if (false === $this->speed_dial_cee_fill($user, $i, $to, $opt_length, $opt_set_domain, $errors)) return false;
-			$i = $row['username_from_req_uri']+1;
+			$i = $row[$c->sd_username]+1;
 		}
 		
 		return true;
@@ -67,12 +69,14 @@ class CData_Layer_speed_dial_create_empty_entries {
 		global $config;
 		$att=$this->get_indexing_sql_insert_attribs($user);
 
+		$c = &$config->data_sql->speed_dial;
+
 		for ($i=$from; $i<=$to; $i++){
 
 			$q="insert into ".$config->data_sql->table_speed_dial." (
 			           ".$att['attributes'].", 
-					   username_from_req_uri".
-					   ($set_domain ? ",domain_from_req_uri" : "").
+					   ".$c->sd_username.
+					   ($set_domain ? ",".$c->sd_domain : "").
 			    ") 
 				values (
 				       ".$att['values'].", 
