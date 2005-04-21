@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.3 2005/01/13 16:23:47 kozlik Exp $
+ * $Id: config_paths.php,v 1.4 2005/04/21 15:32:34 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
@@ -24,7 +24,7 @@
 		$config->img_src_path =		$config->root_path."img/";
 		$config->js_src_path =    	$config->root_path."js/";
 		$config->style_src_path = 	$config->root_path."styles/";
-		$config->user_pages_path = 	$config->root_path."user_interface/";
+		$config->user_pages_path = 	$config->root_path."user/";
 		$config->admin_pages_path =	$config->root_path."admin/";
 		$config->domains_path =		$config->root_path."domains/";
 
