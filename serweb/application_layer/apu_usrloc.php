@@ -3,7 +3,7 @@
  * Application unit usrloc
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_usrloc.php,v 1.1 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_usrloc.php,v 1.2 2005/04/26 14:32:01 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -30,6 +30,7 @@
  *	
  *	'smarty_form'				name of smarty variable - see below
  *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_usrloc'				name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -41,6 +42,10 @@
  *	  'default' - 
  *	  'was_added' - when user submited form and data was succefully stored
  *	  'was_deleted'  - when user delete contact
+ *	
+ *	opt['smarty_usrloc'] 				(usrloc)	
+ *	 associative array containing user's User Loc 
+ *	 The array have same keys as function get_usrloc (from data layer) returned. 
  *	
  */
 
@@ -82,6 +87,8 @@ class apu_usrloc extends apu_base_class{
 		$this->opt['smarty_action'] =		'action';
 		/* name of html form */
 		$this->opt['form_name'] =			'';
+
+		$this->opt['smarty_usrloc'] =		'usrloc';
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => $lang_str['b_add'],
@@ -108,14 +115,15 @@ class apu_usrloc extends apu_base_class{
 	}
 
 	function action_delete(&$errors){
-		if (false === $status = $data->del_contact($this->user_id->uname, $this->user_id->domain, $_GET['ul_dele_id'], $errors)) return false;
+		global $data;
+		if (false === $data->del_contact($this->user_id->uname, $this->user_id->domain, $_GET['ul_dele_id'], $errors)) return false;
 
 		return array("m_ul_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	function action_add(&$errors){
 		global $data;
-		if (false === $status = $data->add_contact($this->user_id->uname, $this->user_id->domain, $_POST['ul_sip_address'], $_POST['ul_expires'], $errors)) return false;
+		if (false === $data->add_contact($this->user_id->uname, $this->user_id->domain, $_POST['ul_sip_address'], $_POST['ul_expires'], $errors)) return false;
 
 		return array("m_ul_added=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -203,6 +211,7 @@ class apu_usrloc extends apu_base_class{
 	/* assign variables to smarty */
 	function pass_values_to_html(){
 		global $smarty;
+		$smarty->assign_by_ref($this->opt['smarty_usrloc'], $this->usrloc);
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 	}
 	
