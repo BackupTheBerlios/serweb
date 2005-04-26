@@ -1,12 +1,19 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.5 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.6 2005/04/26 14:41:57 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
 
 		////////////////////////////////////////////////////////////////
 		//            configure connection to SER
+
+		/**
+		 *	Use XML RPC instead of FIFO for manage SER.
+		 *	This feature is still experimental.
+		 *	If SER useing XXL extension, this must be set to true.
+		 */
+		$config->use_rpc = false;
 
 		/* these are options for connect to XML-RPC interface of SER
 		*/
@@ -100,11 +107,11 @@
 		/* if true, serweb will create/delete entries in table uri when alisa will be created/deleted
 		   (working only in uuidized version)
 		*/
-		$config->use_table_uri = true;
+		$config->use_table_uri = false;
 
 		/* 	if true, serweb will add new subscriber also into aliases table instead of into subscriber table only
 		*/
-		$config->copy_new_subscribers_to_aliases_table = true;		
+		$config->copy_new_subscribers_to_aliases_table = false;		
 		
 		/* Unless you used brute-force to change SER table names */
 		$config->data_sql->table_subscriber="subscriber";
