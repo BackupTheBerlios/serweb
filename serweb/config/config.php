@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.12 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: config.php,v 1.13 2005/04/26 14:39:51 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -176,8 +176,7 @@
 	/* Loging                                                      */
 	/* ------------------------------------------------------------*/
 
-	/* I think that loging is currently useful only for developers.
-	   When you enable loging be sure if you have instaleld PEAR package
+	/* When you enable loging be sure if you have instaleld PEAR package
 	   Log. See http://pear.php.net/manual/en/installation.getting.php 
 	   for more information
 	*/
@@ -403,10 +402,6 @@
 	/* these are table names as reffered from script and via FIFO */
 	$config->ul_table="location";
 	$config->fifo_aliases_table="aliases";
-
-
-	/* development value
-	$config->reply_fifo_path="d:/temp/".$config->reply_fifo_filename; */	
 
 	/* serweb version */
 	$config->psignature="Web_interface_Karel_Kozlik-0.9";
