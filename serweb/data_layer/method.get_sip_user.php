@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_sip_user.php,v 1.2 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: method.get_sip_user.php,v 1.3 2005/04/26 21:09:44 kozlik Exp $
  */
 
 class CData_Layer_get_sip_user {
@@ -29,7 +29,9 @@ class CData_Layer_get_sip_user {
 		//query db
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
-		if (!$res->numRows()) {$errors[] = $lang_str['err_no_user']; return false;}
+		if (!$res->numRows()) {
+			 return false;
+		}
 
 		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
 		$res->free();

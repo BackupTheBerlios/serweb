@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.11 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.12 2005/04/26 21:12:16 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -351,8 +351,11 @@ $lang_str['err_reg_conf_already_created'] = 	"Your account has already been crea
 
 $lang_str['forgot_pass_head'] = 				"Forgot Password?";
 $lang_str['forgot_pass_introduction'] = 		"If you have forgotten your password, please enter your username in the form below. An email containing your password will then be sent to the email-address you have registered with!";
-$lang_str['msg_password_sended_s'] = 			"Login informations sended";
-$lang_str['msg_password_sended_l'] = 			"Login informations was send to your email address";
+$lang_str['forgot_pass_sended'] = 				"New password was created and sended to email address you have registered with.";
+$lang_str['msg_pass_conf_sended_s'] = 			"Login informations sended";
+$lang_str['msg_pass_conf_sended_l'] = 			"Login informations was send to your email address";
+$lang_str['msg_password_sended_s'] = 			"New password sended";
+$lang_str['msg_password_sended_l'] = 			"New password was send to your email address";
 $lang_str['err_no_user'] = 						"Sorry, this is not a registered username!";
 
 /* ------------------------------------------------------------*/
