@@ -1,11 +1,21 @@
 <?
 /*
- * $Id: method.delete_alias.php,v 1.2 2004/12/10 14:08:17 kozlik Exp $
+ * $Id: method.delete_alias.php,v 1.3 2005/04/26 14:34:25 kozlik Exp $
  */
 
 class CData_Layer_delete_alias {
-	var $required_methods = array();
+	var $required_methods = array('clear_proxy_xxl');
 	
+	/**
+	 *	delete alias of user
+	 *
+	 *	@param Cserweb_auth $user	owner of the contact 
+	 *	@param string $alias_u		username part from alias
+	 *	@param string $alias_d		domain part from alias
+	 *	@param array $errors	
+	 *	@return bool				TRUE on success, FALSE on failure
+	 */
+
 	function delete_alias($user, $alias_u, $alias_d, &$errors){
 	 	global $config;
 
@@ -29,30 +39,50 @@ class CData_Layer_delete_alias {
 				$res=$this->db->query($q);
 				if (DB::isError($res)) {log_errors($res, $errors); return false;}
 			}
-
-			return '200 OK';
 		}
-		
 		else{
 		    if ($config->ul_replication) $replication="0\n";
 		    else $replication="";
 	
 			$sip_address='sip:'.$user->uname.'@'.$user->domain;
 			
-			$ul_name=$alias_u."@".$alias_d."\n";
-	
-			/* construct FIFO command */
-			$fifo_cmd=":ul_rm:".$config->reply_fifo_filename."\n".
-				$config->fifo_aliases_table."\n".	//table
-				$ul_name;							//user
-	
-			$message=write2fifo($fifo_cmd, $errors, $status);
-			if ($errors) return false;
-			if (substr($status,0,1)!="2") {$errors[]=$status; return false; }
-	
-			return $message;
-		}
+			$ul_name=$alias_u."@".$alias_d;
+
+			if ($config->use_rpc){
+				if (!$this->connect_to_xml_rpc(null, $errors)) return false;
+
+				$params = array(new XML_RPC_Value($config->fifo_aliases_table, 'string'),
+				                new XML_RPC_Value($ul_name, 'string'));
+				                
+				$msg = new XML_RPC_Message_patched('ul_rm', $params);
+				$res = $this->rpc->send($msg);
 		
+				if ($this->rpc_is_error($res)){
+					log_errors($res, $errors); return false;
+				}
+		
+			}
+			else{	
+				/* construct FIFO command */
+				$fifo_cmd=":ul_rm:".$config->reply_fifo_filename."\n".
+					$config->fifo_aliases_table."\n".	//table
+					$ul_name."\n";						//user
+		
+				$message=write2fifo($fifo_cmd, $errors, $status);
+				if ($errors) return false;
+				if (substr($status,0,1)!="2") {$errors[]=$status; return false; }
+		
+			}
+		}
+
+
+		if ($config->enable_XXL){
+			$alias_uri = "sip:".$alias_u."@".$alias_d;
+
+			if (false === clear_proxy_xxl($alias_uri, null, $errors)) return false;
+		}
+
+		return true;		
 	}
 	
 }
