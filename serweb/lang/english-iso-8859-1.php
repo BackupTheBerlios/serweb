@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.12 2005/04/26 21:12:16 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.13 2005/04/28 14:38:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -370,6 +370,7 @@ $lang_str['msg_user_deleted_s'] = 				"User deleted";
 $lang_str['msg_user_deleted_l'] = 				"User has been deleted succesfuly";
 $lang_str['th_phone'] = 						"phone";
 $lang_str['l_acl'] = 							"ACL";
+$lang_str['l_aliases'] = 						"aliases";
 $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
 
