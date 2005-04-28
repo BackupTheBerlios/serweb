@@ -466,6 +466,14 @@ table.swTable tr.swTrOdd{
 	text-align : center;
 }
 
+.statusonline{
+	color: red;
+}
+
+.statusoffline{
+	color: blue;
+}
+
 
 /*
 	server monitoring statistics
