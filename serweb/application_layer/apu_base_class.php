@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.6 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.7 2005/04/28 14:23:36 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -124,6 +124,10 @@ class apu_base_class{
 			}
 		}
 		return true;
+	}
+
+	/* callback function when some html form is invalid */
+	function form_invalid(){
 	}
 
 	/* check if form of this APU was submited */
