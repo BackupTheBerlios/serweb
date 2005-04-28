@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.20 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: users.php,v 1.21 2005/04/28 14:29:09 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -43,6 +43,7 @@ if ($config->enable_XXL) {
 }
 
 $controler->add_apu($sc);
+$controler->add_reqired_javascript('functions.js');
 $controler->set_template_name('a_users.tpl');
 $controler->start();
 
