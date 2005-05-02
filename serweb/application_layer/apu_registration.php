@@ -3,7 +3,7 @@
  * Application unit registration
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.5 2005/05/02 15:09:53 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -66,7 +66,9 @@ class apu_registration extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_time_zones',  'is_user_exists', 'add_user_to_subscriber');
+		return array('get_time_zones',  'is_user_exists', 
+			'add_user_to_subscriber', 'get_proxy_for_new_user_xxl',
+			'set_proxy_xxl');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -109,18 +111,49 @@ class apu_registration extends apu_base_class{
 
 	function action_register(&$errors){
 		global $config, $data, $lang_str, $sess_lang;
+
+		$uuid = md5(uniqid($_SERVER["SERVER_ADDR"]));
+
+		if (false === $proxy = $data->get_proxy_for_new_user_xxl(
+					new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']),
+					array ("set_proxy" => true),
+					$errors))
+			return false;
+
+		if (false === $data->set_proxy_xxl(
+					new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']), 
+					$proxy['proxy'], 
+					null, 
+					$errors)) 
+			return false;
+
 		
 		$confirm=md5(uniqid(rand()));
 
-		if (!$data->add_user_to_subscriber($_POST['uname'], $this->opt['domain'], $_POST['passwd'], $_POST['fname'], 
-											$_POST['lname'], $_POST['phone'], $_POST['email'], $_POST['timezone'], 
-											$confirm, $config->data_sql->table_pending, $errors)) return false;
+		if (!$data->add_user_to_subscriber(
+				array("uuid" => $uuid, 
+				      "uname" => $_POST['uname'], 
+				      "domain" => $this->opt['domain'], 
+					  "password" => $_POST['passwd'], 
+					  "fname" => $_POST['fname'], 
+					  "lname" => $_POST['lname'], 
+					  "phone" => $_POST['phone'], 
+					  "email" => $_POST['email'], 
+					  "timezone" => $_POST['timezone'],
+					  "confirm" => $confirm),
+				array("pending" => true), 
+				$errors)) 
+			return false;
+
 
 		$sip_address="sip:".$_POST['uname']."@".$this->opt['domain'];
 		$confirmation_url = $config->root_uri.
 							$config->user_pages_path.
 							$this->opt['confirmation_script'].
-							"?nr=".$confirm;
+							"?nr=".$confirm.
+							($config->enable_XXL ? 
+								"&pr=".RawURLEncode(base64_encode($proxy['proxy'])):
+								"");
 
 		$mail = read_lang_txt_file($this->opt['mail_file'], "txt", $sess_lang, 
 					array(array("domain", $this->opt['domain']),
