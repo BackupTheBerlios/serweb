@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.2 2005/05/02 11:23:49 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
@@ -13,15 +13,27 @@ class CData_Layer_get_aliases_by_uri {
 	function get_aliases_by_uri($sip_uri, &$errors){
 		global $config;
 
+		//parse username and domain from sip uri
+		$reg = Creg::singleton();
+		$uname = $reg->get_username($sip_uri);
+		$domain = $reg->get_domainname($sip_uri);
+
+		/* create connection to proxy where are stored data of user */
+		if ($config->enable_XXL and $this->name != "get_aliases_tmp"){
+
+			$tmp_data = CData_Layer::singleton("get_aliases_tmp", $errors);
+			$tmp_data->set_xxl_user_id($sip_uri);
+			$tmp_data->expect_user_id_may_not_exists();
+
+			return $tmp_data->get_aliases_by_uri($sip_uri, $errors);
+			
+		}
+
+
 		if (!$this->connect_to_db($errors)) return false;
 
 		if ($config->users_indexed_by=='uuid'){
 			//we must get uuid first
-
-			//parse username and domain from sip uri
-			$reg=new Creg;
-			$uname = $reg->get_username($sip_uri);
-			$domain = $reg->get_domainname($sip_uri);
 			
 			if (false === $uuid = $this->get_uuid_of_user($uname, $domain, $errors)) return false;
 		

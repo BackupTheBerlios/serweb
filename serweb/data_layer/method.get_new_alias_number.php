@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: method.get_new_alias_number.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_new_alias_number.php,v 1.2 2005/05/02 11:23:49 kozlik Exp $
  */
 
 class CData_Layer_get_new_alias_number {
-	var $required_methods = array();
+	var $required_methods = array('is_user_exists');
 	
 	 /*
 	  *	generate new alias number
@@ -15,7 +15,9 @@ class CData_Layer_get_new_alias_number {
 
 		if (!$this->connect_to_db($errors)) return false;
 
-		if ($config->alias_generation=='rand'){ //random alias generation
+		if ($config->alias_generation=='rand' or
+		    $config->enable_XXL){ //random alias generation
+		    
 			$retries=0;
 			do{
 				//create alias	
@@ -24,14 +26,11 @@ class CData_Layer_get_new_alias_number {
 				$alias.=$config->alias_postfix;
 				
 				//check if alias isn't used
-				$q="select username from ".($config->users_indexed_by=='uuid'?
-											$config->data_sql->table_uuidaliases:
-											$config->data_sql->table_aliases).
-					" where domain='".$domain."' and username='".$alias."'";
-				$res=$this->db->query($q);
-				if (DB::isError($res)) {log_errors($res, $errors); return false;}
-				
-				if ($res->numRows() == 0) break;
+				if (0 > $exists = $this->is_user_exists($alias, $domain, $errors)) {
+					return false;
+				}
+
+				if ($exists == false) break;
 
 				$retries++;
 			}while ($retries < $config->alias_generation_retries);
