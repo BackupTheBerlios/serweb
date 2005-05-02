@@ -1,13 +1,11 @@
 <?
 /*
- * $Id: config.php,v 1.13 2005/04/26 14:39:51 kozlik Exp $
+ * $Id: config.php,v 1.14 2005/05/02 14:54:41 kozlik Exp $
  */
 
 /*****************************************************************************
  * 	                     DOMAIN INDEPENDING OPTIONS                          *
  *****************************************************************************/
-
-/* There are values common for all domains */
 
 	/* this array contain list of config parameter which can be modified
 	   by admins of particular domains */
@@ -18,6 +16,10 @@
 		"alias_postfix", "alias_lenght", "alias_generation_retries",
 		"infomail", "regmail", "forgot_pass_subj", "mail_forgot_pass", 
 		"register_subj", "mail_register", "terms_and_conditions", "lang");
+
+
+	/* set to true if SERWEB is used for more domains */
+	$config->multidomain = false;
 
 		
 	/* ------------------------------------------------------------*/
