@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.check_passw_of_user.php,v 1.2 2005/05/02 11:17:57 kozlik Exp $
  */
 
 class CData_Layer_check_passw_of_user {
@@ -28,9 +28,14 @@ class CData_Layer_check_passw_of_user {
 				" where username='".addslashes($user)."' and domain='".addslashes($domain)."' and ha1='".$ha1."'";
 		}
 		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		if (DB::isError($res)) {
+			log_errors($res, $errors); 
+			return false;
+		}
 
-		if (!$res->numRows()) {$errors[]=$lang_str['bad_username']; return false;}
+		if (!$res->numRows()) {
+			return false;
+		}
 		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
 		$res->free();
 
