@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: local.inc,v 1.3 2005/05/02 14:51:33 kozlik Exp $
  */
 
 
@@ -90,7 +90,7 @@ class phplib_Auth extends Auth {
 
   function auth_validatelogin() {
     global $config, $_POST, $errors;
-	global $serweb_auth, $sess, $data_auth;
+	global $serweb_auth, $sess, $data_auth, $lang_str;
 	
 	if (!$sess->is_registered('serweb_auth')) $sess->register('serweb_auth');
 
@@ -105,7 +105,10 @@ class phplib_Auth extends Auth {
 		$this->check_for_privileges($serweb_auth);
 		return $p_uid;
 	}
-	else return false;
+	else {
+		$errors[]=$lang_str['bad_username']; 
+		return false;
+	}
   }
 
   /*
