@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.9 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.10 2005/05/02 14:59:22 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -93,7 +93,7 @@ class page_conroler{
 			
 			// set initial value of sess_xxl_selected_proxy to same proxy where user has account
 			if (is_null($sess_xxl_selected_proxy)){
-				if (false !== $proxy_uri = $GLOBALS['data_auth']->get_xxl_proxy($this->errors)){
+				if (false !== $proxy_uri = $GLOBALS['data_auth']->get_home_proxy($this->errors)){
 					$sess_xxl_selected_proxy = array('proxy' => $proxy_uri);
 				}
 			}
@@ -104,7 +104,7 @@ class page_conroler{
 			// in variable $data_auth
 			if ($config->enable_XXL and $sess_xxl_selected_proxy){
 				$GLOBALS['data_selected_proxy'] = CData_Layer::singleton("selected_proxy", $this->errors);
-				if (false === $GLOBALS['data_selected_proxy']->set_xxl_proxy($sess_xxl_selected_proxy)){
+				if (false === $GLOBALS['data_selected_proxy']->set_home_proxy($sess_xxl_selected_proxy['proxy'])){
 					die("Can't connect to DB");
 					break;
 				}
@@ -395,6 +395,13 @@ class page_conroler{
 		return true;
 	}
 
+	/* call form_invalid method of each apu */
+	function _form_invalid(){
+		foreach($this->apu_objects as $key=>$val){
+			$this->apu_objects[$key]->form_invalid();
+		}
+	}
+
 	/* load default values to form */
 	function _form_load_defaults(){
 		/* if is used shared html form, load defaults to it */
@@ -608,8 +615,10 @@ class page_conroler{
 		if ($form_valid)
 			$this->_execute_actions();
 		/* otherwise load defaults to the form(s) */
-		else 
+		else {
+			$this->_form_invalid();
 			$this->_form_load_defaults();
+		}
 
 		/** get messages **/
 		$this->_get_messages();
