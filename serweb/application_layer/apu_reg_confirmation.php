@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_reg_confirmation.php,v 1.1 2004/12/10 14:09:38 kozlik Exp $
+ * $Id: apu_reg_confirmation.php,v 1.2 2005/05/02 15:03:45 kozlik Exp $
  */ 
 
 /* Application unit reg_confirmation */
@@ -75,7 +75,20 @@ class apu_reg_confirmation extends apu_base_class{
 	}
 
 	function action_confirm_reg(&$errors){
-		global $data;
+		global $data, $config;
+
+		if (isset($_GET['pr'])){
+			$proxy['proxy'] = base64_decode($_GET['pr']);
+			
+			if ($proxy['proxy']){
+				if (false === $data->set_home_proxy($proxy['proxy'])) return false;
+			} 
+		}
+		
+		if ($config->enable_XXL and !$proxy['proxy']){
+			$errors[] = $lang_str['err_reg_conf_not_exists_conf_num'];
+			return false;
+		}
 
 		// move user from table pending to table subscriber
 		if (false === $user_id=$data->move_user_from_pending_to_subscriber($this->nr, $errors)) return false;
@@ -89,16 +102,16 @@ class apu_reg_confirmation extends apu_base_class{
 		$remove_alias=false;
 		do{
 			if ($this->opt['add_to_aliases_table_too']){
-				if (false === $message=$data->add_new_alias($user_id, $user_id->uname, $user_id->domain, $errors)) break;
+				if (false === $data->add_new_alias($user_id, $user_id->uname, $user_id->domain, $errors)) break;
+				$remove_alias=true;
 			}
-			$remove_alias=true;
 
 			if ($this->opt['create_numeric_alias']){
 				// generate alias number 
 				if (false === $alias=$data->get_new_alias_number($user_id->domain, $errors)) break;
 		
 				// add alias to fifo
-				if (false === $message=$data->add_new_alias($user_id, $alias, $user_id->domain, $errors)) break;
+				if (false === $data->add_new_alias($user_id, $alias, $user_id->domain, $errors)) break;
 			}
 			$remove_from_subscriber=false;
 			$remove_alias=false;
