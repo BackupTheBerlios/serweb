@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.56 2005/04/21 15:09:46 kozlik Exp $
+ * @version   $Id: functions.php,v 1.57 2005/05/03 09:05:15 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -868,6 +868,56 @@ function toCSV($str, $delim=','){
 	$pos2 = strpos($str, $delim);
 	if (!($pos1===false and $pos2===false)) $str = '"'.$str.'"';
 	return $str;
+}
+
+/**
+ *	Return true if module $mod_name is loaded
+ *
+ *	@param string $mod_name		name of module
+ *	@return bool
+ */
+function isModuleLoaded($mod_name){
+	global $config;
+	
+	if (isset($config->modules[$mod_name]) and $config->modules[$mod_name])
+		return true;
+	else
+		return false;
+}
+
+/**
+ *	Return array of loaded modules
+ *
+ *	@return array
+ */
+function getLoadedModules(){
+	global $config;
+	
+	if (isset($config->modules))
+		return array_keys($config->modules, true);
+	else
+		return array();
+}
+
+
+/**
+ *	This function is used for method aggregation will work in PHP4 and PHP5
+ *
+ *	@param object object
+ *	@param string class_name 
+ */
+function my_aggregate_methods(&$object, $class_name){
+
+	if (function_exists('aggregate_methods')){
+		return aggregate_methods($object, $class_name);
+	}
+
+	if (function_exists('classkit_aggregate_methods')){
+		return @classkit_aggregate_methods(get_class($object), $class_name);
+	}
+
+	die("Function aggregate_methods() doesn't exists. Try install Classkit extension. http://pecl.php.net/package/classkit");
+
 }
 
 ?>
