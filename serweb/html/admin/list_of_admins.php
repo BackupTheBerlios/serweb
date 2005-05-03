@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.10 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.11 2005/05/03 09:16:19 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -8,7 +8,8 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
 
-$_required_apu = array('apu_subscribers', 'apu_xxl_proxy_select'); 
+$_required_apu = array('apu_subscribers'); 
+
 
 require "prepend.php";
 
@@ -30,15 +31,6 @@ $smarty->assign('xxl_support', $config->enable_XXL);
 $sc->set_opt('use_chk_adminsonly', true);
 $sc->set_opt('def_chk_adminsonly', true);
 $sc->set_opt('sess_seed', 1);
-
-if ($config->enable_XXL) {
-	$xxl = new apu_xxl_proxy_select();
-
-	$xxl->set_opt('smarty_form', 'xxl_form');
-	$xxl->set_opt('form_submit', array('type' => 'button',
-									   'text' => 'Change'));
-	$controler->add_apu($xxl);
-}
 
 $controler->add_apu($sc);
 $controler->set_template_name('a_list_of_admins.tpl');
