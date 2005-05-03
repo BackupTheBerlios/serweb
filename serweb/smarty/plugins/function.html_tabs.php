@@ -43,7 +43,7 @@ function smarty_function_html_tabs($params, &$smarty){
     }
 	
 	if (!$selected){
-		$selected=basename($_SERVER['PATH_TRANSLATED']);
+		$selected=basename($_SERVER['SCRIPT_FILENAME']);
 	}
 
 	$out='<div id="swTabs"><ul>';
