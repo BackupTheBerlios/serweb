@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: load_apu.php,v 1.2 2004/09/01 10:56:21 kozlik Exp $
+ * $Id: load_apu.php,v 1.3 2005/05/03 09:06:05 kozlik Exp $
  */ 
 
 function _apu_require($_required_apu){
@@ -8,11 +8,29 @@ function _apu_require($_required_apu){
 	static $_loaded_apu = array();
 
 	$reguired_data_layer = array();
+
+	$loaded_modules = getLoadedModules();
+
 	
 	foreach($_required_apu as $item){
 		if (false ===  array_search($item, $_loaded_apu)){ //if required apu isn't loaded yet, load it
-			//require application unit
-			require_once ($_SERWEB["serwebdir"] . "../application_layer/".$item.".php");	
+
+			$file_found = false;
+
+			//try found apu in loaded modules
+			foreach($loaded_modules as $module){
+				if (file_exists($_SERWEB["serwebdir"] . "../modules/".$module."/".$item.".php")){ 
+					require_once ($_SERWEB["serwebdir"] . "../modules/".$module."/".$item.".php");
+					$file_found = true;
+					break;
+				}
+			}
+
+			// if apu was not found in modules, requere the one from 'application_layer' directory
+			if (!$file_found){
+				//require application unit
+				require_once ($_SERWEB["serwebdir"] . "../application_layer/".$item.".php");	
+			}
 				
 			$reguired_data_layer = array_merge($reguired_data_layer, call_user_func(array($item, 'get_required_data_layer_methods')));	
 		}
