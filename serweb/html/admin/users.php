@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.22 2005/05/03 09:16:19 kozlik Exp $
+ * $Id: users.php,v 1.23 2005/05/03 11:15:03 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -26,7 +26,7 @@ if (isset($_GET['m_acl_updated'])){
 $sc	= new apu_subscribers();
 
 $smarty->assign('domain',$config->domain);
-$smarty->assign('xxl_support', $config->enable_XXL);
+$smarty->assign('xxl_support', isModuleLoaded('xxl'));
 
 $sc->set_opt('use_chk_onlineonly', true);
 $sc->set_opt('only_from_same_domain', true);

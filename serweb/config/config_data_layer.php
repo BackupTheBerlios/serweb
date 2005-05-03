@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.6 2005/04/26 14:41:57 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.7 2005/05/03 11:15:02 kozlik Exp $
  */
 
 //		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
@@ -12,6 +12,9 @@
 		 *	Use XML RPC instead of FIFO for manage SER.
 		 *	This feature is still experimental.
 		 *	If SER useing XXL extension, this must be set to true.
+		 *
+		 *	If this is set to true the database setting is irelevant. In this 
+		 *  case, this is obtained from SER automaticaly. 
 		 */
 		$config->use_rpc = false;
 
@@ -52,16 +55,6 @@
 		// If you want to configure more SQL backup servers, copy and paste the above (including the "$i++;")
  		
 		
-		/**
-		 *	Set to true if SER is useing XXL extension
-		 *
-		 *	If this is set to true only first sql server from $config->data_sql->host
-		 *	array is used. The database host is irelevant in this case, this is obtained 
-		 *	from SER. Only other parameters of database configuration is used which must be
-		 *	same on all db servers.
-		 */
-		$config->enable_XXL = false;
-
 		/**
 		 *	Default timeout after which is again looked up for proxy of user 
 		 */

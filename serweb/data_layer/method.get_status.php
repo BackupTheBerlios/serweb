@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_status.php,v 1.3 2005/05/02 14:38:29 kozlik Exp $
+ * $Id: method.get_status.php,v 1.4 2005/05/03 11:15:03 kozlik Exp $
  */
 
 class CData_Layer_get_status {
@@ -15,7 +15,7 @@ class CData_Layer_get_status {
 		global $config, $lang_str, $data;
 
 		/* create connection to proxy where are stored data of user */
-		if ($config->enable_XXL and $this->name != "get_status_tmp"){
+		if (isModuleLoaded('xxl') and $this->name != "get_status_tmp"){
 
 			$tmp_data = CData_Layer::singleton("get_status_tmp", $errors);
 			$tmp_data->set_xxl_user_id($sip_uri);

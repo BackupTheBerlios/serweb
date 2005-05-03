@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_user_exists.php,v 1.3 2005/05/02 11:25:31 kozlik Exp $
+ * $Id: method.is_user_exists.php,v 1.4 2005/05/03 11:15:03 kozlik Exp $
  */
 
 class CData_Layer_is_user_exists {
@@ -13,7 +13,7 @@ class CData_Layer_is_user_exists {
 	function is_user_exists($uname, $udomain, &$errors){
 	 	global $config;
 
-		if ($config->enable_XXL){
+		if (isModuleLoaded('xxl')){
 			if (!$this->connect_to_xml_rpc(array("uri" => "sip:".$uname."@".$udomain), $errors)) return false;
 			
 			$params = array(new XML_RPC_Value("sip:".$uname."@".$udomain, 'string'));

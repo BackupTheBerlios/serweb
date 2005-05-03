@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_alias.php,v 1.5 2005/05/03 09:10:05 kozlik Exp $
+ * $Id: method.delete_alias.php,v 1.6 2005/05/03 11:15:03 kozlik Exp $
  */
 
 class CData_Layer_delete_alias {
@@ -8,7 +8,7 @@ class CData_Layer_delete_alias {
 	function _get_required_methods(){
 		global $config;
 		
-		return $config->enable_XXL?
+		return isModuleLoaded('xxl')?
 					array('clear_proxy_xxl'):
 					array();
 	}
@@ -83,7 +83,7 @@ class CData_Layer_delete_alias {
 		}
 
 
-		if ($config->enable_XXL){
+		if (isModuleLoaded('xxl')){
 			$alias_uri = "sip:".$alias_u."@".$alias_d;
 
 			if (false === $this->clear_proxy_xxl($alias_uri, null, $errors)) return false;

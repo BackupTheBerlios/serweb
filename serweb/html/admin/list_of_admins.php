@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.11 2005/05/03 09:16:19 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.12 2005/05/03 11:15:03 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -26,7 +26,7 @@ if (isset($_GET['m_pr_updated'])){
 $sc	= new apu_subscribers();
 
 $smarty->assign('domain',$config->domain);
-$smarty->assign('xxl_support', $config->enable_XXL);
+$smarty->assign('xxl_support', isModuleLoaded('xxl'));
 
 $sc->set_opt('use_chk_adminsonly', true);
 $sc->set_opt('def_chk_adminsonly', true);

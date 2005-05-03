@@ -3,7 +3,7 @@
  * Application unit registration
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.6 2005/05/03 09:01:49 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.7 2005/05/03 11:15:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -71,7 +71,7 @@ class apu_registration extends apu_base_class{
 		$req = array('get_time_zones',  'is_user_exists', 
 			'add_user_to_subscriber');
 		
-		if ($config->enable_XXL){
+		if (isModuleLoaded('xxl')){
 			$req = array_merge($req, array('get_proxy_for_new_user_xxl',
 				'set_proxy_xxl'));
 		}
@@ -122,7 +122,7 @@ class apu_registration extends apu_base_class{
 
 		$uuid = md5(uniqid($_SERVER["SERVER_ADDR"]));
 
-		if ($config->enable_XXL){
+		if (isModuleLoaded('xxl')){
 			if (false === $proxy = $data->get_proxy_for_new_user_xxl(
 						new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']),
 						array ("set_proxy" => true),
@@ -161,7 +161,7 @@ class apu_registration extends apu_base_class{
 							$config->user_pages_path.
 							$this->opt['confirmation_script'].
 							"?nr=".$confirm.
-							($config->enable_XXL ? 
+							(isModuleLoaded('xxl') ? 
 								"&pr=".RawURLEncode(base64_encode($proxy['proxy'])):
 								"");
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.7 2005/05/03 09:25:14 kozlik Exp $
+ * $Id: data_layer.php,v 1.8 2005/05/03 11:15:03 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -406,7 +406,7 @@ class CData_Layer{
 
 			//if not set DSN of DB to connect, get it
 			if (! $sess_data_conn[$this->name]['db_dsn']){
-				if ($config->enable_XXL){
+				if (isModuleLoaded('xxl')){
 					if(false === $this->get_home_proxy($errors)) return false;
 	
 					if(false === $sess_data_conn[$this->name]['db_dsn'] = 
@@ -486,7 +486,7 @@ class CData_Layer{
 		}
 		else {
 			if (! $sess_data_conn[$this->name]['proxy']){
-				if ($config->enable_XXL){
+				if (isModuleLoaded('xxl')){
 					if (false === $this->get_home_proxy($errors)) return false;
 				}
 				else {

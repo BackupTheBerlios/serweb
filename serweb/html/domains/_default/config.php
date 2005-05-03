@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.7 2004/12/10 17:52:48 kozlik Exp $
+ * $Id: config.php,v 1.8 2005/05/03 11:15:03 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -70,6 +70,8 @@
 
 		/* Nummerical aliases can be generated randomly or incrementaly.
 		   Values 'rand' or 'inc' on the next line.
+	   
+		   notice: if xxl module is loaded always 'rand' is used 
 		*/
 
 		$this->alias_generation='inc';

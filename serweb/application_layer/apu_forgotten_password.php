@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.2 2005/04/26 21:12:16 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.3 2005/05/03 11:15:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -125,7 +125,7 @@ class apu_forgotten_password extends apu_base_class{
 		$confirmation_url = $config->root_uri.
 		                    $_SERVER['PHP_SELF'].
 							"?nr=".$confirm.
-							($config->enable_XXL ? 
+							(isModuleLoaded('xxl') ? 
 								"&pr=".RawURLEncode(base64_encode($proxy)):
 								"");
 
@@ -164,7 +164,7 @@ class apu_forgotten_password extends apu_base_class{
 			} 
 		}
 		
-		if ($config->enable_XXL and !$proxy){
+		if (isModuleLoaded('xxl') and !$proxy){
 			$errors[] = $lang_str['err_reg_conf_not_exists_conf_num'];
 			return false;
 		}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_reg_confirmation.php,v 1.2 2005/05/02 15:03:45 kozlik Exp $
+ * $Id: apu_reg_confirmation.php,v 1.3 2005/05/03 11:15:02 kozlik Exp $
  */ 
 
 /* Application unit reg_confirmation */
@@ -85,7 +85,7 @@ class apu_reg_confirmation extends apu_base_class{
 			} 
 		}
 		
-		if ($config->enable_XXL and !$proxy['proxy']){
+		if (isModuleLoaded('xxl') and !$proxy['proxy']){
 			$errors[] = $lang_str['err_reg_conf_not_exists_conf_num'];
 			return false;
 		}

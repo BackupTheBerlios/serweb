@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_new_alias_number.php,v 1.2 2005/05/02 11:23:49 kozlik Exp $
+ * $Id: method.get_new_alias_number.php,v 1.3 2005/05/03 11:15:03 kozlik Exp $
  */
 
 class CData_Layer_get_new_alias_number {
@@ -16,7 +16,7 @@ class CData_Layer_get_new_alias_number {
 		if (!$this->connect_to_db($errors)) return false;
 
 		if ($config->alias_generation=='rand' or
-		    $config->enable_XXL){ //random alias generation
+		    isModuleLoaded('xxl')){ //random alias generation
 		    
 			$retries=0;
 			do{

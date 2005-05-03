@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_new_alias.php,v 1.5 2005/05/03 09:10:05 kozlik Exp $
+ * $Id: method.add_new_alias.php,v 1.6 2005/05/03 11:15:02 kozlik Exp $
  */
 
 class CData_Layer_add_new_alias {
@@ -8,7 +8,7 @@ class CData_Layer_add_new_alias {
 	function _get_required_methods(){
 		global $config;
 		
-		return $config->enable_XXL?
+		return isModuleLoaded('xxl')?
 					array('set_proxy_xxl'):
 					array();
 	}
@@ -26,7 +26,7 @@ class CData_Layer_add_new_alias {
 	function add_new_alias($user, $alias_u, $alias_d, &$errors){
 	 	global $config;
 
-		if ($config->enable_XXL){
+		if (isModuleLoaded('xxl')){
 			$alias_uri = "sip:".$alias_u."@".$alias_d;
 			if (false === $proxy_uri = $this->get_home_proxy($errors)) return false;
 
