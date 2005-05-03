@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.4 2005/05/03 10:12:33 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -62,7 +62,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>{$lang_str.your_aliases}:</th></tr>
 	{/if}
-	<tr><td align="center">{$row->username}</td></tr>
+	<tr><td align="center">{$row.username}</td></tr>
 	{if $smarty.foreach.aliases.last}
 	</table>
 	</div>
