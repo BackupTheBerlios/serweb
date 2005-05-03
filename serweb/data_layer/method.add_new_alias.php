@@ -1,10 +1,17 @@
 <?
 /*
- * $Id: method.add_new_alias.php,v 1.4 2005/04/26 14:34:25 kozlik Exp $
+ * $Id: method.add_new_alias.php,v 1.5 2005/05/03 09:10:05 kozlik Exp $
  */
 
 class CData_Layer_add_new_alias {
-	var $required_methods = array('set_proxy_xxl');
+
+	function _get_required_methods(){
+		global $config;
+		
+		return $config->enable_XXL?
+					array('set_proxy_xxl'):
+					array();
+	}
 	
 	/**
 	 *	add new alias to user

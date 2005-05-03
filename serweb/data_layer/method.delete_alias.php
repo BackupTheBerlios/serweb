@@ -1,10 +1,17 @@
 <?
 /*
- * $Id: method.delete_alias.php,v 1.4 2005/05/02 11:21:08 kozlik Exp $
+ * $Id: method.delete_alias.php,v 1.5 2005/05/03 09:10:05 kozlik Exp $
  */
 
 class CData_Layer_delete_alias {
-	var $required_methods = array('clear_proxy_xxl');
+	
+	function _get_required_methods(){
+		global $config;
+		
+		return $config->enable_XXL?
+					array('clear_proxy_xxl'):
+					array();
+	}
 	
 	/**
 	 *	delete alias of user
