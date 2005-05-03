@@ -3,7 +3,7 @@
  * Application unit registration
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.5 2005/05/02 15:09:53 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.6 2005/05/03 09:01:49 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -66,9 +66,17 @@ class apu_registration extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_time_zones',  'is_user_exists', 
-			'add_user_to_subscriber', 'get_proxy_for_new_user_xxl',
-			'set_proxy_xxl');
+		global $config;
+
+		$req = array('get_time_zones',  'is_user_exists', 
+			'add_user_to_subscriber');
+		
+		if ($config->enable_XXL){
+			$req = array_merge($req, array('get_proxy_for_new_user_xxl',
+				'set_proxy_xxl'));
+		}
+
+		return $req;
 	}
 
 	/* return array of strings - requred javascript files */
@@ -114,18 +122,20 @@ class apu_registration extends apu_base_class{
 
 		$uuid = md5(uniqid($_SERVER["SERVER_ADDR"]));
 
-		if (false === $proxy = $data->get_proxy_for_new_user_xxl(
-					new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']),
-					array ("set_proxy" => true),
-					$errors))
-			return false;
+		if ($config->enable_XXL){
+			if (false === $proxy = $data->get_proxy_for_new_user_xxl(
+						new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']),
+						array ("set_proxy" => true),
+						$errors))
+				return false;
 
-		if (false === $data->set_proxy_xxl(
-					new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']), 
-					$proxy['proxy'], 
-					null, 
-					$errors)) 
-			return false;
+			if (false === $data->set_proxy_xxl(
+						new Cserweb_auth($uuid, $_POST['uname'], $this->opt['domain']), 
+						$proxy['proxy'], 
+						null, 
+						$errors)) 
+				return false;
+		}
 
 		
 		$confirm=md5(uniqid(rand()));

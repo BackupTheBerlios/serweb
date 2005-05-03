@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.10 2005/05/02 14:59:22 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.11 2005/05/03 09:01:49 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -92,7 +92,7 @@ class page_conroler{
 		if (isset($perm) and $perm->have_perm("admin")){
 			
 			// set initial value of sess_xxl_selected_proxy to same proxy where user has account
-			if (is_null($sess_xxl_selected_proxy)){
+			if ($config->enable_XXL and is_null($sess_xxl_selected_proxy)){
 				if (false !== $proxy_uri = $GLOBALS['data_auth']->get_home_proxy($this->errors)){
 					$sess_xxl_selected_proxy = array('proxy' => $proxy_uri);
 				}
