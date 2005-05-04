@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.1 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: index.php,v 1.2 2005/05/04 15:35:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -9,7 +9,6 @@ $_phplib_page_open = array("sess" => "phplib_Session");
 $_required_apu = array('apu_registration');						   
 
 require "prepend.php";
-require($_SERWEB["serwebdir"] . "load_apu.php");
 
 $register=new apu_registration();
 $register->set_opt('form_name', 'form1');

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.1 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: confirmation.php,v 1.2 2005/05/04 15:35:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -10,7 +10,6 @@ $_required_apu = array('apu_reg_confirmation');
 
 include "reg_jab.php";
 require "prepend.php";
-require($_SERWEB["serwebdir"] . "load_apu.php");
 
 
 $reg_conf=new apu_reg_confirmation();

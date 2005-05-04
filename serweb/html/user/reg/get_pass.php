@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.1 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: get_pass.php,v 1.2 2005/05/04 15:35:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -9,7 +9,6 @@ $_phplib_page_open = array("sess" => "phplib_Session");
 $_required_apu = array('apu_forgotten_password');						   
 
 require "prepend.php";
-require($_SERWEB["serwebdir"] . "load_apu.php");
 
 $fp=new apu_forgotten_password();
 $fp->set_opt('form_name', 'form1');
