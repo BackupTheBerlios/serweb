@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.9 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: main_prepend.php,v 1.10 2005/05/04 15:33:10 kozlik Exp $
  */ 
 
 //require class defintions
@@ -55,12 +55,15 @@ require($_SERWEB["serwebdir"]."../smarty/smarty_serweb.php");
 $smarty = new Smarty_Serweb;
 
 
-
 //require functions
 require_once ($_SERWEB["serwebdir"] . "functions.php");
 
 //require data layer for work with data store and create instance of it
 require_once ($_SERWEB["serwebdir"] . "data_layer.php");
+
+//require modules
+require_once ($_SERWEB["serwebdir"] . "load_modules.php");
+
 
 // create instance of data_layer binded to proxy where is stored account 
 // of currently authenticated user
