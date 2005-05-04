@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.2 2005/05/02 14:56:41 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.3 2005/05/04 20:55:00 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -29,6 +29,9 @@
  *	
  *	'redirect_on_first_login'	(string) default: null
  *	 if is set, user is redirected to this script after his first login to serweb
+ *	
+ *	'cookie_domain'				(string) default: null
+ *	 The domain that the cookie in which is stored username is available 
  *	
  *	'msg_logout'				default: $lang_str['msg_logout_s'] and $lang_str['msg_logout_l']
  *	 message which should be showed on user logout - assoc array with keys 'short' and 'long'
@@ -71,7 +74,7 @@ class apu_login extends apu_base_class{
 	
 	/* constructor */
 	function apu_login(){
-		global $lang_str, $sess_lang;
+		global $lang_str, $sess_lang, $config;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -82,6 +85,9 @@ class apu_login extends apu_base_class{
 		$this->opt['redirect_on_first_login'] = null;
 		
 		$this->opt['check_admin_privilege'] = false;
+
+		$this->opt['cookie_domain'] = null;
+
 
 		/* message on attributes update */
 		$this->opt['msg_logout']['short'] =	&$lang_str['msg_logout_s'];
@@ -110,9 +116,9 @@ class apu_login extends apu_base_class{
 		$pre_uid=$this->user_uuid;
 
 		if (isset($_POST['remember_uname']) and $_POST['remember_uname']) 
-			setcookie('serwebuser', $_POST['uname'], time()+31536000); //cookie expires in one year
+			setcookie('serwebuser', $_POST['uname'], time()+31536000, null, $this->opt['cookie_domain']); //cookie expires in one year
 		else
-			setcookie('serwebuser', '', time()); //delete cookie
+			setcookie('serwebuser', '', time(), null, $this->opt['cookie_domain']); //delete cookie
 		
 		if ($this->opt['redirect_on_first_login']){
 		//check if user exists in subscriber table
