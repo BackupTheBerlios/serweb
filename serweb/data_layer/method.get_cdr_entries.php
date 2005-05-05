@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cdr_entries.php,v 1.1 2005/01/13 16:23:47 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.2 2005/05/05 12:00:03 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
@@ -77,7 +77,7 @@ class CData_Layer_get_cdr_entries {
 			/*
 			 * I can't implement this, because cdr table contains fields username/domain only for caller, not for callee!
 			 */
-			die('SORRY! displaying incoming calls ($config->acc_display_incoming_calls) is avaible only if users are indexed by uuid ($config->users_indexed_by)');
+			die('SORRY! displaying incoming calls (option: opt_filter_incoming or display_incoming) is avaible only if users are indexed by uuid ($config->users_indexed_by)');
 		}
 		return $q;
 	
@@ -111,6 +111,9 @@ class CData_Layer_get_cdr_entries {
 
 		if (!$this->connect_to_db($errors)) return false;
 
+	    $opt_filter_outgoing = (isset($opt['filter_outgoing'])) ? (bool)$opt['filter_outgoing'] : true;
+	    $opt_filter_incoming = (isset($opt['filter_incoming'])) ? (bool)$opt['filter_incoming'] : true;
+
 		$this->cdr_prepare_SQL();
 		
 		/* get num rows */
@@ -118,8 +121,8 @@ class CData_Layer_get_cdr_entries {
 
 		//compose get number of calls queries
 		$q = array();
-		if ($config->acc_display_outgoing_calls) $q=array_merge($q, $this->cdr_get_SQL_select_outgoing_count($user));
-		if ($config->acc_display_incoming_calls) $q=array_merge($q, $this->cdr_get_SQL_select_incoming_count($user));
+		if ($opt_filter_outgoing) $q=array_merge($q, $this->cdr_get_SQL_select_outgoing_count($user));
+		if ($opt_filter_incoming) $q=array_merge($q, $this->cdr_get_SQL_select_incoming_count($user));
 
 		//query DB
 		foreach($q as $row){
@@ -138,8 +141,8 @@ class CData_Layer_get_cdr_entries {
 
 		//compose final query
 		$q = array();
-		if ($config->acc_display_outgoing_calls) $q[] = $this->cdr_get_SQL_select_outgoing($user);
-		if ($config->acc_display_incoming_calls) $q[] = $this->cdr_get_SQL_select_incoming($user);
+		if ($opt_filter_outgoing) $q[] = $this->cdr_get_SQL_select_outgoing($user);
+		if ($opt_filter_incoming) $q[] = $this->cdr_get_SQL_select_incoming($user);
 
 		$q = implode(' union ', $q);
 		$q .= $this->cdr_sql['order'].

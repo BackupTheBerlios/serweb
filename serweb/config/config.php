@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.14 2005/05/02 14:54:41 kozlik Exp $
+ * $Id: config.php,v 1.15 2005/05/05 12:00:03 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -32,20 +32,7 @@
 
 	$config->fully_qualified_name_on_login=false;
 	
-	/* if previous option is true, you can check if given domain is supported
-	   (is in domain table)
-	*/
-	
-	$config->check_supported_domain_on_login=true;
-	
-	/* when is user firsttime authenticated, create alias to him, and
-	   create record in subscriber table
-	*/
-	
-	$config->register_user_after_first_login=false;
-
-	/* the default timezone which is assigned to user on first login - 
-	   only if register_user_after_first_login is true
+	/* the default timezone which is assigned to user on register
 	*/		
 	
 	$config->default_timezone='America/New_York';
@@ -54,13 +41,6 @@
 	   This option is INCOPLETE and need to be supported in templates.
 	*/
 	$config->require_delete_confirmation_page=false;
-
-	/* name of attribute in user preference for set visibility status of user
-	   set to false if status of users should be always visible
-
-	   type of this attribute should be boolean
-	 */
-	$config->status_vibility = "sw_user_status_visible";
 
 	/* Regular expressions for check if phonenumber entered by user is valid
 	   (is used only if serweb is workong with phonenumbers instead of sip addresses)
@@ -87,7 +67,6 @@
 	$config->user_tabs[]=new Ctab (true, "tab_missed_calls", "missed_calls.php");								// $lang_str['tab_missed_calls']
 	$config->user_tabs[]=new Ctab (true, "tab_accounting", "accounting.php");									// $lang_str['tab_accounting']
 	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");											// $lang_str['tab_send_im']
-//	$config->user_tabs[]=new Ctab (false, "tab_notification_subscription", "notification_subscription.php");	// $lang_str['tab_notification_subscription']
 	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");								// $lang_str['tab_message_store']
 	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");									// $lang_str['tab_voicemail']
 	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
@@ -136,18 +115,29 @@
 
 	/* This option is enabling checkbox 'Allow others to see whether 
 	   or not I'm online'
+	   
+	   If you want enable this, you also must set value of option 
+	   $config->status_vibility
 	*/		
 	$config->allow_change_status_visibility=false;
 
-	/* Forwarding to voicemail by group membership. If set to false,
-	   is forwarding to voicemail done through admin privileges
-	*/		
-	$config->forwarding_to_voicemail_by_group=false;
 
-	/* This option is enabling usrloc table and form for adding contacts
-	   at my account tab
-	*/
-	$config->enable_usrloc=true;
+	/* name of attribute in user preference for set visibility status of user
+	   set to false if status of users should be always visible
+
+	   type of this attribute should be boolean
+
+	   $config->status_vibility = "sw_user_status_visible";
+	 */
+	$config->status_vibility = "";
+
+
+	/* This option is enabling checkbox 'forward to voicemail'
+	   If you want enable this, you should mention this in SER routing script.
+	   
+	   Checkbox 'forward to voicemail' is changeing AVP named 'fw_voicemail'
+	*/		
+	$config->allow_enable_forward_to_voicemail=false;
 
 
 	/* ------------------------------------------------------------*/
@@ -159,20 +149,6 @@
 	*/
 	$config->acc_use_cdr_table = false;
 
-	/* display outgoing calls at accounting TAB 
-	*/
-	$config->acc_display_outgoing_calls = true;
-
-	/* display incoming calls at accounting TAB - working only 
-	   if users are indexed by UUID 
-	   '$config->users_indexed_by' option in config_data_layer.php
-	*/
-	$config->acc_display_incoming_calls = false;
-
-	/* display missed calls at accounting TAB - only when 
-	   $config->acc_use_cdr_table is false 
-	 */
-	$config->acc_display_missed_calls = false;
 
 	/* ------------------------------------------------------------*/
 	/* Loging                                                      */
@@ -252,19 +228,6 @@
 	/* ------------------------------------------------------------*/
 	/* applications (experimental)                                 */
 	/* ------------------------------------------------------------*/
-
-	/* subscribe-notify -- list of events to which a user can subscribe and
-	   is then notified with an instant message, if they occur; experimental
-	*/
-//	$config->sub_not=array();
-//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
-//		";type=temperature;operator=lt;value=0","temperature is too low");
-//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org".
-//		";type=wind;operator=gt;value=10","wind is too fast");
-//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;".
-//		"type=pressure;operator=lt;value=1000","pressure is too low");
-//	$config->sub_not[]=new Csub_not("sip:weather@iptel.org;type=metar",
-//		"send METAR data");
 
 	/* metar wheather application */
 	//this is an identificator in event table for sending METAR data
@@ -377,23 +340,6 @@
 	 */
 	$config->ctd_secret	=	"heslo";
 	
-	/* ------------------------------------------------------------*/
-	/*            caller screening                                 */
-	/* ------------------------------------------------------------*/
-
-	/*
-		this array describe how to dispose of draggers
-		$config->calls_forwarding["screening"][]=new Ccall_fw(<action>, <param1>, <param2>, <label>)
-
-		<action> is "reply" or "relay"
-		"reply" have parameters status code and phrase (e.g. ("486", "busy") or ("603", "decline"))
-		"relay" have only one parameter - address of server where to request forward
-		<label> is string which is displayed to user
-	*/
-	$config->calls_forwarding=array();
-	$config->calls_forwarding["screening"][]=new Ccall_fw("reply", "603", "decline", "decline");
-	$config->calls_forwarding["screening"][]=new Ccall_fw("reply", "486", "busy", "reply you are busy");
-	$config->calls_forwarding["screening"][]=new Ccall_fw("relay", "sip:voicemail@".$config->domain, null, "forward to voicemail");
 
 	/* ------------------------------------------------------------*/
 	/* Values you typically do NOT want to change unless you know  *
@@ -430,7 +376,7 @@
 	   which sometimes happens, when it is calculated from an
 	   incorrect domain during installation process
 	*/
-	$config->clear_text_pw=1;
+	$config->clear_text_pw=true;
 
 	/* ------------------------------------------------------------*/
 	/*            send daily missed calls by email                 */

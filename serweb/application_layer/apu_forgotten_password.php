@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.3 2005/05/03 11:15:02 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -29,7 +29,7 @@
  *	'msg_conf_send'					default: $lang_str['msg_pass_conf_sended_s'] and $lang_str['msg_pass_conf_sended_l']
  *	 message which should be showed on indtuctions to get new password succesfuly send - assoc array with keys 'short' and 'long'
  *								
- *	'fully_qualified_name'	(bool) default: false
+ *	'fully_qualified_name'	(bool) default: $config->fully_qualified_name_on_login
  *	 true if should be entered fully qualifide username (username@domain)
  *	
  *	'form_name'					(string) default: ''
@@ -81,7 +81,7 @@ class apu_forgotten_password extends apu_base_class{
 		$this->opt['mail_file_conf'] =		"mail_forgot_password_conf.txt";
 		$this->opt['mail_file_pass'] =		"mail_forgot_password_pass.txt";
 
-		$this->opt['fully_qualified_name'] = false;
+		$this->opt['fully_qualified_name'] = $config->fully_qualified_name_on_login;
 
 		/* message on attributes update */
 		$this->opt['msg_conf_send']['short'] =	&$lang_str['msg_pass_conf_sended_s'];

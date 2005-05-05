@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.4 2005/05/03 10:12:33 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.5 2005/05/05 12:00:03 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -21,15 +21,20 @@
 	<td>{$form_pd.pd_allow_find}</td>
 	</tr>
 
+{if $config->enable_forward_to_voicemail}
 	<tr>
 	<td><label for="fw_voicemail">{$lang_str.ff_fwd_to_voicemail}:</label></td>
 	<td>{$form_pd.fw_voicemail}</td>
 	</tr>
+{/if}
 
+{if $config->enable_status_visibility}
+	{assign var='f_element' value=$config->enable_status_visibility}
 	<tr>
 	<td><label for="sw_user_status_visible">{$lang_str.ff_status_visibility}:</label></td>
-	<td>{$form_pd.sw_user_status_visible}</td>
+	<td>{$form_pd.$f_element}</td>
 	</tr>
+{/if}
 
 
 	<tr>

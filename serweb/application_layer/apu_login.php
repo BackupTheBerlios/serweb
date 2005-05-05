@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.3 2005/05/04 20:55:00 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -17,7 +17,7 @@
  *	'check_admin_privilege'		(bool) default: false
  *	 check if user has administrator privilege
  *	
- *	'fully_qualified_name_on_login'	(bool) default: false
+ *	'fully_qualified_name_on_login'	(bool) default: $config->fully_qualified_name_on_login
  *	 trou if should be entered fully qualifide username (username@domain)
  *	
  *	'check_supported_domain_on_login'	(bool) default: false
@@ -78,7 +78,7 @@ class apu_login extends apu_base_class{
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
-		$this->opt['fully_qualified_name_on_login'] = false;
+		$this->opt['fully_qualified_name_on_login'] = $config->fully_qualified_name_on_login;
 		$this->opt['check_supported_domain_on_login'] = false;
 
 		$this->opt['redirect_on_login'] = 'my_account.php';
@@ -231,13 +231,6 @@ class apu_login extends apu_base_class{
 				$username=$regs[1];
 				$domain=$regs[2];
 				
-				if ($this->opt['check_supported_domain_on_login']){
-					if (true !== $data->domain_exists($domain, $errors)){
-						sw_log("User login: authentication failed: domain '".$domain."'' is not supported. Please check table domain", PEAR_LOG_INFO);
-						$errors[]=$lang_str['bad_username'];
-						return false;
-					}
-				}
 			}
 			else {
 				sw_log("User login: authentication failed: unsuported format of username. Can't parse username and domain part", PEAR_LOG_INFO);
@@ -256,6 +249,15 @@ class apu_login extends apu_base_class{
 
 		$data_auth->set_xxl_user_id('sip:'.$username.'@'.$domain);
 		$data_auth->expect_user_id_may_not_exists();
+
+
+		if ($this->opt['check_supported_domain_on_login']){
+			if (true !== $data_auth->domain_exists($domain, $errors)){
+				sw_log("User login: authentication failed: domain '".$domain."'' is not supported. Please check table domain", PEAR_LOG_INFO);
+				$errors[]=$lang_str['bad_username'];
+				return false;
+			}
+		}
 
 
 		if (false === $this->user_uuid = $data_auth->check_passw_of_user($username, $domain, $_POST['passw'], $errors)) {

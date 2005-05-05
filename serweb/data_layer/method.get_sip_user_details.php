@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_sip_user_details.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_sip_user_details.php,v 1.2 2005/05/05 12:00:03 kozlik Exp $
  */
 
 class CData_Layer_get_sip_user_details {
@@ -12,7 +12,6 @@ class CData_Layer_get_sip_user_details {
 		if (!$this->connect_to_db($errors)) return false;
 		
 		$attributes='';
-		if ($config->allow_change_status_visibility) $attributes.=', allow_show_status';
 
 		$q="select email_address, allow_find, timezone".$attributes." from ".$config->data_sql->table_subscriber.
 			" where ".$this->get_indexing_sql_where_phrase($user);

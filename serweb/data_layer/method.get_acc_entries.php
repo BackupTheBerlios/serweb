@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.3 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
  */
 
 /*
@@ -26,13 +26,13 @@
  *  Possible options parameters:
  *
  *    filter_outgoing	(bool) default: true
- *      should be returned outgoing calls? Depending also on config parametr $config->acc_display_outgoing_calls
+ *      should be returned outgoing calls?
  *
  *    filter_incoming	(bool) default: true
- *      should be returned incoming calls? Depending also on config parametr $config->acc_display_incoming_calls
+ *      should be returned incoming calls?
  *
  *    filter_missed  	(bool) default: true
- *      should be returned missed calls? Depending also on config parametr $config->acc_display_missed_calls
+ *      should be returned missed calls?
  *
  *    get_phonebook_names  	(bool) default: true
  *      should be URIs translated to names by phonebook?
@@ -82,13 +82,13 @@ class CData_Layer_get_acc_entries {
 
 		//compose get number of calls queries
 		$q = array();
-		if ($config->acc_display_outgoing_calls and $opt_filter_outgoing) 
+		if ($opt_filter_outgoing) 
 			$q=array_merge($q, $this->acc_get_SQL_select_outgoing_count($user));
 
-		if ($config->acc_display_incoming_calls and $opt_filter_incoming) 
+		if ($opt_filter_incoming) 
 			$q=array_merge($q, $this->acc_get_SQL_select_incoming_count($user));
 
-		if ($config->acc_display_missed_calls   and $opt_filter_missed)   
+		if ($opt_filter_missed)   
 			$q=array_merge($q, $this->acc_get_SQL_select_missed_count($user));
 
 		//query DB
@@ -108,13 +108,13 @@ class CData_Layer_get_acc_entries {
 
 		//compose final query
 		$q = array();
-		if ($config->acc_display_outgoing_calls and $opt_filter_outgoing) 
+		if ($opt_filter_outgoing) 
 			$q[] = $this->acc_get_SQL_select_outgoing($user);
 			
-		if ($config->acc_display_incoming_calls and $opt_filter_incoming) 
+		if ($opt_filter_incoming) 
 			$q[] = $this->acc_get_SQL_select_incoming($user);
 			
-		if ($config->acc_display_missed_calls and $opt_filter_missed)   
+		if ($opt_filter_missed)   
 			$q[] = $this->acc_get_SQL_select_missed($user);
 
 		$q = implode(' union ', $q);
@@ -358,7 +358,7 @@ class CData_Layer_get_acc_entries {
 			/*
 			 * I can't implement this, because acc table contains fields username/domain only for caller, not for callee!
 			 */
-			die('SORRY! displaying incoming calls ($config->acc_display_incoming_calls) is avaible only if users are indexed by uuid ($config->users_indexed_by)');
+			die('SORRY! displaying incoming calls (option: opt_filter_incoming or display_incoming) is avaible only if users are indexed by uuid ($config->users_indexed_by)');
 		}
 		return $q;
 	

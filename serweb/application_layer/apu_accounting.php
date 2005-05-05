@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.5 2005/05/05 12:00:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -24,6 +24,9 @@
  *	'display_incoming'		(bool) default: true
  *	 have effect only when 'use_filter' is false
  *	 if is true, incoming calls are displayed
+ *	
+ *	 notice: working only if users are indexed by UUID 
+ *	         '$config->users_indexed_by' option in config_data_layer.php
  *
  *	'display_outgoing'		(bool) default: true
  *	 have effect only when 'use_filter' is false
@@ -89,7 +92,14 @@ class apu_accounting extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_acc_entries', 'delete_user_acc', 'delete_user_missed_calls');
+		global $config;
+
+		if ($config->acc_use_cdr_table){
+			return array('get_cdr_entries', 'delete_user_acc', 'delete_user_missed_calls');
+		}
+		else{
+			return array('get_acc_entries', 'delete_user_acc', 'delete_user_missed_calls');
+		}
 	}
 
 	/* return array of strings - required javascript files */
@@ -160,20 +170,20 @@ class apu_accounting extends apu_base_class{
 		if ($this->opt['use_filter']){
 			switch ($sess_acc_filter){
 			case 'incoming':
-				$opt['filter_outgoing'] = false;
-				$opt['filter_incoming'] = true;
-				$opt['filter_missed']   = true;
+				$opt['filter_outgoing'] = false and $this->opt['display_outgoing'];
+				$opt['filter_incoming'] = true  and $this->opt['display_incoming'];
+				$opt['filter_missed']   = true  and $this->opt['display_missed'];
 				break;
 			case 'outgoing':
-				$opt['filter_outgoing'] = true;
-				$opt['filter_incoming'] = false;
-				$opt['filter_missed']   = false;
+				$opt['filter_outgoing'] = true  and $this->opt['display_outgoing'];
+				$opt['filter_incoming'] = false and $this->opt['display_incoming'];
+				$opt['filter_missed']   = false and $this->opt['display_missed'];
 				break;
 			case 'all':
 			default:
-				$opt['filter_outgoing'] = true;
-				$opt['filter_incoming'] = true;
-				$opt['filter_missed']   = true;
+				$opt['filter_outgoing'] = true and $this->opt['display_outgoing'];
+				$opt['filter_incoming'] = true and $this->opt['display_incoming'];
+				$opt['filter_missed']   = true and $this->opt['display_missed'];
 				break;
 			}
 		}
@@ -231,8 +241,13 @@ class apu_accounting extends apu_base_class{
 		$opt = $this->prepare_opt_param_for_get_acc_entries();
 		$opt['limit_query'] = false;
 		
-		if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $opt, $errors)) return false;
-		
+		if ($config->acc_use_cdr_table){
+			if (false === $this->acc_res = $data->get_cdr_entries($this->user_id, $opt, $errors)) return false;
+		}
+		else {
+			if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $opt, $errors)) return false;
+		}
+
 		if ($this->opt['convert_sip_addresses_to_phonenumbers'])
 			$this->convert_sip_addresses_to_phonenumbers();
 

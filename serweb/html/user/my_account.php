@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.1 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: my_account.php,v 1.2 2005/05/05 12:00:03 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -29,13 +29,21 @@ $aliases	= new apu_aliases();
 $acl		= new apu_acl();
 $ul			= new apu_usrloc();
 
-$usr_pref->set_opt('attributes',array('fw_voicemail', 'sw_user_status_visible'));
+
+$up_attributes = array();
+if ($config->allow_enable_forward_to_voicemail) $up_attributes[] = 'fw_voicemail';
+if ($config->allow_change_status_visibility)    $up_attributes[] = $config->status_vibility;
+
 
 
 //create copy of some options from config in order to sensitive options will not accessible via templates
 $cfg=new stdclass();
 $cfg->enable_dial_voicemail            = $config->enable_dial_voicemail;
 $cfg->enable_test_firewall             = $config->enable_test_firewall;
+$cfg->enable_status_visibility         = $config->status_vibility;
+$cfg->enable_forward_to_voicemail      = $config->allow_enable_forward_to_voicemail;
+
+
 
 $smarty->assign_by_ref("config", $cfg);
 
@@ -45,11 +53,17 @@ $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvr
 
 $controler->add_reqired_javascript("functions.js");
 
+
 $controler->add_apu($pd);
-$controler->add_apu($usr_pref);
 $controler->add_apu($aliases);
 $controler->add_apu($acl);
 $controler->add_apu($ul);
+/* add $usr_pref only if need it */
+if (!empty($up_attributes)){
+	$controler->add_apu($usr_pref);
+}
+
+
 
 $controler->assign_form_name("pd", $pd);
 $controler->assign_form_name("pd", $usr_pref);
