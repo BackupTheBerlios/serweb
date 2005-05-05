@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.16 2005/04/21 15:09:45 kozlik Exp $
+$Id: INSTALL,v 1.17 2005/05/05 12:25:13 kozlik Exp $
 
 serweb - Installation
 
@@ -70,7 +70,14 @@ serweb - Installation
                  AllowOverride Limit
              </Directory>
 
-
+  User preferences (AVP)
+  ----------------------
+    If you need some function working with user preferences (i.e. variables
+	allow_change_status_visibility, allow_enable_forward_to_voicemail in config 
+	file) you must fill db table usr_preferences_types by script 
+		scripts/sql/usr_preferences.sql
+	By command:
+		mysql -u ser -pheslo ser < scripts/sql/usr_preferences.sql
 
   Config files notes:
   -------------------
