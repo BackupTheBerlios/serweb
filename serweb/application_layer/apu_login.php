@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.5 2005/05/06 14:32:23 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.6 2005/05/06 15:50:20 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -117,11 +117,14 @@ class apu_login extends apu_base_class{
 		global $data_auth, $lang_str, $sess, $config, $pre_uid;
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
-		
-		if (isset($_POST['remember_uname']) and $_POST['remember_uname']) 
-			setcookie('serwebuser', $_POST['uname'], time()+31536000, null, $this->opt['cookie_domain']); //cookie expires in one year
-		else
-			setcookie('serwebuser', '', time(), null, $this->opt['cookie_domain']); //delete cookie
+		// set cookie only if not doing http redirect because
+		// $_POST['remember_uname'] is not set during redirect
+		if (!isset($_GET["redir_id"])){		
+			if (isset($_POST['remember_uname']) and $_POST['remember_uname']) 
+				setcookie('serwebuser', $_POST['uname'], time()+31536000, null, $this->opt['cookie_domain']); //cookie expires in one year
+			else
+				setcookie('serwebuser', '', time(), null, $this->opt['cookie_domain']); //delete cookie
+		}
 
 		if (isModuleLoaded('xxl') and $this->opt['xxl_redirect_after_login']){
 			xxl_http_redirect(array("get_params"=>array(
