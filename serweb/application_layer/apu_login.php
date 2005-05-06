@@ -3,14 +3,15 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.5 2005/05/06 14:32:23 kozlik Exp $
  * @package   serweb
  */ 
 
 /** Application unit login
  *
  *
- *	This application unit is used for login into application
+ *	This application unit is used for login into application. This APU can't
+ *	be combined with others APUs on one page.
  *	   
  *	Configuration:
  *	--------------
@@ -61,6 +62,9 @@
 class apu_login extends apu_base_class{
 	var $smarty_action='default';
 	var $user_uuid = null;
+	var $username = null;
+	var $domain = null;
+	var $password = null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -88,6 +92,8 @@ class apu_login extends apu_base_class{
 
 		$this->opt['cookie_domain'] = null;
 
+		$this->opt['xxl_redirect_after_login'] = false;
+
 
 		/* message on attributes update */
 		$this->opt['msg_logout']['short'] =	&$lang_str['msg_logout_s'];
@@ -112,17 +118,25 @@ class apu_login extends apu_base_class{
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
 		
-		$sess->register('pre_uid');
-		$pre_uid=$this->user_uuid;
-
 		if (isset($_POST['remember_uname']) and $_POST['remember_uname']) 
 			setcookie('serwebuser', $_POST['uname'], time()+31536000, null, $this->opt['cookie_domain']); //cookie expires in one year
 		else
 			setcookie('serwebuser', '', time(), null, $this->opt['cookie_domain']); //delete cookie
+
+		if (isModuleLoaded('xxl') and $this->opt['xxl_redirect_after_login']){
+			xxl_http_redirect(array("get_params"=>array(
+										"uname"    => $this->username,
+										"domain"   => $this->domain,
+										"pass"     => $this->password,
+										"redir_id" => $this->opt['instance_id'])));
+		}
+
+		$sess->register('pre_uid');
+		$pre_uid=$this->user_uuid;
 		
 		if ($this->opt['redirect_on_first_login']){
 		//check if user exists in subscriber table
-			if (($registered = $data_auth->is_user_registered(new Cserweb_auth($pre_uid, $username, $domain), $errors)) < 0) return false;
+			if (($registered = $data_auth->is_user_registered(new Cserweb_auth($pre_uid, $this->username, $this->domain), $errors)) < 0) return false;
 
 			if (!$registered){
 				sw_log("User login: first login of this user - redirecting to page: ".$this->opt['redirect_on_first_login'], PEAR_LOG_DEBUG);
@@ -152,7 +166,10 @@ class apu_login extends apu_base_class{
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
-		if ($this->was_form_submited()){	// Is there data to process?
+
+		if ($this->was_form_submited() or 
+			(isset($_GET["redir_id"]) and $_GET["redir_id"] == $this->opt['instance_id'])){	// Is there data to process?
+
 			$this->action=array('action'=>"login",
 			                    'validate_form'=>true,
 								'reload'=>true,
@@ -218,49 +235,62 @@ class apu_login extends apu_base_class{
 
 		// don't display logout mesage in case that form was submited
 		if (isset($_GET['logout'])) unset($_GET['logout']);
-		
-		if (false === parent::validate_form($errors)) return false;
 
-		sw_log("User login: values from login form: username: ".
-				$_POST['uname'].", password: ".$_POST['passw'], PEAR_LOG_DEBUG);
-
-		//if fully quantified username is given
-		if ($this->opt['fully_qualified_name_on_login']) {
-			// parse username and domain from it
-			if (ereg("^([^@]+)@(.+)", $_POST['uname'], $regs)){
-				$username=$regs[1];
-				$domain=$regs[2];
-				
-			}
-			else {
-				sw_log("User login: authentication failed: unsuported format of username. Can't parse username and domain part", PEAR_LOG_INFO);
-				$errors[]=$lang_str['bad_username'];
- 				return false;
-			}
+		if (isset($_GET["redir_id"]) and 
+		    isModuleLoaded('xxl') and 
+		    $this->opt['xxl_redirect_after_login']){
+		    
+				$this->username = $_GET['uname'];
+				$this->domain   = $_GET['domain'];
+				$this->password = $_GET['pass'];
 		}
 		else{
-			$username=$_POST['uname'];
-			$domain=$config->domain;
+			if (false === parent::validate_form($errors)) return false;
+	
+			$this->password = $_POST['passw'];
+	
+	
+			sw_log("User login: values from login form: username: ".
+					$_POST['uname'].", password: ".$this->password, PEAR_LOG_DEBUG);
+	
+			//if fully quantified username is given
+			if ($this->opt['fully_qualified_name_on_login']) {
+				// parse username and domain from it
+				if (ereg("^([^@]+)@(.+)", $_POST['uname'], $regs)){
+					$this->username=$regs[1];
+					$this->domain=$regs[2];
+					
+				}
+				else {
+					sw_log("User login: authentication failed: unsuported format of username. Can't parse username and domain part", PEAR_LOG_INFO);
+					$errors[]=$lang_str['bad_username'];
+	 				return false;
+				}
+			}
+			else{
+				$this->username=$_POST['uname'];
+				$this->domain=$config->domain;
+			}
 		}
 
 		sw_log("User login: checking password of user with username: ".
-				$username.", domain: ".$domain, PEAR_LOG_DEBUG);
+				$this->username.", domain: ".$this->domain, PEAR_LOG_DEBUG);
 		
 
-		$data_auth->set_xxl_user_id('sip:'.$username.'@'.$domain);
+		$data_auth->set_xxl_user_id('sip:'.$this->username.'@'.$this->domain);
 		$data_auth->expect_user_id_may_not_exists();
 
 
 		if ($this->opt['check_supported_domain_on_login']){
-			if (true !== $data_auth->domain_exists($domain, $errors)){
-				sw_log("User login: authentication failed: domain '".$domain."'' is not supported. Please check table domain", PEAR_LOG_INFO);
+			if (true !== $data_auth->domain_exists($this->domain, $errors)){
+				sw_log("User login: authentication failed: domain '".$this->domain."'' is not supported. Please check table domain", PEAR_LOG_INFO);
 				$errors[]=$lang_str['bad_username'];
 				return false;
 			}
 		}
 
 
-		if (false === $this->user_uuid = $data_auth->check_passw_of_user($username, $domain, $_POST['passw'], $errors)) {
+		if (false === $this->user_uuid = $data_auth->check_passw_of_user($this->username, $this->domain, $this->password, $errors)) {
 			sw_log("User login: authentication failed: bad username or domain or password ", PEAR_LOG_INFO);
 			$errors[]=$lang_str['bad_username'];
 			return false;
@@ -274,7 +304,7 @@ class apu_login extends apu_base_class{
 
 		if ($this->opt['check_admin_privilege']){
 			if (!$this->check_admin_privilege(
-						new Cserweb_auth($this->user_uuid, $username, $domain), 
+						new Cserweb_auth($this->user_uuid, $this->username, $this->domain), 
 						$errors)){ 
 				$errors[]=$lang_str['bad_username']; 
 				sw_log("User login: authentication failed: user hasn't admin privileges", PEAR_LOG_INFO);
