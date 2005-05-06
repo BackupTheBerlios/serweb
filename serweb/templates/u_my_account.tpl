@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.5 2005/05/05 12:00:03 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.6 2005/05/06 12:39:20 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -31,7 +31,7 @@
 {if $config->enable_status_visibility}
 	{assign var='f_element' value=$config->enable_status_visibility}
 	<tr>
-	<td><label for="sw_user_status_visible">{$lang_str.ff_status_visibility}:</label></td>
+	<td><label for="{$config->enable_status_visibility}">{$lang_str.ff_status_visibility}:</label></td>
 	<td>{$form_pd.$f_element}</td>
 	</tr>
 {/if}

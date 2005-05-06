@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.2 2005/05/05 12:00:03 kozlik Exp $
+ * $Id: my_account.php,v 1.3 2005/05/06 12:39:20 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -34,6 +34,7 @@ $up_attributes = array();
 if ($config->allow_enable_forward_to_voicemail) $up_attributes[] = 'fw_voicemail';
 if ($config->allow_change_status_visibility)    $up_attributes[] = $config->status_vibility;
 
+$usr_pref->set_opt('attributes', $up_attributes);
 
 
 //create copy of some options from config in order to sensitive options will not accessible via templates
