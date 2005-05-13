@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.9 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.10 2005/05/13 14:29:21 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -118,7 +118,7 @@ class apu_speed_dial extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_speed_dials', 'update_speed_dial', 'speed_dial_create_empty_entries');
+		return array('get_speed_dials', 'update_speed_dial');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -226,17 +226,15 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* this metod is called always at begining */
 	function init(){
-		global $sess, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir, $sess_sd_fill_sql_table;
+		global $sess, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir;
 		parent::init();
 		
 		if (!$sess->is_registered('sess_sd_act_row')) $sess->register('sess_sd_act_row');
 		if (!$sess->is_registered('sess_sd_sort'))    $sess->register('sess_sd_sort');
 		if (!$sess->is_registered('sess_sd_sort_dir'))    $sess->register('sess_sd_sort_dir');
-		if (!$sess->is_registered('sess_sd_fill_sql_table'))    $sess->register('sess_sd_fill_sql_table');
 		if (!isset($sess_sd_act_row)) $sess_sd_act_row=0;
 		if (!isset($sess_sd_sort)) $sess_sd_sort='from_uri';
 		if (!isset($sess_sd_sort_dir)) $sess_sd_sort_dir='asc';
-		if (!isset($sess_sd_fill_sql_table)) $sess_sd_fill_sql_table=true;
 		
 		if (isset($_GET['act_row'])) $sess_sd_act_row=$_GET['act_row'];
 
@@ -256,14 +254,18 @@ class apu_speed_dial extends apu_base_class{
 				$sess_sd_sort = 'from_uri';
 			}
 			$sess_sd_act_row=0;
+
 			
-			// if $sd_sort = $sess_sd_sort change sorting direction
-			if ($sd_sort == $sess_sd_sort){
-				if ($sess_sd_sort_dir == 'asc')	$sess_sd_sort_dir = 'desc';
-				else $sess_sd_sort_dir = 'asc';
-			}
-			else{
-				if($this->opt['sort_asc_on_change_col']) $sess_sd_sort_dir = 'asc';
+			// if form was not submited
+			if (!$this->was_form_submited()){
+				// if $sd_sort = $sess_sd_sort change sorting direction
+				if ($sd_sort == $sess_sd_sort){
+					if ($sess_sd_sort_dir == 'asc')	$sess_sd_sort_dir = 'desc';
+					else $sess_sd_sort_dir = 'asc';
+				}
+				else{
+					if($this->opt['sort_asc_on_change_col']) $sess_sd_sort_dir = 'asc';
+				}
 			}
 		}
 		
@@ -284,17 +286,12 @@ class apu_speed_dial extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $lang_str, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir, $sess_sd_fill_sql_table;
+		global $data, $lang_str, $sess_sd_act_row, $sess_sd_sort, $sess_sd_sort_dir;
 		parent::create_html_form($errors);
 
-		if ($sess_sd_fill_sql_table){
-			$opt=array('set_domain' => $this->opt['domain_for_requests']);
-			if (false === $data->speed_dial_create_empty_entries($this->user_id, 0, 99, $opt, $errors)) return false;
-			$sess_sd_fill_sql_table = false; 
-		}
-
 		
-		$opt=array('sort' => $sess_sd_sort,
+		$opt=array('sd_domain' => $this->opt['domain_for_requests'], 
+		           'sort' => $sess_sd_sort,
 		           'sort_desc' => ($sess_sd_sort_dir == 'asc' ? false : true));
 				   
 		$data->set_act_row($sess_sd_act_row);
@@ -309,11 +306,6 @@ class apu_speed_dial extends apu_base_class{
 		$this->pager['from']=$data->get_res_from();
 		$this->pager['to']=$data->get_res_to();
 		
-		
-		/* fill in 'sd_domain' for entries which aren't in DB */
-		foreach ($this->speed_dials as $key => $val){
-			if ($val['empty']) $this->speed_dials[$key]['sd_domain'] = $this->opt['domain_for_requests'];
-		}
 		
 		$i=0;
 		foreach ($this->speed_dials as $key => $val){

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.3 2005/05/13 14:29:21 kozlik Exp $
  */
 
 /*
@@ -39,7 +39,37 @@ class CData_Layer_update_speed_dial {
 
 		$c = &$config->data_sql->speed_dial;
 
+		$att=$this->get_indexing_sql_insert_attribs($user);
 
+		if ($values['new_uri'] == "" and 
+		    $values['fname'] == "" and
+			$values['lname'] == ""){
+			
+			$q="delete from ".$config->data_sql->table_speed_dial." 
+				where ".$c->sd_username."='".$opt['primary_key']['sd_username']."' and 
+				      ".$c->sd_domain."='".$opt['primary_key']['sd_domain']."' and 
+					  ".$this->get_indexing_sql_where_phrase($user);
+		}
+		else{
+			$q="replace ".$config->data_sql->table_speed_dial." (
+			           ".$att['attributes'].", 
+					   ".$c->sd_username.",
+					   ".$c->sd_domain.", 
+					   ".$c->new_uri.", 
+					   ".$c->fname.", 
+					   ".$c->lname."
+			    ) 
+				values (
+				       ".$att['values'].", 
+					   '".$opt['primary_key']['sd_username']."',
+					   '".$opt['primary_key']['sd_domain']."',
+					   '".$values['new_uri']."', 
+					   '".$values['fname']."', 
+					   '".$values['lname']."'
+				 )";
+		}
+
+/*
 		if ($opt_insert) {
 			$att=$this->get_indexing_sql_insert_attribs($user);
 
@@ -70,7 +100,7 @@ class CData_Layer_update_speed_dial {
 					  ".$this->get_indexing_sql_where_phrase($user);
 
 		}
-
+*/
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
