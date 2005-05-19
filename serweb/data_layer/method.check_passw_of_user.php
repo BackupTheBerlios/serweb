@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.2 2005/05/02 11:17:57 kozlik Exp $
+ * $Id: method.check_passw_of_user.php,v 1.3 2005/05/19 17:54:54 kozlik Exp $
  */
 
 class CData_Layer_check_passw_of_user {
@@ -23,7 +23,7 @@ class CData_Layer_check_passw_of_user {
 			$q="select ".$attribute." from ". $config->data_sql->table_subscriber.
 				" where username='".addslashes($user)."' and password='".addslashes($passw)."' and domain='".addslashes($domain)."'";
 		} else {
-			$ha1=md5($uname.":".$config->realm.":".$passw);
+			$ha1=md5($user.":".$domain.":".$passw);
 			$q="select ".$attribute." from ". $config->data_sql->table_subscriber.
 				" where username='".addslashes($user)."' and domain='".addslashes($domain)."' and ha1='".$ha1."'";
 		}
