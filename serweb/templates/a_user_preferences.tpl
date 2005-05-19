@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_user_preferences.tpl,v 1.2 2004/08/10 17:33:50 kozlik Exp $ *}
+{* $Id: a_user_preferences.tpl,v 1.3 2005/05/19 17:55:51 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -7,21 +7,21 @@
 {$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="att_name">{$lang_str.ff_att_name}:</label></td>
-	<td>{$form.att_name}</td>
+	<td><label for="up_att_name">{$lang_str.ff_att_name}:</label></td>
+	<td>{$form.up_att_name}</td>
 	</tr>
 	<tr>
-	<td><label for="att_rich_type">{$lang_str.ff_att_type}:</label></td>
-	<td>{$form.att_rich_type}</td>
+	<td><label for="up_att_rich_type">{$lang_str.ff_att_type}:</label></td>
+	<td>{$form.up_att_rich_type}</td>
 	</tr>
 	<tr>
-	<td><label for="default_value">{$lang_str.ff_att_default_value}:</label></td>
-	<td>{$form.default_value}</td>
+	<td><label for="up_default_value">{$lang_str.ff_att_default_value}:</label></td>
+	<td>{$form.up_default_value}</td>
 	</tr>
 	<tr>
 	<td align="left">
 	{if $url_edit_list}
-		<a href="{$url_edit_list}"><img src="{$config->img_src_path}butons/b_edit_items_of_the_list.gif" width="165" height="16" border="0"></a>
+		<a href="{$url_edit_list}"><img src="{$cfg->img_src_path}butons/b_edit_items_of_the_list.gif" width="165" height="16" border="0"></a>
 	{else}
 		&nbsp;
 	{/if}
