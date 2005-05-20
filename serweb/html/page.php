@@ -3,7 +3,7 @@
  * Functions for output basic page layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: page.php,v 1.30 2005/03/03 09:53:42 kozlik Exp $
+ * @version   $Id: page.php,v 1.31 2005/05/20 09:13:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -31,6 +31,8 @@ function print_html_head($title=""){
 	global $config, $lang_set;	
 	
 	if (!$title) $title=$config->html_title;
+
+	header("Content-Type: text/html; charset=".$lang_set['charset']);
 
 	if ($config->html_doctype=='strict'){
 		?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
