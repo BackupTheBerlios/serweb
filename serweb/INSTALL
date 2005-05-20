@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.17 2005/05/05 12:25:13 kozlik Exp $
+$Id: INSTALL,v 1.18 2005/05/20 17:09:18 kozlik Exp $
 
 serweb - Installation
 
@@ -10,6 +10,8 @@ serweb - Installation
   - PEAR package DB (should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
 		see http://pear.php.net/manual/en/installation.getting.php for details
+  - PECL package Classkit (only PHP5 users)
+  		see http://www.php.net/manual/en/ref.classkit.php
   - MySQL 4.0 (we use UNIONs)
   - running SER with MySQL support
 
@@ -27,8 +29,11 @@ serweb - Installation
   --------------
 
     [1] Untar the distribution (be sure to untar the subdirectories)
-    [2] It is recommended that you don't place the phplib directory in
-        the HTML tree on your server.
+    [2] It is recommended to be only 'html' directory in the HTML tree 
+	    on your server. And leave other directories unaccessible
+	    throught http. Do it by creating alias in your httpd.conf,
+		for example:
+	    	Alias /serweb "/your/serweb/dir/html" 
     [3] Open the file config_data_layer.php in your favourite editor and change
         the values for db_type, db_host, db_name, db_user and db_pass
     [4] Open the file config_paths.php and change value for root_path
@@ -51,29 +56,21 @@ serweb - Installation
         messages (web_contact)
     [8] make sure your php.ini includes the following values:
             - short_open_tag = on
-            - register_globals = on     (in PHP4 is disabled by default)
             - register_long_arrays = on (in PHP5 is disabled by default)
-    [9] Open the file <your-host>/<your-install-dir>/admin/index.php
-        or <your-host>/<your-install-dir>/user/index.php
+    [9] Open the file http://<your-host>/<your-install-dir>/admin/index.php
+        or http://<your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
         The initial username is 'admin' with password 'heslo'. Its strongly
         recomended to change this password after first login.
     [10] If everything work, is now time to create cronjobs. Type command
         'crontab -e' at command line which open your crontab file and insert
         lines said in file
-        /your/serweb/dir/html/admin/cron_job/cronentry
-    [11] You should forbid access to from whole internet to corn_job
-         directory. This is done in .htaccess file in this directory, but
-         you must allow process of this in your apache configuration by
-         directive:
-             <Directory "/your/serweb/dir/html/admin/cron_job">
-                 AllowOverride Limit
-             </Directory>
+        /your/serweb/dir/scripts/cron_job/cronentry
 
   User preferences (AVP)
   ----------------------
     If you need some function working with user preferences (i.e. variables
-	allow_change_status_visibility, allow_enable_forward_to_voicemail in config 
+	status_vibility, usr_pref_forward_to_voicemail in config 
 	file) you must fill db table usr_preferences_types by script 
 		scripts/sql/usr_preferences.sql
 	By command:
@@ -114,6 +111,17 @@ serweb - Installation
   Q: I get this error: "call to undefined function :mysql-pconnect()"
   A: Do install php-mysql. Really.
 
+  Q: I can't login into serweb by default username and password
+  A: Probably your domain do not match. Serweb obtain domain 
+     from http request by default. So the host in http request should
+     be same as you are useing in SER. For details see file
+     config/set_domain.php. You can also disable automatic obtaining
+     domain and set it by hand here.
+
+  Q: Still can't login into serweb by default username and password
+  A: Enable loging in serweb ($config->enable_loging = true) and
+     see log file. For more verbosity set log level to PEAR_LOG_DEBUG
+
   Q: All my login attempts lead to the previous screen without any
      kind of progress or error indication.
   A: Really make sure that register_globals is turned on in your
@@ -123,3 +131,4 @@ serweb - Installation
      For check real php configuration create file phpinfo.php
      in html root with content <? phpinfo(); ?> and look to it by
      browser. There is _all_ informations about php.
+     
