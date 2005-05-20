@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.16 2005/05/20 10:08:20 kozlik Exp $
+ * $Id: config.php,v 1.17 2005/05/20 17:10:19 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -112,31 +112,38 @@
 	$config->allow_change_email=true;
 	$config->allow_change_password=true;
 
-	/* This option is enabling checkbox 'Allow others to see whether 
-	   or not I'm online'
-	   
-	   If you want enable this, you also must set value of option 
-	   $config->status_vibility
-	*/		
-	$config->allow_change_status_visibility=false;
-
-
 	/* name of attribute in user preference for set visibility status of user
 	   set to false if status of users should be always visible
 
-	   type of this attribute should be boolean
+	   Set this option to some non empty value also enable checkbox
+	   'Allow others to see whether or not I'm online' on my account tab.
+
+	   When enabling this option you should create user preference named
+	   same as this option of type boolean. Use tab user preferences in
+	   admin interface for create it or install script scripts/sql/usr_preferences.sql
+	   into database.
 
 	   $config->status_vibility = "sw_user_status_visible";
 	 */
 	$config->status_vibility = "";
 
 
-	/* This option is enabling checkbox 'forward to voicemail'
-	   If you want enable this, you should mention this in SER routing script.
+	/* name of attribute in user preference for enable forwarding to voicemail
+	   set to false if don't want use forwarding to voicemail
 	   
-	   Checkbox 'forward to voicemail' is changeing AVP named 'fw_voicemail'
+	   If you want enable this, you should mention this in SER routing script.
+
+	   Set this option to some non empty value also enable checkbox
+	   'forward to voicemail' on my account tab.
+
+	   When enabling this option you should create user preference named
+	   same as this option of type boolean. Use tab user preferences in
+	   admin interface for create it or install script scripts/sql/usr_preferences.sql
+	   into database.
+	   
+	   $config->usr_pref_forward_to_voicemail = "fw_voicemail";
 	*/		
-	$config->allow_enable_forward_to_voicemail=false;
+	$config->usr_pref_forward_to_voicemail = "";
 
 
 	/* ------------------------------------------------------------*/

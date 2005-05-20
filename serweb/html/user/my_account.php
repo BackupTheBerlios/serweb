@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.3 2005/05/06 12:39:20 kozlik Exp $
+ * $Id: my_account.php,v 1.4 2005/05/20 17:10:20 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -31,8 +31,8 @@ $ul			= new apu_usrloc();
 
 
 $up_attributes = array();
-if ($config->allow_enable_forward_to_voicemail) $up_attributes[] = 'fw_voicemail';
-if ($config->allow_change_status_visibility)    $up_attributes[] = $config->status_vibility;
+if ($config->usr_pref_forward_to_voicemail) $up_attributes[] = $config->usr_pref_forward_to_voicemail;
+if ($config->status_vibility)    			$up_attributes[] = $config->status_vibility;
 
 $usr_pref->set_opt('attributes', $up_attributes);
 
@@ -42,7 +42,7 @@ $cfg=new stdclass();
 $cfg->enable_dial_voicemail            = $config->enable_dial_voicemail;
 $cfg->enable_test_firewall             = $config->enable_test_firewall;
 $cfg->enable_status_visibility         = $config->status_vibility;
-$cfg->enable_forward_to_voicemail      = $config->allow_enable_forward_to_voicemail;
+$cfg->enable_forward_to_voicemail      = $config->usr_pref_forward_to_voicemail;
 
 
 

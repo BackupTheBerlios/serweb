@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.6 2005/05/06 12:39:20 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.7 2005/05/20 17:10:20 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -22,9 +22,10 @@
 	</tr>
 
 {if $config->enable_forward_to_voicemail}
+	{assign var='f_element' value=$config->enable_forward_to_voicemail}
 	<tr>
-	<td><label for="fw_voicemail">{$lang_str.ff_fwd_to_voicemail}:</label></td>
-	<td>{$form_pd.fw_voicemail}</td>
+	<td><label for="{$config->enable_forward_to_voicemail}">{$lang_str.ff_fwd_to_voicemail}:</label></td>
+	<td>{$form_pd.$f_element}</td>
 	</tr>
 {/if}
 
