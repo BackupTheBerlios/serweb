@@ -15,3 +15,9 @@
 2005-04-20
 	* rewrited user and admin interface to use application layer
 	* added XXL support
+	
+2005-05-20
+	* consolidated config files
+	* fixed few bugs
+	* changed default charset to utf-8
+	* finished rewriting application logic to use application layer
