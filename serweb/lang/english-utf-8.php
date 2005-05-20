@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.1 2005/05/20 09:15:18 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.2 2005/05/20 10:07:42 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -156,6 +156,8 @@ $lang_str['ff_expires'] = 						"expires";
 $lang_str['contact_expire_hour'] = 				"one hour";
 $lang_str['contact_expire_day'] = 				"one day";
 $lang_str['contact_will_not_expire'] = 			"permanent";
+$lang_str['acl_err_local_forward'] = 			"local forwarding prohibited";
+$lang_str['acl_err_gateway_forward'] = 			"gateway contacts prohibited";
 
 /* ------------------------------------------------------------*/
 /*      phonebook                                              */

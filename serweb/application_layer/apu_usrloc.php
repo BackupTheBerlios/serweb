@@ -3,7 +3,7 @@
  * Application unit usrloc
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_usrloc.php,v 1.2 2005/04/26 14:32:01 kozlik Exp $
+ * @version   $Id: apu_usrloc.php,v 1.3 2005/05/20 10:07:42 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -178,13 +178,13 @@ class apu_usrloc extends apu_base_class{
 
 	/* validate html form */
 	function validate_form(&$errors){
-		global $config, $perm;
+		global $config, $perm, $lang_str;
 		if (false === parent::validate_form($errors)) return false;
 
 		if (is_array($config->denny_reg) and !$perm->have_perm("admin")){
 			foreach ($config->denny_reg as $val){
 				if (Ereg($val->reg, $_POST['ul_sip_address'])) {
-					$errors[]=$val->label; 
+					$errors[]=$lang_str[$val->label]; 
 					return false;
 				}
 			}
