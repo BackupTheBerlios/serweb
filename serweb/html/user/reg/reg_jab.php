@@ -10,7 +10,7 @@ function reg_jab($sipname)
 	global $config;
 
 	$jcid=$config->jcid;
-	$sipdomain = $config->default_domain;
+	$sipdomain = $config->domain;
 
 	# -----
 	# check if is already registered with Jabber gateway

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.15 2005/05/05 12:00:03 kozlik Exp $
+ * $Id: config.php,v 1.16 2005/05/20 10:08:20 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -14,8 +14,7 @@
 		"html_title", "html_doctype", "html_headers", "display_page_heading", 
 		"alias_generation",	"first_alias_number", "alias_prefix", 
 		"alias_postfix", "alias_lenght", "alias_generation_retries",
-		"infomail", "regmail", "forgot_pass_subj", "mail_forgot_pass", 
-		"register_subj", "mail_register", "terms_and_conditions", "lang");
+		"infomail", "regmail", "lang");
 
 
 	/* set to true if SERWEB is used for more domains */
@@ -62,25 +61,25 @@
 	*/
 
 	$config->user_tabs=array();
-	$config->user_tabs[]=new Ctab (true, "tab_my_account", "my_account.php");									// $lang_str['tab_my_account']
-	$config->user_tabs[]=new Ctab (true, "tab_phonebook", "phonebook.php");										// $lang_str['tab_phonebook']
-	$config->user_tabs[]=new Ctab (true, "tab_missed_calls", "missed_calls.php");								// $lang_str['tab_missed_calls']
-	$config->user_tabs[]=new Ctab (true, "tab_accounting", "accounting.php");									// $lang_str['tab_accounting']
-	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");											// $lang_str['tab_send_im']
-	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");								// $lang_str['tab_message_store']
-	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");									// $lang_str['tab_voicemail']
-	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
-	$config->user_tabs[]=new Ctab (false, "tab_speed_dial", "speed_dial.php");									// $lang_str['tab_speed_dial']
-	$config->user_tabs[]=new Ctab (false, "tab_caller_screening", "caller_screening.php");						// $lang_str['tab_caller_screening']
+	$config->user_tabs[]=new Ctab (true, "tab_my_account", "my_account.php");					// $lang_str['tab_my_account']
+	$config->user_tabs[]=new Ctab (true, "tab_phonebook", "phonebook.php");						// $lang_str['tab_phonebook']
+	$config->user_tabs[]=new Ctab (true, "tab_missed_calls", "missed_calls.php");				// $lang_str['tab_missed_calls']
+	$config->user_tabs[]=new Ctab (true, "tab_accounting", "accounting.php");					// $lang_str['tab_accounting']
+	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");							// $lang_str['tab_send_im']
+	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");				// $lang_str['tab_message_store']
+	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");					// $lang_str['tab_voicemail']
+	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
+	$config->user_tabs[]=new Ctab (false, "tab_speed_dial", "speed_dial.php");					// $lang_str['tab_speed_dial']
+	$config->user_tabs[]=new Ctab (false, "tab_caller_screening", "caller_screening.php");		// $lang_str['tab_caller_screening']
 
 	/* admin tabs definitions
 		Ctab (enabled, name_of_tab, php_script)
 	*/
 	$config->admin_tabs=array();
-	$config->admin_tabs[]=new Ctab (true, "tab_users", "users.php");											// $lang_str['tab_users']
-	$config->admin_tabs[]=new Ctab (true, "tab_admin_privileges", "list_of_admins.php");						// $lang_str['tab_admin_privileges']
-	$config->admin_tabs[]=new Ctab (true, "tab_ser_moni", "ser_moni.php");										// $lang_str['tab_ser_moni']
-	$config->admin_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");						// $lang_str['tab_user_preferences']
+	$config->admin_tabs[]=new Ctab (true, "tab_users", "users.php");							// $lang_str['tab_users']
+	$config->admin_tabs[]=new Ctab (true, "tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
+	$config->admin_tabs[]=new Ctab (true, "tab_ser_moni", "ser_moni.php");						// $lang_str['tab_ser_moni']
+	$config->admin_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
@@ -174,20 +173,6 @@
 	 */
 	$config->log_error_return_location_of_error_to_html = false;
 
-	/* ------------------------------------------------------------*/
-	/* Speed dial                                                  */
-	/* ------------------------------------------------------------*/
-
-
-	/* validation regex which must much username from request uri 
-	   in speed dial
-	*/
-	$config->speed_dial['validation']="^[0-9][0-9]$";
-
-	/* index into $lang_str array which contains error string used 
-	   for failed validations
-	*/
-	$config->speed_dial['validation_msg']="fe_invalid_speed_dial";
 
 	/* ------------------------------------------------------------*/
 	/* ACLs                                                        */
@@ -198,10 +183,11 @@
 	   use these REGexs  to specify which contacts you do not wish;
 	   the first value includes banned REs, the second displays error message
 	   displayed to users if they attempt to introduce a banned contact
+	   Second parameter is index into $lang_str array (see files in lang directory)
 	*/
 	$config->denny_reg=array();
-	$config->denny_reg[]=new CREG_list_item("iptel\.org$","local forwarding prohibited");
-	$config->denny_reg[]=new CREG_list_item("gateway","gateway contacts prohibited");
+	$config->denny_reg[]=new CREG_list_item("iptel\.org$", "acl_err_local_forward");
+	$config->denny_reg[]=new CREG_list_item("gateway", "acl_err_gateway_forward");
 
 	/* SER configuration script may check for group membership of users
 	   identified using digest authentication; e.g., it may only allow
@@ -394,12 +380,6 @@
 	$config->send_daily_missed_calls_mail_subj="your missed calls";
 	$config->send_daily_missed_calls_mail_body=" Hello, \n".
 			"we are sending your missed calls";
-
-
-
-
-	/* $config->realm, $config->domainname and $config->default_domain will be substituted by $config->domain */
-	$config->realm=$config->domainname=$config->default_domain=$config->domain;
 
 				
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.set_password_to_user.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.set_password_to_user.php,v 1.2 2005/05/20 10:08:20 kozlik Exp $
  */
 
 class CData_Layer_set_password_to_user {
@@ -13,8 +13,8 @@ class CData_Layer_set_password_to_user {
 	function set_password_to_user($user, $passwd, &$errors){
 		global $config;
 
-		$ha1=md5($user->uname.":".$config->realm.":".$passwd);
-		$ha1b=md5($user->uname."@".$user->domain.":".$config->realm.":".$passwd);
+		$ha1=md5($user->uname.":".$user->domain.":".$passwd);
+		$ha1b=md5($user->uname."@".$user->domain.":".$user->domain.":".$passwd);
 
 		if (!$this->connect_to_db($errors)) return false;
 

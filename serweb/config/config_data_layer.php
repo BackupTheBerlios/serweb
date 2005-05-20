@@ -1,9 +1,8 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.7 2005/05/03 11:15:02 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.8 2005/05/20 10:08:20 kozlik Exp $
  */
 
-//		$config->data_container_type="sql";		//Type of data container 'sql' or 'ldap' - this value will be removed
 
 		////////////////////////////////////////////////////////////////
 		//            configure connection to SER
@@ -30,6 +29,9 @@
 
 		/* these are the defaults with which SER installs; if you changed
 		   the SER account for SQL database, you need to update here 
+		   
+		   If $config->use_rpc = true you need not set data_sql values, it is
+		   obtained from SER automaticaly
 		*/
 
 		$config->data_sql=new stdClass();
