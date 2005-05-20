@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.3 2005/05/13 14:29:21 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.4 2005/05/20 08:32:56 kozlik Exp $
  */
 
 /*
@@ -103,9 +103,7 @@ class CData_Layer_update_speed_dial {
 */
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
-			if ($res->getCode()==DB_ERROR_ALREADY_EXISTS)
-				$errors[]=$lang_str['err_speed_dial_already_exists'];
-			else log_errors($res, $errors); 
+			log_errors($res, $errors); 
 			return false;
 		}
 		return true;

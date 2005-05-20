@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.13 2005/04/28 14:38:58 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.14 2005/05/20 08:32:56 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -78,7 +78,6 @@ $lang_str['tab_phonebook'] =		 			"phone book";
 $lang_str['tab_missed_calls'] =	 				"missed calls";
 $lang_str['tab_accounting'] =	 				"accounting";
 $lang_str['tab_send_im'] =	 					"send IM";
-$lang_str['tab_notification_subscription'] =	"notification subscription";
 $lang_str['tab_message_store'] =	 			"message store";
 $lang_str['tab_voicemail'] =	 				"voicemail";
 $lang_str['tab_user_preferences'] =	 			"user preferences";
@@ -88,7 +87,6 @@ $lang_str['tab_caller_screening'] =	 			"caller screening";
 $lang_str['tab_users'] =	 					"users";
 $lang_str['tab_admin_privileges'] =	 			"admin privileges";
 $lang_str['tab_ser_moni'] =	 					"server monitoring";
-$lang_str['tab_user_preferences'] =	 			"user preferences";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -185,8 +183,6 @@ $lang_str['found_users'] = 						"Users";
 /*      missed calls                                           */
 /* ------------------------------------------------------------*/
 
-$lang_str['msg_mc_deleted_s'] = 				"Calls deleted";
-$lang_str['msg_mc_deleted_l'] = 				"Calls has been succesfully deleted";
 $lang_str['th_reply_status'] = 					"reply status";
 $lang_str['missed_calls'] = 					"Missed calls";
 $lang_str['no_missed_calls'] = 					"No missed calls";
@@ -200,6 +196,8 @@ $lang_str['th_length_of_call'] = 				"length of call";
 $lang_str['th_hangup'] = 						"hang up";
 $lang_str['calls_count'] = 						"Calls";
 $lang_str['no_calls'] = 						"No calls";
+$lang_str['msg_calls_deleted_s'] = 				"Calls deleted";
+$lang_str['msg_calls_deleted_l'] = 				"Calls has been succesfully deleted";
 
 
 /* ------------------------------------------------------------*/
@@ -218,17 +216,6 @@ $lang_str['ff_text_of_message'] = 				"text of message";
 $lang_str['im_remaining'] = 					"Remaining";
 $lang_str['im_characters'] = 					"characters";
 
-/* ------------------------------------------------------------*/
-/*      notification subscription                              */
-/* ------------------------------------------------------------*/
-
-$lang_str['your_subscribed_events'] = 			"your subscribed events";
-$lang_str['other_events'] = 					"other events";
-$lang_str['no_subscribed_events'] = 			"No subscribed events";
-$lang_str['no_other_events'] = 					"No other events";
-$lang_str['description'] = 						"description";
-$lang_str['l_unsubscribe'] = 					"unsubscribe";
-$lang_str['l_subscribe'] = 						"subscribe";
 
 /* ------------------------------------------------------------*/
 /*      message store                                          */
@@ -265,8 +252,6 @@ $lang_str['no_attributes_defined'] = 			"No attributes defined by admin";
 /*      speed dial                                             */
 /* ------------------------------------------------------------*/
 
-$lang_str['msg_speed_dial_deleted_s'] = 		"Speed dial request deleted";
-$lang_str['msg_speed_dial_deleted_l'] = 		"Your speed dial request has beed deleted";
 $lang_str['th_speed_dial'] = 					"Speed dial";
 $lang_str['th_new_uri'] = 						"New uri";
 
@@ -378,9 +363,6 @@ $lang_str['l_accounting'] = 					"accounting";
 /*      admin - ACL, aliases                                   */
 /* ------------------------------------------------------------*/
 
-$lang_str['err_admin_can_not_manage_user_1'] = 	"You can't manage user";
-$lang_str['err_admin_can_not_manage_user_2'] = 	"this user is from different domain";
-$lang_str['err_unknown_user'] = 				"unknown user";
 $lang_str['access_control_list_of_user'] = 		"Access control list of user";
 $lang_str['have_not_privileges_to_acl'] = 		"You haven't any privileges to control ACL";
 $lang_str['err_alias_already_exists_1'] = 		"The alias:";
@@ -474,8 +456,6 @@ $lang_str['l_back_to_editing_attributes'] = 	"back to editing attributes";
 $lang_str['sel_item_all_calls'] = 				"All calls";
 $lang_str['sel_item_outgoing_calls'] = 			"Outgoing calls only";
 $lang_str['sel_item_incoming_cals'] = 			"Incoming calls only";
-$lang_str['acc_outgoing_call'] = 				"-&gt; Outgoing";
-$lang_str['acc_incoming_call'] = 				"&lt;- Incoming";
 
 /* ------------------------------------------------------------*/
 /*      voicemail                                              */

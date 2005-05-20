@@ -85,10 +85,8 @@ get_ser_moni_values
 
 SPEED_DIAL
 ----------
-del_SD_request
-get_SD_request
-get_SD_requests
-update_SD_request
+get_speed_dials
+update_speed_dial
 delete_user_speed_dial
 
 SUBSCRIBER

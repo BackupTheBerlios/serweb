@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.5 2005/05/05 12:00:03 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.6 2005/05/20 08:32:56 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -49,6 +49,9 @@
  *	
  *	'cvs_export_template'	(string) default: 'acc_cvs.tpl'
  *	 filename of smarty template for output in CSV format
+ *	
+ *	'msg_delete'					default: $lang_str['msg_calls_deleted_s'] and $lang_str['msg_calls_deleted_l']
+ *	 message which should be showed on calls delete - assoc array with keys 'short' and 'long'
  *	
  *	'form_name'				(string) default: ''
  *		name of html form
@@ -125,6 +128,10 @@ class apu_accounting extends apu_base_class{
 		$this->opt['convert_sip_addresses_to_phonenumbers'] = false;
 
 		$this->opt['cvs_export_template'] =	'acc_cvs.tpl';
+
+		$this->opt['msg_delete']['short'] =	&$lang_str['msg_calls_deleted_s'];
+		$this->opt['msg_delete']['long']  =	&$lang_str['msg_calls_deleted_l'];
+
 		
 		/* form */
 		$this->opt['smarty_form'] =			'form';
@@ -279,6 +286,8 @@ class apu_accounting extends apu_base_class{
 			if (!$opt['timestamp']) $opt['timestamp']=null;
 			if (false === $data->delete_user_missed_calls($this->user_id, $opt['timestamp'], $errors)) return false;
 		} 
+
+		return array("m_acc_calls_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -330,6 +339,18 @@ class apu_accounting extends apu_base_class{
 			                             "value"=>$sess_acc_filter,
 										 "options"=>$opt));
 		}						 
+
+	}
+
+
+	/* add messages to given array */
+	function return_messages(&$msgs){
+		global $_GET;
+		
+		if (isset($_GET['m_acc_calls_deleted']) and $_GET['m_acc_calls_deleted'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_delete'];
+			$this->smarty_action="was_deleted";
+		}
 
 	}
 	

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.2 2005/05/04 15:35:37 kozlik Exp $
+ * $Id: get_pass.php,v 1.3 2005/05/20 08:32:56 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -13,8 +13,8 @@ require "prepend.php";
 $fp=new apu_forgotten_password();
 $fp->set_opt('form_name', 'form1');
 //$register->set_opt('form_submit', array('type' => 'image',
-//										'text' => $lang_str['l_submit'],
-//										'src'  => $config->img_src_path."butons/btn_submit.gif"));
+//										'text' => $lang_str['b_submit'],
+//										'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang)));
 
 										
 $config->html_headers = array_merge($config->html_headers, 
