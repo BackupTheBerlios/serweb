@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.8 2005/05/20 10:08:20 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.9 2005/05/24 12:22:37 kozlik Exp $
  */
 
 
@@ -56,6 +56,27 @@
 		*/
 		// If you want to configure more SQL backup servers, copy and paste the above (including the "$i++;")
  		
+
+		/**
+		 *  Needs to be set when you are useing MySQL >= 4.1
+		 *  see mysql manual for more info
+		 *
+		 * 	$config->data_sql->collation = "utf8_general_ci";
+		 */
+
+		$config->data_sql->collation = "";
+
+		/**
+		 *  Set to true when you are useing MySQL >= 4.1
+		 *  This option set mysql system variables character_set_client, 
+		 *  character_set_connection, and character_set_results to charset 
+		 *  used in serweb
+		 *
+		 * 	$config->data_sql->set_charset = true;
+		 */
+
+		$config->data_sql->set_charset = false;
+
 		
 		/**
 		 *	Default timeout after which is again looked up for proxy of user 
@@ -139,7 +160,9 @@
 
 		$config->data_layer_always_required_functions=array('check_passw_of_user',
 															'get_privileges_of_user',
-															'get_user_dom_from_uid');
+															'get_user_dom_from_uid',
+															'set_db_charset',
+															'set_db_collation');
 
 		/*
 		 *  names of columns in table speed dial

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.8 2005/05/03 11:15:03 kozlik Exp $
+ * $Id: data_layer.php,v 1.9 2005/05/24 12:22:37 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -23,6 +23,9 @@ class CData_Layer{
 
 	var $expect_user_id_not_ex = false;
 
+	var $db_collation = null;
+	var $db_charset = null;
+	
 	/*
 	 *   Constructor
 	 */
@@ -172,6 +175,15 @@ class CData_Layer{
 		}
 	}
 
+	/**
+	 *	Set internar variables by another instance of CData_Layer
+	 *
+	 *	@param CData_Layer $d
+	 */
+	function setup_by_another_instance(&$d){
+		$this->db_charset	= $d->db_charset;
+		$this->db_collation	= $d->db_collation;
+	}
 
 	/**
 	 *	Ask SER cluster on proxy which is assignet to user
@@ -468,6 +480,10 @@ class CData_Layer{
 		}
 
 		$this->db=$db;
+
+		if ($this->db_charset) $this->set_db_charset($this->db_charset, null, $errors);
+		if ($this->db_collation) $this->set_db_collation($this->db_collation, null, $errors);
+
 		return $db;
 	}
 

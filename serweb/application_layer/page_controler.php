@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.12 2005/05/03 11:15:02 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.13 2005/05/24 12:22:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -104,6 +104,7 @@ class page_conroler{
 			// in variable $data_auth
 			if (isModuleLoaded('xxl') and $sess_xxl_selected_proxy){
 				$GLOBALS['data_selected_proxy'] = CData_Layer::singleton("selected_proxy", $this->errors);
+				$GLOBALS['data_selected_proxy']->setup_by_another_instance($GLOBALS['data_auth']);
 				if (false === $GLOBALS['data_selected_proxy']->set_home_proxy($sess_xxl_selected_proxy['proxy'])){
 					die("Can't connect to DB");
 					break;

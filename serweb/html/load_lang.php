@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.4 2005/05/24 09:35:23 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.5 2005/05/24 12:22:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -96,5 +96,15 @@ internationalize_tabs();
 
 /* set value of $lang_set[ldir] by avaiable_languages array */
 $lang_set['ldir'] = $available_languages[$sess_lang][2];
+
+global $data;
+
+if (!empty($config->data_sql->set_charset)){
+	$data->set_db_charset($lang_set['charset'], null, $errors);
+}
+
+if (!empty($config->data_sql->collation)){
+	$data->set_db_collation($config->data_sql->collation, null, $errors);
+}
 
 ?>
