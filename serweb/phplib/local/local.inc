@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.3 2005/05/02 14:51:33 kozlik Exp $
+ * $Id: local.inc,v 1.4 2005/05/24 09:35:23 kozlik Exp $
  */
 
 
@@ -27,22 +27,21 @@ class phplib_Session extends Session {
 class phplib_Session_Pre_Auth extends phplib_Session {
 
   function get_id($id = "") {
-    global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $QUERY_STRING;
 
 	if ($this->mode=="cookie"){
 		/*
 		 * if is there cookie and get or post vars then seconds are preffered
 		 */
 	    if ( "" == $id ) {
-          $id = isset($HTTP_GET_VARS[$this->name]) ?
-                $HTTP_GET_VARS[$this->name] :
-                ( isset($HTTP_POST_VARS[$this->name]) ?
-                $HTTP_POST_VARS[$this->name] :
+          $id = isset($_GET[$this->name]) ?
+                $_GET[$this->name] :
+                ( isset($_POST[$this->name]) ?
+                $_POST[$this->name] :
                 "") ;
 		}
 	    if ( "" == $id ) {
-          $id = isset($HTTP_COOKIE_VARS[$this->name]) ?
-                $HTTP_COOKIE_VARS[$this->name] : "";
+          $id = isset($_COOKIE[$this->name]) ?
+                $_COOKIE[$this->name] : "";
 		}
 
 		/* set the corect cookie */

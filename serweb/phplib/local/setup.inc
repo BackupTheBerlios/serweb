@@ -33,7 +33,6 @@
 #
 # 
 
-global $HTTP_REFERER, $REMOTE_ADDR, $HTTP_USER_AGENT;
 
 $db  = new DB_Example;
 $tab = "session_stats";
@@ -44,9 +43,9 @@ $query = sprintf("insert into %s ( name,  sid, start_time, referer, addr, user_a
   $sess->name,
   $sess->id,
   $now,
-  $HTTP_REFERER,
-  $REMOTE_ADDR,
-  $HTTP_USER_AGENT);
+  $_SERVER['HTTP_REFERER'],
+  $_SERVER['REMOTE_ADDR'],
+  $_SERVER['HTTP_USER_AGENT']);
 
 $db->query($query);
 ?>

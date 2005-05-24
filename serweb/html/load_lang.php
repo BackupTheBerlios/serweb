@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.3 2005/03/14 11:45:46 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.4 2005/05/24 09:35:23 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -72,8 +72,8 @@ if (!empty($sess_lang) && empty($available_languages[$sess_lang])) {
 // Language is not defined yet :
 // try to findout user's language by checking its HTTP_ACCEPT_LANGUAGE variable
 
-if (empty($sess_lang) && !empty($HTTP_ACCEPT_LANGUAGE)) {
-	$accepted    = explode(',', $HTTP_ACCEPT_LANGUAGE);
+if (empty($sess_lang) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	$accepted    = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 	$acceptedCnt = count($accepted);
 	for ($i = 0; $i < $acceptedCnt && empty($sess_lang); $i++) {
 		lang_detect($accepted[$i], 1);
@@ -81,8 +81,8 @@ if (empty($sess_lang) && !empty($HTTP_ACCEPT_LANGUAGE)) {
 }
 
 // try to findout user's language by checking its HTTP_USER_AGENT variable
-if (empty($sess_lang) && !empty($HTTP_USER_AGENT)) {
-	lang_detect($HTTP_USER_AGENT, 2);
+if (empty($sess_lang) && !empty($_SERVER['HTTP_USER_AGENT'])) {
+	lang_detect($_SERVER['HTTP_USER_AGENT'], 2);
 }
 
 // Didn't catch any valid lang : we use the default settings

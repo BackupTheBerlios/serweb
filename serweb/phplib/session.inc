@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.3 2004/09/24 09:44:58 kozlik Exp $
+ * $Id: session.inc,v 1.4 2005/05/24 09:35:23 kozlik Exp $
  *
  */
 
@@ -87,7 +87,6 @@ class Session {
   ## one may provide the new session id as a parameter (not recommended).
 
   function get_id($id = "") {
-    global $HTTP_COOKIE_VARS, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_SERVER_VARS;
     $this->newid=true;
 
     $this->name = $this->cookiename==""?$this->classname:$this->cookiename;
@@ -96,15 +95,15 @@ class Session {
       $this->newid=false;
       switch ($this->mode) {
         case "get":
-          $id = isset($HTTP_GET_VARS[$this->name]) ?
-                $HTTP_GET_VARS[$this->name] :
-                ( isset($HTTP_POST_VARS[$this->name]) ?
-                $HTTP_POST_VARS[$this->name] :
+          $id = isset($_GET[$this->name]) ?
+                $_GET[$this->name] :
+                ( isset($_POST[$this->name]) ?
+                $_POST[$this->name] :
                 "") ;
         break;
         case "cookie":
-          $id = isset($HTTP_COOKIE_VARS[$this->name]) ?
-                $HTTP_COOKIE_VARS[$this->name] : "";
+          $id = isset($_COOKIE[$this->name]) ?
+                $_COOKIE[$this->name] : "";
         break;
         default:
           die("This has not been coded yet.");
@@ -135,10 +134,10 @@ class Session {
         }
 
         // Remove session ID info from QUERY String - it is in cookie
-        if ( isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]) ) {
-          $HTTP_SERVER_VARS["QUERY_STRING"] = ereg_replace(
+        if ( isset($_SERVER["QUERY_STRING"]) && ("" != $_SERVER["QUERY_STRING"]) ) {
+          $_SERVER["QUERY_STRING"] = ereg_replace(
             "(^|&)".quotemeta(urlencode($this->name))."=(.)*(&|$)", ## subst *any* preexistent sess 
-            "\\1", $HTTP_SERVER_VARS["QUERY_STRING"]);
+            "\\1", $_SERVER["QUERY_STRING"]);
         }
       break;
       case "get":
@@ -151,11 +150,11 @@ class Session {
           SetCookie($this->name, $id, time()+$this->lifetime*60, "/", $this->cookie_domain);
         }
 
-        if ( isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]) ) {
-          $HTTP_SERVER_VARS["QUERY_STRING"] = ereg_replace(
+        if ( isset($_SERVER["QUERY_STRING"]) && ("" != $_SERVER["QUERY_STRING"]) ) {
+          $_SERVER["QUERY_STRING"] = ereg_replace(
 #            "(^|&)".quotemeta(urlencode($this->name))."=".$id."(&|$)",
             "(^|&)".quotemeta(urlencode($this->name))."=(.)*(&|$)", ## subst *any* preexistent sess 
-            "\\1", $HTTP_SERVER_VARS["QUERY_STRING"]);
+            "\\1", $_SERVER["QUERY_STRING"]);
         }
       break;
       default:
@@ -170,13 +169,12 @@ class Session {
   ## Stop using the current session id (unset cookie, ...) and
   ## abandon a session.
   function put_id() {
-    global $HTTP_COOKIE_VARS;
 
     switch ($this->mode) {
       case "cookie":
         $this->name = $this->cookiename == "" ? $this->classname : $this->cookiename;
         SetCookie($this->name, "", 0, "/", $this->cookie_domain);
-        $HTTP_COOKIE_VARS[$this->name] = "";
+        $_COOKIE[$this->name] = "";
       break;
 
       default:
@@ -230,11 +228,10 @@ class Session {
   }
 
   function self_url() {
-    global $HTTP_SERVER_VARS;
 
-    return $this->url($HTTP_SERVER_VARS["PHP_SELF"] . 
-      ((isset($HTTP_SERVER_VARS["QUERY_STRING"]) && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]))
-        ? "?" . $HTTP_SERVER_VARS["QUERY_STRING"] : ""));
+    return $this->url($_SERVER["PHP_SELF"] . 
+      ((isset($_SERVER["QUERY_STRING"]) && ("" != $_SERVER["QUERY_STRING"]))
+        ? "?" . $_SERVER["QUERY_STRING"] : ""));
   }
 
   function pself_url() {
@@ -247,10 +244,9 @@ class Session {
   }
 
   function add_query($qarray) {
-    global $HTTP_SERVER_VARS;
 
-    if ((isset($HTTP_SERVER_VARS["QUERY_STRING"]) 
-      && ("" != $HTTP_SERVER_VARS["QUERY_STRING"]))
+    if ((isset($_SERVER["QUERY_STRING"]) 
+      && ("" != $_SERVER["QUERY_STRING"]))
       || ($this->mode == "get")) {
       $sep_char = "&";
     } else {
@@ -365,15 +361,15 @@ class Session {
   ## Variable precedence functions
   ##
   function reimport_get_vars() {
-    $this->reimport_any_vars("HTTP_GET_VARS");
+    $this->reimport_any_vars("_GET");
   }
 
   function reimport_post_vars() {
-    $this->reimport_any_vars("HTTP_POST_VARS");
+    $this->reimport_any_vars("_POST");
   }
 
   function reimport_cookie_vars() {
-    $this->reimport_any_vars("HTTP_COOKIE_VARS");
+    $this->reimport_any_vars("_COOKIE");
   }
 
   function reimport_any_vars($arrayname) {
@@ -404,13 +400,11 @@ class Session {
   }
 
   function release_token($sid = "") {
-    global $HTTP_COOKIE_VARS, $HTTP_POST_VARS, $HTTP_GET_VARS,
-           $HTTP_SERVER_VARS;
     # set the  mode for this run
     if ( isset($this->fallback_mode)
       && ("get" == $this->fallback_mode)
       && ("cookie" == $this->mode)
-      && (! isset($HTTP_COOKIE_VARS[$this->name])) ) {
+      && (! isset($_COOKIE[$this->name])) ) {
       $this->mode = $this->fallback_mode;
       }
 
@@ -419,8 +413,8 @@ class Session {
       $this->get_id($sid);
       if ($this->newid)
         {
-        if ( isset($HTTP_SERVER_VARS["HTTPS"]) 
-           && $HTTP_SERVER_VARS["HTTPS"] == 'on' ) {
+        if ( isset($_SERVER["HTTPS"]) 
+           && $_SERVER["HTTPS"] == 'on' ) {
            ## You will need to fix suexec as well, if you 
            ## use Apache and CGI PHP
              $PROTOCOL = 'https';
@@ -430,7 +424,7 @@ class Session {
         $this->freeze();
         header("Status: 302 Moved Temporarily");
         header("Location: " . $PROTOCOL . "://" .
-        $HTTP_SERVER_VARS["HTTP_HOST"] . $this->self_url());
+        $_SERVER["HTTP_HOST"] . $this->self_url());
         exit;
         }
     }
