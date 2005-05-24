@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_lang.php,v 1.3 2005/05/20 09:15:18 kozlik Exp $
+ * $Id: config_lang.php,v 1.4 2005/05/24 09:34:26 kozlik Exp $
  */
 
 /**
@@ -33,6 +33,8 @@
  * For Russian, we put 1251 first, because MSIE does not accept 866
  * and users would not see anything.
  */
+
+global $available_languages;
 
 $available_languages = array(
 //    'cs-utf-8'     => array('cs|czech', 'czech-utf-8', 'cs'),
