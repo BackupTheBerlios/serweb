@@ -6,6 +6,8 @@ require(SMARTY_DIR.'Smarty.class.php');
 class Smarty_Serweb extends Smarty {
 
 	function Smarty_Serweb() {
+		global $config;
+	
 		// Class Constructor. These automatically get set with each new instance.
 		$this->Smarty();
 
