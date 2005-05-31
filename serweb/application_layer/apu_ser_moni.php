@@ -3,7 +3,7 @@
  * Application unit server monitoring
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_ser_moni.php,v 1.1 2005/04/28 15:13:06 kozlik Exp $
+ * @version   $Id: apu_ser_moni.php,v 1.2 2005/05/31 19:01:21 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -85,46 +85,46 @@ class apu_ser_moni extends apu_base_class{
 
 		//generate html of stats to associative array
 		
-		if (isset($this->values['ts_current']))     $this->values_html['ts_current']     = sm_get_value ($lang_str['ser_moni_current'], $lang_str['ser_moni_average'], $this->values['ts_current']);
-		if (isset($this->values['ts_waiting']))     $this->values_html['ts_waiting']     = sm_get_value ($lang_str['ser_moni_waiting_cur'], $lang_str['ser_moni_waiting_avg'], $this->values['ts_waiting']);
-		if (isset($this->values['ts_total']))       $this->values_html['ts_total']       = sm_get_value ($lang_str['ser_moni_total_cur'], $lang_str['ser_moni_total_avg'], $this->values['ts_total']);
-		if (isset($this->values['ts_total_local'])) $this->values_html['ts_total_local'] = sm_get_value ($lang_str['ser_moni_local_cur'], $lang_str['ser_moni_local_avg'], $this->values['ts_total_local']);
-		if (isset($this->values['ts_replied']))     $this->values_html['ts_replied']     = sm_get_value ($lang_str['ser_moni_replies_cur'], $lang_str['ser_moni_replies_avg'], $this->values['ts_replied']);
+		if (isset($this->values['ts_current']))     $this->values_html['ts_current']     = $this->sm_get_value ($lang_str['ser_moni_current'], $lang_str['ser_moni_average'], $this->values['ts_current']);
+		if (isset($this->values['ts_waiting']))     $this->values_html['ts_waiting']     = $this->sm_get_value ($lang_str['ser_moni_waiting_cur'], $lang_str['ser_moni_waiting_avg'], $this->values['ts_waiting']);
+		if (isset($this->values['ts_total']))       $this->values_html['ts_total']       = $this->sm_get_value ($lang_str['ser_moni_total_cur'], $lang_str['ser_moni_total_avg'], $this->values['ts_total']);
+		if (isset($this->values['ts_total_local'])) $this->values_html['ts_total_local'] = $this->sm_get_value ($lang_str['ser_moni_local_cur'], $lang_str['ser_moni_local_avg'], $this->values['ts_total_local']);
+		if (isset($this->values['ts_replied']))     $this->values_html['ts_replied']     = $this->sm_get_value ($lang_str['ser_moni_replies_cur'], $lang_str['ser_moni_replies_avg'], $this->values['ts_replied']);
 		
-		if (isset($this->values['ts_6xx'])) $this->values_html['ts_6xx'] = sm_get_value ("6xx ".$lang_str['ser_moni_current'], "6xx ".$lang_str['ser_moni_average'], $this->values['ts_6xx']);
-		if (isset($this->values['ts_5xx'])) $this->values_html['ts_5xx'] = sm_get_value ("5xx ".$lang_str['ser_moni_current'], "5xx ".$lang_str['ser_moni_average'], $this->values['ts_5xx']);
-		if (isset($this->values['ts_4xx'])) $this->values_html['ts_4xx'] = sm_get_value ("4xx ".$lang_str['ser_moni_current'], "4xx ".$lang_str['ser_moni_average'], $this->values['ts_4xx']);
-		if (isset($this->values['ts_3xx'])) $this->values_html['ts_3xx'] = sm_get_value ("3xx ".$lang_str['ser_moni_current'], "3xx ".$lang_str['ser_moni_average'], $this->values['ts_3xx']);
-		if (isset($this->values['ts_2xx'])) $this->values_html['ts_2xx'] = sm_get_value ("2xx ".$lang_str['ser_moni_current'], "2xx ".$lang_str['ser_moni_average'], $this->values['ts_2xx']);
+		if (isset($this->values['ts_6xx'])) $this->values_html['ts_6xx'] = $this->sm_get_value ("6xx ".$lang_str['ser_moni_current'], "6xx ".$lang_str['ser_moni_average'], $this->values['ts_6xx']);
+		if (isset($this->values['ts_5xx'])) $this->values_html['ts_5xx'] = $this->sm_get_value ("5xx ".$lang_str['ser_moni_current'], "5xx ".$lang_str['ser_moni_average'], $this->values['ts_5xx']);
+		if (isset($this->values['ts_4xx'])) $this->values_html['ts_4xx'] = $this->sm_get_value ("4xx ".$lang_str['ser_moni_current'], "4xx ".$lang_str['ser_moni_average'], $this->values['ts_4xx']);
+		if (isset($this->values['ts_3xx'])) $this->values_html['ts_3xx'] = $this->sm_get_value ("3xx ".$lang_str['ser_moni_current'], "3xx ".$lang_str['ser_moni_average'], $this->values['ts_3xx']);
+		if (isset($this->values['ts_2xx'])) $this->values_html['ts_2xx'] = $this->sm_get_value ("2xx ".$lang_str['ser_moni_current'], "2xx ".$lang_str['ser_moni_average'], $this->values['ts_2xx']);
 		
-		if (isset($this->values['sl_200'])) $this->values_html['sl_200'] = sm_get_value ("200 ".$lang_str['ser_moni_current'], "200 ".$lang_str['ser_moni_average'], $this->values['sl_200']);
-		if (isset($this->values['sl_202'])) $this->values_html['sl_202'] = sm_get_value ("202 ".$lang_str['ser_moni_current'], "202 ".$lang_str['ser_moni_average'], $this->values['sl_202']);
-		if (isset($this->values['sl_2xx'])) $this->values_html['sl_2xx'] = sm_get_value ("2xx ".$lang_str['ser_moni_current'], "2xx ".$lang_str['ser_moni_average'], $this->values['sl_2xx']);
+		if (isset($this->values['sl_200'])) $this->values_html['sl_200'] = $this->sm_get_value ("200 ".$lang_str['ser_moni_current'], "200 ".$lang_str['ser_moni_average'], $this->values['sl_200']);
+		if (isset($this->values['sl_202'])) $this->values_html['sl_202'] = $this->sm_get_value ("202 ".$lang_str['ser_moni_current'], "202 ".$lang_str['ser_moni_average'], $this->values['sl_202']);
+		if (isset($this->values['sl_2xx'])) $this->values_html['sl_2xx'] = $this->sm_get_value ("2xx ".$lang_str['ser_moni_current'], "2xx ".$lang_str['ser_moni_average'], $this->values['sl_2xx']);
 		                                                                                                                                                        
-		if (isset($this->values['sl_300'])) $this->values_html['sl_300'] = sm_get_value ("300 ".$lang_str['ser_moni_current'], "300 ".$lang_str['ser_moni_average'], $this->values['sl_300']);
-		if (isset($this->values['sl_301'])) $this->values_html['sl_301'] = sm_get_value ("301 ".$lang_str['ser_moni_current'], "301 ".$lang_str['ser_moni_average'], $this->values['sl_301']);
-		if (isset($this->values['sl_302'])) $this->values_html['sl_302'] = sm_get_value ("302 ".$lang_str['ser_moni_current'], "302 ".$lang_str['ser_moni_average'], $this->values['sl_302']);
-		if (isset($this->values['sl_3xx'])) $this->values_html['sl_3xx'] = sm_get_value ("3xx ".$lang_str['ser_moni_current'], "3xx ".$lang_str['ser_moni_average'], $this->values['sl_3xx']);
+		if (isset($this->values['sl_300'])) $this->values_html['sl_300'] = $this->sm_get_value ("300 ".$lang_str['ser_moni_current'], "300 ".$lang_str['ser_moni_average'], $this->values['sl_300']);
+		if (isset($this->values['sl_301'])) $this->values_html['sl_301'] = $this->sm_get_value ("301 ".$lang_str['ser_moni_current'], "301 ".$lang_str['ser_moni_average'], $this->values['sl_301']);
+		if (isset($this->values['sl_302'])) $this->values_html['sl_302'] = $this->sm_get_value ("302 ".$lang_str['ser_moni_current'], "302 ".$lang_str['ser_moni_average'], $this->values['sl_302']);
+		if (isset($this->values['sl_3xx'])) $this->values_html['sl_3xx'] = $this->sm_get_value ("3xx ".$lang_str['ser_moni_current'], "3xx ".$lang_str['ser_moni_average'], $this->values['sl_3xx']);
 		                                                                                                                                                        
-		if (isset($this->values['sl_400'])) $this->values_html['sl_400'] = sm_get_value ("400 ".$lang_str['ser_moni_current'], "400 ".$lang_str['ser_moni_average'], $this->values['sl_400']);
-		if (isset($this->values['sl_401'])) $this->values_html['sl_401'] = sm_get_value ("401 ".$lang_str['ser_moni_current'], "401 ".$lang_str['ser_moni_average'], $this->values['sl_401']);
-		if (isset($this->values['sl_403'])) $this->values_html['sl_403'] = sm_get_value ("403 ".$lang_str['ser_moni_current'], "403 ".$lang_str['ser_moni_average'], $this->values['sl_403']);
-		if (isset($this->values['sl_404'])) $this->values_html['sl_404'] = sm_get_value ("404 ".$lang_str['ser_moni_current'], "404 ".$lang_str['ser_moni_average'], $this->values['sl_404']);
-		if (isset($this->values['sl_407'])) $this->values_html['sl_407'] = sm_get_value ("407 ".$lang_str['ser_moni_current'], "407 ".$lang_str['ser_moni_average'], $this->values['sl_407']);
-		if (isset($this->values['sl_408'])) $this->values_html['sl_408'] = sm_get_value ("408 ".$lang_str['ser_moni_current'], "408 ".$lang_str['ser_moni_average'], $this->values['sl_408']);
-		if (isset($this->values['sl_483'])) $this->values_html['sl_483'] = sm_get_value ("483 ".$lang_str['ser_moni_current'], "483 ".$lang_str['ser_moni_average'], $this->values['sl_483']);
-		if (isset($this->values['sl_4xx'])) $this->values_html['sl_4xx'] = sm_get_value ("4xx ".$lang_str['ser_moni_current'], "4xx ".$lang_str['ser_moni_average'], $this->values['sl_4xx']);
+		if (isset($this->values['sl_400'])) $this->values_html['sl_400'] = $this->sm_get_value ("400 ".$lang_str['ser_moni_current'], "400 ".$lang_str['ser_moni_average'], $this->values['sl_400']);
+		if (isset($this->values['sl_401'])) $this->values_html['sl_401'] = $this->sm_get_value ("401 ".$lang_str['ser_moni_current'], "401 ".$lang_str['ser_moni_average'], $this->values['sl_401']);
+		if (isset($this->values['sl_403'])) $this->values_html['sl_403'] = $this->sm_get_value ("403 ".$lang_str['ser_moni_current'], "403 ".$lang_str['ser_moni_average'], $this->values['sl_403']);
+		if (isset($this->values['sl_404'])) $this->values_html['sl_404'] = $this->sm_get_value ("404 ".$lang_str['ser_moni_current'], "404 ".$lang_str['ser_moni_average'], $this->values['sl_404']);
+		if (isset($this->values['sl_407'])) $this->values_html['sl_407'] = $this->sm_get_value ("407 ".$lang_str['ser_moni_current'], "407 ".$lang_str['ser_moni_average'], $this->values['sl_407']);
+		if (isset($this->values['sl_408'])) $this->values_html['sl_408'] = $this->sm_get_value ("408 ".$lang_str['ser_moni_current'], "408 ".$lang_str['ser_moni_average'], $this->values['sl_408']);
+		if (isset($this->values['sl_483'])) $this->values_html['sl_483'] = $this->sm_get_value ("483 ".$lang_str['ser_moni_current'], "483 ".$lang_str['ser_moni_average'], $this->values['sl_483']);
+		if (isset($this->values['sl_4xx'])) $this->values_html['sl_4xx'] = $this->sm_get_value ("4xx ".$lang_str['ser_moni_current'], "4xx ".$lang_str['ser_moni_average'], $this->values['sl_4xx']);
 		                                                                                                                                                        
-		if (isset($this->values['sl_500'])) $this->values_html['sl_500'] = sm_get_value ("500 ".$lang_str['ser_moni_current'], "500 ".$lang_str['ser_moni_average'], $this->values['sl_500']);
-		if (isset($this->values['sl_5xx'])) $this->values_html['sl_5xx'] = sm_get_value ("5xx ".$lang_str['ser_moni_current'], "5xx ".$lang_str['ser_moni_average'], $this->values['sl_5xx']);
+		if (isset($this->values['sl_500'])) $this->values_html['sl_500'] = $this->sm_get_value ("500 ".$lang_str['ser_moni_current'], "500 ".$lang_str['ser_moni_average'], $this->values['sl_500']);
+		if (isset($this->values['sl_5xx'])) $this->values_html['sl_5xx'] = $this->sm_get_value ("5xx ".$lang_str['ser_moni_current'], "5xx ".$lang_str['ser_moni_average'], $this->values['sl_5xx']);
 		
-		if (isset($this->values['sl_6xx'])) $this->values_html['sl_6xx'] = sm_get_value ("6xx ".$lang_str['ser_moni_current'], "6xx ".$lang_str['ser_moni_average'], $this->values['sl_6xx']);
+		if (isset($this->values['sl_6xx'])) $this->values_html['sl_6xx'] = $this->sm_get_value ("6xx ".$lang_str['ser_moni_current'], "6xx ".$lang_str['ser_moni_average'], $this->values['sl_6xx']);
 		
-		if (isset($this->values['sl_xxx'])) $this->values_html['sl_xxx'] = sm_get_value ("xxx ".$lang_str['ser_moni_current'], "xxx ".$lang_str['ser_moni_average'], $this->values['sl_xxx']);
+		if (isset($this->values['sl_xxx'])) $this->values_html['sl_xxx'] = $this->sm_get_value ("xxx ".$lang_str['ser_moni_current'], "xxx ".$lang_str['ser_moni_average'], $this->values['sl_xxx']);
 		
 		foreach($this->ul_params as $row){
-			if (isset($this->values['ul_'.$row.'_reg']))  $this->values_html['ul_'.$row.'_reg'] = sm_get_value ($lang_str['ser_moni_registered_cur'], $lang_str['ser_moni_registered_avg'], $this->values['ul_'.$row.'_reg']);
-			if (isset($this->values['ul_'.$row.'_exp']))  $this->values_html['ul_'.$row.'_exp'] = sm_get_value ($lang_str['ser_moni_expired_cur'], $lang_str['ser_moni_expired_avg'], $this->values['ul_'.$row.'_exp']);
+			if (isset($this->values['ul_'.$row.'_reg']))  $this->values_html['ul_'.$row.'_reg'] = $this->sm_get_value ($lang_str['ser_moni_registered_cur'], $lang_str['ser_moni_registered_avg'], $this->values['ul_'.$row.'_reg']);
+			if (isset($this->values['ul_'.$row.'_exp']))  $this->values_html['ul_'.$row.'_exp'] = $this->sm_get_value ($lang_str['ser_moni_expired_cur'], $lang_str['ser_moni_expired_avg'], $this->values['ul_'.$row.'_exp']);
 		}
 
 
@@ -198,8 +198,8 @@ class apu_ser_moni extends apu_base_class{
 		$val_i=$value->mv;
 		$val_a_i=$value->ad;
 		
-		sm_corect_bounds($min, $max);
-		sm_corect_bounds($min_i, $max_i);
+		$this->sm_corect_bounds($min, $max);
+		$this->sm_corect_bounds($min_i, $max_i);
 		
 		$out=
 		'<div class="swSMOneStat">
@@ -209,15 +209,15 @@ class apu_ser_moni extends apu_base_class{
 			<span class="swSMStatMinVal"><em>&lt;</em>'.$min.'</span><em>;</em><span class="swSMStatMaxVal">'.$max.'<em>&gt;</em></span><br/>
 			<span class="swSMStatValueI">'.$val_i.'</span>
 			<span class="swSMStatMinValI"><em>&lt;</em>'.$min_i.'</span><em>;</em><span class="swSMStatMaxValI">'.$max_i.'<em>&gt;</em></span><br />
-			<span class="swSMbar">'.sm_get_bar($val, $min, $max, "cur").'</span>		
-			<span class="swSMbarI">'.sm_get_bar($val_i, $min_i, $max_i, "cur").'</span>		
+			<span class="swSMbar">'.$this->sm_get_bar($val, $min, $max, "cur").'</span>		
+			<span class="swSMbarI">'.$this->sm_get_bar($val_i, $min_i, $max_i, "cur").'</span>		
 			</div>
 			<div class="swSMValA">
 			<strong>'.$name_a.'</strong><br />
 			<span class="swSMStatValue">'.$val_a.'</span><br />
 			<span class="swSMStatValueI">'.$val_a_i.'</span>
-			<span class="swSMbar">'.sm_get_bar($val_a, $min, $max, "avg").'</span>		
-			<span class="swSMbarI">'.sm_get_bar($val_a_i, $min_i, $max_i, "avg").'</span>		
+			<span class="swSMbar">'.$this->sm_get_bar($val_a, $min, $max, "avg").'</span>		
+			<span class="swSMbarI">'.$this->sm_get_bar($val_a_i, $min_i, $max_i, "avg").'</span>		
 			</div>
 			<hr>
 		</div>';
