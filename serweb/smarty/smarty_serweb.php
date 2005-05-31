@@ -11,9 +11,15 @@ class Smarty_Serweb extends Smarty {
 
 		//set smarty directories
 		$this->template_dir = SMARTY_DIR.'../templates/';
-		$this->compile_dir =  SMARTY_DIR.'../templates/templates_c/';
 		$this->config_dir =   SMARTY_DIR.'../templates/configs/';
 		$this->cache_dir =    SMARTY_DIR.'../templates/cache/';
+
+		if (!empty($config->smarty_compile_dir)){
+			$this->compile_dir =  $config->smarty_compile_dir;
+		}
+		else{
+			$this->compile_dir =  SMARTY_DIR.'../templates/templates_c/';
+		}
 
 	}
 
