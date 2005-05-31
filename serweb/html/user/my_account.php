@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.4 2005/05/20 17:10:20 kozlik Exp $
+ * $Id: my_account.php,v 1.5 2005/05/31 13:06:31 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -35,6 +35,10 @@ if ($config->usr_pref_forward_to_voicemail) $up_attributes[] = $config->usr_pref
 if ($config->status_vibility)    			$up_attributes[] = $config->status_vibility;
 
 $usr_pref->set_opt('attributes', $up_attributes);
+
+$pd->set_opt('change_pass', $config->allow_change_password);
+$pd->set_opt('change_email', $config->allow_change_email);
+
 
 
 //create copy of some options from config in order to sensitive options will not accessible via templates
