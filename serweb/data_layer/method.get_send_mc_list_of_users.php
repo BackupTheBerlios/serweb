@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_send_mc_list_of_users.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_send_mc_list_of_users.php,v 1.2 2005/05/31 19:36:35 kozlik Exp $
  */
 
 class CData_Layer_get_send_mc_list_of_users {
@@ -17,7 +17,7 @@ class CData_Layer_get_send_mc_list_of_users {
 						" on s.uuid=p.uuid and p.attribute='".$config->up_send_daily_missed_calls."'";
 		}
 		else{
-			$q="select s.username, s.domain, s.phplib as uuid, s.email_address, p.value ".
+			$q="select s.username, s.domain, s.phplib_id as uuid, s.email_address, p.value ".
 				"from ".$config->data_sql->table_subscriber." s left outer join ".$config->data_sql->table_user_preferences." p ".
 						" on s.username=p.username and s.domain=p.domain and p.attribute='".$config->up_send_daily_missed_calls."'";
 		}
