@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.4 2005/04/26 14:34:26 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.5 2005/05/31 13:04:40 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {
@@ -51,13 +51,16 @@ class CData_Layer_get_usrloc {
 			"\n";				
 	
 			$fifo_out=write2fifo($fifo_cmd, $err, $status);
-			if ($err or !$fifo_out) {
-				$errors=array_merge($errors, $err); // No!
+
+			if ($err) {
+				$errors=array_merge($errors, $err); 
 				return false;
 			}
-			if (!$fifo_out) return false;
 	
-			if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {$errors[]=$status; return false; }
+			if (substr($status,0,1)!="2" and substr($status,0,3)!="404") {
+				$errors[]=$status; 
+				return false; 
+			}
 
 			$out=array();	
 			$out_arr=explode("\n", $fifo_out);
