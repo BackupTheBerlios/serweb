@@ -3,7 +3,7 @@
  * Application unit send_im 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_send_im.php,v 1.1 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_send_im.php,v 1.2 2005/05/31 17:33:07 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -185,6 +185,11 @@ class apu_send_im extends apu_base_class{
 	/* validate html form */
 	function validate_form(&$errors){
 		global $lang_str;
+
+		// don't display mesage in case that form was submited
+		if (isset($_GET['m_im_sended']) and $_GET['m_im_sended'] == $this->opt['instance_id']) 
+			unset($_GET['m_im_sended']);
+
 		if (false === parent::validate_form($errors)) return false;
 
 		if (!$_POST['im_instant_message']){
