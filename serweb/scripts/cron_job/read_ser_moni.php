@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: read_ser_moni.php,v 1.1 2004/10/12 14:42:20 kozlik Exp $
+ * $Id: read_ser_moni.php,v 1.2 2005/06/02 11:27:19 kozlik Exp $
  */
 
 require "prepend.php";
@@ -262,5 +262,5 @@ do{
 
 } while (false);
 
-if (is_array($errors)) foreach($errors as $val) echo "error: ".$val."\n";
+if (is_array($errors)) foreach($errors as $val) sw_log("server monitoring - ".$val, PEAR_LOG_ERR);
 ?>
