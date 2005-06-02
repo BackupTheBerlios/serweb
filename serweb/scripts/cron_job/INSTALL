@@ -1,0 +1,56 @@
+$Id: INSTALL,v 1.1 2005/06/02 11:29:58 kozlik Exp $
+
+Installation of cron jobs used by seweb 
+=======================================
+
+All cronjobs require to have installed php cli (command line interface). To
+know if you have php cli installed type 'php -v' at command line.
+
+Type command 'crontab -e' at command line which open your crontab file and 
+insert lines mentioned below.
+
+There are currently these cronjobs. You needn't install all of them. Install
+only that features which you whish.
+
+
+
+
+
+Send daily missed calls
+-----------------------
+Short description:
+    Send missed calls of subscribers to their email addresses.
+
+At what time to run?
+    Daily a while after midnight
+
+Crontab line: 
+    5 0 * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/send_daily_missed_calls.php
+
+Extra require:
+    * imap support for PHP (package php4-imap or see php manual: 
+                            http://www.php.net/manual/en/ref.imap.php)
+    * create user preference of same name as value of 
+      $config->up_send_daily_missed_calls is and of type boolean. If you
+	  installed script scripts/sql/usr_preferences.sql, this user preference is 
+	  already created.
+	 
+
+
+
+
+	 
+Server monitoring
+-----------------
+Short description:
+    Read SER statistics, store them in DB and create source data for 
+    server monitoring tab in admin interface
+    
+At what time to run?
+    Each minute
+
+Crontab line: 
+   * * * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/read_ser_moni.php
+
+Extra require:
+   * nothing
