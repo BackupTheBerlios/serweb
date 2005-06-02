@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.19 2005/05/24 09:35:23 kozlik Exp $
+$Id: INSTALL,v 1.20 2005/06/02 11:30:32 kozlik Exp $
 
 serweb - Installation
 
@@ -29,42 +29,64 @@ serweb - Installation
   --------------
 
     [1] Untar the distribution (be sure to untar the subdirectories)
-    [2] It is recommended to be only 'html' directory in the HTML tree 
-	    on your server. And leave other directories unaccessible
+
+    [2] It is recommended to be only 'html' directory accessible throught the 
+	    HTML tree on your server. And leave other directories unaccessible
 	    throught http. Do it by creating alias in your httpd.conf,
 		for example:
 	    	Alias /serweb "/your/serweb/dir/html" 
+
     [3] Open the file config_data_layer.php in your favourite editor and change
         the values for db_type, db_host, db_name, db_user and db_pass
+
     [4] Open the file config_paths.php and change value for root_path
         to fit directory in html tree where serweb is installed. Also change
         other values to fit your environment.
+
     [5] Open the file config.php and see if you wish to change some setting.
         If you want enable loging, make sure that you have installed
-        PEAR package LOG
-    [6] In subdirectory /your/serweb/dir/html/domains create
-        directories named as domains you are hosting a copy to them content
+        PEAR package LOG. Make sure that your web server daemon has rights
+        to write to file /var/log/serweb. Type these two commands:
+            touch /var/log/serweb
+            chown www-data /var/log/serweb
+
+    [6] Make sure that your web server daemon has rights to write and create 
+        files in directory /your/serweb/dir/templates/templates_c. Command:
+            chown www-data /your/serweb/dir/templates/templates_c
+    
+    [7] Follow this step if you are hosting more domains and wnat have 
+	    diferent setting for some domain:
+	    In subdirectory /your/serweb/dir/html/domains create
+        directories named as domains you are hosting and copy to them content
         of subdir /your/serweb/dir/html/domains/_default. In this
         directories is files for domain depended configuration and layout
         of pages for each domain. If some file isn't found in directory
         /your/serweb/dir/html/domains/<domain> is used the one from
         /your/serweb/dir/html/domains/_default
-    [7] Open config.php for each domain
+
+        Open config.php for each domain
         (/your/serweb/dir/html/domains/*/config.php) and change setting
         to fit your environment. Don't forget change email address
         (mail_header_from, infomail, regmail) and contact address of instant
         messages (web_contact)
+
     [8] make sure your php.ini includes the following values:
             - short_open_tag = on
+            
     [9] Open the file http://<your-host>/<your-install-dir>/admin/index.php
         or http://<your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
         The initial username is 'admin' with password 'heslo'. Its strongly
         recomended to change this password after first login.
-    [10] If everything work, is now time to create cronjobs. Type command
-        'crontab -e' at command line which open your crontab file and insert
-        lines said in file
-        /your/serweb/dir/scripts/cron_job/cronentry
+        
+        Notice: Do not replace '<your-host>' in url mentioned above by
+        'localhost'. Use real name of the server instead of 'localhost'!!
+		It is because serweb obtail domainname from this url and the domainname
+		is also used for user authentication.
+        
+    [10] If everything work, is now time to create cronjobs. Follow instructions 
+	    in file scripts/cron_job/INSTALL
+	    
 
   User preferences (AVP)
   ----------------------
@@ -121,13 +143,11 @@ serweb - Installation
   A: Enable loging in serweb ($config->enable_loging = true) and
      see log file. For more verbosity set log level to PEAR_LOG_DEBUG
 
-  Q: All my login attempts lead to the previous screen without any
-     kind of progress or error indication.
-  A: Really make sure that register_globals is turned on in your
-     php.ini. (Also make sure that you are changing the php.ini in
-     use by your server and register_globals is not turned off
-     somewhere else in the configuration file.)
-     For check real php configuration create file phpinfo.php
-     in html root with content <? phpinfo(); ?> and look to it by
-     browser. There is _all_ informations about php.
+  Q: When new user is subscribing throught serweb, still same alias is assigned
+     to him.
+  A: Make sure that usrloc module in ser is useing domain. Look up for this 
+     option in your ser.cfg:
      
+	 modparam("usrloc|registrar", "use_domain", 1)
+ 
+ 
