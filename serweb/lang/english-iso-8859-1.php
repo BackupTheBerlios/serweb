@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.15 2005/05/20 10:07:42 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.16 2005/06/02 11:33:54 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -249,6 +249,8 @@ $lang_str['fe_invalid_value_of_attribute'] = 	"invalid value of attribute";
 $lang_str['fe_is_not_number'] = 				"is not valid number";
 $lang_str['fe_is_not_sip_adr'] = 				"is not valid sip address";
 $lang_str['no_attributes_defined'] = 			"No attributes defined by admin";
+
+$lang_str['ff_send_daily_missed_calls'] =		"send me daily my missed calls to my email";
 
 /* ------------------------------------------------------------*/
 /*      speed dial                                             */

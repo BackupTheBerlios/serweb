@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: user_preferences.php,v 1.3 2005/06/02 11:33:54 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -18,6 +18,7 @@ $usr_pref=new apu_user_preferences();
 //description of attributes
 $att_desc['fw_voicemail'] = $lang_str['ff_fwd_to_voicemail'];
 $att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
+$att_desc['send_daily_missed_calls'] = $lang_str['ff_send_daily_missed_calls'];
 $usr_pref->set_opt('att_description', $att_desc);
 
 
