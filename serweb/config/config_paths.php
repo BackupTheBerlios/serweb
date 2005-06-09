@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.4 2005/04/21 15:32:34 kozlik Exp $
+ * $Id: config_paths.php,v 1.5 2005/06/09 08:15:44 janakj Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
@@ -28,6 +28,8 @@
 		$config->admin_pages_path =	$config->root_path."admin/";
 		$config->domains_path =		$config->root_path."domains/";
 
+		/* Directory where smarty stores compiled templates */
+		$config->smarty_compile_dir = "/tmp/";
 
 		/* spool directory with voicemail messages */
 		$config->voice_silo_dir = '/var/spool/voicemail/'; 
