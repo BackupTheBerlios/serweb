@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.57 2005/05/03 09:05:15 kozlik Exp $
+ * @version   $Id: functions.php,v 1.58 2005/06/10 16:10:42 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -301,6 +301,16 @@ function send_mail($to, $subj, $text, $headers = ""){
 function write2fifo($fifo_cmd, &$errors, &$status){
 	global $config;
 
+	/* check if fifo is running */
+	if (!file_exists($config->fifo_server) or 
+	     filetype($config->fifo_server)!="fifo"){
+
+		log_errors(PEAR::raiseError("FIFO not running or bad path to it", NULL, NULL, 
+		           NULL, "fifo path:".$config->fifo_server), $errors);
+		return false;
+	}
+
+
 	/* open fifo now */
 	$fifo_handle=fopen( $config->fifo_server, "w" );
 	if (!$fifo_handle) {
@@ -329,13 +339,17 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 		$errors[]="sorry -- reply fifo opening error"; return false;
 	}
 
-	$status=fgetS($fp,256);
+	$status=fgets($fp,256);
 	if (!$status) {
 	    @unlink($config->reply_fifo_path);
 		$errors[]="sorry -- reply fifo reading error"; return false;
 	}
 	
-	$rd=fread($fp,8192);
+
+	$rd="";
+	while (!feof($fp)) {
+		$rd.=fread($fp,8192);
+	}
 	@unlink($config->reply_fifo_path);
 	
 	return $rd;
