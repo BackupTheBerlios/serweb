@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.5 2005/06/10 14:55:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -107,10 +107,11 @@ class apu_forgotten_password extends apu_base_class{
 		global $config, $data, $sess_lang, $lang_str, $pre_uid, $pre_uid_expires;
 
 		$confirm=md5(uniqid(rand()));
-
-		if (false === $proxy = $data->get_home_proxy($errors))
-			return false;
-
+	
+		if (isModuleLoaded('xxl')){
+			if (false === $proxy = $data->get_home_proxy($errors))
+				return false;
+		}
 
 		if (false === $data->update_sip_user_confirmation(
 						new Cserweb_auth($this->sip_user['uuid'],
@@ -159,7 +160,7 @@ class apu_forgotten_password extends apu_base_class{
 		if (isset($_GET['pr'])){
 			$proxy = base64_decode($_GET['pr']);
 			
-			if ($proxy){
+			if ($proxy and isModuleLoaded('xxl')){
 				if (false === $data->set_home_proxy($proxy)) return false;
 			} 
 		}
