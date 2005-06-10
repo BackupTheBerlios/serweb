@@ -3,7 +3,7 @@
  * Application unit usrloc
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_usrloc.php,v 1.3 2005/05/20 10:07:42 kozlik Exp $
+ * @version   $Id: apu_usrloc.php,v 1.4 2005/06/10 16:06:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -220,7 +220,7 @@ class apu_usrloc extends apu_base_class{
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
 		             'after'       => '',
-					 'before'      => 'sip_address_completion(ul_sip_address);');
+					 'before'      => 'sip_address_completion(f.ul_sip_address);');
 	}
 }
 
