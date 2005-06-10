@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.6 2005/04/21 15:09:46 kozlik Exp $
+$Id: application_layer_cz,v 1.7 2005/06/10 13:12:02 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -50,7 +50,41 @@ set_opt($opt_name, $val)
 		name atribut <form> tagu
 	'form_submit'			(assoc), default: array('type' => 'hidden')
 		asocitivni pole popisujici submit element, detaily viz. metoda add_submit_to_form()
-		
+
+set_timezone()
+	nastavi casovou zonu na zonu prave prihlaseneho uzivatele. Melo by se volat
+	ve skriptech ktere zobrazuji casove udaje
+	
+set_onload_js($js)
+	Spusti javascript $js po nacteni stranky
+	
+do_not_check_perms_of_admin()
+	vypne kontrolu jestli admin ma opravneni zobrazit/menit nastaveni daneho 
+	uzivatele
+
+change_url_for_reload($url)
+	nastavi url na ktere bude uzivatel presmerovan (defaultne se presmerovava 
+	sam na sebe)
+	
+add_reqired_javascript($file)
+	prida soubor s javascriptem ktery se ma natahnout
+	
+assign_form_name($form_name, &$apu)
+	vytvori novy sdileny html formular se jmenem $form_name (pokud jeste 
+	neexistuje)	a prida do nej APU $apu
+	
+set_name_of_smarty_var_for_form($form_name, $smarty_var)
+	nastavi jmeno promenne ve smarty pro html formular $form_name
+			
+set_submit_for_form($form_name, $submit)
+	nastavi jaky se ma pouzit element pro odeslani html formulare. Podrobnosti 
+	viz. soubor oohform_ext.php
+
+set_apu_for_msgs($form_name, $apu_id)
+	pokud jeden html formular sdili nekolik apu, tato funkce nastavuje ktera
+	apu zobrazi zpravu o ulozeni hodnot	
+
+
 start()
 	spousti zpracovani stranky
 	
@@ -139,6 +173,10 @@ validate_form(&$errors)
 	pokud potomek pretezuje tuto metodu nemel by zapomenout zavolat ji ze 
 	sveho rodice: parent::validate_form($errors)
 	
+form_invalid()
+	funkce je volana v pripade ze formular obsahuje neplatna data (funkce
+	validate_form() vratila false)
+	
 was_form_submited()
 	vraci boolean - zjistuje jestli byl odeslan formular od teto APU
 	
@@ -211,7 +249,7 @@ Prubeh zpracovani APU page_controlerem
  * Application unit my_apu 
  * 
  * @author    Karel Kozlik
- * @version   $Id: application_layer_cz,v 1.6 2005/04/21 15:09:46 kozlik Exp $
+ * @version   $Id: application_layer_cz,v 1.7 2005/06/10 13:12:02 kozlik Exp $
  * @package   serweb
  */ 
 
