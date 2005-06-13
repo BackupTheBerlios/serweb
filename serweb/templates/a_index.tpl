@@ -1,7 +1,15 @@
 {* Smarty *}
-{* $Id: a_index.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: a_index.tpl,v 1.4 2005/06/13 13:15:37 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{if ($form_ls)}
+	<div align="right">
+		{$form_ls.start}
+		Language: {$form_ls.ls_language} {$form_ls.okey}
+		{$form_ls.finish}
+	</div>
+{/if}
 
 <div class="swLPTitle">
 <h1>{$domain} {$lang_str.adminlogin}</h1>

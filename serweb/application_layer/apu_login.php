@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.6 2005/05/06 15:50:20 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.7 2005/06/13 13:15:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -180,8 +180,7 @@ class apu_login extends apu_base_class{
 		}
 		else $this->action=array('action'=>"default",
 			                     'validate_form'=>false,
-								 'reload'=>false,
-								 'alone'=>true);
+								 'reload'=>false);
 	}
 	
 	/* create html form */

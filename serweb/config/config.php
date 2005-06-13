@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.18 2005/05/31 13:05:21 kozlik Exp $
+ * $Id: config.php,v 1.19 2005/06/13 13:15:37 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -91,6 +91,14 @@
 // currently disabled in serweb:	$config->show_voice_silo=false; /* show voice messages in silo too */
 	$config->enable_dial_voicemail=false;
 	$config->setup_jabber_account=false;
+
+
+	/* allow change language of serweb on login page
+	   this require enable more lanaguages in config_lang.php and do 
+	   the translations
+	*/
+	$config->allow_change_language_on_login = false;
+
 
 	$config->jserver = "localhost";   		# Jabber server hostname
 	$config->jport = "5222";     			# Jabber server port

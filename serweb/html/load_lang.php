@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.5 2005/05/24 12:22:37 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.6 2005/06/13 13:15:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -60,7 +60,7 @@ if (!$sess->is_registered("sess_lang")) $sess->register("sess_lang");
 
 // Lang forced
 if (!empty($config->lang['lang'])) {
-    $sess_lang = $config->lang;
+    $sess_lang = $config->lang['lang'];
 }
 
 // If '$sess_lang' is defined, ensure this is a valid translation
@@ -90,6 +90,7 @@ if (empty($sess_lang)) {
 	$sess_lang = $config->lang['default_lang'];
 }
 
+/** load strings of selected language */
 require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$sess_lang][1].".php");
 
 internationalize_tabs();
