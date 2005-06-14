@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.8 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.9 2005/06/14 09:17:19 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -120,19 +120,19 @@ class apu_user_preferences extends apu_base_class{
 		global $sess;
 	
 		$out=array();
-		$i=0;
 		foreach($attributes as $att){
+			$name_of_attribute = &$this->attributes[$att]->att_name;
+		
 			if ($this->attributes[$att]->att_rich_type == "sip_adr") 
-					$js_on_subm.="sip_address_completion(f.".$this->attributes[$att]->att_name.");";
+					$js_on_subm.="sip_address_completion(f.".$name_of_attribute.");";
 
 			// set description of attributes
-			if (isset($this->opt['att_description'][$this->attributes[$att]->att_name]))
-				$out[$i]['att_desc'] = $this->opt['att_description'][$this->attributes[$att]->att_name];
+			if (isset($this->opt['att_description'][$name_of_attribute]))
+				$out[$name_of_attribute]['att_desc'] = $this->opt['att_description'][$name_of_attribute];
 			else
-				$out[$i]['att_desc'] = $this->attributes[$att]->att_name;
+				$out[$name_of_attribute]['att_desc'] = $name_of_attribute;
 	
-			$out[$i]['att_name'] = $this->attributes[$att]->att_name;
-			$i++;
+			$out[$name_of_attribute]['att_name'] = $name_of_attribute;
 		}
 		
 		return $out;
