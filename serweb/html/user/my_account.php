@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.5 2005/05/31 13:06:31 kozlik Exp $
+ * $Id: my_account.php,v 1.6 2005/06/14 09:19:09 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -30,11 +30,28 @@ $acl		= new apu_acl();
 $ul			= new apu_usrloc();
 
 
+/*
+ * If you want display only some attributes from user preferences at this tab
+ * uncoment block below and choose attributes to display
+ */
+ 
+/*
 $up_attributes = array();
-if ($config->usr_pref_forward_to_voicemail) $up_attributes[] = $config->usr_pref_forward_to_voicemail;
-if ($config->status_vibility)    			$up_attributes[] = $config->status_vibility;
+$up_attributes[] = "fw_voicemail";
+$up_attributes[] = "sw_user_status_visible";
 
 $usr_pref->set_opt('attributes', $up_attributes);
+*/
+
+
+
+/* set descriptions of user preferences */
+$att_desc['fw_voicemail'] = $lang_str['ff_fwd_to_voicemail'];
+$att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
+$att_desc['send_daily_missed_calls'] = $lang_str['ff_send_daily_missed_calls'];
+$usr_pref->set_opt('att_description', $att_desc);
+
+
 
 $pd->set_opt('change_pass', $config->allow_change_password);
 $pd->set_opt('change_email', $config->allow_change_email);
@@ -45,9 +62,6 @@ $pd->set_opt('change_email', $config->allow_change_email);
 $cfg=new stdclass();
 $cfg->enable_dial_voicemail            = $config->enable_dial_voicemail;
 $cfg->enable_test_firewall             = $config->enable_test_firewall;
-$cfg->enable_status_visibility         = $config->status_vibility;
-$cfg->enable_forward_to_voicemail      = $config->usr_pref_forward_to_voicemail;
-
 
 
 $smarty->assign_by_ref("config", $cfg);
@@ -59,15 +73,12 @@ $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvr
 $controler->add_reqired_javascript("functions.js");
 
 
+
 $controler->add_apu($pd);
 $controler->add_apu($aliases);
 $controler->add_apu($acl);
 $controler->add_apu($ul);
-/* add $usr_pref only if need it */
-if (!empty($up_attributes)){
-	$controler->add_apu($usr_pref);
-}
-
+$controler->add_apu($usr_pref);
 
 
 $controler->assign_form_name("pd", $pd);

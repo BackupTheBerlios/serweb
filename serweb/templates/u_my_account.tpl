@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.7 2005/05/20 17:10:20 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.8 2005/06/14 09:19:09 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -17,28 +17,6 @@
 	</tr>
 {/if}
 	<tr>
-	<td><label for="pd_allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
-	<td>{$form_pd.pd_allow_find}</td>
-	</tr>
-
-{if $config->enable_forward_to_voicemail}
-	{assign var='f_element' value=$config->enable_forward_to_voicemail}
-	<tr>
-	<td><label for="{$config->enable_forward_to_voicemail}">{$lang_str.ff_fwd_to_voicemail}:</label></td>
-	<td>{$form_pd.$f_element}</td>
-	</tr>
-{/if}
-
-{if $config->enable_status_visibility}
-	{assign var='f_element' value=$config->enable_status_visibility}
-	<tr>
-	<td><label for="{$config->enable_status_visibility}">{$lang_str.ff_status_visibility}:</label></td>
-	<td>{$form_pd.$f_element}</td>
-	</tr>
-{/if}
-
-
-	<tr>
 	<td><label for="pd_timezone">{$lang_str.ff_your_timezone}:</label></td>
 	<td>{$form_pd.pd_timezone}</td>
 	</tr>
@@ -52,6 +30,39 @@
 	<td>{$form_pd.pd_passwd_r}</td>
 	</tr>
 {/if}
+	<tr>
+	<td><label for="pd_allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
+	<td>{$form_pd.pd_allow_find}</td>
+	</tr>
+
+{foreach from=$attributes item='row' name='attributes'}
+	{assign var='f_element' value=$row.att_name}
+	<tr>
+	<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
+	<td>{$form_pd.$f_element}</td>
+	</tr>
+{/foreach}
+
+
+{* If you need display only one specific user preference, see the examples 
+ * below. In first case is displayed user preference of name NAME_OF_UP.
+ * In second case is displayed user preference which name is stored in
+ * variable $name_of_user_pref_1
+ *}
+ 
+{*
+	<tr>
+	<td><label for="NAME_OF_UP">{$attributes.NAME_OF_UP.att_desc}:</label></td>
+	<td>{$form_pd.NAME_OF_UP}</td>
+	</tr>
+
+	{assign var='f_element' value=$name_of_user_pref_1}
+	<tr>
+	<td><label for="{$name_of_user_pref_1}">{$attributes.$name_of_user_pref_1.att_desc}:</label></td>
+	<td>{$form_pd.$f_element}</td>
+	</tr>
+*}
+
 	<tr>
 	<td>&nbsp;</td>
 	<td align="right">{$form_pd.okey}</td>

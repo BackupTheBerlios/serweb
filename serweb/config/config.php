@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.19 2005/06/13 13:15:37 kozlik Exp $
+ * $Id: config.php,v 1.20 2005/06/14 09:19:09 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -68,7 +68,7 @@
 	$config->user_tabs[]=new Ctab (true, "tab_send_im", "send_im.php");							// $lang_str['tab_send_im']
 	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");				// $lang_str['tab_message_store']
 	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");					// $lang_str['tab_voicemail']
-	$config->user_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
+	$config->user_tabs[]=new Ctab (false, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
 	$config->user_tabs[]=new Ctab (false, "tab_speed_dial", "speed_dial.php");					// $lang_str['tab_speed_dial']
 	$config->user_tabs[]=new Ctab (false, "tab_caller_screening", "caller_screening.php");		// $lang_str['tab_caller_screening']
 
@@ -121,10 +121,7 @@
 	$config->allow_change_password=true;
 
 	/* name of attribute in user preference for set visibility status of user
-	   set to false if status of users should be always visible
-
-	   Set this option to some non empty value also enable checkbox
-	   'Allow others to see whether or not I'm online' on my account tab.
+	   set to empty string if status of users should be always visible
 
 	   When enabling this option you should create user preference named
 	   same as this option of type boolean. Use tab user preferences in
@@ -134,24 +131,6 @@
 	   $config->status_vibility = "sw_user_status_visible";
 	 */
 	$config->status_vibility = "";
-
-
-	/* name of attribute in user preference for enable forwarding to voicemail
-	   set to false if don't want use forwarding to voicemail
-	   
-	   If you want enable this, you should mention this in SER routing script.
-
-	   Set this option to some non empty value also enable checkbox
-	   'forward to voicemail' on my account tab.
-
-	   When enabling this option you should create user preference named
-	   same as this option of type boolean. Use tab user preferences in
-	   admin interface for create it or install script scripts/sql/usr_preferences.sql
-	   into database.
-	   
-	   $config->usr_pref_forward_to_voicemail = "fw_voicemail";
-	*/		
-	$config->usr_pref_forward_to_voicemail = "";
 
 
 	/* ------------------------------------------------------------*/
