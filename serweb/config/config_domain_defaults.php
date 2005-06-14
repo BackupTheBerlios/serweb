@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.5 2005/05/20 10:08:20 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.6 2005/06/14 07:44:01 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -65,7 +65,7 @@
 	$config->lang['default_lang'] = 'en-utf-8';
 	
 	/* Force: always use this language - must be defined in
-	   lang/config_lang.php
+	   config/config_lang.php
 
 	   $config->lang['lang'] = 'en-iso-8859-1';
 	*/

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_lang.php,v 1.5 2005/06/13 13:15:37 kozlik Exp $
+ * $Id: config_lang.php,v 1.1 2005/06/14 07:44:01 kozlik Exp $
  */
 
 /**

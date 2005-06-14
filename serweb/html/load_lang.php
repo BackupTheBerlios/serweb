@@ -3,11 +3,11 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.6 2005/06/13 13:15:37 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.7 2005/06/14 07:44:01 kozlik Exp $
  * @package   serweb
  */ 
 
-require_once($_SERWEB["serwebdir"]."../lang/config_lang.php");
+require_once($_SERWEB["serwebdir"]."../config/config_lang.php");
 
 /**
  *	Change names of tabs according to $lang_str

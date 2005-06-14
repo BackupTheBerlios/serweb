@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.10 2005/05/20 10:08:20 kozlik Exp $
+ * $Id: config.php,v 1.11 2005/06/14 07:44:01 kozlik Exp $
  */
 
 		/* ------------------------------------------------------------*/
@@ -53,7 +53,7 @@
 		$this->lang['default_lang'] = 'en-utf-8';
 		
 		/* Force: always use this language - must be defined in
-		   lang/config_lang.php
+		   config/config_lang.php
 
 		   $this->lang['lang'] = 'en-iso-8859-1';
 		*/
