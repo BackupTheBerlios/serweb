@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.20 2005/06/14 09:19:09 kozlik Exp $
+ * $Id: config.php,v 1.21 2005/06/14 09:20:43 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -69,7 +69,7 @@
 	$config->user_tabs[]=new Ctab (true, "tab_message_store", "message_store.php");				// $lang_str['tab_message_store']
 	$config->user_tabs[]=new Ctab (false, "tab_voicemail", "voicemail.php");					// $lang_str['tab_voicemail']
 	$config->user_tabs[]=new Ctab (false, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
-	$config->user_tabs[]=new Ctab (false, "tab_speed_dial", "speed_dial.php");					// $lang_str['tab_speed_dial']
+	$config->user_tabs[]=new Ctab (true, "tab_speed_dial", "speed_dial.php");					// $lang_str['tab_speed_dial']
 	$config->user_tabs[]=new Ctab (false, "tab_caller_screening", "caller_screening.php");		// $lang_str['tab_caller_screening']
 
 	/* admin tabs definitions
