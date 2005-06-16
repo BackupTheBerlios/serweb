@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.3 2005/06/16 08:52:55 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.4 2005/06/16 09:01:19 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -14,7 +14,14 @@
  *	   
  *	Configuration:
  *	--------------
+ *	'use_charset_only'			(string) default: 'utf-8'
+ *	 display only languages that exist in specified charset. Set to empty to
+ *	 show all language setting form $avaiable_languages array
  *	
+ *	'save_to_avp'				(string) default: ''
+ *	 name of AVP to which should be saved selected language. If is empty, 
+ *	 language isn't saved into AVP, only into session variable
+ *
  *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *								
