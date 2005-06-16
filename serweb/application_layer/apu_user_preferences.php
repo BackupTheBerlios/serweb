@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.9 2005/06/14 09:17:19 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.10 2005/06/16 08:53:50 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -10,7 +10,8 @@
    
    Configuration:
    --------------
-   'attributes'					(array) with which attributes should object work - default with all atributes
+   'attributes'					(array) with which attributes object should work - default with all atributes
+   'exclude_attributes'			(array) with which attributes object shouldn't work - default empty
    'error_messages'				associative array - keys are names of attributes, values are custom error messages
                                 displayed when value of attribute is wrong
    'validate_funct'				name of validate function
@@ -86,6 +87,7 @@ class apu_user_preferences extends apu_base_class{
 
 		/* with which attributes we will work, if this array is ampty we will work with all defined attributes */		
 		$this->opt['attributes'] = array();	
+		$this->opt['exclude_attributes'] = array();	
 
 		$this->opt['att_description'] = array();	
 
@@ -205,6 +207,10 @@ class apu_user_preferences extends apu_base_class{
 					}
 				}
 			}
+
+			//except unwanted arguments
+			$this->opt['attributes'] = array_diff($this->opt['attributes'], $this->opt['exclude_attributes']);
+
 
 			// get attributes values
 			if (false === $data->get_att_values($this->user_id, $this->attributes, $errors)) break;
