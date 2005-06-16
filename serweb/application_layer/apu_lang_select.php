@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.2 2005/06/13 13:15:37 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.3 2005/06/16 08:52:55 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -45,7 +45,7 @@ class apu_lang_select extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array();
+		return array('update_attribute_of_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -60,6 +60,7 @@ class apu_lang_select extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['use_charset_only'] =	'utf-8';
+		$this->opt['save_to_avp']      =	'';
 
 
 		/* message on attributes update */
@@ -78,9 +79,17 @@ class apu_lang_select extends apu_base_class{
 	}
 
 	function action_update(&$errors){
-		global $sess_lang;
+		global $sess_lang, $available_languages, $data;
 		
 		$sess_lang = $_POST['ls_language'];
+
+		if ($this->opt['save_to_avp']){
+			if (false === $data->update_attribute_of_user($this->user_id, 
+															$this->opt['save_to_avp'], 
+															$available_languages[$sess_lang][2], 
+															$errors)) 
+					return false;
+		}
 
 		return array("m_ls_updated=".RawURLEncode($this->opt['instance_id']));
 	}
