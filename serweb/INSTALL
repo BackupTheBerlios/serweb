@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.20 2005/06/02 11:30:32 kozlik Exp $
+$Id: INSTALL,v 1.21 2005/06/23 09:37:58 kozlik Exp $
 
 serweb - Installation
 
@@ -50,11 +50,7 @@ serweb - Installation
             touch /var/log/serweb
             chown www-data /var/log/serweb
 
-    [6] Make sure that your web server daemon has rights to write and create 
-        files in directory /your/serweb/dir/templates/templates_c. Command:
-            chown www-data /your/serweb/dir/templates/templates_c
-    
-    [7] Follow this step if you are hosting more domains and wnat have 
+    [6] Follow this step if you are hosting more domains and wnat have 
 	    diferent setting for some domain:
 	    In subdirectory /your/serweb/dir/html/domains create
         directories named as domains you are hosting and copy to them content
@@ -70,10 +66,10 @@ serweb - Installation
         (mail_header_from, infomail, regmail) and contact address of instant
         messages (web_contact)
 
-    [8] make sure your php.ini includes the following values:
+    [7] make sure your php.ini includes the following values:
             - short_open_tag = on
             
-    [9] Open the file http://<your-host>/<your-install-dir>/admin/index.php
+    [8] Open the file http://<your-host>/<your-install-dir>/admin/index.php
         or http://<your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
         The initial username is 'admin' with password 'heslo'. Its strongly
@@ -84,7 +80,7 @@ serweb - Installation
 		It is because serweb obtail domainname from this url and the domainname
 		is also used for user authentication.
         
-    [10] If everything work, is now time to create cronjobs. Follow instructions 
+    [9] If everything work, is now time to create cronjobs. Follow instructions 
 	    in file scripts/cron_job/INSTALL
 	    
 

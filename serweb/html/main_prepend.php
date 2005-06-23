@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.10 2005/05/04 15:33:10 kozlik Exp $
+ * $Id: main_prepend.php,v 1.11 2005/06/23 09:37:58 kozlik Exp $
  */ 
 
 //require class defintions
@@ -50,13 +50,12 @@ else{
 	$serwebLog  = NULL;
 }
 
+//require functions
+require_once ($_SERWEB["serwebdir"] . "functions.php");
+
 //require Smarty and create Smarty instance
 require($_SERWEB["serwebdir"]."../smarty/smarty_serweb.php");
 $smarty = new Smarty_Serweb;
-
-
-//require functions
-require_once ($_SERWEB["serwebdir"] . "functions.php");
 
 //require data layer for work with data store and create instance of it
 require_once ($_SERWEB["serwebdir"] . "data_layer.php");

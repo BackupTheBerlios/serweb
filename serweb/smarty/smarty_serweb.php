@@ -17,6 +17,7 @@ class Smarty_Serweb extends Smarty {
 		$this->cache_dir =    SMARTY_DIR.'../templates/cache/';
 
 		if (!empty($config->smarty_compile_dir)){
+			RecursiveMkdir($config->smarty_compile_dir);
 			$this->compile_dir =  $config->smarty_compile_dir;
 		}
 		else{
