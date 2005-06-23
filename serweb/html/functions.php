@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.58 2005/06/10 16:10:42 kozlik Exp $
+ * @version   $Id: functions.php,v 1.59 2005/06/23 09:33:56 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -932,6 +932,26 @@ function my_aggregate_methods(&$object, $class_name){
 
 	die("Function aggregate_methods() doesn't exists. Try install Classkit extension. http://pecl.php.net/package/classkit");
 
+}
+
+
+/**
+ *	This function creates the specified directory using mkdir().  Note
+ *	that the recursive feature on mkdir() is added in PHP5 so I need
+ *	to create it myself for PHP4
+ *
+ *	@param string $path
+ *	@param int    $mode  	The mode is 0777 by default, which means the widest possible access. For more information on modes, read the details on the chmod() page.
+ */
+function RecursiveMkdir($path, $mode=0777){
+
+	if (!file_exists($path)){
+		// The directory doesn't exist.  Recurse, passing in the parent
+		// directory so that it gets created.
+		RecursiveMkdir(dirname($path));
+		
+		mkdir($path, $mode);
+	}
 }
 
 ?>
