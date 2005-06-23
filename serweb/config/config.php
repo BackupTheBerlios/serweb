@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.21 2005/06/14 09:20:43 kozlik Exp $
+ * $Id: config.php,v 1.22 2005/06/23 09:29:59 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -160,7 +160,7 @@
 		  PEAR_LOG_WARNING, PEAR_LOG_NOTICE, PEAR_LOG_INFO, PEAR_LOG_DEBUG
 	   see http://www.indelible.org/pear/Log/guide.php#log-levels for more info
 	 */
-	$config->log_level = "PEAR_LOG_INFO";
+	$config->log_level = "PEAR_LOG_WARNING";
 	
 	/* If location where error was occured should be returned to user
 	   html output, set this to true
