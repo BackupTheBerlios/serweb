@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.22 2005/06/23 09:29:59 kozlik Exp $
+ * $Id: config.php,v 1.23 2005/06/27 09:15:08 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -29,7 +29,7 @@
 	   instead of 'username' only
 	*/
 
-	$config->fully_qualified_name_on_login=false;
+	$config->fully_qualified_name_on_login=true;
 	
 	/* the default timezone which is assigned to user on register
 	*/		
