@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.21 2005/06/23 09:37:58 kozlik Exp $
+$Id: INSTALL,v 1.22 2005/06/30 08:36:44 kozlik Exp $
 
 serweb - Installation
 
@@ -129,7 +129,9 @@ serweb - Installation
   A: Do install php-mysql. Really.
 
   Q: I can't login into serweb by default username and password
-  A: Probably your domain do not match. Serweb obtain domain 
+  A: Please make sure your username, password and domain values are exactly 
+     matched the values of your subscriber table.
+       Probably your domain do not match. Serweb obtain domain 
      from http request by default. So the host in http request should
      be same as you are useing in SER. For details see file
      config/set_domain.php. You can also disable automatic obtaining
