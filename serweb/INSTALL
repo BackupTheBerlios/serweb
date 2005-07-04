@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.22 2005/06/30 08:36:44 kozlik Exp $
+$Id: INSTALL,v 1.23 2005/07/04 16:08:51 kozlik Exp $
 
 serweb - Installation
 
@@ -148,4 +148,11 @@ serweb - Installation
      
 	 modparam("usrloc|registrar", "use_domain", 1)
  
+  Q: How can I install PECL package Classkit?
+  A: Type this command on command line:
+       
+	   pear install -f classkit
+       
+     If you get an error mentioning "phpize" you also might need to install 
+	 some dev package, like php4-dev on Debian systems.
  
