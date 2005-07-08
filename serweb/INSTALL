@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.23 2005/07/04 16:08:51 kozlik Exp $
+$Id: INSTALL,v 1.24 2005/07/08 11:18:20 kozlik Exp $
 
 serweb - Installation
 
@@ -22,7 +22,7 @@ serweb - Installation
   	and it is on your own risc. This version is developer and may be unstable and buggy.
   	For get latest stable version use this command:
   	
-  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -d serweb -r rel_0_8_12 iptel
+  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_0_9_2 serweb
 
 
   Quick Install:
