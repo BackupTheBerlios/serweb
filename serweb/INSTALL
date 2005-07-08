@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.24 2005/07/08 11:18:20 kozlik Exp $
+$Id: INSTALL,v 1.25 2005/07/08 15:12:06 kozlik Exp $
 
 serweb - Installation
 
@@ -156,3 +156,12 @@ serweb - Installation
      If you get an error mentioning "phpize" you also might need to install 
 	 some dev package, like php4-dev on Debian systems.
  
+  Q: Package Classkit is installed, but serweb still reporting:
+     Function aggregate_methods() doesn't exists. Try install Classkit extension. 
+  A: Check if module is loaded in PHP. Check your php.ini for something like 
+     this:
+       extension=classkit.so
+  
+  Q: Serweb show error "DB Error: syntax error" on 'missed call' and 
+     'accounting' tab.
+  A: Check version of your mysql. Serweb need mysql >= 4.0
