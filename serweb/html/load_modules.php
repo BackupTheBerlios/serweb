@@ -31,5 +31,32 @@
 		unset($loaded_modules);
 	}
 	
+
+	/**
+	 * Include additional module
+	 * This function should be called before function init_modules()
+	 *
+	 * @param string $mod	name of module
+	 * @access private
+	 */	
+	function include_module($mod){
+		global $_SERWEB, $config;
+
+		$config->modules[$mod] = true;
+
+		if (file_exists($_SERWEB["serwebdir"] . "../modules/".$mod."/include.php")){ 
+			require_once ($_SERWEB["serwebdir"] . "../modules/".$mod."/include.php");
+		}
+	}
+	
+
+	/* enable required modules */	
+	if (isset($_require_modules)){
+		foreach((array) $_require_modules as $m){
+			$config->modules[$m] = true;
+		}
+	}
+	
+	
 	include_modules();
 ?>

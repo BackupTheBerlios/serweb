@@ -21,3 +21,12 @@
 	* fixed few bugs
 	* changed default charset to utf-8
 	* finished rewriting application logic to use application layer
+	
+2005-06-28
+	* serweb 0.9.3 released
+	
+2005-07-08
+	* support for creating modules
+	* authentication functions moved to auth module
+	* created modules auth_radius and auth_ldap
+

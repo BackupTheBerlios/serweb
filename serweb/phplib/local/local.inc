@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.4 2005/05/24 09:35:23 kozlik Exp $
+ * $Id: local.inc,v 1.5 2005/07/08 11:06:52 kozlik Exp $
  */
 
 
@@ -145,26 +145,26 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 	function auth_preauth()	{
 	    global $sess, $errors;
-	    global $pre_uid, $pre_uid_expires;
-		global $serweb_auth, $config, $data_auth;
+	    global $pre_uid, $pre_uname, $pre_domain, $pre_uid_expires;
+		global $serweb_auth, $config;
 
 		if (!$sess->is_registered('serweb_auth')) $sess->register('serweb_auth');
 		
 		if (isset($pre_uid)){
 			$sess->unregister('pre_uid');
+			$sess->unregister('pre_uname');
+			$sess->unregister('pre_domain');
 			$sess->unregister('pre_uid_expires');
 
 			if (isset($pre_uid_expires) and $pre_uid_expires<time()) return false;
 
-			if (false === $usr = $data_auth->get_user_dom_from_uid($pre_uid, $errors)) return false;
-
 			$uid=$pre_uid;
-			$serweb_auth=new Cserweb_auth($uid, $usr['uname'], $usr['domain']);
-			$this->auth["uname"] = $usr['uname'];
+			$serweb_auth=new Cserweb_auth($pre_uid, $pre_uname, $pre_domain);
+			$this->auth["uname"] = $pre_uname;
 
 			$this->check_for_privileges($serweb_auth);
 
-			return $uid;
+			return $pre_uid;
 		}
 		else{
 			return false;

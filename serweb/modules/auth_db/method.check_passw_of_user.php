@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.3 2005/05/19 17:54:54 kozlik Exp $
+ * $Id: method.check_passw_of_user.php,v 1.1 2005/07/08 11:06:52 kozlik Exp $
  */
 
 class CData_Layer_check_passw_of_user {

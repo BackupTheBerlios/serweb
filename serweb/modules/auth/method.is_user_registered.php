@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_user_registered.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.is_user_registered.php,v 1.1 2005/07/08 11:06:52 kozlik Exp $
  */
 
 class CData_Layer_is_user_registered {

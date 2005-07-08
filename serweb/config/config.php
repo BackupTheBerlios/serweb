@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.23 2005/06/27 09:15:08 kozlik Exp $
+ * $Id: config.php,v 1.24 2005/07/08 11:06:52 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -20,6 +20,16 @@
 	/* set to true if SERWEB is used for more domains */
 	$config->multidomain = false;
 
+
+	/* ------------------------------------------------------------*/
+	/* serweb modules                                              */
+	/* ------------------------------------------------------------*/
+
+	/* modules which are loaded on every page
+	*/
+	
+	$config->modules = array();
+	$config->modules['auth'] = true;
 		
 	/* ------------------------------------------------------------*/
 	/* serweb appearance                                           */
@@ -374,6 +384,5 @@
 	$config->send_daily_missed_calls_mail_subj="your missed calls";
 	$config->send_daily_missed_calls_mail_body=" Hello, \n".
 			"we are sending your missed calls";
-
-				
+ 				
 ?>

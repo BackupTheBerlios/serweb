@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.7 2005/06/13 13:15:37 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.1 2005/07/08 11:06:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -114,7 +114,7 @@ class apu_login extends apu_base_class{
 	}
 
 	function action_login(&$errors){
-		global $data_auth, $lang_str, $sess, $config, $pre_uid;
+		global $data_auth, $lang_str, $sess, $config, $pre_uid, $pre_uname, $pre_domain;
 		if ($sess->is_registered('auth')) $sess->unregister('auth');
 
 		// set cookie only if not doing http redirect because
@@ -135,7 +135,12 @@ class apu_login extends apu_base_class{
 		}
 
 		$sess->register('pre_uid');
-		$pre_uid=$this->user_uuid;
+		$sess->register('pre_uname');
+		$sess->register('pre_domain');
+		
+		$pre_uid    = $this->user_uuid;
+		$pre_uname  = $this->username;
+		$pre_domain = $this->domain;
 		
 		if ($this->opt['redirect_on_first_login']){
 		//check if user exists in subscriber table
