@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.11 2005/06/23 09:37:58 kozlik Exp $
+ * $Id: main_prepend.php,v 1.12 2005/07/18 11:34:06 kozlik Exp $
  */ 
 
 //require class defintions
@@ -48,6 +48,18 @@ if ($config->enable_loging){
 }
 else{
 	$serwebLog  = NULL;
+
+	/* 
+	 * define constants used by logging to avoid errors reported by php
+	 */
+	define('PEAR_LOG_EMERG',    0);     /** System is unusable */
+	define('PEAR_LOG_ALERT',    1);     /** Immediate action required */
+	define('PEAR_LOG_CRIT',     2);     /** Critical conditions */
+	define('PEAR_LOG_ERR',      3);     /** Error conditions */
+	define('PEAR_LOG_WARNING',  4);     /** Warning conditions */
+	define('PEAR_LOG_NOTICE',   5);     /** Normal but significant */
+	define('PEAR_LOG_INFO',     6);     /** Informational */
+	define('PEAR_LOG_DEBUG',    7);     /** Debug-level messages */
 }
 
 //require functions
