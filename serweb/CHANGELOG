@@ -30,3 +30,5 @@
 	* authentication functions moved to auth module
 	* created modules auth_radius and auth_ldap
 
+2005-07-19
+	* apu_speed_dial - added ability to export information about sorting direction to smarty

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.10 2005/05/13 14:29:21 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.11 2005/07/19 09:42:35 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
@@ -82,6 +82,8 @@
    'smarty_sort_to_uri'			name of smarty variable - see below
    'smarty_sort_fname'			name of smarty variable - see below
    'smarty_sort_lname'			name of smarty variable - see below
+   'smarty_sort_by'				name of smarty variable - see below
+   'smarty_sort_dir'			name of smarty variable - see below
    
    
    Exported smarty variables:
@@ -106,6 +108,13 @@
 	opt['smarty_sort_fname']   		(url_sort_fname)
 	opt['smarty_sort_lname']   		(url_sort_lname)
 		contain URL for change sorting
+
+	opt['smarty_sort_by']   		(sort_by)
+		Contain name of collumn by which the output is sorted. Contain one of:
+			"from_uri", "to_uri", "fname", "lname"
+		
+	opt['smarty_sort_desc']   		(sort_desc)
+		True if sorting direction is descending. False otherwise.
 
 */
 
@@ -166,6 +175,10 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['smarty_sort_to_uri'] = 		'url_sort_to_uri';
 		$this->opt['smarty_sort_fname'] = 		'url_sort_fname';
 		$this->opt['smarty_sort_lname'] = 		'url_sort_lname';
+
+		/* Sorting direction */
+		$this->opt['smarty_sort_by'] = 			'sort_by';
+		$this->opt['smarty_sort_desc'] = 		'sort_desc';
 
 		/* name of html form */
 		$this->opt['form_name'] =			'';
@@ -426,7 +439,7 @@ class apu_speed_dial extends apu_base_class{
 
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty, $sess;
+		global $smarty, $sess, $sess_sd_sort, $sess_sd_sort_dir;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
 		$smarty->assign_by_ref($this->opt['smarty_speed_dials'], $this->speed_dials);
@@ -435,6 +448,10 @@ class apu_speed_dial extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_sort_to_uri'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=tu"));
 		$smarty->assign_by_ref($this->opt['smarty_sort_fname'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=fn"));
 		$smarty->assign_by_ref($this->opt['smarty_sort_lname'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&sd_order_by=ln"));
+
+		$smarty->assign_by_ref($this->opt['smarty_sort_by'], $sess_sd_sort);
+		$smarty->assign($this->opt['smarty_sort_desc'], $sess_sd_sort_dir == 'asc' ? false : true);
+
 	}
 	
 	/* return info need to assign html form to smarty */
