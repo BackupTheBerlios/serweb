@@ -1,0 +1,491 @@
+<?
+/*
+ * $Id: czech-iso-8859-2.php,v 1.2 2005/07/21 16:23:03 kozlik Exp $
+ *
+ * Czech translation by Karel Kozlik, july 2005
+ * karel@iptel.org
+ *
+ * Prefixes:
+ * 'fe' - form error
+ * 'ff' - form field
+ * 'msg_*_s' - message short
+ * 'msg_*_l' - message long
+ * 'l' - link
+ * 'th' - table heading
+ * 'err' - error
+ */
+
+$lang_set['charset'] = 			"iso-8859-2";
+$lang_set['date_time_format'] = "d.m.Y H:i";
+$lang_set['date_format'] = 		"d.m.Y";
+$lang_set['time_format'] = 		"H:i";
+
+
+/* ------------------------------------------------------------*/
+/*      common messages                                        */
+/* ------------------------------------------------------------*/
+
+$lang_str['user_management'] = 					"U¾ivatelské rozhraní";
+$lang_str['admin_interface'] = 					"Administrátorské rozhraní";
+$lang_str['user'] = 							"u¾ivatel";
+$lang_str['from'] = 							"z";
+$lang_str['no_records'] = 						"®ádné záznamy";
+$lang_str['l_logout'] = 						"Odhlá¹ení";
+$lang_str['l_edit'] = 							"zmìnit";
+$lang_str['l_change'] = 						"zmìnit";
+$lang_str['l_delete'] = 						"smazat";
+$lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
+$lang_str['l_back'] = 							"zpìt";
+$lang_str['status_unknown'] = 					"neznámý";
+$lang_str['status_nonlocal'] = 					"nelokální";
+$lang_str['status_nonexists'] = 				"neexistující";
+$lang_str['status_online'] = 					"on line";
+$lang_str['status_offline'] = 					"off line";
+$lang_str['search_filter'] = 					"filtr";
+$lang_str['showed_users'] = 					"Zobrazení u¾ivatelé";
+$lang_str['no_users_found'] = 					"®ádní u¾ivatelé nenalezeni";
+
+/* ------------------------------------------------------------*/
+/*      error messages                                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_not_valid_email'] =	 			"neplatná emailová adresa";
+$lang_str['fe_not_valid_sip'] = 				"neplatná SIP adresa";
+$lang_str['fe_not_valid_phonenumber'] = 		"neplatné telefonní èíslo";
+$lang_str['fe_not_filled_sip'] = 				"SIP adresu musíte vyplnit";
+$lang_str['fe_passwords_not_match'] =			"hesla si neodpovídají";
+$lang_str['fe_not_filled_username'] = 			"u¾ivatelské jméno musíte vyplnit";
+$lang_str['fe_not_allowed_uri'] = 				"Nepovolená SIP adresa";
+$lang_str['fe_max_entries_reached'] = 			"Dosa¾en maximální povolený poèet polo¾ek";
+
+/* ------------------------------------------------------------*/
+/*      buttons                                                */
+/* ------------------------------------------------------------*/
+
+$lang_str['b_add'] =		 					"Pøidat";
+$lang_str['b_save'] =		 					"Ulo¾it";
+$lang_str['b_submit'] =		 					"Ulo¾it";
+$lang_str['b_forgot_pass_submit'] = 			"Zjistit heslo";
+$lang_str['b_upload_greeting'] =		 		"Nahrát pozdrav";
+$lang_str['b_find'] = 							"Najít";
+$lang_str['b_send'] =		 					"Odeslat";
+$lang_str['b_login'] =		 					"Pøihlásit";
+$lang_str['b_register'] = 						"Registrovat se";
+
+/* ------------------------------------------------------------*/
+/*      tabs                                                   */
+/* ------------------------------------------------------------*/
+
+$lang_str['tab_my_account'] =		 			"mùj úèet";
+$lang_str['tab_phonebook'] =		 			"telefonní seznam";
+$lang_str['tab_missed_calls'] =	 				"zme¹kané hovory";
+$lang_str['tab_accounting'] =	 				"pøehled volání";
+$lang_str['tab_send_im'] =	 					"poslat zprávu";
+$lang_str['tab_message_store'] =	 			"ulo¾ené zprávy";
+$lang_str['tab_voicemail'] =	 				"hlasová schránka";
+$lang_str['tab_user_preferences'] =	 			"nastavení";
+$lang_str['tab_speed_dial'] =	 				"rychlá volba";
+$lang_str['tab_caller_screening'] =	 			"filtrování volajících";
+
+$lang_str['tab_users'] =	 					"u¾ivatelé";
+$lang_str['tab_admin_privileges'] =	 			"oprávnìní správcù";
+$lang_str['tab_ser_moni'] =	 					"monitorování serveru";
+
+/* ------------------------------------------------------------*/
+/*      form fields                                            */
+/* ------------------------------------------------------------*/
+
+$lang_str['ff_first_name'] = 					"jméno";
+$lang_str['ff_last_name'] = 					"pøíjmení";
+$lang_str['ff_sip_address'] = 					"SIP adresa";
+$lang_str['ff_your_timezone'] = 				"èasová zóna";
+$lang_str['ff_username'] = 						"u¾ivatelské jméno";
+$lang_str['ff_email'] = 						"email";
+$lang_str['ff_show_online_only'] = 				"zobraz jenom on-line u¾ivatele";
+
+/* ------------------------------------------------------------*/
+/*      table heading                                          */
+/* ------------------------------------------------------------*/
+
+$lang_str['th_name'] = 							"jméno";
+$lang_str['th_sip_address'] = 					"SIP adresa";
+$lang_str['th_aliases'] = 						"alias";
+$lang_str['th_status'] = 						"stav";
+$lang_str['th_timezone'] = 						"èasová zóna";
+$lang_str['th_calling_subscriber'] = 			"volající";
+$lang_str['th_time'] = 							"èas";
+$lang_str['th_username'] = 						"u¾ivatelské jméno";
+$lang_str['th_email'] = 						"email";
+
+/* ------------------------------------------------------------*/
+/*      login messages                                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['bad_username'] = 					"Chybné u¾ivatelské jméno nebo heslo";
+$lang_str['msg_logout_s'] = 					"Odhlá¹en";
+$lang_str['msg_logout_l'] = 					"Byl jste odhlá¹en. Pro nové pøihlá¹ení vyplòte u¾ivatelské jméno a heslo";
+$lang_str['userlogin'] = 						"pøihlá¹ení u¾ivatele";
+$lang_str['adminlogin'] = 						"pøihlá¹ení administrátora";
+$lang_str['enter_username_and_passw'] = 		"Prosím vyplòte va¹e u¾ivatelské jméno a heslo";
+$lang_str['ff_password'] = 						"heslo";
+$lang_str['l_forgot_passw'] = 					"Zapomìli jste heslo?";
+$lang_str['l_register'] = 						"Registrace!";
+$lang_str['remember_uname'] = 					"Zapamatuj si mé u¾ivatelské jméno na tomto poèítaèi";
+
+/* ------------------------------------------------------------*/
+/*      my account                                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_changes_saved_s'] = 				"Zmìny ulo¾eny";
+$lang_str['msg_changes_saved_l'] = 				"Va¹e zmìny byly ulo¾eny";
+$lang_str['msg_loc_contact_deleted_s'] = 		"Kontakt vymazán";
+$lang_str['msg_loc_contact_deleted_l'] = 		"Kontakt byl vymazán";
+$lang_str['msg_loc_contact_added_s'] = 			"Kontakt pøidán";
+$lang_str['msg_loc_contact_added_l'] = 			"Kontakt byl pøidán";
+$lang_str['ff_your_email'] = 					"vá¹ email";
+$lang_str['ff_fwd_to_voicemail'] = 				"pøesmìrování do hlasové schránky";
+$lang_str['ff_allow_lookup_for_me'] = 			"umo¾nit ostatním vyhledat mojí SIP adresu";
+$lang_str['ff_status_visibility'] = 			"umo¾nit ostatním zjistit zda-li jsem on-line";
+$lang_str['ff_your_password'] = 				"va¹e heslo";
+$lang_str['ff_retype_password'] = 				"heslo pro kontrolu";
+$lang_str['your_aliases'] = 					"va¹e aliasy";
+$lang_str['your_acl'] = 						"volání povoleno do";
+$lang_str['th_contact'] = 						"kontakt";
+$lang_str['th_expires'] = 						"vypr¹í za";
+$lang_str['th_priority'] = 						"priorita";
+$lang_str['th_location'] = 						"umístìní";
+$lang_str['add_new_contact'] = 					"pøidat nový kontakt";
+$lang_str['ff_expires'] = 						"vypr¹í za";
+$lang_str['contact_expire_hour'] = 				"1 hodinu";
+$lang_str['contact_expire_day'] = 				"1 den";
+$lang_str['contact_will_not_expire'] = 			"nikdy";
+$lang_str['acl_err_local_forward'] = 			"lokální pøesmìrování je zakázáno";
+$lang_str['acl_err_gateway_forward'] = 			"pøesmìrování na bránu je zakázáno";
+
+/* ------------------------------------------------------------*/
+/*      phonebook                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_pb_contact_deleted_s'] = 		"Kontakt vymazán";
+$lang_str['msg_pb_contact_deleted_l'] = 		"Kontakt byl vymazán z telefonního seznamu";
+$lang_str['msg_pb_contact_updated_s'] = 		"Kontakt aktualizován";
+$lang_str['msg_pb_contact_updated_l'] = 		"Zmìny byly ulo¾eny";
+$lang_str['msg_pb_contact_added_s'] = 			"Kontakt pøidán";
+$lang_str['msg_pb_contact_added_l'] = 			"Kontakt byl pøidán do telefonního seznamu";
+$lang_str['phonebook_records'] = 				"Zobrazeny kontakty";
+$lang_str['l_find_user'] = 						"Vyhledávání u¾ivatelù";
+
+/* ------------------------------------------------------------*/
+/*      find user                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['find_user'] = 						"Najdi u¾ivatele";
+$lang_str['l_add_to_phonebook'] = 				"pøidej do telefonního seznamu";
+$lang_str['l_back_to_phonebook'] = 				"zpìt do telefonního seznamu";
+$lang_str['found_users'] = 						"U¾ivatelé";
+
+/* ------------------------------------------------------------*/
+/*      missed calls                                           */
+/* ------------------------------------------------------------*/
+
+$lang_str['th_reply_status'] = 					"odpovìï";
+$lang_str['missed_calls'] = 					"zme¹kané hovory";
+$lang_str['no_missed_calls'] = 					"¾ádné zme¹kané hovory";
+
+/* ------------------------------------------------------------*/
+/*      accounting                                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['th_destination'] = 					"volaný";
+$lang_str['th_length_of_call'] = 				"délka hovoru";
+$lang_str['th_hangup'] = 						"zavìsil";
+$lang_str['calls_count'] = 						"Zobrazeny hovory";
+$lang_str['no_calls'] = 						"®ádné hovory";
+$lang_str['msg_calls_deleted_s'] = 				"Hovory vymazány";
+$lang_str['msg_calls_deleted_l'] = 				"Hovory byly úspì¹nì vymazány z databáze";
+
+
+/* ------------------------------------------------------------*/
+/*      send IM                                                */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_no_im'] = 						"nenapsal jste ¾ádnou zprávu";
+$lang_str['fe_im_too_long'] = 					"zpráva je pøíli¹ dlouhá";
+$lang_str['msg_im_send_s'] = 					"Zpráva odeslána";
+$lang_str['msg_im_send_l'] = 					"Zpráva byla uspì¹nì odeslána na adresu";
+$lang_str['max_length_of_im'] = 				"Maximální délka zprávy je";
+$lang_str['sending_message'] = 					"posílám zprávu";
+$lang_str['please_wait'] = 						"prosím èekejte!";
+$lang_str['ff_sip_address_of_recipient'] = 		"SIP adresa pøíjemce";
+$lang_str['ff_text_of_message'] = 				"text zprávy";
+$lang_str['im_remaining'] = 					"Zbývá";
+$lang_str['im_characters'] = 					"znakù";
+
+
+/* ------------------------------------------------------------*/
+/*      message store                                          */
+/* ------------------------------------------------------------*/
+
+$lang_str['instant_messages_store'] = 			"Ulo¾ené textové zprávy";
+$lang_str['voicemail_messages_store'] = 		"Ulo¾ené hlasové zprávy";
+$lang_str['no_stored_instant_messages'] = 		"Nejsou ulo¾eny ¾ádné textové zprávy";
+$lang_str['no_stored_voicemail_messages'] = 	"Nejsou ulo¾eny ¾ádné hlasové zprávy";
+$lang_str['th_subject'] = 						"pøedmìt";
+$lang_str['l_reply'] = 							"odpovìdìt";
+$lang_str['err_can_not_open_message'] = 		"Nelze otevøít zprávu";
+$lang_str['err_voice_msg_not_found'] = 			"Zpráva nenalezena nebo nemáte pøístup k pøeètení zprávy";
+$lang_str['msg_im_deleted_s'] = 				"Zpráva vymazána";
+$lang_str['msg_im_deleted_l'] = 				"Zpráva byla úspì¹nì vymazána";
+
+/* ------------------------------------------------------------*/
+/*      voicemail                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['customize_greetings'] = 				"Pøizpùsobit pozdrav";
+$lang_str['err_can_not_open_greeting'] = 		"Nelze otevøít pozdrav";
+
+/* ------------------------------------------------------------*/
+/*      user preferences                                       */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_invalid_value_of_attribute'] = 	"neplatná hodnota";
+$lang_str['fe_is_not_number'] = 				"není platné èíslo";
+$lang_str['fe_is_not_sip_adr'] = 				"není platná SIP adresa";
+$lang_str['no_attributes_defined'] = 			"®ádné nastavení není povoleno administrátorem";
+
+$lang_str['ff_send_daily_missed_calls'] =		"posílejte mi dennì seznam zme¹kaných hovorù na email";
+
+/* ------------------------------------------------------------*/
+/*      speed dial                                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['th_speed_dial'] = 					"zkrácená volba";
+$lang_str['th_new_uri'] = 						"nová SIP adresa";
+
+
+
+
+/* ------------------------------------------------------------*/
+/*      caller screening                                       */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_caller_screening_deleted_s'] = 	"Adresa vymazána";
+$lang_str['msg_caller_screening_deleted_l'] = 	"Adresa byla vymazána ze seznamu filtrovaných adres";
+$lang_str['msg_caller_screening_updated_s'] = 	"Adresa zmìnìna";
+$lang_str['msg_caller_screening_updated_l'] = 	"Filtrovaná adresa byla zmìnìna";
+$lang_str['msg_caller_screening_added_s'] = 	"Adresa pøidána";
+$lang_str['msg_caller_screening_added_l'] = 	"Adresa byla pøidána do seznamu filtrovaných adres";
+$lang_str['fe_not_caller_uri'] = 				"musíte vyplnit adresu volajícího";
+$lang_str['ff_screening_caller_uri'] = 			"adresa volajícího (regulární výraz)";
+$lang_str['ff_action'] = 						"akce";
+$lang_str['th_caller_uri'] = 					"adresa volajícího";
+$lang_str['th_action'] = 						"akce";
+$lang_str['no_caller_screenings_defined'] = 	"¾ádné filtrování volajících není definováno";
+$lang_str['err_screening_already_exists'] = 	"záznam s touto adresou volajícího u¾ existuje";
+$lang_str['cs_decline'] = 						"odmítnout";
+$lang_str['cs_reply_busy'] = 					"odpovìdìt: jsem zaneprázdnìn";
+$lang_str['cs_fw_to_voicemail'] = 				"pøesmìrovat do hlasové schránky";
+
+
+/* ------------------------------------------------------------*/
+/*      registration                                           */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_not_accepted_terms'] = 			"Nepøijal jste na¹e podmínky a po¾adavky";
+$lang_str['choose_timezone'] = 					"--- prosím vyberte va¹i èasovou zónu ---";
+$lang_str['fe_not_choosed_timezone'] = 			"vyberte va¹i èasovou zónu";
+$lang_str['fe_uname_not_follow_conventions'] = 	"u¾ivatelské jméno neodpovídá doporuèovaným konvencím";
+$lang_str['fe_not_filled_password'] = 			"musíte vyplnit heslo";
+$lang_str['fe_not_filled_your_fname'] = 		"musíte vyplnit køestní jméno";
+$lang_str['fe_not_filled_your_lname'] = 		"musíte vyplnit pøíjmení";
+$lang_str['fe_uname_already_choosen_1'] = 		"Promiòte, u¾ivatelské jméno";
+$lang_str['fe_uname_already_choosen_2'] = 		"u¾ bylo vybráno nìkým jiným. Zkuste nìjaké jiné.";
+$lang_str['err_sending_mail'] = 				"Promiòte, do¹lo k chybì pøi odesílání registraèního emailu.";
+$lang_str['registration_introduction'] = 		"Pro registraci prosím vyplòte formuláø ní¾e a kliknìte na tlaèítko &quot;registrovat&quot; na spodku stránky. Bude vám zaslán email potvrzující registraci. Prosím kontaktujte <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> pokud máte nìjaké otázky ohlednì registrace nebo na¹ich SIP slu¾eb.";
+$lang_str['reg_email_desc'] = 					"Adresa na kterou bude odesláno potvrzení o registraci. (Pokud vyplníte neplatnou adresu, ¾ádné potvrzení nedostanete a úèet vám nebude vytvoøen.)";
+$lang_str['ff_phone'] = 						"telefonní èíslo";
+$lang_str['reg_phone_desc'] = 					"Telefonní èíslo na kterém jste k zasti¾ení.";
+$lang_str['ff_pick_username'] = 				"zvolte si u¾ivatelské jméno";
+$lang_str['reg_username_desc'] = 				"Va¹e SIP adresa bude: u¾ivatelské_jméno@".$config->domain.". U¾ivatelské jméno mù¾e být buï numerické zaèínající '8' (napø., '8910') nebo alfanumerické psáno malými písmeny zaèínající písmenem (napø., john.doe01). Nezapomeòte va¹e u¾ivatelské jméno -- budete ho potøebovat k nastavení va¹eho telefonu!";
+$lang_str['ff_pick_password'] = 				"zvolte si heslo";
+$lang_str['reg_password_desc'] = 				"Nezapmeòte va¹e heslo -- budete ho potøebovat k nastavení va¹eho telefonu!";
+$lang_str['ff_confirm_password'] = 				"heslo znovu pro potvrzení";
+$lang_str['ff_terms_and_conditions'] = 			"podmínky a po¾adavky";
+$lang_str['ff_i_accept'] = 						"souhlasím";
+$lang_str['l_back_to_loginform'] = 				"Zpìt na pøihla¹ovací stránku";
+
+/* ------------------------------------------------------------*/
+/*      registration - finished                                */
+/* ------------------------------------------------------------*/
+
+$lang_str['reg_finish_thanks'] = 				"Dìkujeme za registraci v ".$config->domain;
+$lang_str['reg_finish_app_forwarded'] = 		"Va¹e ¾ádost byla odeslána ke schválení.";
+$lang_str['reg_finish_confirm_msg'] = 			"Oèekávejte potvrzující zprávu v krátké dobì..";
+$lang_str['reg_finish_sip_address'] = 			"Rezervujeme pro Vás tuto SIP adresu:";
+$lang_str['reg_finish_questions'] = 			"Pokud máte nìjaké dotazy neostýchejte se nám napsat";
+$lang_str['reg_finish_infomail'] = 				"email na adresu <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+
+/* ------------------------------------------------------------*/
+/*      registration - confirmation                            */
+/* ------------------------------------------------------------*/
+
+$lang_str['reg_conf_congratulations'] = 		"Gratulujeme! Vá¹ ".$config->domain." úèet je pøipraven!";
+$lang_str['reg_conf_set_up'] = 					"Vá¹ ".$config->domain." úèet je pøipraven!";
+$lang_str['reg_conf_jabber_failed'] = 			"Ale va¹e registrace v Jabber bránì ".$config->domain." selhala.";
+$lang_str['reg_conf_contact_infomail'] = 		"Prosím kontaktujte <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> pro dal¹í pomoc.";
+$lang_str['reg_conf_failed'] = 					"Omlouváme se ale vá¹ pokus o potvrzení selhal.";
+$lang_str['err_reg_conf_not_exists_conf_num'] = "Litujeme. Toto potvrzovací èíslo neexistuje";
+$lang_str['err_reg_conf_already_created'] = 	"Vá¹ úèet ji¾ byl vytvoøen";
+
+/* ------------------------------------------------------------*/
+/*      registration - forgot password                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['forgot_pass_head'] = 				"Zapomìl jste heslo?";
+$lang_str['forgot_pass_introduction'] = 		"Jestli¾e jste zapomìl va¹e heslo, prosím vyplòte ní¾e va¹e heslo. Email obsahující va¹e heslo bude odeslán na emailovou adresu kterou jste zadal pøi registraci!";
+$lang_str['forgot_pass_sended'] = 				"Nové heslo bylo vytvoøeno a odesláno na emailovou adresu kterou jste zadal pøi registraci.";
+$lang_str['msg_pass_conf_sended_s'] = 			"Informace pro pøihlá¹ení odeslány";
+$lang_str['msg_pass_conf_sended_l'] = 			"Informace pro pøihlá¹ení byly odeslány na va¹í emailovou adresu";
+$lang_str['msg_password_sended_s'] = 			"Nové heslo odesláno";
+$lang_str['msg_password_sended_l'] = 			"Nové heslo bylo odesláno na va¹í emailovou adresu";
+$lang_str['err_no_user'] = 						"Litujeme, to u¾ivatelské jméno není registrované!";
+
+/* ------------------------------------------------------------*/
+/*      admin - users management                               */
+/* ------------------------------------------------------------*/
+
+$lang_str['err_admin_can_not_delete_user_1'] = 	"Nemù¾ete vymazat tohoto u¾ivatele";
+$lang_str['err_admin_can_not_delete_user_2'] = 	"tento u¾ivatel potøí do jiné domény";
+$lang_str['msg_acl_updated_s'] = 				"ACL aktualizován";	
+$lang_str['msg_acl_updated_l'] = 				"Access control list byl aktualizován";
+$lang_str['msg_user_deleted_s'] = 				"U¾ivatel vymazán";
+$lang_str['msg_user_deleted_l'] = 				"U¾ivatel byl úspì¹nì vymazán";
+$lang_str['th_phone'] = 						"telefon";
+$lang_str['l_acl'] = 							"ACL";
+$lang_str['l_aliases'] = 						"aliasy";
+$lang_str['l_account'] = 						"úèet";
+$lang_str['l_accounting'] = 					"pøehled volání";
+
+/* ------------------------------------------------------------*/
+/*      admin - ACL, aliases                                   */
+/* ------------------------------------------------------------*/
+
+$lang_str['access_control_list_of_user'] = 		"Access control list u¾ivatele";
+$lang_str['have_not_privileges_to_acl'] = 		"Nemáte oprávnìní ke zmìnì ACL";
+$lang_str['err_alias_already_exists_1'] = 		"alias:";
+$lang_str['err_alias_already_exists_2'] = 		"u¾ existuje";
+$lang_str['msg_alias_deleted_s'] = 				"Alias vymazán";
+$lang_str['msg_alias_deleted_l'] = 				"Alias u¾ivatele byl vymazán";
+$lang_str['msg_alias_updated_s'] = 				"Alias aktualizován";
+$lang_str['msg_alias_updated_l'] = 				"Va¹e zmìny byly ulo¾eny";
+$lang_str['msg_alias_added_s'] = 				"Alias pøidán";
+$lang_str['msg_alias_added_l'] = 				"Alias byl pøidán u¾ivateli";
+$lang_str['change_aliases_of_user'] = 			"Zmìna aliasù u¾ivatele";
+$lang_str['ff_alias'] = 						"alias";
+$lang_str['th_alias'] = 						"alias";
+$lang_str['realy_you_want_delete_this_alias'] = "Opravdu chcete smazat tento alias?";
+$lang_str['user_have_not_any_aliases'] = 		"U¾ivatel nemá ¾ádné aliasy";
+
+/* ------------------------------------------------------------*/
+/*      admin privileges                                       */
+/* ------------------------------------------------------------*/
+
+$lang_str['admin_privileges_of'] = 				"Oprávnìní administrátora ";
+$lang_str['admin_competence'] = 				"pùsobnost administrátora";
+$lang_str['ff_is_admin'] = 						"je administrátor";
+$lang_str['ff_change_privileges'] = 			"zmìna oprávnìní jiných administrátorù";
+$lang_str['acl_control'] = 						"zmìny ACL";
+$lang_str['msg_privileges_updated_s'] = 		"Oprávnìní aktualizovány";
+$lang_str['msg_privileges_updated_l'] = 		"Oprávnìní u¾ivatele byly aktualizovány";
+$lang_str['list_of_users'] = 					"Seznam u¾ivatelù";
+$lang_str['th_domain'] = 						"doména";
+$lang_str['l_change_privileges'] = 				"zmìna oprávnìní";
+$lang_str['ff_domain'] = 						"doména";
+$lang_str['ff_show_admins_only'] = 				"zobrazit jenom administrátory";
+
+/* ------------------------------------------------------------*/
+/*      server monitoring                                      */
+/* ------------------------------------------------------------*/
+
+$lang_str['ser_moni_current'] = 				"aktuálnì";
+$lang_str['ser_moni_average'] = 				"prùmìrnì";
+$lang_str['ser_moni_waiting_cur'] = 			"aktuálnì èekajících";
+$lang_str['ser_moni_waiting_avg'] = 			"prùmìrnì èekajících";
+$lang_str['ser_moni_total_cur'] = 				"aktuální souhrn";
+$lang_str['ser_moni_total_avg'] = 				"prùmìrný souhrn";
+$lang_str['ser_moni_local_cur'] = 				"aktuálnì lokálních";
+$lang_str['ser_moni_local_avg'] = 				"prùmìrnì lokálních";
+$lang_str['ser_moni_replies_cur'] = 			"akt. lokál. odpovìdí";
+$lang_str['ser_moni_replies_avg'] = 			"prùm. lokál. odpovìdí";
+$lang_str['ser_moni_registered_cur'] = 			"akt. registrováno";
+$lang_str['ser_moni_registered_avg'] = 			"prùm. registrováno";
+$lang_str['ser_moni_expired_cur'] = 			"aktuálnì vypr¹ených";
+$lang_str['ser_moni_expired_avg'] = 			"prùmìrnì vypr¹ených";
+$lang_str['ser_moni_general_values'] = 			"obecné hodnoty";
+$lang_str['ser_moni_diferencial_values'] = 		"rozdílové hodnoty";
+$lang_str['ser_moni_transaction_statistics'] = 	"Transakèní statistiky";
+$lang_str['ser_moni_completion_status'] = 		"Stav dokonèení";
+$lang_str['ser_moni_stateless_server_statis'] = "Statistiky bezestavového serveru";
+$lang_str['ser_moni_usrLoc_stats'] = 			"Statistiky UsrLoc";
+$lang_str['domain'] = 							"tabulka";
+
+
+$lang_str['fe_not_filled_name_of_attribute'] = 	"musíte vyplnit jméno atributu";
+$lang_str['ff_att_name'] = 						"jméno atributu";
+$lang_str['ff_att_type'] = 						"typ atributu";
+$lang_str['ff_att_default_value'] = 			"defaultní hodnota";
+$lang_str['th_att_name'] = 						"jméno atributu";
+$lang_str['th_att_type'] = 						"typ atributu";
+$lang_str['th_att_default_value'] = 			"defaultní hodnota";
+$lang_str['fe_not_filled_item_label'] = 		"musíte vyplnit jméno polo¾ky";
+$lang_str['fe_not_filled_item_value'] = 		"musíte vyplnit hodnotu polo¾ky";
+$lang_str['edit_items_of_the_list'] = 			"zmìnit seznam polo¾ek";
+$lang_str['ff_item_label'] = 					"jméno polo¾ky";
+$lang_str['ff_item_value'] = 					"hodnota polo¾ky";
+$lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
+$lang_str['th_item_label'] = 					"jméno polo¾ky";
+$lang_str['th_item_value'] = 					"hodnota polo¾ky";
+$lang_str['l_back_to_editing_attributes'] = 	"zpìt k editaci atributù";
+
+
+/* ------------------------------------------------------------*/
+/* ------------------------------------------------------------*/
+/*      Application units                                      */
+/* ------------------------------------------------------------*/
+/*      strings which are used in application units or         */
+/*      data layer methods                                     */
+/* ------------------------------------------------------------*/
+
+/* ------------------------------------------------------------*/
+/*      accounting                                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['sel_item_all_calls'] = 				"V¹echny hovory";
+$lang_str['sel_item_outgoing_calls'] = 			"Jenom odchozí hovory";
+$lang_str['sel_item_incoming_cals'] = 			"Jenom pøíchozí hovory";
+
+/* ------------------------------------------------------------*/
+/*      voicemail                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_no_greeeting_file'] = 			"nevybral jste soubor s pozdravem";
+$lang_str['fe_invalid_greeting_file'] = 		"soubor s pozdravem je neplatný";
+$lang_str['fe_greeting_file_no_wav'] = 			"typ souboru s pozdravem musí být audio/wav";
+$lang_str['fe_greeting_file_too_big'] = 		"soubor s pozdravem je pøíli¹ velký";
+$lang_str['msg_greeting_stored_s'] = 			"Pozdrav ulo¾en";
+$lang_str['msg_greeting_stored_l'] = 			"Vá¹ pozdrav byl úspì¹nì ulo¾en";
+$lang_str['msg_greeting_deleted_s'] = 			"Pozdrav vymazán";
+$lang_str['msg_greeting_deleted_l'] = 			"Vá¹ pozdrav byl úspì¹nì vymazán";
+
+/* ------------------------------------------------------------*/
+/*      whitelist                                              */
+/* ------------------------------------------------------------*/
+
+$lang_str['err_whitelist_already_exists'] = 	"Polo¾ka ji¾ existuje";
+
+
+$lang_str[''] = 					"";
+$lang_str[''] = 					"";
+$lang_str[''] = 					"";
+$lang_str[''] = 					"";
+?>

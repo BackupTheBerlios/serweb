@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.59 2005/06/23 09:33:56 kozlik Exp $
+ * @version   $Id: functions.php,v 1.60 2005/07/21 16:23:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -273,20 +273,45 @@ function connect_to_db(&$errors){
  * config option {@link $config->mail_header_from}
  *
  * @param string $to address of recipient
- * @param string $subj subject of email
  * @param string $text email body
- * @param string $headers email headers
+ * @param array $headers email headers (associative array)
  * @return boolean TRUE if the mail was successfully accepted for delivery, FALSE otherwise
  *
  * @todo add error logging/reporting
  */
  
-function send_mail($to, $subj, $text, $headers = ""){
+function send_mail($to, $text, $headers = array()){
 	global $config;
 
-	$headers .= "From: ".$config->mail_header_from."\n";
+	/* if subject isn't defined */
+	if (!isset($headers['subject'])) $headers['subject'] = "";
 
-	@$a= mail($to, $subj, $text, $headers);
+	/* add from header */
+	if (!isset($headers['from'])) $headers['from'] = $config->mail_header_from;
+
+	/* convert associative array to string */
+	$str_headers="";
+	foreach ($headers as $k=>$v){
+		/* exclude header 'subject'. It is given throught another parameter of function */
+		if ($k=='subject') continue;
+		$str_headers .= $k.": ".$v."\n";
+	}
+
+	/* get charset */
+	$charset = null;
+	if (isset($headers['content-type']) and 
+	    eregi("charset=([-a-z0-9]+)", $headers['content-type'], $regs)){
+		
+		$charset = $regs[1];
+	}
+
+	/* add information about charset to the header */
+	if ($charset)
+		$headers['subject'] = "=?".$charset."?Q?".imap_8bit($headers['subject'])."?=";
+
+
+	/* send email */
+	@$a= mail($to, $headers['subject'], $text, $str_headers);
 	return $a;
 }
 

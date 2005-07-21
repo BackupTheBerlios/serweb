@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.4 2005/04/28 14:28:04 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.5 2005/07/21 16:23:04 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -7,21 +7,21 @@
 
 {literal}
 <style type="text/css">
-	#usrnm {width:120px;}
-	#fname {width:120px;}
-	#lname {width:120px;}
-	#email {width:120px;}
+	#usrnm, #lusrnm {width:120px;}
+	#fname, #lfname {width:120px;}
+	#lname, #llname {width:120px;}
+	#email, #lemail {width:120px;}
 </style>	
 {/literal}
 
 <div class="swForm swHorizontalForm">
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td><label for="usrnm">{$lang_str.ff_username}</label></td>
-<td><label for="fname">{$lang_str.ff_first_name}</label></td>
-<td><label for="lname">{$lang_str.ff_last_name}</label></td>
-<td><label for="email">{$lang_str.ff_email}</label></td>
+<tr valign="bottom">
+<td><label for="usrnm" id="lusrnm">{$lang_str.ff_username}</label></td>
+<td><label for="fname" id="lfname">{$lang_str.ff_first_name}</label></td>
+<td><label for="lname" id="llname">{$lang_str.ff_last_name}</label></td>
+<td><label for="email" id="lemail">{$lang_str.ff_email}</label></td>
 </tr>
 
 <tr>

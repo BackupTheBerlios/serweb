@@ -1,7 +1,14 @@
 {* Smarty *}
-{* $Id: a_index.tpl,v 1.4 2005/06/13 13:15:37 kozlik Exp $ *}
+{* $Id: a_index.tpl,v 1.5 2005/07/21 16:23:04 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{literal}
+<style type="text/css">
+	#uname {width:97%;}
+	#passw {width:97%;}
+</style>	
+{/literal}
 
 {if ($form_ls)}
 	<div align="right">
@@ -21,11 +28,11 @@
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<td width="150"><label for="uname">{$lang_str.ff_username}:</label></td>
+<td width="50%"><label for="uname">{$lang_str.ff_username}:</label></td>
 <td>{$form.uname}</td>
 </tr>
 <tr>
-<td><label for="passw">{$lang_str.ff_password}:</label></td>
+<td width="50%"><label for="passw">{$lang_str.ff_password}:</label></td>
 <td>{$form.passw}</td>
 </tr>
 <tr>

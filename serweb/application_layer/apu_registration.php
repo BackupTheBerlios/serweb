@@ -3,7 +3,7 @@
  * Application unit registration
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.7 2005/05/03 11:15:02 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.8 2005/07/21 16:23:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -177,10 +177,7 @@ class apu_registration extends apu_base_class{
 			return false;	
 		}
 
-		/* if subject isn't defined in txt file */
-		if (!isset($mail['headers']['subject'])) $mail['headers']['subject'] = "";
-
-		if (!send_mail($_POST['email'], $mail['headers']['subject'], $mail['body'])){
+		if (!send_mail($_POST['email'], $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			
 			$this->controler->_form_load_defaults();

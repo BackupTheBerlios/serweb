@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_lang.php,v 1.1 2005/06/14 07:44:01 kozlik Exp $
+ * $Id: config_lang.php,v 1.2 2005/07/21 16:23:03 kozlik Exp $
  */
 
 /**
@@ -37,11 +37,13 @@
 global $available_languages;
 
 $available_languages = array(
-//    'cs-utf-8'     => array('cs|czech', 'czech-utf-8', 'cs'),
-//    'cs-iso-8859-2'=> array('cs|czech', 'czech-iso-8859-2', 'cs'),
-//    'cs-win1250'   => array('cs|czech', 'czech-windows-1250', 'cs'),
+    'cs-utf-8'     => array('cs|czech',                         'czech-utf-8', 'cs'),
+    'cs-iso-8859-2'=> array('cs|czech',                         'czech-iso-8859-2', 'cs'),
+    'cs-win1250'   => array('cs|czech',                         'czech-windows-1250', 'cs'),     'en-utf-8'     => array('en([-_][[:alpha:]]{2})?|english',  'english-utf-8', 'en'),
     'en-utf-8'     => array('en([-_][[:alpha:]]{2})?|english',  'english-utf-8', 'en'),
     'en-iso-8859-1'=> array('en([-_][[:alpha:]]{2})?|english',  'english-iso-8859-1', 'en'),
+    'nl-utf-8'     => array('nl([-_][[:alpha:]]{2})?|dutch',    'dutch-utf-8', 'nl'),
+    'nl-iso-8859-1'=> array('nl([-_][[:alpha:]]{2})?|dutch',    'dutch-iso-8859-1', 'nl'), 
 //    'de-iso-8859-1'=> array('de([-_][[:alpha:]]{2})?|german', 'german-iso-8859-1', 'de')
 );
 

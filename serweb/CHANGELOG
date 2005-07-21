@@ -30,5 +30,15 @@
 	* authentication functions moved to auth module
 	* created modules auth_radius and auth_ldap
 
+2005-07-18
+	* fixed bug: "Use of undefined constant PEAR_LOG_INFO" when logging 
+	  is disabled
+
 2005-07-19
 	* apu_speed_dial - added ability to export information about sorting direction to smarty
+
+2005-07-20
+	* fixed look of login screen in IE
+	* added czech and dutch translation
+	* added scripts which should help with debuging of php configuration
+	* support to specify charset of sended emails

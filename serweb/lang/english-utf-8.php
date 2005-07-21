@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.3 2005/06/02 11:33:54 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.4 2005/07/21 16:23:03 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -124,7 +124,7 @@ $lang_str['msg_logout_l'] = 					"You have loged out. To login again, type your 
 $lang_str['userlogin'] = 						"Userlogin";
 $lang_str['adminlogin'] = 						"Adminlogin";
 $lang_str['enter_username_and_passw'] = 		"Please enter your username and password";
-$lang_str['ff_password'] = 						"Password";
+$lang_str['ff_password'] = 						"password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
 $lang_str['l_register'] = 						"Subscribe!";
 $lang_str['remember_uname'] = 					"Remember my username on this computer";
@@ -401,7 +401,7 @@ $lang_str['ff_domain'] = 						"domain";
 $lang_str['ff_show_admins_only'] = 				"show admins only";
 
 /* ------------------------------------------------------------*/
-/*      server minitoring                                      */
+/*      server monitoring                                      */
 /* ------------------------------------------------------------*/
 
 $lang_str['ser_moni_current'] = 				"current";

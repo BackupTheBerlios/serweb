@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.5 2005/06/10 14:55:03 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.6 2005/07/21 16:23:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -140,10 +140,7 @@ class apu_forgotten_password extends apu_base_class{
 			return false;	
 		}
 
-		/* if subject isn't defined in txt file */
-		if (!isset($mail['headers']['subject'])) $mail['headers']['subject'] = "";
-
-		if (!send_mail($this->sip_user['email'], $mail['headers']['subject'], $mail['body'])){
+		if (!send_mail($this->sip_user['email'], $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			
 			$this->controler->_form_load_defaults();
@@ -197,10 +194,7 @@ class apu_forgotten_password extends apu_base_class{
 			return false;	
 		}
 
-		/* if subject isn't defined in txt file */
-		if (!isset($mail['headers']['subject'])) $mail['headers']['subject'] = "";
-
-		if (!send_mail($sip_user['email_address'], $mail['headers']['subject'], $mail['body'])){
+		if (!send_mail($sip_user['email_address'], $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			return false;
 		}

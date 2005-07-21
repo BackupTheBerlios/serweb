@@ -269,10 +269,11 @@ table.swTable tr.swTrOdd{
 }
 
 .swIMtitle a, .swIMtitle a:link, .swIMtitle a:visited, .swIMtitle a:active, .swIMtitle a:hover{
-	width: 4em;
 	float: right;
 	text-align: center;
 	color: Black;
+	margin-left: 0.3em;
+	margin-right: 0.3em;
 }
 
 .swIMtime{
