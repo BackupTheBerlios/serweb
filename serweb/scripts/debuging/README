@@ -1,0 +1,23 @@
+$Id: README,v 1.2 2005/07/21 16:25:17 kozlik Exp $
+
+This directory contain some scripts which shoult help you find what is wrong
+in your configuration if something not working correctly.
+
+Copy this scripts into your HTML tree and browse to it by your www browser.
+
+Scripts description
+===================
+
+phpinfo.php
+-----------
+ Display informations about your php configuration. If you aren't sure
+if changes you made in php.ini take effect, you may check it by this script.
+
+mail.php
+--------
+ Check if working email sending from php. Use this script if you have troubles
+with sending emails from serweb to make sure if the problem is in serweb 
+configuration or in PHP or your sendmail configuration.
+  
+ This script send testing email message to root@localhost. Feel free to change 
+destination of testing message inside the script. 
