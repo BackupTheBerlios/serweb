@@ -1,0 +1,25 @@
+# This file contain text of confirmation email sent during account registration
+# 
+# replacements in allowed this file: 
+# 	- #@#domain#@# - is replaced by domain name
+#	- #@#sip_address#@#	- replaced by SIP address reserved for user
+#	- #@#confirmation_url#@# - URL of confirmation script
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: uw #@#domain#@# registratie
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Dank u voor uw registratie bij #@#domain#@#.
+
+
+Wij hebben voor u het volgende SIP-adres aangemaakt: #@#sip_address#@#
+
+
+Om uw registratie te bevestigen gebruik binnen 24 uur onderstaande url:
+#@#confirmation_url#@#
+
+Doe dit binnen 24 uur anders verloopt uw aanvraag.
+

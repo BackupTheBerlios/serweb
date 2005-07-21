@@ -1,0 +1,30 @@
+# This file contain text of confirmation email sent during account registration
+# 
+# replacements in allowed this file: 
+# 	- #@#domain#@# - is replaced by domain name
+#	- #@#sip_address#@#	- replaced by SIP address reserved for user
+#	- #@#confirmation_url#@# - URL of confirmation script
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: #@#domain#@# Vaše registrace
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Děkujeme Vám za registraci u #@#domain#@#.
+
+
+Rezervujeme pro Vás následující SIP adresu: #@#sip_address#@#
+
+
+Pro dokončení registrace prosím navštivte následující adresu během 24 hodin:
+#@#confirmation_url#@#
+
+(Pokud ji navštívíte později, budete se muset zaregistrovat znovu.)
+
+
+Uživatelé Windows Messengeru mohou navštívit následující adresu pro rady
+a tipy ohledně konfigurace:
+http://www.iptel.org/phpBB/viewtopic.php?topic=11&forum=1&0
+
