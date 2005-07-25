@@ -42,3 +42,6 @@
 	* added czech and dutch translation
 	* added scripts which should help with debuging of php configuration
 	* support to specify charset of sended emails
+
+2005-07-25
+	* added ability to change first name, last name and phone of subscriber

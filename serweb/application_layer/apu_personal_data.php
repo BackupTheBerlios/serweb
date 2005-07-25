@@ -3,7 +3,7 @@
  * Application unit personal_data
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_personal_data.php,v 1.1 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_personal_data.php,v 1.2 2005/07/25 14:56:05 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -20,6 +20,15 @@
  *	  
  *	'change_email'				(bool) default: true
  *	  allow change email
+ *	  
+ *	'change_first_name'			(bool) default: true
+ *	  allow change first name
+ *	  
+ *	'change_last_name'			(bool) default: true
+ *	  allow change last name
+ *	  
+ *	'change_phone'				(bool) default: true
+ *	  allow change phone
  *	  
  *	   
  *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
@@ -48,7 +57,7 @@
  *
  *	opt['smarty_enabled_fields']	(enabled_fields)
  *		boolean values reflecting setting of change_pass, change_email, etc..
- *		keys: pass, email
+ *		keys: pass, email, first_name, last_name, phone
  *	
  */
 
@@ -73,6 +82,9 @@ class apu_personal_data extends apu_base_class{
 		/* set default values to $this->opt */		
 		$this->opt['change_pass'] =			true;
 		$this->opt['change_email'] =		true;
+		$this->opt['change_first_name'] =	true;
+		$this->opt['change_last_name'] =	true;
+		$this->opt['change_phone'] =		true;
 
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -93,14 +105,18 @@ class apu_personal_data extends apu_base_class{
 	function action_update(&$errors){
 		global $data;
 	
-		$pass = $email = null;
+		$fname = $lname = $phone = $pass = $email = null;
 	
 		if ($this->opt['change_pass'] and $_POST['pd_passwd']) $pass=$_POST['pd_passwd'];	
 	
-		if ($this->opt['change_email']) $email=$_POST['pd_email'];
+		if ($this->opt['change_email'])      $email=$_POST['pd_email'];
+		if ($this->opt['change_first_name']) $fname=$_POST['pd_first_name'];
+		if ($this->opt['change_last_name'])  $lname=$_POST['pd_last_name'];
+		if ($this->opt['change_phone'])      $phone=$_POST['pd_phone'];
 		
 
-		if (false === $data->update_sip_user_details($this->user_id, $email, 
+		if (false === $data->update_sip_user_details($this->user_id, 
+				$fname, $lname, $phone, $email, 
 				isset($_POST['pd_allow_find'])?1:0, $_POST['pd_timezone'], 
 				null, $errors)) return false;
 
@@ -171,6 +187,34 @@ class apu_personal_data extends apu_base_class{
 										 "pass"=>1));
 		}
 
+		if ($this->opt['change_first_name']){
+			$this->f->add_element(array("type"=>"text",
+			                             "name"=>"pd_first_name",
+										 "size"=>16,
+										 "maxlength"=>25,
+			                             "value"=>$user_data->first_name,
+										 "minlength"=>1,
+										 "length_e"=>$lang_str['fe_not_filled_your_fname']));
+		}
+	
+		if ($this->opt['change_last_name']){
+			$this->f->add_element(array("type"=>"text",
+			                             "name"=>"pd_last_name",
+										 "size"=>16,
+										 "maxlength"=>45,
+			                             "value"=>$user_data->last_name,
+										 "minlength"=>1,
+										 "length_e"=>$lang_str['fe_not_filled_your_lname']));
+		}
+	
+		if ($this->opt['change_phone']){
+			$this->f->add_element(array("type"=>"text",
+			                             "name"=>"pd_phone",
+										 "size"=>16,
+										 "maxlength"=>15,
+			                             "value"=>$user_data->phone));
+		}
+
 		$this->f->add_element(array("type"=>"select",
 									 "name"=>"pd_timezone",
 									 "options"=>$options,
@@ -211,7 +255,10 @@ class apu_personal_data extends apu_base_class{
 		
 		$smarty->assign($this->opt['smarty_enabled_fields'], 
 				array('pass' => $this->opt['change_pass'],
-				      'email' => $this->opt['change_email']));
+				      'email' => $this->opt['change_email'],
+				      'first_name' => $this->opt['change_first_name'],
+				      'last_name' => $this->opt['change_last_name'],
+				      'phone' => $this->opt['change_phone']));
 	}
 	
 	/* return info need to assign html form to smarty */

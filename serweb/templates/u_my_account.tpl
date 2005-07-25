@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.8 2005/06/14 09:19:09 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.9 2005/07/25 14:56:05 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -10,10 +10,28 @@
 <div class="swForm">
 {$form_pd.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
+{if $enabled_fields.first_name}
+	<tr>
+	<td><label for="pd_first_name">{$lang_str.ff_first_name}:</label></td>
+	<td>{$form_pd.pd_first_name}</td>
+	</tr>
+{/if}
+{if $enabled_fields.last_name}
+	<tr>
+	<td><label for="pd_last_name">{$lang_str.ff_last_name}:</label></td>
+	<td>{$form_pd.pd_last_name}</td>
+	</tr>
+{/if}
 {if $enabled_fields.email}
 	<tr>
 	<td><label for="pd_email">{$lang_str.ff_your_email}:</label></td>
 	<td>{$form_pd.pd_email}</td>
+	</tr>
+{/if}
+{if $enabled_fields.phone}
+	<tr>
+	<td><label for="pd_phone">{$lang_str.ff_phone}:</label></td>
+	<td>{$form_pd.pd_phone}</td>
 	</tr>
 {/if}
 	<tr>
