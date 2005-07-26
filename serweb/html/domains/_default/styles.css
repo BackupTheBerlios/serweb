@@ -481,7 +481,7 @@ table.swTable tr.swTrOdd{
 */
 
 .swSMdomain{
-	width: 40.83em;   /* 49 / 1.2 = 40.83    1.2em is font size in this class  79em is width of swSMgdval and  swSMOneStat */
+	width: 45em;   /* 54 / 1.2 = 45    1.2em is font size in this class  54em is width of swSMgdval and  swSMOneStat */
 	margin-left: auto;
 	margin-right: auto;
 	text-align: left;
@@ -491,7 +491,7 @@ table.swTable tr.swTrOdd{
 .swSMgdval{
 	position: relative;
 	height: 1.4em;
-	width: 49em;
+	width: 54em;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -503,17 +503,17 @@ table.swTable tr.swTrOdd{
 }
 
 .swSMgval{
-	left: 13.5em;
+	left: 18.5em;
 }
 
 .swSMdval{
-	left: 31.5em;
+	left: 36.5em;
 }
 
 .swSMOneStat{
 	position: relative;
 	height: 4.5em;
-	width: 49em;
+	width: 54em;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: left;
@@ -529,8 +529,9 @@ table.swTable tr.swTrOdd{
 
 .swSMVal strong, .swSMValA strong{
 	display: block;
-	width: 13em;
+	width: 18em;
 	position: absolute;
+	white-space: nowrap;
 }
 
 .swSMVal{
@@ -556,33 +557,33 @@ table.swTable tr.swTrOdd{
 }
 
 .swSMStatMinVal{
-	left: 13.5em;
+	left: 18.5em;
 	top: -1.4em;
 }
 
 .swSMStatMaxVal{
-	left: 18.5em;
+	left: 23.5em;
 	top: -1.4em;
 	text-align: right;
 }
 
 .swSMStatMinValI{
-	left: 31.5em;
+	left: 36.5em;
 	top: -1.4em;
 }
 
 .swSMStatMaxValI{
-	left: 36.5em;
+	left: 41.5em;
 	top: -1.4em;
 	text-align: right;
 }
 
 .swSMStatValue{
-	left: 25em;	
+	left: 30em;	
 }
 
 .swSMStatValueI{
-	left: 43em;	
+	left: 48em;	
 }
 
 .swSMbar, .swSMbarI{
@@ -594,11 +595,11 @@ table.swTable tr.swTrOdd{
 }
 
 .swSMbar{
-	left: 13.5em;
+	left: 18.5em;
 }
 
 .swSMbarI{
-	left: 31.5em;
+	left: 36.5em;
 }
 
 /* bars at server monitoring page*/
