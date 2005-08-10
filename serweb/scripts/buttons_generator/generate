@@ -1,0 +1,231 @@
+#!/bin/sh
+PHP=`which php`
+exec $PHP -C -q -d output_buffering=1 $0 $@
+<?php
+
+/**
+ *This script is used for creation internationalized images of buttons.
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: generate,v 1.1 2005/08/10 13:50:38 kozlik Exp $
+ */
+
+require("config.php");
+
+require("../../config/config_lang.php");
+require("../../html/functions.php");
+
+
+/**
+ *	returns an image identifier representing the image obtained from the given filename
+ *
+ *	@param string $filename		name of file with image
+ *	@param int    $type			type of image
+ *	@return resource			image identifier
+ */
+
+function imagecreatefromfile($filename, $type){
+	switch ($type){
+	case IMAGETYPE_GIF:
+		return imagecreatefromgif($filename);
+
+	case IMAGETYPE_JPEG:
+		return imagecreatefromjpeg($filename);
+
+	case IMAGETYPE_PNG:
+		return imagecreatefrompng($filename);
+
+	default:
+		die("Unsuported image type of file: ".$filename);
+	}
+}
+
+/**
+ *	outputs a GD image stream (image) to the file
+ *
+ *	@param resource $image		image identifier
+ *	@param string   $filename	name of file for output
+ */
+function saveimage($image, $filename){
+	global $bg_cfg;
+
+	if ($bg_cfg['output_images_type'] == "gif"){
+		$ok = imagegif($image, $filename.".gif");
+	}
+	elseif ($bg_cfg['output_images_type'] == "png"){
+		$ok = imagepng($image, $filename.".png");
+	}
+	elseif ($bg_cfg['output_images_type'] == "jpg" or $bg_cfg['output_images_type'] == "jpeg"){
+		$ok = imagejpeg($image, $filename.".jpg");
+	}
+	else{
+		die("Bad type of output images: ".$bg_cfg['output_images_type']);
+	}
+
+	if (!$ok){
+		die("Error whena saving image: ".$filename);
+	}
+}
+
+/**
+ *	create image of button
+ *
+ *	@param string  $name		index into $bg_cfg['button'] array
+ *	@param string  $output_dir	directory where the image will be stored
+ */
+function create_button($name, $output_dir){
+	global $bg_cfg;
+	global $lang_str;
+	global $lang_set;
+	
+	$button = &$bg_cfg['button'][$name];
+	$b_type = &$bg_cfg['btn_type'][$button['type']];
+
+	/* get info of backgrounf images */
+	
+	$back_l_info = getimagesize($b_type['image_left']);
+	if (false === $back_l_info) die("Can't open file: ".$b_type['image_left']);
+	
+	$back_r_info = getimagesize($b_type['image_right']);
+	if (false === $back_r_info) die("Can't open file: ".$b_type['image_right']);
+
+	$back_c_info = getimagesize($b_type['image_center']);
+	if (false === $back_c_info) die("Can't open file: ".$b_type['image_center']);
+	
+	/* read background images from files */
+	
+	if (!$back_l_img = imagecreatefromfile($b_type['image_left'], $back_l_info[2]))
+		die("Can't create image from file: ".$b_type['image_left']);
+		
+	if (!$back_r_img = imagecreatefromfile($b_type['image_right'], $back_r_info[2]))
+		die("Can't create image from file: ".$b_type['image_right']);
+		
+	if (!$back_c_img = imagecreatefromfile($b_type['image_center'], $back_c_info[2]))
+		die("Can't create image from file: ".$b_type['image_center']);
+
+	/* create image of button */
+	
+	$button_img = imagecreate($b_type['width'], $b_type['height']);
+
+	$transparent_background = imagecolorallocate($button_img, 255, 255, 255);
+	imagecolortransparent ($button_img, $transparent_background);
+
+	//get decimal components of the passed hex color of font
+	$red   = hexdec(substr($b_type['font_color'], 0, 2));
+	$green = hexdec(substr($b_type['font_color'], 2, 2));
+	$blue  = hexdec(substr($b_type['font_color'], 4, 2));
+
+	$font_color = imagecolorallocate($button_img, $red, $green, $blue);
+
+	
+	/* put background to button */
+
+	imagecopy($button_img, $back_l_img, 
+	          0, 0, 0, 0, 
+			  $back_l_info[0], $back_l_info[1]);
+
+	imagecopy($button_img, $back_r_img, 
+	          $b_type['width']-$back_r_info[0], 0, 0, 0, 
+			  $back_r_info[0], $back_r_info[1]);
+
+	$center_width = $b_type['width']-$back_r_info[0]-$back_l_info[0];
+
+	imagecopyresized($button_img, $back_c_img, 
+	                 $back_l_info[0], 0, 0, 0, 
+					 $center_width, $b_type['height'],
+					 $back_c_info[0], $back_c_info[1]);
+
+
+	
+
+	$font = $b_type['font'];
+	$label = $lang_str[$button['lang_str']];
+
+	/* change encoding of label if necessary */
+
+	if ($lang_set['charset'] != "utf-8"){
+		$label = iconv($lang_set['charset'], "utf-8", $label);
+		
+		if ($label === false) {
+			die("Error when changeing charset of label");
+		}
+	}
+		
+
+	/* calculate dimensions of the text */
+
+	$box = imagettfbbox($b_type['font_size'], 0, $font, $label);
+	$font_width = max($box[2], $box[4]) - min($box[0], $box[6]);
+
+
+	if ($center_width < $font_width){
+		$font = $b_type['narrow_font'];
+	
+		$box = imagettfbbox($b_type['font_size'], 0, $font, $label);
+		$font_width = max($box[2], $box[4]) - min($box[0], $box[6]);
+		
+		if ($center_width < $font_width)
+			echo "  WARNING: text of image ".$button['lang_str']." '".$label."' is too wide\n";
+	}
+
+	/* Calculate position of text */
+
+	if (empty($b_type['horizontal_pos'])){
+		$b_type['horizontal_pos'] = round(($b_type['height'] - $b_type['font_size'])/2) + $b_type['font_size'];
+	}
+
+	$x = round(($center_width - $font_width)/2) + $back_l_info[0];
+	$y = $b_type['horizontal_pos'];
+
+	
+	/* place the text */
+	imagettftext($button_img, $b_type['font_size'], 0, $x, $y, $font_color, $font, $label);
+
+	/* save image */
+	saveimage($button_img, $output_dir.$button['filename']);
+
+	/* free memory */
+	imagedestroy($button_img);		
+	imagedestroy($back_l_img);		
+	imagedestroy($back_r_img);		
+	imagedestroy($back_c_img);		
+}
+
+/**
+ *	Generate all buttons for language $lang
+ *
+ *	@param string $lang 	index into array $available_languages (@see config_lang.php)
+ */
+function generate_guttons_of_lang($lang){
+	global $bg_cfg;
+	global $available_languages;
+	global $lang_str;
+	global $lang_set;
+
+	$config=array();
+	require("../../lang/".$available_languages[$lang][1].".php");
+
+	$dir = $bg_cfg['output_path'].$available_languages[$lang][2]."/";
+	RecursiveMkdir($dir);
+
+	foreach($bg_cfg['button'] as $k=>$v){
+		create_button($k, $dir);
+	}
+}
+
+
+
+$last_lang = null;
+
+foreach ($available_languages as $k=>$v){
+	/* skip duplicated lines with diferent encoding */
+	if ($last_lang == $v[2]) continue;
+	
+	$last_lang = $v[2];
+
+	echo "Generating buttons for language ".$k."\n";
+	generate_guttons_of_lang($k);
+}
+
+
+?>
