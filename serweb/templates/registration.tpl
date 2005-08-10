@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.1 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: registration.tpl,v 1.2 2005/08/10 13:56:25 kozlik Exp $ *}
 
 <div style="background:white;">
 
@@ -79,7 +79,7 @@
 				<tr><td colspan="2">
 					<div style="text-align:center;">
 						<div style="float: left; width:48%;">{$form.okey}</div>
-						<div style="float: left; width:48%;"><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.l_back}"></a></div>
+						<div style="float: left; width:48%;"><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}"></a></div>
 					</div><br>&nbsp;
 				</td></tr>
 				</table>
@@ -120,7 +120,7 @@
 		<p>
 		<br>
 
-		<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0"></a></div>
+		<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}"></a></div>
 
 	</div><!-- /rbcontentB -->
 	</div><!-- /rbcontentwrapB -->

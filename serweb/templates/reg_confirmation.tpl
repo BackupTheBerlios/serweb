@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: reg_confirmation.tpl,v 1.1 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: reg_confirmation.tpl,v 1.2 2005/08/10 13:56:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -24,7 +24,7 @@
 	{/if}
 
 	<br>
-	<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_next.gif" border="0"></a></div>
+	<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_next.gif" border="0" alt="{$lang_str.b_next}"></a></div>
 
 </div><!-- /rbcontentB -->
 </div><!-- /rbcontentwrapB -->

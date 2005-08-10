@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.9 2005/07/25 14:56:05 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.10 2005/08/10 13:56:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -161,8 +161,8 @@
 {if $config->enable_dial_voicemail or $config->enable_test_firewall}
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_dial_your_voicemail.gif" width="165" height="16" border="0"></a></td>{/if}
-{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_test_firewall_NAT.gif" width="165" height="16" border="0"></a></td>{/if}
+{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_dial_your_voicemail.gif" width="165" height="16" border="0" alt="{$lang_str.b_dial_your_voicemail}"></a></td>{/if}
+{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_test_firewall_NAT.gif" width="165" height="16" border="0" alt="{$lang_str.b_test_firewall_NAT}"></a></td>{/if}
 </tr>
 </table>
 {/if}

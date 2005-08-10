@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_voicemail.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: u_voicemail.tpl,v 1.4 2005/08/10 13:56:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -14,7 +14,7 @@
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td align="right"><a href="{$vm_download_url}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_download_greeting.gif" width="165" height="16" border="0"></a></td>
+	<td align="right"><a href="{$vm_download_url}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_download_greeting.gif" width="165" height="16" border="0" alt="{$lang_str.b_download_greeting}"></a></td>
 </tr>
 </table>
 {$form.finish}

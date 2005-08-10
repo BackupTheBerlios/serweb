@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_missed_calls.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: u_missed_calls.tpl,v 1.4 2005/08/10 13:56:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -38,7 +38,7 @@
 <div class="swNumOfFoundRecords">{$lang_str.no_missed_calls}</div>
 {/foreach}
 
-<br><div align="center"><a href="{$url_delete}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_delete_calls.gif" width="165" height="16" border="0"></a></div>
+<br><div align="center"><a href="{$url_delete}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_delete_calls.gif" width="165" height="16" border="0" alt="{$lang_str.b_delete_calls}"></a></div>
 
 <br>
 {include file='_tail.tpl'}

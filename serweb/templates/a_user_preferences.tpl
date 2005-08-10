@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_user_preferences.tpl,v 1.4 2005/05/19 18:26:07 kozlik Exp $ *}
+{* $Id: a_user_preferences.tpl,v 1.5 2005/08/10 13:56:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -21,7 +21,7 @@
 	<tr>
 	<td align="left">
 	{if $url_edit_list}
-		<a href="{$url_edit_list}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_edit_items_of_the_list.gif" width="165" height="16" border="0"></a>
+		<a href="{$url_edit_list}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_edit_items_of_the_list.gif" width="165" height="16" border="0" alt="{$lang_str.b_edit_items_of_the_list}"></a>
 	{else}
 		&nbsp;
 	{/if}
