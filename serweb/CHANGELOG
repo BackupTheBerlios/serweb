@@ -45,3 +45,6 @@
 
 2005-07-25
 	* added ability to change first name, last name and phone of subscriber
+
+2005-08-10
+	* created script for generation internationalized images of buttons
