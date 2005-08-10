@@ -1,9 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.2 2005/07/21 16:23:03 kozlik Exp $
- *
- * Czech translation by Karel Kozlik, july 2005
- * karel@iptel.org
+ * $Id: czech-iso-8859-2.php,v 1.3 2005/08/10 13:55:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -35,7 +32,6 @@ $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
-$lang_str['l_back'] = 							"zpìt";
 $lang_str['status_unknown'] = 					"neznámý";
 $lang_str['status_nonlocal'] = 					"nelokální";
 $lang_str['status_nonexists'] = 				"neexistující";
@@ -63,14 +59,21 @@ $lang_str['fe_max_entries_reached'] = 			"Dosa¾en maximální povolený poèet polo¾
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Pøidat";
-$lang_str['b_save'] =		 					"Ulo¾it";
-$lang_str['b_submit'] =		 					"Ulo¾it";
+$lang_str['b_back'] =		 					"Zpìt";
+$lang_str['b_delete_calls'] =		 			"Vymazat hovory";
+$lang_str['b_dial_your_voicemail'] =		 	"Vytoèit hlasovou schránku";
+$lang_str['b_download_greeting'] =		 		"Pøehrát Vá¹ pozdrav";
+$lang_str['b_edit_items_of_the_list'] =		 	"Zmìnit polo¾ky seznamu";
+$lang_str['b_find'] = 							"Vyhledat";
 $lang_str['b_forgot_pass_submit'] = 			"Zjistit heslo";
-$lang_str['b_upload_greeting'] =		 		"Nahrát pozdrav";
-$lang_str['b_find'] = 							"Najít";
-$lang_str['b_send'] =		 					"Odeslat";
 $lang_str['b_login'] =		 					"Pøihlásit";
+$lang_str['b_next'] =		 					"Dal¹í";
 $lang_str['b_register'] = 						"Registrovat se";
+$lang_str['b_send'] =		 					"Odeslat";
+$lang_str['b_submit'] =		 					"Ulo¾it";
+$lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
+$lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
+
 
 /* ------------------------------------------------------------*/
 /*      tabs                                                   */
@@ -483,9 +486,4 @@ $lang_str['msg_greeting_deleted_l'] = 			"Vá¹ pozdrav byl úspì¹nì vymazán";
 
 $lang_str['err_whitelist_already_exists'] = 	"Polo¾ka ji¾ existuje";
 
-
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
 ?>

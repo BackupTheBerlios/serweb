@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.17 2005/07/21 16:23:03 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.18 2005/08/10 13:55:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,7 +32,6 @@ $lang_str['l_edit'] = 							"edit";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_back_to_main'] = 					"back to main page";
-$lang_str['l_back'] = 							"back";
 $lang_str['status_unknown'] = 					"unknown";
 $lang_str['status_nonlocal'] = 					"non-local";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -60,14 +59,21 @@ $lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Add";
-$lang_str['b_save'] =		 					"Save";
-$lang_str['b_submit'] =		 					"Save";
-$lang_str['b_forgot_pass_submit'] = 			"Get password";
-$lang_str['b_upload_greeting'] =		 		"Upload greeting";
+$lang_str['b_back'] =		 					"Back";
+$lang_str['b_delete_calls'] =		 			"Delete calls";
+$lang_str['b_dial_your_voicemail'] =		 	"Dial your voicemail";
+$lang_str['b_download_greeting'] =		 		"Download your greeting";
+$lang_str['b_edit_items_of_the_list'] =		 	"Edit items of the list";
 $lang_str['b_find'] = 							"Find";
-$lang_str['b_send'] =		 					"Send";
+$lang_str['b_forgot_pass_submit'] = 			"Get password";
 $lang_str['b_login'] =		 					"Login";
+$lang_str['b_next'] =		 					"Next";
 $lang_str['b_register'] = 						"Register";
+$lang_str['b_send'] =		 					"Send";
+$lang_str['b_submit'] =		 					"Save";
+$lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
+$lang_str['b_upload_greeting'] =		 		"Upload greeting";
+
 
 /* ------------------------------------------------------------*/
 /*      tabs                                                   */
@@ -480,9 +486,4 @@ $lang_str['msg_greeting_deleted_l'] = 			"Your greeting has been succesfully rem
 
 $lang_str['err_whitelist_already_exists'] = 	"Whitelist entry already exists";
 
-
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
 ?>

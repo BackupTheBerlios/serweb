@@ -1,10 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.2 2005/07/21 16:23:03 kozlik Exp $
- *
- *
- * Dutch translation by Marcel Bosman, july 2005
- * m.bosman@globaloffice.nl
+ * $Id: dutch-iso-8859-1.php,v 1.3 2005/08/10 13:55:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -36,7 +32,6 @@ $lang_str['l_edit'] = 							"toevoegen";
 $lang_str['l_change'] = 						"wijzigen";
 $lang_str['l_delete'] = 						"verwijderen";
 $lang_str['l_back_to_main'] = 					"terug";
-$lang_str['l_back'] = 							"terug";
 $lang_str['status_unknown'] = 					"onbekend";
 $lang_str['status_nonlocal'] = 					"niet lokaal";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -64,14 +59,21 @@ $lang_str['fe_max_entries_reached'] = 			"Maximum aantal pogingen";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Toevoegen";
-$lang_str['b_save'] =		 					"Bewaar";
-$lang_str['b_submit'] =		 					"Bewaar";
-$lang_str['b_forgot_pass_submit'] = 			"Wachtwoord opvragen";
-$lang_str['b_upload_greeting'] =		 		"Upload welkomsbericht";
+$lang_str['b_back'] =		 					"Terug";
+$lang_str['b_delete_calls'] =		 			"Verwijder berichten";
+$lang_str['b_dial_your_voicemail'] =		 	"Bel voicemail";
+$lang_str['b_download_greeting'] =		 		"Download welkomsbericht";
+$lang_str['b_edit_items_of_the_list'] =		 	"Wijzig items in de lijst";
 $lang_str['b_find'] = 							"Zoek";
-$lang_str['b_send'] =		 					"Verstuur";
+$lang_str['b_forgot_pass_submit'] = 			"Wachtwoord opvragen";
 $lang_str['b_login'] =		 					"Login";
+$lang_str['b_next'] =		 					"Volgende";
 $lang_str['b_register'] = 						"Registreer";
+$lang_str['b_send'] =		 					"Verstuur";
+$lang_str['b_submit'] =		 					"Bewaar";
+$lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
+$lang_str['b_upload_greeting'] =		 		"Upload welkomsbericht";
+
 
 /* ------------------------------------------------------------*/
 /*      tabs                                                   */
@@ -484,9 +486,4 @@ $lang_str['msg_greeting_deleted_l'] = 			"Het bestand is verwijderd";
 
 $lang_str['err_whitelist_already_exists'] = 	"Dit item is reeds aanwezig";
 
-
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
-$lang_str[''] = 					"";
 ?>
