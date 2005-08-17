@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_sip_user.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.delete_sip_user.php,v 1.1 2005/08/17 10:43:08 kozlik Exp $
  */
 
 class CData_Layer_delete_sip_user {

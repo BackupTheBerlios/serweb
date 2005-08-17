@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.4 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: method.get_users.php,v 1.1 2005/08/17 10:43:08 kozlik Exp $
  */
 
 /*

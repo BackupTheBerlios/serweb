@@ -1,12 +1,14 @@
 <?
 /*
- * $Id: users.php,v 1.23 2005/05/03 11:15:03 kozlik Exp $
+ * $Id: users.php,v 1.24 2005/08/17 10:43:07 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
+
+$_required_modules = array('subscribers');
 
 $_required_apu = array('apu_subscribers'); 
 
