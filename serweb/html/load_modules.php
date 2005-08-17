@@ -51,8 +51,8 @@
 	
 
 	/* enable required modules */	
-	if (isset($_require_modules)){
-		foreach((array) $_require_modules as $m){
+	if (isset($_required_modules)){
+		foreach((array) $_required_modules as $m){
 			$config->modules[$m] = true;
 		}
 	}
