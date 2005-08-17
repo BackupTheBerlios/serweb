@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_admin_privileges.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: a_admin_privileges.tpl,v 1.4 2005/08/17 12:59:55 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -12,11 +12,11 @@
 	<legend>{$lang_str.admin_competence}</legend>
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
-	<td><label for="chk_is_admin">{$lang_str.ff_is_admin}</label></td>
+	<td><label for="pr_chk_is_admin">{$lang_str.ff_is_admin}</label></td>
 	<td>{$form.pr_chk_is_admin}</td>
 	</tr>
 	<tr>
-	<td><label for="chk_change_privileges">{$lang_str.ff_change_privileges}</label></td>
+	<td><label for="pr_chk_change_privileges">{$lang_str.ff_change_privileges}</label></td>
 	<td>{$form.pr_chk_change_privileges}</td>
 	</tr>
 	</table>
