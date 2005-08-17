@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.11 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.12 2005/08/17 12:29:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -8,6 +8,8 @@ $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
+
+$_required_modules = array('privileges');
 
 $_required_apu = array('apu_privileges'); 
 
