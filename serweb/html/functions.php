@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.60 2005/07/21 16:23:03 kozlik Exp $
+ * @version   $Id: functions.php,v 1.61 2005/08/18 14:22:14 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -576,7 +576,7 @@ function get_file_by_lang($filename, $ddir, $lang){
 	}
 
 	else {
-		sw_log("File not found. Filename:".$filename.", Language:".$ln.", Subdir:".$ddir, PEAR_LOG_ERR);	
+		sw_log("File not found. Filename:".$filename.", Language:".$ln.", Subdir:".$ddir, PEAR_LOG_WARNING);	
 		return false;
 	}
 }
