@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.12 2005/05/19 17:55:51 kozlik Exp $
+ * $Id: user_preferences.php,v 1.13 2005/08/18 12:08:49 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -8,6 +8,8 @@ $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
+
+$_required_modules = array('user_preferences');
 
 $_required_apu = array('apu_user_preferences_admin'); 
 

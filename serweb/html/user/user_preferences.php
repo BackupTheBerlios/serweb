@@ -1,12 +1,14 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.3 2005/06/02 11:33:54 kozlik Exp $
+ * $Id: user_preferences.php,v 1.4 2005/08/18 12:08:49 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
 
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Auth");
+
+$_required_modules = array('user_preferences');
 
 $_required_apu = array('apu_user_preferences');						   
 require "prepend.php";

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.10 2005/06/16 08:53:50 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
  */ 
 
 /* Application unit user preferences */

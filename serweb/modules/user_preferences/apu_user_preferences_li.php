@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_li 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_li.php,v 1.1 2005/05/19 17:55:51 kozlik Exp $
+ * @version   $Id: apu_user_preferences_li.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
  * @package   serweb
  */ 
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_att_values.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_att_values.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
  */
 
 class CData_Layer_get_att_values {
