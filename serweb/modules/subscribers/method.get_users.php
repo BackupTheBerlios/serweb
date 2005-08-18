@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.1 2005/08/17 10:43:08 kozlik Exp $
+ * $Id: method.get_users.php,v 1.2 2005/08/18 12:31:14 kozlik Exp $
  */
 
 /*
@@ -118,7 +118,6 @@ class CData_Layer_get_users {
 			$out[$i]['lname']          = $row->last_name;
 			$out[$i]['phone']          = $row->phone;
 			$out[$i]['email_address']  = $row->email_address;
-			$out[$i]['phone']          = $row->phone;
 			$out[$i]['get_param']      = user_to_get_param($row->uuid, $row->username, $row->domain, 'u');
 			$out[$i]['get_param_d']    = user_to_get_param($row->uuid, $row->username, $row->domain, 'd');
 
