@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.4 2005/05/20 08:32:56 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.1 2005/08/18 12:07:00 kozlik Exp $
  */
 
 /*

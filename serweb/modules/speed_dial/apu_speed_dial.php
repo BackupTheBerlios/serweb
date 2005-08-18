@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.11 2005/07/19 09:42:35 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.1 2005/08/18 12:07:00 kozlik Exp $
  */ 
 
 /* Application unit speed dial */
