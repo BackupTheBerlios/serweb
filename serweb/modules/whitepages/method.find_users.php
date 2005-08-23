@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.find_users.php,v 1.3 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: method.find_users.php,v 1.1 2005/08/23 11:42:44 kozlik Exp $
  */
 
 class CData_Layer_find_users {
