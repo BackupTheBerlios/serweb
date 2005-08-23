@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.5 2005/05/31 13:04:40 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {

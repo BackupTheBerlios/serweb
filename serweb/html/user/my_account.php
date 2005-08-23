@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.7 2005/08/18 12:08:49 kozlik Exp $
+ * $Id: my_account.php,v 1.8 2005/08/23 12:58:13 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -9,7 +9,7 @@ $_phplib_page_open = array("sess" => "phplib_Session_Pre_Auth",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
 
-$_required_modules = array('user_preferences');
+$_required_modules = array('user_preferences', 'usrloc');
 
 $_required_apu = array('apu_personal_data', 'apu_user_preferences', 'apu_aliases', 'apu_acl', 'apu_usrloc'); 
 

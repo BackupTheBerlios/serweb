@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_contact.php,v 1.3 2005/04/26 14:34:25 kozlik Exp $
+ * $Id: method.add_contact.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
  */
 
 class CData_Layer_add_contact {

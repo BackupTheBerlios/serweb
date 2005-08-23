@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_contact.php,v 1.2 2005/04/26 14:34:25 kozlik Exp $
+ * $Id: method.del_contact.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
  */
 
 class CData_Layer_del_contact {

@@ -3,7 +3,7 @@
  * Application unit usrloc
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_usrloc.php,v 1.4 2005/06/10 16:06:54 kozlik Exp $
+ * @version   $Id: apu_usrloc.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
  * @package   serweb
  */ 
 
