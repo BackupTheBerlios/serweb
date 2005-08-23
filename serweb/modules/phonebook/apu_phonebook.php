@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_phonebook.php,v 1.4 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: apu_phonebook.php,v 1.1 2005/08/23 10:21:01 kozlik Exp $
  */ 
 
 /* Application unit phonebook */

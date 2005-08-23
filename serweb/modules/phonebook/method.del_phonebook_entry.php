@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_phonebook_entry.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.del_phonebook_entry.php,v 1.1 2005/08/23 10:21:01 kozlik Exp $
  */
 
 class CData_Layer_del_phonebook_entry {

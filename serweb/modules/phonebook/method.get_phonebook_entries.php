@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.3 2004/12/13 14:29:59 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.1 2005/08/23 10:21:01 kozlik Exp $
  */
 
 /*
