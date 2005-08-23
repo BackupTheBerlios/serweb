@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.6 2005/05/20 08:32:56 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
  * @package   serweb
  */ 
 

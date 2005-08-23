@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.4 2005/05/05 12:00:03 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
  */
 
 /*

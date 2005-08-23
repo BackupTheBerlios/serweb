@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cdr_entries.php,v 1.2 2005/05/05 12:00:03 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
