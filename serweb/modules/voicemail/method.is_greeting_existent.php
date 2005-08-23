@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_greeting_existent.php,v 1.1 2004/09/02 11:27:03 kozlik Exp $
+ * $Id: method.is_greeting_existent.php,v 1.1 2005/08/23 12:41:18 kozlik Exp $
  */
 
 class CData_Layer_is_greeting_existent {
