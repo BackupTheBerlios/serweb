@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.2 2005/08/24 13:23:58 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -164,8 +164,6 @@ class apu_user_preferences extends apu_base_class{
 		global $_SERWEB;
 		parent::init();
 
-		require_once ($_SERWEB["serwebdir"] . "user_preferences.php");
-		
 		$this->reg = new Creg;				// create regular expressions class
 		$this->usr_pref = new User_Preferences();
 

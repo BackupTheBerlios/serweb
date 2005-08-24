@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.13 2004/12/15 21:46:51 kozlik Exp $
+ * $Id: user_preferences.php,v 1.1 2005/08/24 13:23:58 kozlik Exp $
  */
 
 /*

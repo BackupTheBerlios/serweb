@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_admin
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_admin.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
+ * @version   $Id: apu_user_preferences_admin.php,v 1.2 2005/08/24 13:23:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -175,7 +175,6 @@ class apu_user_preferences_admin extends apu_base_class{
 		global $_SERWEB;
 		parent::init();
 
-		require_once ($_SERWEB["serwebdir"] . "user_preferences.php");
 		$this->usr_pref = new User_Preferences();
 	}
 	

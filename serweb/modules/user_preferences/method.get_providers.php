@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_providers.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_providers.php,v 1.1 2005/08/24 13:23:58 kozlik Exp $
  */
 
 class CData_Layer_get_providers {

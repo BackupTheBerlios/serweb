@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_li 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_li.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
+ * @version   $Id: apu_user_preferences_li.php,v 1.2 2005/08/24 13:23:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -154,8 +154,6 @@ class apu_user_preferences_li extends apu_base_class{
 	function init(){
 		global $_SERWEB, $sess_apu_sd_li, $sess;
 		parent::init();
-
-		require_once ($_SERWEB["serwebdir"] . "user_preferences.php");
 
 		/* registger session variable if still isn't registered */
 		if (!$sess->is_registered('sess_apu_sd_li')) $sess->register('sess_apu_sd_li');
