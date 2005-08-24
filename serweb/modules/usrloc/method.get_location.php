@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_location.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_location.php,v 1.1 2005/08/24 13:02:43 kozlik Exp $
  */
 
 class CData_Layer_get_location {
