@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_ser_moni_values.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_ser_moni_values.php,v 1.1 2005/08/24 12:28:37 kozlik Exp $
  */
 
 class CData_Layer_get_ser_moni_values {

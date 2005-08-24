@@ -3,7 +3,7 @@
  * Application unit server monitoring
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_ser_moni.php,v 1.2 2005/05/31 19:01:21 kozlik Exp $
+ * @version   $Id: apu_ser_moni.php,v 1.1 2005/08/24 12:28:37 kozlik Exp $
  * @package   serweb
  */ 
 
