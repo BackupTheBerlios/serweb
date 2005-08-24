@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.send_im.php,v 1.2 2005/04/26 14:34:26 kozlik Exp $
+ * $Id: method.send_im.php,v 1.1 2005/08/24 08:55:04 kozlik Exp $
  */
 
 class CData_Layer_send_im {

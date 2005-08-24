@@ -1,5 +1,5 @@
 /*
- * $Id: instant_message.js,v 1.1 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: instant_message.js,v 1.1 2005/08/24 08:55:04 kozlik Exp $
  */
 
 

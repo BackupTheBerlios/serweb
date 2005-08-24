@@ -3,7 +3,7 @@
  * Application unit send_im 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_send_im.php,v 1.2 2005/05/31 17:33:07 kozlik Exp $
+ * @version   $Id: apu_send_im.php,v 1.1 2005/08/24 08:55:04 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -64,7 +64,7 @@ class apu_send_im extends apu_base_class{
 
 	/* return array of strings - requred javascript files */
 	function get_required_javascript(){
-		return array('sip_address_completion.js.php', 'instant_message.js');
+		return array('sip_address_completion.js.php', 'get_js.php?mod=send_im&js=instant_message.js');
 	}
 	
 	/* constructor */
