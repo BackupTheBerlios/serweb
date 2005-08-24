@@ -3,7 +3,7 @@
  * Application unit msilo 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_msilo.php,v 1.1 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_msilo.php,v 1.1 2005/08/24 10:42:34 kozlik Exp $
  * @package   serweb
  */ 
 

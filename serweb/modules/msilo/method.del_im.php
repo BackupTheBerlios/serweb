@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_im.php,v 1.2 2005/04/11 15:39:25 kozlik Exp $
+ * $Id: method.del_im.php,v 1.1 2005/08/24 10:42:34 kozlik Exp $
  */
 
 class CData_Layer_del_im {
