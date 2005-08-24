@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cs_caller.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.get_cs_caller.php,v 1.1 2005/08/24 11:44:11 kozlik Exp $
  */
 
 class CData_Layer_get_cs_caller {
