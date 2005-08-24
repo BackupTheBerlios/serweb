@@ -1,5 +1,5 @@
 /*
- * $Id: whitelist.js,v 1.4 2004/11/29 21:45:53 kozlik Exp $
+ * $Id: whitelist.js,v 1.1 2005/08/24 12:17:31 kozlik Exp $
  */
  
 function select_all_options(sel_element){

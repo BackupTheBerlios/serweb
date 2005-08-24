@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_whitelist.php,v 1.10 2005/04/21 15:09:45 kozlik Exp $
+ * $Id: apu_whitelist.php,v 1.1 2005/08/24 12:17:31 kozlik Exp $
  */ 
 
 /* Application unit whitelist */
@@ -95,7 +95,7 @@ class apu_whitelist extends apu_base_class{
 
 	/* return array of strings - requred javascript files */
 	function get_required_javascript(){
-		return array('whitelist.js', 'sip_address_completion.js.php');
+		return array('get_js.php?mod=whitelist&js=whitelist.js', 'sip_address_completion.js.php');
 	}
 	
 	/* constructor */

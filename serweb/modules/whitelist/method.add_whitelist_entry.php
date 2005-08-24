@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_whitelist_entry.php,v 1.1 2004/09/16 17:19:46 kozlik Exp $
+ * $Id: method.add_whitelist_entry.php,v 1.1 2005/08/24 12:17:31 kozlik Exp $
  */
 
 /*
