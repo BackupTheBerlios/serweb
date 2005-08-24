@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_admin_acl_privileges.php,v 1.1 2004/12/06 13:31:47 kozlik Exp $
+ * $Id: method.get_admin_acl_privileges.php,v 1.1 2005/08/24 11:57:51 kozlik Exp $
  */
 
 class CData_Layer_get_admin_ACL_privileges {

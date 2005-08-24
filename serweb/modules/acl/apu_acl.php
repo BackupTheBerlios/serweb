@@ -3,7 +3,7 @@
  * Application unit acl (Access Control List)
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_acl.php,v 1.1 2005/04/21 15:09:45 kozlik Exp $
+ * @version   $Id: apu_acl.php,v 1.1 2005/08/24 11:57:51 kozlik Exp $
  * @package   serweb
  */ 
 

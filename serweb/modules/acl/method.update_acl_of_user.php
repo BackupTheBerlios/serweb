@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_acl_of_user.php,v 1.1 2004/12/06 13:34:21 kozlik Exp $
+ * $Id: method.update_acl_of_user.php,v 1.1 2005/08/24 11:57:51 kozlik Exp $
  */
 
 class CData_Layer_update_ACL_of_user {
