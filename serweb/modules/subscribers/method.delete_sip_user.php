@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: method.delete_sip_user.php,v 1.1 2005/08/17 10:43:08 kozlik Exp $
+ * $Id: method.delete_sip_user.php,v 1.2 2005/08/24 12:56:31 kozlik Exp $
  */
 
 class CData_Layer_delete_sip_user {
-	var $required_methods = array('delete_user_calls_forwarding', 'delete_user_speed_dial', 'delete_user_events', 
+	var $required_methods = array('delete_user_calls_forwarding', 'delete_user_speed_dial', 
 		'delete_user_msilo', 'delete_user_vsilo', 'delete_user_phonebook', 'delete_user_usr_preferences', 
 		'delete_user_acl', 'delete_user_admin_privileges', 'delete_user_aliases', 'delete_user_from_subscriber',
 		'delete_user_missed_calls');
@@ -14,7 +14,6 @@ class CData_Layer_delete_sip_user {
 
 		if (false === $this->delete_user_calls_forwarding($user, $errors)) return false;
 		if (false === $this->delete_user_speed_dial($user, $errors)) return false;
-		if (false === $this->delete_user_events($user, $errors)) return false;
 		if (false === $this->delete_user_msilo($user, $errors)) return false;
 		if (false === $this->delete_user_vsilo($user, $errors)) return false;
 		if (false === $this->delete_user_missed_calls($user, NULL, $errors)) return false;
