@@ -5,7 +5,7 @@
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: db_pgsql.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
+ * $Id: db_pgsql.inc,v 1.3 2005/08/26 13:39:22 kozlik Exp $
  *
  */ 
 
@@ -32,7 +32,7 @@ class DB_Sql {
   function ifadd($add, $me) {
           if("" != $add) return " ".$me.$add;
   }
-  
+
   /* public: constructor */
   function DB_Sql($query = "") {
       $this->query($query);
@@ -62,7 +62,7 @@ class DB_Sql {
       return 0;
 
     $this->connect();
-    
+
     if ($this->Debug) 
       printf("<br>Debug: query = %s<br>\n", $Query_String);
 
@@ -77,10 +77,10 @@ class DB_Sql {
 
     return $this->Query_ID;
   }
-  
+
   function next_record() {
     $this->Record = @pg_fetch_array($this->Query_ID, $this->Row++);
-    
+
     $this->Error = pg_ErrorMessage($this->Link_ID);
     $this->Errno = ($this->Error == "")?0:1;
 
@@ -104,7 +104,7 @@ class DB_Sql {
     }
     return $result;
   }
-  
+
   function unlock() {
     return pg_Exec($this->Link_ID, "commit");
   }
