@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: click_to_dial.js.php,v 1.3 2004/09/17 19:39:07 kozlik Exp $
+ * $Id: click_to_dial.js.php,v 1.4 2005/08/26 13:31:58 kozlik Exp $
  */
 
 Header("content-type: text/js");
@@ -9,11 +9,6 @@ $_SERWEB = array();
 $_SERWEB["serwebdir"]  = "../";
 
 require ($_SERWEB["serwebdir"] . "../config/config_paths.php");
-
-//if config.developer is present, replace default config by developer config
-if (file_exists($_SERWEB["serwebdir"] . "../config/config.developer.php")){
-	require_once ($_SERWEB["serwebdir"] . "../config/config.developer.php");
-}
 ?>
 
 var ctd_win=null;
