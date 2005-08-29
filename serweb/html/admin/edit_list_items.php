@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.14 2005/08/18 12:08:49 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.15 2005/08/29 13:34:11 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -16,6 +16,8 @@ $_required_apu = array('apu_user_preferences_li');
 require "prepend.php";
 
 $perm->check("admin");
+
+$page_attributes['selected_tab']="user_preferences.php";
 
 $up	= new apu_user_preferences_li();
 $up->set_opt('edit_up_script', 'user_preferences.php');
