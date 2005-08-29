@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.set_db_charset.php,v 1.1 2005/05/24 12:22:37 kozlik Exp $
+ * $Id: method.set_db_charset.php,v 1.2 2005/08/29 14:27:06 kozlik Exp $
  */
 
 class CData_Layer_set_db_charset {
@@ -12,27 +12,48 @@ class CData_Layer_set_db_charset {
 
 	function set_db_charset($charset, $opt, &$errors){
 	 	global $config;
-	 	
-	 	static $charset_mapping = array ('utf-8' => 'utf8',
-		                                 'iso-8859-1' => 'latin1',
-		                                 'iso-8859-2' => 'latin2',
-		                                 'windows-1250' => 'cp1250',
-		                                 'iso-8859-7' => 'greek',
-		                                 'iso-8859-8' => 'hebrew',
-		                                 'iso-8859-9' => 'latin5',
-		                                 'iso-8859-13' => 'latin7',
-		                                 'windows-1251' => 'cp1251');
 
 		$this->db_charset = $charset;
-
+	 	
 		/* if connection to db is estabilished run sql query setting the charset */		
 		if ($this->db){
-
+			if ($this->db_host['parsed']['phptype'] == 'mysql'){
+			 	static $charset_mapping = array ('utf-8' => 'utf8',
+				                                 'iso-8859-1' => 'latin1',
+				                                 'iso-8859-2' => 'latin2',
+				                                 'windows-1250' => 'cp1250',
+				                                 'iso-8859-7' => 'greek',
+				                                 'iso-8859-8' => 'hebrew',
+				                                 'iso-8859-9' => 'latin5',
+				                                 'iso-8859-13' => 'latin7',
+				                                 'windows-1251' => 'cp1251');
+			}
+			else{
+			 	static $charset_mapping = array ('utf-8' => 'utf8',
+				                                 'iso-8859-1' => 'latin1',
+				                                 'iso-8859-2' => 'latin2',
+				                                 'iso-8859-3' => 'latin3',
+				                                 'iso-8859-4' => 'latin4',
+				                                 'iso-8859-5' => 'ISO_8859_5',
+				                                 'iso-8859-6' => 'ISO_8859_6',
+				                                 'iso-8859-7' => 'ISO_8859_7',
+				                                 'iso-8859-8' => 'ISO_8859_8',
+				                                 'iso-8859-9' => 'latin5',
+				                                 'iso-8859-10' => 'latin6',
+				                                 'iso-8859-13' => 'latin7',
+				                                 'iso-8859-14' => 'latin8',
+				                                 'iso-8859-15' => 'latin9',
+				                                 'iso-8859-16' => 'latin10',
+				                                 'windows-1250' => 'win1250',
+				                                 'windows-1251' => 'win1251');
+		
+			}
+	
 			$ch = isset($charset_mapping[$this->db_charset]) ?
 			            $charset_mapping[$this->db_charset] :
 			            $this->db_charset;
 
-			$q="set NAMES ".$ch;
+			$q="set NAMES '".$ch."'";
 	
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {
