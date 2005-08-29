@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cdr_entries.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
@@ -19,7 +19,7 @@ class CData_Layer_get_cdr_entries {
 						sip_to, 
 						sip_callid, 
 						sip_status,
-			 			sec_to_time(unix_timestamp(stop)-unix_timestamp(start)) as length, 
+						stop,
 						start as ttime ";
 
 			$this->cdr_sql['select_in'] = 
@@ -27,7 +27,7 @@ class CData_Layer_get_cdr_entries {
 						sip_from as sip_to, 
 						sip_callid, 
 						sip_status,
-			 			sec_to_time(unix_timestamp(stop)-unix_timestamp(start)) as length, 
+						stop,
 						start as ttime ";
 						
 			$this->cdr_sql['from'] = 
@@ -146,7 +146,7 @@ class CData_Layer_get_cdr_entries {
 
 		$q = implode(' union ', $q);
 		$q .= $this->cdr_sql['order'].
-				"limit ".$this->get_act_row().", ".$this->get_showed_rows();
+				$this->get_sql_limit_phrase();
 		
 		//query DB
 		$res=$this->db->query($q);
@@ -164,6 +164,13 @@ class CData_Layer_get_cdr_entries {
 								substr($row->ttime,8,2), 	//day
 								substr($row->ttime,0,4));	//year
 
+			$ts_stop = gmmktime(substr($row->stop,11,2), 	//hour
+								substr($row->stop,14,2), 	//minute
+								substr($row->stop,17,2), 	//second
+								substr($row->stop,5,2), 	//month
+								substr($row->stop,8,2), 	//day
+								substr($row->stop,0,4));	//year
+
 			if ($timestamp <=0 ) $o['time'] = "";
 			else {
 				if (date('Y-m-d',$timestamp)==date('Y-m-d')) $o['time'] = "today ".date('H:i',$timestamp);
@@ -179,7 +186,7 @@ class CData_Layer_get_cdr_entries {
 			else $o['hangup']="n/a"; */
 			$o['hangup']="n/a";
 
-			$o['length']=$row->length;
+			$o['length'] = date ('H:i:s', $ts_stop - $timestamp);
 
 			$o['url_ctd'] = "javascript: open_ctd_win2('".rawURLEncode($o['to_uri'])."', '".RawURLEncode("sip:".$serweb_auth->uname."@".$serweb_auth->domain)."');";
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));

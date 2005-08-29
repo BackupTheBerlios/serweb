@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.1 2005/08/23 10:21:01 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 /*
@@ -69,7 +69,8 @@ class CData_Layer_get_phonebook_entries {
 	
 		$q="select id, fname, lname, sip_uri from ".$config->data_sql->table_phonebook.
 			" where ".$this->get_indexing_sql_where_phrase($user).$qw." order by lname".
-			" limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			$this->get_sql_limit_phrase();
+
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 		

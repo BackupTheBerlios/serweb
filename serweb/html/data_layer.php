@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.9 2005/05/24 12:22:37 kozlik Exp $
+ * $Id: data_layer.php,v 1.10 2005/08/29 13:28:10 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -25,6 +25,9 @@ class CData_Layer{
 
 	var $db_collation = null;
 	var $db_charset = null;
+
+	/** Contain DSN (Data Source Name) of DB Host in string and in parsed form */
+	var $db_host = array();
 	
 	/*
 	 *   Constructor
@@ -405,6 +408,17 @@ class CData_Layer{
 	}
 
 	/**
+	 *	Set object variable (@see db_host) by given dsn (Data Source Name)
+	 *
+	 *	@param string $dsn		Data Source Name
+	 *	@access private
+	 */
+	function set_this_db_host($dsn){
+		$this->db_host['dsn'] = $dsn;
+        $this->db_host['parsed'] = DB::parseDSN($dsn); 
+	}
+
+	/**
 	 *	connect to sql database
 	 */
 
@@ -433,7 +447,9 @@ class CData_Layer{
 			}
 
 			$dsn = $sess_data_conn[$this->name]['db_dsn'];
-			$db = DB::connect($dsn, true);
+			$this->set_this_db_host($dsn);
+			
+			$db = DB::connect($this->db_host['parsed'], true);
 
 
 			if (DB::isError($db)) {	
@@ -462,7 +478,8 @@ class CData_Layer{
 								":".$cfg->host[$serv]['port'])."/".
 						$cfg->host[$serv]['name'];
 		
-				$db = DB::connect($dsn, true);
+				$this->set_this_db_host($dsn);
+				$db = DB::connect($this->db_host['parsed'], true);
 		
 				if (DB::isError($db)) {	
 					//if connect failed and multiple servers is defined
@@ -657,6 +674,75 @@ class CData_Layer{
 		}
 
 		return array('attributes'=>$attributes, 'values'=>$values);
+	}
+
+
+	/**
+	 *	Return a limit phrase for SQL queries depending on which DB host is useing
+	 *
+	 *	If $limit  is omited, the value returned by $this->get_showed_rows() is used
+	 *	If $offset is omited, the value returned by $this->get_act_row() is used
+	 *
+	 *	@param int $offset	says to skip that many rows before beginning to return rows
+	 *	@param int $limit	maximum of rows that should be returned
+	 *	@return string		limit sql phrase		
+	 */
+	function get_sql_limit_phrase($offset = NULL, $limit = NULL){
+		if (is_null($offset)) $offset = $this->get_act_row();
+		if (is_null($limit))  $limit  = $this->get_showed_rows();
+		
+		if ($this->db_host['parsed']['phptype'] == 'pgsql'){
+			return " limit ".$limit." offset ".$offset;
+		}
+		else {
+			return " limit ".$offset.", ".$limit;
+		}
+	}
+
+	/**
+	 *	Return a concatenation function which may be used in SQL queries depending on which DB host is useing
+	 *
+	 *	@param array $arguments		array of string which should be concatenated in SQL query
+	 *	@return string				concatenation function		
+	 */
+	function get_sql_concat_funct($arguments = array()){
+		
+		if ($this->db_host['parsed']['phptype'] == 'pgsql'){
+			$start     = "";
+			$separator = " || ";
+			$finish    = "";
+		}
+		else {
+			$start     = "concat(";
+			$separator = ", ";
+			$finish    = ")";
+		}
+
+		$out = $start;;
+		foreach ($arguments as $v){
+			$out .= $v;
+			$out .= $separator;
+		}
+
+		$out = substr($out, 0, 0 - strlen($separator));	//trim last separator
+		$out .= $finish;
+
+		return $out;
+	}
+
+	/**
+	 *	Return a integer cast function which may be used in SQL queries depending on which DB host is useing
+	 *
+	 *	@param string $argument
+	 *	@return string		
+	 */
+	function get_sql_cast_to_int_funct($argument){
+		if ($this->db_host['parsed']['phptype'] == 'mysql'){
+			return " cast(".$argument." as signed integer) ";
+		}
+		else {
+			return " cast(".$argument." as integer) ";
+		}
 	}
 
 	/* return filter for ldap commands depending on how are user's indexed */

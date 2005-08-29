@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_speed_dials.php,v 1.1 2005/08/18 12:07:00 kozlik Exp $
+ * $Id: method.get_speed_dials.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 /**
@@ -62,7 +62,7 @@ class CData_Layer_get_speed_dials {
 		if (false === $num_rows_in_db = $this->get_speed_dials_count($user, $where_phrase, $errors)) return false;
 		$this->set_num_rows($opt['sd_to'] - $opt['sd_from'] +1);
 
-		$q_limit = " limit ".$this->get_act_row().", ".$this->get_showed_rows();
+		$q_limit = $this->get_sql_limit_phrase();
 
 		/* sorting */
 		switch ($opt['sort']){	
@@ -77,8 +77,10 @@ class CData_Layer_get_speed_dials {
 			}
 		
 			$q_ord = $c->sd_username; 
-			$where_phrase .= " and abs(".$c->sd_username.") >= ".$opt['get_from']." ";  //abs() converts string to integer
-			$where_phrase .= " and abs(".$c->sd_username.") <  ".$opt['get_to']." ";
+			$where_phrase .= " and ".$this->get_sql_cast_to_int_funct($c->sd_username)." >= ".$opt['get_from']." ";
+			$where_phrase .= " and ".$this->get_sql_cast_to_int_funct($c->sd_username)." <  ".$opt['get_to']." ";
+//			$where_phrase .= " and abs(".$c->sd_username.") >= ".$opt['get_from']." ";  //abs() converts string to integer
+//			$where_phrase .= " and abs(".$c->sd_username.") <  ".$opt['get_to']." ";
 			$q_limit = "";
 			break;
 		case "to_uri":		$q_ord = $c->new_uri; break;

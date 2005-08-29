@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_ims.php,v 1.1 2005/08/24 10:42:34 kozlik Exp $
+ * $Id: method.get_ims.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 class CData_Layer_get_ims {
@@ -29,7 +29,7 @@ class CData_Layer_get_ims {
 		$q="select mid, src_addr, inc_time, body from ".
 			$config->data_sql->table_message_silo.
 			" where ".$this->get_indexing_sql_where_phrase($user).
-			" limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			$this->get_sql_limit_phrase();
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 

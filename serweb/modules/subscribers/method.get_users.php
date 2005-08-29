@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.2 2005/08/18 12:31:14 kozlik Exp $
+ * $Id: method.get_users.php,v 1.3 2005/08/29 13:28:11 kozlik Exp $
  */
 
 /*
@@ -45,7 +45,7 @@ class CData_Layer_get_users {
 					(($config->users_indexed_by=='uuid')?
 						"(s.uuid=p.uuid and p.priv_name='is_admin') ":
 						"(s.username=p.username and s.domain=p.domain and p.priv_name='is_admin') ");
-			$q_admins_where = " p.priv_value and ";
+			$q_admins_where = " p.priv_value='1' and ";
 		}
 		else{
 			$q_admins_join = "";
@@ -75,7 +75,7 @@ class CData_Layer_get_users {
 		}
 		else if ($filter['domain']) 
 			$query_c .= "s.domain like '%".$filter['domain']."%' and ";
-		$query_c.="1 ";
+		$query_c.="true ";
 
 
 
@@ -103,7 +103,7 @@ class CData_Layer_get_users {
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
 				$q_admins_join.
 			" where ".$q_admins_where.$q_online_where.$query_c.
-			" order by s.username limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			" order by s.username ".$this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

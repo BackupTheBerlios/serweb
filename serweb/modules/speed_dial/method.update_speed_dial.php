@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.1 2005/08/18 12:07:00 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 /*
@@ -51,56 +51,60 @@ class CData_Layer_update_speed_dial {
 					  ".$this->get_indexing_sql_where_phrase($user);
 		}
 		else{
-			$q="replace ".$config->data_sql->table_speed_dial." (
-			           ".$att['attributes'].", 
-					   ".$c->sd_username.",
-					   ".$c->sd_domain.", 
-					   ".$c->new_uri.", 
-					   ".$c->fname.", 
-					   ".$c->lname."
-			    ) 
-				values (
-				       ".$att['values'].", 
-					   '".$opt['primary_key']['sd_username']."',
-					   '".$opt['primary_key']['sd_domain']."',
-					   '".$values['new_uri']."', 
-					   '".$values['fname']."', 
-					   '".$values['lname']."'
-				 )";
+			// do replace (faster than update) if useing mysql
+			if ($this->db_host['parsed']['phptype'] == 'mysql'){
+				$q="replace ".$config->data_sql->table_speed_dial." (
+				           ".$att['attributes'].", 
+						   ".$c->sd_username.",
+						   ".$c->sd_domain.", 
+						   ".$c->new_uri.", 
+						   ".$c->fname.", 
+						   ".$c->lname."
+				    ) 
+					values (
+					       ".$att['values'].", 
+						   '".$opt['primary_key']['sd_username']."',
+						   '".$opt['primary_key']['sd_domain']."',
+						   '".$values['new_uri']."', 
+						   '".$values['fname']."', 
+						   '".$values['lname']."'
+					 )";
+			}
+			else{
+			// for other databases do insert or update
+				if ($opt_insert) {
+					$att=$this->get_indexing_sql_insert_attribs($user);
+		
+					$q="insert into ".$config->data_sql->table_speed_dial." (
+					           ".$att['attributes'].", 
+							   ".$c->sd_username.",
+							   ".$c->sd_domain.", 
+							   ".$c->new_uri.", 
+							   ".$c->fname.", 
+							   ".$c->lname."
+					    ) 
+						values (
+						       ".$att['values'].", 
+							   '".$opt['primary_key']['sd_username']."',
+							   '".$opt['primary_key']['sd_domain']."',
+							   '".$values['new_uri']."', 
+							   '".$values['fname']."', 
+							   '".$values['lname']."'
+						 )";
+				}
+				else {
+					$q="update ".$config->data_sql->table_speed_dial." 
+					    set ".$c->new_uri."='".$values['new_uri']."', 
+							".$c->fname."='".$values['fname']."', 
+							".$c->lname."='".$values['lname']."' 
+						where ".$c->sd_username."='".$opt['primary_key']['sd_username']."' and 
+						      ".$c->sd_domain."='".$opt['primary_key']['sd_domain']."' and 
+							  ".$this->get_indexing_sql_where_phrase($user);
+		
+				}
+			}
 		}
 
-/*
-		if ($opt_insert) {
-			$att=$this->get_indexing_sql_insert_attribs($user);
-
-			$q="insert into ".$config->data_sql->table_speed_dial." (
-			           ".$att['attributes'].", 
-					   ".$c->sd_username.",
-					   ".$c->sd_domain.", 
-					   ".$c->new_uri.", 
-					   ".$c->fname.", 
-					   ".$c->lname."
-			    ) 
-				values (
-				       ".$att['values'].", 
-					   '".$opt['primary_key']['sd_username']."',
-					   '".$opt['primary_key']['sd_domain']."',
-					   '".$values['new_uri']."', 
-					   '".$values['fname']."', 
-					   '".$values['lname']."'
-				 )";
-		}
-		else {
-			$q="update ".$config->data_sql->table_speed_dial." 
-			    set ".$c->new_uri."='".$values['new_uri']."', 
-					".$c->fname."='".$values['fname']."', 
-					".$c->lname."='".$values['lname']."' 
-				where ".$c->sd_username."='".$opt['primary_key']['sd_username']."' and 
-				      ".$c->sd_domain."='".$opt['primary_key']['sd_domain']."' and 
-					  ".$this->get_indexing_sql_where_phrase($user);
-
-		}
-*/
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			log_errors($res, $errors); 

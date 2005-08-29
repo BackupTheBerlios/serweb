@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cs_callers.php,v 1.1 2005/08/24 11:44:11 kozlik Exp $
+ * $Id: method.get_cs_callers.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 /*
@@ -49,7 +49,7 @@ class CData_Layer_get_cs_callers {
 		$q="select uri_re, action, param1, param2 from ".$config->data_sql->table_calls_forwarding.
 			" where ".$this->get_indexing_sql_where_phrase($user)." and purpose='screening'".$qw.
 			" order by uri_re".
-			" limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			$this->get_sql_limit_phrase();
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 

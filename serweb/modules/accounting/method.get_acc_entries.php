@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
  */
 
 /*
@@ -121,7 +121,7 @@ class CData_Layer_get_acc_entries {
 		$q .= $this->acc_sql['order'];
 		
 		if ($opt_limit_query)
-			$q .= "limit ".$this->get_act_row().", ".$this->get_showed_rows();
+			$q .= $this->get_sql_limit_phrase();
 		
 		//query DB
 		$res=$this->db->query($q);
@@ -174,7 +174,27 @@ class CData_Layer_get_acc_entries {
 				else if ($row->inv_fromtag==$row->bye_totag) $o['hangup']="callee";
 				else $o['hangup']="n/a";
 
-				$o['length']=$row->length;
+				$inv_ts=gmmktime(substr($row->inv_time,11,2), 	//hour
+								 substr($row->inv_time,14,2), 	//minute
+								 substr($row->inv_time,17,2), 	//second
+								 substr($row->inv_time,5,2), 	//month
+								 substr($row->inv_time,8,2), 	//day
+								 substr($row->inv_time,0,4));	//year
+
+				$bye_ts=gmmktime(substr($row->bye_time,11,2), 	//hour
+								 substr($row->bye_time,14,2), 	//minute
+								 substr($row->bye_time,17,2), 	//second
+								 substr($row->bye_time,5,2), 	//month
+								 substr($row->bye_time,8,2), 	//day
+								 substr($row->bye_time,0,4));	//year
+
+				$o['length'] = date ('H:i:s', $bye_ts - $inv_ts);
+
+
+//			 			sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, 
+//			 			sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, 
+//				$o['length']=$row->length;
+//				$o['length']=0;
 			}
 			$o['url_ctd'] = "javascript: open_ctd_win2('".rawURLEncode($o['to_uri'])."', '".RawURLEncode("sip:".$serweb_auth->uname."@".$serweb_auth->domain)."');";
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));
@@ -225,8 +245,7 @@ class CData_Layer_get_acc_entries {
 						t2.totag as bye_totag,
 						t2.from_uri as bye_from_uri, 
 						t2.sip_from as bye_sip_from,
-			 			sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, 
-						ifnull(t1.time, t2.time) as ttime ";
+						coalesce(t1.time, t2.time) as ttime ";
 
 			$this->acc_sql['select_in'] = 
 				"select t1.from_uri as inv_to_uri, 
@@ -243,8 +262,7 @@ class CData_Layer_get_acc_entries {
 						t2.totag as bye_totag,
 						t2.from_uri as bye_from_uri, 
 						t2.sip_from as bye_sip_from,
-			 			sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, 
-						ifnull(t1.time, t2.time) as ttime ";
+						coalesce(t1.time, t2.time) as ttime ";
 
 			$this->acc_sql['select_missed'] = 
 				"select t1.from_uri as inv_to_uri, 
@@ -261,7 +279,6 @@ class CData_Layer_get_acc_entries {
 						null as bye_totag,
 						null as bye_from_uri, 
 						null as bye_sip_from,
-			 			null as length, 
 						t1.time as ttime ";
 						
 			$this->acc_sql['from_1'] = 
@@ -282,14 +299,10 @@ class CData_Layer_get_acc_entries {
 				"where t1.sip_method='INVITE' ";
 
 			$this->acc_sql['where_2'] = 
-				"where t2.sip_method='BYE' and isnull(t1.username) ";
+				"where t2.sip_method='BYE' and t1.username IS NULL ";
 
 			$this->acc_sql['order'] = 
 				"order by ttime desc ";
-
-//where clauses before UUIDzation:
-//first select			where t1.username='".$user."' and t1.domain='".$domain."' and t1.sip_method='INVITE' )
-//second select			where t2.username='".$user."' and t2.domain='".$domain."' and t2.sip_method='BYE' and isnull(t1.username) )
 							
 	}
 
