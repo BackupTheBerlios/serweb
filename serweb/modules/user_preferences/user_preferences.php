@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.1 2005/08/24 13:23:58 kozlik Exp $
+ * $Id: user_preferences.php,v 1.2 2005/09/01 15:12:06 kozlik Exp $
  */
 
 /*
@@ -74,7 +74,7 @@ class User_Preferences {
 		$this->att_types['sip_adr'] = 	new UP_att_types("SIP address", 2);
 		$this->att_types['list'] =	 	new UP_att_types("List of values", 2);
 		$this->att_types['radio'] =	 	new UP_att_types("List of values - radio", 2);
-		$this->att_types['provider'] = 	new UP_att_types("List of providers", 2);
+//		$this->att_types['provider'] = 	new UP_att_types("List of providers", 2);
 		
 		$this->reg = new Creg;				// create regular expressions class
 		$this->providers = new UP_providers();
