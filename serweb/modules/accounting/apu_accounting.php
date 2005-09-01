@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.2 2005/09/01 15:11:12 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.3 2005/09/01 15:22:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -217,7 +217,7 @@ class apu_accounting extends apu_base_class{
 	
 	/* realize action */
 	function action_default(&$errors){
-		global $data, $sess_acc_act_row;
+		global $data, $sess_acc_act_row, $config;
 		
 		do{
 			$this->controler->set_timezone();
@@ -246,7 +246,7 @@ class apu_accounting extends apu_base_class{
 	}
 
 	function action_export(&$errors){
-		global $data, $smarty;
+		global $data, $smarty, $config;
 
 		$this->controler->set_timezone();
 			
