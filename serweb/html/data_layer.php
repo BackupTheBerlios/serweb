@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.10 2005/08/29 13:28:10 kozlik Exp $
+ * $Id: data_layer.php,v 1.11 2005/09/01 15:10:10 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -741,7 +741,8 @@ class CData_Layer{
 			return " cast(".$argument." as signed integer) ";
 		}
 		else {
-			return " cast(".$argument." as integer) ";
+//			return " cast(".$argument." as integer) ";					// working in pgsql 8.0
+			return " cast(cast(".$argument." as text) as integer) "; 	// change for pgsql 7.*
 		}
 	}
 
