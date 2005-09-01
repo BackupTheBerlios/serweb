@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.1 2005/08/23 10:33:10 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.2 2005/09/01 15:11:12 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -225,7 +225,12 @@ class apu_accounting extends apu_base_class{
 			
 			$opt = $this->prepare_opt_param_for_get_acc_entries();
 			
-			if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $opt, $errors)) return false;
+			if ($config->acc_use_cdr_table){
+				if (false === $this->acc_res = $data->get_cdr_entries($this->user_id, $opt, $errors)) return false;
+			}
+			else {
+				if (false === $this->acc_res = $data->get_acc_entries($this->user_id, $opt, $errors)) return false;
+			}
 
 			$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 			$this->pager['pos']=$data->get_act_row();
