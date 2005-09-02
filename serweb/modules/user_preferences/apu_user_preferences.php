@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.2 2005/08/24 13:23:58 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.3 2005/09/02 14:00:25 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -114,7 +114,11 @@ class apu_user_preferences extends apu_base_class{
 
 	/* 
 		returned two dimensional array of attributes
-		it is ordered array which elements contain associative array, curently with key 'att_name' only
+		it is ordered array which elements contain associative array, with keys:
+			'att_name'
+			'att_desc'
+			'att_type'
+			'att_spec' (for type 'radio' only)
 		
 		this method also return javascript on form submit for attributes which type is sip address
 	 */
@@ -135,8 +139,19 @@ class apu_user_preferences extends apu_base_class{
 				$out[$name_of_attribute]['att_desc'] = $name_of_attribute;
 	
 			$out[$name_of_attribute]['att_name'] = $name_of_attribute;
+
+			$out[$name_of_attribute]['att_type'] = $this->attributes[$att]->att_rich_type;
+			
+			/* if type of attribute is radio, create list of options
+			 * ass array of asociative arrays with entries 'label' and 'value'
+			 */
+			if ($this->attributes[$att]->att_rich_type == "radio") {
+				foreach($this->f->elements[$name_of_attribute]['ob']->options as $v){
+					$out[$name_of_attribute]['att_spec'][] = $v;
+				}
+			}
+
 		}
-		
 		return $out;
 	}
 	

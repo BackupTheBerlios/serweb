@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.10 2005/08/10 13:56:25 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.11 2005/09/02 14:00:25 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -54,13 +54,26 @@
 	</tr>
 
 {foreach from=$attributes item='row' name='attributes'}
-	{assign var='f_element' value=$row.att_name}
-	<tr>
-	<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
-	<td>{$form_pd.$f_element}</td>
-	</tr>
+ 	{if $row.att_type == 'radio'}
+ 		
+ 		<tr><td colspan=2>&nbsp;</td></tr>
+ 		{foreach from=$row.att_spec item='r'}
+ 			{assign var='f_element' value="`$row.att_name`_`$r.value`"}
+ 			<tr>
+ 			<td><label for="{$row.att_name}_{$r.value}">{$r.label}:</label></td>
+ 			<td>{$form_pd.$f_element}</td>
+ 			</tr>
+ 		{/foreach}
+ 		<tr><td colspan=2>&nbsp;</td></tr>
+ 		
+ 	{else}
+ 		{assign var='f_element' value=$row.att_name}
+ 		<tr>
+ 		<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
+ 		<td>{$form_pd.$f_element}</td>
+ 		</tr>
+ 	{/if}
 {/foreach}
-
 
 {* If you need display only one specific user preference, see the examples 
  * below. In first case is displayed user preference of name NAME_OF_UP.
