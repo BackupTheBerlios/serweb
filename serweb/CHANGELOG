@@ -48,7 +48,17 @@
 
 2005-08-10
 	* created script for generation internationalized images of buttons
-	
+
+2005-08-20
+	* modularized
+		
 2005-08-29
 	* support for postgesql
+	* fixed highlight of selected tab user_preferences in admin interface
 	
+2005-09-01
+	* removed unused type of user preference 'list of providers'
+	* fixed bug "undefined function get_acc_entries" in some configuration case
+
+2005-09-02
+	* fixed used preferences in order to display radio buttons
