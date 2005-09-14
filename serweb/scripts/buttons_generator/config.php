@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: config.php,v 1.1 2005/08/10 13:50:38 kozlik Exp $
+ * $Id: config.php,v 1.2 2005/09/14 06:40:19 kozlik Exp $
  */
 
 /** 
@@ -125,7 +125,7 @@ $bg_cfg['button'][11]['type']		= 'blue';
 
 $bg_cfg['button'][12]['filename']	= 'btn_submit';
 $bg_cfg['button'][12]['lang_str']	= 'b_submit';
-$bg_cfg['button'][12]['type']		= 'blue';
+$bg_cfg['button'][12]['type']		= 'blue_80';
 
 $bg_cfg['button'][13]['filename']	= 'btn_test_firewall_NAT';
 $bg_cfg['button'][13]['lang_str']	= 'b_test_firewall_NAT';
