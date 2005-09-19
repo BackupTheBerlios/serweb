@@ -1,19 +1,28 @@
 <?
 /*
- * $Id: click_to_dial.php,v 1.2 2004/08/09 12:21:27 kozlik Exp $
+ * $Id: click_to_dial.php,v 1.3 2005/09/19 13:46:32 kozlik Exp $
  */
 
 $_SERWEB = array();
+$_PHPLIB = array();
 $_SERWEB["serwebdir"]  = "../";
-require($_SERWEB["serwebdir"] . "main_prepend.php");
+$_PHPLIB["libdir"]  = "../../phplib/";
 
-put_headers();
+$_phplib_page_open = array("sess" => "phplib_Session");
+
+require($_SERWEB["serwebdir"] . "main_prepend.php");
+require($_SERWEB["serwebdir"] . "load_phplib.php");
+
+if (empty($serweb_auth->uname) or empty($serweb_auth->domain)){
+	die ('not logged in');
+}
 
 if (isset($_GET['target']) and $_GET['target']) $target=$_GET['target'];
 else $target=$config->ctd_target;
 
-if (isset($_GET['uri']) and $_GET['uri']) $uri=$_GET['uri'];
+if (empty($_GET['default_caller'])) $uri = "sip:".$serweb_auth->uname."@".$serweb_auth->domain;
 else $uri=$config->ctd_uri;
+
 
 click_to_dial($target, $uri, $errors);
 

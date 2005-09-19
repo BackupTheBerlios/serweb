@@ -62,3 +62,6 @@
 
 2005-09-02
 	* fixed used preferences in order to display radio buttons
+
+2005-09-19
+	* fixed security issue: the click2dial applet works without authentication.

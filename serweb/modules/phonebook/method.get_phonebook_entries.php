@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.3 2005/09/19 13:46:33 kozlik Exp $
  */
 
 /*
@@ -82,7 +82,7 @@ class CData_Layer_get_phonebook_entries {
 			$out[$row->id]['f_name'] = $row->fname;
 			$out[$row->id]['name'] = implode(' ', array($name=$row->lname, $row->fname));
 			$out[$row->id]['sip_uri'] = $row->sip_uri;
-			$out[$row->id]['url_ctd'] = "javascript: open_ctd_win2('".rawURLEncode($row->sip_uri)."', '".RawURLEncode("sip:".$serweb_auth->uname."@".$serweb_auth->domain)."');";
+			$out[$row->id]['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($row->sip_uri)."');";
 			$out[$row->id]['url_dele'] = $sess->url("phonebook.php?kvrk=".uniqID("")."&dele_id=".$row->id);
 			$out[$row->id]['url_edit'] = $sess->url("phonebook.php?kvrk=".uniqID("")."&edit_id=".$row->id);
 

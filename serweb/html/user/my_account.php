@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.9 2005/08/24 11:57:51 kozlik Exp $
+ * $Id: my_account.php,v 1.10 2005/09/19 13:46:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
@@ -68,7 +68,7 @@ $cfg->enable_test_firewall             = $config->enable_test_firewall;
 
 $smarty->assign_by_ref("config", $cfg);
 
-$smarty->assign('url_ctd', "javascript: open_ctd_win('".RawURLEncode("sip:".$controler->user_id->uname."@".$controler->user_id->domain)."');");
+$smarty->assign('url_ctd', "javascript: open_ctd_win_default('".RawURLEncode("sip:".$controler->user_id->uname."@".$controler->user_id->domain)."');");
 $smarty->assign('url_stun', "javascript:stun_applet_win('stun_applet.php', ".$config->stun_applet_width.", ".$config->stun_applet_height.");");
 $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvrk=".uniqid("")));
 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.2 2005/08/29 13:28:10 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.3 2005/09/19 13:46:33 kozlik Exp $
  */
 
 /*
@@ -196,7 +196,7 @@ class CData_Layer_get_acc_entries {
 //				$o['length']=$row->length;
 //				$o['length']=0;
 			}
-			$o['url_ctd'] = "javascript: open_ctd_win2('".rawURLEncode($o['to_uri'])."', '".RawURLEncode("sip:".$serweb_auth->uname."@".$serweb_auth->domain)."');";
+			$o['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($o['to_uri'])."');";
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));
 
 			if ($opt_get_user_status)
