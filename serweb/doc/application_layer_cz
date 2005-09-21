@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.7 2005/06/10 13:12:02 kozlik Exp $
+$Id: application_layer_cz,v 1.8 2005/09/21 12:25:08 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -245,15 +245,16 @@ Prubeh zpracovani APU page_controlerem
                       Sablona pro vytvareni vlastnich APU
 ===============================================================================
 
-/*
+/**
  * Application unit my_apu 
  * 
  * @author    Karel Kozlik
- * @version   $Id: application_layer_cz,v 1.7 2005/06/10 13:12:02 kozlik Exp $
+ * @version   $Id: application_layer_cz,v 1.8 2005/09/21 12:25:08 kozlik Exp $
  * @package   serweb
  */ 
 
-/* Application unit my_apu 
+/**
+ *	Application unit my_apu 
  *
  *
  *	This application unit is used for .............
@@ -289,17 +290,29 @@ Prubeh zpracovani APU page_controlerem
 class apu_my_apu extends apu_base_class{
 	var $smarty_action='default';
 
-	/* return required data layer methods - static class */
+	/** 
+	 *	return required data layer methods - static class 
+	 *
+	 *	@return array	array of required data layer methods
+	 */
 	function get_required_data_layer_methods(){
 		return array();
 	}
 
-	/* return array of strings - requred javascript files */
+	/**
+	 *	return array of strings - required javascript files 
+	 *
+	 *	@return array	array of required javascript files
+	 */
 	function get_required_javascript(){
 		return array();
 	}
 	
-	/* constructor */
+	/**
+	 *	constructor 
+	 *	
+	 *	initialize internal variables
+	 */
 	function apu_my_apu(){
 		global $lang_str;
 		parent::apu_base_class();
@@ -321,16 +334,27 @@ class apu_my_apu extends apu_base_class{
 		
 	}
 
-	function action_update(&$errors){
-		return true;
-	}
-	
-	/* this metod is called always at begining */
+	/**
+	 *	this metod is called always at begining - initialize variables
+	 */
 	function init(){
 		parent::init();
 	}
 	
-	/* check _get and _post arrays and determine what we will do */
+	/**
+	 *	Method perform action update
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_update(&$errors){
+		return true;
+	}
+	
+	/**
+	 *	check _get and _post arrays and determine what we will do 
+	 */
 	function determine_action(){
 		if ($this->was_form_submited()){	// Is there data to process?
 			$this->action=array('action'=>"update",
@@ -342,19 +366,33 @@ class apu_my_apu extends apu_base_class{
 								 'reload'=>false);
 	}
 	
-	/* create html form */
+	/**
+	 *	create html form 
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return null			FALSE on failure
+	 */
 	function create_html_form(&$errors){
 		parent::create_html_form($errors);
 	}
 
-	/* validate html form */
+	/**
+	 *	validate html form 
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
+	 */
 	function validate_form(&$errors){
 		if (false === parent::validate_form($errors)) return false;
 		return true;
 	}
 	
 	
-	/* add messages to given array */
+	/**
+	 *	add messages to given array 
+	 *
+	 *	@param array $msgs	array of messages
+	 */
 	function return_messages(&$msgs){
 		global $_GET;
 		
@@ -364,13 +402,17 @@ class apu_my_apu extends apu_base_class{
 		}
 	}
 
-	/* assign variables to smarty */
+	/**
+	 *	assign variables to smarty 
+	 */
 	function pass_values_to_html(){
 		global $smarty;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 	}
 	
-	/* return info need to assign html form to smarty */
+	/**
+	 *	return info need to assign html form to smarty 
+	 */
 	function pass_form_to_html(){
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
