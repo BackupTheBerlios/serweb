@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.61 2005/08/18 14:22:14 kozlik Exp $
+ * @version   $Id: functions.php,v 1.62 2005/09/22 14:15:21 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -665,7 +665,7 @@ function multidomain_get_lang_file($filename, $ddir, $lang){
  *	Function's finding replacements in body and in header values.
  *
  *	Function return array with two keys: "headers" and "body". Body is only 
- *	string. Headers contain associative array with header names as kayes.
+ *	string. Headers contain associative array with header names as keys.
  *
  *	@param string $filename		name of file is searching for
  *	@param string $ddir			subdirectory in of domain dir
@@ -680,9 +680,40 @@ function read_lang_txt_file($filename, $ddir, $lang, $replacements){
 		return false;
 	}
 	
-	$fp = fopen($f, "r");
+	return read_txt_file($f, $replacements);
+}
+
+/**
+ * 	Read txt file, parse and saparate to headers and body and do replacements.
+ *
+ *	Txt files in serweb (as emails, terms and conditions etc.) are stored in 
+ *	special format. At the beginning (but only at beginning) of these files may 
+ *	be comments. Lines with comments begins by "#". Rest of file is separated
+ *	into two parts separated by empty line: headers and body. 
+ *
+ *	Each header contain header name and header value. Each header must be on
+ *	own line. Header name and header value is separated by ":".
+ *
+ *	Body is the rest of txt file after first empty line.
+ *
+ *	When txt file is readed, function replace all strings in form #@#some_name#@#
+ *	by replacement. The parametr $replacements is array of pairs. First element
+ *	of each pair is name of replacement and second element from pair is value
+ *	by which is replaced.
+ *
+ *	Function's finding replacements in body and in header values.
+ *
+ *	Function return array with two keys: "headers" and "body". Body is only 
+ *	string. Headers contain associative array with header names as keys.
+ *
+ *	@param string $filename		name of file is searching for
+ *	@param array $replacements	see above
+ *	@retrun array				parsed file or false on error
+ */
+function read_txt_file($filename, $replacements){
+	$fp = fopen($filename, "r");
 	if (!$fp){
-		sw_log("Can't open txt file ".$filename.", subdir:".$ddir.", lang:".$lang, PEAR_LOG_ERR);
+		sw_log("Can't open txt file ".$filename, PEAR_LOG_ERR);
 		return false;
 	}
 
@@ -979,4 +1010,43 @@ function RecursiveMkdir($path, $mode=0777){
 	}
 }
 
+/**
+ * Copy a file, or recursively copy a folder and its contents
+ *
+ * @author      Aidan Lister <aidan@php.net>
+ * @version     1.0.1
+ * @param       string   $source    Source path
+ * @param       string   $dest      Destination path
+ * @return      bool     Returns TRUE on success, FALSE on failure
+ */
+function copyr($source, $dest)
+{
+    // Simple copy for a file
+    if (is_file($source)) {
+        return copy($source, $dest);
+    }
+ 
+    // Make destination directory
+    if (!is_dir($dest)) {
+        mkdir($dest);
+    }
+ 
+    // Loop through the folder
+    $dir = dir($source);
+    while (false !== $entry = $dir->read()) {
+        // Skip pointers
+        if ($entry == '.' || $entry == '..') {
+            continue;
+        }
+ 
+        // Deep copy directories
+        if ($dest !== "$source/$entry") {
+            copyr("$source/$entry", "$dest/$entry");
+        }
+    }
+ 
+    // Clean up
+    $dir->close();
+    return true;
+}
 ?>
