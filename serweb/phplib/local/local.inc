@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.5 2005/07/08 11:06:52 kozlik Exp $
+ * $Id: local.inc,v 1.6 2005/09/22 14:11:43 kozlik Exp $
  */
 
 
@@ -116,7 +116,7 @@ class phplib_Auth extends Auth {
 	function check_for_privileges($user){
 		global $config, $errors, $data_auth;
 
-	    if (false === $privileges = $data_auth->get_privileges_of_user($user, array('change_privileges','is_admin'), $errors)) return false;
+	    if (false === $privileges = $data_auth->get_privileges_of_user($user, array('change_privileges','is_admin', 'hostmaster'), $errors)) return false;
 
 		foreach($privileges as $row) {
 			switch ($row->priv_name){
@@ -131,6 +131,13 @@ class phplib_Auth extends Auth {
 				if ($row->priv_value) {
 					if ($this->auth["perm"]) $this->auth["perm"].=",";
 					$this->auth["perm"].="change_priv";
+				}
+				break;
+
+			case 'hostmaster':
+				if ($row->priv_value) {
+					if ($this->auth["perm"]) $this->auth["perm"].=",";
+					$this->auth["perm"].="hostmaster";
 				}
 				break;
 
@@ -182,7 +189,8 @@ class phplib_Perm extends Perm {
 
   var $permissions = array(
                             "admin"      => 1,
-							"change_priv"=> 2
+							"change_priv"=> 2,
+							"hostmaster" => 4
                           );
 
   function perm_invalid($does_have, $must_have) {

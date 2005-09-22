@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.1 2005/08/17 12:29:37 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.2 2005/09/22 14:11:43 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -142,6 +142,7 @@ class apu_privileges extends apu_base_class{
 		
 		if (false === $this->update_db('is_admin', array('type'=>'boolean'), $errors)) return false;
 		if (false === $this->update_db('change_privileges', array('type'=>'boolean'), $errors)) return false;
+		if (false === $this->update_db('hostmaster', array('type'=>'boolean'), $errors)) return false;
 		if (false === $this->update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $errors)) return false;
 
 		if ($this->opt['redirect_on_update'])
@@ -158,6 +159,7 @@ class apu_privileges extends apu_base_class{
 		$this->privileges['acl_control'] = array();
 		$this->privileges['change_privileges'] = array();
 		$this->privileges['is_admin'] = array();
+		$this->privileges['hostmaster'] = array();
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -202,6 +204,17 @@ class apu_privileges extends apu_base_class{
 		$this->f->add_element(array("type"=>"hidden",
 		                      "name"=>"pr_hidden_change_privileges",
 		                      "value"=>isset($this->privileges['change_privileges'][0]) and $this->privileges['change_privileges'][0]?"1":"0"));
+
+
+		$this->f->add_element(array("type"=>"checkbox",
+		                      "name"=>"pr_chk_hostmaster",
+		                      "checked"=>isset($this->privileges['hostmaster'][0]) and $this->privileges['hostmaster'][0]?"1":"0",
+		                      "value"=>"1"));
+	
+		$this->f->add_element(array("type"=>"hidden",
+		                      "name"=>"pr_hidden_hostmaster",
+		                      "value"=>isset($this->privileges['hostmaster'][0]) and $this->privileges['hostmaster'][0]?"1":"0"));
+
 	
 		$this->f->add_element(array("type"=>"checkbox",
 		                      "name"=>"pr_chk_is_admin",
@@ -222,6 +235,7 @@ class apu_privileges extends apu_base_class{
 				dis = !is_admin.checked;
 
 				if (f.pr_chk_change_privileges) f.pr_chk_change_privileges.disabled = dis;
+				if (f.pr_chk_hostmaster)        f.pr_chk_hostmaster.disabled = dis;
 		";
 
 		foreach ($config->grp_values as $row)
