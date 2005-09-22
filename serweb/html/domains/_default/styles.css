@@ -476,6 +476,16 @@ table.swTable tr.swTrOdd{
 }
 
 
+.swDomainEnabled{
+	color: Black;
+	white-space: nowrap;
+}
+
+.swDomainDisabled{
+	color: Gray;
+	white-space: nowrap;
+}
+
 /*
 	server monitoring statistics
 */
