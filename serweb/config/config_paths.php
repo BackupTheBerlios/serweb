@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.6 2005/06/23 09:29:59 kozlik Exp $
+ * $Id: config_paths.php,v 1.7 2005/09/22 14:42:54 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
@@ -64,6 +64,17 @@
 		$config->html_separator="separator.html";
 		$config->html_epilog="epilog.html";
 
+
+		/************************************************************
+		 *	Configs for multidomain support
+		 ************************************************************/
+
+		/* Directory containing virtual hosts. Directory to which 
+		 * directive VirtualDocumentRoot from apache config pointing
+		 * For more info see http://httpd.apache.org/docs/2.1/vhosts/mass.html
+		 */
+		 
+		$config->apache_vhosts_dir = "/var/httpd/vhosts/";
 
 
 /*

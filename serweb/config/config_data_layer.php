@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.9 2005/05/24 12:22:37 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.10 2005/09/22 14:42:54 kozlik Exp $
  */
 
 
@@ -156,6 +156,8 @@
 		$config->data_sql->table_whitelist="whitelist";
 		$config->data_sql->table_lcr="lcr";
 		$config->data_sql->table_uri="uri";
+		$config->data_sql->table_customer="customer";
+		$config->data_sql->table_dom_preferences="dom_preferences";
 		
 
 		$config->data_layer_always_required_functions=array('check_passw_of_user',
@@ -175,4 +177,28 @@
  		$config->data_sql->speed_dial->new_uri = 		"new_uri";
  		$config->data_sql->speed_dial->fname = 			"fname";
  		$config->data_sql->speed_dial->lname = 			"lname";
+
+
+		/*
+		 *  names of columns in table customer
+		 */															
+		$config->data_sql->customer = new stdClass();															
+ 		$config->data_sql->customer->id = 				"c_id";
+ 		$config->data_sql->customer->name = 			"name";
+
+		/*
+		 *  names of columns in table domain
+		 */															
+		$config->data_sql->domain = new stdClass();															
+ 		$config->data_sql->domain->id = 				"d_id";
+ 		$config->data_sql->domain->name = 				"domain";
+ 		$config->data_sql->domain->disabled = 			"f_disabled";
+
+		/*
+		 *  names of columns in table dom_preferences
+		 */															
+		$config->data_sql->dom_pref = new stdClass();															
+ 		$config->data_sql->dom_pref->id = 				"d_id";
+ 		$config->data_sql->dom_pref->att_name = 		"att_name";
+ 		$config->data_sql->dom_pref->att_value = 		"att_value";
 ?>
