@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.6 2005/09/22 14:11:43 kozlik Exp $
+ * $Id: local.inc,v 1.7 2005/09/26 10:56:54 kozlik Exp $
  */
 
 
@@ -143,6 +143,9 @@ class phplib_Auth extends Auth {
 
 			}//switch
 		}
+
+		/* get privileges to administrative domains */
+	    if (false === $this->auth["domains_perm"] = $data_auth->get_domains_of_admin($user, array(), $errors)) return false;
 
 	} //function check_for_privileges()
 }

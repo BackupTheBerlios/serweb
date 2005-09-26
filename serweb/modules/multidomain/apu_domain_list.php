@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.2 2005/09/26 10:56:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -31,6 +31,7 @@
  *	'smarty_action'				name of smarty variable - see below
  *	'smarty_pager'				name of smarty variable - see below
  *	'smarty_domains'			name of smarty variable - see below
+ *	'smarty_url_new_domain'		name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -48,6 +49,9 @@
  *	opt['smarty_domains'] 		(domains)	
  *	 associative array containing domains
  *	 The array have same keys as function get_domains (from data layer) returned. 
+ *	
+ *	opt['smarty_url_new_domain']	(url_new_domain)
+ *	 contain url of link for create new domain
  */
 
 class apu_domain_list extends apu_base_class{
@@ -96,6 +100,8 @@ class apu_domain_list extends apu_base_class{
 		$this->opt['smarty_pager'] =		'pager';
 
 		$this->opt['smarty_domains'] = 	    'domains';
+
+		$this->opt['smarty_url_new_domain']	= 'url_new_domain';
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => $lang_str['b_find'],
@@ -173,9 +179,10 @@ class apu_domain_list extends apu_base_class{
 		$this->pager['to']=$data->get_res_to();
 
 		foreach($this->domains as $key=>$val){
-			$this->domains[$key]['url_edit'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&edit_id=".$val['id']);
-			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&enable_all_id=".$val['id']);
-			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&disable_all_id=".$val['id']);
+			$get = $this->controler->domain_to_get_param($val['id']);
+			$this->domains[$key]['url_edit'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&edit=1");
+			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&enable_all=1");
+			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&disable_all=1");
 		}
 
 		return true;
@@ -244,10 +251,11 @@ class apu_domain_list extends apu_base_class{
 	 *	assign variables to smarty 
 	 */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
 		$smarty->assign_by_ref($this->opt['smarty_domains'], $this->domains);
+		$smarty->assign($this->opt['smarty_url_new_domain'], $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&new=1"));
 	}
 	
 	/**

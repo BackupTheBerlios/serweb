@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.2 2005/09/26 10:56:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -293,9 +293,9 @@ class apu_domain extends apu_base_class{
 		if (false === $this->dom_names = $data->get_domain($opt, $errors)) return false;
 
 		foreach($this->dom_names as $key=>$val){
-			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name'])."&id=".$this->id);
-			$this->dom_names[$key]['url_enable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&enable_name=".RawURLEncode($val['name'])."&id=".$this->id);
-			$this->dom_names[$key]['url_disable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&disable_name=".RawURLEncode($val['name'])."&id=".$this->id);
+			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name']));
+			$this->dom_names[$key]['url_enable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&enable_name=".RawURLEncode($val['name']));
+			$this->dom_names[$key]['url_disable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&disable_name=".RawURLEncode($val['name']));
 		}
 
 		return true;		
@@ -320,7 +320,7 @@ class apu_domain extends apu_base_class{
 		else {
 			$opt['name'] = $_GET['disable_name'];
 			$opt['disable'] = true;
-
+			
 			if (false === $this->remove_symlinks($opt['name'], $errors)) return false;
 		}
 
@@ -333,7 +333,7 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
 		}
 
-		return array('edit_id='.$this->id);
+		return true;
 	}
 
 	/**
@@ -346,14 +346,14 @@ class apu_domain extends apu_base_class{
 	function action_enable_domain_all(&$errors){
 		global $data;
 
-		if (isset($_GET['enable_all_id'])){
-			$opt['id'] = $_GET['enable_all_id'];
+		if (isset($_GET['enable_all'])){
+			$opt['id'] = $this->id;
 			$opt['disable'] = false;
 
 			if (false === $this->create_or_remove_all_symlinks(true, $errors)) return false;
 		}
 		else {
-			$opt['id'] = $_GET['disable_all_id'];
+			$opt['id'] = $this->id;
 			$opt['disable'] = true;
 
 			if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
@@ -368,7 +368,7 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_disable_all']);
 		}
 
-		return array('edit_id='.$this->id);
+		return true;
 	}
 
 	/**
@@ -391,7 +391,7 @@ class apu_domain extends apu_base_class{
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
 
-		return array('edit_id='.$this->id);
+		return true;
 	}
 
 	/**
@@ -414,7 +414,7 @@ class apu_domain extends apu_base_class{
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
 		
-		return array('edit_id='.$this->id);
+		return true;
 	}
 
 	/**
@@ -439,16 +439,16 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
 		}
 
-		return array('edit_id='.$this->id);
+		return true;
 	}
 	
 	/**
 	 *	check _get and _post arrays and determine what we will do 
 	 */
 	function determine_action(){
+		$this->id = $this->controler->domain_id;
 
 		if ($this->was_form_submited()){	// Is there data to process?
-			$this->id = $_POST['do_id'];
 			if (isset($_POST['do_okey_add_x'])){
 				$this->action=array('action'=>"add_alias",
 				                    'validate_form'=>true,
@@ -463,8 +463,8 @@ class apu_domain extends apu_base_class{
 			return;
 		}
 
-		if (isset($_GET['edit_id'])){
-			$this->id = $_GET['edit_id'];
+		if (isset($_GET['new'])){
+			$this->id = null;
 		    $this->action=array('action'=>"default",
 			                     'validate_form'=>false,
 								 'reload'=>false);
@@ -472,15 +472,13 @@ class apu_domain extends apu_base_class{
 		}
 
 		if (isset($_GET['enable_name']) or isset($_GET['disable_name'])){
-			$this->id = $_GET['id'];
 			$this->action=array('action'=>"enable_domain",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;
 		}
 
-		if (isset($_GET['enable_all_id']) or isset($_GET['disable_all_id'])){
-			$this->id = isset($_GET['enable_all_id']) ? $_GET['enable_all_id'] : $_GET['disable_all_id'];
+		if (isset($_GET['enable_all']) or isset($_GET['disable_all'])){
 			$this->action=array('action'=>"enable_domain_all",
 			                    'validate_form'=>false,
 								'reload'=>true);
@@ -488,14 +486,13 @@ class apu_domain extends apu_base_class{
 		}
 
 		if (isset($_GET['dele_name'])){
-			$this->id = $_GET['id'];
-
 			$this->action=array('action'=>"delete_domain",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;
 		}
 
+/*		if (isset($_GET['edit']))*/
 		$this->action=array('action'=>"default",
 		                    'validate_form'=>false,
 							'reload'=>false);
@@ -514,6 +511,7 @@ class apu_domain extends apu_base_class{
 		/* if domain id is not set, get new id */
 		if (!$this->id) {
 			if (false === $this->id = $data->get_new_domain_id(null, $errors)) return false;
+			$this->controler->set_domain_id($this->id);
 		}
 
 		/* get list of customers */
@@ -544,10 +542,6 @@ class apu_domain extends apu_base_class{
 									 "size"=>1,
 									 "options"=>$options,
 		                             "value"=>$this->owner['id']));
-
-		$this->f->add_element(array("type"=>"hidden",
-		                             "name"=>"do_id",
-		                             "value"=>$this->id));
 
 	}
 

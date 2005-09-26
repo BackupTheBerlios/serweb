@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.13 2005/05/24 12:22:37 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.14 2005/09/26 10:56:53 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -46,6 +46,8 @@ class page_conroler{
 	var $come_from_admin_interface=false;
 	/** auth info of user with which setting we are working. Usualy is same as $serweb_auth, only admin can change it */
 	var $user_id = null;		
+	/** id of domain with which setting we are working. Only admin can change it */
+	var $domain_id = null;		
 	/** associative array of controller options */
 	var $opt=array();
 	/** array of html forms */
@@ -72,7 +74,10 @@ class page_conroler{
 	 */
 	var $reg;
 
+	/** flag if the check to permissions to user should be performed */
 	var $check_perms_to_user = false;
+	/** flag if the check to permissions to domain should be performed */
+	var $check_perms_to_domain = false;
 	var $errors=array();
 	var $messages=array();
 	
@@ -80,6 +85,7 @@ class page_conroler{
 	function page_conroler(){
 		global $sess, $perm, $config;
 		global $serweb_auth, $sess_page_controler_user_id, $sess_xxl_selected_proxy;
+		global $sess_page_controler_domain_id;
 
 		$this->reg = Creg::singleton();				// create regular expressions class
 
@@ -132,6 +138,19 @@ class page_conroler{
 			//if still user_id is null, get it from $serweb_auth
 			if (is_null($this->user_id))
 				$this->user_id=$serweb_auth;
+
+			/* get id of administrated domain */
+			//first try get domain id from session variable
+			if (isset($sess_page_controler_domain_id)){
+				$this->domain_id = $sess_page_controler_domain_id;
+			}
+
+			//second if domain_id param is given, get domain id from it
+			if (isset($_GET['pc_domain_id'])){
+				$this->check_perms_to_domain = true;
+
+				$this->set_domain_id($_GET['pc_domain_id']);
+			}
 				
 
 		}
@@ -141,13 +160,37 @@ class page_conroler{
 		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
 			$GLOBALS['data_selected_proxy'] = &$GLOBALS['data_auth'];
 	}
+
+	/**
+	 *	return string which can be used as $_GET param containing id of domain
+	 *
+	 *	@param 	string $domain_id		id of domain
+	 *	@return string					$_GET param
+	 */
+	function domain_to_get_param($domain_id){
+		return "pc_domain_id=".RawURLEncode($domain_id);
+	}
+	
+	/**
+	 *	set $this->domain_id and session variable to given value
+	 *
+	 *	@param 	string $domain_id		id of domain
+	 */
+	function set_domain_id($domain_id){
+		global $sess, $sess_page_controler_domain_id;
+
+		//register session variable
+		if (!$sess->is_registered('sess_page_controler_domain_id')) $sess->register('sess_page_controler_domain_id');
+		
+		$this->domain_id = $sess_page_controler_domain_id = $domain_id;
+	}
 	
 	/**
 	 * return required data layer methods - static class 
 	 * @static
 	 */
 	function get_required_data_layer_methods(){
-		return array('check_admin_perms_to_user', 'set_timezone');
+		return array('check_admin_perms_to_user', 'check_admin_perms_to_domain', 'set_timezone');
 	}
 
 	/* add application unit to $apu_objects array*/
@@ -572,7 +615,7 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm, $auth;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
@@ -583,9 +626,28 @@ class page_conroler{
 
 				$sess_page_controler_user_id = $serweb_auth;
 				page_close();			
-				die("You haven't permissions to manage user '".$this->user_id->uname."'");
+				die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
 			} 
 		}
+
+
+		/* check if admin have perms to manage domain */
+		if ($this->check_perms_to_domain){
+			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
+				$pp=$GLOBALS['data']->check_admin_perms_to_domain($serweb_auth, $auth, $this->domain_id, array(), $this->errors);
+
+				if (0 > $pp or !$pp){
+					if (0 > $pp) echo "Permissin check error \n";
+	
+					$sess_page_controler_domain_id = null;
+					page_close();			
+					die("You haven't permissions to manage domain with id:'".$this->domain_id."'");
+				} 
+
+			}
+		}
+
+
 
 		/* translate chars '<', '>', etc. to &lt; &gt; etc.. */
 		$this->hack_protection();

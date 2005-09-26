@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.10 2005/09/22 14:42:54 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.11 2005/09/26 10:59:53 kozlik Exp $
  */
 
 
@@ -164,7 +164,8 @@
 															'get_privileges_of_user',
 															'get_user_dom_from_uid',
 															'set_db_charset',
-															'set_db_collation');
+															'set_db_collation',
+															'get_domains_of_admin');
 
 		/*
 		 *  names of columns in table speed dial
