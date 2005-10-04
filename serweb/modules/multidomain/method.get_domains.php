@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.2 2005/10/04 09:59:36 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -23,6 +23,9 @@ class CData_Layer_get_domains {
 	 *		if true, function return aliases of domain in 'names' keys of returned array.
 	 *		Otherwise the keys 'names' are empty
 	 *
+	 *	  return_all		(bool)	default: false
+	 *		if true, the result isn't limited by LIMIT sql phrase
+	 *
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages
 	 *	@return array			array of domains or FALSE on error
@@ -38,6 +41,7 @@ class CData_Layer_get_domains {
 
 	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
 	    $o_get_names = (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
+	    $o_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
 
 		$qw=" true ";
 		if (!empty($o_filter['id']))          $qw .= "and d.".$cd->id." LIKE '%".$o_filter['id']."%' ";
@@ -48,7 +52,8 @@ class CData_Layer_get_domains {
 		/* get num rows */		
 		$q="select count(distinct d.".$cd->id.") 
 		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
-			       on d.".$cd->id." = dp.".$cp->id.") left outer join ".$config->data_sql->table_customer." c
+			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner') 
+				   left outer join ".$config->data_sql->table_customer." c
 			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
 			where ".$qw;
 		
@@ -63,12 +68,13 @@ class CData_Layer_get_domains {
 	
 		$q="select d.".$cd->id.", c.".$cc->name."
 		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
-			       on d.".$cd->id." = dp.".$cp->id.") left outer join ".$config->data_sql->table_customer." c
+			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
+				   left outer join ".$config->data_sql->table_customer." c
 			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
 			where ".$qw." 
 			group by d.".$cd->id."
 			order by d.".$cd->id.
-			$this->get_sql_limit_phrase();
+			($o_return_all ? "" : $this->get_sql_limit_phrase());
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
