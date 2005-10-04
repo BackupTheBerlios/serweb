@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_owner_of_domain.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.get_owner_of_domain.php,v 1.2 2005/10/04 09:58:44 kozlik Exp $
  */
 
 class CData_Layer_get_owner_of_domain {
@@ -31,8 +31,8 @@ class CData_Layer_get_owner_of_domain {
 
 		$q="select dp.".$cp->att_value.", c.".$cc->name."
 		    from ".$config->data_sql->table_dom_preferences." dp left outer join ".$config->data_sql->table_customer." c
-				on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
-			where dp.".$cp->id." = ".$id;
+				on (dp.".$cp->att_value." = c.".$cc->id.")
+			where dp.".$cp->id." = ".$id." and dp.".$cp->att_name." = 'owner'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
