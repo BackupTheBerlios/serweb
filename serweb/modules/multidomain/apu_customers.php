@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.2 2005/10/05 12:38:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -170,7 +170,10 @@ class apu_customers extends apu_base_class{
 		global $data;
 
 		$opt = array( 'insert' => true);
-		$values = array('name'  => $_POST['cu_name']);			
+		$values = array('name'  => $_POST['cu_name'],
+		                'address'  => $_POST['cu_address'],
+						'phone'  => $_POST['cu_phone'],
+						'email'  => $_POST['cu_email']);			
 							
 		if (false === $data->update_customer($values, $opt, $errors)) return false;
 
@@ -188,7 +191,10 @@ class apu_customers extends apu_base_class{
 
 		$opt = array( 'insert' => false,
 		              'primary_key' => array('id' => $this->act_id));
-		$values = array('name'  => $_POST['cu_name']);			
+		$values = array('name'  => $_POST['cu_name'],
+		                'address'  => $_POST['cu_address'],
+						'phone'  => $_POST['cu_phone'],
+						'email'  => $_POST['cu_email']);			
 							
 		if (false === $data->update_customer($values, $opt, $errors)) return false;
 
@@ -308,6 +314,8 @@ class apu_customers extends apu_base_class{
 			$this->customer = reset($customer);	//return first value of array
 		}
 
+		$reg = Creg::singleton();
+
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"cu_name",
 									 "size"=>16,
@@ -315,6 +323,26 @@ class apu_customers extends apu_base_class{
 		                             "value"=>isset($this->customer['name']) ? $this->customer['name'] : "",
 									 "minlength"=>1,
 									 "length_e"=>$lang_str['fe_not_customer_name']));
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"cu_address",
+									 "size"=>16,
+									 "maxlength"=>255,
+		                             "value"=>isset($this->customer['address']) ? $this->customer['address'] : ""));
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"cu_phone",
+									 "size"=>16,
+									 "maxlength"=>64,
+		                             "value"=>isset($this->customer['phone']) ? $this->customer['phone'] : ""));
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"cu_email",
+									 "size"=>16,
+									 "maxlength"=>255,
+		                             "value"=>isset($this->customer['email']) ? $this->customer['email'] : "",
+		                             "valid_regex"=>"(".$reg->email.")|(^$)",
+		                             "valid_e"=>$lang_str['fe_not_valid_email']));
 
 		$this->f->add_element(array("type"=>"hidden",
 		                             "name"=>"cu_id",

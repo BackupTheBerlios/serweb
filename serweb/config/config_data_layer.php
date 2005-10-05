@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.11 2005/09/26 10:59:53 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.12 2005/10/05 12:38:26 kozlik Exp $
  */
 
 
@@ -186,6 +186,9 @@
 		$config->data_sql->customer = new stdClass();															
  		$config->data_sql->customer->id = 				"c_id";
  		$config->data_sql->customer->name = 			"name";
+ 		$config->data_sql->customer->address = 			"address";
+ 		$config->data_sql->customer->phone = 			"phone";
+ 		$config->data_sql->customer->email = 			"email";
 
 		/*
 		 *  names of columns in table domain
@@ -193,7 +196,6 @@
 		$config->data_sql->domain = new stdClass();															
  		$config->data_sql->domain->id = 				"d_id";
  		$config->data_sql->domain->name = 				"domain";
- 		$config->data_sql->domain->disabled = 			"f_disabled";
 
 		/*
 		 *  names of columns in table dom_preferences

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.2 2005/10/05 12:38:26 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -11,7 +11,9 @@ class CData_Layer_update_customer {
 	 *
 	 *  Keys of associative array $values:
 	 *    name
-	 *
+	 *    address
+	 *    email
+	 *    phone
 	 *
 	 *  Possible options:
 	 *
@@ -46,15 +48,18 @@ class CData_Layer_update_customer {
 		if ($opt_insert) {
 
 			$q="insert into ".$config->data_sql->table_customer." (
-					   ".$c->name."
+					   ".$c->name.", ".$c->address.", ".$c->email.", ".$c->phone."
 			    ) 
 				values (
-					   '".$values['name']."'
+					   '".$values['name']."', '".$values['address']."', '".$values['email']."', '".$values['phone']."'
 				 )";
 		}
 		else {
 			$q="update ".$config->data_sql->table_customer." 
-			    set ".$c->name."='".$values['name']."' 
+			    set ".$c->name."='".$values['name']."',  
+			        ".$c->address."='".$values['address']."', 
+			        ".$c->email."='".$values['email']."', 
+			        ".$c->phone."='".$values['phone']."'
 				where ".$c->id."='".$opt['primary_key']['id']."'";
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_customers.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.get_customers.php,v 1.2 2005/10/05 12:38:26 kozlik Exp $
  */
 
 class CData_Layer_get_customers {
@@ -12,6 +12,9 @@ class CData_Layer_get_customers {
 	 *  Keys of associative arrays:
 	 *    id	-	id of customer
 	 *    name	-	name of customer
+	 *    address  
+	 *    email
+	 *    phone
 	 *
 	 *  Possible options:
 	 *
@@ -56,7 +59,7 @@ class CData_Layer_get_customers {
 		/* if act_row is bigger then num_rows, correct it */
 		$this->correct_act_row();
 	
-		$q="select ".$c->id.", ".$c->name." 
+		$q="select ".$c->id.", ".$c->name.", ".$c->phone.", ".$c->address.", ".$c->email." 
 		    from ".$config->data_sql->table_customer.
 			$qw." 
 			order by name".
@@ -67,8 +70,11 @@ class CData_Layer_get_customers {
 		
 		$out=array();
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i]['id']   = $row[$c->id];
-			$out[$i]['name'] = $row[$c->name];
+			$out[$i]['id']      = $row[$c->id];
+			$out[$i]['name']    = $row[$c->name];
+			$out[$i]['phone']   = $row[$c->phone];
+			$out[$i]['address'] = $row[$c->address];
+			$out[$i]['email']   = $row[$c->email];
 			$out[$i]['primary_key']  = array('id' => &$out[$i]['id']);
 		}
 		$res->free();
