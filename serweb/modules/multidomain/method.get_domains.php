@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.2 2005/10/04 09:59:36 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.3 2005/10/05 11:22:52 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -66,11 +66,13 @@ class CData_Layer_get_domains {
 		/* if act_row is bigger then num_rows, correct it */
 		$this->correct_act_row();
 	
-		$q="select d.".$cd->id.", c.".$cc->name."
+		$q="select d.".$cd->id.", c.".$cc->name.", dpd.".$cp->att_value." as disabled
 		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
 			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
 				   left outer join ".$config->data_sql->table_customer." c
 			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
+			       left outer join ".$config->data_sql->table_dom_preferences." dpd 
+			       on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
 			where ".$qw." 
 			group by d.".$cd->id."
 			order by d.".$cd->id.
@@ -83,6 +85,7 @@ class CData_Layer_get_domains {
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
 			$out[$i]['id']		   = $row[$cd->id];
 			$out[$i]['customer']   = $row[$cc->name];
+			$out[$i]['disabled']   = $row['disabled'];
 
 			$o = array('filter' => array('id' => $row[$cd->id]));
 			if ($o_get_names){

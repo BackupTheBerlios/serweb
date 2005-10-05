@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.2 2005/10/05 11:22:52 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
@@ -12,7 +12,6 @@ class CData_Layer_get_domain {
 	 *  Keys of associative arrays:
 	 *    id
 	 *    name
-	 *    disabled
 	 *
 	 *  Possible options:
 	 *
@@ -37,7 +36,7 @@ class CData_Layer_get_domain {
 			$qw .= "and ".$c->$k." = '".$v."' ";
 		}
 
-		$q="select ".$c->id.", ".$c->name.", ".$c->disabled."
+		$q="select ".$c->id.", ".$c->name."
 		    from ".$config->data_sql->table_domain."
 			where ".$qw." 
 			order by ".$c->name;
@@ -49,7 +48,6 @@ class CData_Layer_get_domain {
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
 			$out[$i]['id']       = $row[$c->id];
 			$out[$i]['name']     = $row[$c->name];
-			$out[$i]['disabled'] = $row[$c->disabled];
 			$out[$i]['primary_key']  = array('id' => &$out[$i]['id'], 
 			                                 'name' => &$out[$i]['name']);
 		}

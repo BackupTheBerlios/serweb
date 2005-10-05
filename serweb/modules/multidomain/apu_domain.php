@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.2 2005/09/26 10:56:54 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.3 2005/10/05 11:22:50 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -21,13 +21,7 @@
  *	 if empty, browser isn't redirected
  *	
  *	'redirect_on_disable'		(string) default: ''
- *	 name of script to which is browser redirected after disable or enable some 
- *	 alias of domain
- *	 if empty, browser isn't redirected
- *	
- *	'redirect_on_disable_all'	(string) default: ''
- *	 name of script to which is browser redirected after disable or enable whole 
- *	 domain
+ *	 name of script to which is browser redirected after disable or enable domain 
  *	 if empty, browser isn't redirected
  *	
  *	'no_domain_name_e'			(string) default: $lang_str['no_domain_name_is_set']
@@ -119,7 +113,6 @@ class apu_domain extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['redirect_on_disable'] = "";
-		$this->opt['redirect_on_disable_all'] = "";
 		$this->opt['redirect_on_update']  = "";
 
 		$this->opt['no_domain_name_e'] = $lang_str['no_domain_name_is_set'];
@@ -294,15 +287,13 @@ class apu_domain extends apu_base_class{
 
 		foreach($this->dom_names as $key=>$val){
 			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name']));
-			$this->dom_names[$key]['url_enable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&enable_name=".RawURLEncode($val['name']));
-			$this->dom_names[$key]['url_disable'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&disable_name=".RawURLEncode($val['name']));
 		}
 
 		return true;		
 	}
 	
 	/**
-	 *	Method enable or disable domain alias depending on $_GET params
+	 *	Method enable or disable (depending on $_GET params) domain
 	 *
 	 *	@param array $errors	array with error messages
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
@@ -311,42 +302,7 @@ class apu_domain extends apu_base_class{
 	function action_enable_domain(&$errors){
 		global $data;
 
-		if (isset($_GET['enable_name'])){
-			$opt['name'] = $_GET['enable_name'];
-			$opt['disable'] = false;
-
-			if (false === $this->create_symlinks($opt['name'], $errors)) return false;
-		}
-		else {
-			$opt['name'] = $_GET['disable_name'];
-			$opt['disable'] = true;
-			
-			if (false === $this->remove_symlinks($opt['name'], $errors)) return false;
-		}
-
-		if (false === $data->enable_domain($opt, $errors)) return false;
-
-		/* notify SER to reload domains */
-		if (false === $data->reload_domains(null, $errors)) return false;
-
-		if ($this->opt['redirect_on_disable']){
-			$this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
-		}
-
-		return true;
-	}
-
-	/**
-	 *	Method enable or disable (depending on $_GET params) all aliases of domain
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
-	 */
-
-	function action_enable_domain_all(&$errors){
-		global $data;
-
-		if (isset($_GET['enable_all'])){
+		if (isset($_GET['enable'])){
 			$opt['id'] = $this->id;
 			$opt['disable'] = false;
 
@@ -364,8 +320,8 @@ class apu_domain extends apu_base_class{
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
 
-		if ($this->opt['redirect_on_disable_all']){
-			$this->controler->change_url_for_reload($this->opt['redirect_on_disable_all']);
+		if ($this->opt['redirect_on_disable']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
 		}
 
 		return true;
@@ -378,7 +334,7 @@ class apu_domain extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 
-	function action_delete_domain(&$errors){
+	function action_delete_domain_alias(&$errors){
 		global $data;
 
 		$opt['id'] = $this->id;
@@ -471,22 +427,15 @@ class apu_domain extends apu_base_class{
 			return;
 		}
 
-		if (isset($_GET['enable_name']) or isset($_GET['disable_name'])){
+		if (isset($_GET['enable']) or isset($_GET['disable'])){
 			$this->action=array('action'=>"enable_domain",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;
 		}
 
-		if (isset($_GET['enable_all']) or isset($_GET['disable_all'])){
-			$this->action=array('action'=>"enable_domain_all",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			return;
-		}
-
 		if (isset($_GET['dele_name'])){
-			$this->action=array('action'=>"delete_domain",
+			$this->action=array('action'=>"delete_domain_alias",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;

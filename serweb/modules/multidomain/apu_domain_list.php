@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.2 2005/09/26 10:56:54 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.3 2005/10/05 11:22:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -181,8 +181,8 @@ class apu_domain_list extends apu_base_class{
 		foreach($this->domains as $key=>$val){
 			$get = $this->controler->domain_to_get_param($val['id']);
 			$this->domains[$key]['url_edit'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&edit=1");
-			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&enable_all=1");
-			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&disable_all=1");
+			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&enable=1");
+			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&disable=1");
 		}
 
 		return true;
