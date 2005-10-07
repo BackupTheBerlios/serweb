@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.3 2005/08/29 13:28:11 kozlik Exp $
+ * $Id: method.get_users.php,v 1.4 2005/10/07 14:01:14 kozlik Exp $
  */
 
 /*
@@ -21,7 +21,11 @@
  *  Possible options parameters:
  *
  *    only_domain	  		(string) default: null
- *      if is set, only subscribers from selected domain are returned
+ *      if is set, only subscribers from selected domain alias are returned
+ *  
+ *    from_domains			(array) default:null
+ *  	array of domain IDs from which are returned subscribers. By default are 
+ *		returned all subscribers. Multidomain support must be enabled.
  *  
  *    get_user_aliases	  	(bool) default: true
  *      should returned aliases of users?
@@ -35,8 +39,12 @@ class CData_Layer_get_users {
 		global $config, $sess;
 
 		if (!$this->connect_to_db($errors)) return false;
+
+		$cd = &$config->data_sql->domain;
+		$cp = &$config->data_sql->dom_pref;
 	
 	    $opt_only_domain = (isset($opt['only_domain'])) ? $opt['only_domain'] : null;
+	    $opt_from_domains = (isset($opt['from_domains'])) ? $opt['from_domains'] : null;
 	    $opt_get_aliases = (isset($opt['get_user_aliases'])) ? (bool)$opt['get_user_aliases'] : true;
 
 
@@ -63,6 +71,28 @@ class CData_Layer_get_users {
 			$q_online_where = "";
 		}
 
+		$q_domains_from = $q_domains_where = $q_domains_cols = "";
+		if ($config->multidomain){
+			$q_domains_cols = 
+				" dpd.".$cp->att_value." as domain_disabled ";
+			$q_domains_from = 
+				" left outer join ".$config->data_sql->table_domain." d on s.domain = d.".$cd->name."
+			      left outer join ".$config->data_sql->table_dom_preferences." dpd 
+			        on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
+			      left outer join ".$config->data_sql->table_dom_preferences." dpx 
+			        on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')";
+			$q_domains_where = /* skip subscribers from deleted domains */
+				" not (COALESCE(dpx.".$cp->att_value.", 0) > 0) and ";    
+
+			if (is_array($opt_from_domains)){
+				/* create a list of domains from which subscribers should be */
+				$q_dom_tmp = "";
+				foreach($opt_from_domains as $v) $q_dom_tmp .= " d.".$cd->id." = '".$v."' or ";
+				$q_domains_where .= " (".$q_dom_tmp." 0) and ";
+				unset($q_dom_tmp);
+			}
+		}
+
 
 		$query_c="";
 		if ($filter['usrnm'])  $query_c .= "s.username like '%".$filter['usrnm']."%' and ";
@@ -82,8 +112,8 @@ class CData_Layer_get_users {
 		/* get num rows */		
 		$q="select s.username ".
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
-				$q_admins_join.
-			" where ".$q_admins_where.$q_online_where.$query_c;
+				$q_admins_join.$q_domains_from.
+			" where ".$q_domains_where.$q_admins_where.$q_online_where.$query_c;
 
 
 		$res=$this->db->query($q);
@@ -99,10 +129,10 @@ class CData_Layer_get_users {
 		else $attribute='s.phplib_id';
 		
 		/* get users */
-		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid ".
+		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid, ".$q_domains_cols.
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
-				$q_admins_join.
-			" where ".$q_admins_where.$q_online_where.$query_c.
+				$q_admins_join.$q_domains_from.
+			" where ".$q_domains_where.$q_admins_where.$q_online_where.$query_c.
 			" order by s.username ".$this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);

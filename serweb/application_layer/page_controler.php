@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.14 2005/09/26 10:56:53 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.15 2005/10/07 14:01:14 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -615,26 +615,28 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm, $auth;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
-			$pp=$GLOBALS['data']->check_admin_perms_to_user($serweb_auth, $this->user_id, $this->errors);
-
-			if (0 > $pp or !$pp){
-				if (0 > $pp) echo "Database error \n";
-
-				$sess_page_controler_user_id = $serweb_auth;
-				page_close();			
-				die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
-			} 
+			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
+				$pp=$GLOBALS['data']->check_admin_perms_to_user($serweb_auth, $this->user_id, $this->errors);
+	
+				if (0 > $pp or !$pp){
+					if (0 > $pp) echo "Database error \n";
+	
+					$sess_page_controler_user_id = $serweb_auth;
+					page_close();			
+					die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
+				} 
+			}
 		}
 
 
 		/* check if admin have perms to manage domain */
 		if ($this->check_perms_to_domain){
 			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
-				$pp=$GLOBALS['data']->check_admin_perms_to_domain($serweb_auth, $auth, $this->domain_id, array(), $this->errors);
+				$pp=$GLOBALS['data']->check_admin_perms_to_domain($serweb_auth, $this->domain_id, array(), $this->errors);
 
 				if (0 > $pp or !$pp){
 					if (0 > $pp) echo "Permissin check error \n";

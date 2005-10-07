@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.1 2005/08/17 10:43:08 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.2 2005/10/07 14:01:14 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -29,6 +29,10 @@
  *	
  *	'only_from_same_domain'		(bool) default: false
  *	 set to true for display only users from same domain as admin
+ *	 DEPRECATED
+ *	
+ *	'only_from_administrated_domains'	(bool) default: false
+ *	 set to true for display only users from domains administrated by admin
  *	
  *	'get_user_aliases'			(bool) default: false
  *	 set to true if you want display aliases of users
@@ -100,6 +104,7 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['sess_seed'] =	0;
 
 		$this->opt['only_from_same_domain'] = false;
+		$this->opt['only_from_administrated_domains'] = false;
 
 		$this->opt['get_user_aliases'] = false;
 
@@ -129,7 +134,7 @@ class apu_subscribers extends apu_base_class{
 	function action_delete(&$errors){
 		global $data, $lang_str, $serweb_auth;
 	
-		if ($this->opt['only_from_same_domain']){
+		if ($this->opt['only_from_same_domain'] or $this->opt['only_from_administrated_domains']){
 			if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $this->dele_user, $errors))) return false;
 			
 			if (!$pp){
@@ -149,10 +154,16 @@ class apu_subscribers extends apu_base_class{
 		global $data, $sess, $sess_apu_sc, $serweb_auth;
 
 		$data->set_act_row($sess_apu_sc[$this->opt['sess_seed']]['act_row']);
+
+		if (isset($serweb_auth->domains_perm) and is_array($serweb_auth->domains_perm)) $domains_perm = $serweb_auth->domains_perm;
+		else $domains_perm = array();
 		
 		$opt = array('only_domain' => $this->opt['only_from_same_domain']?
 							$serweb_auth->domain:
 							null,
+					 'from_domains' => $this->opt['only_from_administrated_domains']?
+					 		$domains_perm:
+					 		null,
 					 'get_user_aliases' => $this->opt['get_user_aliases']);
 		
 		

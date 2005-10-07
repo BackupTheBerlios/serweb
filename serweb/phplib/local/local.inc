@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.7 2005/09/26 10:56:54 kozlik Exp $
+ * $Id: local.inc,v 1.8 2005/10/07 14:01:14 kozlik Exp $
  */
 
 
@@ -113,7 +113,7 @@ class phplib_Auth extends Auth {
   /*
   	method checks user permisions
   */
-	function check_for_privileges($user){
+	function check_for_privileges(&$user){
 		global $config, $errors, $data_auth;
 
 	    if (false === $privileges = $data_auth->get_privileges_of_user($user, array('change_privileges','is_admin', 'hostmaster'), $errors)) return false;
@@ -145,7 +145,7 @@ class phplib_Auth extends Auth {
 		}
 
 		/* get privileges to administrative domains */
-	    if (false === $this->auth["domains_perm"] = $data_auth->get_domains_of_admin($user, array(), $errors)) return false;
+	    if (false === $user->domains_perm = $data_auth->get_domains_of_admin($user, array(), $errors)) return false;
 
 	} //function check_for_privileges()
 }
