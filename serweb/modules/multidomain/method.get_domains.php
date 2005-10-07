@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.3 2005/10/05 11:22:52 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.4 2005/10/07 07:28:00 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -49,45 +49,69 @@ class CData_Layer_get_domains {
 		if (!empty($o_filter['customer']))    $qw .= "and c.".$cc->name." LIKE '%".$o_filter['customer']."%' ";
 		if (!empty($o_filter['customer_id'])) $qw .= "and c.".$cc->id." = '".$o_filter['customer_id']."' ";
 
-		/* get num rows */		
-		$q="select count(distinct d.".$cd->id.") 
-		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
-			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner') 
-				   left outer join ".$config->data_sql->table_customer." c
-			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
-			where ".$qw;
-		
-		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
-		$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
-		$this->set_num_rows($row[0]);
-		$res->free();
+		/* prepare SQL query */
 
-		/* if act_row is bigger then num_rows, correct it */
-		$this->correct_act_row();
-	
-		$q="select d.".$cd->id.", c.".$cc->name.", dpd.".$cp->att_value." as disabled
+		/* second select is necessary to get domains without aliases 
+		   both selects are same except the table from which is obtained list of domains.
+		   table_domain in first select and table_dom_preferences in second select 
+		  
+		   Statement 'not COALESCE((dpx.".$cp->att_value." > 0), 0)' is used for skip deleted domains 
+		*/
+		$q1="select d.".$cd->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
 		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
 			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
 				   left outer join ".$config->data_sql->table_customer." c
 			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
 			       left outer join ".$config->data_sql->table_dom_preferences." dpd 
 			       on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
-			where ".$qw." 
-			group by d.".$cd->id."
-			order by d.".$cd->id.
-			($o_return_all ? "" : $this->get_sql_limit_phrase());
+			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
+			       on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
+			where ".$qw." and not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			group by d.".$cd->id;
+			
+		$q2="select d.".$cp->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
+		    from (".$config->data_sql->table_dom_preferences." d left outer join ".$config->data_sql->table_dom_preferences." dp 
+			       on d.".$cp->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
+				   left outer join ".$config->data_sql->table_customer." c
+			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
+			       left outer join ".$config->data_sql->table_dom_preferences." dpd 
+			       on (d.".$cp->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
+			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
+			       on (d.".$cp->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
+			where ".$qw." and not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			group by d.".$cp->id;
+
+		if (empty($o_filter['name']))			
+			$q = "(".$q1.") union (".$q2.")";
+		else $q = &$q1;	
+		
+		if (!$o_return_all){
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+			$this->set_num_rows($res->numRows());
+			$res->free();
+
+			/* if act_row is bigger then num_rows, correct it */
+			$this->correct_act_row();
+		}
+
+		$q.=" order by dom_id";
+		$q.=($o_return_all ? "" : $this->get_sql_limit_phrase());
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+
+		if ($o_return_all){
+			$this->set_num_rows($res->numRows());
+		}
 		
 		$out=array();
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i]['id']		   = $row[$cd->id];
+			$out[$i]['id']		   = $row['dom_id'];
 			$out[$i]['customer']   = $row[$cc->name];
 			$out[$i]['disabled']   = $row['disabled'];
 
-			$o = array('filter' => array('id' => $row[$cd->id]));
+			$o = array('filter' => array('id' => $row['dom_id']));
 			if ($o_get_names){
 				if (false === $out[$i]['names'] = $this->get_domain($o, $errors)) return false;
 			}

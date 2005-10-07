@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_domain_alias.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.add_domain_alias.php,v 1.2 2005/10/07 07:28:00 kozlik Exp $
  */
 
 class CData_Layer_add_domain_alias {
@@ -31,13 +31,11 @@ class CData_Layer_add_domain_alias {
 
 		$q="insert into ".$config->data_sql->table_domain." (
 				   ".$c->id.",
-				   ".$c->name.", 
-				   ".$c->disabled."
+				   ".$c->name."
 		    ) 
 			values (
 				   '".$values['id']."', 
-				   '".$values['name']."', 
-				   0
+				   '".$values['name']."'
 			 )";
 
 		$res=$this->db->query($q);

@@ -1,9 +1,9 @@
 <?php
 /*
- * $Id: method.delete_domain.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.del_domain_alias.php,v 1.1 2005/10/07 07:28:00 kozlik Exp $
  */
 
-class CData_Layer_delete_domain {
+class CData_Layer_del_domain_alias {
 	var $required_methods = array();
 	
 	/**
@@ -23,7 +23,7 @@ class CData_Layer_delete_domain {
 	 *	@param array $errors	error messages
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */ 
-	function delete_domain($opt, &$errors){
+	function del_domain_alias($opt, &$errors){
 		global $config;
 
 		if (!$this->connect_to_db($errors)) return false;

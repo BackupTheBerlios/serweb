@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.3 2005/10/05 11:22:50 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.4 2005/10/07 07:28:00 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -22,6 +22,10 @@
  *	
  *	'redirect_on_disable'		(string) default: ''
  *	 name of script to which is browser redirected after disable or enable domain 
+ *	 if empty, browser isn't redirected
+ *	
+ *	'redirect_on_delete'		(string) default: ''
+ *	 name of script to which is browser redirected after succesfull delete of domain
  *	 if empty, browser isn't redirected
  *	
  *	'no_domain_name_e'			(string) default: $lang_str['no_domain_name_is_set']
@@ -81,6 +85,8 @@ class apu_domain extends apu_base_class{
 	var $dom_names = array();
 	/** owner of this domain */
 	var $owner = null;
+	/** domain preferences */
+	var $preferences = array();
 	
 	/** 
 	 *	return required data layer methods - static class 
@@ -89,8 +95,9 @@ class apu_domain extends apu_base_class{
 	 */
 	function get_required_data_layer_methods(){
 		return array('get_owner_of_domain', 'get_domain', 'get_customers', 
-			'get_new_domain_id', 'enable_domain', 'delete_domain', 
-			'add_domain_alias', 'update_owner_of_domain', 'reload_domains');
+			'get_new_domain_id', 'enable_domain', 'del_domain_alias', 
+			'add_domain_alias', 'update_owner_of_domain', 'reload_domains',
+			'mark_domain_deleted', 'get_domain_preferences');
 	}
 
 	/**
@@ -114,6 +121,7 @@ class apu_domain extends apu_base_class{
 		/* set default values to $this->opt */		
 		$this->opt['redirect_on_disable'] = "";
 		$this->opt['redirect_on_update']  = "";
+		$this->opt['redirect_on_delete']  = "";
 
 		$this->opt['no_domain_name_e'] = $lang_str['no_domain_name_is_set'];
 		
@@ -328,6 +336,31 @@ class apu_domain extends apu_base_class{
 	}
 
 	/**
+	 *	Method delete domain
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_delete_domain(&$errors){
+		global $data;
+
+		$opt['id'] = $this->id;
+		if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
+
+		if (false === $data->mark_domain_deleted($opt, $errors)) return false;
+
+		/* notify SER to reload domains */
+		if (false === $data->reload_domains(null, $errors)) return false;
+
+		if ($this->opt['redirect_on_delete']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_delete']);
+		}
+
+		return true;
+	}
+
+	/**
 	 *	Method delete alias of the domain. Alias name depend on $_GET param
 	 *
 	 *	@param array $errors	array with error messages
@@ -342,7 +375,7 @@ class apu_domain extends apu_base_class{
 
 		if (false === $this->remove_symlinks($opt['name'], $errors)) return false;
 
-		if (false === $data->delete_domain($opt, $errors)) return false;
+		if (false === $data->del_domain_alias($opt, $errors)) return false;
 
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
@@ -362,13 +395,16 @@ class apu_domain extends apu_base_class{
 
 		$values['id'] = $this->id;
 		$values['name'] = $_POST['do_new_name'];
-
-		if (false === $this->create_symlinks($values['name'], $errors)) return false;
 		
 		if (false === $data->add_domain_alias($values, null, $errors)) return false;
 
-		/* notify SER to reload domains */
-		if (false === $data->reload_domains(null, $errors)) return false;
+		/* create symlinks and notify ser only if domain isn't disabled */
+		if (empty($this->preferences['disabled'])){
+			if (false === $this->create_symlinks($values['name'], $errors)) return false;
+	
+			/* notify SER to reload domains */
+			if (false === $data->reload_domains(null, $errors)) return false;
+		}
 		
 		return true;
 	}
@@ -434,6 +470,13 @@ class apu_domain extends apu_base_class{
 			return;
 		}
 
+		if (isset($_GET['delete'])){
+			$this->action=array('action'=>"delete_domain",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
 		if (isset($_GET['dele_name'])){
 			$this->action=array('action'=>"delete_domain_alias",
 			                    'validate_form'=>false,
@@ -465,6 +508,10 @@ class apu_domain extends apu_base_class{
 
 		/* get list of customers */
 		if (false === $this->customers = $data->get_customers(array(), $errors)) return false;
+
+		/* get domain preferences */
+		if (false === $this->preferences = $data->get_domain_preferences($this->id, array(), $errors)) return false;
+
 
 		$options = array();
 		$options[] = array('label' => "--- ".$lang_str['none']." ---", 'value' => -1);
