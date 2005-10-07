@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.2 2005/10/05 11:22:52 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.1 2005/10/07 13:57:54 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
