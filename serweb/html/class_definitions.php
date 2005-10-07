@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: class_definitions.php,v 1.3 2005/03/03 11:39:01 kozlik Exp $
+ * $Id: class_definitions.php,v 1.4 2005/10/07 14:00:35 kozlik Exp $
  */
 
 class Csub_not {
@@ -84,9 +84,9 @@ class Cconfig{
  
 //class for storing authentication information
 class Cserweb_auth{
-	var $uuid, $uname, $domain;
+	var $uuid, $uname, $domain, $domains_perm;
 	var $classname='Cserweb_auth';
-	var $persistent_slots = array("uuid", "uname", "domain");
+	var $persistent_slots = array("uuid", "uname", "domain", "domains_perm");
 
 	function Cserweb_auth($uuid=null, $uname=null, $domain=null){
 		$this->uuid   =	$uuid;
