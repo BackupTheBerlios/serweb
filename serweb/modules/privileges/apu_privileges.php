@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.2 2005/09/22 14:11:43 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.3 2005/10/07 13:09:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -15,6 +15,9 @@
  *	Configuration:
  *	--------------
  *
+ *	'disabled_privileges'		(array) default: array()
+ *	 list of privileges that can't be changed
+ *	
  *	'redirect_on_update'		(string) default: ''
  *	 name of script to which is browser redirected after succesfull update
  *	 if empty, browser isn't redirected
@@ -32,6 +35,7 @@
  *	'smarty_form'				name of smarty variable - see below
  *	'smarty_action'				name of smarty variable - see below
  *	'smarty_groups'				name of smarty variable - see below
+ *	'smarty_enabled_privileges'	name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -45,12 +49,15 @@
  *	
  *	opt['smarty_groups']		(grp)
  *	 contain all possible values in ACL
- *
+ *	
+ *	opt['smarty_enabled_privileges']	(en_priv)
+ *	 associative array - keys are privilege names, values are 0 and 1 (enabled/disabled)
  */
 
 class apu_privileges extends apu_base_class{
 	var $smarty_action='default';
 	var $privileges;
+	var $enabled_privileges;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -68,6 +75,7 @@ class apu_privileges extends apu_base_class{
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
+		$this->opt['disabled_privileges'] = array();
 		$this->opt['redirect_on_update'] = "";
 
 		/* message on attributes update */
@@ -83,6 +91,8 @@ class apu_privileges extends apu_base_class{
 		$this->opt['form_name'] =			'f_priv';
 
 		$this->opt['smarty_groups'] = 		'grp';		
+
+		$this->opt['smarty_enabled_privileges'] = 		'en_priv';		
 		
 	}
 
@@ -140,10 +150,18 @@ class apu_privileges extends apu_base_class{
 	function action_update(&$errors){
 		global $config;
 		
-		if (false === $this->update_db('is_admin', array('type'=>'boolean'), $errors)) return false;
-		if (false === $this->update_db('change_privileges', array('type'=>'boolean'), $errors)) return false;
-		if (false === $this->update_db('hostmaster', array('type'=>'boolean'), $errors)) return false;
-		if (false === $this->update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $errors)) return false;
+		if ($this->enabled_privileges['is_admin']){
+			if (false === $this->update_db('is_admin', array('type'=>'boolean'), $errors)) return false;
+		}
+		if ($this->enabled_privileges['change_privileges']){
+			if (false === $this->update_db('change_privileges', array('type'=>'boolean'), $errors)) return false;
+		}
+		if ($this->enabled_privileges['hostmaster']){
+			if (false === $this->update_db('hostmaster', array('type'=>'boolean'), $errors)) return false;
+		}
+		if ($this->enabled_privileges['acl_control']){
+			if (false === $this->update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $errors)) return false;
+		}
 
 		if ($this->opt['redirect_on_update'])
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
@@ -160,6 +178,15 @@ class apu_privileges extends apu_base_class{
 		$this->privileges['change_privileges'] = array();
 		$this->privileges['is_admin'] = array();
 		$this->privileges['hostmaster'] = array();
+
+		$this->enabled_privileges = array('is_admin' => 1,
+		                                  'change_privileges' => 1,
+										  'hostmaster' => 1,
+										  'acl_control' => 1 );
+
+		foreach ($this->opt['disabled_privileges'] as $v){
+			$this->enabled_privileges[$v] = 0;
+		}
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -277,6 +304,7 @@ class apu_privileges extends apu_base_class{
 	function pass_values_to_html(){
 		global $smarty, $config;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+		$smarty->assign_by_ref($this->opt['smarty_enabled_privileges'], $this->enabled_privileges);
 		$smarty->assign($this->opt['smarty_groups'], $config->grp_values);
 	}
 	

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: admin_privileges.php,v 1.12 2005/08/17 12:29:37 kozlik Exp $
+ * $Id: admin_privileges.php,v 1.13 2005/10/07 13:09:52 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -26,9 +26,14 @@ $smarty->assign('uname', $controler->user_id->uname);
 $smarty->assign('domain',$config->domain);
 
 $pr->set_opt('redirect_on_update', 'list_of_admins.php');
+/* Privilege 'hostmaster' can assign only user, who has this privilege. 
+ * Also in not multidomain config isn't privilege 'hostmaster' used.
+ */
+if (!$perm->have_perm('hostmaster') or !$config->multidomain) $pr->set_opt('disabled_privileges', array('hostmaster'));
 
+
+if (!$config->multidomain) $controler->do_not_check_perms_of_admin();
 $controler->add_apu($pr);
-$controler->do_not_check_perms_of_admin();
 $controler->set_template_name('a_admin_privileges.tpl');
 $controler->start();
 
