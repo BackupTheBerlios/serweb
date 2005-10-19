@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.2 2005/10/05 12:38:26 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.3 2005/10/19 10:10:35 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -59,6 +59,10 @@
 class apu_customers extends apu_base_class{
 	var $smarty_action='default';
 	var $act_id = null;
+	/** array of customers */
+	var $customers;
+	/** customer which is currently editing */
+	var $customer;
 
 	/** 
 	 *	return required data layer methods - static class 

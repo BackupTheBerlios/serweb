@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.1 2005/10/04 10:03:42 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.2 2005/10/19 10:13:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -43,8 +43,11 @@
 
 class apu_domain_admin extends apu_base_class{
 	var $smarty_action='default';
+	/** array of domains assigned to user */
 	var $assigned_domains = array();
+	/** array of rest domains (unassigned to user) */
 	var $unassigned_domains = array();
+	/** array of IDs of domains assigned to admin */
 	var $assigned_ids = array();
 	
 	/** 
