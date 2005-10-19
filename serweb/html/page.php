@@ -3,7 +3,7 @@
  * Functions for output basic page layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: page.php,v 1.31 2005/05/20 09:13:10 kozlik Exp $
+ * @version   $Id: page.php,v 1.32 2005/10/19 10:00:46 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -76,9 +76,13 @@ function print_html_body_begin(&$parameters){
 	if (isset($parameters['run_at_html_body_begin']) and function_exists($parameters['run_at_html_body_begin']))
 		$parameters['run_at_html_body_begin']($parameters);
 	
-	virtual(multidomain_get_file($config->html_prolog));
+	if (isset($parameters['prolog'])) echo $parameters['prolog'];
+	else virtual(multidomain_get_file($config->html_prolog));
+
 	if (isset($parameters['title']) and $parameters['title']) echo $parameters['title'];
-	virtual(multidomain_get_file($config->html_separator));
+
+	if (isset($parameters['separator'])) echo $parameters['separator'];
+	else virtual(multidomain_get_file($config->html_separator));
 
 ?>
 <div class="swMain">
@@ -96,12 +100,13 @@ function print_html_body_begin(&$parameters){
  *  @deprecated
  */	
 
-function print_html_body_end(){
+function print_html_body_end(&$parameters){
 	global $config, $_page_tab;	?>
 	</div>
 
 <?
-	virtual(multidomain_get_file($config->html_epilog));
+	if (isset($parameters['epilog'])) echo $parameters['epilog'];
+	else virtual(multidomain_get_file($config->html_epilog));
 }
 
 
