@@ -1,5 +1,5 @@
 /*
- * $Id: functions.js,v 1.4 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: functions.js,v 1.5 2005/10/19 10:06:34 kozlik Exp $
  */
 
 /* confirm click to <a href=""> */
@@ -71,7 +71,7 @@ function stun_applet_win(script, width, height){
 	function __compareElem() {
 		//if there are no forms on the page
 		if (!document.forms || !document.forms.length) return false;
-		//if startElem wan not filled retrun false
+		//if startElem was not filled return false
 		if (!this.startElem.length) return false;
 	
 		var f = this.whichForm;
