@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.5 2005/08/10 13:55:17 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.6 2005/10/19 12:27:49 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,10 @@ $lang_str['l_edit'] = 							"edit";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_back_to_main'] = 					"back to main page";
+$lang_str['l_disable'] = 						"disable";
+$lang_str['l_enable'] = 						"enable";
+$lang_str['l_disable_all'] = 					"disable all";
+$lang_str['l_enable_all'] = 					"enable all";
 $lang_str['status_unknown'] = 					"unknown";
 $lang_str['status_nonlocal'] = 					"non-local";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -40,6 +44,7 @@ $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Showed users";
 $lang_str['no_users_found'] = 					"No users found";
+$lang_str['none'] = 							"none";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -93,6 +98,8 @@ $lang_str['tab_caller_screening'] =	 			"caller screening";
 $lang_str['tab_users'] =	 					"users";
 $lang_str['tab_admin_privileges'] =	 			"admin privileges";
 $lang_str['tab_ser_moni'] =	 					"server monitoring";
+$lang_str['tab_domains'] =	 					"domains";
+$lang_str['tab_customers'] =	 				"customers";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -397,6 +404,7 @@ $lang_str['admin_privileges_of'] = 				"Admin privileges of";
 $lang_str['admin_competence'] = 				"admin competence";
 $lang_str['ff_is_admin'] = 						"is admin";
 $lang_str['ff_change_privileges'] = 			"changes privileges of admins";
+$lang_str['ff_is_hostmaster'] = 				"is hostmaster";
 $lang_str['acl_control'] = 						"ACL control";
 $lang_str['msg_privileges_updated_s'] = 		"Privileges updated";
 $lang_str['msg_privileges_updated_l'] = 		"The privileges of user has been updated";
@@ -485,5 +493,64 @@ $lang_str['msg_greeting_deleted_l'] = 			"Your greeting has been succesfully rem
 /* ------------------------------------------------------------*/
 
 $lang_str['err_whitelist_already_exists'] = 	"Whitelist entry already exists";
+
+/* ------------------------------------------------------------*/
+/*      multidomain                                            */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_not_customer_name'] = 			"You must fill name of customer";
+$lang_str['ff_customer_name'] = 				"name of customer";
+$lang_str['no_customers'] = 					"No customer";
+$lang_str['customer'] = 						"Customer";
+
+$lang_str['msg_customer_updated_s'] = 			"Customer updated";
+$lang_str['msg_customer_updated_l'] = 			"Customer name has been updated";
+$lang_str['msg_customer_deleted_s'] = 			"Customer deleted";
+$lang_str['msg_customer_deleted_l'] = 			"Customer has been deleted";
+$lang_str['msg_customer_added_s'] = 			"Customer created";
+$lang_str['msg_customer_added_l'] = 			"New customer has been created";
+$lang_str['err_customer_own_domains'] = 		"Customer is owning some domains, can't delete him";
+
+$lang_str['d_id'] = 							"Domain ID";
+$lang_str['d_name'] = 							"Domain name";
+$lang_str['list_of_domains'] = 					"List of domains";
+$lang_str['showed_domains'] = 					"Showed domains";
+$lang_str['no_domains_found'] = 				"No domains found";
+$lang_str['new_dom_name'] = 					"Add new domain name";
+$lang_str['owner'] = 							"Owner";
+
+$lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";
+$lang_str['l_create_new_domain'] = 				"create new domain";
+$lang_str['l_reload_ser'] = 					"reload SER and web server";
+$lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
+
+$lang_str['msg_domain_reload_s'] = 				"Config reloaded";
+$lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";
+
+$lang_str['assigned_domains'] = 				"Assigned domains";
+$lang_str['unassigned_domains'] = 				"Unassigned domains";
+$lang_str['l_assign_domain'] = 					"assign domain";
+$lang_str['l_unassign_domain'] = 				"unassign domain";
+$lang_str['l_assigned_domains'] = 				"assigned domains";
+$lang_str['l_change_layout'] = 					"change layout";
+$lang_str['l_domain_preferences'] = 			"domain preferences";
+
+$lang_str['ff_address'] = 						"address";
+
+$lang_str['lf_terms_and_conditions'] =			"terms and conditions";
+$lang_str['lf_mail_register'] = 				"mail confirmation registration";
+$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";
+$lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";
+$lang_str['lf_config'] = 						"domain configuration";
+
+$lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";
+$lang_str['l_upload_images'] = 					"upload images";
+
+$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";
+
+$lang_str['choose_one'] = 						"choose one";
+
+$lang_str['layout_files'] = 					"Layout files";
+$lang_str['text_files'] = 						"Text files";
 
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.3 2005/08/10 13:55:17 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.4 2005/10/19 12:27:48 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,10 @@ $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
+$lang_str['l_disable'] = 						"disable";	//to translate 
+$lang_str['l_enable'] = 						"enable";	//to translate 
+$lang_str['l_disable_all'] = 					"disable all";	//to translate 
+$lang_str['l_enable_all'] = 					"enable all";	//to translate 
 $lang_str['status_unknown'] = 					"neznámý";
 $lang_str['status_nonlocal'] = 					"nelokální";
 $lang_str['status_nonexists'] = 				"neexistující";
@@ -40,6 +44,7 @@ $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filtr";
 $lang_str['showed_users'] = 					"Zobrazení u¾ivatelé";
 $lang_str['no_users_found'] = 					"®ádní u¾ivatelé nenalezeni";
+$lang_str['none'] = 							"none";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -93,6 +98,8 @@ $lang_str['tab_caller_screening'] =	 			"filtrování volajících";
 $lang_str['tab_users'] =	 					"u¾ivatelé";
 $lang_str['tab_admin_privileges'] =	 			"oprávnìní správcù";
 $lang_str['tab_ser_moni'] =	 					"monitorování serveru";
+$lang_str['tab_domains'] =	 					"domains";	//to translate 
+$lang_str['tab_customers'] =	 				"customers";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -397,6 +404,7 @@ $lang_str['admin_privileges_of'] = 				"Oprávnìní administrátora ";
 $lang_str['admin_competence'] = 				"pùsobnost administrátora";
 $lang_str['ff_is_admin'] = 						"je administrátor";
 $lang_str['ff_change_privileges'] = 			"zmìna oprávnìní jiných administrátorù";
+$lang_str['ff_is_hostmaster'] = 				"is hostmaster";	//to translate 
 $lang_str['acl_control'] = 						"zmìny ACL";
 $lang_str['msg_privileges_updated_s'] = 		"Oprávnìní aktualizovány";
 $lang_str['msg_privileges_updated_l'] = 		"Oprávnìní u¾ivatele byly aktualizovány";
@@ -485,5 +493,64 @@ $lang_str['msg_greeting_deleted_l'] = 			"Vá¹ pozdrav byl úspì¹nì vymazán";
 /* ------------------------------------------------------------*/
 
 $lang_str['err_whitelist_already_exists'] = 	"Polo¾ka ji¾ existuje";
+
+/* ------------------------------------------------------------*/
+/*      multidomain                                            */
+/* ------------------------------------------------------------*/
+
+$lang_str['fe_not_customer_name'] = 			"You must fill name of customer";	//to translate 
+$lang_str['ff_customer_name'] = 				"name of customer";	//to translate 
+$lang_str['no_customers'] = 					"No customer";	//to translate 
+$lang_str['customer'] = 						"Customer";	//to translate 
+
+$lang_str['msg_customer_updated_s'] = 			"Customer updated";	//to translate 
+$lang_str['msg_customer_updated_l'] = 			"Customer name has been updated";	//to translate 
+$lang_str['msg_customer_deleted_s'] = 			"Customer deleted";	//to translate 
+$lang_str['msg_customer_deleted_l'] = 			"Customer has been deleted";	//to translate 
+$lang_str['msg_customer_added_s'] = 			"Customer created";	//to translate 
+$lang_str['msg_customer_added_l'] = 			"New customer has been created";	//to translate 
+$lang_str['err_customer_own_domains'] = 		"Customer is owning some domains, can't delete him";	//to translate 
+
+$lang_str['d_id'] = 							"Domain ID";	//to translate 
+$lang_str['d_name'] = 							"Domain name";	//to translate 
+$lang_str['list_of_domains'] = 					"List of domains";	//to translate 
+$lang_str['showed_domains'] = 					"Showed domains";	//to translate 
+$lang_str['no_domains_found'] = 				"No domains found";	//to translate 
+$lang_str['new_dom_name'] = 					"Add new domain name";	//to translate 
+$lang_str['owner'] = 							"Owner";	//to translate 
+
+$lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";	//to translate 
+$lang_str['l_create_new_domain'] = 				"create new domain";	//to translate 
+$lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
+$lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to translate 
+
+$lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
+$lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";	//to translate 
+
+$lang_str['assigned_domains'] = 				"Assigned domains";	//to translate 
+$lang_str['unassigned_domains'] = 				"Unassigned domains";	//to translate 
+$lang_str['l_assign_domain'] = 					"assign domain";	//to translate 
+$lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate 
+$lang_str['l_assigned_domains'] = 				"assigned domains";	//to translate 
+$lang_str['l_change_layout'] = 					"change layout";	//to translate 
+$lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
+
+$lang_str['ff_address'] = 						"address";	//to translate 
+
+$lang_str['lf_terms_and_conditions'] =			"terms and conditions";	//to translate 
+$lang_str['lf_mail_register'] = 				"mail confirmation registration";	//to translate 
+$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";	//to translate 
+$lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";	//to translate 
+$lang_str['lf_config'] = 						"domain configuration";	//to translate 
+
+$lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";	//to translate 
+$lang_str['l_upload_images'] = 					"upload images";	//to translate 
+
+$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";	//to translate 
+
+$lang_str['choose_one'] = 						"choose one";	//to translate 
+
+$lang_str['layout_files'] = 					"Layout files";	//to translate 
+$lang_str['text_files'] = 						"Text files";	//to translate 
 
 ?>
