@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.4 2005/10/07 07:28:00 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.5 2005/10/19 10:22:04 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -26,6 +26,9 @@ class CData_Layer_get_domains {
 	 *	  return_all		(bool)	default: false
 	 *		if true, the result isn't limited by LIMIT sql phrase
 	 *
+	 *	  administrated_by	(Cserweb_auth)	default:null
+	 *		if is set, only domains administrated by given admin is returned
+	 *
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages
 	 *	@return array			array of domains or FALSE on error
@@ -42,14 +45,29 @@ class CData_Layer_get_domains {
 	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
 	    $o_get_names = (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
 	    $o_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
+	    $o_admin = (isset($opt['administrated_by'])) ? $opt['administrated_by'] : null;
 
-		$qw=" true ";
-		if (!empty($o_filter['id']))          $qw .= "and d.".$cd->id." LIKE '%".$o_filter['id']."%' ";
-		if (!empty($o_filter['name']))        $qw .= "and d.".$cd->name." LIKE '%".$o_filter['name']."%' ";
-		if (!empty($o_filter['customer']))    $qw .= "and c.".$cc->name." LIKE '%".$o_filter['customer']."%' ";
-		if (!empty($o_filter['customer_id'])) $qw .= "and c.".$cc->id." = '".$o_filter['customer_id']."' ";
+		$qw="";
+		if (!empty($o_filter['id']))          $qw .= "d.".$cd->id." LIKE '%".$o_filter['id']."%' and ";
+		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE '%".$o_filter['name']."%' and ";
+		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE '%".$o_filter['customer']."%' and ";
+		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->id." = '".$o_filter['customer_id']."' and ";
 
 		/* prepare SQL query */
+
+		$q_admin_from = "";
+		$q_admin_where = "";
+		if (!is_null($o_admin)){
+			$u = ($config->users_indexed_by=='uuid') ?
+					$o_admin->uuid :
+					($o_admin->uname."@".$o_admin->domain);
+
+			$q_admin_from = 
+				" left outer join ".$config->data_sql->table_dom_preferences." dpa 
+				  on (d.".$cd->id." = dpa.".$cp->id." and dpa.".$cp->att_name." = 'admin') ";
+
+			$q_admin_where = "dpa.".$cp->att_value." = '".$u."' and ";
+		}
 
 		/* second select is necessary to get domains without aliases 
 		   both selects are same except the table from which is obtained list of domains.
@@ -66,7 +84,8 @@ class CData_Layer_get_domains {
 			       on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
 			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
 			       on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
-			where ".$qw." and not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			       ".$q_admin_from."
+			where ".$qw.$q_admin_where." not COALESCE((dpx.".$cp->att_value." > 0), 0)
 			group by d.".$cd->id;
 			
 		$q2="select d.".$cp->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
@@ -78,7 +97,8 @@ class CData_Layer_get_domains {
 			       on (d.".$cp->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
 			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
 			       on (d.".$cp->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
-			where ".$qw." and not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			       ".$q_admin_from."
+			where ".$qw.$q_admin_where." not COALESCE((dpx.".$cp->att_value." > 0), 0)
 			group by d.".$cp->id;
 
 		if (empty($o_filter['name']))			
