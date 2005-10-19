@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.15 2005/10/07 14:01:14 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.16 2005/10/19 09:50:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -615,7 +615,7 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm, $sess;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
@@ -723,13 +723,13 @@ class page_conroler{
 		print_html_head();
 		
 		foreach($this->required_javascript as $val){
-?><script language="JavaScript" src="<?echo $config->js_src_path.$val;?>"></script><?			 
+?><script language="JavaScript" src="<?echo $sess->url($config->js_src_path.$val); ?>"></script><?			 
 		}
 		print_html_body_begin($page_attributes);
 				
 		$smarty->display($this->template_name);
 
-		print_html_body_end();
+		print_html_body_end($page_attributes);
 		
 		
 		if (count($this->js_after_document)){
