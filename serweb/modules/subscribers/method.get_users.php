@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.4 2005/10/07 14:01:14 kozlik Exp $
+ * $Id: method.get_users.php,v 1.5 2005/10/19 11:03:15 kozlik Exp $
  */
 
 /*
@@ -74,7 +74,7 @@ class CData_Layer_get_users {
 		$q_domains_from = $q_domains_where = $q_domains_cols = "";
 		if ($config->multidomain){
 			$q_domains_cols = 
-				" dpd.".$cp->att_value." as domain_disabled ";
+				", dpd.".$cp->att_value." as domain_disabled ";
 			$q_domains_from = 
 				" left outer join ".$config->data_sql->table_domain." d on s.domain = d.".$cd->name."
 			      left outer join ".$config->data_sql->table_dom_preferences." dpd 
@@ -129,7 +129,7 @@ class CData_Layer_get_users {
 		else $attribute='s.phplib_id';
 		
 		/* get users */
-		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid, ".$q_domains_cols.
+		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid ".$q_domains_cols.
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
 				$q_admins_join.$q_domains_from.
 			" where ".$q_domains_where.$q_admins_where.$q_online_where.$query_c.
