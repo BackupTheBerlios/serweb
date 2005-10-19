@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.24 2005/07/08 11:06:52 kozlik Exp $
+ * $Id: config.php,v 1.25 2005/10/19 09:51:50 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -90,6 +90,8 @@
 	$config->admin_tabs[]=new Ctab (true, "tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
 	$config->admin_tabs[]=new Ctab (true, "tab_ser_moni", "ser_moni.php");						// $lang_str['tab_ser_moni']
 	$config->admin_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
+	$config->admin_tabs[]=new Ctab (true, "tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
+	$config->admin_tabs[]=new Ctab (true, "tab_customers", "customers.php");					// $lang_str['tab_customers']
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
@@ -215,6 +217,34 @@
 	 */
 	$config->auth_lifetime = 20;
 	
+	/* ------------------------------------------------------------*/
+	/*                    domain preferences     	               */
+	/* ------------------------------------------------------------*/
+
+	/*
+	 *	 array describing attributes of domain preferences
+	 *	 the keys in array are names of attributes. Each item in array should contain
+	 *	 associative array with these keys:
+	 *		'type'    - type of attribute, possible values are: 
+	 *		            'boolean', 'int', 'string', 'sip_adr', 'list', 'radio'
+	 *		            see class User_Preferences for details
+	 *		'desc'    - description of attribute. May contain reference into $lang_str array
+	 *		'options' - associative array of options for types: 'list' and 'radio'
+	 *		            keys contain values of options and values are description 
+	 *		            of options
+	 *
+	 *  Example: 
+	 *
+	 *	$config->domain_preferences['attrib1'] =    array('type' => 'list',
+	 *	                                                  'options' => array ('opt1' => 'first',
+	 *												                          'opt2' => 'second',
+	 *															              'opt3' => 'third'),
+	 *												      'desc' => 'List of options');
+	 *
+	 *	$config->domain_preferences['attrib2'] =    array('type' => 'string',
+	 *	                                                  'desc' => 'A string');
+	 */
+
 	/* ------------------------------------------------------------*/
 	/* applications (experimental)                                 */
 	/* ------------------------------------------------------------*/
