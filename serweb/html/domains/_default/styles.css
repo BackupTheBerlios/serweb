@@ -1,6 +1,6 @@
 /*
-	main DIV
-*/
+ *	main DIV
+ */
 
 
 .swMain{
@@ -23,16 +23,16 @@
 }
 
 /*
-	popup window
-*/
+ *	popup window
+ */
 .swPopUpWin{
 	background-color: #B1C9DC;
 	color: black;
 }
 
 /*
-	heading above TABs
-*/
+ *	heading above TABs
+ */
 
 .swHeadingUser{
 	font-size : 1.2em;
@@ -47,8 +47,8 @@
 }
 
 /*
-	TABs defintions
-*/
+ *	TABs defintions
+ */
 
 div#swTabs{
 	padding: 0.4em;
@@ -115,8 +115,8 @@ div#swTabs ul li strong{
 
 
 /*
-	main content
-*/
+ *	main content
+ */
 
 div#swContent{
 	border : 1px solid #B1C9DC;
@@ -126,8 +126,8 @@ div#swContent{
 }
 
 /*
-	main content if tabs aren't displayed
-*/
+ *	main content if tabs aren't displayed
+ */
 
 div#swContentNoTabs{
 	padding : 20px;
@@ -136,8 +136,8 @@ div#swContentNoTabs{
 }
 
 /*
-	form
-*/
+ *	form
+ */
 
 .swForm{
 	text-align: left;
@@ -158,7 +158,7 @@ div.swForm table{
 
 .swForm fieldset{
 	margin-left: auto;
-	margin-right: auto;	
+	margin-right: auto;
 }
 
 /* needed to center fieldsets in IE5 */
@@ -175,8 +175,8 @@ div.swForm table{
 }
 
 .swFormElementInvisible{
-	border:0; 
-	background-color:#FFFFFF; 
+	border:0;
+	background-color:#FFFFFF;
 	font-size:12px;
 	color: black;
 }
@@ -200,24 +200,26 @@ div.swRegForm{
 
 
 /*
-	description in registration form 
-*/
+ *	description in registration form
+ */
 
 .swRegFormDesc{
-	width: 250px;	
+	width: 250px;
 }
 
 /*
-	tables
-*/
+ *	tables
+ */
 
 table.swTable{
 	border : 1px solid #C1D773;
 	border-bottom : 2px solid #C1D773;
+	border-top : 2px solid #C1D773;
 }
 
 table.swTable th{
 	border: 1px solid #C1D773;
+	border-top : 0px;
 	border-bottom : 2px solid #C1D773;
 	color: #000000;
 	text-align: justify ;
@@ -227,7 +229,7 @@ table.swTable th{
 	padding-right: 4px;
 }
 
-table.swTable th a:link, table.swTable th a:visited, 
+	table.swTable th a:link, table.swTable th a:visited,
 table.swTable th a:active, table.swTable th a:hover{
 	color: #000000;
 }
@@ -251,8 +253,8 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	instant message
-*/
+ *	instant message
+ */
 
 .swInstantMessage{
 	width: 500px;
@@ -279,16 +281,16 @@ table.swTable tr.swTrOdd{
 .swIMtime{
 	width: 11em;
 	float: right;
-	text-align: center;	
+	text-align: center;
 }
 
 .swIMSrcAdr{
-	
+
 }
 
 /*
-	title
-*/
+ *	title
+ */
 
 .swTitle{
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -310,16 +312,16 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	this class is used for elements which should have same width as title
-*/
+ *	this class is used for elements which should have same width as title
+ */
 
 .swWidthAsTitle{
 	width: 504px;		/* width + border */
 }
 
 /*
-	Number of founded records
-*/
+ *	Number of founded records
+ */
 
 .swNumOfFoundRecords{
 	text-align: center;
@@ -327,16 +329,16 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	Strip with links to next found records if search return too many records
-*/
+ *	Strip with links to next found records if search return too many records
+ */
 
 .swSearchLinks{
-	text-align: left;	
+	text-align: left;
 }
 
 /*
-	Link to other pages of tab like 'find user' in phonebook etc.
-*/
+ *	Link to other pages of tab like 'find user' in phonebook etc.
+ */
 
 .swLinkToTabExtension{
 	text-align: center;
@@ -344,8 +346,8 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	Link to back to main tab
-*/
+ *	Link to back to main tab
+ */
 
 .swBackToMainPage{
 	text-align: left;
@@ -353,16 +355,16 @@ table.swTable tr.swTrOdd{
 
 
 /*
-	Name of user at user details tab in admin interface
-*/
+ *	Name of user at user details tab in admin interface
+ */
 
 .swNameOfUser{
 	text-align: left;
 }
 
 /*
-	Login Page - title
-*/
+ *	Login Page - title
+ */
 
 .swLPTitle{
 	text-align: center;
@@ -370,8 +372,8 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	Login Page - Subscribe and Forgot password links
-*/
+ *	Login Page - Subscribe and Forgot password links
+ */
 
 .swLPSubscLinks{
 	width: 300px;
@@ -386,13 +388,13 @@ table.swTable tr.swTrOdd{
 }
 
 .swLPSubscribe{
-	text-align: right;	
+	text-align: right;
 	float: right;
 }
 
 /*
-	Forgot password page - text at top
-*/
+ *	Forgot password page - text at top
+ */
 .swForgotPassw{
 	width: 550px;
 	background-color: #B1C9DC;
@@ -407,8 +409,8 @@ table.swTable tr.swTrOdd{
 
 
 /*
-	MyAccount - Aliases table
-*/
+ *	MyAccount - Aliases table
+ */
 
 #swMAAliasesTable{
 	float: left;
@@ -422,11 +424,11 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	MyAccount - ACL table
-*/
+ *	MyAccount - ACL table
+ */
 
 #swMAACLTable{
-	float: right;	
+	float: right;
 	width: 49%;
 	text-align: center;
 }
@@ -437,21 +439,21 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	floating box cleaner
-*/
+ *	floating box cleaner
+ */
 
 .swCleaner{
-   clear: both;
-   height: 1px;
-   border: none;
-   margin: -1em 0 0 0;
-   visibility: hidden;
+	clear: both;
+	height: 1px;
+	border: none;
+	margin: -1em 0 0 0;
+	visibility: hidden;
 }
 
 
 /*
-	errors and messages
-*/
+ *	errors and messages
+ */
 
 .errors{
 	font-size : 12px;
@@ -487,8 +489,8 @@ table.swTable tr.swTrOdd{
 }
 
 /*
-	server monitoring statistics
-*/
+ *	server monitoring statistics
+ */
 
 .swSMdomain{
 	width: 45em;   /* 54 / 1.2 = 45    1.2em is font size in this class  54em is width of swSMgdval and  swSMOneStat */
@@ -589,11 +591,11 @@ table.swTable tr.swTrOdd{
 }
 
 .swSMStatValue{
-	left: 30em;	
+	left: 30em;
 }
 
 .swSMStatValueI{
-	left: 48em;	
+	left: 48em;
 }
 
 .swSMbar, .swSMbarI{
@@ -641,3 +643,4 @@ table.swTable tr.swTrOdd{
 .swBarCurrent{
 	background-color: Blue;
 }
+
