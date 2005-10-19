@@ -1,0 +1,365 @@
+<?php
+/**
+ * Application unit domain_layout
+ * 
+ * @author    Karel Kozlik
+ * @version   $Id: apu_domain_layout.php,v 1.1 2005/10/19 10:32:14 kozlik Exp $
+ * @package   serweb
+ */ 
+
+/**
+ *	Application unit domain_layout
+ *
+ *
+ *	This application unit is used for changeing web layout for given domain 
+ *	(CSS, prolog, separator, epilog, images)
+ *	   
+ *	Configuration:
+ *	--------------
+ *	
+ *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+ *								
+ *	'form_name'					(string) default: ''
+ *	 name of html form
+ *	
+ *	'form_submit'				(assoc)
+ *	 assotiative array describe submit element of form. For details see description 
+ *	 of method add_submit in class form_ext
+ *	
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_form'] 			(form)			
+ *	 phplib html form
+ *	 
+ *	opt['smarty_action']			(action)
+ *	  tells what should smarty display. Values:
+ *	  'default' - 
+ *	  'was_updated' - when user submited form and data was succefully stored
+ *	
+ */
+
+class apu_domain_layout extends apu_base_class{
+	var $smarty_action='default';
+	var $layout_f;
+	var $text_f;
+	var $languages;
+	var $filename;
+	var $lang;
+	var $fileinfo = null;
+
+	/** 
+	 *	return required data layer methods - static class 
+	 *
+	 *	@return array	array of required data layer methods
+	 */
+	function get_required_data_layer_methods(){
+		return array();
+	}
+
+	/**
+	 *	return array of strings - required javascript files 
+	 *
+	 *	@return array	array of required javascript files
+	 */
+	function get_required_javascript(){
+		return array();
+	}
+	
+	/**
+	 *	constructor 
+	 *	
+	 *	initialize internal variables
+	 */
+	function apu_domain_layout(){
+		global $lang_str;
+		parent::apu_base_class();
+
+		/* set default values to $this->opt */		
+		$this->opt['layout_files'] =			array();
+		$this->opt['text_files'] =				array();
+
+
+		/* message on attributes update */
+		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
+		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
+		
+		/*** names of variables assigned to smarty ***/
+		/* form */
+		$this->opt['smarty_form'] =			'form';
+		/* smarty action */
+		$this->opt['smarty_action'] =		'action';
+		/* name of html form */
+		$this->opt['form_name'] =			'';
+		
+		$this->opt['smarty_layout_files'] =	'layout_files';
+		$this->opt['smarty_text_files'] =	'text_files';
+		$this->opt['smarty_fileinfo'] =		'fileinfo';
+		
+	}
+
+	/**
+	 *	this metod is called always at begining - initialize variables
+	 */
+	function init(){
+		global $sess, $available_languages;
+		parent::init();
+
+		/* create list of languages */
+		$this->languages = array();
+	    foreach($available_languages AS $k => $tmplang) {
+	    	$this->languages[$k]= $tmplang[2];
+	    } 		
+
+		$this->languages = array_unique($this->languages);
+
+		/* initialize array of layout files */
+		$this->layout_f = &$this->opt['layout_files'];
+		foreach ($this->layout_f as $k => $v){
+			if (!isset($v['desc'])) $this->layout_f[$k]['desc'] = $v['filename'];
+			$this->layout_f[$k]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_layout=1&filename=".RawURLEncode($v['filename']));
+		}
+
+		/* initialize array of text files */
+		$this->text_f = &$this->opt['text_files'];
+		foreach ($this->text_f as $k => $v){
+			$this->text_f[$k]['lang'] = array();
+			$this->text_f[$k]['languages'] = array();
+			if (!isset($v['desc'])) $this->text_f[$k]['desc'] = $v['filename'];
+
+			foreach ($this->languages as $klang => $vlang){
+				$this->text_f[$k]['languages'][] = $vlang;
+				$this->text_f[$k]['lang'][$vlang]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_text=1&filename=".RawURLEncode($v['filename'])."&lang=".$klang);
+			}
+		}
+	}
+
+	/**
+	 * find entry with filename matching $this->filename in array of layout files and assign this entry to $this->fileinfo
+	 */
+	function get_layout_fileinfo(){
+		$this->fileinfo = null;
+	
+		foreach ($this->layout_f as $k => $v){
+			if ($v['filename']==$this->filename){
+				$this->fileinfo = $v;
+				break;
+			}
+		}
+	}
+
+	/**
+	 * find entry with filename matching $this->filename in array of text files and assign this entry to $this->fileinfo
+	 */
+	function get_text_fileinfo(){
+		$this->fileinfo = null;
+	
+		foreach ($this->text_f as $k => $v){
+			if ($v['filename']==$this->filename){
+				$this->fileinfo = $v;
+				break;
+			}
+		}
+	}
+	
+	/**
+	 *	Method perform action update
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_update(&$errors){
+		global $available_languages;
+
+		$dirname  = dirname(__FILE__)."/../../html/domains/";
+		$dirname .= $this->controler->domain_id."/";
+
+		if ($_POST['dl_kind_of_file']=='text'){
+			$ln = $available_languages[$_POST['dl_lang']][2];
+			$dirname .= "txt/".$ln."/";
+		}
+
+		RecursiveMkdir($dirname);
+		$fp=fopen($dirname.basename($_POST['dl_filename']), "w");
+
+		/* protect ini files from reading its throught the web */
+		if (!empty($this->fileinfo['ini'])){
+			fwrite($fp, "; <?php die( 'Please do not access this page directly.' ); ?".">\n");
+		}
+	
+		fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
+		fclose($fp);
+	
+		return true;
+	}
+
+	/**
+	 *	perform action edit text file
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */	
+	function action_edit_text_file(&$errors){
+		$this->smarty_action="edit_text";
+		return true;
+	}
+	
+	/**
+	 *	perform action edit layout file
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */	
+	function action_edit_layout_file(&$errors){
+		$this->smarty_action="edit_layout";
+		return true;
+	}
+	
+	/**
+	 *	check _get and _post arrays and determine what we will do 
+	 */
+	function determine_action(){
+		if ($this->was_form_submited()){	// Is there data to process?
+			$this->action=array('action'=>"update",
+			                    'validate_form'=>true,
+								'reload'=>true);
+			$this->filename = $_POST['dl_filename'];
+			if ($_POST['dl_kind_of_file'] == "text") $this->get_text_fileinfo();
+			else	$this->get_layout_fileinfo();
+			return;
+		}
+		
+		if (isset($_GET['edit_text'])){
+			$this->action=array('action'=>"edit_text_file",
+			                    'validate_form'=>false,
+								'reload'=>false);
+			$this->lang = $_GET['lang'];
+			$this->filename = $_GET['filename'];
+			$this->get_text_fileinfo();
+			return;
+		}
+
+		if (isset($_GET['edit_layout'])){
+			$this->action=array('action'=>"edit_layout_file",
+			                    'validate_form'=>false,
+								'reload'=>false);
+			$this->filename = $_GET['filename'];
+			$this->get_layout_fileinfo();
+			return;
+		}
+
+		$this->action=array('action'=>"default",
+		                    'validate_form'=>false,
+							'reload'=>false);
+	}
+	
+	/**
+	 *	create html form 
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return null			FALSE on failure
+	 */
+	function create_html_form(&$errors){
+		parent::create_html_form($errors);
+
+		$file_content = "";
+		$kind = "";
+
+		if ($this->action['action'] == "edit_text_file"){
+			$f = multidomain_get_lang_file($this->filename, "txt", $this->lang, $this->controler->domain_id);
+			$kind = "text";
+		}
+		elseif ($this->action['action'] == "edit_layout_file"){
+			$f = multidomain_get_file($this->filename, false, $this->controler->domain_id);
+			$kind = "layout";
+		}
+
+		if(! empty($f)){
+			$fp = fopen($f, "r");
+			$file_content = fread($fp, 65536);
+			fclose($fp);
+		}
+
+		/* strip first line containing die() preventing this script from displaying throught http */
+		if (!empty($this->fileinfo['ini'])){
+			$first_eol = strpos($file_content, "\n");
+			$first_line = substr($file_content, 0, $first_eol);
+			if (false !== strpos($first_line, "<?php die(")){
+				$file_content = substr($file_content, $first_eol);
+			}
+		}		
+		
+		$this->f->add_element(array("type"=>"textarea",
+		                             "name"=>"dl_content",
+									 "rows"=>25,
+									 "cols"=>80,
+		                             "value"=>$file_content,
+									 "wrap"=>"off"));
+
+		$this->f->add_element(array("type"=>"hidden",
+		                             "name"=>"dl_filename",
+		                             "value"=>$this->filename));
+
+		$this->f->add_element(array("type"=>"hidden",
+		                             "name"=>"dl_kind_of_file",
+		                             "value"=>$kind));
+		
+		$this->f->add_element(array("type"=>"hidden",
+		                             "name"=>"dl_lang",
+		                             "value"=>$this->lang));
+		
+	}
+
+	/**
+	 *	validate html form 
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
+	 */
+	function validate_form(&$errors){
+		if (false === parent::validate_form($errors)) return false;
+		return true;
+	}
+	
+	
+	/**
+	 *	add messages to given array 
+	 *
+	 *	@param array $msgs	array of messages
+	 */
+	function return_messages(&$msgs){
+		global $_GET;
+		
+		if (isset($_GET['m_my_apu_updated']) and $_GET['m_my_apu_updated'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_update'];
+			$this->smarty_action="was_updated";
+		}
+	}
+
+	/**
+	 *	assign variables to smarty 
+	 */
+	function pass_values_to_html(){
+		global $smarty;
+		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+
+		$smarty->assign_by_ref($this->opt['smarty_layout_files'], $this->layout_f);
+		$smarty->assign_by_ref($this->opt['smarty_text_files'], $this->text_f);
+		$smarty->assign_by_ref($this->opt['smarty_fileinfo'], $this->fileinfo);
+	}
+	
+	/**
+	 *	return info need to assign html form to smarty 
+	 */
+	function pass_form_to_html(){
+		return array('smarty_name' => $this->opt['smarty_form'],
+		             'form_name'   => $this->opt['form_name'],
+		             'after'       => '',
+					 'before'      => '');
+	}
+}
+?>
