@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: edit_list_items.php,v 1.15 2005/08/29 13:34:11 kozlik Exp $
+ * $Id: edit_list_items.php,v 1.16 2005/10/19 11:16:11 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -15,7 +15,8 @@ $_required_apu = array('apu_user_preferences_li');
 
 require "prepend.php";
 
-$perm->check("admin");
+if ($config->multidomain) $perm->check("admin,hostmaster");
+else $perm->check("admin");
 
 $page_attributes['selected_tab']="user_preferences.php";
 

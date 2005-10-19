@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.13 2005/08/18 12:08:49 kozlik Exp $
+ * $Id: user_preferences.php,v 1.14 2005/10/19 11:16:11 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -15,7 +15,9 @@ $_required_apu = array('apu_user_preferences_admin');
 
 require "prepend.php";
 
-$perm->check("admin");
+if ($config->multidomain) $perm->check("admin,hostmaster");
+else $perm->check("admin");
+
 
 $up	= new apu_user_preferences_admin();
 $up->set_opt('edit_up_script', 'edit_list_items.php');
