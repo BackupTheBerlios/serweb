@@ -50,7 +50,7 @@ require($_SERWEB["serwebdir"] . "load_lang.php");
 	$smarty->display('relogin.tpl');
 ?>
 
-<?print_html_body_end();?>
+<?print_html_body_end($page_attributes);?>
 <script language="JavaScript">
 <!--
   if (document.forms['login_form'][0].value != '') {
