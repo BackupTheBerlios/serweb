@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.62 2005/09/22 14:15:21 kozlik Exp $
+ * @version   $Id: functions.php,v 1.63 2005/10/19 10:02:30 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -521,22 +521,36 @@ function click_to_dial($target, $uri, &$errors){
 /**
  *	Return path to file from directory for concrete domain
  *
- *	Path in this case mean path in html tree. If file is not found in directory
- *	for specified domain, path to file for default domain directory is returned.
+ *	Path in this case may be path in html tree or filesystem path - depending on 
+ *	param $html_tree. If file is not found in directory for specified domain, 
+ *	path to file for default domain directory is returned or FALSE if file not
+ *	exists.
  *
  *	@param string $filename
- *	@retrun string
+ *	@param bool   $html_tree	if true path in html tree is returned, otherwise path in filesystem is returned
+ *	@param string $domain		domain from which the file is requested. If not set, value from $config->domain is used
+ *	@return string				path to file on success, false on error
  */ 
-function multidomain_get_file($filename){
+function multidomain_get_file($filename, $html_tree=true, $domain=null){
 	global $config;
 	
 	$dir=dirname(__FILE__)."/domains/";
+	if (is_null($domain)) $domain = $config->domain;
 
-	if (file_exists($dir.$config->domain."/".$filename)) 
-		return $config->domains_path.$config->domain."/".$filename;
+	if (file_exists($dir.$domain."/".$filename)){ 
+		return $html_tree ? 
+			($config->domains_path.$domain."/".$filename) :
+			($dir.$domain."/".$filename);
+	}
+	else if (file_exists($dir."_default/".$filename)){
+		sw_log("Useing file from default domain for filename: ".$filename.", requested domain: ".$domain, PEAR_LOG_INFO);
+		return $html_tree ? 
+			($config->domains_path."_default/".$filename) :
+			($dir."_default/".$filename);
+	}
 	else {
-		sw_log("Useing file from default domain for filename: ".$filename, PEAR_LOG_INFO);
-		return $config->domains_path."_default/".$filename;
+		sw_log("Requested domain specific file not found. Filename:".$filename, PEAR_LOG_ERR);	
+		return false;
 	}
 }
 
@@ -544,7 +558,7 @@ function multidomain_get_file($filename){
  *	Return path to file for specified language mutation
  *
  *	Path in this case mean filesystem path. This function searching in some 
- *  directories and if corresponfing file is found, retrun path to it. Directories
+ *  directories and if corresponfing file is found, return path to it. Directories
  *	are scanned in this order:
  *		- dir for specified language
  *		- dir for default language
@@ -556,7 +570,7 @@ function multidomain_get_file($filename){
  *	@param string $filename		name of file is searching for
  *	@param string $ddir			subdirectory within html dir
  *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
- *	@retrun string				path to file on success, false on error
+ *	@return string				path to file on success, false on error
  */
 function get_file_by_lang($filename, $ddir, $lang){
 	global $config, $reference_language, $available_languages;
@@ -597,7 +611,7 @@ function get_path_to_buttons($button, $lang){
  *	Return path to text file for specified language mutation and concrete domain
  *
  *	Path in this case mean filesystem path. This function searching in some 
- *  directories and if corresponfing file is found, retrun path to it. Directories
+ *  directories and if corresponfing file is found, return path to it. Directories
  *	are scanned in this order:
  *		- dir for specified domain and specified language
  *		- dir for specified domain and default language
@@ -608,23 +622,25 @@ function get_path_to_buttons($button, $lang){
  *	@param string $filename		name of file is searching for
  *	@param string $ddir			subdirectory within domain dir
  *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
- *	@retrun string				path to file on success, false on error
+ *	@param string $domain		domain from which the file is requested. If not set, value from $config->domain is used
+ *	@return string				path to file on success, false on error
  */
-function multidomain_get_lang_file($filename, $ddir, $lang){
+function multidomain_get_lang_file($filename, $ddir, $lang, $domain=null){
 	global $config, $reference_language, $available_languages;
 	
 	$dir=dirname(__FILE__)."/domains/";
 	$ln = $available_languages[$lang][2];
 	$ref_ln = $available_languages[$reference_language][2];
+	if (is_null($domain)) $domain = $config->domain;
 
 	if (!empty($ddir) and substr($ddir, -1) != "/") $ddir.="/";
 
-	if (file_exists($dir.$config->domain."/".$ddir.$ln."/".$filename)) 
-		return $dir.$config->domain."/".$ddir.$ln."/".$filename;
+	if (file_exists($dir.$domain."/".$ddir.$ln."/".$filename)) 
+		return $dir.$domain."/".$ddir.$ln."/".$filename;
 	
-	else if (file_exists($dir.$config->domain."/".$ddir.$ref_ln."/".$filename)){
+	else if (file_exists($dir.$domain."/".$ddir.$ref_ln."/".$filename)){
 		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
-		return $dir.$config->domain."/".$ddir.$ref_ln."/".$filename;
+		return $dir.$domain."/".$ddir.$ref_ln."/".$filename;
 	}
 		
 	else if (file_exists($dir."_default/".$ddir.$ln."/".$filename)){
@@ -671,7 +687,7 @@ function multidomain_get_lang_file($filename, $ddir, $lang){
  *	@param string $ddir			subdirectory in of domain dir
  *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
  *	@param array $replacements	see above
- *	@retrun array				parsed file or false on error
+ *	@return array				parsed file or false on error
  */
 function read_lang_txt_file($filename, $ddir, $lang, $replacements){
 	$f = multidomain_get_lang_file($filename, $ddir, $lang);
@@ -708,7 +724,7 @@ function read_lang_txt_file($filename, $ddir, $lang, $replacements){
  *
  *	@param string $filename		name of file is searching for
  *	@param array $replacements	see above
- *	@retrun array				parsed file or false on error
+ *	@return array				parsed file or false on error
  */
 function read_txt_file($filename, $replacements){
 	$fp = fopen($filename, "r");
