@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_attributes.php,v 1.2 2005/08/29 13:28:11 kozlik Exp $
+ * $Id: method.get_attributes.php,v 1.3 2005/10/19 15:34:21 kozlik Exp $
  */
 
 class Cattrib{
@@ -23,7 +23,7 @@ class CData_Layer_get_attributes {
 	var $required_methods = array();
 	
 	/* 
-	 * return list of all attributes without atribute namad as $att_edit
+	 * return list of all attributes without atribute named as $att_edit
 	 * $att_edit may be null
 	 */
 	 
@@ -32,7 +32,7 @@ class CData_Layer_get_attributes {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-		if (! is_null($att_edit)) $qw=" att_name != '$att_edit' "; else $qw="true";
+		if (! is_null($att_edit)) $qw=" att_name != '$att_edit' "; else $qw=$this->get_sql_bool(true);
 
 		$q="select att_name, att_rich_type, att_type_spec, default_value from ".$config->data_sql->table_user_preferences_types.
 			" where ".$qw.

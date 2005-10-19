@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.1 2005/10/07 13:57:54 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.2 2005/10/19 15:34:21 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
@@ -31,7 +31,7 @@ class CData_Layer_get_domain {
 
 	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
 
-		$qw=" true ";
+		$qw=" ".$this->get_sql_bool(true)." ";
 		foreach($o_filter as $k=>$v){
 			$qw .= "and ".$c->$k." = '".$v."' ";
 		}

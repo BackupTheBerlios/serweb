@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.5 2005/10/19 11:03:15 kozlik Exp $
+ * $Id: method.get_users.php,v 1.6 2005/10/19 15:34:21 kozlik Exp $
  */
 
 /*
@@ -105,7 +105,7 @@ class CData_Layer_get_users {
 		}
 		else if ($filter['domain']) 
 			$query_c .= "s.domain like '%".$filter['domain']."%' and ";
-		$query_c.="true ";
+		$query_c.=$this->get_sql_bool(true)." ";
 
 
 

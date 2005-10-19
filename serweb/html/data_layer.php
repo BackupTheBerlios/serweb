@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.11 2005/09/01 15:10:10 kozlik Exp $
+ * $Id: data_layer.php,v 1.12 2005/10/19 15:34:21 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -743,6 +743,21 @@ class CData_Layer{
 		else {
 //			return " cast(".$argument." as integer) ";					// working in pgsql 8.0
 			return " cast(cast(".$argument." as text) as integer) "; 	// change for pgsql 7.*
+		}
+	}
+
+	/**
+	 *	Return a boolean constant which may be used in SQL queries depending on which DB host is useing
+	 *
+	 *	@param bool $argument	if true return "true" or "1", if false return "false" or "0"
+	 *	@return string		
+	 */
+	function get_sql_bool($argument){
+		if ($this->db_host['parsed']['phptype'] == 'mysql'){
+			return $argument ? "1" : "0";
+		}
+		else {
+			return $argument ? "true" : "false";
 		}
 	}
 
