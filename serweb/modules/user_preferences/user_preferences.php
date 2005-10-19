@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.2 2005/09/01 15:12:06 kozlik Exp $
+ * $Id: user_preferences.php,v 1.3 2005/10/19 10:21:46 kozlik Exp $
  */
 
 /*
@@ -81,6 +81,35 @@ class User_Preferences {
 	
 	}
 
+	/**
+	 *	Convert array of UP_List_Items objects into associative array
+	 *	If $type_spec is array() return it as is. It is array of options 
+	 *	from domain preferences. If $type_spec is string (it is $type_spec 
+	 *	from user preferences), unserialize it into array of UP_List_Items 
+	 *	objects and convert to associative array.
+	 *
+	 *	@param mixed $type_spec		associative array of options or array of UP_List_Items serialized into string
+	 *	@return array				associative array of options
+	 *	@access private
+	 */
+	function convert_UP_List_Items_to_assoc($type_spec){
+		if (is_array($type_spec)) return $type_spec;
+		
+		if (is_string($type_spec)) {
+			$type_spec = unserialize($type_spec);
+
+			$items = array();
+			foreach($type_spec as $v){
+				if (is_a($v, "UP_List_Items")) $items[$v->value] = $v->label;
+			}
+
+			return $items;
+		}
+
+		return array();
+	}
+
+
 	/* 
 		return value formated for output 
 	*/
@@ -94,9 +123,15 @@ class User_Preferences {
 		
 		case 'list':
 		case 'radio':
+			$items = $this->convert_UP_List_Items_to_assoc($type_spec);
+
+			if (isset($items[$value])) return $items[$value];
+
+			return $value;
+			break;
+
 		case 'provider':
-			if ($type=='list' or $type=='radio') $items=unserialize(is_string($type_spec)?$type_spec:"");
-			if ($type=='provider') $items=$this->providers->get_items();
+			$items=$this->providers->get_items();
 
 			if (is_Array($items)){
 				foreach($items as $item){
@@ -128,9 +163,33 @@ class User_Preferences {
 		
 		case 'list':
 		case 'radio':
+			$items = $this->convert_UP_List_Items_to_assoc($type_spec);
+
+			if (!$items) return true;
+			if (!is_array($items)) return true;
+			
+			//if not $value, return first of items
+			if ($value==""){
+				reset($items);
+				list($k, $v) = each($items); 
+				$value = $k;
+				return true;
+			}
+
+			//find value in item values
+			if (isset($items[$value])) return true;
+			
+			//$value not found in item values, try find it in item labels
+			foreach($items as $k => $v) if (strcasecmp($value, $v) == 0) {
+				$value = $k;
+				return true;
+			}
+			//$value not found
+			return false;
+			break;
+
 		case 'provider':
-			if ($type=='list' or $type=='radio') $items=unserialize(is_string($type_spec)?$type_spec:"");
-			if ($type=='provider') $items=$this->providers->get_items();
+			$items=$this->providers->get_items();
 			
 			if (!$items) return true;
 			if (!is_array($items)) return true;
@@ -179,6 +238,28 @@ class User_Preferences {
 		
 		}
 	}
+
+	/**
+	 *	Convert array of UP_List_Items objects or associative array
+	 *	into array which can be passed to phplib form object.
+	 *	
+	 *	@param mixed $type_spec		associative array of options or array of UP_List_Items serialized into string
+	 *	@return array				array of options for phplib form
+	 *	@access private
+	 */
+	function create_options_for_form($items){
+		if (is_string($items)) $items=unserialize($items);
+
+		if (!is_array($items)) $items=array();
+		$opt=array();
+
+		foreach($items as $k => $v){
+			if (is_a($v, "UP_List_Items")) $opt[]=array("label" => $item->label, "value" => $item->value);
+			else $opt[]=array("label" => $v, "value" => $k);
+		}
+		
+		return $opt;
+	}
 	
 	/*
 		add form element to form
@@ -198,10 +279,9 @@ class User_Preferences {
 			                         "value"=>"1",
 									 "checked"=>$value));
 			break;
-		case 'list':
+
 		case 'provider':
-			if ($type=='list') $items=unserialize(is_string($type_spec)?$type_spec:"");
-			if ($type=='provider') $items=$this->providers->get_items();
+			$items=$this->providers->get_items();
 
 			if (!is_array($items)) $items=array();
 			$opt=array();
@@ -216,19 +296,19 @@ class User_Preferences {
 	    	                         "value"=>$value,
 									 "options"=>$opt));
 			break;
+
+		case 'list':
+			$form->add_element(array("type"=>"select",
+		                             "name"=>$att_name,
+									 "size"=>1,
+	    	                         "value"=>$value,
+									 "options"=>$this->create_options_for_form($type_spec)));
+			break;
+
 		case 'radio':
-			$items=unserialize(is_string($type_spec)?$type_spec:"");
-
-			if (!is_array($items)) $items=array();
-			$opt=array();
-
-			foreach($items as $item){
-				$opt[]=array("label" => $item->label, "value" => $item->value);
-			}
-			
 			$form->add_element(array("type"=>"radio",
 		                             "name"=>$att_name,
-									 "options"=>$opt,
+									 "options"=>$this->create_options_for_form($type_spec),
 	    	                         "value"=>$value));
 
 			break;
