@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain_preferences.php,v 1.1 2005/10/07 07:28:00 kozlik Exp $
+ * $Id: method.get_domain_preferences.php,v 1.1 2005/10/19 10:27:11 kozlik Exp $
  */
 
 class CData_Layer_get_domain_preferences {
