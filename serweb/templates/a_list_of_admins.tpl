@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.4 2005/07/21 16:23:04 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.5 2005/10/19 10:26:26 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -52,6 +52,7 @@
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
 	<th>&nbsp;</th>
+	{if $change_domain_admin}<th>&nbsp;</th>{/if}
 	</tr>
 	{/if}
 	
@@ -61,6 +62,9 @@
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="{url url='admin_privileges.php' uniq=1}&{$row.get_param}">{$lang_str.l_change_privileges}</a></td>
+	{if $change_domain_admin}
+	<td align="center"><a href="{url url='domain_admin.php' uniq=1}&{$row.get_param}">{$lang_str.l_assigned_domains}</a></td>
+	{/if}
 	</tr>
 	{if $smarty.foreach.admins.last}
 	</table>

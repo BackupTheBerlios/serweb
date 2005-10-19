@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.5 2005/07/21 16:23:04 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.6 2005/10/19 10:26:26 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -8,6 +8,7 @@
 {literal}
 <style type="text/css">
 	#usrnm, #lusrnm {width:120px;}
+	#domain, #ldomain {width:120px;}
 	#fname, #lfname {width:120px;}
 	#lname, #llname {width:120px;}
 	#email, #lemail {width:120px;}
@@ -19,6 +20,7 @@
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
 <td><label for="usrnm" id="lusrnm">{$lang_str.ff_username}</label></td>
+{if $multidomain}<td><label for="domain" id="ldomain">{$lang_str.ff_domain}</label></td>{/if}
 <td><label for="fname" id="lfname">{$lang_str.ff_first_name}</label></td>
 <td><label for="lname" id="llname">{$lang_str.ff_last_name}</label></td>
 <td><label for="email" id="lemail">{$lang_str.ff_email}</label></td>
@@ -26,6 +28,7 @@
 
 <tr>
 <td>{$form.usrnm}</td>
+{if $multidomain}<td>{$form.domain}</td>{/if}
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
@@ -44,6 +47,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>{$lang_str.th_username}</th>
+	{if $multidomain}<th>{$lang_str.th_domain}</th>{/if}
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_phone}</th>
 	<th>{$lang_str.th_alias}</th>
@@ -58,6 +62,7 @@
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.username|empty2nbsp}</td>
+	{if $multidomain}<td align="left">{$row.domain|empty2nbsp}</td>{/if}
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="right">{$row.phone|empty2nbsp}</td>
 	<td align="right">{$row.aliases|empty2nbsp}</td>
