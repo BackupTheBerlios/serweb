@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.2 2005/10/20 10:32:43 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.3 2005/10/20 13:09:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -351,6 +351,10 @@ class apu_domain_layout extends apu_base_class{
 	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
 	 */
 	function validate_form(&$errors){
+
+		if (ini_get('magic_quotes_gpc'))
+			$_POST['dl_content'] = stripslashes($_POST['dl_content']);
+	
 		if (false === parent::validate_form($errors)) return false;
 
 		/* check syntax of inifile */
