@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.1 2005/10/19 10:32:14 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.2 2005/10/20 10:32:43 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -16,8 +16,25 @@
  *	   
  *	Configuration:
  *	--------------
+ *	'layout_files'				default: array()
+ *	 Array containing informations about layout files which may be edited.
+ *	 Items of array contain associative arrays with keys:
+ *		- filename - (required) name of file, files are searched in dir html/domain/<name of domain>
+ *		- desc     - description of file
+ *		- html	   - flag if file have html content (wysiswyg editor can be used)
+ *		- ini      - flag if file is INI file
  *	
- *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	'text_files'				default: array()
+ *	 Array containing informations about text files which may be edited.
+ *	 Items of array contain associative arrays with keys:
+ *		- filename - (required) name of file, files are searched in dir html/domain/<name of domain>/txt/<lang>
+ *		- desc     - description of file
+ *	
+ *	'tmp_file'					default: $config->smarty_compile_dir."tmp.ini"
+ *	 path to temporary file used for check syntax of ini files. Http server must have 
+ *	 write rights to this file. If 'tmp_file' is empty syntax isn't checked.
+ *	
+ *	'msg_update'				default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *								
  *	'form_name'					(string) default: ''
@@ -75,12 +92,14 @@ class apu_domain_layout extends apu_base_class{
 	 *	initialize internal variables
 	 */
 	function apu_domain_layout(){
-		global $lang_str;
+		global $lang_str, $config;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
 		$this->opt['layout_files'] =			array();
 		$this->opt['text_files'] =				array();
+
+		$this->opt['tmp_file'] = 				$config->smarty_compile_dir."tmp.ini";
 
 
 		/* message on attributes update */
@@ -314,6 +333,17 @@ class apu_domain_layout extends apu_base_class{
 		
 	}
 
+	function ini_file_error_handler($errno, $errstr){
+
+		$this->error_in_ini_file = $errstr;
+
+		/* replace path to ini file in error string */
+		if (substr($this->error_in_ini_file, 0 ,13) == "Error parsing"){
+			$this->error_in_ini_file = str_replace($this->opt['tmp_file'], "ini file", $this->error_in_ini_file);
+		}
+		
+	}
+
 	/**
 	 *	validate html form 
 	 *
@@ -322,6 +352,28 @@ class apu_domain_layout extends apu_base_class{
 	 */
 	function validate_form(&$errors){
 		if (false === parent::validate_form($errors)) return false;
+
+		/* check syntax of inifile */
+		if (!empty($this->fileinfo['ini']) and $this->opt['tmp_file']){
+			$fp=fopen($this->opt['tmp_file'], "w");
+			fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
+			fclose($fp);
+			
+			$this->error_in_ini_file = false;
+			set_error_handler(array(&$this, "ini_file_error_handler"));
+			parse_ini_file($this->opt['tmp_file']);
+			restore_error_handler();
+			unlink($this->opt['tmp_file']);
+
+			if ($this->error_in_ini_file) {
+				if ($_POST['dl_kind_of_file']=='text') $this->smarty_action="edit_text";
+				else $this->smarty_action="edit_layout";
+
+				$errors[] = $this->error_in_ini_file;
+				return false;
+			}
+		}
+
 		return true;
 	}
 	
