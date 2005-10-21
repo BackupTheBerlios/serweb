@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.2 2005/10/19 10:13:10 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.3 2005/10/21 08:39:14 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -74,7 +74,7 @@ class apu_domain_admin extends apu_base_class{
 	 *	initialize internal variables
 	 */
 	function apu_domain_admin(){
-		global $lang_str;
+		global $lang_str, $sess_lang;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -94,6 +94,9 @@ class apu_domain_admin extends apu_base_class{
 		$this->opt['smarty_assigned_domains'] =		'assigned_domains';
 		$this->opt['smarty_unassigned_domains'] =	'unassigned_domains';
 		
+		$this->opt['form_submit']=array('type' => 'image',
+										'text' => $lang_str['b_find'],
+										'src'  => get_path_to_buttons("btn_find.gif", $sess_lang));
 	}
 
 	/**
