@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.3 2005/10/19 10:21:46 kozlik Exp $
+ * $Id: user_preferences.php,v 1.4 2005/10/21 14:22:09 kozlik Exp $
  */
 
 /*
@@ -254,7 +254,7 @@ class User_Preferences {
 		$opt=array();
 
 		foreach($items as $k => $v){
-			if (is_a($v, "UP_List_Items")) $opt[]=array("label" => $item->label, "value" => $item->value);
+			if (is_a($v, "UP_List_Items")) $opt[]=array("label" => $v->label, "value" => $v->value);
 			else $opt[]=array("label" => $v, "value" => $k);
 		}
 		
