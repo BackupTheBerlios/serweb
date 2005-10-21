@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.6 2005/10/19 10:26:26 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.7 2005/10/21 08:46:55 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -16,6 +16,8 @@
 {/literal}
 
 <div class="swForm swHorizontalForm">
+
+{assign var='colspan' value=4}
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
@@ -28,15 +30,15 @@
 
 <tr>
 <td>{$form.usrnm}</td>
-{if $multidomain}<td>{$form.domain}</td>{/if}
+{if $multidomain}<td>{$form.domain}</td>{assign var='colspan' value = "`$colspan+1`"}{/if}
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
 </tr>
 
-<tr><td colspan="4"><label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}</td></tr>
+<tr><td colspan="{$colspan}"><label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}</td></tr>
 				
-<tr><td colspan="4" align="right">{$form.okey}</td></tr>
+<tr><td colspan="{$colspan}" align="right">{$form.okey}</td></tr>
 </table>
 {$form.finish}
 </div>
