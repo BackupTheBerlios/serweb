@@ -1,0 +1,95 @@
+                      Introduction into application layer
+                      ***********************************
+
+Motivation:
+===========
+
+There is need to simply change layout of pages, change the place of functions
+of serweb on single tabs. If there are for each function some unit (named 
+application unit - APU - in next text) we can very simply create new page
+containing arbitrary combination of functions. This page is created via one
+quite simply php script and one new samrty template.
+
+
+More description
+================
+
+The php scripts mentioned above are located in directories html/admin and
+html/user. In this context we can perceive these files as some configuration 
+files. These scripts describing which APU may be loaded, set some parameters
+and configuration options of the APU and describeing which smarty template may
+be used.
+
+APU contain whole logic and functionality of serweb. It takes takes valeus from
+user (from http GET and POST params), do SQL queries and updates and the result
+store to variables used by smarty template engine. Smarty create from template
+and from values of these variables the result html page.
+
+APU are located in directory application layer. Unfortunately there is no 
+documentation for the application layer but you can found some description 
+in source code of the APU. On the begining of each file is description of 
+allowed configuration and exported smarty variables.
+
+The configuration options of APU can be changed be calling method of the APU
+set_opt('option_name', <option_value>)
+
+
+HTML forms
+==========
+
+One main thing which APU useing for interaction with user is HTML form. The HTML
+form is usualy stored in smarty variable name $form (can be renamed by change
+option 'smarty_form' of the APU). This variable is associative array containing
+always keys 'start' and 'finish'. 
+
+The variable 'form.start' contain <form ....> tag and variable 'form.finish'
+contain </form> tag. Except these keys variable form contain other keys 
+which are single <input> (or <select>) tags. The names of these keys depends
+on Application Unit.
+	
+The submit element of the form is always stored in variable 'form.okey'. The
+submit element may be <input type="image"> or <input type='submit'> or may
+be hidden. If is hidden it has to be called by javascript function. But it
+have the advantage in customization. It may be for example image (of button)
+which changes on mouse over. For example like this:
+
+	<a href="document.form1.reset();" onmouseover="btnOver();" onmousedown="btnDown();" 
+		onmouseup="btnUp();" onmouseout="btnOut();" onfocus="this.blur();">
+		<img class="button" src="...." alt="...."></a>
+
+The type of submit button can be changed by option of application unit
+'form_submit'. This option is asociative array with following keys:
+	['type'] - type of submit element 'hidden', 'button', 'image'
+	['text'] - text on button or alt on image
+	['src']  - source of image
+
+
+Shared HTML forms
+=================
+
+There is sometime need to share one html form by more APU. For example in the
+case when we need run more functions by one click to form submit button. For 
+example update user preference and update user details. 
+
+This have to be set up by calling method
+$controler->assign_form_name("form_name", APU1);
+$controler->assign_form_name("form_name", APU2);
+
+This assigning one form with name "form_name" to two APU: APU1 and APU2;
+Also the submit element of shared html form should be set by calling:
+
+$controler->set_submit_for_form("form_name", form_submit);
+The form_submit is associative array described above.
+
+The result html form will be stored in smarty variable named "form_name".
+
+For examples see file html/user/my_account.php
+
+notice: if one shared html form is used, you should call $controler->assign_form_name
+        for each APU useing html form even if it not sharing their html form with
+        other APU
+
+
+
+To update:
+* where everywhere are stored APU

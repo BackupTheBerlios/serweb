@@ -1,0 +1,54 @@
+                     Introduction into serweb configuration
+                     **************************************
+                     
+Serweb configuration is separated into some files which are located in directory
+config:
+
+ - config.php                 - contain main configuration variables
+ - config_data_layer.php      - configuration of data storage. Contain values as
+                                connection to DB, names of tables in DB etc.
+ - config_lang.php            - internationalization - contain avaiable languages
+ - config_paths.php           - contain paths to directories used by serweb
+ - set_domain.php             - short script used for obtain domain under which 
+                                serweb is running
+ - config_domain_defaults.php - default values of configuration variables which
+                                could differentiate for each domain
+
+Execept this configuration there is also configuration for domains. This can
+be found in directory html/domains/<name of domain> or in html/domains/_default
+if serweb not running in multidomain setup. 
+
+If you need change some domain specific config values and not useing multidomain
+setup, or useing serweb for more domains but the settings for all domains is 
+same, you shuld change this setting simply in html/domains/_default.
+Otherwise if you useing serweb for more domains and the setting for each domain 
+is different, you should create subdirectories in directory html/domains named
+by names of domains and copy to them content of _default directory.
+
+Files in the html/domains/_default directory:
+config.php                               - domain specific config variables
+styles.css                               - CSS styles used by serweb
+prolog.html, epilog.html, separator.html - HTML documents surrounding
+                               these may typically include banner, trailers,
+		                       and whatever else appropriate to your web design; 
+                    		   the files should include at least:
+                                   prolog: <body> or <body><h1>, etc.
+		                           separator: may be empty, or </h1><hr> etc.
+                                   epilog: </body>
+
+directory img
+ Contain images which can be used as background in CSS styles etc.
+
+directory txt
+ Contain text files. Directory txt contain subdirectories for single languages
+and them contain text files which are for example emails sended by serweb etc.
+
+The format of this files is:
+- Lines starting by # on and only on the begining of the file are comments.
+- Follows headers and body separated by ampty line from headers. If the file 
+  does not contain headers, there must be at least one empty line before body.
+  
+The file may also contain some special strings quoted by '#@#' (for example:
+'#@#domain#@#'). Which are replaced by some another values. It is described 
+in each text file.
+
