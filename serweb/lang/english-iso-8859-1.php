@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.19 2005/10/19 12:27:49 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.20 2005/10/25 09:00:33 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -42,7 +42,7 @@ $lang_str['status_nonexists'] = 				"non-existent";
 $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
-$lang_str['showed_users'] = 					"Showed users";
+$lang_str['showed_users'] = 					"Displaying users";
 $lang_str['no_users_found'] = 					"No users found";
 $lang_str['none'] = 							"none";
 
@@ -514,7 +514,7 @@ $lang_str['err_customer_own_domains'] = 		"Customer is owning some domains, can'
 $lang_str['d_id'] = 							"Domain ID";
 $lang_str['d_name'] = 							"Domain name";
 $lang_str['list_of_domains'] = 					"List of domains";
-$lang_str['showed_domains'] = 					"Showed domains";
+$lang_str['showed_domains'] = 					"Displaying domains";
 $lang_str['no_domains_found'] = 				"No domains found";
 $lang_str['new_dom_name'] = 					"Add new domain name";
 $lang_str['owner'] = 							"Owner";
