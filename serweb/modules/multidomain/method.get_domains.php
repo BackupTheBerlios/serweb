@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.5 2005/10/19 10:22:04 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.6 2005/10/26 12:45:42 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -29,6 +29,9 @@ class CData_Layer_get_domains {
 	 *	  administrated_by	(Cserweb_auth)	default:null
 	 *		if is set, only domains administrated by given admin is returned
 	 *
+	 *	  deleted_before (int)	default:false
+	 *		if is set, only domains marked as deleted before given timestamp are returned
+	 *
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages
 	 *	@return array			array of domains or FALSE on error
@@ -46,6 +49,7 @@ class CData_Layer_get_domains {
 	    $o_get_names = (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
 	    $o_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
 	    $o_admin = (isset($opt['administrated_by'])) ? $opt['administrated_by'] : null;
+	    $o_deleted_before = (isset($opt['deleted_before'])) ? $opt['deleted_before'] : false;
 
 		$qw="";
 		if (!empty($o_filter['id']))          $qw .= "d.".$cd->id." LIKE '%".$o_filter['id']."%' and ";
@@ -68,6 +72,12 @@ class CData_Layer_get_domains {
 
 			$q_admin_where = "dpa.".$cp->att_value." = '".$u."' and ";
 		}
+	
+		if ($o_deleted_before)
+			$q_deleted_where = " dpx.".$cp->att_value." < ".$o_deleted_before." and dpx.".$cp->att_value." > 0 ";
+		else
+			$q_deleted_where = " not COALESCE((dpx.".$cp->att_value." > 0), 0)";
+
 
 		/* second select is necessary to get domains without aliases 
 		   both selects are same except the table from which is obtained list of domains.
@@ -85,7 +95,7 @@ class CData_Layer_get_domains {
 			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
 			       on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
 			       ".$q_admin_from."
-			where ".$qw.$q_admin_where." not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			where ".$qw.$q_admin_where.$q_deleted_where."
 			group by d.".$cd->id;
 			
 		$q2="select d.".$cp->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
@@ -98,7 +108,7 @@ class CData_Layer_get_domains {
 			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
 			       on (d.".$cp->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
 			       ".$q_admin_from."
-			where ".$qw.$q_admin_where." not COALESCE((dpx.".$cp->att_value." > 0), 0)
+			where ".$qw.$q_admin_where.$q_deleted_where."
 			group by d.".$cp->id;
 
 		if (empty($o_filter['name']))			
