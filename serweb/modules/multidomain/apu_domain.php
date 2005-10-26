@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.4 2005/10/07 07:28:00 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.5 2005/10/26 12:49:50 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -30,11 +30,6 @@
  *	
  *	'no_domain_name_e'			(string) default: $lang_str['no_domain_name_is_set']
  *	 error message displayed when any domain names is not set
- *	
- *	'apache_vhosts_dir'			(string) default: $config->apache_vhosts_dir
- *	 Directory containing virtual hosts. Directory to which 
- *	 directive VirtualDocumentRoot from apache config pointing
- *	 For more info see http://httpd.apache.org/docs/2.1/vhosts/mass.html
  *	
  *	'form_name'					(string) default: ''
  *	 name of html form
@@ -129,8 +124,6 @@ class apu_domain extends apu_base_class{
 										'text' => $lang_str['b_add'],
 										'src'  => get_path_to_buttons("btn_add.gif", $sess_lang));
 
-		$this->opt['apache_vhosts_dir'] =	$config->apache_vhosts_dir;
-		
 		/*** names of variables assigned to smarty ***/
 		/* form */
 		$this->opt['smarty_form'] =			'form';
@@ -154,100 +147,6 @@ class apu_domain extends apu_base_class{
 		parent::init();
 	}
 
-	/**
-	 *  Method create directory with domain specific config 
-	 *	Function create the directory by copy the html/domains/_default
-	 *
-	 *	@param array  $errors		array with error messages
-	 *	@return bool				return TRUE on success, FALSE on failure
-	 */
-	 
-	function create_domain_config_dir(&$errors){
-		$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
-
-		$target = $serweb_root."html/domains/".$this->id;
-
-		if (file_exists($target)) return true;
-
-		if (false === copyr ($serweb_root."html/domains/_default", $target)){
-			log_errors(PEAR::raiseError("Can't create domain specific config", NULL, NULL, 
-			           NULL, "Can't create dicetory with domain config. Directory:".$target), $errors);
-			return false;
-		}
-		
-		return true;
-	}
-
-	/**
-	 *	Method create symlinks for new domain name (alias)
-	 *
-	 *	Method create symlinks into directory with domain specific config and 
-	 *	into directory with virtual hosts (for purpose of apache)
-	 *
-	 *	@param string $domain_name	name of domain (alias)
-	 *	@param array  $errors		array with error messages
-	 *	@return bool				return TRUE on success, FALSE on failure
-	 */
-
-	function create_symlinks($domain_name, &$errors){
-		$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
-
-		$target = $serweb_root."html/domains/".$this->id;
-		$file = $serweb_root."html/domains/".$domain_name;
-
-		if (false === $this->create_domain_config_dir($errors)) return false;
-
-		if (false === symlink($target, $file)){
-			log_errors(PEAR::raiseError("Can't create domain specific config", NULL, NULL, 
-			           NULL, "Can't create symlink. Link:".$file." target:".$target), $errors);
-			return false;
-		}
-		
-		$target = $serweb_root."html/";
-		$file = $this->opt['apache_vhosts_dir'].$domain_name;
-
-		if (false === symlink($target, $file)){
-			log_errors(PEAR::raiseError("Can't create virtual server", NULL, NULL, 
-			           NULL, "Can't create symlink. Link:".$file." target:".$target), $errors);
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 *	Method remove symlinks for domain name (alias)
-	 *
-	 *	Method remove symlinks from directory with domain specific config and 
-	 *	from directory with virtual hosts (for purpose of apache)
-	 *
-	 *	@param string $domain_name	name of domain (alias)
-	 *	@param array  $errors		array with error messages
-	 *	@return bool				return TRUE on success, FALSE on failure
-	 */
-
-	function remove_symlinks($domain_name, &$errors){
-		$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
-
-		$success = TRUE;
-		$file = $serweb_root."html/domains/".$domain_name;
-		if(file_exists($file)) $success = @unlink($file);
-//		$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
-		if (false === $success) {
-			log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
-			           NULL, "Filename:".$file), $errors);
-			return false;
-		}
-		
-		$file = $this->opt['apache_vhosts_dir'].$domain_name;
-		if(file_exists($file)) $success = @unlink($file);
-//		$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
-		if (false === $success) {
-			log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
-			           NULL, "Filename:".$file), $errors);
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	 *	Method create or remove symlinks for all aliases of the domain
@@ -267,10 +166,10 @@ class apu_domain extends apu_base_class{
 		
 		foreach($this->dom_names as $v){
 			if ($create){
-				if (false === $this->create_symlinks($v['name'], $errors)) return false;
+				if (false === domain_create_symlinks($this->id, $v['name'], $errors)) return false;
 			}
 			else{
-				if (false === $this->remove_symlinks($v['name'], $errors)) return false;
+				if (false === domain_remove_symlinks($v['name'], $errors)) return false;
 			}
 		}
 		return true;
@@ -373,7 +272,7 @@ class apu_domain extends apu_base_class{
 		$opt['id'] = $this->id;
 		$opt['name'] = $_GET['dele_name'];
 
-		if (false === $this->remove_symlinks($opt['name'], $errors)) return false;
+		if (false === domain_remove_symlinks($opt['name'], $errors)) return false;
 
 		if (false === $data->del_domain_alias($opt, $errors)) return false;
 
@@ -400,7 +299,7 @@ class apu_domain extends apu_base_class{
 
 		/* create symlinks and notify ser only if domain isn't disabled */
 		if (empty($this->preferences['disabled'])){
-			if (false === $this->create_symlinks($values['name'], $errors)) return false;
+			if (false === domain_create_symlinks($this->id, $values['name'], $errors)) return false;
 	
 			/* notify SER to reload domains */
 			if (false === $data->reload_domains(null, $errors)) return false;
