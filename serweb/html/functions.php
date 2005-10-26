@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.63 2005/10/19 10:02:30 kozlik Exp $
+ * @version   $Id: functions.php,v 1.64 2005/10/26 12:43:25 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -1065,4 +1065,45 @@ function copyr($source, $dest)
     $dir->close();
     return true;
 }
+
+/**
+ * rm() -- Vigorously erase files and directories.
+ * 
+ * @param $fileglob mixed If string, must be a file name (foo.txt), glob pattern (*.txt), or directory name.
+ *                        If array, must be an array of file names, glob patterns, or directories.
+ */
+function rm($fileglob)
+{
+   if (is_string($fileglob)) {
+       if (is_file($fileglob)) {
+           return unlink($fileglob);
+       } else if (is_dir($fileglob)) {
+           $ok = rm("$fileglob/*");
+           if (! $ok) {
+               return false;
+           }
+           return rmdir($fileglob);
+       } else {
+           $matching = glob($fileglob);
+           if ($matching === false) {
+               trigger_error(sprintf('No files match supplied glob %s', $fileglob), E_USER_WARNING);
+               return false;
+           }       
+           $rcs = array_map('rm', $matching);
+           if (in_array(false, $rcs)) {
+               return false;
+           }
+       }       
+   } else if (is_array($fileglob)) {
+       $rcs = array_map('rm', $fileglob);
+       if (in_array(false, $rcs)) {
+           return false;
+       }
+   } else {
+       trigger_error('Param #1 must be filename or glob pattern, or array of filenames or glob patterns', E_USER_ERROR);
+       return false;
+   }
+   return true;
+}
+
 ?>
