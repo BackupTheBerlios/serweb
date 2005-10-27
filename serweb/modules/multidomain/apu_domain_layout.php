@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.3 2005/10/20 13:09:34 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.4 2005/10/27 13:33:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -213,7 +213,7 @@ class apu_domain_layout extends apu_base_class{
 		fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
 		fclose($fp);
 	
-		return true;
+		return array("m_dl_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -390,7 +390,7 @@ class apu_domain_layout extends apu_base_class{
 	function return_messages(&$msgs){
 		global $_GET;
 		
-		if (isset($_GET['m_my_apu_updated']) and $_GET['m_my_apu_updated'] == $this->opt['instance_id']){
+		if (isset($_GET['m_dl_updated']) and $_GET['m_dl_updated'] == $this->opt['instance_id']){
 			$msgs[]=&$this->opt['msg_update'];
 			$this->smarty_action="was_updated";
 		}
