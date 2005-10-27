@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.5 2005/10/26 12:49:50 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.6 2005/10/27 08:40:41 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -175,6 +175,24 @@ class apu_domain extends apu_base_class{
 		return true;
 	}
 
+	/**
+	 *	Generete new domain id if is not set
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return bool			return TRUE on success, FALSE on failure
+	 */
+	 
+	function generate_domain_id(&$errors){
+		global $data;
+		
+		/* if domain id is not set, get new id */
+		if (is_null($this->id)) {
+			if (false === $this->id = $data->get_new_domain_id(null, $errors)) return false;
+			$this->controler->set_domain_id($this->id);
+		}
+		
+		return true;
+	}
 
 	/**
 	 *	Method obtain a list of all domain names (aliases) and store it into 
@@ -186,6 +204,12 @@ class apu_domain extends apu_base_class{
 
 	function get_domain_names(&$errors){
 		global $data, $sess;
+
+		/* if domain id is still not set, do nothing */
+		if (is_null($this->id)){
+			$this->dom_names = array();
+			return true;
+		}
 
 		$opt = array();
 		$opt['filter']['id'] = $this->id;
@@ -208,6 +232,11 @@ class apu_domain extends apu_base_class{
 
 	function action_enable_domain(&$errors){
 		global $data;
+
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
 
 		if (isset($_GET['enable'])){
 			$opt['id'] = $this->id;
@@ -244,6 +273,11 @@ class apu_domain extends apu_base_class{
 	function action_delete_domain(&$errors){
 		global $data;
 
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
+
 		$opt['id'] = $this->id;
 		if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
 
@@ -269,6 +303,11 @@ class apu_domain extends apu_base_class{
 	function action_delete_domain_alias(&$errors){
 		global $data;
 
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
+
 		$opt['id'] = $this->id;
 		$opt['name'] = $_GET['dele_name'];
 
@@ -291,6 +330,8 @@ class apu_domain extends apu_base_class{
 
 	function action_add_alias(&$errors){
 		global $data;
+
+		if (false === $this->generate_domain_id($errors)) return false;
 
 		$values['id'] = $this->id;
 		$values['name'] = $_POST['do_new_name'];
@@ -317,6 +358,8 @@ class apu_domain extends apu_base_class{
 
 	function action_update(&$errors){
 		global $data;
+
+		if (false === $this->generate_domain_id($errors)) return false;
 
 		if (!$this->owner or is_null($this->owner['id']))
 			$opt['insert'] = true;
@@ -356,6 +399,7 @@ class apu_domain extends apu_base_class{
 
 		if (isset($_GET['new'])){
 			$this->id = null;
+			$this->controler->set_domain_id($this->id);
 		    $this->action=array('action'=>"default",
 			                     'validate_form'=>false,
 								 'reload'=>false);
@@ -399,17 +443,14 @@ class apu_domain extends apu_base_class{
 		global $data, $lang_str;
 		parent::create_html_form($errors);
 
-		/* if domain id is not set, get new id */
-		if (!$this->id) {
-			if (false === $this->id = $data->get_new_domain_id(null, $errors)) return false;
-			$this->controler->set_domain_id($this->id);
-		}
-
 		/* get list of customers */
 		if (false === $this->customers = $data->get_customers(array(), $errors)) return false;
-
-		/* get domain preferences */
-		if (false === $this->preferences = $data->get_domain_preferences($this->id, array(), $errors)) return false;
+		
+		/* if domain id is set */
+		if (!is_null($this->id)){
+			/* get domain preferences */
+			if (false === $this->preferences = $data->get_domain_preferences($this->id, array(), $errors)) return false;
+		}
 
 
 		$options = array();
@@ -418,11 +459,14 @@ class apu_domain extends apu_base_class{
 			$options[] = array('label' => $v['name'], 'value' => $v['id']);
 		}
 
-		/* get owner of the domain */
-		if (false === $this->owner = $data->get_owner_of_domain($this->id, null, $errors)) return false;
+		/* if domain id is set */
+		if (!is_null($this->id)){
+			/* get owner of the domain */
+			if (false === $this->owner = $data->get_owner_of_domain($this->id, null, $errors)) return false;
 
-		/* get list of the domain names */
-		if (false === $this->get_domain_names($errors)) return false;
+			/* get list of the domain names */
+			if (false === $this->get_domain_names($errors)) return false;
+		}
 
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"do_new_name",
