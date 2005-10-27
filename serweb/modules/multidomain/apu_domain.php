@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.7 2005/10/27 09:02:42 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.8 2005/10/27 13:34:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -50,6 +50,7 @@
  *	'smarty_id'					name of smarty variable - see below
  *	'smarty_dom_names'			name of smarty variable - see below
  *	'smarty_customers'			name of smarty variable - see below
+ *	'smarty_admins'				name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -70,6 +71,9 @@
  *	opt['smarty_customers'] 	(customers)
  *	 array containing customers
  *	 
+ *	opt['smarty_admins'] 		(admins)
+ *	 array containing admins of domain
+ *	 
  */
 
 
@@ -85,6 +89,8 @@ class apu_domain extends apu_base_class{
 	var $owner = null;
 	/** domain preferences */
 	var $preferences = array();
+	/** admins of domain */
+	var $admins;
 	
 	/** 
 	 *	return required data layer methods - static class 
@@ -95,7 +101,8 @@ class apu_domain extends apu_base_class{
 		return array('get_owner_of_domain', 'get_domain', 'get_customers', 
 			'get_new_domain_id', 'enable_domain', 'del_domain_alias', 
 			'add_domain_alias', 'update_owner_of_domain', 'reload_domains',
-			'mark_domain_deleted', 'get_domain_preferences');
+			'mark_domain_deleted', 'get_domain_preferences', 'get_admins_of_domain',
+			'set_domain_admin');
 	}
 
 	/**
@@ -145,6 +152,7 @@ class apu_domain extends apu_base_class{
 		
 		$this->opt['smarty_customers'] =	'customers';
 				
+		$this->opt['smarty_admins'] =		'admins';
 	}
 
 	/**
@@ -228,6 +236,28 @@ class apu_domain extends apu_base_class{
 		}
 
 		return true;		
+	}
+
+	/**
+	 *	Method obtain a list of admins of domain and store it into 
+	 *	variable $this->admins
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return bool			return TRUE on success, FALSE on failure
+	 */
+
+	function get_admins(&$errors){
+		global $data, $sess;
+		
+		if (false === $this->admins = $data->get_admins_of_domain($this->id, null, $errors)) return false;
+
+		foreach ($this->admins as $k => $v){
+			$this->admins[$k]['url_unset_admin'] = 
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&do_unset_admin=1&".
+					user_to_get_param($v['uuid'], $v['username'], $v['domain'], 'u'));
+		}
+
+		return true;
 	}
 	
 	/**
@@ -385,7 +415,35 @@ class apu_domain extends apu_base_class{
 
 		return array("m_do_updated=".RawURLEncode($this->opt['instance_id']));
 	}
+
+	/**
+	 *	Unset admin of domain
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+	function action_unset_admin(&$errors){
+		global $data;
+		
+		$opt = array("add_domain" => false);
+		
+		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
 	
+		return true;
+	}
+
+	/**
+	 *	default action
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_default(&$errors){
+		if (false === $this->get_admins($errors)) return false;
+		return true;
+	}
+		
 	/**
 	 *	check _get and _post arrays and determine what we will do 
 	 */
@@ -432,6 +490,13 @@ class apu_domain extends apu_base_class{
 
 		if (isset($_GET['dele_name'])){
 			$this->action=array('action'=>"delete_domain_alias",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
+		if (isset($_GET['do_unset_admin'])){
+			$this->action=array('action'=>"unset_admin",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;
@@ -534,6 +599,7 @@ class apu_domain extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_id'], $this->id);
 		$smarty->assign_by_ref($this->opt['smarty_dom_names'], $this->dom_names);
 		$smarty->assign_by_ref($this->opt['smarty_customers'], $this->customers);
+		$smarty->assign_by_ref($this->opt['smarty_admins'], $this->admins);
 	}
 	
 	/**

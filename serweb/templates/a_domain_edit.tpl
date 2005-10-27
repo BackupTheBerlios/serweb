@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_edit.tpl,v 1.1 2005/10/19 10:33:07 kozlik Exp $ *}
+{* $Id: a_domain_edit.tpl,v 1.2 2005/10/27 13:34:31 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -49,6 +49,23 @@
 	</table>
 {$form.finish}
 </div>
+
+<h2 class="swTitle">{$lang_str.admins_of_domain}</h2>
+
+{foreach from=$admins item='row' name='admins'}
+	{if $smarty.foreach.admins.first}
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
+	{/if}
+	<tr>
+	<td align="left">{$row.username}@{$row.domain}</td>
+	<td><a href="{$row.url_unset_admin}">{$lang_str.l_unassign_admin	}</a></td>
+	</tr>
+	{if $smarty.foreach.admins.last}
+	</table>
+	{/if}
+{foreachelse}
+<div class="swNumOfFoundRecords">{$lang_str.no_admins}</div>
+{/foreach}
 
 <div class="swBackToMainPage"><a href="{url url='list_of_domains.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 
