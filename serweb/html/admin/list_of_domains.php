@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: list_of_domains.php,v 1.1 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: list_of_domains.php,v 1.2 2005/10/27 09:02:43 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -19,6 +19,12 @@ $perm->check("admin");
 if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_admin=1;}
 
 $smarty->assign('hostmaster_actions', $perm->have_perm('hostmaster'));
+
+if (isset($_GET['m_do_deleted'])){
+	$controler->add_message(array(
+		'short' => $lang_str['msg_domain_deleted_s'],
+		'long'  => $lang_str['msg_domain_deleted_l']));
+}
 
 
 $dl	= new apu_domain_list();

@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.6 2005/10/27 08:40:41 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.7 2005/10/27 09:02:42 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -31,6 +31,9 @@
  *	'no_domain_name_e'			(string) default: $lang_str['no_domain_name_is_set']
  *	 error message displayed when any domain names is not set
  *	
+ *	'msg_delete'				default: $lang_str['msg_domain_deleted_s'] and $lang_str['msg_domain_deleted_l']
+ *	 message which should be showed on domain delete - assoc array with keys 'short' and 'long'
+ *								
  *	'form_name'					(string) default: ''
  *	 name of html form
  *	
@@ -56,7 +59,7 @@
  *	opt['smarty_action']		(action)
  *	  tells what should smarty display. Values:
  *	  'default' - 
- *	  'was_updated' - when user submited form and data was succefully stored
+ *	  'was_deleted' - when domain was deleted
  *	 
  *	opt['smarty_id'] 			(dom_id)
  *	 contain id of currently edited domain
@@ -123,6 +126,10 @@ class apu_domain extends apu_base_class{
 		$this->opt['form_add_submit']=array('type' => 'image',
 										'text' => $lang_str['b_add'],
 										'src'  => get_path_to_buttons("btn_add.gif", $sess_lang));
+
+		/* messages */
+		$this->opt['msg_delete']['short'] =	&$lang_str['msg_domain_deleted_s'];
+		$this->opt['msg_delete']['long']  =	&$lang_str['msg_domain_deleted_l'];
 
 		/*** names of variables assigned to smarty ***/
 		/* form */
@@ -260,7 +267,10 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
 		}
 
-		return true;
+		if (isset($_GET['enable']))
+			return array("m_do_enabled=".RawURLEncode($this->opt['instance_id']));
+		else
+			return array("m_do_disabled=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -290,7 +300,7 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_delete']);
 		}
 
-		return true;
+		return array("m_do_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -318,7 +328,7 @@ class apu_domain extends apu_base_class{
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
 
-		return true;
+		return array("m_do_alias_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -346,7 +356,7 @@ class apu_domain extends apu_base_class{
 			if (false === $data->reload_domains(null, $errors)) return false;
 		}
 		
-		return true;
+		return array("m_do_alias_created=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -373,7 +383,7 @@ class apu_domain extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
 		}
 
-		return true;
+		return array("m_do_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 	/**
@@ -499,6 +509,20 @@ class apu_domain extends apu_base_class{
 		}
 
 		return true;
+	}
+
+	/**
+	 *	add messages to given array 
+	 *
+	 *	@param array $msgs	array of messages
+	 */
+	function return_messages(&$msgs){
+		global $_GET;
+		
+		if (isset($_GET['m_do_deleted']) and $_GET['m_do_deleted'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_delete'];
+			$this->smarty_action="was_deleted";
+		}
 	}
 
 	/**
