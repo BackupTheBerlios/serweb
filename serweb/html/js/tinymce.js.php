@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: tinymce.js.php,v 1.1 2005/10/19 13:41:21 kozlik Exp $
+ * $Id: tinymce.js.php,v 1.2 2005/10/27 13:28:50 kozlik Exp $
  */
 
 Header("content-type: text/js");
@@ -33,7 +33,7 @@ function toogleEditorMode(sEditorID) {
 function openFileManager(){
     var template = new Array();
     
-    template['file']   = '../../plugins/filemanager/InsertFile/insert_file.php'; // Relative to theme
+    template['file']   = '<?php echo $config->js_src_path; ?>tinymce/plugins/filemanager/InsertFile/insert_file.php'; // Relative to theme
 	template['file'] += "?callback=none"
     if (typeof(window.tinyMCEsess) != "undefined"){
 		template['file'] += "&"+window.tinyMCEsess
