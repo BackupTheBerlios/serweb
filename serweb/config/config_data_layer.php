@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.12 2005/10/05 12:38:26 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.13 2005/10/31 16:22:06 kozlik Exp $
  */
 
 
@@ -83,6 +83,12 @@
 		 */
 		$config->XXL_proxy_asigment_lifetime = 900;
  		
+		/**
+		 *	Lifetime of deleted records. (in days)
+		 *	Deleted domains and subscribers will be kept in DB for given time
+		 *	interval. After expiring it, records will be permanently deleted.
+		 */
+		$config->keep_deleted_interval = 30;
 		
 		/* these are setting required by ldap, you need to change it only if you are using ldap to 
 		   store some data. If you are using ldap, you need to instal PEAR package db_ldap2 by command:
@@ -204,4 +210,13 @@
  		$config->data_sql->dom_pref->id = 				"d_id";
  		$config->data_sql->dom_pref->att_name = 		"att_name";
  		$config->data_sql->dom_pref->att_value = 		"att_value";
+
+		/*
+		 *  names of columns in table subscriber
+		 */															
+		$config->data_sql->subscriber = new stdClass();															
+ 		$config->data_sql->subscriber->uuid = 			$config->users_indexed_by=='uuid' ? "uuid" : "phplib_id";
+ 		$config->data_sql->subscriber->username = 		"username";
+ 		$config->data_sql->subscriber->domain = 		"domain";
+
 ?>
