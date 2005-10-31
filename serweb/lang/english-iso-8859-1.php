@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.20 2005/10/25 09:00:33 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.21 2005/10/31 16:35:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -322,7 +322,11 @@ $lang_str['reg_password_desc'] = 				"Do not forget your password -- you will ne
 $lang_str['ff_confirm_password'] = 				"confirmation password";
 $lang_str['ff_terms_and_conditions'] = 			"terms and conditions";
 $lang_str['ff_i_accept'] = 						"I accept";
+$lang_str['ff_timezone'] = 						"timezone";
 $lang_str['l_back_to_loginform'] = 				"Back to login form";
+$lang_str['msg_user_registered_s'] = 			"User registered";
+$lang_str['msg_user_registered_l'] = 			"New user has been successfully registered";
+$lang_str['register_new_user'] = 				"register new user";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -527,6 +531,9 @@ $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";
 $lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";
 
+$lang_str['msg_domain_deleted_s'] = 			"Domain deleted";
+$lang_str['msg_domain_deleted_l'] = 			"This domain is no longer served and all associated records including subscriber data will be deleted soon. Make sure that DNS records no longer refer to this server";
+
 $lang_str['assigned_domains'] = 				"Assigned domains";
 $lang_str['unassigned_domains'] = 				"Unassigned domains";
 $lang_str['l_assign_domain'] = 					"assign domain";
@@ -534,6 +541,10 @@ $lang_str['l_unassign_domain'] = 				"unassign domain";
 $lang_str['l_assigned_domains'] = 				"assigned domains";
 $lang_str['l_change_layout'] = 					"change layout";
 $lang_str['l_domain_preferences'] = 			"domain preferences";
+$lang_str['l_unassign_admin'] = 				"unassign admin";
+
+$lang_str['admins_of_domain'] = 				"Admins of this domain";
+$lang_str['no_admins'] = 						"No admins";
 
 $lang_str['ff_address'] = 						"address";
 
@@ -546,11 +557,12 @@ $lang_str['lf_config'] = 						"domain configuration";
 $lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";
 $lang_str['l_upload_images'] = 					"upload images";
 
-$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";
+$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them! Please note that compatibility list of used WYSIWYG editor is: 'Mozilla, MSIE and FireFox (Safari experimental)'. If your browser is not on this list WYSIWYG editor may not work.";
 
 $lang_str['choose_one'] = 						"choose one";
 
 $lang_str['layout_files'] = 					"Layout files";
 $lang_str['text_files'] = 						"Text files";
 
+$lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";
 ?>

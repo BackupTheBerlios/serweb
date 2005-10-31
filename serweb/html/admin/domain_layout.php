@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: domain_layout.php,v 1.1 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: domain_layout.php,v 1.2 2005/10/31 16:35:20 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -41,6 +41,8 @@ $text_files[] = array('filename' => "terms.txt",
                       'desc' => $lang_str['lf_terms_and_conditions']);
 $text_files[] = array('filename' => "mail_register.txt",
                       'desc' => $lang_str['lf_mail_register']);
+$text_files[] = array('filename' => "mail_registered_by_admin.txt",
+                      'desc' => $lang_str['lf_mail_register_by_admin']);
 $text_files[] = array('filename' => "mail_forgot_password_pass.txt",
                       'desc' => $lang_str['lf_mail_fp_pass']);
 $text_files[] = array('filename' => "mail_forgot_password_conf.txt",

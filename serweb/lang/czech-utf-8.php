@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.4 2005/10/19 12:27:48 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.5 2005/10/31 16:35:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -322,7 +322,11 @@ $lang_str['reg_password_desc'] = 				"Nezapmeňte vaše heslo -- budete ho potř
 $lang_str['ff_confirm_password'] = 				"heslo znovu pro potvrzení";
 $lang_str['ff_terms_and_conditions'] = 			"podmínky a požadavky";
 $lang_str['ff_i_accept'] = 						"souhlasím";
+$lang_str['ff_timezone'] = 						"timezone";	//to translate 
 $lang_str['l_back_to_loginform'] = 				"Zpět na přihlašovací stránku";
+$lang_str['msg_user_registered_s'] = 			"User registered";	//to translate 
+$lang_str['msg_user_registered_l'] = 			"New user has been successfully registered";	//to translate 
+$lang_str['register_new_user'] = 				"register new user";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -527,6 +531,9 @@ $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to t
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
 $lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";	//to translate 
 
+$lang_str['msg_domain_deleted_s'] = 			"Domain deleted";	//to translate 
+$lang_str['msg_domain_deleted_l'] = 			"This domain is no longer served and all associated records including subscriber data will be deleted soon. Make sure that DNS records no longer refer to this server";	//to translate 
+
 $lang_str['assigned_domains'] = 				"Assigned domains";	//to translate 
 $lang_str['unassigned_domains'] = 				"Unassigned domains";	//to translate 
 $lang_str['l_assign_domain'] = 					"assign domain";	//to translate 
@@ -534,6 +541,10 @@ $lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate
 $lang_str['l_assigned_domains'] = 				"assigned domains";	//to translate 
 $lang_str['l_change_layout'] = 					"change layout";	//to translate 
 $lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
+$lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
+
+$lang_str['admins_of_domain'] = 				"Admins of this domain";	//to translate 
+$lang_str['no_admins'] = 						"No admins";	//to translate 
 
 $lang_str['ff_address'] = 						"address";	//to translate 
 
@@ -553,4 +564,5 @@ $lang_str['choose_one'] = 						"choose one";	//to translate
 $lang_str['layout_files'] = 					"Layout files";	//to translate 
 $lang_str['text_files'] = 						"Text files";	//to translate 
 
+$lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";	//to translate 
 ?>

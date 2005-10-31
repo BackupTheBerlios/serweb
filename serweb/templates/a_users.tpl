@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.7 2005/10/21 08:46:55 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.8 2005/10/31 16:35:20 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -87,6 +87,8 @@
 {foreachelse}
 <div class="swNumOfFoundRecords">{$lang_str.no_users_found}</div>
 {/foreach}
+
+<a href="{url url='new_user.php' uniq=1}">{$lang_str.register_new_user}</a>
 
 <br>
 {include file='_tail.tpl'}

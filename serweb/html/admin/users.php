@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.25 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: users.php,v 1.26 2005/10/31 16:35:20 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -22,6 +22,12 @@ if (isset($_GET['m_acl_updated'])){
 	$controler->add_message(array(
 		'short' => $lang_str['msg_acl_updated_s'],
 		'long'  => $lang_str['msg_acl_updated_l']));
+}
+
+if (isset($_GET['m_user_registered'])){
+	$controler->add_message(array(
+		'short' => $lang_str['msg_user_registered_s'],
+		'long'  => $lang_str['msg_user_registered_l']));
 }
 
 
