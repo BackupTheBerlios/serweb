@@ -488,6 +488,16 @@ table.swTable tr.swTrOdd{
 	white-space: nowrap;
 }
 
+.swUserEnabled{
+	color: Black;
+	white-space: nowrap;
+}
+
+.swUserDisabled{
+	color: Gray;
+	white-space: nowrap;
+}
+
 /*
  *	server monitoring statistics
  */
