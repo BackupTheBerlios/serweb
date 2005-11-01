@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: method.find_users.php,v 1.2 2005/08/29 13:28:11 kozlik Exp $
+ * $Id: method.find_users.php,v 1.3 2005/11/01 17:58:40 kozlik Exp $
  */
 
 class CData_Layer_find_users {
-	var $required_methods = array('get_aliases_by_uri', 'get_status');
+	var $required_methods = array('get_aliases_by_uri', 'get_status', 'get_sql_user_flags');
 
 	/*
 	 * find users - white pages
@@ -58,21 +58,22 @@ class CData_Layer_find_users {
 			}
 		}
 		
+		$flags = $this->get_sql_user_flags(null);
 		
 		/* get num rows */		
 		if ($filter['onlineonly']){
 
-			if ($config->users_indexed_by=='uuid')	$qw = " where s.uuid=l.uuid and ".$q_where;
-			else $qw = " where s.username=l.username and s.domain=l.domain and ".$q_where;
+			if ($config->users_indexed_by=='uuid')	$qw = " where s.uuid=l.uuid and ".$flags['deleted']['where'].$q_where;
+			else $qw = " where s.username=l.username and s.domain=l.domain and ".$flags['deleted']['where'].$q_where;
 
 			if ($this->db_host['parsed']['phptype'] == 'mysql'){ //query for mysql
 				$q=	"select count(distinct s.username, s.domain) 
-					 from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ".$qw;
+					 from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from.", ".$config->data_sql->table_location." l ".$qw;
 			}
 			else{												//query for others
 				$q=	"select count(*) from (
 						select distinct s.username, s.domain 
-					 	from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ".
+					 	from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from.", ".$config->data_sql->table_location." l ".
 						$qw.")
 					 as cnt";
 			}
@@ -80,14 +81,14 @@ class CData_Layer_find_users {
 		else{
 			if ($this->db_host['parsed']['phptype'] == 'mysql'){	//query for mysql
 				$q=	"select count(distinct s.username, s.domain) 
-				     from ".$config->data_sql->table_subscriber." s ".$q_from." 
-					 where ".$q_where;
+				     from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from." 
+					 where ".$flags['deleted']['where'].$q_where;
 			}
 			else{													//query for others
 				$q=	"select count(*) from (
 						select distinct s.username, s.domain 
-						from ".$config->data_sql->table_subscriber." s ".$q_from." 
-						where ".$q_where.") 
+						from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from." 
+						where ".$flags['deleted']['where'].$q_where.") 
 					 as cnt";
 			}
 		}
@@ -105,16 +106,16 @@ class CData_Layer_find_users {
 
 		if ($filter['onlineonly']){
 			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username, s.domain ".
-				"from ".$config->data_sql->table_subscriber." s ".$q_from.", ".$config->data_sql->table_location." l ";
+				"from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from.", ".$config->data_sql->table_location." l ";
 
-			if ($config->users_indexed_by=='uuid')	$q .= " where s.uuid=l.uuid and ".$q_where;
-			else $q .= " where s.username=l.username and s.domain=l.domain and ".$q_where;
+			if ($config->users_indexed_by=='uuid')	$q .= " where s.uuid=l.uuid and ".$flags['deleted']['where'].$q_where;
+			else $q .= " where s.username=l.username and s.domain=l.domain and ".$flags['deleted']['where'].$q_where;
 
 			$q .= $this->get_sql_limit_phrase();
 		}
 		else
-			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username, s.domain from ".$config->data_sql->table_subscriber." s ".$q_from.
-				" where ".$q_where.
+			$q=	"select distinct s.timezone, s.first_name, s.last_name, s.username, s.domain from ".$config->data_sql->table_subscriber." s ".$flags['deleted']['from'].$q_from.
+				" where ".$flags['deleted']['where'].$q_where.
 				$this->get_sql_limit_phrase();
 				
 		$res=$this->db->query($q);

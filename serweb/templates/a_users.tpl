@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.8 2005/10/31 16:35:20 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.9 2005/11/01 17:58:40 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -59,12 +59,17 @@
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
 	{/if}
+	{assign var='usr_class' value='swUserEnabled'}
+	{assign var='dom_class' value='swDomainEnabled'}
+	{if $row.user_disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
+	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left">{$row.username|empty2nbsp}</td>
-	{if $multidomain}<td align="left">{$row.domain|empty2nbsp}</td>{/if}
+	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
+	{if $multidomain}<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>{/if}
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="right">{$row.phone|empty2nbsp}</td>
 	<td align="right">{$row.aliases|empty2nbsp}</td>
@@ -73,6 +78,11 @@
 	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a></td>
+	{if $row.user_disabled}
+	<td align="center"><a href="{$row.url_enable}">{$lang_str.l_enable}</a></td>
+	{else}
+	<td align="center"><a href="{$row.url_disable}">{$lang_str.l_disable}</a></td>
+	{/if}
 	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, 'Realy you want delete user?')">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.users.last}

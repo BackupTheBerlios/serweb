@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.1 2005/07/08 11:06:52 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.2 2005/11/01 17:58:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -300,6 +300,12 @@ class apu_login extends apu_base_class{
 		if (false === $this->user_uuid = $data_auth->check_passw_of_user($this->username, $this->domain, $this->password, $errors)) {
 			sw_log("User login: authentication failed: bad username or domain or password ", PEAR_LOG_INFO);
 			$errors[]=$lang_str['bad_username'];
+			return false;
+		}
+
+		if (is_int($this->user_uuid) and $this->user_uuid == -1){
+			sw_log("User login: authentication failed: account disabled ", PEAR_LOG_INFO);
+			$errors[]=$lang_str['account_disabled'];
 			return false;
 		}
 

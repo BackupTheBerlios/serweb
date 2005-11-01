@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.6 2005/10/19 15:34:21 kozlik Exp $
+ * $Id: method.get_users.php,v 1.7 2005/11/01 17:58:40 kozlik Exp $
  */
 
 /*
@@ -33,7 +33,7 @@
  */ 
 
 class CData_Layer_get_users {
-	var $required_methods = array('get_aliases');
+	var $required_methods = array('get_aliases', 'get_sql_user_flags');
 	
 	function get_users($filter, $opt, &$errors){
 		global $config, $sess;
@@ -41,7 +41,8 @@ class CData_Layer_get_users {
 		if (!$this->connect_to_db($errors)) return false;
 
 		$cd = &$config->data_sql->domain;
-		$cp = &$config->data_sql->dom_pref;
+		$cdp = &$config->data_sql->dom_pref;
+		$cup = &$config->data_sql->usr_pref;
 	
 	    $opt_only_domain = (isset($opt['only_domain'])) ? $opt['only_domain'] : null;
 	    $opt_from_domains = (isset($opt['from_domains'])) ? $opt['from_domains'] : null;
@@ -74,15 +75,15 @@ class CData_Layer_get_users {
 		$q_domains_from = $q_domains_where = $q_domains_cols = "";
 		if ($config->multidomain){
 			$q_domains_cols = 
-				", dpd.".$cp->att_value." as domain_disabled ";
+				", dpd.".$cdp->att_value." as domain_disabled ";
 			$q_domains_from = 
 				" left outer join ".$config->data_sql->table_domain." d on s.domain = d.".$cd->name."
 			      left outer join ".$config->data_sql->table_dom_preferences." dpd 
-			        on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
+			        on (d.".$cd->id." = dpd.".$cdp->id." and dpd.".$cdp->att_name." = 'disabled')
 			      left outer join ".$config->data_sql->table_dom_preferences." dpx 
-			        on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')";
+			        on (d.".$cd->id." = dpx.".$cdp->id." and dpx.".$cdp->att_name." = 'deleted')";
 			$q_domains_where = /* skip subscribers from deleted domains */
-				" not (COALESCE(dpx.".$cp->att_value.", 0) > 0) and ";    
+				" not (COALESCE(dpx.".$cdp->att_value.", 0) > 0) and ";    
 
 			if (is_array($opt_from_domains)){
 				/* create a list of domains from which subscribers should be */
@@ -93,6 +94,7 @@ class CData_Layer_get_users {
 			}
 		}
 
+		$flags = $this->get_sql_user_flags(null);
 
 		$query_c="";
 		if ($filter['usrnm'])  $query_c .= "s.username like '%".$filter['usrnm']."%' and ";
@@ -112,8 +114,8 @@ class CData_Layer_get_users {
 		/* get num rows */		
 		$q="select s.username ".
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
-				$q_admins_join.$q_domains_from.
-			" where ".$q_domains_where.$q_admins_where.$q_online_where.$query_c;
+				$q_admins_join.$q_domains_from.$flags['deleted']['from'].
+			" where ".$q_domains_where.$flags['deleted']['where'].$q_admins_where.$q_online_where.$query_c;
 
 
 		$res=$this->db->query($q);
@@ -129,10 +131,10 @@ class CData_Layer_get_users {
 		else $attribute='s.phplib_id';
 		
 		/* get users */
-		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid ".$q_domains_cols.
+		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid ".$q_domains_cols.$flags['disabled']['cols'].
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
-				$q_admins_join.$q_domains_from.
-			" where ".$q_domains_where.$q_admins_where.$q_online_where.$query_c.
+				$q_admins_join.$q_domains_from.$flags['deleted']['from'].$flags['disabled']['from'].
+			" where ".$q_domains_where.$flags['deleted']['where'].$q_admins_where.$q_online_where.$query_c.
 			" order by s.username ".$this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);
@@ -150,6 +152,9 @@ class CData_Layer_get_users {
 			$out[$i]['email_address']  = $row->email_address;
 			$out[$i]['get_param']      = user_to_get_param($row->uuid, $row->username, $row->domain, 'u');
 			$out[$i]['get_param_d']    = user_to_get_param($row->uuid, $row->username, $row->domain, 'd');
+			$out[$i]['user_disabled']  = $row->user_disabled ? 1 : 0;
+			$out[$i]['domain_disabled'] = isset($row->domain_disabled) ? $row->domain_disabled : 0;
+			$out[$i]['disabled']       = ($out[$i]['user_disabled'] or $out[$i]['domain_disabled']) ? 1 : 0;
 
 			if ($opt_get_aliases){
 				$out[$i]['aliases']='';

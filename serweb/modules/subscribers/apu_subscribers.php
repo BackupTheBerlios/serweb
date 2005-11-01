@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.2 2005/10/07 14:01:14 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.3 2005/11/01 17:58:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -82,7 +82,8 @@ class apu_subscribers extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_users', 'delete_sip_user', 'check_admin_perms_to_user');
+		return array('get_users', 'mark_user_deleted', 
+		             'enable_user', 'check_admin_perms_to_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -131,10 +132,34 @@ class apu_subscribers extends apu_base_class{
 		
 	}
 
+	function action_enable(&$errors){
+		global $data;
+		
+		$opt = array("user"    => $this->controler->user_id,
+		             "disable" => false);
+	
+		if (!$data->enable_user($opt, $errors)) return false;
+
+		return array("m_sc_user_enabled=".RawURLEncode($this->opt['instance_id']));
+	}
+
+
+	function action_disable(&$errors){
+		global $data;
+		
+		$opt = array("user"    => $this->controler->user_id,
+		             "disable" => true);
+	
+		if (!$data->enable_user($opt, $errors)) return false;
+
+		return array("m_sc_user_disabled=".RawURLEncode($this->opt['instance_id']));
+	}
+
+
 	function action_delete(&$errors){
 		global $data, $lang_str, $serweb_auth;
 	
-		if ($this->opt['only_from_same_domain'] or $this->opt['only_from_administrated_domains']){
+/*		if ($this->opt['only_from_same_domain'] or $this->opt['only_from_administrated_domains']){
 			if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $this->dele_user, $errors))) return false;
 			
 			if (!$pp){
@@ -142,12 +167,10 @@ class apu_subscribers extends apu_base_class{
 				return false;
 			}
 		}
-
-		if (!$data->delete_sip_user($this->dele_user, $errors)) return false;
+*/
+		if (!$data->mark_user_deleted(array("user"=>$this->dele_user), $errors)) return false;
 
 		return array("m_sc_user_deleted=".RawURLEncode($this->opt['instance_id']));
-
-//        Header("Location: ".$sess->url("users.php?kvrk=".uniqID("")."&m_user_deleted=".RawURLEncode($usr->uname."@".$usr->domain)));
 	}
 
 	function action_default(&$errors){
@@ -185,7 +208,17 @@ class apu_subscribers extends apu_base_class{
 			$this->subscribers[$key]['url_dele'] = 
 				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
 						"&sc_dele=".RawURLEncode($this->opt['instance_id']).
-						"&".$val['get_param_d']);
+						"&".$val['get_param']);
+
+			$this->subscribers[$key]['url_enable'] = 
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&sc_enable=".RawURLEncode($this->opt['instance_id']).
+						"&".$val['get_param']);
+
+			$this->subscribers[$key]['url_disable'] = 
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&sc_disable=".RawURLEncode($this->opt['instance_id']).
+						"&".$val['get_param']);
 		}
 
 		return true;
@@ -255,13 +288,26 @@ class apu_subscribers extends apu_base_class{
 	function determine_action(){
 
 		if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
-			if (false !== $this->dele_user = get_userauth_from_get_param('d')){
-				$this->action=array('action'=>"delete",
-				                    'validate_form'=>false,
-									'reload'=>true);
-				return;
-			}
-			sw_log("user should be deleted, but can't get identificator from GET param", PEAR_LOG_DEBUG);
+			$this->dele_user = $this->controler->user_id;
+			
+			$this->action=array('action'=>"delete",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
+		if (isset($_GET['sc_enable']) and $_GET['sc_enable'] == $this->opt['instance_id']){
+			$this->action=array('action'=>"enable",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
+		if (isset($_GET['sc_disable']) and $_GET['sc_disable'] == $this->opt['instance_id']){
+			$this->action=array('action'=>"disable",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
 		}
 		
 

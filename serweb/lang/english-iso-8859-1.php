@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.21 2005/10/31 16:35:20 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.22 2005/11/01 17:58:39 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -132,6 +132,7 @@ $lang_str['th_email'] = 						"email";
 /* ------------------------------------------------------------*/
 
 $lang_str['bad_username'] = 					"Bad username or password";
+$lang_str['account_disabled'] = 				"Your account was disabled";
 $lang_str['msg_logout_s'] = 					"Loged out";
 $lang_str['msg_logout_l'] = 					"You have loged out. To login again, type your username and password bellow";
 $lang_str['userlogin'] = 						"Userlogin";

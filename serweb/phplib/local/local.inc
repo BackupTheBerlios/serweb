@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.8 2005/10/07 14:01:14 kozlik Exp $
+ * $Id: local.inc,v 1.9 2005/11/01 17:58:40 kozlik Exp $
  */
 
 
@@ -99,6 +99,11 @@ class phplib_Auth extends Auth {
 	$data_auth->set_xxl_user_id('sip:'.$serweb_auth->uname.'@'.$serweb_auth->domain);
 
 	$p_uid = $data_auth->check_passw_of_user($serweb_auth->uname, $serweb_auth->domain, $password, $errors);
+
+	if (is_int($p_uid) and $p_uid == -1){
+		$errors[]=$lang_str['account_disabled'];
+		return false;
+	}
 
 	if ($p_uid) {
 		$this->check_for_privileges($serweb_auth);

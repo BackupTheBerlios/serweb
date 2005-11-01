@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.get_admins_of_domain.php,v 1.1 2005/10/27 13:34:31 kozlik Exp $
+ * $Id: method.get_admins_of_domain.php,v 1.2 2005/11/01 17:58:40 kozlik Exp $
  */
 
 class CData_Layer_get_admins_of_domain {
-	var $required_methods = array('get_domain');
+	var $required_methods = array('get_domain', 'get_sql_user_flags');
 	
 	/**
 	 *  return array of associtive arrays containig admins of domain
@@ -36,11 +36,12 @@ class CData_Layer_get_admins_of_domain {
 					"s.".$cs->uuid :
 					"concat(s.".$cs->username.", '@', s.".$cs->domain.")";
 
+		$flags = $this->get_sql_user_flags(null);
 
 		$q="select s.".$cs->uuid.", s.".$cs->username.", s.".$cs->domain."
 		    from ".$config->data_sql->table_dom_preferences." dp join ".$config->data_sql->table_subscriber." s 
-			       on (dp.".$cp->att_value." = ".$q_join." and dp.".$cp->att_name." = 'admin')
-			where dp.".$cp->id."='".$d_id."'
+			       on (dp.".$cp->att_value." = ".$q_join." and dp.".$cp->att_name." = 'admin')".$flags['deleted']['from']."
+			where ".$flags['deleted']['where']." dp.".$cp->id."='".$d_id."'
 			order by s.".$cs->domain.", s.".$cs->username;
 
 		$res=$this->db->query($q);

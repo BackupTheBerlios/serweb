@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.13 2005/10/31 16:22:06 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.14 2005/11/01 17:58:38 kozlik Exp $
  */
 
 
@@ -218,5 +218,15 @@
  		$config->data_sql->subscriber->uuid = 			$config->users_indexed_by=='uuid' ? "uuid" : "phplib_id";
  		$config->data_sql->subscriber->username = 		"username";
  		$config->data_sql->subscriber->domain = 		"domain";
+
+		/*
+		 *  names of columns in table usr_preferences
+		 */															
+		$config->data_sql->usr_pref = new stdClass();															
+ 		$config->data_sql->usr_pref->uuid = 			"uuid";
+ 		$config->data_sql->usr_pref->username = 		"username";
+ 		$config->data_sql->usr_pref->domain = 			"domain";
+ 		$config->data_sql->usr_pref->att_name = 		"attribute";
+ 		$config->data_sql->usr_pref->att_value = 		"value";
 
 ?>
