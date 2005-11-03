@@ -33,6 +33,7 @@ class Smarty_Serweb extends Smarty {
 	*/
 	
 	function assign_phplib_form($name, $form, $start_arg = array(), $finish_arg = array()){
+		global $sess;
 
 		/* assign default values to args */		
 		if (!isset($start_arg['jvs_name']))		$start_arg['jvs_name']="";
@@ -43,6 +44,11 @@ class Smarty_Serweb extends Smarty {
 		
 		if (!isset($finish_arg['after']))	$finish_arg['after']="";
 		if (!isset($finish_arg['before']))	$finish_arg['before']="";
+
+		/* do not leave 'action' empty */
+		if (!$start_arg['action']) {
+			$start_arg['action'] = $sess->url($_SERVER['PHP_SELF']);
+		}
 
 		/* create associative array of form elements and begin and end tags of form */
 

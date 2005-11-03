@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.16 2005/10/19 09:50:26 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.17 2005/11/03 11:02:07 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -494,8 +494,10 @@ class page_conroler{
 			
 			/* send header */
 			if (!$this->url_for_reload) $this->url_for_reload = $_SERVER['PHP_SELF'];
+
+			$param_separator = strpos($this->url_for_reload, "?") !== false ?  "&" : "?";
 			
-	        Header("Location: ".$sess->url($this->url_for_reload."?kvrk=".uniqID("").
+	        Header("Location: ".$sess->url($this->url_for_reload.$param_separator."kvrk=".uniqID("").
 								($send_get_param ? 
 									'&'.$send_get_param : 
 									'')));
@@ -657,6 +659,7 @@ class page_conroler{
 		/* propagate user_id and reference to this to all application units */
 		foreach($this->apu_objects as $key=>$val){
 			$this->apu_objects[$key]->user_id=$this->user_id;
+			$this->apu_objects[$key]->domain_id=$this->domain_id;
 			$this->apu_objects[$key]->controler=&$this;
 		}
 

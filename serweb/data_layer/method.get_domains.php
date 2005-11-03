@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.1 2005/10/31 16:07:41 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.2 2005/11/03 11:02:08 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -47,6 +47,7 @@ class CData_Layer_get_domains {
 
 	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
 	    $o_get_names = (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
+	    $o_order_names = (isset($opt['order_names'])) ? (bool)$opt['order_names'] : true;
 	    $o_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
 	    $o_admin = (isset($opt['administrated_by'])) ? $opt['administrated_by'] : null;
 	    $o_deleted_before = (isset($opt['deleted_before'])) ? $opt['deleted_before'] : false;
@@ -141,8 +142,9 @@ class CData_Layer_get_domains {
 			$out[$i]['customer']   = $row[$cc->name];
 			$out[$i]['disabled']   = $row['disabled'];
 
-			$o = array('filter' => array('id' => $row['dom_id']));
 			if ($o_get_names){
+				$o = array('filter' => array('id' => $row['dom_id']));
+				$o['order_by'] = $o_order_names ? "name" : "";
 				if (false === $out[$i]['names'] = $this->get_domain($o, $errors)) return false;
 			}
 

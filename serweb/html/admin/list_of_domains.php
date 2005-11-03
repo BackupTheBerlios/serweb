@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: list_of_domains.php,v 1.2 2005/10/27 09:02:43 kozlik Exp $
+ * $Id: list_of_domains.php,v 1.3 2005/11/03 11:02:08 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -31,6 +31,8 @@ $dl	= new apu_domain_list();
 if (!$perm->have_perm('hostmaster')){
 	$dl->set_opt('domains_administrated_by', $serweb_auth);
 }
+
+$dl->set_opt('script_create', "wiz_new_domain/1_new_domain.php");
 
 $controler->add_apu($dl);
 $controler->add_reqired_javascript('functions.js');

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.4 2005/11/03 11:02:11 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.domain}&gt;</div>
@@ -9,8 +9,10 @@
 	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout}</a></div>
 {/if}
 
+{if $parameters.user_name or $parameters.logout}
 	<br class="cleaner" />
 	<br />
+{/if}
 
 {if $xxl_form}
 	<div align="right">

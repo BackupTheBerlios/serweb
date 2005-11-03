@@ -135,6 +135,10 @@ div#swContentNoTabs{
 	text-align: center;
 }
 
+.swWizard div#swContentNoTabs{
+	padding-top : 0px;
+}
+
 /*
  *	form
  */
@@ -229,7 +233,7 @@ table.swTable th{
 	padding-right: 4px;
 }
 
-	table.swTable th a:link, table.swTable th a:visited,
+table.swTable th a:link, table.swTable th a:visited,
 table.swTable th a:active, table.swTable th a:hover{
 	color: #000000;
 }
@@ -334,6 +338,20 @@ table.swTable tr.swTrOdd{
 
 .swSearchLinks{
 	text-align: left;
+}
+
+/*
+ *	Link selector
+ */
+
+.swLinkSelector .swLsSelected{
+	font-weight: bold;
+	font-size: larger;
+	border-bottom: 2px solid #C1D773;
+}
+
+.swLinkSelector .swLsNotSelected{
+	font-weight: bold;
 }
 
 /*

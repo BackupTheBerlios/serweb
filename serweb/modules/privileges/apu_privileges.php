@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.3 2005/10/07 13:09:52 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -168,6 +168,33 @@ class apu_privileges extends apu_base_class{
 
 		return array("m_pr_updated=".RawURLEncode($this->opt['instance_id']));
 	}
+
+	function action_set_admin_privileges(&$errors){
+		global $data;
+
+		/* get privileges of user */
+		if (false === $privs = $data->get_privileges_of_user($this->user_id, NULL, $errors)) return false;
+
+		/* find if user have 'is_admin' privilege*/
+		foreach($privs as $row)	
+			$privileges[$row->priv_name][]=$row->priv_value;
+
+		$set_privs = array();
+		$set_privs[] = "is_admin";
+		$set_privs[] = "change_privileges";
+
+		foreach($set_privs as $v){
+			if (isset($privileges[$v][0])) $update = true;
+			else $update = false;
+			
+			/* update only if user still does not have admin privilege */
+			if (empty($privileges[$v][0])){
+				if (false === $data->add_privilege_to_user($this->user_id, $v, '1', $update, $errors)) return false;
+			}
+		}
+	
+		return array("m_pr_updated=".RawURLEncode($this->opt['instance_id']));
+	}
 	
 	/* this metod is called always at begining */
 	function init(){
@@ -191,6 +218,13 @@ class apu_privileges extends apu_base_class{
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
+		if (isset($_GET['pr_set_admin_privilege'])){
+			$this->action=array('action'=>"set_admin_privileges",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
 		if ($this->was_form_submited()){	// Is there data to process?
 			$this->action=array('action'=>"update",
 			                    'validate_form'=>true,

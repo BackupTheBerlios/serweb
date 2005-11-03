@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.5 2005/10/19 10:16:16 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.6 2005/11/03 11:02:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -19,6 +19,9 @@
  *	
  *	'script_edit'				(string) default: 'domain_edit.php'
  *	 name of script which contain apu_domain
+ *
+ *	'script_create'				(string) default: 'domain_edit.php'
+ *	 name of script for create new_domain (which contain apu_domain)
  *
  *	'script_layout'				(string) default: 'domain_layout.php'
  *	 name of script which contain apu_domain_layout
@@ -96,6 +99,7 @@ class apu_domain_list extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['script_edit'] =			'domain_edit.php';
+		$this->opt['script_create'] =		'domain_edit.php';
 		$this->opt['script_layout'] =		'domain_layout.php';
 		$this->opt['script_preferences'] =	'domain_preferences.php';
 
@@ -276,7 +280,7 @@ class apu_domain_list extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
 		$smarty->assign_by_ref($this->opt['smarty_domains'], $this->domains);
-		$smarty->assign($this->opt['smarty_url_new_domain'], $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&new=1"));
+		$smarty->assign($this->opt['smarty_url_new_domain'], $sess->url($this->opt['script_create']."?kvrk=".uniqID("")."&new=1"));
 	}
 	
 	/**

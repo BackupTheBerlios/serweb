@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.2 2005/10/19 15:34:21 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.3 2005/11/03 11:02:07 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
@@ -14,6 +14,9 @@ class CData_Layer_get_domain {
 	 *    name
 	 *
 	 *  Possible options:
+	 *
+	 *	  order_by	(string)	default: 'name'
+	 *		name of column for sorting. If false or empty, result is not sorted
 	 *
 	 *    filter	(array)     default: array()
 	 *      associative array of pairs (column, value) which should be returned
@@ -29,7 +32,8 @@ class CData_Layer_get_domain {
 
 		$c = &$config->data_sql->domain;
 
-	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
+	    $o_filter  = (isset($opt['filter'])) ? $opt['filter'] : array();
+	    $o_order_by = (isset($opt['order_by'])) ? $opt['order_by'] : "name";
 
 		$qw=" ".$this->get_sql_bool(true)." ";
 		foreach($o_filter as $k=>$v){
@@ -38,8 +42,8 @@ class CData_Layer_get_domain {
 
 		$q="select ".$c->id.", ".$c->name."
 		    from ".$config->data_sql->table_domain."
-			where ".$qw." 
-			order by ".$c->name;
+			where ".$qw; 
+		if ($o_order_by) $q = " order by ".$c->$o_order_by;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

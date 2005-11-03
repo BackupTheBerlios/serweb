@@ -1,5 +1,5 @@
 /*
- * $Id: functions.js,v 1.5 2005/10/19 10:06:34 kozlik Exp $
+ * $Id: functions.js,v 1.6 2005/11/03 11:02:08 kozlik Exp $
  */
 
 /* confirm click to <a href=""> */
@@ -25,6 +25,22 @@ function stun_applet_win(script, width, height){
 	if (stun_win != null) stun_win.close();
 		stun_win=window.open(script, "stun_win", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,top=20,left=20,width=" + width + ",height=" + height);
 		stun_win.window.focus();
+		return;
+}
+
+/* show wizard window */
+
+var wizard_win=null;
+
+function open_wizard_win(url){
+	var width = 750; 
+	var height = 550;
+	var x = (screen.width - width) / 2;
+	var y = (screen.height - height) / 2;
+
+	if (wizard_win != null) wizard_win.close();
+		wizard_win=window.open(url, "wizard_win", "toolbar=no,location=no,directories=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,top="+ x +",left="+ y +",width=" + width + ",height=" + height);
+		wizard_win.window.focus();
 		return;
 }
 

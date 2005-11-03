@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.1 2005/10/19 10:33:07 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.2 2005/11/03 11:02:11 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -89,7 +89,7 @@
 {/foreach}
 
 {if $hostmaster_actions}
-<div><a href="{$url_new_domain}">{$lang_str.l_create_new_domain}</a></div>
+<div><a href="javascript: open_wizard_win('{url url=$url_new_domain uniq=1}');">{$lang_str.l_create_new_domain}</a></div>
 {/if}
 	
 <br>

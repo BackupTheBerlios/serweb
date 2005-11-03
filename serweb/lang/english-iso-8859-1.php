@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.22 2005/11/01 17:58:39 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.23 2005/11/03 11:02:09 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,7 @@ $lang_str['l_edit'] = 							"edit";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_back_to_main'] = 					"back to main page";
+$lang_str['l_back'] = 							"back";
 $lang_str['l_disable'] = 						"disable";
 $lang_str['l_enable'] = 						"enable";
 $lang_str['l_disable_all'] = 					"disable all";
@@ -550,6 +551,7 @@ $lang_str['no_admins'] = 						"No admins";
 $lang_str['ff_address'] = 						"address";
 
 $lang_str['lf_terms_and_conditions'] =			"terms and conditions";
+$lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";
 $lang_str['lf_mail_register'] = 				"mail confirmation registration";
 $lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";
 $lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";
@@ -566,4 +568,22 @@ $lang_str['layout_files'] = 					"Layout files";
 $lang_str['text_files'] = 						"Text files";
 
 $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";
+
+/* ------------------------------------------------------------*/
+/*      wizard - create new domain                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['register_new_admin'] = 				"Register new admin for domain";
+$lang_str['assign_existing_admin'] = 			"Assign an existing admin to domain";
+$lang_str['assign_admin_to_domain'] = 			"Assign admin to domain";
+$lang_str['create_new_domain'] = 				"Create new domain";
+$lang_str['l_create_new_customer'] = 			"create new customer";
+$lang_str['create_new_customer'] = 				"Create new customer";
+$lang_str['l_close_window'] = 					"close window";
+$lang_str['step'] = 							"step";
+$lang_str['l_select'] = 						"select";
+$lang_str['domain_setup_success'] = 			"New domain has been set up successfully!";
+$lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";
+
+
 ?>

@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.3 2005/10/21 08:39:14 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -16,6 +16,10 @@
  *	Configuration:
  *	--------------
  *	
+ *	'get_list_of_domains'		(bool) default: true
+ *	 If is set to false list of domains in 'default' action is not returned.
+ *	 This is only for better performance when the list does not needed.
+ *
  *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *								
@@ -78,6 +82,7 @@ class apu_domain_admin extends apu_base_class{
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
+		$this->opt['get_list_of_domains'] =	true;
 
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -140,11 +145,13 @@ class apu_domain_admin extends apu_base_class{
 		$this->unassigned_domains = array();
 		foreach ($domains as $k => $v){
 			if (in_array($v['id'], $this->assigned_ids)) {
-				$domains[$k]['url_unassign'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&da_unassign=".RawURLEncode($v['id']));
+				$domains[$k]['url_unassign'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&da_unassign=1&".$this->controler->domain_to_get_param($v['id']));
 				$this->assigned_domains[] = &$domains[$k];
 			}
 			else {
-				$domains[$k]['url_assign'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&da_assign=".RawURLEncode($v['id']));
+				$domains[$k]['url_assign'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&da_assign=1&".$this->controler->domain_to_get_param($v['id']));
 				$this->unassigned_domains[] = &$domains[$k];
 			}
 		}
@@ -182,7 +189,7 @@ class apu_domain_admin extends apu_base_class{
 		
 		$opt = array("add_domain" => true);
 		
-		if (false === $data->set_domain_admin($this->controler->user_id, $_GET['da_assign'], $opt, $errors)) return false;
+		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
 	
 		return true;
 	}
@@ -198,7 +205,7 @@ class apu_domain_admin extends apu_base_class{
 		
 		$opt = array("add_domain" => false);
 		
-		if (false === $data->set_domain_admin($this->controler->user_id, $_GET['da_unassign'], $opt, $errors)) return false;
+		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
 	
 		return true;
 	}
@@ -211,7 +218,10 @@ class apu_domain_admin extends apu_base_class{
 	 */
 
 	function action_default(&$errors){
-		if (!$this->get_domains($errors)) return false;
+
+		if ($this->opt['get_list_of_domains']){
+			if (!$this->get_domains($errors)) return false;
+		}
 	
 		return true;
 	}

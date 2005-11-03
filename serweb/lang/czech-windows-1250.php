@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.6 2005/11/01 17:58:39 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.7 2005/11/03 11:02:09 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,7 @@ $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
+$lang_str['l_back'] = 							"back";	//to translate 
 $lang_str['l_disable'] = 						"disable";	//to translate 
 $lang_str['l_enable'] = 						"enable";	//to translate 
 $lang_str['l_disable_all'] = 					"disable all";	//to translate 
@@ -550,6 +551,7 @@ $lang_str['no_admins'] = 						"No admins";	//to translate
 $lang_str['ff_address'] = 						"address";	//to translate 
 
 $lang_str['lf_terms_and_conditions'] =			"terms and conditions";	//to translate 
+$lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";	//to translate 
 $lang_str['lf_mail_register'] = 				"mail confirmation registration";	//to translate 
 $lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";	//to translate 
 $lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";	//to translate 
@@ -566,4 +568,22 @@ $lang_str['layout_files'] = 					"Layout files";	//to translate
 $lang_str['text_files'] = 						"Text files";	//to translate 
 
 $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";	//to translate 
+
+/* ------------------------------------------------------------*/
+/*      wizard - create new domain                             */
+/* ------------------------------------------------------------*/
+
+$lang_str['register_new_admin'] = 				"Register new admin for domain";	//to translate 
+$lang_str['assign_existing_admin'] = 			"Assign an existing admin to domain";	//to translate 
+$lang_str['assign_admin_to_domain'] = 			"Assign admin to domain";	//to translate 
+$lang_str['create_new_domain'] = 				"Create new domain";	//to translate 
+$lang_str['l_create_new_customer'] = 			"create new customer";	//to translate 
+$lang_str['create_new_customer'] = 				"Create new customer";	//to translate 
+$lang_str['l_close_window'] = 					"close window";	//to translate 
+$lang_str['step'] = 							"step";	//to translate 
+$lang_str['l_select'] = 						"select";	//to translate 
+$lang_str['domain_setup_success'] = 			"New domain has been set up successfully!";	//to translate 
+$lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to translate 
+
+
 ?>

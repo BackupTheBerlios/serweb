@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.3 2005/10/19 10:10:35 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -16,6 +16,18 @@
  *	Configuration:
  *	--------------
  *	
+ *	'redirect_on_update'		(string) default: ''
+ *	 name of script to which is browser redirected after succesfull update
+ *	 if empty, browser isn't redirected
+ *	
+ *	'redirect_on_create'		(string) default: ''
+ *	 name of script to which is browser redirected after creation of customer 
+ *	 if empty, browser isn't redirected
+ *	
+ *	'redirect_on_delete'		(string) default: ''
+ *	 name of script to which is browser redirected after succesfull delete of customer
+ *	 if empty, browser isn't redirected
+ *
  *	'msg_add'					default: $lang_str['msg_customer_added_s'] and $lang_str['msg_customer_added_l']
  *	 message which should be showed on customer update - assoc array with keys 'short' and 'long'
  *								
@@ -92,6 +104,9 @@ class apu_customers extends apu_base_class{
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
+		$this->opt['redirect_on_create'] = "";
+		$this->opt['redirect_on_update']  = "";
+		$this->opt['redirect_on_delete']  = "";
 
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_customer_updated_s'];
@@ -181,6 +196,10 @@ class apu_customers extends apu_base_class{
 							
 		if (false === $data->update_customer($values, $opt, $errors)) return false;
 
+		if ($this->opt['redirect_on_create']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_create']);
+		}
+
 		return array("m_cu_added=".RawURLEncode($this->opt['instance_id']));
 	}
 
@@ -201,6 +220,10 @@ class apu_customers extends apu_base_class{
 						'email'  => $_POST['cu_email']);			
 							
 		if (false === $data->update_customer($values, $opt, $errors)) return false;
+
+		if ($this->opt['redirect_on_update']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
+		}
 
 		return array("m_cu_updated=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -236,6 +259,10 @@ class apu_customers extends apu_base_class{
 		$opt = array( 'primary_key' => array('id' => $this->act_id));
 		if (false === $data->delete_customer($opt, $errors)) return false;
 	
+		if ($this->opt['redirect_on_delete']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_delete']);
+		}
+
 		return array("m_cu_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 

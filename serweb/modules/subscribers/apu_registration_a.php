@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration_a.php,v 1.1 2005/10/31 16:35:20 kozlik Exp $
+ * @version   $Id: apu_registration_a.php,v 1.2 2005/11/03 11:02:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -29,6 +29,9 @@
  *	'allowed_domains'			(array)	default: null
  *	 array of domain names from which may admin select. If is not set text field
  *	 is displayed instead of select
+ *	 
+ *	'pre_selected_domain'		(string)	default: null
+ *	 name of domain which is preselected
  *	 
  *	'redirect_on_register'		(string) default: ''
  *	 name of script to which is browser redirected after succesfull registration of new user
@@ -89,6 +92,7 @@ class apu_registration_a extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['allowed_domains'] = null;
+		$this->opt['pre_selected_domain'] = null;
 		
 		$this->opt['mail_file'] =	'mail_registered_by_admin.txt';
 		$this->opt['login_script'] =	'';
@@ -138,6 +142,7 @@ class apu_registration_a extends apu_base_class{
 				$errors)) 
 			return false;
 
+		$user_param = user_to_get_param($uuid, $_POST['uname'], $_POST['domain'], "u");
 
 		$remove_from_subscriber=true;
 		$remove_alias=false;
@@ -199,7 +204,8 @@ class apu_registration_a extends apu_base_class{
 		if ($this->opt['redirect_on_register'])
 			$this->controler->change_url_for_reload($this->opt['redirect_on_register']);
 
-		return array("m_user_registered=".RawURLEncode($this->opt['instance_id']));
+		return array("m_user_registered=".RawURLEncode($this->opt['instance_id']),
+		             $user_param);
 	}
 
 	function action_finish(&$errors){
@@ -246,6 +252,7 @@ class apu_registration_a extends apu_base_class{
 			$this->f->add_element(array("type"=>"select",
 										 "name"=>"domain",
 										 "options"=>$dom_options,
+										 "value"=>($this->opt['pre_selected_domain'] ? $this->opt['pre_selected_domain'] : ""),
 										 "size"=>1));
 		}
 		else{
