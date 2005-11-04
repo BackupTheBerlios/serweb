@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.5 2005/11/04 13:26:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -52,12 +52,17 @@
  *	
  *	opt['smarty_enabled_privileges']	(en_priv)
  *	 associative array - keys are privilege names, values are 0 and 1 (enabled/disabled)
+ *
+ *	opt['smarty_allow_change']	(allow_change_privileges)
+ *	 flag which says if privileges can be changed
  */
 
 class apu_privileges extends apu_base_class{
 	var $smarty_action='default';
 	var $privileges;
 	var $enabled_privileges;
+	/** flag for smarty template - is unset when changeing privileges isn't allowed */
+	var $allow_change_priv = true;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -94,6 +99,7 @@ class apu_privileges extends apu_base_class{
 
 		$this->opt['smarty_enabled_privileges'] = 		'en_priv';		
 		
+		$this->opt['smarty_allow_change'] =	'allow_change_privileges';
 	}
 
 	/*
@@ -147,8 +153,22 @@ class apu_privileges extends apu_base_class{
 	} //end function update_db
 
 
+	function check_access(&$errors){
+		global $perm, $lang_str;
+		
+		if (!$perm->have_perm('hostmaster') and !empty ($this->privileges['hostmaster'][0])){
+			$errors[] = $lang_str['err_cant_ch_priv_of_hostmaster'];
+			$this->allow_change_priv = false;
+			return false;
+		}
+		
+		return true;
+	}
+
 	function action_update(&$errors){
 		global $config;
+		
+		if (false === $this->check_access($errors)) return false;
 		
 		if ($this->enabled_privileges['is_admin']){
 			if (false === $this->update_db('is_admin', array('type'=>'boolean'), $errors)) return false;
@@ -172,23 +192,18 @@ class apu_privileges extends apu_base_class{
 	function action_set_admin_privileges(&$errors){
 		global $data;
 
-		/* get privileges of user */
-		if (false === $privs = $data->get_privileges_of_user($this->user_id, NULL, $errors)) return false;
-
-		/* find if user have 'is_admin' privilege*/
-		foreach($privs as $row)	
-			$privileges[$row->priv_name][]=$row->priv_value;
+		if (false === $this->check_access($errors)) return false;
 
 		$set_privs = array();
 		$set_privs[] = "is_admin";
 		$set_privs[] = "change_privileges";
 
 		foreach($set_privs as $v){
-			if (isset($privileges[$v][0])) $update = true;
+			if (isset($this->privileges[$v][0])) $update = true;
 			else $update = false;
 			
 			/* update only if user still does not have admin privilege */
-			if (empty($privileges[$v][0])){
+			if (empty($this->privileges[$v][0])){
 				if (false === $data->add_privilege_to_user($this->user_id, $v, '1', $update, $errors)) return false;
 			}
 		}
@@ -196,6 +211,10 @@ class apu_privileges extends apu_base_class{
 		return array("m_pr_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
+	function action_default(&$errors){
+		if (false === $this->check_access($errors)) return false;
+	}
+
 	/* this metod is called always at begining */
 	function init(){
 		parent::init();
@@ -340,6 +359,7 @@ class apu_privileges extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_enabled_privileges'], $this->enabled_privileges);
 		$smarty->assign($this->opt['smarty_groups'], $config->grp_values);
+		$smarty->assign($this->opt['smarty_allow_change'], $this->allow_change_priv);
 	}
 	
 	/* return info need to assign html form to smarty */
