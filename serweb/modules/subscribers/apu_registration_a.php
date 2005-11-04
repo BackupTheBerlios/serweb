@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration_a.php,v 1.2 2005/11/03 11:02:10 kozlik Exp $
+ * @version   $Id: apu_registration_a.php,v 1.3 2005/11/04 13:25:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -267,7 +267,7 @@ class apu_registration_a extends apu_base_class{
 
 
 		$timezones=$data->get_time_zones($errors);
-		$tz_options[]=array("label"=>$lang_str['choose_timezone'],"value"=>"");
+		$tz_options[]=array("label"=>$lang_str['choose_timezone_of_user'],"value"=>"");
 		foreach ($timezones as $v) $tz_options[]=array("label"=>$v,"value"=>$v);
 
 		$this->f->add_element(array("type"=>"select",
