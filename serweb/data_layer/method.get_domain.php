@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.3 2005/11/03 11:02:07 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.4 2005/11/04 13:23:02 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
@@ -43,7 +43,7 @@ class CData_Layer_get_domain {
 		$q="select ".$c->id.", ".$c->name."
 		    from ".$config->data_sql->table_domain."
 			where ".$qw; 
-		if ($o_order_by) $q = " order by ".$c->$o_order_by;
+		if ($o_order_by) $q .= " order by ".$c->$o_order_by;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
