@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_layout.tpl,v 1.1 2005/10/19 10:33:07 kozlik Exp $ *}
+{* $Id: a_domain_layout.tpl,v 1.2 2005/11/04 14:55:54 kozlik Exp $ *}
 
 {literal}
 <script language="javascript" type="text/javascript">
@@ -50,8 +50,10 @@
 <div class="swForm">
 	{$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr><td>{$form.dl_content}</td></tr>
-	<tr><td align="right">{$form.okey}</td></tr>
+	<tr><td colspan="3">{$form.dl_content}</td></tr>
+	<tr><td align="left" width="33%">&nbsp;</td>
+	    <td align="center"><a href="{$url_back_to_default}">{$lang_str.l_back_to_default}</a></td>
+	    <td align="right" width="33%">{$form.okey}</td></tr>
 	</table>
 	{$form.finish}
 </div>
@@ -62,10 +64,11 @@
 <div class="swForm">
 	{$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr><td colspan="2">{$form.dl_content}</td></tr>
-	<tr><td align="left">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');">{$lang_str.l_toggle_wysiwyg}</a>
+	<tr><td colspan="3">{$form.dl_content}</td></tr>
+	<tr><td align="left" width="33%">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');">{$lang_str.l_toggle_wysiwyg}</a>
 	                     {else}&nbsp;{/if}</td>
-	    <td align="right">{$form.okey}</td></tr>
+	    <td align="center"><a href="{$url_back_to_default}">{$lang_str.l_back_to_default}</a></td>
+	    <td align="right" width="33%">{$form.okey}</td></tr>
 	</table>
 	{$form.finish}
 </div>

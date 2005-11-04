@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.4 2005/10/27 13:33:26 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.5 2005/11/04 14:55:53 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -67,6 +67,7 @@ class apu_domain_layout extends apu_base_class{
 	var $filename;
 	var $lang;
 	var $fileinfo = null;
+	var $url_back_to_default;
 
 	/** 
 	 *	return required data layer methods - static class 
@@ -117,6 +118,7 @@ class apu_domain_layout extends apu_base_class{
 		$this->opt['smarty_layout_files'] =	'layout_files';
 		$this->opt['smarty_text_files'] =	'text_files';
 		$this->opt['smarty_fileinfo'] =		'fileinfo';
+		$this->opt['smarty_url_back_to_default'] =		'url_back_to_default';
 		
 	}
 
@@ -216,6 +218,46 @@ class apu_domain_layout extends apu_base_class{
 		return array("m_dl_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 
+
+	/**
+	 *	perform action back to default text file
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */	
+	function action_back_to_default_text(&$errors){
+		global $available_languages;
+		$dirname  = dirname(__FILE__)."/../../html/domains/";
+		$dirname_dafult = $dirname."_default/";
+		$dirname .= $this->controler->domain_id."/";
+
+		$ln = $available_languages[$this->lang][2];
+		$dirname_dafult .= "txt/".$ln."/";
+		$dirname .= "txt/".$ln."/";
+
+		RecursiveMkdir($dirname);
+
+		copy($dirname_dafult.$this->filename, $dirname.$this->filename);
+		return true;
+	}
+
+	/**
+	 *	perform action back to default layout file
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */	
+	function action_back_to_default_layout(&$errors){
+		$dirname  = dirname(__FILE__)."/../../html/domains/";
+		$dirname_dafult = $dirname."_default/";
+		$dirname .= $this->controler->domain_id."/";
+		RecursiveMkdir($dirname);
+
+		copy($dirname_dafult.$this->filename, $dirname.$this->filename);
+		return true;
+	}
+	
+	
 	/**
 	 *	perform action edit text file
 	 *
@@ -223,7 +265,10 @@ class apu_domain_layout extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */	
 	function action_edit_text_file(&$errors){
+		global $sess;
 		$this->smarty_action="edit_text";
+
+		$this->url_back_to_default = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&back_to_default_text=1&filename=".RawURLEncode($this->filename)."&lang=".$this->lang);
 		return true;
 	}
 	
@@ -234,7 +279,10 @@ class apu_domain_layout extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */	
 	function action_edit_layout_file(&$errors){
+		global $sess;
 		$this->smarty_action="edit_layout";
+
+		$this->url_back_to_default = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&back_to_default_layout=1&filename=".RawURLEncode($this->filename));
 		return true;
 	}
 	
@@ -268,6 +316,23 @@ class apu_domain_layout extends apu_base_class{
 								'reload'=>false);
 			$this->filename = $_GET['filename'];
 			$this->get_layout_fileinfo();
+			return;
+		}
+
+		if (isset($_GET['back_to_default_text'])){
+			$this->action=array('action'=>"back_to_default_text",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			$this->lang = $_GET['lang'];
+			$this->filename = $_GET['filename'];
+			return;
+		}
+
+		if (isset($_GET['back_to_default_layout'])){
+			$this->action=array('action'=>"back_to_default_layout",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			$this->filename = $_GET['filename'];
 			return;
 		}
 
@@ -406,6 +471,7 @@ class apu_domain_layout extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_layout_files'], $this->layout_f);
 		$smarty->assign_by_ref($this->opt['smarty_text_files'], $this->text_f);
 		$smarty->assign_by_ref($this->opt['smarty_fileinfo'], $this->fileinfo);
+		$smarty->assign_by_ref($this->opt['smarty_url_back_to_default'], $this->url_back_to_default);
 	}
 	
 	/**
