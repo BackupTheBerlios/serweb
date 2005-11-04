@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.23 2005/11/03 11:02:09 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.24 2005/11/04 14:48:57 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -305,6 +305,7 @@ $lang_str['cs_fw_to_voicemail'] = 				"forward to voicemail";
 
 $lang_str['fe_not_accepted_terms'] = 			"You don't accept terms and conditions";
 $lang_str['choose_timezone'] = 					"--- please select your timezone ---";
+$lang_str['choose_timezone_of_user'] = 			"--- please select timezone of user ---";
 $lang_str['fe_not_choosed_timezone'] = 			"select your timezone please";
 $lang_str['fe_uname_not_follow_conventions'] = 	"username does not follow suggested conventions";
 $lang_str['fe_not_filled_password'] = 			"you must fill password";
@@ -419,6 +420,7 @@ $lang_str['th_domain'] = 						"domain";
 $lang_str['l_change_privileges'] = 				"change privileges";
 $lang_str['ff_domain'] = 						"domain";
 $lang_str['ff_show_admins_only'] = 				"show admins only";
+$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";
 
 /* ------------------------------------------------------------*/
 /*      server monitoring                                      */
@@ -559,6 +561,7 @@ $lang_str['lf_config'] = 						"domain configuration";
 
 $lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";
 $lang_str['l_upload_images'] = 					"upload images";
+$lang_str['l_back_to_default'] = 				"restore default content";
 
 $lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them! Please note that compatibility list of used WYSIWYG editor is: 'Mozilla, MSIE and FireFox (Safari experimental)'. If your browser is not on this list WYSIWYG editor may not work.";
 

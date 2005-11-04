@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.7 2005/11/03 11:02:09 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.8 2005/11/04 14:48:57 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -305,6 +305,7 @@ $lang_str['cs_fw_to_voicemail'] = 				"doorsturen naa voicemail";
 
 $lang_str['fe_not_accepted_terms'] = 			"Uw moet de algemene voorwaarden accepteren";
 $lang_str['choose_timezone'] = 					"--- selecteer uw tijdzone ---";
+$lang_str['choose_timezone_of_user'] = 			"--- please select timezone of user ---";	//to translate 
 $lang_str['fe_not_choosed_timezone'] = 			"selecteer uw tijdzone SVP";
 $lang_str['fe_uname_not_follow_conventions'] = 	"gebruikersnaam voldoet niet aan de regels";
 $lang_str['fe_not_filled_password'] = 			"u moet een wachtwoord invullen";
@@ -419,6 +420,7 @@ $lang_str['th_domain'] = 						"domein";
 $lang_str['l_change_privileges'] = 				"wijzig rechten";
 $lang_str['ff_domain'] = 						"domein";
 $lang_str['ff_show_admins_only'] = 				"alleen administrators";
+$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      server monitoring                                      */
@@ -559,6 +561,7 @@ $lang_str['lf_config'] = 						"domain configuration";	//to translate
 
 $lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";	//to translate 
 $lang_str['l_upload_images'] = 					"upload images";	//to translate 
+$lang_str['l_back_to_default'] = 				"restore default content";	//to translate 
 
 $lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";	//to translate 
 
