@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_admin_perms_to_user.php,v 1.2 2005/10/07 14:17:14 kozlik Exp $
+ * $Id: method.check_admin_perms_to_user.php,v 1.3 2005/11/04 13:23:18 kozlik Exp $
  */
 
 class CData_Layer_check_admin_perms_to_user {
@@ -28,6 +28,7 @@ class CData_Layer_check_admin_perms_to_user {
 
 		if ($config->multidomain){
 			$opt['filter']['name'] = $user->domain;
+			$opt['order_by'] = "";
 			if (false === $dom=$this->get_domain($opt, $errors)) return -1;
 			
 			$dom = reset($dom);					/* get first field of array */
