@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.14 2005/11/01 17:58:38 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.15 2005/11/08 15:27:50 kozlik Exp $
  */
 
 
@@ -89,6 +89,20 @@
 		 *	interval. After expiring it, records will be permanently deleted.
 		 */
 		$config->keep_deleted_interval = 30;
+		
+		/**
+		 *	Lifetime of pending records. (in hours)
+		 *	Pending subscribers will be kept in DB for given time
+		 *	interval. After expiring it, records will be permanently deleted.
+		 */
+		$config->keep_pending_interval = 24;
+		
+		/**
+		 *	Lifetime of acc records. (in days)
+		 *	Accounting records will be kept in DB for given time
+		 *	interval. After expiring it, records will be permanently deleted.
+		 */
+		$config->keep_acc_interval = 60;
 		
 		/* these are setting required by ldap, you need to change it only if you are using ldap to 
 		   store some data. If you are using ldap, you need to instal PEAR package db_ldap2 by command:
