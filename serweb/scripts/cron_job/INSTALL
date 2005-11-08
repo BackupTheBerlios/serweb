@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.1 2005/06/02 11:29:58 kozlik Exp $
+$Id: INSTALL,v 1.2 2005/11/08 15:43:14 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -12,6 +12,24 @@ insert lines mentioned below.
 There are currently these cronjobs. You needn't install all of them. Install
 only that features which you whish.
 
+
+
+
+Database daily maintenance
+--------------------------
+Short description:
+    Purge subscribers and domains marked as deleted, purge pending registrations
+    and purge old accounting records
+
+At what time to run?
+    Daily a while after midnight
+
+Crontab line: 
+    5 0 * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/daily.php
+
+Extra require:
+   * nothing
+	 
 
 
 
