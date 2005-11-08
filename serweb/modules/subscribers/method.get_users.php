@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_users.php,v 1.7 2005/11/01 17:58:40 kozlik Exp $
+ * $Id: method.get_users.php,v 1.8 2005/11/08 15:31:22 kozlik Exp $
  */
 
 /*
@@ -27,6 +27,12 @@
  *  	array of domain IDs from which are returned subscribers. By default are 
  *		returned all subscribers. Multidomain support must be enabled.
  *  
+ *	  return_all			(bool)	default: false
+ *		if true, the result isn't limited by LIMIT sql phrase
+ *
+ *	  deleted_before (int)	default:false
+ *		if is set, only users marked as deleted before given timestamp are returned
+ *
  *    get_user_aliases	  	(bool) default: true
  *      should returned aliases of users?
  *      Could be disabled from performance reasons.
@@ -47,9 +53,11 @@ class CData_Layer_get_users {
 	    $opt_only_domain = (isset($opt['only_domain'])) ? $opt['only_domain'] : null;
 	    $opt_from_domains = (isset($opt['from_domains'])) ? $opt['from_domains'] : null;
 	    $opt_get_aliases = (isset($opt['get_user_aliases'])) ? (bool)$opt['get_user_aliases'] : true;
+	    $opt_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
+	    $opt_deleted_before = (isset($opt['deleted_before'])) ? $opt['deleted_before'] : false;
 
 
-		if($filter['adminsonly']){
+		if(!empty($filter['adminsonly'])){
 			$q_admins_join = " left join ".$config->data_sql->table_admin_privileges." p on ".
 					(($config->users_indexed_by=='uuid')?
 						"(s.uuid=p.uuid and p.priv_name='is_admin') ":
@@ -61,7 +69,7 @@ class CData_Layer_get_users {
 			$q_admins_where = "";
 		}
 
-		if ($filter['onlineonly']){
+		if (!empty($filter['onlineonly'])){
 			$q_online_from = " ".$config->data_sql->table_location." l, ";
 			$q_online_where = ($config->users_indexed_by=='uuid')?
 								" s.uuid=l.uuid and ":
@@ -82,8 +90,11 @@ class CData_Layer_get_users {
 			        on (d.".$cd->id." = dpd.".$cdp->id." and dpd.".$cdp->att_name." = 'disabled')
 			      left outer join ".$config->data_sql->table_dom_preferences." dpx 
 			        on (d.".$cd->id." = dpx.".$cdp->id." and dpx.".$cdp->att_name." = 'deleted')";
-			$q_domains_where = /* skip subscribers from deleted domains */
-				" not (COALESCE(dpx.".$cdp->att_value.", 0) > 0) and ";    
+
+			if (!$opt_deleted_before){
+				/* skip subscribers from deleted domains */
+				$q_domains_where = " not (COALESCE(dpx.".$cdp->att_value.", 0) > 0) and ";    
+			}
 
 			if (is_array($opt_from_domains)){
 				/* create a list of domains from which subscribers should be */
@@ -94,38 +105,49 @@ class CData_Layer_get_users {
 			}
 		}
 
-		$flags = $this->get_sql_user_flags(null);
+		$f_opt = array();
+		if ($opt_deleted_before) $f_opt['deleted_before'] = $opt_deleted_before;
+		$flags = $this->get_sql_user_flags($f_opt);
 
 		$query_c="";
-		if ($filter['usrnm'])  $query_c .= "s.username like '%".$filter['usrnm']."%' and ";
-		if ($filter['fname'])  $query_c .= "s.first_name like '%".$filter['fname']."%' and ";
-		if ($filter['lname'])  $query_c .= "s.last_name like '%".$filter['lname']."%' and ";
-		if ($filter['email'])  $query_c .= "s.email_address like '%".$filter['email']."%' and ";
+		if (!empty($filter['usrnm']))  $query_c .= "s.username like '%".$filter['usrnm']."%' and ";
+		if (!empty($filter['fname']))  $query_c .= "s.first_name like '%".$filter['fname']."%' and ";
+		if (!empty($filter['lname']))  $query_c .= "s.last_name like '%".$filter['lname']."%' and ";
+		if (!empty($filter['email']))  $query_c .= "s.email_address like '%".$filter['email']."%' and ";
 	
 		if ($opt_only_domain){
 			$query_c .= "s.domain = '".$opt_only_domain."' and ";
 		}
-		else if ($filter['domain']) 
+		else if (!empty($filter['domain']))
 			$query_c .= "s.domain like '%".$filter['domain']."%' and ";
 		$query_c.=$this->get_sql_bool(true)." ";
 
+		$q_user_deleted_where = $flags['deleted']['where'];
+
+		if ($config->multidomain and $opt_deleted_before){
+			$q_user_deleted_where = "((".$q_user_deleted_where.$this->get_sql_bool(true).") or 
+					                   (dpx.".$cdp->att_value." < ".$opt_deleted_before." and dpx.".$cdp->att_value." > 0 )) and ";
+
+		}
 
 
-		/* get num rows */		
-		$q="select s.username ".
-			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
-				$q_admins_join.$q_domains_from.$flags['deleted']['from'].
-			" where ".$q_domains_where.$flags['deleted']['where'].$q_admins_where.$q_online_where.$query_c;
-
-
-		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
-
-		$this->set_num_rows($res->numRows());
-		$res->free();
+		if (!$opt_return_all){
+			/* get num rows */		
+			$q="select s.username ".
+				" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
+					$q_admins_join.$q_domains_from.$flags['deleted']['from'].
+				" where ".$q_domains_where.$q_user_deleted_where.$q_admins_where.$q_online_where.$query_c;
 	
-		/* if act_row is bigger then num_rows, correct it */
-		$this->correct_act_row();
+	
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+	
+			$this->set_num_rows($res->numRows());
+			$res->free();
+		
+			/* if act_row is bigger then num_rows, correct it */
+			$this->correct_act_row();
+		}
 
 		if ($config->users_indexed_by=='uuid') $attribute='s.uuid';
 		else $attribute='s.phplib_id';
@@ -134,8 +156,11 @@ class CData_Layer_get_users {
 		$q="select s.username, s.domain, s.first_name, s.last_name, s.phone, s.email_address, ".$attribute." as uuid ".$q_domains_cols.$flags['disabled']['cols'].
 			" from ".$q_online_from.$config->data_sql->table_subscriber." s ".
 				$q_admins_join.$q_domains_from.$flags['deleted']['from'].$flags['disabled']['from'].
-			" where ".$q_domains_where.$flags['deleted']['where'].$q_admins_where.$q_online_where.$query_c.
-			" order by s.username ".$this->get_sql_limit_phrase();
+			" where ".$q_domains_where.$q_user_deleted_where.$q_admins_where.$q_online_where.$query_c.
+			" order by s.username ";
+
+		$q.=($opt_return_all ? "" : $this->get_sql_limit_phrase());
+
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -145,6 +170,7 @@ class CData_Layer_get_users {
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_OBJECT); $i++){
 			$out[$i]['username']       = $row->username;
 			$out[$i]['domain']         = $row->domain;
+			$out[$i]['serweb_auth']    = new Cserweb_auth($row->uuid, $row->username, $row->domain);
 			$out[$i]['name']           = implode(' ', array($row->last_name, $row->first_name));
 			$out[$i]['fname']          = $row->first_name;
 			$out[$i]['lname']          = $row->last_name;
