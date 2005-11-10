@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_admin
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_admin.php,v 1.2 2005/08/24 13:23:58 kozlik Exp $
+ * @version   $Id: apu_user_preferences_admin.php,v 1.3 2005/11/10 15:08:41 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -284,7 +284,7 @@ class apu_user_preferences_admin extends apu_base_class{
 	
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_attributes'], $this->attributes);
 
@@ -294,7 +294,7 @@ class apu_user_preferences_admin extends apu_base_class{
 
 			$smarty->assign(
 				$this->opt['smarty_list_items_link'], 
-				$this->opt['edit_list_items_script']."?attrib_name=".RawURLEncode($this->att_id)."&kvrk=".uniqID("")
+				$sess->url($this->opt['edit_list_items_script']."?attrib_name=".RawURLEncode($this->att_id)."&kvrk=".uniqID(""))
 			);
 		}
 	}
