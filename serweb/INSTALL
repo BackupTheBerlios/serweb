@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.25 2005/07/08 15:12:06 kozlik Exp $
+$Id: INSTALL,v 1.26 2005/11/11 13:06:54 kozlik Exp $
 
 serweb - Installation
 
@@ -6,7 +6,9 @@ serweb - Installation
   -------------
 
   - Apache web server
-  - php 4.3 and later with support for mysql (php-mysql package)
+  - php 4.3 and later
+  - mysql support for php (php-mysql package)
+  - imap support for php (php-imap package)
   - PEAR package DB (should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
 		see http://pear.php.net/manual/en/installation.getting.php for details
@@ -35,6 +37,10 @@ serweb - Installation
 	    throught http. Do it by creating alias in your httpd.conf,
 		for example:
 	    	Alias /serweb "/your/serweb/dir/html" 
+	    	
+	    notice: If you are intending use serweb with multidomain support, skip 
+	            this step. And instead of it follow instructions in file
+	            mudules/multidomain/README
 
     [3] Open the file config_data_layer.php in your favourite editor and change
         the values for db_type, db_host, db_name, db_user and db_pass
@@ -44,27 +50,20 @@ serweb - Installation
         other values to fit your environment.
 
     [5] Open the file config.php and see if you wish to change some setting.
-        If you want enable loging, make sure that you have installed
+        If you want enable logging, make sure that you have installed
         PEAR package LOG. Make sure that your web server daemon has rights
         to write to file /var/log/serweb. Type these two commands:
             touch /var/log/serweb
             chown www-data /var/log/serweb
 
-    [6] Follow this step if you are hosting more domains and wnat have 
-	    diferent setting for some domain:
-	    In subdirectory /your/serweb/dir/html/domains create
-        directories named as domains you are hosting and copy to them content
-        of subdir /your/serweb/dir/html/domains/_default. In this
-        directories is files for domain depended configuration and layout
-        of pages for each domain. If some file isn't found in directory
-        /your/serweb/dir/html/domains/<domain> is used the one from
-        /your/serweb/dir/html/domains/_default
-
-        Open config.php for each domain
-        (/your/serweb/dir/html/domains/*/config.php) and change setting
-        to fit your environment. Don't forget change email address
-        (mail_header_from, infomail, regmail) and contact address of instant
-        messages (web_contact)
+    [6] There are some config options which are specific for individual domains
+        in multidomain setup. If you are intending to use serweb in multidomain
+        setup look for detailed info in file mudules/multidomain/README. 
+		Otherwise if you will use serweb only for a single domain change these
+		options in file html/domains/_default/config.ini.php
+	    
+        Don't forget change at least email addresses (mail_header_from, 
+		infomail, regmail) and contact address of instant messages (web_contact)
 
     [7] make sure your php.ini includes the following values:
             - short_open_tag = on

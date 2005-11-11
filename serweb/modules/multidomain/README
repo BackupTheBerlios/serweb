@@ -1,0 +1,91 @@
+$Id: README,v 1.1 2005/11/11 13:06:55 kozlik Exp $
+
+Multidomain module
+------------------
+
+ This module is need when serweb should run in multidomain configuration. It 
+allow management of domains (create/delete, enable/disable), manage domain 
+administrators (assign/unassign domains to administrators), change appearance
+of serweb for specified domain, web based configuration of serweb (change
+config values specific for domain).
+
+
+Instalation and configuration
+-----------------------------
+
+ 1. Enable mutltidomain support in serweb. Serweb config file:
+    $config->multidomain = true;
+
+ 2. Add write privilege for apache to directory serweb/html/domains
+
+	    chown apache:apache <....../serweb/html/domains>
+    
+ 3. Change config variable $config->apache_vhosts_dir in file config_paths.php
+    if needed. This variable has to point to directory where will be created
+    symlinks for domains. This symlinks will point to serweb/html directory
+    and they are created automaticaly by serweb. You also have to allow apache 
+	to write to this directory.
+	
+	    chown apache:apache <apache_vhosts_dir>
+
+ 4. Reconfigure apache to use module mod_vhost_alias. This is need for dynamic
+    virtual host configuration. Detailed info about it you can found here:
+    http://httpd.apache.org/docs/2.1/vhosts/mass.html Add to your httpd.conf
+    something like this:
+    
+        LoadModule vhost_alias_module /usr/lib/apache2/modules/mod_vhost_alias.so
+
+        UseCanonicalName Off
+        
+        <Directory />
+            Options FollowSymLinks
+            AllowOverride None
+        </Directory>
+        
+	    VirtualDocumentRoot /usr/local/share/serweb/vhosts/%0
+
+	Where "/usr/local/share/serweb/vhosts/" is content of $config->apache_vhosts_dir
+	
+ 5. Create symlink for first domain in <apache_vhosts_dir> directory to allow 
+    the first login to serweb. The domain for which you are creating the symlink
+	should be the domain of hostmaster. So if account of your hostmaster is
+	admin@mydomain.org create symlink:
+	
+		ln -s /your/serweb/dir/html  /usr/local/share/serweb/vhosts/mydomain.org
+
+	From now you should be able login to serweb at http://mydomain.org/user and
+	http://mydomain.org/admin
+	
+
+
+Configuration specific for individual domains
+---------------------------------------------
+
+Directory html/domains contain subdirecotries (one for each domain) containing 
+files specific for the domain. This files could be modified throught the web 
+interface so you can skip this chapter. Read on if you want understand how the 
+domain specific configuration works.
+
+The directory currently have this content:
+   * img (directory)     - contain images 
+   * txt (directory)     - contain text files (emails sended by serweb, 
+                           terms and conditions, etc.)
+   * styles.css          - css stylesheets
+   * prolog.html
+   * separator.html
+   * epilog.html         - files containing layout of genareted pages
+   * config.ini.php      - contain configuration options specific for domain
+                           If you will edit it, do not remove the first line
+                           <?php die("....."); ?> It protect the file from 
+						   unauthorized access.
+
+If serweb is generating a html page for a domain (e.g. foobar.com) it is trying 
+get appropriate file from directory html/domains/foobar.com. If the file doesn't
+exists serweb get it from directory html/domains/_default
+
+Notice: There is config file config/config_domain_defaults.php containing 
+        default values for domain specific config options. If some option in 
+		file html/domains/<some_domain>/config.ini.php is missing, the value 
+		from file config/config_domain_defaults.php is used.
+	        
+	        
