@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.6 2005/06/14 07:44:01 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.7 2005/11/11 13:03:34 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -10,7 +10,7 @@
  * Changes in this file have effect only if corresponding option in config   *
  * file for some domain is missing. Please DON'T CHANGE THIS FILE until you  *
  * don't know what are you doing. Instead of changing this file do changes   *
- * in files /html/domains/__name_of_domain__/config.php                      *
+ * in files /html/domains/__name_of_domain__/config.ini.php                  *
  *****************************************************************************/
  
 	/* ------------------------------------------------------------*/
