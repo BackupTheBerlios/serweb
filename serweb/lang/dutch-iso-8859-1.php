@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.8 2005/11/04 14:48:57 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.9 2005/11/14 15:35:55 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -571,6 +571,9 @@ $lang_str['layout_files'] = 					"Layout files";	//to translate
 $lang_str['text_files'] = 						"Text files";	//to translate 
 
 $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";	//to translate 
+
+$lang_str['th_old_versions'] = 					"Old versions of this file";	//to translate 
+$lang_str['initial_ver'] = 						"initial";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */

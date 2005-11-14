@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.5 2005/11/04 14:55:53 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.6 2005/11/14 15:36:05 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -30,6 +30,10 @@
  *		- filename - (required) name of file, files are searched in dir html/domain/<name of domain>/txt/<lang>
  *		- desc     - description of file
  *	
+ *	'nr_backups'				default: $config->backup_versions_nr
+ *	 This variable tells how many versions of one file is stored. If is set to 
+ *	 zero files are not backuped on update of them.
+ *	
  *	'tmp_file'					default: $config->smarty_compile_dir."tmp.ini"
  *	 path to temporary file used for check syntax of ini files. Http server must have 
  *	 write rights to this file. If 'tmp_file' is empty syntax isn't checked.
@@ -46,6 +50,11 @@
  *	
  *	'smarty_form'				name of smarty variable - see below
  *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_layout_files'		name of smarty variable - see below
+ *	'smarty_text_files'			name of smarty variable - see below
+ *	'smarty_backup_files'		name of smarty variable - see below
+ *	'smarty_fileinfo'			name of smarty variable - see below
+ *	'smarty_url_back_to_default'name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -65,9 +74,15 @@ class apu_domain_layout extends apu_base_class{
 	var $text_f;
 	var $languages;
 	var $filename;
+	/** version of file for display - name of file in backup directory */
+	var $file_ver = null;
 	var $lang;
 	var $fileinfo = null;
 	var $url_back_to_default;
+	/** array containing info about old versions of file */
+	var $backup_f;
+	/** associative array containig path to directories with domain specific config*/
+	var $dir;
 
 	/** 
 	 *	return required data layer methods - static class 
@@ -102,6 +117,8 @@ class apu_domain_layout extends apu_base_class{
 
 		$this->opt['tmp_file'] = 				$config->smarty_compile_dir."tmp.ini";
 
+		$this->opt['nr_backups'] =				$config->backup_versions_nr;
+
 
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -117,6 +134,7 @@ class apu_domain_layout extends apu_base_class{
 		
 		$this->opt['smarty_layout_files'] =	'layout_files';
 		$this->opt['smarty_text_files'] =	'text_files';
+		$this->opt['smarty_backup_files'] =	'backup_files';
 		$this->opt['smarty_fileinfo'] =		'fileinfo';
 		$this->opt['smarty_url_back_to_default'] =		'url_back_to_default';
 		
@@ -128,6 +146,14 @@ class apu_domain_layout extends apu_base_class{
 	function init(){
 		global $sess, $available_languages;
 		parent::init();
+
+		$this->dir['domains']        = dirname(__FILE__)."/../../html/domains/";
+		$this->dir['domain']         = $this->dir['domains'] . $this->controler->domain_id."/";
+		$this->dir['txt']            = $this->dir['domain']  . "txt/";
+		$this->dir['backup']         = $this->dir['domain']  . "backup/";
+		$this->dir['default_domain'] = $this->dir['domains'] . "_default/";
+		$this->dir['default_txt']    = $this->dir['default_domain'] . "txt/";
+
 
 		/* create list of languages */
 		$this->languages = array();
@@ -185,6 +211,151 @@ class apu_domain_layout extends apu_base_class{
 			}
 		}
 	}
+
+
+	/**
+	 *	Write $_POST['dl_content'] into given file
+	 *
+	 *	@param string $filename		full filesystem path
+	 */
+	function write_dl_content_to_file($filename){
+		$fp=fopen($filename, "w");
+
+		/* protect ini files from reading its throught the web */
+		if (!empty($this->fileinfo['ini'])){
+			fwrite($fp, "; <?php die( 'Please do not access this page directly.' ); ?".">\n");
+		}
+	
+		fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
+		fclose($fp);
+	}
+
+	/**
+	 *	Clean old versions of file in backup directory
+	 *  If there are more versions of file than $this->opt['nr_backups']
+	 *  the excess versions are deleted
+	 *
+	 *	@param string $dirname	backup dirctory 
+	 *	@param string $filename	name of file
+	 */
+	function clean_old_backups($dirname, $filename){
+		$files = array();
+		$d = dir($dirname);
+
+		/* get the list of backups of file $filename */
+		while (false !== ($entry = $d->read())) {
+			if (ereg("^([0-9]+)-".$filename."$", $entry, $regs)){
+				$files[(int)$regs[1]] = $entry;
+			}
+		}
+		$d->close();
+
+		/* sort the array of backup files by timestamp */
+		ksort($files, SORT_NUMERIC);
+		
+		/* remove excess files */
+		while (count($files) > $this->opt['nr_backups']){
+			/* get first file in array - file with oldest timestamp */
+			$file = reset($files);
+			/* delete the file */
+			rm($dirname.$file);
+			/* unset the first entry in array */
+			unset($files[key($files)]);
+		}
+		
+	}
+
+	/**
+	 *	Obtain info about old versions of file and store it into $this->backup_f
+	 *
+	 *	@param bool $txt		if true we are working with text files, otherwise with layout files
+	 *	@param array $errors	array with error messages
+	 *	@return bool			TRUE on success, FALSE on failure
+	 */
+	function get_list_of_backups($txt, &$errors){
+		global $data, $serweb_auth, $lang_set, $lang_str, $sess, $available_languages;
+
+		/* put together name of directory containing backup files */
+		if ($txt){
+			$ln = $available_languages[$this->lang][2];
+			$dirname = $this->dir['backup']."txt/".$ln."/";
+		}
+		else
+			$dirname = $this->dir['backup'];
+
+		$this->backup_f = array();
+
+		/* add entry for initial version of file */
+		$url_edit = $txt ?
+			$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_text=1&filename=".RawURLEncode($this->filename)."&lang=".$this->lang."&version=initial") :
+			$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_layout=1&filename=".RawURLEncode($this->filename)."&version=initial");			
+
+		$this->backup_f[0] = 
+			array('filename'  => "initial-".$this->filename,
+		          'timestamp' => 0,
+				  'date'      => $lang_str['initial_ver'],
+				  'url_edit'  => $url_edit);
+
+		/* if directory with backups don't exists => exit */
+		if (!is_dir($dirname)) return true;
+
+		/* set timezone of admin */
+		$this->controler->set_timezone($serweb_auth);
+
+		$d = dir($dirname);
+		
+		/* get the list of backups of file $filename */
+		while (false !== ($entry = $d->read())) {
+			if (ereg("^([0-9]+)-".$this->filename."$", $entry, $regs)){
+				$url_edit = $txt ?
+					$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_text=1&filename=".RawURLEncode($this->filename)."&lang=".$this->lang."&version=".RawURLEncode($entry)) :
+					$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_layout=1&filename=".RawURLEncode($this->filename)."&version=".RawURLEncode($entry));			
+
+				$this->backup_f[(int)$regs[1]] = 
+					array('filename'  => $entry,
+				          'timestamp' => (int)$regs[1],
+						  'date'      => date($lang_set['date_time_format'], (int)$regs[1]),
+						  'url_edit'  => $url_edit);
+			}
+		}
+		$d->close();
+
+		/* sort the array of backup files by timestamp */
+		ksort($this->backup_f, SORT_NUMERIC);
+		
+		return true;
+	}
+	
+	/**
+	 *	Return path to file which should be edited
+	 *
+	 *	@param bool $text_file	if true, path to file in 'txt' directory is returned
+	 *	@return string			path to file
+	 */
+	function get_path_to_file_for_edit($text_file){
+		global $available_languages;
+
+		if ($text_file){
+			$ln = $available_languages[$this->lang][2];
+			if ($this->file_ver == "initial") /* get initial version of file */
+				$f = multidomain_get_lang_file($this->filename, "txt", $this->lang, "_default");
+			elseif ($this->file_ver)          /* get some old version of file */
+				$f = $this->dir['backup']."txt/".$ln."/".$this->file_ver;
+			else                              /* get current version of file */
+				$f = multidomain_get_lang_file($this->filename, "txt", $this->lang, $this->controler->domain_id);
+		}
+
+		else {
+			if ($this->file_ver == "initial") /* get initial version of file */
+				$f = multidomain_get_file($this->filename, false, "_default");
+			elseif ($this->file_ver)          /* get some old version of file */
+				$f = $this->dir['backup'].$this->file_ver;
+			else                              /* get current version of file */
+				$f = multidomain_get_file($this->filename, false, $this->controler->domain_id);
+		}
+	
+		return $f;
+	}
 	
 	/**
 	 *	Method perform action update
@@ -196,67 +367,35 @@ class apu_domain_layout extends apu_base_class{
 	function action_update(&$errors){
 		global $available_languages;
 
-		$dirname  = dirname(__FILE__)."/../../html/domains/";
-		$dirname .= $this->controler->domain_id."/";
-
 		if ($_POST['dl_kind_of_file']=='text'){
 			$ln = $available_languages[$_POST['dl_lang']][2];
-			$dirname .= "txt/".$ln."/";
+			$dirname = $this->dir['txt'].$ln."/";
 		}
+		else 
+			$dirname = $this->dir['domain'];
+
+		$filename = basename($_POST['dl_filename']);
 
 		RecursiveMkdir($dirname);
-		$fp=fopen($dirname.basename($_POST['dl_filename']), "w");
+		$this->write_dl_content_to_file($dirname.$filename);
+		
+		if ($this->opt['nr_backups']){
+			/* write the data also to backup dir for purpose to back to this version later */
+			$dirname = $this->dir['backup'];
+			$filename_t = time()."-".$filename;
 
-		/* protect ini files from reading its throught the web */
-		if (!empty($this->fileinfo['ini'])){
-			fwrite($fp, "; <?php die( 'Please do not access this page directly.' ); ?".">\n");
-		}
+			if ($_POST['dl_kind_of_file']=='text'){
+				$dirname .= "txt/".$ln."/";
+			}
 	
-		fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
-		fclose($fp);
+			RecursiveMkdir($dirname);
+			$this->write_dl_content_to_file($dirname.$filename_t);
+
+			$this->clean_old_backups($dirname, $filename);
+		}
 	
 		return array("m_dl_updated=".RawURLEncode($this->opt['instance_id']));
 	}
-
-
-	/**
-	 *	perform action back to default text file
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
-	 */	
-	function action_back_to_default_text(&$errors){
-		global $available_languages;
-		$dirname  = dirname(__FILE__)."/../../html/domains/";
-		$dirname_dafult = $dirname."_default/";
-		$dirname .= $this->controler->domain_id."/";
-
-		$ln = $available_languages[$this->lang][2];
-		$dirname_dafult .= "txt/".$ln."/";
-		$dirname .= "txt/".$ln."/";
-
-		RecursiveMkdir($dirname);
-
-		copy($dirname_dafult.$this->filename, $dirname.$this->filename);
-		return true;
-	}
-
-	/**
-	 *	perform action back to default layout file
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
-	 */	
-	function action_back_to_default_layout(&$errors){
-		$dirname  = dirname(__FILE__)."/../../html/domains/";
-		$dirname_dafult = $dirname."_default/";
-		$dirname .= $this->controler->domain_id."/";
-		RecursiveMkdir($dirname);
-
-		copy($dirname_dafult.$this->filename, $dirname.$this->filename);
-		return true;
-	}
-	
 	
 	/**
 	 *	perform action edit text file
@@ -266,6 +405,11 @@ class apu_domain_layout extends apu_base_class{
 	 */	
 	function action_edit_text_file(&$errors){
 		global $sess;
+
+		if ($this->opt['nr_backups']){		
+			if (false === $this->get_list_of_backups(true, $errors)) return false;
+		}
+
 		$this->smarty_action="edit_text";
 
 		$this->url_back_to_default = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&back_to_default_text=1&filename=".RawURLEncode($this->filename)."&lang=".$this->lang);
@@ -280,6 +424,11 @@ class apu_domain_layout extends apu_base_class{
 	 */	
 	function action_edit_layout_file(&$errors){
 		global $sess;
+
+		if ($this->opt['nr_backups']){		
+			if (false === $this->get_list_of_backups(false, $errors)) return false;
+		}
+		
 		$this->smarty_action="edit_layout";
 
 		$this->url_back_to_default = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&back_to_default_layout=1&filename=".RawURLEncode($this->filename));
@@ -294,7 +443,7 @@ class apu_domain_layout extends apu_base_class{
 			$this->action=array('action'=>"update",
 			                    'validate_form'=>true,
 								'reload'=>true);
-			$this->filename = $_POST['dl_filename'];
+			$this->filename = basename($_POST['dl_filename']);
 			if ($_POST['dl_kind_of_file'] == "text") $this->get_text_fileinfo();
 			else	$this->get_layout_fileinfo();
 			return;
@@ -305,7 +454,8 @@ class apu_domain_layout extends apu_base_class{
 			                    'validate_form'=>false,
 								'reload'=>false);
 			$this->lang = $_GET['lang'];
-			$this->filename = $_GET['filename'];
+			$this->file_ver = !empty($_GET['version']) ? basename($_GET['version']) : null;
+			$this->filename = basename($_GET['filename']);
 			$this->get_text_fileinfo();
 			return;
 		}
@@ -314,25 +464,9 @@ class apu_domain_layout extends apu_base_class{
 			$this->action=array('action'=>"edit_layout_file",
 			                    'validate_form'=>false,
 								'reload'=>false);
-			$this->filename = $_GET['filename'];
+			$this->file_ver = !empty($_GET['version']) ? basename($_GET['version']) : null;
+			$this->filename = basename($_GET['filename']);
 			$this->get_layout_fileinfo();
-			return;
-		}
-
-		if (isset($_GET['back_to_default_text'])){
-			$this->action=array('action'=>"back_to_default_text",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			$this->lang = $_GET['lang'];
-			$this->filename = $_GET['filename'];
-			return;
-		}
-
-		if (isset($_GET['back_to_default_layout'])){
-			$this->action=array('action'=>"back_to_default_layout",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			$this->filename = $_GET['filename'];
 			return;
 		}
 
@@ -348,35 +482,36 @@ class apu_domain_layout extends apu_base_class{
 	 *	@return null			FALSE on failure
 	 */
 	function create_html_form(&$errors){
+		global $available_languages;
 		parent::create_html_form($errors);
 
 		$file_content = "";
 		$kind = "";
 
-		if ($this->action['action'] == "edit_text_file"){
-			$f = multidomain_get_lang_file($this->filename, "txt", $this->lang, $this->controler->domain_id);
-			$kind = "text";
-		}
-		elseif ($this->action['action'] == "edit_layout_file"){
-			$f = multidomain_get_file($this->filename, false, $this->controler->domain_id);
-			$kind = "layout";
-		}
-
-		if(! empty($f)){
-			$fp = fopen($f, "r");
-			$file_content = fread($fp, 65536);
-			fclose($fp);
-		}
-
-		/* strip first line containing die() preventing this script from displaying throught http */
-		if (!empty($this->fileinfo['ini'])){
-			$first_eol = strpos($file_content, "\n");
-			$first_line = substr($file_content, 0, $first_eol);
-			if (false !== strpos($first_line, "<?php die(")){
-				$file_content = substr($file_content, $first_eol);
-			}
-		}		
+		if ($this->action['action'] == "edit_text_file" or
+		    $this->action['action'] == "edit_layout_file"){
 		
+			$kind = ($this->action['action'] == "edit_text_file") ?
+			        "text" : "layout";
+
+			$f = $this->get_path_to_file_for_edit($this->action['action'] == "edit_text_file");
+	
+			if(! empty($f)){
+				$fp = fopen($f, "r");
+				$file_content = fread($fp, 65536);
+				fclose($fp);
+			}
+	
+			/* strip first line containing die() preventing this script from displaying throught http */
+			if (!empty($this->fileinfo['ini'])){
+				$first_eol = strpos($file_content, "\n");
+				$first_line = substr($file_content, 0, $first_eol);
+				if (false !== strpos($first_line, "<?php die(")){
+					$file_content = substr($file_content, $first_eol);
+				}
+			}		
+		}
+			
 		$this->f->add_element(array("type"=>"textarea",
 		                             "name"=>"dl_content",
 									 "rows"=>25,
@@ -470,6 +605,7 @@ class apu_domain_layout extends apu_base_class{
 
 		$smarty->assign_by_ref($this->opt['smarty_layout_files'], $this->layout_f);
 		$smarty->assign_by_ref($this->opt['smarty_text_files'], $this->text_f);
+		$smarty->assign_by_ref($this->opt['smarty_backup_files'], $this->backup_f);
 		$smarty->assign_by_ref($this->opt['smarty_fileinfo'], $this->fileinfo);
 		$smarty->assign_by_ref($this->opt['smarty_url_back_to_default'], $this->url_back_to_default);
 	}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.24 2005/11/04 14:48:57 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.25 2005/11/14 15:35:55 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -571,6 +571,9 @@ $lang_str['layout_files'] = 					"Layout files";
 $lang_str['text_files'] = 						"Text files";
 
 $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";
+
+$lang_str['th_old_versions'] = 					"Old versions of this file";
+$lang_str['initial_ver'] = 						"initial";
 
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */

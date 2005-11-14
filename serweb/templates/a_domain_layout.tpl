@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_layout.tpl,v 1.2 2005/11/04 14:55:54 kozlik Exp $ *}
+{* $Id: a_domain_layout.tpl,v 1.3 2005/11/14 15:36:05 kozlik Exp $ *}
 
 {literal}
 <script language="javascript" type="text/javascript">
@@ -42,42 +42,54 @@
 	}
 
 </script>
+
+<style type="text/css">
+#oldVersions{
+	float: left;
+}
+</style>
 {/literal}
 
 {include file='_head.tpl'}
 
-{if $action == 'edit_text'}
-<div class="swForm">
+{if $action == 'edit_text' or $action == 'edit_layout'}
 	{$form.start}
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr><td colspan="3">{$form.dl_content}</td></tr>
-	<tr><td align="left" width="33%">&nbsp;</td>
-	    <td align="center"><a href="{$url_back_to_default}">{$lang_str.l_back_to_default}</a></td>
-	    <td align="right" width="33%">{$form.okey}</td></tr>
-	</table>
+		<div id="oldVersions">
+		{foreach from=$backup_files item='row' name='backup'}
+			{if $smarty.foreach.backup.first}
+			<table border="1" cellpadding="1" cellspacing="0" class="swTable">
+			<tr>
+			<th align="left">{$lang_str.th_old_versions}</th>
+			</tr>
+			{/if}
+			
+			<tr valign="top">
+			<td align="left"><a href="{$row.url_edit}">{$row.date|empty2nbsp}</a></td>
+			</tr>
+			{if $smarty.foreach.backup.last}
+			</table>
+			{/if}
+		{/foreach}
+		</div>
+	
+		<div class="swForm">
+		<table border="0" cellspacing="0" cellpadding="0" align="center">
+		<tr><td colspan="2">{$form.dl_content}</td></tr>
+		<tr><td align="left" width="50%">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');">{$lang_str.l_toggle_wysiwyg}</a>
+		                     {else}&nbsp;{/if}</td>
+	        <td align="right" width="50%">{$form.okey}</td></tr>
+		</table>
+		</div>
 	{$form.finish}
-</div>
-
+	
+	<br class="cleaner" />
+	{if $fileinfo.html}
+		<div>{$lang_str.wysiwyg_warning}</div>
+		<br />
+	{/if}
+	
 	<div class="swBackToMainPage"><a href="{url url='domain_layout.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 
-{elseif $action == 'edit_layout'}
-<div class="swForm">
-	{$form.start}
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr><td colspan="3">{$form.dl_content}</td></tr>
-	<tr><td align="left" width="33%">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');">{$lang_str.l_toggle_wysiwyg}</a>
-	                     {else}&nbsp;{/if}</td>
-	    <td align="center"><a href="{$url_back_to_default}">{$lang_str.l_back_to_default}</a></td>
-	    <td align="right" width="33%">{$form.okey}</td></tr>
-	</table>
-	{$form.finish}
-</div>
-{if $fileinfo.html}
-	<div>{$lang_str.wysiwyg_warning}</div>
-	<br />
-{/if}
-
-	<div class="swBackToMainPage"><a href="{url url='domain_layout.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 
 {else}
 

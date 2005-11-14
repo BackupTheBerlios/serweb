@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.15 2005/11/08 15:27:50 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.16 2005/11/14 15:35:49 kozlik Exp $
  */
 
 
@@ -103,6 +103,14 @@
 		 *	interval. After expiring it, records will be permanently deleted.
 		 */
 		$config->keep_acc_interval = 60;
+		
+		/**
+		 *	Number of kept versions of one file
+		 *	This variable tells how many versions of one file (from directory 
+		 *	with domain specific config) is stored. If is set to zero files
+		 *	are not backuped on update of them.
+		 */
+		$config->backup_versions_nr = 10;
 		
 		/* these are setting required by ldap, you need to change it only if you are using ldap to 
 		   store some data. If you are using ldap, you need to instal PEAR package db_ldap2 by command:
