@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.17 2005/11/03 11:02:07 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.18 2005/11/14 15:21:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -217,11 +217,20 @@ class page_conroler{
 		$this->messages[] = &$msg;
 	}
 
-	function set_timezone(){
+	/**
+	 *	set timezone which is used by date/time formating function to timezone 
+	 *  of user
+	 *
+	 *	@param Cserweb_auth $user	user to which timezone should be set - if not given $this->user_id is used
+	 */
+	function set_timezone($user = null){
 		global $data;
-		if (!$this->is_set_timezone){
-			if (false === $data->set_timezone($this->user_id, $this->errors)) return;
-			$this->is_set_timezone = true;
+		if (is_null($user)) $user = $this->user_id;
+
+		/* if timezone is already set for this user, do not set it again */
+		if (!$this->is_set_timezone or $this->is_set_timezone != $user){
+			if (false === $data->set_timezone($user, $this->errors)) return;
+			$this->is_set_timezone = $user;
 		}
 	}
 
