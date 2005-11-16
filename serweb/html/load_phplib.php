@@ -2,7 +2,7 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.7 2005/04/21 15:09:46 kozlik Exp $
+ * $Id: load_phplib.php,v 1.8 2005/11/16 09:49:45 kozlik Exp $
  */ 
 
 
@@ -15,7 +15,7 @@ elseif ($config->data_sql->type=="pgsql"){
 else die('Invalid database type '.$config->data_sql->type);
 
 require($_PHPLIB["libdir"] . "ct_sql.inc");    /* Change this to match your data storage container */
-require($_PHPLIB["libdir"] . "session4.inc");   /* Required for everything below.      */
+require($_PHPLIB["libdir"] . "session4.1.php");   /* Required for everything below.      */
 require($_PHPLIB["libdir"] . "auth4.inc");      /* Disable this, if you are not using authentication. */
 require($_PHPLIB["libdir"] . "perm.inc");      /* Disable this, if you are not using permission checks. */
 //require($_PHPLIB["libdir"] . "user4.inc");      /* Disable this, if you are not using per-user variables. */

@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.6 2004/09/20 09:53:47 kozlik Exp $
+ * $Id: oohforms.inc,v 1.7 2005/11/16 09:49:49 kozlik Exp $
  */
 
 class of_element {
