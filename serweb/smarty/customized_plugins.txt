@@ -1,0 +1,10 @@
+Plugins which not originate from smarty release:
+------------------------------------------------
+
+function.html_tabs.php
+function.pager.php
+function.url.php
+modifier.add_html_attrib_to_tag.php
+modifier.my_date_format.php
+modifier.toCSV.php
+modifier.empty2nbsp.php
