@@ -7,6 +7,9 @@ class Smarty_Serweb extends Smarty {
 
 	function Smarty_Serweb() {
 		global $config;
+		
+		//avoid smarty crash if "magic_quotes_runtime" is enabled in php.ini
+		ini_set("magic_quotes_runtime", 0);
 	
 		// Class Constructor. These automatically get set with each new instance.
 		$this->Smarty();
