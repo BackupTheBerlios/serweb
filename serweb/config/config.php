@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.25 2005/10/19 09:51:50 kozlik Exp $
+ * $Id: config.php,v 1.26 2005/11/28 14:30:27 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -388,8 +388,6 @@
 	/* flags support ? (a new ser feature) */
 	$config->ul_flags=1;
 
-	/* seconds in which expires "get pass session" */
-	$config->pre_uid_expires=3600;                
 	/* is the sql database query for user authentication formed
 	   with clear text password or a hashed one; the former is less
 	   secure the latter works even if password hash is incorrect,
