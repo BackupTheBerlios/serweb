@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.6 2005/07/21 16:23:03 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.7 2005/11/28 14:28:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -104,7 +104,7 @@ class apu_forgotten_password extends apu_base_class{
 	}
 
 	function action_send_conf(&$errors){
-		global $config, $data, $sess_lang, $lang_str, $pre_uid, $pre_uid_expires;
+		global $config, $data, $sess_lang, $lang_str;
 
 		$confirm=md5(uniqid(rand()));
 	
