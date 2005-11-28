@@ -5,7 +5,7 @@
 * @copyright 1998,1999 NetUSE AG, Boris Erdmann, Kristian Koehntopp
 *            2000 Teodor Cimpoesu <teo@digiro.net>
 * @author    Teodor Cimpoesu <teo@digiro.net>, Ulf Wendel <uw@netuse.de>, Maxim Derkachev <kot@books.ru
-* @version   $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+* @version   $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
 * @access    public
 * @package   PHPLib
 */ 
@@ -29,7 +29,7 @@ class Session {
   
   /**
   * Depreciated! There's no need for page_close in PHP4 sessions. 
-  * @deprec $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
   * @var  integer
   */
   var $secure_auto_init = 1;
@@ -105,7 +105,7 @@ class Session {
   * has no effect on previous versions
   *
   * @var    string  
-  * @deprec $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
   */
   var $mode = "cookie";               ## We propagate session IDs with cookies
   
@@ -114,7 +114,7 @@ class Session {
   * propagation policy, which is a safer  propagation method that get mode  
   *
   * @var    string  
-  * @deprec $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
   */
   var $fallback_mode;                 ## if fallback_mode is also 'ccokie'
                                       ## we enforce session.use_only_cookie
@@ -171,23 +171,39 @@ class Session {
     $this->put_headers();
 
 
+    $ok = session_start();
+    $this->id = session_id();
+
+	$this->set_cookie();
+
     # set the  mode for this run
     if ( isset($this->fallback_mode)
       && ("get" == $this->fallback_mode)
       && ("cookie" == $this->mode)
       && (! isset($_COOKIE[$this->name])) ) {
-      $this->mode = $this->fallback_mode;
+	      $this->mode = $this->fallback_mode;
       }
 
-
-    $ok = session_start();
-    $this->id = session_id();
 
     $this->thaw();
    
     return $ok;
   } // end func start
 
+
+  /**
+   * Sets cookie if it is not set yet
+   */
+  function set_cookie(){
+	#we don't trust user input; session in url doesn't
+	#mean cookies are disabled
+    if (("cookie" == $this->mode) && (! isset($_COOKIE[$this->name])) ) {
+		if ($this->lifetime > 0) $lifetime = time()+$this->lifetime*60;
+		else $lifetime = 0;
+
+		SetCookie($this->name, $this->id, $lifetime, $this->cookie_path, $this->cookie_domain);
+	}
+  }
   
   /**
    * Sets or returns the name of the current session
@@ -244,7 +260,7 @@ class Session {
   
   /**
    * @brother id()
-   * @deprec  $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+   * @deprec  $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
    * @access public  
    */  
   function get_id($sid = '') {
@@ -324,7 +340,7 @@ class Session {
    *		 doesn't seem to do (looking @ the session.c:940)
    * uw: yes we should keep it to remain the same interface, but deprec. 
    *
-   * @deprec $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+   * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
    * @access public  
    * @global $_COOKIE
    */
@@ -366,7 +382,7 @@ class Session {
   * @return string  rewritten url with session id included
   * @see    $trans_id_enabled
   * @global $_COOKIE
-  * @deprec $Id: session4.1.php,v 1.2 2005/11/16 09:49:49 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
   * @access public  
   */
   function url($url) {
@@ -534,6 +550,26 @@ class Session {
         }
 
       break;
+
+      case "integer":
+      case "double":
+      case "float":
+        eval("\$l = \$$var;");
+        $str.="\$$var = ".$l."; ";
+      
+      break;
+      
+      case "boolean":
+        eval("\$l = \$$var;");
+        $str.="\$$var = ".($l ? "TRUE" : "FALSE")."; ";
+      break;
+	
+      case "NULL":
+        $str.="\$$var = NULL; ";
+	
+      break;
+	
+      case "string":
       default:
         ## $$var is an atom. Extract it to $l, then generate code.
         eval("\$l = \$$var;");
@@ -565,8 +601,8 @@ class Session {
         $this->serialize("GLOBALS['".$thing."']", $str);
       }
     }
-
-	$_SESSION[$this->name] = $str;
+    
+    $_SESSION[$this->name] = $str;
   }
 
   /**

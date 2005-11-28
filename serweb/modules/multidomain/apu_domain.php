@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.8 2005/10/27 13:34:31 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.9 2005/11/28 14:06:30 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -91,6 +91,8 @@ class apu_domain extends apu_base_class{
 	var $preferences = array();
 	/** admins of domain */
 	var $admins;
+	/** used by function generate_domain_id and revert_domain_id */
+	var $revert_domain_id = false;
 	
 	/** 
 	 *	return required data layer methods - static class 
@@ -202,11 +204,27 @@ class apu_domain extends apu_base_class{
 		
 		/* if domain id is not set, get new id */
 		if (is_null($this->id)) {
-			if (false === $this->id = $data->get_new_domain_id(null, $errors)) return false;
+			if (false === $did = $data->get_new_domain_id(null, $errors)) return false;
+			$this->id = $did;
+			$this->revert_domain_id = true;
 			$this->controler->set_domain_id($this->id);
 		}
 		
 		return true;
+	}
+
+	/**
+	 *	Revert domain id back to null value in the case creation of domain was not successfull
+	 *
+	 */
+
+	function revert_domain_id(){
+		if ($this->revert_domain_id){
+			$this->id = NULL;
+			$this->controler->set_domain_id($this->id);
+		}
+
+		return;
 	}
 
 	/**
@@ -376,7 +394,10 @@ class apu_domain extends apu_base_class{
 		$values['id'] = $this->id;
 		$values['name'] = $_POST['do_new_name'];
 		
-		if (false === $data->add_domain_alias($values, null, $errors)) return false;
+		if (false === $data->add_domain_alias($values, null, $errors)) {
+			$this->revert_domain_id();
+			return false;
+		}
 
 		/* create symlinks and notify ser only if domain isn't disabled */
 		if (empty($this->preferences['disabled'])){
@@ -406,7 +427,10 @@ class apu_domain extends apu_base_class{
 		else
 			$opt['insert'] = false;
 
-		if (false === $data->update_owner_of_domain($this->id, $_POST['do_customer'], $opt, $errors)) return false;
+		if (false === $data->update_owner_of_domain($this->id, $_POST['do_customer'], $opt, $errors)) {
+			$this->revert_domain_id();
+			return false;
+		}
 
 
 		if ($this->opt['redirect_on_update']){
