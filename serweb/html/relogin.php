@@ -1,4 +1,8 @@
 <?
+/*
+ * $Id: relogin.php,v 1.2 2005/11/30 11:18:11 kozlik Exp $
+ */
+
 	global $config, $page_attributes, $errors, $smarty, $lang_str, $_SERWEB;
 	
 	print_html_head();
