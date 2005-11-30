@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.12 2005/10/19 15:34:21 kozlik Exp $
+ * $Id: data_layer.php,v 1.13 2005/11/30 09:53:32 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -96,10 +96,23 @@ class CData_Layer{
 	function add_method($m){
 		global $_data_layer_required_methods;
 
-		if (is_array($m)) 
+		if (is_array($m)) {
+			/* next line is optimalization: don't call 
+			 * require_and_agregate_methods() if all required methods 
+			 * are already loaded
+			 */
+			if (!count(array_diff($m, $this->_data_layer_loaded_methods))) return;
+
 			$_data_layer_required_methods = array_merge($_data_layer_required_methods, $m);
-		else
+		}
+		else{
+			/* next line is optimalization: don't call 
+			 * require_and_agregate_methods() method is already loaded
+			 */
+			if (in_array($m, $this->_data_layer_loaded_methods)) return;
+
 			$_data_layer_required_methods[] = $m;
+		}
 			
 		$this->require_and_agregate_methods();
 	}
