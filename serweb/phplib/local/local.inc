@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.11 2005/11/30 10:10:51 kozlik Exp $
+ * $Id: local.inc,v 1.12 2005/11/30 10:19:45 kozlik Exp $
  */
 
 
@@ -39,7 +39,7 @@ class phplib_Auth extends Auth {
 
 	function auth_loginform() {
 		global $sess;
-		global $_PHPLIB;
+		global $_SERWEB;
 		
 		//user is not legged in, forward to login screen
 		if (empty($this->auth["uid"])){
@@ -48,7 +48,7 @@ class phplib_Auth extends Auth {
 		}
 		
 		//else display relogin form
-		include($_PHPLIB["libdir"] . "local/loginform.ihtml");
+		include($_SERWEB["serwebdir"] . "relogin.php");
 	}
 
 	/**
