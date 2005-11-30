@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.12 2005/11/14 15:35:55 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.13 2005/11/30 09:56:07 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -143,6 +143,8 @@ $lang_str['ff_password'] = 						"password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
 $lang_str['l_register'] = 						"Subscribe!";
 $lang_str['remember_uname'] = 					"Remember my username on this computer";
+$lang_str['session_expired'] = 					"Session expired";
+$lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */

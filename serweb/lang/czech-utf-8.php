@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.9 2005/11/14 15:35:55 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.10 2005/11/30 09:56:07 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -143,6 +143,8 @@ $lang_str['ff_password'] = 						"heslo";
 $lang_str['l_forgot_passw'] = 					"Zapoměli jste heslo?";
 $lang_str['l_register'] = 						"Registrace!";
 $lang_str['remember_uname'] = 					"Zapamatuj si mé uživatelské jméno na tomto počítači";
+$lang_str['session_expired'] = 					"Session expired";	//to translate 
+$lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */
