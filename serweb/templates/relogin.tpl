@@ -1,34 +1,34 @@
 {* Smarty *}
-{* $Id: relogin.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: relogin.tpl,v 1.2 2005/11/30 09:58:17 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<div class="frameHeading">Session expired</div>
+<div class="frameHeading">{$lang_str.session_expired}</div>
+
 <div class="frameBodyPadding" style="font-weight:bolder; color:red;">
-Your session expired, please relogin.
+	{$lang_str.session_expired_relogin}
 </div>
+
 <br>
 
 <div class="swForm swLoginForm">
-<form name='login_form' action="{$form_action}" method=post>
-<table border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td><label for="username">Username:</label></td>
-<td><input type="text" name="username" id="username" value="{$form_username}" size=32 maxlength=32 disabled></td>
-</tr>
-<tr>
-<td><label for="passw">Password:</label></td>
-<td><input type="password" name="password" id="password" size=32 maxlength=32></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td align=right><input type="Submit" name="relogin" value="Login"></td>
-</tr>
-</table>
-</form>
+{$form.start}
+	<table border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr>
+		<td><label for="username">{$lang_str.ff_username}:</label></td>
+		<td>{$form.username}</td>
+	</tr>
+	<tr>
+		<td><label for="passw">{$lang_str.ff_password}:</label></td>
+		<td>{$form.password}</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align=right>{$form.okey}</td>
+	</tr>
+	</table>
+{$form.finish}
 </div>
-
 
 <br>
 {include file='_tail.tpl'}
-

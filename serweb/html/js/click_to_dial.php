@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: click_to_dial.php,v 1.3 2005/09/19 13:46:32 kozlik Exp $
+ * $Id: click_to_dial.php,v 1.4 2005/11/30 09:58:16 kozlik Exp $
  */
 
 $_SERWEB = array();
@@ -12,6 +12,9 @@ $_phplib_page_open = array("sess" => "phplib_Session");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");
+
+phplib_load();
+
 
 if (empty($serweb_auth->uname) or empty($serweb_auth->domain)){
 	die ('not logged in');

@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.2 2005/11/01 17:58:40 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.3 2005/11/30 09:58:16 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -15,21 +15,18 @@
  *	   
  *	Configuration:
  *	--------------
+ *	'auth_class'				(string) default: "Auth"
+ *	 Name of class auth class which is used for validate credentials and which
+ *	 is created after successfull authentication.
+ *	
  *	'check_admin_privilege'		(bool) default: false
  *	 check if user has administrator privilege
  *	
  *	'fully_qualified_name_on_login'	(bool) default: $config->fully_qualified_name_on_login
- *	 trou if should be entered fully qualifide username (username@domain)
- *	
- *	'check_supported_domain_on_login'	(bool) default: false
- *	 Should be extra checked domain if is present in table domains 
- *	 in case that 'fully_qualified_name_on_login' is true
+ *	 true if should be entered fully qualifide username (username@realm)
  *	
  *	'redirect_on_login'			(string) default: 'my_account.php'
  *	 name of script ot which is browser redirected after succesfull login
- *	
- *	'redirect_on_first_login'	(string) default: null
- *	 if is set, user is redirected to this script after his first login to serweb
  *	
  *	'cookie_domain'				(string) default: null
  *	 The domain that the cookie in which is stored username is available 
@@ -61,14 +58,14 @@
 
 class apu_login extends apu_base_class{
 	var $smarty_action='default';
-	var $user_uuid = null;
+	var $uid = null;
 	var $username = null;
-	var $domain = null;
+	var $realm = null;
 	var $password = null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('domain_exists', 'is_user_registered', 'get_privileges_of_user');
+		return array('check_credentials', 'get_privileges_of_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -83,16 +80,16 @@ class apu_login extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['fully_qualified_name_on_login'] = $config->fully_qualified_name_on_login;
-		$this->opt['check_supported_domain_on_login'] = false;
 
 		$this->opt['redirect_on_login'] = 'my_account.php';
-		$this->opt['redirect_on_first_login'] = null;
 		
 		$this->opt['check_admin_privilege'] = false;
 
 		$this->opt['cookie_domain'] = null;
 
 		$this->opt['xxl_redirect_after_login'] = false;
+
+		$this->opt['auth_class'] = 'Auth';
 
 
 		/* message on attributes update */
@@ -114,8 +111,9 @@ class apu_login extends apu_base_class{
 	}
 
 	function action_login(&$errors){
-		global $data_auth, $lang_str, $sess, $config, $pre_uid, $pre_uname, $pre_domain;
-		if ($sess->is_registered('auth')) $sess->unregister('auth');
+		global $lang_str, $config;
+
+		unset($_SESSION['auth']);
 
 		// set cookie only if not doing http redirect because
 		// $_POST['remember_uname'] is not set during redirect
@@ -129,29 +127,13 @@ class apu_login extends apu_base_class{
 		if (isModuleLoaded('xxl') and $this->opt['xxl_redirect_after_login']){
 			xxl_http_redirect(array("get_params"=>array(
 										"uname"    => $this->username,
-										"domain"   => $this->domain,
+										"realm"    => $this->realm,
 										"pass"     => $this->password,
 										"redir_id" => $this->opt['instance_id'])));
 		}
 
-		$sess->register('pre_uid');
-		$sess->register('pre_uname');
-		$sess->register('pre_domain');
-		
-		$pre_uid    = $this->user_uuid;
-		$pre_uname  = $this->username;
-		$pre_domain = $this->domain;
-		
-		if ($this->opt['redirect_on_first_login']){
-		//check if user exists in subscriber table
-			if (($registered = $data_auth->is_user_registered(new Cserweb_auth($pre_uid, $this->username, $this->domain), $errors)) < 0) return false;
-
-			if (!$registered){
-				sw_log("User login: first login of this user - redirecting to page: ".$this->opt['redirect_on_first_login'], PEAR_LOG_DEBUG);
-				$this->controler->change_url_for_reload($this->opt['redirect_on_first_login']);
-				return true;
-			}
-		} 
+		$_SESSION['auth'] = new $this->opt['auth_class'];
+		$_SESSION['auth']->authenticate_as($this->uid, $this->username, $this->realm);
 
 		sw_log("User login: redirecting to page: ".$this->opt['redirect_on_login'], PEAR_LOG_DEBUG);
 
@@ -248,7 +230,7 @@ class apu_login extends apu_base_class{
 		    $this->opt['xxl_redirect_after_login']){
 		    
 				$this->username = $_GET['uname'];
-				$this->domain   = $_GET['domain'];
+				$this->realm    = $_GET['realm'];
 				$this->password = $_GET['pass'];
 		}
 		else{
@@ -262,62 +244,36 @@ class apu_login extends apu_base_class{
 	
 			//if fully quantified username is given
 			if ($this->opt['fully_qualified_name_on_login']) {
-				// parse username and domain from it
+				// parse username and realm from it
 				if (ereg("^([^@]+)@(.+)", $_POST['uname'], $regs)){
 					$this->username=$regs[1];
-					$this->domain=$regs[2];
+					$this->realm=$regs[2];
 					
 				}
 				else {
-					sw_log("User login: authentication failed: unsuported format of username. Can't parse username and domain part", PEAR_LOG_INFO);
+					sw_log("User login: authentication failed: unsuported format of username. Can't parse username and realm part", PEAR_LOG_INFO);
 					$errors[]=$lang_str['bad_username'];
 	 				return false;
 				}
 			}
 			else{
 				$this->username=$_POST['uname'];
-				$this->domain=$config->domain;
+				$this->realm = $config->domain;
 			}
 		}
 
 		sw_log("User login: checking password of user with username: ".
-				$this->username.", domain: ".$this->domain, PEAR_LOG_DEBUG);
+				$this->username.", realm: ".$this->realm, PEAR_LOG_DEBUG);
+
+		/* validate credentials */
+		$uid = call_user_func_array(array($this->opt['auth_class'], 'validate_credentials'), 
+		                            array($this->username, $this->realm, $this->password, array(), &$errors));
+
+		if (false === $uid) return false;
 		
-
-		$data_auth->set_xxl_user_id('sip:'.$this->username.'@'.$this->domain);
-		$data_auth->expect_user_id_may_not_exists();
-
-
-		if ($this->opt['check_supported_domain_on_login']){
-			if (true !== $data_auth->domain_exists($this->domain, $errors)){
-				sw_log("User login: authentication failed: domain '".$this->domain."'' is not supported. Please check table domain", PEAR_LOG_INFO);
-				$errors[]=$lang_str['bad_username'];
-				return false;
-			}
-		}
-
-
-		if (false === $this->user_uuid = $data_auth->check_passw_of_user($this->username, $this->domain, $this->password, $errors)) {
-			sw_log("User login: authentication failed: bad username or domain or password ", PEAR_LOG_INFO);
-			$errors[]=$lang_str['bad_username'];
-			return false;
-		}
-
-		if (is_int($this->user_uuid) and $this->user_uuid == -1){
-			sw_log("User login: authentication failed: account disabled ", PEAR_LOG_INFO);
-			$errors[]=$lang_str['account_disabled'];
-			return false;
-		}
-
-		if (is_null($this->user_uuid)){
-			sw_log("User login: authentication failed: no user ID", PEAR_LOG_INFO);
-			$errors[]=$lang_str['bad_username'];
-			return false;
-		}
-
 		if ($this->opt['check_admin_privilege']){
 			if (!$this->check_admin_privilege(
-						new Cserweb_auth($this->user_uuid, $this->username, $this->domain), 
+						new Cserweb_auth($this->uid, $this->username, $this->realm), 
 						$errors)){ 
 				$errors[]=$lang_str['bad_username']; 
 				sw_log("User login: authentication failed: user hasn't admin privileges", PEAR_LOG_INFO);
@@ -325,7 +281,9 @@ class apu_login extends apu_base_class{
 			}
 		}
 
-		sw_log("User login: authentication succeeded, uuid: ".$this->user_uuid, PEAR_LOG_DEBUG);
+		$this->uid = $uid;
+
+		sw_log("User login: authentication succeeded, uid: ".$this->uid, PEAR_LOG_DEBUG);
 
 		return true;
 	}

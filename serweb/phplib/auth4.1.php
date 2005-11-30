@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: auth4.1.php,v 1.1 2005/11/23 09:59:27 kozlik Exp $
+ * $Id: auth4.1.php,v 1.2 2005/11/30 09:58:16 kozlik Exp $
  */ 
 
 class Auth {
@@ -15,9 +15,9 @@ class Auth {
 	                              ## method. Set to 0 to disable refresh
 	
 	var $mode = "log";            ## "log" for login only systems,
-	                              ## "reg" for user self registration
+	                              ## "reg" for user self registration - obsoleted and may not work
 	
-	var $nobody = false;          ## If true, a default auth is created...
+	var $nobody = false;          ## If true, a default auth is created... - obsoleted and may not work
 	
 	var $cancel_login = "cancel_login"; ## The name of a button that can be 
 	                                    ## used to cancel a login form
@@ -25,18 +25,12 @@ class Auth {
 	## End of user qualifiable settings.
 	
 	var $auth = array();            ## Data array
-	
+	var $serweb_auth;
 
 	/**
 	 * constructor
 	 */
 	function Auth(){
-		//create references to auth info for backward compatibility
-		
-		$this->serweb_auth = new Cserweb_auth();
-		$this->serweb_auth->uuid   = &$this->auth['uid'];
-		$this->serweb_auth->uname  = &$this->auth['uname'];
-		$this->serweb_auth->domain = &$this->auth['realm'];
 	}	
 	
 	function check_feature($f){
@@ -49,17 +43,45 @@ class Auth {
 	}
 
 	/**
-	 *	authenticate user
+	 *	authenticate user - uid, uname and realm have to be previously set
 	 */
-	function authenticate($uid, $uname, $realm){
-		//create references to auth info for backward compatibility
+	function authenticate(){
 		
-		$this->auth['uid']		= $uid;
-		$this->auth['uname']	= $uname;
-		$this->auth['realm']	= $realm;
-		$this->auth["exp"] 		= time() + (60 * $this->lifetime);
-		$this->auth["refresh"] 	= time() + (60 * $this->refresh);
+		$this->auth['authenticated']	= true;
+		$this->auth["exp"] 				= time() + (60 * $this->lifetime);
+		$this->auth["refresh"] 			= time() + (60 * $this->refresh);
 	}	
+
+	/**
+	 *	authenticate user by given uid, uname and relam
+	 *
+	 *	@param $uid		string
+	 *	@param $uname	string
+	 *	@param $realm	string
+	 */
+	function authenticate_as($uid, $uname, $realm){
+		
+		$this->auth['uid']				= $uid;
+		$this->auth['uname']			= $uname;
+		$this->auth['realm']			= $realm;
+
+		$this->authenticate();
+		$this->create_serweb_auth_references();
+	}	
+
+	/**
+	 *	create references to auth info for backward compatibility
+	 */
+	function create_serweb_auth_references(){
+
+		if (! is_object($this->serweb_auth)){
+			$this->serweb_auth = new Cserweb_auth();	
+		}
+
+		$this->serweb_auth->uuid   = &$this->auth['uid'];
+		$this->serweb_auth->uname  = &$this->auth['uname'];
+		$this->serweb_auth->domain = &$this->auth['realm'];
+	}
 	
 	##
 	## Initialization
@@ -67,144 +89,132 @@ class Auth {
 	function start() {
 		$cl = $this->cancel_login;
 		global $$cl;
+
+		$this->create_serweb_auth_references();
 				
 		# Check current auth state. Should be one of
 		#  1) Not logged in (no valid auth info or auth expired)
 		#  2) Logged in (valid auth info)
 		#  3) Login in progress (if $$cl, revert to state 1)
 		if ($this->is_authenticated()) {
-		  $uid = $this->auth["uid"];
-		  switch ($uid) {
-		    case "form":
-		      # Login in progress
-		      if ($$cl) {
-		        # If $$cl is set, delete all auth info 
-		        # and set state to "Not logged in", so eventually
-		        # default or automatic authentication may take place
-		        $this->unauth();
-		        $state = 1;
-		      } else {
-		        # Set state to "Login in progress"
-		        $state = 3;
-		      }
-		      break;
-		    default:
-		      # User is authenticated and auth not expired
-		      $state = 2;
-		      break;
-		  }
+			# User is authenticated and auth not expired
+			$state = 2;
+
+		} elseif(! empty($this->auth['in_progress'])) {
+			# Login in progress
+			if ($$cl) {
+				# If $$cl is set, delete all auth info 
+				# and set state to "Not logged in", so eventually
+				# default or automatic authentication may take place
+				$this->unauth();
+				$state = 1;
+			} else {
+				# Set state to "Login in progress"
+				$state = 3;
+			}
+
 		} else {
-		  # User is not (yet) authenticated
-		  $this->unauth();
-		  $state = 1;
+			# User is not (yet) authenticated
+			$this->unauth();
+			$state = 1;
 		}
 		
 		switch ($state) {
-		  case 1:
-		    # No valid auth info or auth is expired
+		case 1:
+			# No valid auth info or auth is expired
+			
+			# Check for user supplied automatic login procedure 
+			if ( $this->auth_preauth() and $this->is_authenticated()) {
+				$this->auth['in_progress'] = false; // to be sure
+				return true;
+			}
 		    
-		    # Check for user supplied automatic login procedure 
-		    if ( $uid = $this->auth_preauth() ) {
-		      $this->auth["uid"] = $uid;
-		      $this->auth["exp"] = time() + (60 * $this->lifetime);
-		      $this->auth["refresh"] = time() + (60 * $this->refresh);
-		      return true;
-		    }
-		    
-		    # Check for "log" vs. "reg" mode
-		    switch ($this->mode) {
-		      case "yes":
-		      case "log":
-		        if ($this->nobody) {
-		          # Authenticate as nobody
-		          $this->auth["uid"] = "nobody";
-		          # $this->auth["uname"] = "nobody";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          return true;
-		        } else {
-		          # Show the login form
-		          $this->auth_loginform();
-		          $this->auth["uid"] = "form";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          exit;
-		        }
-		        break;
-		      case "reg":
-		       if ($this->nobody) {
-		          # Authenticate as nobody
-		          $this->auth["uid"] = "nobody";
-		          # $this->auth["uname"] = "nobody";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          return true;
-		        } else {
-		        # Show the registration form
-		          $this->auth_registerform();
-		          $this->auth["uid"] = "form";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          exit;
-		        }
-		        break;
-		      default:
-		        # This should never happen. Complain.
-		        echo "Error in auth handling: no valid mode specified.\n";
-		        exit;
-		    }
-		    break;
-		  case 2:
-		    # Valid auth info
-		    # Refresh expire info
-		    ## DEFAUTH handling: do not update exp for nobody.
-		    if ($uid != "nobody")
-		      $this->auth["exp"] = time() + (60 * $this->lifetime);
-		    break;
-		  case 3:
-		    # Login in progress, check results and act accordingly
-		    switch ($this->mode) {
-		      case "yes":
-		      case "log":
-		        if ( $uid = $this->auth_validatelogin() ) {
-		          $this->auth["uid"] = $uid;
-		          $this->auth["exp"] = time() + (60 * $this->lifetime);
-		          $this->auth["refresh"] = time() + (60 * $this->refresh);
-		          return true;
-		        } else {
-		          $this->auth_loginform();
-		          $this->auth["uid"] = "form";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          exit;
-		        }
-		        break;
-		      case "reg":
-		        if ($uid = $this->auth_doregister()) {
-		          $this->auth["uid"] = $uid;
-		          $this->auth["exp"] = time() + (60 * $this->lifetime);
-		          $this->auth["refresh"] = time() + (60 * $this->refresh);
-		          return true;
-		        } else {
-		          $this->auth_registerform();
-		          $this->auth["uid"] = "form";
-		          $this->auth["exp"] = 0x7fffffff;
-		          $this->auth["refresh"] = 0x7fffffff;
-		          exit;
-		        }
-		        break;
-		      default:
-		        # This should never happen. Complain.
-		        echo "Error in auth handling: no valid mode specified.\n";
-		        exit;
-		        break;
-		    }
-		    break;
-		  default:
-		    # This should never happen. Complain.
-		    echo "Error in auth handling: invalid state reached.\n";
-		    exit;
-		    break;
+			# Check for "log" vs. "reg" mode
+			switch ($this->mode) {
+			case "yes":
+			case "log":
+				if ($this->nobody) {
+					# Authenticate as nobody
+					$this->auth["uid"] = "nobody";
+					# $this->auth["uname"] = "nobody";
+					$this->auth["exp"] = 0x7fffffff;
+					$this->auth["refresh"] = 0x7fffffff;
+					return true;
+				} else {
+					# Show the login form
+					$this->auth_loginform();
+					$this->auth['in_progress'] = true;
+					exit;
+				}
+				break;
+
+			case "reg":
+				if ($this->nobody) {
+					# Authenticate as nobody
+					$this->auth["uid"] = "nobody";
+					# $this->auth["uname"] = "nobody";
+					$this->auth["exp"] = 0x7fffffff;
+					$this->auth["refresh"] = 0x7fffffff;
+					return true;
+				} else {
+					# Show the registration form
+					$this->auth_registerform();
+					$this->auth['in_progress'] = true;
+					exit;
+				}
+				break;
+			default:
+				# This should never happen. Complain.
+				echo "Error in auth handling: no valid mode specified.\n";
+				exit;
+			}
+			break;
+
+		case 2:
+			# Valid auth info
+			# Refresh expire info
+			## DEFAUTH handling: do not update exp for nobody.
+			if ($this->auth["uid"] != "nobody")
+				$this->auth["exp"] = time() + (60 * $this->lifetime);
+			break;
+
+		case 3:
+			# Login in progress, check results and act accordingly
+			switch ($this->mode) {
+			case "yes":
+			case "log":
+				if ( $this->auth_validatelogin() and $this->is_authenticated()) {
+					$this->auth['in_progress'] = false;
+					return true;
+				} else {
+					$this->auth_loginform();
+					$this->auth['in_progress'] = true;
+					exit;
+				}
+				break;
+			case "reg":
+				if ( $this->auth_doregister() and $this->is_authenticated()) {
+					$this->auth['in_progress'] = false;
+					return true;
+				} else {
+					$this->auth_registerform();
+					$this->auth['in_progress'] = true;
+					exit;
+				}
+				break;
+			default:
+				# This should never happen. Complain.
+				echo "Error in auth handling: no valid mode specified.\n";
+				exit;
+				break;
+			}
+			break;
+
+		default:
+			# This should never happen. Complain.
+			echo "Error in auth handling: invalid state reached.\n";
+			exit;
+			break;
 		}
 	}
 	
@@ -216,35 +226,25 @@ class Auth {
 		  $this->start(); # Call authentication code
 		}
 	}
-	
-	function unauth($nobody = false) {
-		$this->auth = array();
 
-		$this->auth["uid"]   = null;
-		$this->auth["uname"] = null;
-		$this->auth["realm"] = null;
+	
+	function unauth() {
+		$this->auth["authenticated"]   = false;
 		$this->auth["perm"]  = "";
 		$this->auth["exp"]   = 0;
-		
-		## Back compatibility: passing $nobody to this method is
-		## deprecated
-		if ($nobody) {
-		  $this->auth["uid"]   = "nobody";
-		  $this->auth["perm"]  = "";
-		  $this->auth["exp"]   = 0x7fffffff;
-		}
 	}
 	
 	
-	function logout($nobody = "") {
-		unset($this->auth["uname"]);
-		$this->unauth($nobody == "" ? $this->nobody : $nobody);
+	function logout() {
+		$this->auth = array();
+		$this->unauth();
 	}
 	
 	function is_authenticated() {
 		if (
 			isset($this->auth["uid"]) &&
 			$this->auth["uid"] && 
+			$this->auth["authenticated"] && 
 			(($this->lifetime <= 0) || (time() < $this->auth["exp"]))
 		) {
 			# If more than $this->refresh minutes are passed since last check,
@@ -280,26 +280,91 @@ class Auth {
 		print $GLOBALS["sess"]->self_url();
 	}
 	
-	## This method can authenticate a user before the loginform
-	## is being displayed. If it does, it must set a valid uid 
-	## (i.e. nobody IS NOT a valid uid) just like auth_validatelogin,
-	## else it shall return false.
-	
-	function auth_preauth() { return false; }
-	
 	##
 	## Authentication dummies. Must be overridden by user.
 	##
+
+	/**
+	 *	This method can authenticate a user before the loginform is being displayed.
+	 *
+	 *	If it does, it must call method $this->authenticate(...) and return true.
+	 *	Else it shall return false.
+	 *
+	 *	@return 	bool
+	 */
 	
+	function auth_preauth() { return false; }
+	
+	/**
+	 *	This function should validate given credentials and return UID if they are valid
+	 *
+	 *	In array $errors may be returned reason why credentials are invalid
+	 *	This function has to be static - do not use $this reference inside function body
+	 *
+	 *	@static
+	 *	@param	string	$username	
+	 *	@param	string	$realm		
+	 *	@param	string	$password	
+	 *	@param	array	$opt		
+	 *	@param	array 	$errors		array with error messages
+	 *	@return	string				UID if credentials are valid, false otherwise
+	 */
+	function validate_credentials($username, $realm, $password, $opt, &$errors){
+		return true;
+	}
+
+	/**
+	 *	This function is called when the user submits the login form created by auth_loginform(). 
+	 *
+	 *  It must validate the user input. If the user authenticated successfully, 
+	 *  it must call method $this->authenticate(...) and return true.
+	 *	Else it shall return false.
+	 *
+	 *	@return 	bool
+	 */
+
+	function auth_validatelogin() { return false; }
+
+	/**
+	 *	This function should output HTML that creates a login screen for the user. 
+	 *
+	 *  It must be overridden by a subclass to Auth.
+	 */
+
 	function auth_loginform() { ; }
+
+	/**
+	 *	This function must refresh the authentication informations stored in auth array by auth_validatelogin() method. 
+	 *
+	 *	It is called every refresh minutes and is not called if the user is logged in as nobody.
+	 *	It must return true on success, false otherwise (i.e.: the userid is no longer valid). 
+	 *
+	 *  It must be overridden by a subclass to Auth.
+	 *
+	 *	@return 	bool
+	 */
 	
-	function auth_validatelogin() { ; }
+	function auth_refreshlogin() { return true; }
 	
-	function auth_refreshlogin() { ; }
-	
+	/**
+	 *	This function is called when the user submits the register form created by auth_registerform(). 
+	 *
+	 *  It must validate the user input. If the user registered successfully, 
+	 *  it must call method $this->authenticate(...) and return true.
+	 *	Else it shall return false.
+	 *
+	 *	@return 	bool
+	 */
+
+	function auth_doregister() { return false; }
+
+	/**
+	 *	This function should output HTML that creates a register screen for the user. 
+	 *
+	 *  It must be overridden by a subclass to Auth.
+	 */
+
 	function auth_registerform() { ; }
-	
-	function auth_doregister() { ; }
 }
 
 ?>

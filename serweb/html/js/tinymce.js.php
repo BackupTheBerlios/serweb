@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: tinymce.js.php,v 1.2 2005/10/27 13:28:50 kozlik Exp $
+ * $Id: tinymce.js.php,v 1.3 2005/11/30 09:58:16 kozlik Exp $
  */
 
 Header("content-type: text/js");
@@ -13,6 +13,9 @@ $_PHPLIB["libdir"]  = "../../phplib/";
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require ($_SERWEB["serwebdir"] . "load_phplib.php");
+
+phplib_load();
+
 
 $js_url = $config->js_src_path."tinymce/tiny_mce_src.js";
 ?>

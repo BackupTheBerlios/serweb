@@ -1,12 +1,12 @@
 <?php
 /*
- * $Id: my_account.php,v 1.10 2005/09/19 13:46:32 kozlik Exp $
+ * $Id: my_account.php,v 1.11 2005/11/30 09:58:16 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array('get_user_real_name');
 
-$_phplib_page_open = array("sess" => "phplib_Session_Pre_Auth",
-						   "auth" => "phplib_Pre_Auth",
+$_phplib_page_open = array("sess" => "phplib_Session",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('user_preferences', 'usrloc', 'acl');

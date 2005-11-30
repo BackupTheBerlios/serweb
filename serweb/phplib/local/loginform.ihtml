@@ -1,14 +1,11 @@
 <?
-	global $username, $config, $page_attributes, $errors, $serweb_auth, $_POST, $smarty, $lang_str, $_SERWEB;
-
-require($_SERWEB["serwebdir"] . "load_lang.php");
+	global $config, $page_attributes, $errors, $smarty, $lang_str, $_SERWEB;
 	
 	print_html_head();
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
 
 	if (!isset($errors)) $errors=array();
-//	if (isset($_POST['submit']) or isset($_POST['submit_x'])) $errors[]="Your password is invalid. Please try again!";
 
 	print_html_body_begin($page_attributes);
 
@@ -21,14 +18,6 @@ require($_SERWEB["serwebdir"] . "load_lang.php");
 	$cfg->admin_pages_path =	$config->admin_pages_path;
 	$cfg->domains_path =		$config->domains_path;
 
-	// text 'bad username or password' can't be in errors array can't be in errors array
-	// because lang was not loaded yet when method check_password was called
-	// so we must add this message to errors array when there is en empty slot.
-	// This solution IS NOT CLEAR!!!, rewrite check_password mathod is required to 
-	// not using lang directly
-	foreach ($errors as $k => $v){
-		if (!$v) $errors[$k] = $lang_str['bad_username'];
-	}
 
 	$page_attributes['errors']=&$errors;
 	$page_attributes['message']=&$message;
@@ -36,28 +25,40 @@ require($_SERWEB["serwebdir"] . "load_lang.php");
 	$smarty->assign_by_ref('parameters', $page_attributes);
 
 	$smarty->assign_by_ref("cfg", $cfg);		
-	$smarty->assign_by_ref('config', $cfg);		//deprecated form 7.12.2004 - for backward compatibility only
-
-	$smarty->assign('form_action', $this->url());
-
-	if ($config->fully_qualified_name_on_login) 
-		$smarty->assign('form_username', $serweb_auth->uname.'@'.$serweb_auth->domain);
-	else
-		$smarty->assign('form_username', $serweb_auth->uname);
-
 	$smarty->assign_by_ref('lang_str', $lang_str);
+
+	$f_uname = $config->fully_qualified_name_on_login ?
+				($this->auth['uname'].'@'.$this->auth['realm']) :
+				$this->auth['uname'];
+
+	/* create html form */
+
+	$form = array();
+	$form['start']    = '<form name="login_form" action="'.$this->url().'" method=post>';
+	$form['username'] = '<input type="text" name="username" id="username" value="'.$f_uname.'" size=32 disabled>';
+	$form['password'] = '<input type="password" name="password" id="password" size=32 maxlength=128>';
+	$form['okey']     = '<input type="submit" name="okey_x" id="okey" value="'.$lang_str['b_login'].'">';
+	$form['finish']   = '</form>';
+
+	$smarty->assign_by_ref("form", $form);		
+
+	/* 
+	 * assign deprecated smarty variables - 
+	 * this is only for backward compatibility with older templates 
+	 */
+	$smarty->assign('form_action', $this->url());	//deprecated from 30.11.2005
+	$smarty->assign('form_username', $f_uname);		//deprecated from 30.11.2005
+	$smarty->assign_by_ref('config', $cfg);			//deprecated from 7.12.2004
+
 	
 	$smarty->display('relogin.tpl');
-?>
 
-<?print_html_body_end($page_attributes);?>
+	print_html_body_end($page_attributes);
+
+?>
 <script language="JavaScript">
 <!--
-  if (document.forms['login_form'][0].value != '') {
-      document.forms['login_form'][1].focus();
-  } else {
-      document.forms['login_form'][0].focus();
-  }
+	document.forms['login_form']['password'].focus();
 // -->
 </script>
 </html>

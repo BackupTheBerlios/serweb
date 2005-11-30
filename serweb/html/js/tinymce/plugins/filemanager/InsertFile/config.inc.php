@@ -23,6 +23,9 @@ $_PHPLIB["libdir"]  = "../../../../../../phplib/";
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");
 
+phplib_load();
+
+
 $perm->check("admin");
 
 /* check if domain is set */
