@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.10 2005/11/30 09:58:16 kozlik Exp $
+ * $Id: local.inc,v 1.11 2005/11/30 10:10:51 kozlik Exp $
  */
 
 
@@ -35,7 +35,6 @@ class phplib_Auth extends Auth {
 		$this->Auth();
 		
 		$this->lifetime = $config->auth_lifetime;
-		$this->lifetime = 0.01;
 	}
 
 	function auth_loginform() {
