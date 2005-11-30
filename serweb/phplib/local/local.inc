@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.12 2005/11/30 10:19:45 kozlik Exp $
+ * $Id: local.inc,v 1.13 2005/11/30 11:17:25 kozlik Exp $
  */
 
 
@@ -176,20 +176,18 @@ class phplib_Pre_Auth extends phplib_Auth {
 ##
 
 class phplib_Perm extends Perm {
-  var $classname = "phplib_Perm";
+	var $classname = "phplib_Perm";
 
-  var $permissions = array(
-                            "admin"      => 1,
+	var $permissions = array(
+							"admin"      => 1,
 							"change_priv"=> 2,
 							"hostmaster" => 4
-                          );
+						);
 
-  function perm_invalid($does_have, $must_have) {
-    global $perm, $auth, $sess;
-    global $_PHPLIB;
-
-    include($_PHPLIB["libdir"] . "local/perminvalid.ihtml");
-  }
+	function perm_invalid($does_have, $must_have) {
+		global $_SERWEB;
+		include($_SERWEB["serwebdir"] . "perm_invalid.php");
+	}
 }
 
 ?>
