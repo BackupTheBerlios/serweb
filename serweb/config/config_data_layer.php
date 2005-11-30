@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.16 2005/11/14 15:35:49 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.17 2005/11/30 09:54:34 kozlik Exp $
  */
 
 
@@ -186,6 +186,18 @@
 		$config->data_sql->table_uri="uri";
 		$config->data_sql->table_customer="customer";
 		$config->data_sql->table_dom_preferences="dom_preferences";
+
+
+		$config->flags = array(
+							"DB_LOAD_SER"   => 1,	// if set, attribute is mean for SER
+							"DB_DISABLED"   => 2,   // if set, attribute is disabled
+							"DB_CANON"      => 4,	// canonical domain name (domain table)
+							"DB_IS_TO"      => 8,   // URI may be used in r-uri
+							"DB_IS_FROM"    => 16,  // URI may be used in from
+							"DB_FOR_SERWEB" => 32,  // if set, attribute is mean for SERWEB
+							"DB_PENDING"    => 64,  // account is pending for confirmation
+							"DB_DELETED"    => 128	// row is marked as deleted
+		                  );
 		
 
 		$config->data_layer_always_required_functions=array('check_passw_of_user',
@@ -194,6 +206,25 @@
 															'set_db_charset',
 															'set_db_collation',
 															'get_domains_of_admin');
+
+
+		$config->data_sql->table_credentials="credentials";
+
+		$config->data_sql->credentials = new stdClass();
+ 		$config->data_sql->credentials->cols = new stdClass();
+		
+		$config->data_sql->credentials->table_name = 		"credentials";
+		
+ 		$config->data_sql->credentials->cols->uname = 		"auth_username";
+ 		$config->data_sql->credentials->cols->realm = 		"realm";
+ 		$config->data_sql->credentials->cols->password = 	"password";
+ 		$config->data_sql->credentials->cols->flags = 		"flags";
+ 		$config->data_sql->credentials->cols->ha1 = 		"ha1";
+ 		$config->data_sql->credentials->cols->ha1b = 		"ha1b";
+ 		$config->data_sql->credentials->cols->uid = 		"uid";
+
+ 		$config->data_sql->credentials->flag_values = &$config->flags;
+
 
 		/*
 		 *  names of columns in table speed dial
