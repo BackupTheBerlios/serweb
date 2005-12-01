@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.17 2005/11/30 09:54:34 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.18 2005/12/01 12:04:59 kozlik Exp $
  */
 
 
@@ -208,6 +208,10 @@
 															'get_domains_of_admin');
 
 
+		/*
+		 *	Definition of table credentials
+		 */
+		 
 		$config->data_sql->table_credentials="credentials";
 
 		$config->data_sql->credentials = new stdClass();
@@ -224,6 +228,62 @@
  		$config->data_sql->credentials->cols->uid = 		"uid";
 
  		$config->data_sql->credentials->flag_values = &$config->flags;
+
+
+
+		/*
+		 *	Definition of table user_attrs
+		 */
+		 
+		$config->data_sql->user_attrs = new stdClass();
+ 		$config->data_sql->user_attrs->cols = new stdClass();
+		
+		$config->data_sql->user_attrs->table_name = 		"user_attrs";
+		
+ 		$config->data_sql->user_attrs->cols->uid = 			"uid";
+ 		$config->data_sql->user_attrs->cols->name = 		"name";
+ 		$config->data_sql->user_attrs->cols->value = 		"value";
+ 		$config->data_sql->user_attrs->cols->type = 		"type";
+ 		$config->data_sql->user_attrs->cols->flags = 		"flags";
+
+ 		$config->data_sql->user_attrs->flag_values = &$config->flags;
+
+
+
+		/*
+		 *	Definition of table domain_attrs
+		 */
+		 
+		$config->data_sql->domain_attrs = new stdClass();
+ 		$config->data_sql->domain_attrs->cols = new stdClass();
+		
+		$config->data_sql->domain_attrs->table_name = 		"domain_attrs";
+		
+ 		$config->data_sql->domain_attrs->cols->did = 		"did";
+ 		$config->data_sql->domain_attrs->cols->name = 		"name";
+ 		$config->data_sql->domain_attrs->cols->value = 		"value";
+ 		$config->data_sql->domain_attrs->cols->type = 		"type";
+ 		$config->data_sql->domain_attrs->cols->flags = 		"flags";
+
+ 		$config->data_sql->domain_attrs->flag_values = &$config->flags;
+
+
+
+		/*
+		 *	Definition of table global_attrs
+		 */
+		 
+		$config->data_sql->global_attrs = new stdClass();
+ 		$config->data_sql->global_attrs->cols = new stdClass();
+		
+		$config->data_sql->global_attrs->table_name = 		"global_attrs";
+		
+ 		$config->data_sql->global_attrs->cols->name = 		"name";
+ 		$config->data_sql->global_attrs->cols->value = 		"value";
+ 		$config->data_sql->global_attrs->cols->type = 		"type";
+ 		$config->data_sql->global_attrs->cols->flags = 		"flags";
+
+ 		$config->data_sql->global_attrs->flag_values = &$config->flags;
 
 
 		/*
