@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: auth4.1.php,v 1.2 2005/11/30 09:58:16 kozlik Exp $
+ * $Id: auth4.1.php,v 1.3 2005/12/01 12:06:11 kozlik Exp $
  */ 
 
 class Auth {
@@ -30,6 +30,7 @@ class Auth {
 	/**
 	 * constructor
 	 */
+
 	function Auth(){
 	}	
 	
@@ -45,6 +46,7 @@ class Auth {
 	/**
 	 *	authenticate user - uid, uname and realm have to be previously set
 	 */
+
 	function authenticate(){
 		
 		$this->auth['authenticated']	= true;
@@ -55,10 +57,11 @@ class Auth {
 	/**
 	 *	authenticate user by given uid, uname and relam
 	 *
-	 *	@param $uid		string
-	 *	@param $uname	string
-	 *	@param $realm	string
+	 *	@param	string	$uid
+	 *	@param	string	$uname
+	 *	@param	string	$realm
 	 */
+
 	function authenticate_as($uid, $uname, $realm){
 		
 		$this->auth['uid']				= $uid;
@@ -70,8 +73,19 @@ class Auth {
 	}	
 
 	/**
+	 *	Set permissions
+	 *	
+	 *	@param	array	array of permissions
+	 */
+
+	function set_perms($perms){
+		$this->auth["perm"] = implode(",", $perms);		
+	}
+	
+	/**
 	 *	create references to auth info for backward compatibility
 	 */
+
 	function create_serweb_auth_references(){
 
 		if (! is_object($this->serweb_auth)){
@@ -83,9 +97,11 @@ class Auth {
 		$this->serweb_auth->domain = &$this->auth['realm'];
 	}
 	
+	########################################################################
 	##
 	## Initialization
 	##
+
 	function start() {
 		$cl = $this->cancel_login;
 		global $$cl;
@@ -267,11 +283,12 @@ class Auth {
 			return false;
 		}
 	}
-	
+
 	########################################################################
 	##
 	## Helper functions
 	##
+
 	function url() {
 		return $GLOBALS["sess"]->self_url();
 	}
@@ -280,6 +297,7 @@ class Auth {
 		print $GLOBALS["sess"]->self_url();
 	}
 	
+	########################################################################
 	##
 	## Authentication dummies. Must be overridden by user.
 	##
@@ -299,7 +317,8 @@ class Auth {
 	 *	This function should validate given credentials and return UID if they are valid
 	 *
 	 *	In array $errors may be returned reason why credentials are invalid
-	 *	This function has to be static - do not use $this reference inside function body
+	 *	This function has to be static - do not use the '$this' reference inside 
+	 *	function body
 	 *
 	 *	@static
 	 *	@param	string	$username	
@@ -309,10 +328,29 @@ class Auth {
 	 *	@param	array 	$errors		array with error messages
 	 *	@return	string				UID if credentials are valid, false otherwise
 	 */
+	
 	function validate_credentials($username, $realm, $password, $opt, &$errors){
-		return true;
+		return $username."@".$realm;
 	}
 
+	/**
+	 *	This functioun should find out permissinos of user with given UID and return the permissons as array
+	 *
+	 *	In array $errors may be returned reason of error if any occur
+	 *	This function has to be static - do not use the '$this' reference inside 
+	 *	function body
+	 *
+	 *	@static
+	 *	@param	string	$uid
+	 *	@param	array	$opt		
+	 *	@param	array 	$errors		array with error messages
+	 *	@return	array				array of permissions or FALSE on error
+	 */
+
+	function find_out_perms($uid, $opt, &$errors){
+		return array();
+	}
+	
 	/**
 	 *	This function is called when the user submits the login form created by auth_loginform(). 
 	 *

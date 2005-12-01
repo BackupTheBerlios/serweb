@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.3 2005/11/30 09:58:16 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.4 2005/12/01 12:06:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -62,10 +62,11 @@ class apu_login extends apu_base_class{
 	var $username = null;
 	var $realm = null;
 	var $password = null;
+	var $perms = null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('check_credentials', 'get_privileges_of_user');
+		return array();
 	}
 
 	/* return array of strings - requred javascript files */
@@ -110,6 +111,19 @@ class apu_login extends apu_base_class{
 		
 	}
 
+	/* this metod is called always at begining */
+	function init(){
+		parent::init();
+		
+		$this->controler->set_onload_js("
+			if (document.forms['".$this->opt['form_name']."']['uname'].value != '') {
+				document.forms['".$this->opt['form_name']."']['passw'].focus();
+			} else {
+				document.forms['".$this->opt['form_name']."']['uname'].focus();
+			}
+		");
+	}
+	
 	function action_login(&$errors){
 		global $lang_str, $config;
 
@@ -135,23 +149,13 @@ class apu_login extends apu_base_class{
 		$_SESSION['auth'] = new $this->opt['auth_class'];
 		$_SESSION['auth']->authenticate_as($this->uid, $this->username, $this->realm);
 
+		if (is_array($this->perms))
+			$_SESSION['auth']->set_perms($this->perms);
+
 		sw_log("User login: redirecting to page: ".$this->opt['redirect_on_login'], PEAR_LOG_DEBUG);
 
 		$this->controler->change_url_for_reload($this->opt['redirect_on_login']);
 		return true;
-	}
-	
-	/* this metod is called always at begining */
-	function init(){
-		parent::init();
-		
-		$this->controler->set_onload_js("
-			if (document.forms['".$this->opt['form_name']."']['uname'].value != '') {
-				document.forms['".$this->opt['form_name']."']['passw'].focus();
-			} else {
-				document.forms['".$this->opt['form_name']."']['uname'].focus();
-			}
-		");
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -202,25 +206,10 @@ class apu_login extends apu_base_class{
 
 	}
 
-	function check_admin_privilege($user, &$errors){
-		global $data_auth;
-		//check for admin privilege
-		if (false === $privileges = $data_auth->get_privileges_of_user(
-					$user,
-					array('change_privileges','is_admin'),
-					$errors)
-			) return false;
-
-		foreach($privileges as $row)
-			if ($row->priv_name=='is_admin' and $row->priv_value) return true;
-	
-		return false;
-	}
-
 
 	/* validate html form */
 	function validate_form(&$errors){
-		global $config, $data, $data_auth, $lang_str;
+		global $config, $lang_str;
 
 		// don't display logout mesage in case that form was submited
 		if (isset($_GET['logout'])) unset($_GET['logout']);
@@ -270,11 +259,15 @@ class apu_login extends apu_base_class{
 		                            array($this->username, $this->realm, $this->password, array(), &$errors));
 
 		if (false === $uid) return false;
-		
+
+		/* set_permissions */
+		$perms = call_user_func_array(array($this->opt['auth_class'], 'find_out_perms'), 
+		                              array($uid, array(), &$errors));
+
+		if (false === $perms) return false;
+
 		if ($this->opt['check_admin_privilege']){
-			if (!$this->check_admin_privilege(
-						new Cserweb_auth($this->uid, $this->username, $this->realm), 
-						$errors)){ 
+			if (!in_array('admin', $perms)){
 				$errors[]=$lang_str['bad_username']; 
 				sw_log("User login: authentication failed: user hasn't admin privileges", PEAR_LOG_INFO);
 				return false;
@@ -282,6 +275,7 @@ class apu_login extends apu_base_class{
 		}
 
 		$this->uid = $uid;
+		$this->perms = $perms;
 
 		sw_log("User login: authentication succeeded, uid: ".$this->uid, PEAR_LOG_DEBUG);
 
@@ -311,8 +305,8 @@ class apu_login extends apu_base_class{
 		             'form_name'   => $this->opt['form_name'],
 		             'after'       => '',
 					 'before'      => ($this->opt['fully_qualified_name_on_login'] ?
-					 		'login_completion(f.uname);':
-							''));
+									 		'login_completion(f.uname);':
+											''));
 	}
 }
 

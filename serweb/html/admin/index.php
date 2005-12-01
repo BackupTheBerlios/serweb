@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: index.php,v 1.21 2005/06/13 13:15:37 kozlik Exp $
+ * $Id: index.php,v 1.22 2005/12/01 12:06:10 kozlik Exp $
  */ 
 
 $_phplib_page_open = array("sess" => "phplib_Session");
@@ -15,6 +15,7 @@ unset ($page_attributes['tab_collection']);
 $page_attributes['logout']=false;
 $smarty->assign('domain',$config->domain);
 
+$login->set_opt("auth_class", "phplib_Auth");
 $login->set_opt('check_admin_privilege', true);
 $login->set_opt('redirect_on_login', 'users.php');
 
