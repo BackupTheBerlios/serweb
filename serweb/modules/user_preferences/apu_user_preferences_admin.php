@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_admin
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_admin.php,v 1.3 2005/11/10 15:08:41 kozlik Exp $
+ * @version   $Id: apu_user_preferences_admin.php,v 1.4 2005/12/01 16:11:29 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -60,7 +60,7 @@ class apu_user_preferences_admin extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('del_attribute', 'get_attribute', 'update_attribute', 'get_attributes');
+		return array('del_attribute', 'get_attribute', 'update_attribute', 'get_attr_types');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -97,7 +97,7 @@ class apu_user_preferences_admin extends apu_base_class{
 		
 		$this->attributes = array();
 		
-		if (false === $attributes = $data->get_attributes($this->att_id, $errors)) return false;
+		if (false === $attributes = $data->get_attr_types($this->att_id, $errors)) return false;
 
 		$i=0;
 		foreach($attributes as $att){

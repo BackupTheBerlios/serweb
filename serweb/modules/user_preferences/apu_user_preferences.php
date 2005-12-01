@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.3 2005/09/02 14:00:25 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.4 2005/12/01 16:11:29 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -72,7 +72,7 @@ class apu_user_preferences extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_attributes', 'get_att_values', 'update_attribute_of_user');
+		return array('get_attr_types', 'get_att_values', 'update_attribute_of_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -203,7 +203,7 @@ class apu_user_preferences extends apu_base_class{
 
 		do{		
 			//get list of attributes
-			if (false === $this->attributes = $data->get_attributes(NULL, $errors)) break;
+			if (false === $this->attributes = $data->get_attr_types(NULL, $errors)) break;
 
 			// if option 'atributes' is not given, that mean we will work with all attributes
 			if (empty($this->opt['attributes'])){
