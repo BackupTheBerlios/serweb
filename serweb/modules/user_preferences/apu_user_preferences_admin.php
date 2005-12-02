@@ -3,7 +3,7 @@
  * Application unit apu_user_preferences_admin
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_user_preferences_admin.php,v 1.4 2005/12/01 16:11:29 kozlik Exp $
+ * @version   $Id: apu_user_preferences_admin.php,v 1.5 2005/12/02 13:56:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -60,7 +60,7 @@ class apu_user_preferences_admin extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('del_attribute', 'get_attribute', 'update_attribute', 'get_attr_types');
+		return array('del_attribute', 'get_attribute', 'update_attr_type', 'get_attr_types');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -117,7 +117,7 @@ class apu_user_preferences_admin extends apu_base_class{
 	function action_update(&$errors){
 		global $data;
 
-		if (false === $data->update_attribute($this->att_id, 
+		if (false === $data->update_attr_type($this->att_id, 
 		                                      $_POST['up_att_name'], 
 											  $_POST['up_att_rich_type'], 
 											  $this->usr_pref->att_types[$_POST['up_att_rich_type']]->raw_type, 
@@ -134,7 +134,7 @@ class apu_user_preferences_admin extends apu_base_class{
 	function action_add(&$errors){
 		global $data;
 
-		if (false === $data->update_attribute(NULL, 
+		if (false === $data->update_attr_type(NULL, 
 		                                      $_POST['up_att_name'], 
 											  $_POST['up_att_rich_type'], 
 											  $this->usr_pref->att_types[$_POST['up_att_rich_type']]->raw_type, 

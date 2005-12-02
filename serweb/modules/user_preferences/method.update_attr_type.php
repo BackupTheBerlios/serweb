@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: method.update_attribute.php,v 1.1 2005/08/18 12:08:49 kozlik Exp $
+ * $Id: method.update_attr_type.php,v 1.1 2005/12/02 13:56:26 kozlik Exp $
  */
 
-class CData_Layer_update_attribute {
+class CData_Layer_update_attr_type {
 	var $required_methods = array();
 	
 	/* 
@@ -11,7 +11,7 @@ class CData_Layer_update_attribute {
 	 * if name of atribute is changed, update also usr_preferences
 	 */
 	 
-	function update_attribute($att_edit, $att_name, $att_rich_type, $att_raw_type, $default_value, &$errors){
+	function update_attr_type($att_edit, $att_name, $att_rich_type, $att_raw_type, $default_value, &$errors){
 		global $config;
 		
 		if (!$this->connect_to_db($errors)) return false;
