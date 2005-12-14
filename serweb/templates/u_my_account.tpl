@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.11 2005/09/02 14:00:25 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.12 2005/12/14 16:27:11 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -10,47 +10,13 @@
 <div class="swForm">
 {$form_pd.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-{if $enabled_fields.first_name}
 	<tr>
-	<td><label for="pd_first_name">{$lang_str.ff_first_name}:</label></td>
-	<td>{$form_pd.pd_first_name}</td>
-	</tr>
-{/if}
-{if $enabled_fields.last_name}
-	<tr>
-	<td><label for="pd_last_name">{$lang_str.ff_last_name}:</label></td>
-	<td>{$form_pd.pd_last_name}</td>
-	</tr>
-{/if}
-{if $enabled_fields.email}
-	<tr>
-	<td><label for="pd_email">{$lang_str.ff_your_email}:</label></td>
-	<td>{$form_pd.pd_email}</td>
-	</tr>
-{/if}
-{if $enabled_fields.phone}
-	<tr>
-	<td><label for="pd_phone">{$lang_str.ff_phone}:</label></td>
-	<td>{$form_pd.pd_phone}</td>
-	</tr>
-{/if}
-	<tr>
-	<td><label for="pd_timezone">{$lang_str.ff_your_timezone}:</label></td>
-	<td>{$form_pd.pd_timezone}</td>
-	</tr>
-{if $enabled_fields.pass}
-	<tr>
-	<td><label for="pd_passwd">{$lang_str.ff_your_password}:</label></td>
-	<td>{$form_pd.pd_passwd}</td>
+	<td><label for="pu_passwd">{$lang_str.ff_your_password}:</label></td>
+	<td>{$form_pd.pu_passwd}</td>
 	</tr>
 	<tr>
-	<td><label for="pd_passwd_r">{$lang_str.ff_retype_password}:</label></td>
-	<td>{$form_pd.pd_passwd_r}</td>
-	</tr>
-{/if}
-	<tr>
-	<td><label for="pd_allow_find">{$lang_str.ff_allow_lookup_for_me}:</label></td>
-	<td>{$form_pd.pd_allow_find}</td>
+	<td><label for="pu_passwd_r">{$lang_str.ff_retype_password}:</label></td>
+	<td>{$form_pd.pu_passwd_r}</td>
 	</tr>
 
 {foreach from=$attributes item='row' name='attributes'}
@@ -74,6 +40,12 @@
  		</tr>
  	{/if}
 {/foreach}
+
+	</tr>
+	<tr>
+	<td><label for="ls_language">{$lang_str.ff_language}:</label></td>
+	<td>{$form_pd.ls_language}</td>
+	</tr>
 
 {* If you need display only one specific user preference, see the examples 
  * below. In first case is displayed user preference of name NAME_OF_UP.
@@ -133,6 +105,8 @@
 	
 <br class="swCleaner"><br>
 
+{if $config->allow_change_usrloc}	
+
 {foreach from=$usrloc item='row' name='usrloc'}
 	{if $smarty.foreach.usrloc.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -155,21 +129,22 @@
 	</table>
 	{/if}
 {/foreach}
-	
-<h2 class="swTitle">{$lang_str.add_new_contact}:</h2>
 
-<div class="swForm">
-{$form_ul.start}
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-	<td><label for="sip_address">{$lang_str.ff_sip_address}:</label></td>
-	<td>{$form_ul.ul_sip_address}</td>
-	<td><label for="expires">{$lang_str.ff_expires}:</label></td>
-	<td>{$form_ul.ul_expires}</td>
-	<td>{$form_ul.okey}</td></tr>
-	</table>
-{$form_ul.finish}
-</div>
+	<h2 class="swTitle">{$lang_str.add_new_contact}:</h2>
+	
+	<div class="swForm">
+	{$form_ul.start}
+		<table border="0" cellspacing="0" cellpadding="0" align="center">
+		<tr>
+		<td><label for="sip_address">{$lang_str.ff_sip_address}:</label></td>
+		<td>{$form_ul.ul_sip_address}</td>
+		<td><label for="expires">{$lang_str.ff_expires}:</label></td>
+		<td>{$form_ul.ul_expires}</td>
+		<td>{$form_ul.okey}</td></tr>
+		</table>
+	{$form_ul.finish}
+	</div>
+{/if}
 
 {if $config->enable_dial_voicemail or $config->enable_test_firewall}
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
