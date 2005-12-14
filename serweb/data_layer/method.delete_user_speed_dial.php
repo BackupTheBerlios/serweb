@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_speed_dial.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.delete_user_speed_dial.php,v 1.2 2005/12/14 16:36:58 kozlik Exp $
  */
 
 class CData_Layer_delete_user_speed_dial {
@@ -10,18 +10,50 @@ class CData_Layer_delete_user_speed_dial {
 	 * delete all records of user from speed_dial table
 	 */
 	
-	function delete_user_speed_dial($user, &$errors){
+	function delete_user_speed_dial($uid){
 	 	global $config;
 		
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
+		}
 
-		$q="delete from ".$config->data_sql->table_speed_dial." where ".$this->get_indexing_sql_where_phrase($user);
+		/* table's name */
+		$t_name  = &$config->data_sql->speed_dial->table_name;
+		$ta_name = &$config->data_sql->sd_attrs->table_name;
+		/* col names */
+		$c  = &$config->data_sql->speed_dial->cols;
+		$ca = &$config->data_sql->sd_attrs->cols;
+
+
+		$q="select ".$c->id." as id from ".$t_name." where ".$c->uid." = '".$uid."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			if ($res->getCode()==DB_ERROR_NOSUCHTABLE) return true;  //expected, table mayn't exist in installed version
-			else {log_errors($res, $errors); return false;}
+			else { ErrorHandler::log_errors($res); return false; }
 		}
+
+		$ids = array();
+		while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
+			$ids[] = $ca->id." = ".$row['id'];
+		}
+
+		if (count($ids)){
+			$q = "delete from ".$ta_name." where ".implode(" or ", $ids);
+
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {
+				if ($res->getCode()==DB_ERROR_NOSUCHTABLE) {}  //expected, table mayn't exist in installed version
+				else { ErrorHandler::log_errors($res); return false; }
+			}
+		}
+
+
+		$q="delete from ".$t_name." where ".$c->uid." = '".$uid."'";
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 		return true;
 	}
 }
