@@ -1,8 +1,8 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.4 2005/11/03 11:02:11 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.5 2005/12/14 16:34:06 kozlik Exp $ *}
 
 {if $parameters.user_name}
-	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.domain}&gt;</div>
+	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.realm}&gt;</div>
 {/if}
 
 {if $parameters.logout}
