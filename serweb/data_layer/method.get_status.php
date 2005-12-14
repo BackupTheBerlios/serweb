@@ -1,93 +1,101 @@
-<?
+<?php
 /*
- * $Id: method.get_status.php,v 1.4 2005/05/03 11:15:03 kozlik Exp $
+ * $Id: method.get_status.php,v 1.5 2005/12/14 16:30:19 kozlik Exp $
  */
 
 class CData_Layer_get_status {
-	var $required_methods = array('domain_exists', 'is_user_exists', 'get_status_visibility');
+	var $required_methods = array('get_did_by_realm');
 	
-	/*
-	 * get status of sip user
-	 * return: "non-local", "unknown", "non-existent", "on line", "off line"
-	 */
-
-	function get_status($sip_uri, &$errors){
-		global $config, $lang_str, $data;
-
+	/**
+	 *  Get status of user specified by sip-uri
+	 *
+	 *	Return status: 'unknown', 'nonlocal', 'notexists', 'offline', 'online'
+	 *
+	 *  Possible options:
+	 *		none
+	 *
+	 *	@param	string	$sip_uri	URI of user
+	 *	@param	array	$opt		array of options
+	 *	@return	string				FALSE on error
+	 */ 
+	 
+	function get_status($sip_uri, $opt){
+		global $config;
+		
 		/* create connection to proxy where are stored data of user */
 		if (isModuleLoaded('xxl') and $this->name != "get_status_tmp"){
 
-			$tmp_data = CData_Layer::singleton("get_status_tmp", $errors);
+			$tmp_data = &CData_Layer::singleton("get_status_tmp", $errors);
 			$tmp_data->set_xxl_user_id($sip_uri);
-			//$tmp_data->expect_user_id_may_not_exists(); //do not need this?
+			//$tmp_data->expect_user_id_may_not_exists(); //need this?
 
 			return $tmp_data->get_status($sip_uri, $errors);
 		}
 
 
-		$reg = Creg::singleton();
-		if (!eregi("^sip:([^@]+@)?".$reg->host, $sip_uri, $regs)) 
-			return "<div class=\"statusunknown\">".$lang_str['status_nonlocal']."</div>";
-
-		$user=substr($regs[1],0,-1);
-		$domain=$regs[2];
-
-		if ($config->multidomain){
-			$local = $data->domain_exists($domain, $errors);
-			if ($local < 0) return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
-			if (! $local) return "<div class=\"statusunknown\">".$lang_str['status_nonlocal']."</div>";
-		}
-		else{
-			if ($domain != $config->domain) return "<div class=\"statusunknown\">".$lang_str['status_nonlocal']."</div>";
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
 		}
 
+		/* table's name */
+		$tu_name = &$config->data_sql->uri->table_name;
+		$tl_name = &$config->data_sql->location->table_name;
+		/* col names */
+		$cu = &$config->data_sql->uri->cols;
+		$cl = &$config->data_sql->location->cols;
+		/* flags */
+		$fu = &$config->data_sql->uri->flag_values;
 
-		//check if user exists
+		$an = &$config->attr_names;
 
-		$exists=$this->is_user_exists($user, $domain, $errors);
-		if ($exists<0) return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
-		elseif(!$exists) return "<div class=\"statusunknown\">".$lang_str['status_nonexists']."</div>";
+		$reg   = &Creg::singleton();
+		$uname = $reg->get_username($sip_uri);
+		$realm = $reg->get_domainname($sip_uri);;
 
-		//check if others can see status of user
-		if ($config->status_vibility){
-			$status_visibility=$this->get_status_visibility($user, $domain, $errors);
-			if ($status_visibility === false or $status_visibility<0) return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
-		}
+		if (!$uname or !$realm) return "unknown";
+
+		if (false === $did = $this->get_did_by_realm($realm, null)) return false;
+		if (is_null($did)) return "nonlocal";
+
+		$flags_val = $fu['DB_DISABLED'] | $fu['DB_DELETED'];
+
+		$q="select ".$cu->uid." as uid
+		    from ".$tu_name."
+			where  ".$cu->did." = '".$did."' and 
+			       ".$cu->username." = '".$uname."' and 
+				  (".$cu->flags." & ".$flags_val.") = 0";
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 		
-		//check usrloc if user is online
+		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
+		if (!$row){	unset($res); return "notexists"; }
 		
-		if ($config->use_rpc){
-			if (!$this->connect_to_xml_rpc(null, $errors)) 
-				return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
-			
-			$params = array(new XML_RPC_Value($config->ul_table, 'string'),
-			                new XML_RPC_Value($user."@".$domain, 'string'));
-			$msg = new XML_RPC_Message_patched('ul_show_contact', $params);
-			$res = $this->rpc->send($msg);
-	
-			if ($this->rpc_is_error($res)){
-				if ($res->getCode() == "404"){
-					return "<div class=\"statusoffline\">".$lang_str['status_offline']."</div>";
-				}
+		$uid = $row['uid'];
 
-				log_errors($res, $errors); 
-				return "<div class=\"statusunknown\">".$lang_str['status_unknown']."</div>";
-			}
-			return "<div class=\"statusonline\">".$lang_str['status_online']."</div>";
+		$o = array("uid" => $uid,
+		           "did" => $did);
+
+		if (false === $show = Attributes::get_attribute($an['show_status'], $o)) return false;
+
+		if (!$show) return 'unknown';
+
+		$q="select count(*)
+		    from ".$tl_name."
+			where  ".$cl->uid." = '".$uid."'";
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
+		
+		if (!($row = $res->fetchRow(DB_FETCHMODE_ORDERED))){ 
+			ErrorHandler::log_errors(PEAR::raiseError("Can't fetch data from DB")); 
+			return false; 
 		}
-		else{
 
-			$fifo_cmd=":ul_show_contact:".$config->reply_fifo_filename."\n".
-			$config->ul_table."\n".		//table
-			$user."@".$domain."\n\n";	//username
+		if ($row[0]) return "online";
+		else return "offline";
 
-			$out=write2fifo($fifo_cmd, $errors, $status);
-			if ($errors) return;
-
-			if (substr($status,0,3)=="200") return "<div class=\"statusonline\">".$lang_str['status_online']."</div>";
-			else return "<div class=\"statusoffline\">".$lang_str['status_offline']."</div>";
-		}
 	}
-	
 }
 ?>
