@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.7 2005/06/14 07:44:01 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.8 2005/12/14 16:39:25 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -41,54 +41,116 @@ function internationalize_tabs(){
  
 function lang_detect($str = '', $envType = ''){
 	global $available_languages;
-	global $sess_lang;
 	
 	foreach($available_languages AS $key => $value) {
 		// $envType =  1 for the 'HTTP_ACCEPT_LANGUAGE' environment variable,
 		//             2 for the 'HTTP_USER_AGENT' one
+		//             3 for the user/domain/global attribute
 		if (($envType == 1 && eregi('^(' . $value[0] . ')(;q=[0-9]\\.[0-9])?$', $str))
-			|| ($envType == 2 && eregi('(\(|\[|;[[:space:]])(' . $value[0] . ')(;|\]|\))', $str))) {
-			$sess_lang = $key;
-			break;
+			|| ($envType == 2 && eregi('(\(|\[|;[[:space:]])(' . $value[0] . ')(;|\]|\))', $str))
+			|| ($envType == 3 && ($value[2] == substr($str, 0, 2)))) {
+			return $key;
 		}
 	}
+	return false;
 } 
 
 
-// Register session variable 
-if (!$sess->is_registered("sess_lang")) $sess->register("sess_lang");
 
-// Lang forced
-if (!empty($config->lang['lang'])) {
-    $sess_lang = $config->lang['lang'];
-}
-
-// If '$sess_lang' is defined, ensure this is a valid translation
-if (!empty($sess_lang) && empty($available_languages[$sess_lang])) {
-    $sess_lang = '';
-}
+function determine_lang(){
+	global $config, $data, $available_languages;
+	$an = &$config->attr_names;
+	$did = null;
 
 
-// Language is not defined yet :
-// try to findout user's language by checking its HTTP_ACCEPT_LANGUAGE variable
-
-if (empty($sess_lang) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	$accepted    = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-	$acceptedCnt = count($accepted);
-	for ($i = 0; $i < $acceptedCnt && empty($sess_lang); $i++) {
-		lang_detect($accepted[$i], 1);
+	// Lang forced
+	if (!empty($config->force_lang) && isset($available_languages[$config->force_lang])) {
+    	$_SESSION['lang'] = $config->force_lang;
 	}
+
+	
+	// If session variable is set, obtain language from it
+	if (isset($_SESSION['lang'])){
+		if (isset($available_languages[$_SESSION['lang']])) return $_SESSION['lang'];
+		else unset($_SESSION['lang']);
+	}
+
+	// Lang is not know yet
+	// try to findout user's language by checking user attribute
+
+	if (isset($_SESSION['auth']) and 
+	    is_a($_SESSION['auth'], 'Auth') and
+	    $_SESSION['auth']->is_authenticated()){
+
+		$uid = $_SESSION['auth']->get_uid();
+		$did = $_SESSION['auth']->get_did(); //for checking domain attribute later
+
+		$attrs = &User_Attrs::singleton($uid);
+		$lang = lang_detect($attrs->get_attribute($an['lang']), 3);
+		if (false != $lang) return $lang;
+
+	}
+	
+
+	// try to findout user's language by checking cookie
+
+	if (!empty($_COOKIE['serweb_lang']) and isset($available_languages[$_COOKIE['serweb_lang']])){
+		return $_COOKIE['serweb_lang'];
+	}
+
+	// try to findout user's language by checking its HTTP_ACCEPT_LANGUAGE variable
+	
+	if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$accepted    = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$acceptedCnt = count($accepted);
+		for ($i = 0; $i < $acceptedCnt; $i++) {
+			$lang = lang_detect($accepted[$i], 1);
+			if (false != $lang) return $lang;
+		}
+	}
+	
+	// try to findout user's language by checking its HTTP_USER_AGENT variable
+
+	if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+		$lang = lang_detect($_SERVER['HTTP_USER_AGENT'], 2);
+		if (false != $lang) return $lang;
+	}
+
+	// try to findout user's language by checking domain or global attribute
+
+	if (is_null($did)){ // if user is not authenticated yet
+	                    // get did of domain from http request
+		$data->add_method('get_did_by_realm');
+		$did = $data->get_did_by_realm($config->domain, null);
+		if (false === $did) $did = null;
+	}
+
+	$o = array();
+	if (!is_null($did)) $o['did'] = $did;
+	$lang = lang_detect(Attributes::get_attribute($an['lang'], $o), 3);
+	if (false != $lang) return $lang;
+
+
+	if (!is_null($lang) and isset($available_languages[$lang])) return $lang;
+
+
+	// Didn't catch any valid lang : we use the default settings
+	
+	return $config->default_lang;
+
 }
 
-// try to findout user's language by checking its HTTP_USER_AGENT variable
-if (empty($sess_lang) && !empty($_SERVER['HTTP_USER_AGENT'])) {
-	lang_detect($_SERVER['HTTP_USER_AGENT'], 2);
-}
 
-// Didn't catch any valid lang : we use the default settings
-if (empty($sess_lang)) {
-	$sess_lang = $config->lang['default_lang'];
-}
+$_SESSION['lang'] = determine_lang();
+
+// store language to $sess_lang variable for backward compatibility
+$sess_lang = &$_SESSION['lang']; 
+
+//set cookie containing selected lang
+//cookie expires in one year
+setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path);
+
+
 
 /** load strings of selected language */
 require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$sess_lang][1].".php");
