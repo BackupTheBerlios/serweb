@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.13 2005/11/30 09:56:07 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.14 2005/12/14 16:20:48 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -113,6 +113,7 @@ $lang_str['ff_your_timezone'] = 				"your timezone";
 $lang_str['ff_username'] = 						"username";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"show on-line users only";
+$lang_str['ff_language'] = 						"language";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.10 2005/11/30 09:56:07 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.11 2005/12/14 16:20:48 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -113,6 +113,7 @@ $lang_str['ff_your_timezone'] = 				"èasová zóna";
 $lang_str['ff_username'] = 						"uživatelské jméno";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"zobraz jenom on-line uživatele";
+$lang_str['ff_language'] = 						"language";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
