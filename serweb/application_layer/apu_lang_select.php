@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.4 2005/06/16 09:01:19 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.5 2005/12/14 16:40:04 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -18,11 +18,14 @@
  *	 display only languages that exist in specified charset. Set to empty to
  *	 show all language setting form $avaiable_languages array
  *	
- *	'save_to_avp'				(string) default: ''
- *	 name of AVP to which should be saved selected language. If is empty, 
- *	 language isn't saved into AVP, only into session variable
+ *	'save_to_user_attr'			(bool) default: false
+ *	 If true, selected language is saved into user_attrs on submit
+ *	 The name of user_attr is defined by config variable $config->attr_names['lang']
  *
- *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	'save_to_cookie'			(bool) default: true
+ *	 If true, selected language is saved into cookie on submit
+ *
+ *	'msg_update'				default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *								
  *	'form_name'					(string) default: ''
@@ -52,7 +55,7 @@ class apu_lang_select extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('update_attribute_of_user');
+		return array('update_attribute');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -67,7 +70,8 @@ class apu_lang_select extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['use_charset_only'] =	'utf-8';
-		$this->opt['save_to_avp']      =	'';
+		$this->opt['save_to_user_attr']      =	false;
+		$this->opt['save_to_cookie']      	 =	true;
 
 
 		/* message on attributes update */
@@ -85,25 +89,32 @@ class apu_lang_select extends apu_base_class{
 		
 	}
 
-	function action_update(&$errors){
-		global $sess_lang, $available_languages, $data;
-		
-		$sess_lang = $_POST['ls_language'];
-
-		if ($this->opt['save_to_avp']){
-			if (false === $data->update_attribute_of_user($this->user_id, 
-															$this->opt['save_to_avp'], 
-															$available_languages[$sess_lang][2], 
-															$errors)) 
-					return false;
-		}
-
-		return array("m_ls_updated=".RawURLEncode($this->opt['instance_id']));
-	}
-	
 	/* this metod is called always at begining */
 	function init(){
 		parent::init();
+	}
+	
+	function action_update(&$errors){
+		global $available_languages, $config;
+		
+		$_SESSION['lang'] = $_POST['ls_language'];
+
+		$opt = array("uid" => $this->user_id->uuid);
+
+		if ($this->opt['save_to_cookie']){
+			setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path);
+		}
+		
+		if ($this->opt['save_to_user_attr']){
+			$an = &$config->attr_names;
+		
+			$attrs = &User_Attrs::singleton($this->controler->user_id->uuid);
+			if (false === $attrs->set_attribute($an['lang'], 
+			                                    $available_languages[$_SESSION['lang']][2])) 
+				return false;
+		}
+
+		return array("m_ls_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -120,7 +131,7 @@ class apu_lang_select extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $available_languages, $sess_lang;
+		global $available_languages;
 		parent::create_html_form($errors);
 
 		$options = array();
@@ -148,7 +159,7 @@ class apu_lang_select extends apu_base_class{
 									 "name"=>"ls_language",
 									 "options"=>$options,
 									 "size"=>1,
-		                             "value"=>$sess_lang));
+		                             "value"=>$_SESSION['lang']));
 
 	}
 
