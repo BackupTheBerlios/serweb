@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_index.tpl,v 1.6 2005/07/21 16:23:04 kozlik Exp $ *}
+{* $Id: u_index.tpl,v 1.7 2005/12/14 16:34:36 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -13,7 +13,7 @@
 {if ($form_ls)}
 	<div align="right">
 		{$form_ls.start}
-		Language: {$form_ls.ls_language} {$form_ls.okey}
+		{$lang_str.ff_language}: {$form_ls.ls_language} {$form_ls.okey}
 		{$form_ls.finish}
 	</div>
 {/if}
