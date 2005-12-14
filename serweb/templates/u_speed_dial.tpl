@@ -26,7 +26,7 @@
 		 </tr>
 {/if}
 		 <tr class="{cycle values='swTrOdd,swTrEven'}">
-		  <td >{$row.sd_username}</td>
+		  <td >{$row.dial_username}</td>
 		  <td >{$form.$f_name}</td>
 		  <td >{$form.$l_name}</td>
 		  <td >{$form.$new_uri}</td>

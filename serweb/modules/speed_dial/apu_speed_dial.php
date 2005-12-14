@@ -1,122 +1,124 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.1 2005/08/18 12:07:00 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.2 2005/12/14 16:19:58 kozlik Exp $
  */ 
 
-/* Application unit speed dial */
+/** Application unit speed dial */
 
-/*
-   This application unit is used for view and change values in table speed dial
-   
-   Configuration:
-   --------------
-   'numerical_target_only'		(bool) default: false
-     if is true, only phonenumbers are alowed in username part of targer uri. 
-	 The 'username_in_target_only' should be set to true too.
-	 
-   'username_in_target_only'	(bool) default: false
-     If is true, user enter only username part of target uri. Domain name is 
-	 appended by the option 'domain_for_targets'
-	 
-   'domain_for_targets'			(string) default: domain of loged in user
-     see description of option 'username_in_target_only'
-   
-   'domain_for_requests'		(string) default: domain of loged in user
-     domain which is used for request URIs (column 'sd_domain' in DB table)
-
-   'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
-     message which should be showed on attributes update - assoc array with keys 'short' and 'long'
-
-   'blacklist'					default: null
-	 if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
-
-   'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
-	 error message that is displayed if URI is blacklisted
-   								
-   'form_name'					(string) default: ''
-     name of html form
-   
-   'form_submit'				(assoc)
-     assotiative array describe submit element of form. For details see description 
-	 of method add_submit in class form_ext
-	 
-   'fname_max_chars'			(int) default: 128
-     maximum number of characters in fields fname
-
-   'lname_max_chars'			(int) default: 128
-     maximum number of characters in fields lname
-
-   'new_uri_max_chars'			(int) default: 128
-     maximum number of characters in fields new_uri
-
-	 
-   'sort_asc_on_change_col'		(bool) default: true;
-     If true, sorting direction is set to ASCENDING when column by which is output sorted is changed
-	 
-	 
-   'validate_funct'				(string) default: null
-     name of enhanced validate function of entered uri
-	 validate function must return true or false, first parametr is reference
-	 to given URI (function can change it)
-	 and second one is  is reference to errors array - function can add error message 
-	 to it which is dispayed to user
-	
-		 example:
-			function my_validate_form(&$uri, &$errors){
-				//validate only one attribute
-				if (ereg('^[0-9]+$', $uri)) return true;
-				else {
-					$errors[]="not number";
-					return false;
-				}
-			}
-	
-			set_opt('validate_funct') = 'my_validate_function';
-	 
-	 
-   'smarty_form'				name of smarty variable - see below
-   'smarty_speed_dials'			name of smarty variable - see below
-   'smarty_pager'				name of smarty variable - see below
-   'smarty_action'				name of smarty variable - see below
-   'smarty_sort_from_uri'		name of smarty variable - see below
-   'smarty_sort_to_uri'			name of smarty variable - see below
-   'smarty_sort_fname'			name of smarty variable - see below
-   'smarty_sort_lname'			name of smarty variable - see below
-   'smarty_sort_by'				name of smarty variable - see below
-   'smarty_sort_dir'			name of smarty variable - see below
-   
-   
-   Exported smarty variables:
-   --------------------------
-   opt['smarty_form'] 			(form)			
-     phplib html form
-	 
-   opt['smarty_speed_dials']	(speed_dials)
-     array containing info about speed dials
-	 
-   opt['smarty_pager']			(pager)
-     associative array containing size of result and which page is returned
-   
-   opt['smarty_action']			(action)
-	  tells what should smarty display. Values:
-   	  'default' - 
-	  'was_updated' - when user submited form and data was succefully stored
-
-	  
-   	opt['smarty_sort_from_uri'] 	(url_sort_from_uri)
-	opt['smarty_sort_to_uri']   	(url_sort_to_uri)
-	opt['smarty_sort_fname']   		(url_sort_fname)
-	opt['smarty_sort_lname']   		(url_sort_lname)
-		contain URL for change sorting
-
-	opt['smarty_sort_by']   		(sort_by)
-		Contain name of collumn by which the output is sorted. Contain one of:
-			"from_uri", "to_uri", "fname", "lname"
-		
-	opt['smarty_sort_desc']   		(sort_desc)
-		True if sorting direction is descending. False otherwise.
-
-*/
+/**
+ *	This application unit is used for view and change values in table speed dial
+ *	   
+ *	Configuration:
+ *	--------------
+ *	'numerical_target_only'		(bool) default: false
+ *		if is true, only phonenumbers are alowed in username part of targer uri. 
+ *		The 'username_in_target_only' should be set to true too.
+ *	 
+ *	'username_in_target_only'	(bool) default: false
+ *		If is true, user enter only username part of target uri. Domain name is 
+ *		appended by the option 'domain_for_targets'
+ *	 
+ *	'domain_for_targets'			(string) default: domain of loged in user
+ *		see description of option 'username_in_target_only'
+ *	
+ *	'domain_for_requests'		(string) default: domain id of loged in user
+ *		domain id which is used for request URIs (column 'dial_did' in DB table)
+ *	
+ *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *		message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+ *	
+ *	'blacklist'					default: null
+ *		if isset, the regex check is performed agains all entered URIs. If URI match, it is not allowed
+ *	
+ *	'blacklist_e'				default: $lang_str['fe_not_allowed_uri']
+ *		error message that is displayed if URI is blacklisted
+ *	   								
+ *	'form_name'					(string) default: ''
+ *		name of html form
+ *	
+ *	'form_submit'				(assoc)
+ *		assotiative array describe submit element of form. For details see description 
+ *		of method add_submit in class form_ext
+ *	
+ *	'fname_max_chars'			(int) default: 128
+ *		maximum number of characters in fields fname
+ *	
+ *	'lname_max_chars'			(int) default: 128
+ *		maximum number of characters in fields lname
+ *	
+ *	'new_uri_max_chars'			(int) default: 128
+ *		maximum number of characters in fields new_uri
+ *	
+ *		 
+ *	'sort_asc_on_change_col'		(bool) default: true;
+ *		If true, sorting direction is set to ASCENDING when column by which is 
+ *		output sorted is changed
+ *		 
+ *		 
+ *	'validate_funct'				(string) default: null
+ *		name of enhanced validate function of entered uri
+ *		validate function must return true or false, first parametr is reference
+ *		to given URI (function can change it)
+ *		and second one is  is reference to errors array - function can add error 
+ *		message to it which is dispayed to user
+ *		 
+ *		
+ *		example:
+ *			function my_validate_form(&$uri, &$errors){
+ *				//validate only one attribute
+ *				if (ereg('^[0-9]+$', $uri)) return true;
+ *				else {
+ *					$errors[]="not number";
+ *					return false;
+ *				}
+ *			}
+ *	
+ *			set_opt('validate_funct') = 'my_validate_function';
+ *	 
+ *	 
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_speed_dials'			name of smarty variable - see below
+ *	'smarty_pager'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_sort_from_uri'		name of smarty variable - see below
+ *	'smarty_sort_to_uri'			name of smarty variable - see below
+ *	'smarty_sort_fname'			name of smarty variable - see below
+ *	'smarty_sort_lname'			name of smarty variable - see below
+ *	'smarty_sort_by'				name of smarty variable - see below
+ *	'smarty_sort_dir'			name of smarty variable - see below
+ *	   
+ *	   
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_form'] 			(form)			
+ *		phplib html form
+ *	
+ *	opt['smarty_speed_dials']	(speed_dials)
+ *		array containing info about speed dials
+ *	
+ *	opt['smarty_pager']			(pager)
+ *		associative array containing size of result and which page is returned
+ *	
+ *	opt['smarty_action']			(action)
+ *		tells what should smarty display. Values:
+ *		'default' - 
+ *		'was_updated' - when user submited form and data was succefully stored
+ *	
+ *	  
+ *	opt['smarty_sort_from_uri'] 	(url_sort_from_uri)
+ *	opt['smarty_sort_to_uri']   	(url_sort_to_uri)
+ *	opt['smarty_sort_fname']   		(url_sort_fname)
+ *	opt['smarty_sort_lname']   		(url_sort_lname)
+ *		contain URL for change sorting
+ *	
+ *	opt['smarty_sort_by']   		(sort_by)
+ *		Contain name of collumn by which the output is sorted. Contain one of:
+ *			"from_uri", "to_uri", "fname", "lname"
+ *		
+ *	opt['smarty_sort_desc']   		(sort_desc)
+ *		True if sorting direction is descending. False otherwise.
+ *	
+ */
 
 
 class apu_speed_dial extends apu_base_class{
@@ -146,7 +148,7 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
 
-		$this->opt['domain_for_requests'] = $controler->user_id->domain;
+		$this->opt['domain_for_requests'] = $controler->did;
 
 		/* blacklist */
 		$this->opt['blacklist'] = null;
@@ -222,13 +224,16 @@ class apu_speed_dial extends apu_base_class{
 			    $val['lname']  != $_POST['lname_'.$val['index']]){
 			
 				$opt = array( 'insert' => $val['empty'],
-				              'primary_key' => $val['primary_key']);
+				              'primary_key' => $val['primary_key'],
+							  'original_vals' => &$val);
 
-				$values = array('new_uri' => $new_uri,
+				$values = array('dial_username' => $val['dial_username'],
+				                'dial_did' => $val['dial_did'],
+				                'new_uri' => $new_uri,
 				                'fname' => $_POST['fname_'.$val['index']],
 								'lname'  => $_POST['lname_'.$val['index']]);			
 								
-				if (false === $data->update_speed_dial($this->user_id, $values, $opt, $errors)) return false;
+				if (false === $data->update_speed_dial($this->controler->uid, $values, $opt)) return false;
 			}
 		
 		}
@@ -303,14 +308,14 @@ class apu_speed_dial extends apu_base_class{
 		parent::create_html_form($errors);
 
 		
-		$opt=array('sd_domain' => $this->opt['domain_for_requests'], 
+		$opt=array('dial_did' => $this->opt['domain_for_requests'], 
 		           'sort' => $sess_sd_sort,
 		           'sort_desc' => ($sess_sd_sort_dir == 'asc' ? false : true));
 				   
 		$data->set_act_row($sess_sd_act_row);
 		$data->set_showed_rows(10);
 			
-		if (false === $this->speed_dials = $data->get_speed_dials($this->user_id, $opt, $errors)) return false;
+		if (false === $this->speed_dials = $data->get_speed_dials($this->controler->uid, $opt)) return false;
 		
 		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 		$this->pager['pos']=$data->get_act_row();
