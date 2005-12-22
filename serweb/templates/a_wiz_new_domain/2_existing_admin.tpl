@@ -1,10 +1,10 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.1 2005/11/03 11:02:11 kozlik Exp $ *}
+{* $Id: 2_existing_admin.tpl,v 1.2 2005/12/22 13:39:35 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
 	#usrnm,  #lusrnm {width:120px;}
-	#domain, #ldomain {width:120px;}
+	#realm,  #lrealm {width:120px;}
 	#fname,  #lfname {width:120px;}
 	#lname,  #llname {width:120px;}
 	#email,  #lemail {width:120px;}
@@ -33,7 +33,7 @@
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
 <td><label for="usrnm"  id="lusrnm" >{$lang_str.ff_username}</label></td>
-<td><label for="domain" id="ldomain">{$lang_str.ff_domain}</label></td>
+<td><label for="realm"  id="lrealm">{$lang_str.ff_realm}</label></td>
 <td><label for="fname"  id="lfname" >{$lang_str.ff_first_name}</label></td>
 <td><label for="lname"  id="llname" >{$lang_str.ff_last_name}</label></td>
 <td><label for="email"  id="lemail" >{$lang_str.ff_email}</label></td>
@@ -41,7 +41,7 @@
 
 <tr>
 <td>{$form.usrnm}</td>
-<td>{$form.domain}</td>
+<td>{$form.realm}</td>
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
@@ -61,7 +61,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>{$lang_str.th_username}</th>
-	<th>{$lang_str.th_domain}</th>
+	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
 	<th>&nbsp;</th>
@@ -69,7 +69,7 @@
 	{/if}
 	{assign var='usr_class' value='swUserEnabled'}
 	{assign var='dom_class' value='swDomainEnabled'}
-	{if $row.user_disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
+	{if $row.disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">

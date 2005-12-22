@@ -1,9 +1,9 @@
 {* Smarty *}
-{* $Id: a_new_user.tpl,v 1.1 2005/10/31 16:35:20 kozlik Exp $ *}
+{* $Id: a_new_user.tpl,v 1.2 2005/12/22 13:39:34 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
-	#uname, #domain, #fname, #lname, #email, #phone, #timezone {width:250px;}
+	#uname, #domain, #sw_fname, #sw_lname, #sw_email, #sw_phone, #sw_timezone {width:250px;}
 </style>	
 {/literal}
 
@@ -24,26 +24,8 @@
 	<td><label for="domain">{$lang_str.ff_domain}:</label></td>
 	<td>{$form.domain}</td>
 	</tr>
-	<tr>
-	<td><label for="fname">{$lang_str.ff_first_name}:</label></td>
-	<td >{$form.fname}</td>
-	</tr>
-	<tr>
-	<td><label for="lname">{$lang_str.ff_last_name}:</label></td>
-	<td>{$form.lname}</td>
-	</tr>
-	<tr>
-	<td><label for="email">{$lang_str.ff_email}:</label></td>
-	<td>{$form.email}</td>
-	</tr>
-	<tr>
-	<td><label for="phone">{$lang_str.ff_phone}:</label></td>
-	<td>{$form.phone}</td>
-	</tr>
-	<tr>
-	<td><label for="timezone">{$lang_str.ff_timezone}:</label></td>
-	<td>{$form.timezone}</td>
-	</tr>
+
+	{include file="_attr_form.tpl" attributes=$attributes form=$form}
 
 	<tr>
 	<td>&nbsp;</td>

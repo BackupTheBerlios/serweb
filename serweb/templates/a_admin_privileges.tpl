@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_admin_privileges.tpl,v 1.7 2005/11/04 13:26:04 kozlik Exp $ *}
+{* $Id: a_admin_privileges.tpl,v 1.8 2005/12/22 13:39:33 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -22,12 +22,6 @@
 		<tr>
 		<td><label for="pr_chk_hostmaster">{$lang_str.ff_is_hostmaster}</label></td>
 		<td>{$form.pr_chk_hostmaster}</td>
-		</tr>
-	{/if}
-	{if $en_priv.change_privileges}
-		<tr>
-		<td><label for="pr_chk_change_privileges">{$lang_str.ff_change_privileges}</label></td>
-		<td>{$form.pr_chk_change_privileges}</td>
 		</tr>
 	{/if}
 		</table>

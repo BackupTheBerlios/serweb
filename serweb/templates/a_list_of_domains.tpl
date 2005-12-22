@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.2 2005/11/03 11:02:11 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.3 2005/12/22 13:39:34 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -64,7 +64,7 @@
 	</td>
 	<td align="left">{$row.customer|empty2nbsp}</td>
 	<td align="center"><a href="{$row.url_layout}">{$lang_str.l_change_layout}</a></td>
-	<td align="center"><a href="{$row.url_preferences}">{$lang_str.l_domain_preferences}</a></td>
+	<td align="center"><a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a></td>
 {if $hostmaster_actions}
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
 	{if $row.disabled}

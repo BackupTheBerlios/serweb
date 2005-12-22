@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.9 2005/11/01 17:58:40 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.10 2005/12/22 13:39:34 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -8,7 +8,7 @@
 {literal}
 <style type="text/css">
 	#usrnm, #lusrnm {width:120px;}
-	#domain, #ldomain {width:120px;}
+	#realm, #lrealm {width:120px;}
 	#fname, #lfname {width:120px;}
 	#lname, #llname {width:120px;}
 	#email, #lemail {width:120px;}
@@ -17,12 +17,11 @@
 
 <div class="swForm swHorizontalForm">
 
-{assign var='colspan' value=4}
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
 <td><label for="usrnm" id="lusrnm">{$lang_str.ff_username}</label></td>
-{if $multidomain}<td><label for="domain" id="ldomain">{$lang_str.ff_domain}</label></td>{/if}
+<td><label for="realm" id="lrealm">{$lang_str.ff_realm}</label></td>
 <td><label for="fname" id="lfname">{$lang_str.ff_first_name}</label></td>
 <td><label for="lname" id="llname">{$lang_str.ff_last_name}</label></td>
 <td><label for="email" id="lemail">{$lang_str.ff_email}</label></td>
@@ -30,15 +29,15 @@
 
 <tr>
 <td>{$form.usrnm}</td>
-{if $multidomain}<td>{$form.domain}</td>{assign var='colspan' value = "`$colspan+1`"}{/if}
+<td>{$form.realm}</td>
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
 </tr>
 
-<tr><td colspan="{$colspan}"><label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}</td></tr>
+<tr><td colspan="5"><label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}</td></tr>
 				
-<tr><td colspan="{$colspan}" align="right">{$form.okey}</td></tr>
+<tr><td colspan="5" align="right">{$form.okey}</td></tr>
 </table>
 {$form.finish}
 </div>
@@ -49,7 +48,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>{$lang_str.th_username}</th>
-	{if $multidomain}<th>{$lang_str.th_domain}</th>{/if}
+	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_phone}</th>
 	<th>{$lang_str.th_alias}</th>
@@ -64,12 +63,12 @@
 	{/if}
 	{assign var='usr_class' value='swUserEnabled'}
 	{assign var='dom_class' value='swDomainEnabled'}
-	{if $row.user_disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
+	{if $row.disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
-	{if $multidomain}<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>{/if}
+	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="right">{$row.phone|empty2nbsp}</td>
 	<td align="right">{$row.aliases|empty2nbsp}</td>
@@ -78,7 +77,7 @@
 	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a></td>
-	{if $row.user_disabled}
+	{if $row.disabled}
 	<td align="center"><a href="{$row.url_enable}">{$lang_str.l_enable}</a></td>
 	{else}
 	<td align="center"><a href="{$row.url_disable}">{$lang_str.l_disable}</a></td>

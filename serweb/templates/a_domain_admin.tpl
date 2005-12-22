@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_admin.tpl,v 1.1 2005/10/19 10:33:07 kozlik Exp $ *}
+{* $Id: a_domain_admin.tpl,v 1.2 2005/12/22 13:39:34 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -60,7 +60,7 @@
 	</tr>
 	{/if}
 	
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle name='assigned' values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.id|empty2nbsp}</td>
 	<td align="left">
 		{assign var='d_aliases' value=''}
@@ -97,7 +97,7 @@
 	</tr>
 	{/if}
 	
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle name='unassigned' values='swTrOdd,swTrEven'}">
 	<td align="center"><a href="{$row.url_assign}" style="white-space: nowrap;" title="{$lang_str.l_assign_domain}">&lt;&lt;&lt;</a></td>
 	<td align="left">{$row.id|empty2nbsp}</td>
 	<td align="left">
