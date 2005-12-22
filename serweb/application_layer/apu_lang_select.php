@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.5 2005/12/14 16:40:04 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.6 2005/12/22 13:40:39 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -55,7 +55,7 @@ class apu_lang_select extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('update_attribute');
+		return array();
 	}
 
 	/* return array of strings - requred javascript files */
