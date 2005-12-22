@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.check_credentials.php,v 1.1 2005/12/01 12:04:11 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.2 2005/12/22 13:15:53 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -28,13 +28,17 @@ class CData_Layer_check_credentials {
 	 *	@param string $realm	realm
 	 *	@param string $passw	password
 	 *	@param array $opt		associative array of options
-	 *	@param array $errors	error messages
 	 *	@return mixed			uid or error code
 	 */ 
-	function check_credentials($uname, $realm, $passw, $opt, &$errors){
+	function check_credentials($uname, $realm, $passw, $opt){
 		global $config, $serweb_auth, $sess;
 
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors);
+			return false;
+		}
 
 		/* table name */
 		$t_name = &$config->data_sql->credentials->table_name;
@@ -61,7 +65,11 @@ class CData_Layer_check_credentials {
 		}
 
 		$res=$this->db->query($q);
-		if (DB::isError($res)) { log_errors($res, $errors); return 0; }
+		if (DB::isError($res)) { 
+			log_errors($res, $errors); 
+			ErrorHandler::add_error($errors);
+			return 0; 
+		}
 
 		/* account not exists or password is wrong */
 		if (!$res->numRows()) {
