@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.64 2005/10/26 12:43:25 kozlik Exp $
+ * @version   $Id: functions.php,v 1.65 2005/12/22 13:09:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -805,8 +805,22 @@ function log_errors($err_object, &$errors){
 
 	//get name of function from which log_errors is called
 	$backtrace=debug_backtrace();
-	if (isset($backtrace[1]['function'])) $funct=$backtrace[1]['function'];
+	if (isset($backtrace[1]['function'])) {
+		if (isset($backtrace[1]['class']) and	//if this function is called from errorhandler class
+			$backtrace[1]['function'] == 'log_errors' and
+			$backtrace[1]['class'] == 'errorhandler'){
+			
+			if (isset($backtrace[2]['function'])) {
+				$funct=$backtrace[2]['function'];
+			}
+			else $funct=null;
+		}
+		else{
+			$funct=$backtrace[1]['function'];
+		}
+	}
 	else $funct=null;
+
 
 	//get backtrace frame from err_object which correspond to function from which log_errors is called
 	$backtrace=$err_object->getBacktrace();
@@ -930,12 +944,12 @@ function get_userauth_from_get_param($prefix){
 	if ( isset($_GET[$prefix."_id"]) and
 	     isset($_GET[$prefix."_n"]) and
 		 isset($_GET[$prefix."_d"])) 
-		return new Cserweb_auth($_GET[$prefix."_id"], $_GET[$prefix."_n"], $_GET[$prefix."_d"]);
+		return new SerwebUser($_GET[$prefix."_id"], $_GET[$prefix."_n"], $_GET[$prefix."_d"]);
 		
 	if ( isset($_POST[$prefix."_id"]) and
 	     isset($_POST[$prefix."_n"]) and
 		 isset($_POST[$prefix."_d"])) 
-		return new Cserweb_auth($_POST[$prefix."_id"], $_POST[$prefix."_n"], $_POST[$prefix."_d"]);
+		return new SerwebUser($_POST[$prefix."_id"], $_POST[$prefix."_n"], $_POST[$prefix."_d"]);
 	
 	return false;
 }
