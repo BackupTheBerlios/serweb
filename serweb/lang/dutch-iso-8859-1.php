@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.11 2005/12/14 16:20:48 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.12 2005/12/22 12:37:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -101,6 +101,7 @@ $lang_str['tab_admin_privileges'] =	 			"admin rechten";
 $lang_str['tab_ser_moni'] =	 					"server status";
 $lang_str['tab_domains'] =	 					"domains";	//to translate 
 $lang_str['tab_customers'] =	 				"customers";	//to translate 
+$lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -422,6 +423,8 @@ $lang_str['list_of_users'] = 					"Gebruikersoverzicht";
 $lang_str['th_domain'] = 						"domein";
 $lang_str['l_change_privileges'] = 				"wijzig rechten";
 $lang_str['ff_domain'] = 						"domein";
+$lang_str['ff_realm'] = 						"realm";	//to translate 
+$lang_str['th_realm'] = 						"realm";	//to translate 
 $lang_str['ff_show_admins_only'] = 				"alleen administrators";
 $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
 
@@ -547,7 +550,7 @@ $lang_str['l_assign_domain'] = 					"assign domain";	//to translate
 $lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate 
 $lang_str['l_assigned_domains'] = 				"assigned domains";	//to translate 
 $lang_str['l_change_layout'] = 					"change layout";	//to translate 
-$lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
+$lang_str['l_domain_attributes'] = 				"domain attributes";	//to translate 
 $lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
 
 $lang_str['admins_of_domain'] = 				"Admins of this domain";	//to translate 
@@ -595,4 +598,11 @@ $lang_str['domain_setup_success'] = 			"New domain has been set up successfully!
 $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to translate 
 
 
+
+
+/****************************************************/
+/* strings which are missing in reference lang file */
+/****************************************************/
+
+$lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
 ?>

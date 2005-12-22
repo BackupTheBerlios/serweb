@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.14 2005/12/14 16:20:48 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.15 2005/12/22 12:37:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -101,6 +101,7 @@ $lang_str['tab_admin_privileges'] =	 			"admin privileges";
 $lang_str['tab_ser_moni'] =	 					"server monitoring";
 $lang_str['tab_domains'] =	 					"domains";
 $lang_str['tab_customers'] =	 				"customers";
+$lang_str['tab_global_attributes'] =	 		"global attributes";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -422,6 +423,8 @@ $lang_str['list_of_users'] = 					"List of users";
 $lang_str['th_domain'] = 						"domain";
 $lang_str['l_change_privileges'] = 				"change privileges";
 $lang_str['ff_domain'] = 						"domain";
+$lang_str['ff_realm'] = 						"realm";
+$lang_str['th_realm'] = 						"realm";
 $lang_str['ff_show_admins_only'] = 				"show admins only";
 $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";
 
@@ -547,7 +550,7 @@ $lang_str['l_assign_domain'] = 					"assign domain";
 $lang_str['l_unassign_domain'] = 				"unassign domain";
 $lang_str['l_assigned_domains'] = 				"assigned domains";
 $lang_str['l_change_layout'] = 					"change layout";
-$lang_str['l_domain_preferences'] = 			"domain preferences";
+$lang_str['l_domain_attributes'] = 				"domain attributes";
 $lang_str['l_unassign_admin'] = 				"unassign admin";
 
 $lang_str['admins_of_domain'] = 				"Admins of this domain";
