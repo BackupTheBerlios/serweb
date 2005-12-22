@@ -1,10 +1,10 @@
 <?
 /*
- * $Id: method.find_users.php,v 1.3 2005/11/01 17:58:40 kozlik Exp $
+ * $Id: method.find_users.php,v 1.4 2005/12/22 13:30:13 kozlik Exp $
  */
 
 class CData_Layer_find_users {
-	var $required_methods = array('get_aliases_by_uri', 'get_status', 'get_sql_user_flags');
+	var $required_methods = array('get_aliases', 'get_status', 'get_sql_user_flags');
 
 	/*
 	 * find users - white pages
@@ -129,7 +129,7 @@ class CData_Layer_find_users {
 			$out[$i]['lname'] = $row->last_name;
 			$out[$i]['name'] = implode(' ', array($row->last_name, $row->first_name));
 			$out[$i]['sip_uri'] = "sip:".$row->username."@".$row->domain;
-			$out[$i]['status'] = $this->get_status($out[$i]['sip_uri'], $errors);
+			$out[$i]['status'] = $this->get_status($out[$i]['sip_uri'], null);
 			$out[$i]['timezone'] = $row->timezone;
 			$out[$i]['url_add'] = $sess->url("phonebook.php?kvrk=".uniqID("").
 												"&okey_x=1".
@@ -139,7 +139,7 @@ class CData_Layer_find_users {
 			$out[$i]['aliases']='';
 
 			$al_arr=array();
-			if (!$aliases = $this->get_aliases_by_uri("sip:".$row->username."@".$row->domain, $errors)) continue;
+			if (!$aliases = $this->get_aliases("sip:".$row->username."@".$row->domain, $errors)) continue;
 			foreach($aliases as $val) $al_arr[] = $val->username;
 			
 			$out[$i]['aliases'] = implode(', ', $al_arr);
