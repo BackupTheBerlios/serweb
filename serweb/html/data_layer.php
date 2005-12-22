@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.13 2005/11/30 09:53:32 kozlik Exp $
+ * $Id: data_layer.php,v 1.14 2005/12/22 13:10:57 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -28,6 +28,11 @@ class CData_Layer{
 
 	/** Contain DSN (Data Source Name) of DB Host in string and in parsed form */
 	var $db_host = array();
+
+
+	var $transaction_rollback = false;
+	var $transaction_semaphore = 0;
+
 	
 	/*
 	 *   Constructor
@@ -650,10 +655,67 @@ class CData_Layer{
 			$this->set_act_row(max(0, $this->get_num_rows()-$this->get_showed_rows()));
 	}
 	
+
+	/**
+	 *	Start a transaction on the current connection
+	 */
+	function transaction_start(){
+		/* initialize variables after rollback */
+		if ($this->transaction_rollback){
+			$this->transaction_rollback = false;
+			$this->transaction_semaphore = 0;
+		}
+
+		/* don't call "start transaction" in nested transactions */
+		if ($this->transaction_semaphore == 0){
+			$res=$this->db->query("start transaction");
+			if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
+		}
+		
+		$this->transaction_semaphore++;
+
+		return true;		
+	}
+
+	/**
+	 *	Commit the transaction on the current connection
+	 */
+	function transaction_commit(){
+
+		$this->transaction_semaphore--;
+
+		/* Value of semaphore never should be negative. This line is for the  
+		 * case it is negative by some error.
+		 */
+		if ($this->transaction_semaphore < 0) $this->transaction_semaphore = 0;
+		
+		/* don't call "commit" in nested transactions or if rollback was called */
+		if ($this->transaction_semaphore == 0 and !$this->transaction_rollback){
+			$res=$this->db->query("commit");
+			if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
+		}
+
+		return true;		
+	}
+
+	/**
+	 *	Rollback changes done due the transaction
+	 */
+	function transaction_rollback(){
+
+		$this->transaction_rollback = true;
+
+		$res=$this->db->query("rollback");
+		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
+
+		return true;		
+	}
+
+
 	
 	/* return where phrase for sql commands depending on how are user's indexed */
 	
-	function get_indexing_sql_where_phrase($user, $uuid_col='uuid', $uname_col='username', $domain_col='domain'){
+	function get_indexing_sql_where_phrase($user, $uuid_col='uid', $uname_col='username', $domain_col='domain'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
 			return $uuid_col."='".$user->uuid."'";
@@ -663,7 +725,7 @@ class CData_Layer{
 
 	/* return where phrase for sql commands depending on how are user's indexed - tables where users are indexed by sip uri */
 
-	function get_indexing_sql_where_phrase_uri($user, $uuid_col='uuid', $r_uri_col='r_uri'){
+	function get_indexing_sql_where_phrase_uri($user, $uuid_col='uid', $r_uri_col='r_uri'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
 			return $uuid_col."='".$user->uuid."'";
@@ -674,7 +736,7 @@ class CData_Layer{
 
 	/* return attributes and values for sql insert commands depending on how are user's indexed */
 
-	function get_indexing_sql_insert_attribs($user, $uuid_col='uuid', $uname_col='username', $domain_col='domain'){
+	function get_indexing_sql_insert_attribs($user, $uuid_col='uid', $uname_col='username', $domain_col='domain'){
 		global $config;
 
 		if ($config->users_indexed_by=='uuid') {
@@ -772,6 +834,31 @@ class CData_Layer{
 		else {
 			return $argument ? "true" : "false";
 		}
+	}
+
+	/**
+	 *	Return expression " expr IN (value,...) " where list of values are constructed from $set
+	 *
+	 *	If $set conatain no elements expression " false " is returned instead of this.
+	 *	If $quote is true, elements are quoted
+	 *
+	 *	@param	string	$expr
+	 *	@param	array	$set
+	 *	@param	bool	$quote
+	 *	@return	string		
+	 */
+	function get_sql_in($expr, $set, $quote = true){
+
+		if (!count($set)) return (" ".$this->get_sql_bool(false)." ");
+
+		if ($quote){
+			foreach($set as $k=>$v) $set[$k] = "'".$v."'";
+		}
+		
+		$set = implode(", ", $set);
+
+		return (" ".$expr." IN (".$set.") ");
+
 	}
 
 	/* return filter for ldap commands depending on how are user's indexed */
