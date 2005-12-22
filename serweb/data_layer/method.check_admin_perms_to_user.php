@@ -1,45 +1,58 @@
 <?
 /*
- * $Id: method.check_admin_perms_to_user.php,v 1.3 2005/11/04 13:23:18 kozlik Exp $
+ * $Id: method.check_admin_perms_to_user.php,v 1.4 2005/12/22 13:17:46 kozlik Exp $
  */
 
 class CData_Layer_check_admin_perms_to_user {
 
 	function _get_required_methods(){
-		global $config;
-
-		$out = array();
-		if ($config->multidomain) $out[] = 'get_domain';
-		if ($config->users_indexed_by=='uuid') $out[] = 'get_user_dom_from_uid';
-		return $out;
+		return array();
 	}
 	
-	/* check if $user domain is same as $admin domain */
-	function check_admin_perms_to_user($admin, $user, &$errors){
+	/**
+	 *  check if admin have permissions to change user's setting
+	 *
+	 *  Possible options parameters:
+	 *	 none
+	 *
+	 *	@param object $admin		admin - instance of class Auth
+	 *	@param object $user			admin - instance of class SerwebUser
+	 *	@param array $opt			associative array of options
+	 *	@return bool				TRUE on permit, FALSE on forbid, -1 on failure
+	 */ 
+	function check_admin_perms_to_user(&$admin, &$user, $opt){
 		global $config;
 
-		/* if users are indexed by uuid, get the real domain from DB in order 
-		 * to domain can't be faked 
-		 */
-		if ($config->users_indexed_by=='uuid'){
-			if (false === $usr=$this->get_user_dom_from_uid($user->uuid, $errors)) return -1;
-			$user->domain = $usr['domain'];
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return -1;
 		}
 
-		if ($config->multidomain){
-			$opt['filter']['name'] = $user->domain;
-			$opt['order_by'] = "";
-			if (false === $dom=$this->get_domain($opt, $errors)) return -1;
-			
-			$dom = reset($dom);					/* get first field of array */
-			if (false === $dom) return false;	/* if returned array is empty (domain not exists) */
-			
-			if (in_array($dom['id'], $admin->domains_perm)) return true;
-			return false;
-		}
-		else{
-			return $admin->domain == $user->domain;
-		}
+		/* table name */
+		$t_name = &$config->data_sql->uri->table_name;
+		/* col names */
+		$c = &$config->data_sql->uri->cols;
+		/* flags */
+		$f = &$config->data_sql->uri->flag_values;
+
+
+		if (false === $adm_domains = $admin->get_administrated_domains()) return -1;
+
+		$uid = $user->get_uid();
+
+		$q = "select count(*) 
+		      from ".$t_name."
+			  where ".$c->uid." = '".$uid."' and 
+			        ".$this->get_sql_in($c->did, $adm_domains, true)." and 
+					".$c->flags." & ".$f['DB_DELETED']." = 0";
+
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {log_errors($res, $errors); return -1;}
+
+		$row = $res->fetchRow(DB_FETCHMODE_ORDERED);
+		$res->free();
+
+		return $row[0] ? true : false;
 		
 	}
 	
