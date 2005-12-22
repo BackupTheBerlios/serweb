@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_msilo.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
+ * $Id: method.delete_user_msilo.php,v 1.2 2005/12/22 13:19:54 kozlik Exp $
  */
 
 class CData_Layer_delete_user_msilo {
@@ -10,18 +10,20 @@ class CData_Layer_delete_user_msilo {
 	 * delete all messages of user from message silo
 	 */
 	
-	function delete_user_msilo($user, &$errors){
+	function delete_user_msilo($uid){
 	 	global $config;
 		
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
+		}
 
-		if ($config->users_indexed_by=='uuid') $q="delete from ".$config->data_sql->table_message_silo." where uuid='".$user->uuid."'";
-		else $q="delete from ".$config->data_sql->table_message_silo." where r_uri like 'sip:".$user->uname."@".$user->domain."%'";
+		$q="delete from ".$config->data_sql->table_message_silo." where uid='".$uid."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			if ($res->getCode()==DB_ERROR_NOSUCHTABLE) return true;  //expected, table mayn't exist in installed version
-			else {log_errors($res, $errors); return false;}
+			else {ErrorHandler::log_errors($res); return false;}
 		}
 		return true;
 	}
