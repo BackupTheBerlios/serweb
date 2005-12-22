@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains_of_admin.php,v 1.1 2005/09/26 10:56:54 kozlik Exp $
+ * $Id: method.get_domains_of_admin.php,v 1.2 2005/12/22 13:21:22 kozlik Exp $
  */
 
 class CData_Layer_get_domains_of_admin {
@@ -15,31 +15,39 @@ class CData_Layer_get_domains_of_admin {
 	 *      
 	 *	@param object $user		user - instance of class Cserweb_auth
 	 *	@param array $opt		associative array of options
-	 *	@param array $errors	error messages
 	 *	@return array			array of domain ids or FALSE on error
 	 */ 
-	function get_domains_of_admin($user, $opt, &$errors){
-		global $config, $serweb_auth, $sess;
+	function get_domains_of_admin($uid, $opt){
+		global $config;
 
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
+		}
 
-		$c = &$config->data_sql->dom_pref;
+		/* table's name */
+		$t_name = &$config->data_sql->domain_attrs->table_name;
+		/* col names */
+		$c = &$config->data_sql->domain_attrs->cols;
+		/* flags */
+		$f = &$config->data_sql->domain_attrs->flag_values;
 
-		$u = ($config->users_indexed_by=='uuid') ?
-				$user->uuid :
-				($user->uname."@".$user->domain);
+		$an = &$config->attr_names;
+
+		$q="select ".$c->did." 
+		    from ".$t_name."
+			where  ".$c->name." = '".$an['admin']."' and 
+			       ".$c->value." = '".$uid."' and 
+			      (".$c->flags." & ".$f['DB_DELETED'].") = 0 and
+				  (".$c->flags." & ".$f['DB_FOR_SERWEB'].") = ".$f['DB_FOR_SERWEB'];
+
 		
-		$q="select ".$c->id."
-		    from ".$config->data_sql->table_dom_preferences."
-			where ".$c->att_name."='admin' and
-			      ".$c->att_value." = '".$u."'";
-
 		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 		
 		$out=array();
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i]   = $row[$c->id];
+			$out[$i]   = $row[$c->did];
 		}
 		$res->free();
 

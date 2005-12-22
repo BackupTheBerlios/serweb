@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.2 2005/11/03 11:02:08 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.3 2005/12/22 13:21:21 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -26,11 +26,11 @@ class CData_Layer_get_domains {
 	 *	  return_all		(bool)	default: false
 	 *		if true, the result isn't limited by LIMIT sql phrase
 	 *
-	 *	  administrated_by	(Cserweb_auth)	default:null
-	 *		if is set, only domains administrated by given admin is returned
+	 *	  only_domains		(array)	default:null
+	 *		Array of domain IDs. if is set, only domains from this array are returned
 	 *
-	 *	  deleted_before (int)	default:false
-	 *		if is set, only domains marked as deleted before given timestamp are returned
+	 *	  check_deleted_flag	(bool)	default:true
+	 *		If true, domains marked as deleted are not returned
 	 *
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages
@@ -41,44 +41,47 @@ class CData_Layer_get_domains {
 
 		if (!$this->connect_to_db($errors)) return false;
 
-		$cd = &$config->data_sql->domain;
-		$cp = &$config->data_sql->dom_pref;
-		$cc = &$config->data_sql->customer;
 
-	    $o_filter = (isset($opt['filter'])) ? $opt['filter'] : array();
-	    $o_get_names = (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
+		/* table's name */
+		$td_name = &$config->data_sql->domain->table_name;
+		$ta_name = &$config->data_sql->domain_attrs->table_name;
+		$tc_name = &$config->data_sql->customers->table_name;
+		/* col names */
+		$cd = &$config->data_sql->domain->cols;
+		$ca = &$config->data_sql->domain_attrs->cols;
+		$cc = &$config->data_sql->customers->cols;
+		/* flags */
+		$fd = &$config->data_sql->domain->flag_values;
+		$fa = &$config->data_sql->domain_attrs->flag_values;
+		/* attribute names */
+		$an = &$config->attr_names;
+
+
+	    $o_filter =      (isset($opt['filter'])) ? $opt['filter'] : array();
+	    $o_get_names =   (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
 	    $o_order_names = (isset($opt['order_names'])) ? (bool)$opt['order_names'] : true;
-	    $o_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
-	    $o_admin = (isset($opt['administrated_by'])) ? $opt['administrated_by'] : null;
-	    $o_deleted_before = (isset($opt['deleted_before'])) ? $opt['deleted_before'] : false;
+	    $o_return_all =  (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
+	    $o_did_filter =  (isset($opt['only_domains'])) ? $opt['only_domains'] : null;
+	    $o_check_deleted =  (isset($opt['check_deleted_flag'])) ? $opt['check_deleted_flag'] : true;
 
 		$qw="";
-		if (!empty($o_filter['id']))          $qw .= "d.".$cd->id." LIKE '%".$o_filter['id']."%' and ";
+		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did." LIKE '%".$o_filter['id']."%' and ";
 		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE '%".$o_filter['name']."%' and ";
 		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE '%".$o_filter['customer']."%' and ";
-		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->id." = '".$o_filter['customer_id']."' and ";
+		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = '".$o_filter['customer_id']."' and ";
 
 		/* prepare SQL query */
 
-		$q_admin_from = "";
-		$q_admin_where = "";
-		if (!is_null($o_admin)){
-			$u = ($config->users_indexed_by=='uuid') ?
-					$o_admin->uuid :
-					($o_admin->uname."@".$o_admin->domain);
-
-			$q_admin_from = 
-				" left outer join ".$config->data_sql->table_dom_preferences." dpa 
-				  on (d.".$cd->id." = dpa.".$cp->id." and dpa.".$cp->att_name." = 'admin') ";
-
-			$q_admin_where = "dpa.".$cp->att_value." = '".$u."' and ";
+		$q_did_filter = "";
+		if (!is_null($o_did_filter)){
+			$q_did_filter = $this->get_sql_in("d.".$cd->did, $o_did_filter, true)." and ";
 		}
-	
-		if ($o_deleted_before)
-			$q_deleted_where = " dpx.".$cp->att_value." < ".$o_deleted_before." and dpx.".$cp->att_value." > 0 ";
-		else
-			$q_deleted_where = " not COALESCE((dpx.".$cp->att_value." > 0), 0)";
 
+		$q1_deleted = $q2_deleted = $this->get_sql_bool(true);
+		if ($o_check_deleted){
+			$q1_deleted = " (d.".$cd->flags." & ".$fd['DB_DELETED'].") = 0";
+			$q2_deleted = " (d.".$ca->flags." & ".$fa['DB_DELETED'].") = 0";
+		}
 
 		/* second select is necessary to get domains without aliases 
 		   both selects are same except the table from which is obtained list of domains.
@@ -86,31 +89,30 @@ class CData_Layer_get_domains {
 		  
 		   Statement 'not COALESCE((dpx.".$cp->att_value." > 0), 0)' is used for skip deleted domains 
 		*/
-		$q1="select d.".$cd->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
-		    from (".$config->data_sql->table_domain." d left outer join ".$config->data_sql->table_dom_preferences." dp 
-			       on d.".$cd->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
-				   left outer join ".$config->data_sql->table_customer." c
-			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
-			       left outer join ".$config->data_sql->table_dom_preferences." dpd 
-			       on (d.".$cd->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
-			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
-			       on (d.".$cd->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
-			       ".$q_admin_from."
-			where ".$qw.$q_admin_where.$q_deleted_where."
-			group by d.".$cd->id;
-			
-		$q2="select d.".$cp->id." as dom_id, c.".$cc->name.", dpd.".$cp->att_value." as disabled
-		    from (".$config->data_sql->table_dom_preferences." d left outer join ".$config->data_sql->table_dom_preferences." dp 
-			       on d.".$cp->id." = dp.".$cp->id." and dp.".$cp->att_name." = 'owner')
-				   left outer join ".$config->data_sql->table_customer." c
-			       on (dp.".$cp->att_value." = c.".$cc->id." and dp.".$cp->att_name." = 'owner')
-			       left outer join ".$config->data_sql->table_dom_preferences." dpd 
-			       on (d.".$cp->id." = dpd.".$cp->id." and dpd.".$cp->att_name." = 'disabled')
-			       left outer join ".$config->data_sql->table_dom_preferences." dpx 
-			       on (d.".$cp->id." = dpx.".$cp->id." and dpx.".$cp->att_name." = 'deleted')
-			       ".$q_admin_from."
-			where ".$qw.$q_admin_where.$q_deleted_where."
-			group by d.".$cp->id;
+
+
+		$q1="select d.".$cd->did." as did, 
+		            c.".$cc->name.", 
+					d.".$cd->flags." & ".$fd['DB_DISABLED']." as disabled
+		    from (".$td_name." d left outer join ".$ta_name." dac 
+			           on d.".$cd->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
+				   left outer join ".$tc_name." c
+			           on (dac.".$ca->value." = c.".$cc->cid." and dac.".$ca->name." = '".$an['dom_owner']."')
+			where ".$qw.$q_did_filter.$q1_deleted."
+			group by d.".$cd->did;
+
+
+		$q2="select d.".$ca->did." as did, 
+		            c.".$cc->name.", 
+					d.".$ca->flags." & ".$fa['DB_DISABLED']." as disabled
+		    from (".$ta_name." d left outer join ".$ta_name." dac 
+			           on d.".$ca->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
+				   left outer join ".$tc_name." c
+			           on (dac.".$ca->value." = c.".$cc->cid." and dac.".$ca->name." = '".$an['dom_owner']."')
+			where ".$qw.$q_did_filter.$q2_deleted."
+			group by d.".$ca->did;
+
+
 
 		if (empty($o_filter['name']))			
 			$q = "(".$q1.") union (".$q2.")";
@@ -126,7 +128,7 @@ class CData_Layer_get_domains {
 			$this->correct_act_row();
 		}
 
-		$q.=" order by dom_id";
+		$q.=" order by did";
 		$q.=($o_return_all ? "" : $this->get_sql_limit_phrase());
 
 		$res=$this->db->query($q);
@@ -138,14 +140,15 @@ class CData_Layer_get_domains {
 		
 		$out=array();
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i]['id']		   = $row['dom_id'];
+			$out[$i]['id']		   = $row['did'];
 			$out[$i]['customer']   = $row[$cc->name];
 			$out[$i]['disabled']   = $row['disabled'];
 
 			if ($o_get_names){
-				$o = array('filter' => array('id' => $row['dom_id']));
-				$o['order_by'] = $o_order_names ? "name" : "";
-				if (false === $out[$i]['names'] = $this->get_domain($o, $errors)) return false;
+				$o = array('filter' => array('did' => $row['did']),
+				           'check_deleted_flag' => $o_check_deleted,
+						   'order_by' => $o_order_names ? "name" : "");
+				if (false === $out[$i]['names'] = $this->get_domain($o)) return false;
 			}
 
 			$out[$i]['primary_key']  = array('id' => &$out[$i]['id']);
