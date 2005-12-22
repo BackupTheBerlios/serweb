@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.3 2005/09/19 13:46:33 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.4 2005/12/22 13:16:38 kozlik Exp $
  */
 
 /*
@@ -87,11 +87,11 @@ class CData_Layer_get_phonebook_entries {
 			$out[$row->id]['url_edit'] = $sess->url("phonebook.php?kvrk=".uniqID("")."&edit_id=".$row->id);
 
 			if ($opt_get_user_status)
-				$out[$row->id]['status'] = $this->get_status($row->sip_uri, $errors);
+				$out[$row->id]['status'] = $this->get_status($row->sip_uri, null);
 
 			if ($opt_get_aliases){
 				$out[$row->id]['aliases']='';
-				if (false === ($aliases = $this->get_aliases_by_uri($row->sip_uri, $errors))) continue;
+				if (false === ($aliases = $this->get_aliases_by_uri($row->sip_uri, null))) continue;
 
 				$alias_arr=array();
 				foreach($aliases as $val) $alias_arr[] = $val->username;
