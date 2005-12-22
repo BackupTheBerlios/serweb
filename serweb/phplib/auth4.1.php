@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: auth4.1.php,v 1.3 2005/12/01 12:06:11 kozlik Exp $
+ * $Id: auth4.1.php,v 1.4 2005/12/22 13:36:19 kozlik Exp $
  */ 
 
 class Auth {
@@ -89,7 +89,7 @@ class Auth {
 	function create_serweb_auth_references(){
 
 		if (! is_object($this->serweb_auth)){
-			$this->serweb_auth = new Cserweb_auth();	
+			$this->serweb_auth = new SerwebUser();	
 		}
 
 		$this->serweb_auth->uuid   = &$this->auth['uid'];
@@ -286,6 +286,23 @@ class Auth {
 
 	########################################################################
 	##
+	## Accessors
+	##
+
+	function set_did($did){
+		$this->auth['did'] = $did;
+	}
+
+	function get_did(){
+		return $this->auth['did'];
+	}
+
+	function get_uid(){
+		return $this->auth['uid'];
+	}
+
+	########################################################################
+	##
 	## Helper functions
 	##
 
@@ -316,7 +333,6 @@ class Auth {
 	/**
 	 *	This function should validate given credentials and return UID if they are valid
 	 *
-	 *	In array $errors may be returned reason why credentials are invalid
 	 *	This function has to be static - do not use the '$this' reference inside 
 	 *	function body
 	 *
@@ -325,29 +341,44 @@ class Auth {
 	 *	@param	string	$realm		
 	 *	@param	string	$password	
 	 *	@param	array	$opt		
-	 *	@param	array 	$errors		array with error messages
 	 *	@return	string				UID if credentials are valid, false otherwise
 	 */
 	
-	function validate_credentials($username, $realm, $password, $opt, &$errors){
+	function validate_credentials($username, $realm, $password, $opt){
 		return $username."@".$realm;
 	}
 
 	/**
+	 *	Get domain id of domain of the user
+	 *	
+	 *	This function has to be static - do not use the '$this' reference inside 
+	 *	function body
+	 *
+	 *	@static
+	 *	@param	string	$username	
+	 *	@param	string	$realm		
+	 *	@param	string	$uid	
+	 *	@param	array	$opt		
+	 *	@return	string				domain ID, FALSE on error
+	 */
+
+	function find_out_did($username, $realm, $uid, $opt){
+		return $realm;
+	}
+	
+	/**
 	 *	This functioun should find out permissinos of user with given UID and return the permissons as array
 	 *
-	 *	In array $errors may be returned reason of error if any occur
 	 *	This function has to be static - do not use the '$this' reference inside 
 	 *	function body
 	 *
 	 *	@static
 	 *	@param	string	$uid
 	 *	@param	array	$opt		
-	 *	@param	array 	$errors		array with error messages
 	 *	@return	array				array of permissions or FALSE on error
 	 */
 
-	function find_out_perms($uid, $opt, &$errors){
+	function find_out_perms($uid, $opt){
 		return array();
 	}
 	
