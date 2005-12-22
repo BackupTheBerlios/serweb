@@ -1,12 +1,12 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.14 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: user_preferences.php,v 1.15 2005/12/22 12:54:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('user_preferences');
@@ -15,8 +15,7 @@ $_required_apu = array('apu_user_preferences_admin');
 
 require "prepend.php";
 
-if ($config->multidomain) $perm->check("admin,hostmaster");
-else $perm->check("admin");
+$perm->check("admin,hostmaster");
 
 
 $up	= new apu_user_preferences_admin();

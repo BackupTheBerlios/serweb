@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.4 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: page_attributes.php,v 1.5 2005/12/22 12:54:32 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -10,45 +10,27 @@ function _disable_unneeded_tabs(&$page_attributes){
 		foreach($page_attributes['tab_collection'] as $key=>$val){
 
 			if ($val->page == "list_of_admins.php"){
-				if (is_object($perm) and !$perm->have_perm("change_priv"))
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
 					$page_attributes['tab_collection'][$key]->enabled=false;
 			}
 			elseif ($val->page == "customers.php") {
-				if (!$config->multidomain or 
-				    (is_object($perm) and !$perm->have_perm("hostmaster")))
-						$page_attributes['tab_collection'][$key]->enabled=false;
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+					$page_attributes['tab_collection'][$key]->enabled=false;
 			}
 			elseif ($val->page == "user_preferences.php") {
-				if ($config->multidomain and 
-				    (is_object($perm) and !$perm->have_perm("hostmaster")))
-						$page_attributes['tab_collection'][$key]->enabled=false;
-			}
-			elseif ($val->page == "list_of_domains.php") {
-				if (!$config->multidomain) $page_attributes['tab_collection'][$key]->enabled=false;
-			}
-
-
-/*
-			if (is_object($perm) and !$perm->have_perm("change_priv")){
-				if ($val->page == "list_of_admins.php") $page_attributes['tab_collection'][$key]->enabled=false;
-			}
-		
-			if (is_object($perm) and !$perm->have_perm("hostmaster")){
-				if ($val->page == "customers.php") $page_attributes['tab_collection'][$key]->enabled=false;
-				if ($val->page == "user_preferences.php" and $config->multidomain) $page_attributes['tab_collection'][$key]->enabled=false;
-				
-			}
-
-			if (!$config->multidomain){
-				if ($val->page == "list_of_domains.php" or $val->page == "customers.php") 
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
 					$page_attributes['tab_collection'][$key]->enabled=false;
-		
 			}
-*/
+			elseif ($val->page == "ser_moni.php") {
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+					$page_attributes['tab_collection'][$key]->enabled=false;
+			}
+			elseif ($val->page == "global_attributes.php") {
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+					$page_attributes['tab_collection'][$key]->enabled=false;
+			}
 		}
 	}
-
-
 }
 
 $page_attributes=array(

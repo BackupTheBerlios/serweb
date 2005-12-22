@@ -1,11 +1,11 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.14 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.15 2005/12/22 12:54:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('subscribers');
@@ -15,7 +15,7 @@ $_required_apu = array('apu_subscribers');
 
 require "prepend.php";
 
-$perm->check("admin");
+$perm->check("admin,hostmaster");
 if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_admin=1;}
 
 if (isset($_GET['m_pr_updated'])){
@@ -29,12 +29,12 @@ $sc	= new apu_subscribers();
 
 $smarty->assign('domain',$config->domain);
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
-$smarty->assign('change_domain_admin', $config->multidomain and $perm->have_perm('hostmaster'));
+$smarty->assign('change_domain_admin', $perm->have_perm('hostmaster'));
 
 $sc->set_opt('use_chk_adminsonly', true);
 $sc->set_opt('def_chk_adminsonly', true);
 $sc->set_opt('sess_seed', 1);
-if ($config->multidomain and !$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
+if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 
 $controler->add_apu($sc);
 $controler->set_template_name('a_list_of_admins.tpl');

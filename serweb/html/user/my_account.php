@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.12 2005/12/14 16:27:11 kozlik Exp $
+ * $Id: my_account.php,v 1.13 2005/12/22 12:54:33 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -9,7 +9,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
-$_required_modules = array('auth', 'attributes', 'usrloc', 'acl');
+$_required_modules = array('auth', 'attributes', 'usrloc', 'acl', 'uri');
 
 $_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 'apu_acl', 'apu_usrloc', 'apu_lang_select'); 
 

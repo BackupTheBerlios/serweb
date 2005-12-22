@@ -1,11 +1,11 @@
 <?
 /*
- * $Id: users.php,v 1.26 2005/10/31 16:35:20 kozlik Exp $
+ * $Id: users.php,v 1.27 2005/12/22 12:54:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('subscribers');
@@ -35,16 +35,11 @@ $sc	= new apu_subscribers();
 
 $smarty->assign('domain',$config->domain);
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
-$smarty->assign('multidomain', $config->multidomain);
 
 $sc->set_opt('use_chk_onlineonly', true);
 $sc->set_opt('get_user_aliases', true);
 $sc->set_opt('sess_seed', 0);
-if ($config->multidomain){
-	if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
-}
-else
-	$sc->set_opt('only_from_same_domain', true);
+if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 
 $controler->add_apu($sc);
 $controler->add_reqired_javascript('functions.js');

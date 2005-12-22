@@ -1,11 +1,11 @@
 <?php
 /*
- * $Id: list_of_domains.php,v 1.3 2005/11/03 11:02:08 kozlik Exp $
+ * $Id: list_of_domains.php,v 1.4 2005/12/22 12:54:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('multidomain');
@@ -29,7 +29,8 @@ if (isset($_GET['m_do_deleted'])){
 
 $dl	= new apu_domain_list();
 if (!$perm->have_perm('hostmaster')){
-	$dl->set_opt('domains_administrated_by', $serweb_auth);
+	if (false === $dom = $_SESSION['auth']->get_administrated_domains()) $dom = array();
+	$dl->set_opt('only_domains', $dom);
 }
 
 $dl->set_opt('script_create', "wiz_new_domain/1_new_domain.php");

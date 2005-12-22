@@ -1,21 +1,21 @@
 <?php
 /*
- * $Id: 2_new_admin.php,v 1.1 2005/11/03 11:02:08 kozlik Exp $
+ * $Id: 2_new_admin.php,v 1.2 2005/12/22 12:54:33 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
-$_required_modules = array('subscribers');
+$_required_modules = array('registration');
 
-$_required_apu = array('apu_registration_a'); 
+$_required_apu = array('apu_registration'); 
 
 
 require "prepend.php";
 
-$perm->check("admin");
+$perm->check("admin,hostmaster");
 
 $page_attributes['title'] .= " - ".$lang_str['step']." 2/3";
 
@@ -27,32 +27,20 @@ if (isset($_GET['save_domain_id'])){
 }
 if (empty($sess_wiz_new_domain['domain_id'])) $sess_wiz_new_domain['domain_id'] = $controler->domain_id;
 
-$opt = array('get_domain_names' => true,
-             'order_names' => false,
-             'return_all' => true);
-if (!$perm->have_perm('hostmaster')){
-	$opt['administrated_by'] = $serweb_auth;
-}
 
 
-$allowed_domains = array();
-$preselected_domain = null;
-if (false !== $domains = $data->get_domains($opt, $controler->errors)){
-	foreach ($domains as $dom) 
-		foreach($dom['names'] as $v){
-			$allowed_domains[] = $v['name'];
-
-			if (!$preselected_domain and $v['id']==$sess_wiz_new_domain['domain_id'])
-				$preselected_domain = $v['name'];
-		}
-}
-
-
-
-$re	= new apu_registration_a();
-$re->set_opt('allowed_domains', $allowed_domains);
+$re	= new apu_registration();
+$re->set_opt('choose_passw', false);
+$re->set_opt('require_confirmation', false);
 $re->set_opt('redirect_on_register', '3_finish.php?da_assign=1&pr_set_admin_privilege=1');
-$re->set_opt('pre_selected_domain', $preselected_domain);
+$re->set_opt('pre_selected_domain', $sess_wiz_new_domain['domain_id']);
+
+if (!$perm->have_perm('hostmaster')){
+	$allowed_domains = $_SESSION['auth']->get_administrated_domains();
+	if (false === $allowed_domains) $allowed_domains = array();
+	
+	$re->set_opt('allowed_domains', $allowed_domains);
+}
 		
 
 $controler->add_apu($re);

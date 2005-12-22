@@ -1,13 +1,15 @@
 <?
 /*
- * $Id: aliases.php,v 1.4 2005/04/28 14:28:34 kozlik Exp $
+ * $Id: aliases.php,v 1.5 2005/12/22 12:54:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
+
+$_required_modules = array('uri');
 
 $_required_apu = array('apu_aliases'); 
 

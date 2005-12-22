@@ -1,12 +1,12 @@
 <?
 /*
- * $Id: acl.php,v 1.17 2005/08/24 11:57:51 kozlik Exp $
+ * $Id: acl.php,v 1.18 2005/12/22 12:54:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('acl');

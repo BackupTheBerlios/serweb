@@ -1,12 +1,12 @@
 <?php
 /*
- * $Id: domain_admin.php,v 1.1 2005/10/19 11:16:11 kozlik Exp $
+ * $Id: domain_admin.php,v 1.2 2005/12/22 12:54:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('multidomain');
@@ -15,7 +15,7 @@ $_required_apu = array('apu_domain_admin');
 
 require "prepend.php";
 
-$perm->check("admin,change_priv,hostmaster");
+$perm->check("admin,hostmaster");
 
 
 $da	= new apu_domain_admin();

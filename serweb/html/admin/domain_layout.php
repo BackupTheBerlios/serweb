@@ -1,12 +1,12 @@
 <?php
 /*
- * $Id: domain_layout.php,v 1.2 2005/10/31 16:35:20 kozlik Exp $
+ * $Id: domain_layout.php,v 1.3 2005/12/22 12:54:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 
 $_phplib_page_open = array("sess" => "phplib_Session",
-						   "auth" => "phplib_Pre_Auth",
+						   "auth" => "phplib_Auth",
 						   "perm" => "phplib_Perm");
 
 $_required_modules = array('multidomain');
