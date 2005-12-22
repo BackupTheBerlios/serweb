@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain.php,v 1.2 2005/10/19 11:07:23 kozlik Exp $
+ * $Id: config_domain.php,v 1.3 2005/12/22 12:58:28 kozlik Exp $
  */
 
 /**
@@ -39,12 +39,6 @@ class CDomain_config{
 		foreach($this->cfg as $k => $v){
 			if ((substr($k, 0, 13) == "html_headers_") and in_array("html_headers", $config->domain_depend_config)){
 				$config->html_headers[] = $v;
-			}
-			elseif ($k == "default_lang" and in_array("lang", $config->domain_depend_config)){
-				$config->lang['default_lang'] = $v;
-			}
-			elseif ($k == "force_lang"   and in_array("lang", $config->domain_depend_config)){
-				$config->lang['lang'] = $v;
 			}
 			
 			if (in_array($k, $config->domain_depend_config)){
