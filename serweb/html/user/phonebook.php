@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: phonebook.php,v 1.3 2005/12/14 16:28:37 kozlik Exp $
+ * $Id: phonebook.php,v 1.4 2005/12/22 15:31:05 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -22,6 +22,12 @@ $pb->set_opt('get_user_status', true);
 $pb->set_opt('get_user_aliases', true);
 
 $page_attributes['user_name'] = get_user_real_name($serweb_auth);
+
+
+//create copy of some options from config in order to sensitive options will not accessible via templates
+$cfg=new stdclass();
+$cfg->whitepages            = $config->whitepages;
+$smarty->assign_by_ref("config", $cfg);
 
 
 $controler->add_apu($pb);
