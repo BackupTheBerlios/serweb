@@ -4,6 +4,7 @@
 # 	- #@#domain#@# - is replaced by domain name
 #	- #@#sip_address#@#	- replaced by SIP address reserved for user
 #	- #@#login_url#@# - URL of serweb login page
+#	- #@#confirmation_url#@# - URL of confirmation script
 #	- #@#username#@# - username of user
 #	- #@#password#@# - password of user
 #	- #@#email#@#    - email of user
