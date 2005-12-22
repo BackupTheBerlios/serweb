@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.5 2005/12/22 12:38:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -172,8 +172,8 @@ class apu_customers extends apu_base_class{
 		$this->pager['to']=$data->get_res_to();
 
 		foreach($this->customers as $key=>$val){
-			$this->customers[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&cu_dele_id=".$val['primary_key']['id']);
-			$this->customers[$key]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&cu_edit_id=".$val['primary_key']['id']);
+			$this->customers[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&cu_dele_id=".$val['primary_key']['cid']);
+			$this->customers[$key]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&cu_edit_id=".$val['primary_key']['cid']);
 		}
 		
 		return true;
@@ -213,7 +213,7 @@ class apu_customers extends apu_base_class{
 		global $data;
 
 		$opt = array( 'insert' => false,
-		              'primary_key' => array('id' => $this->act_id));
+		              'primary_key' => array('cid' => $this->act_id));
 		$values = array('name'  => $_POST['cu_name'],
 		                'address'  => $_POST['cu_address'],
 						'phone'  => $_POST['cu_phone'],
@@ -256,7 +256,7 @@ class apu_customers extends apu_base_class{
 			return false;
 		}		
 
-		$opt = array( 'primary_key' => array('id' => $this->act_id));
+		$opt = array( 'primary_key' => array('cid' => $this->act_id));
 		if (false === $data->delete_customer($opt, $errors)) return false;
 	
 		if ($this->opt['redirect_on_delete']){

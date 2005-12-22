@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_domain_alias.php,v 1.1 2005/10/07 07:28:00 kozlik Exp $
+ * $Id: method.del_domain_alias.php,v 1.2 2005/12/22 12:38:54 kozlik Exp $
  */
 
 class CData_Layer_del_domain_alias {
@@ -11,7 +11,7 @@ class CData_Layer_del_domain_alias {
 	 *
 	 *  Possible options:
 	 *
-	 *    id		(int)   	default: null
+	 *    did		(int)   	default: null
 	 *      id of domain which will be deleted
 	 *      either id or name is required
 	 *      
@@ -28,23 +28,29 @@ class CData_Layer_del_domain_alias {
 
 		if (!$this->connect_to_db($errors)) return false;
 
-		$c = &$config->data_sql->domain;
+		/* table's name */
+		$td_name = &$config->data_sql->domain->table_name;
+		/* col names */
+		$cd = &$config->data_sql->domain->cols;
+		/* flags */
+		$fd = &$config->data_sql->domain->flag_values;
 
-	    $o_id = (isset($opt['id'])) ? $opt['id'] : null;
+
+	    $o_did  = (isset($opt['did']))  ? $opt['did']  : null;
 	    $o_name = (isset($opt['name'])) ? $opt['name'] : null;
 
-		if (is_null($o_id) and is_null($o_name)) {
+		if (is_null($o_did) and is_null($o_name)) {
 			log_errors(PEAR::raiseError('domain for delete is not specified'), $errors); 
 			return false;
 		}
 
 		$qw="";
-		if ($o_id) $qw .= $c->id."=".$o_id;
+		if ($o_did)          $qw .= $cd->did.  "= '".$o_did."'";
 		if ($qw and $o_name) $qw .= " and ";
-		if ($o_name) $qw .= $c->name."='".$o_name."'";
+		if ($o_name)         $qw .= $cd->name. "= '".$o_name."'";
 		
 
-		$q="delete from ".$config->data_sql->table_domain."
+		$q="delete from ".$td_name."
 			where ".$qw;
 
 		$res=$this->db->query($q);

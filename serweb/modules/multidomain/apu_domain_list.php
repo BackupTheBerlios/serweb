@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.6 2005/11/03 11:02:10 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.7 2005/12/22 12:38:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -26,11 +26,11 @@
  *	'script_layout'				(string) default: 'domain_layout.php'
  *	 name of script which contain apu_domain_layout
  *
- *	'script_preferences'		(string) default: 'domain_preferences.php'
- *	 name of script which contain apu_domain_preferences
+ *	'script_attributes'			(string) default: 'domain_attributes.php'
+ *	 name of script for editing domain attributes
  *
- *	'domains_administrated_by'	(Cserweb_auth)	default: null
- *	 if is set, only domains administrated by given admin is returned
+ *	'only_domains'				(array)	default: null
+ *	 Array of domain IDs. if is set, only domains from this array are returned
  *								
  *	'form_name'					(string) default: ''
  *	 name of html form
@@ -101,9 +101,9 @@ class apu_domain_list extends apu_base_class{
 		$this->opt['script_edit'] =			'domain_edit.php';
 		$this->opt['script_create'] =		'domain_edit.php';
 		$this->opt['script_layout'] =		'domain_layout.php';
-		$this->opt['script_preferences'] =	'domain_preferences.php';
+		$this->opt['script_attributes'] =	'domain_attributes.php';
 
-		$this->opt['domains_administrated_by'] = null;
+		$this->opt['only_domains'] = null;
 
 		
 		/*** names of variables assigned to smarty ***/
@@ -184,8 +184,8 @@ class apu_domain_list extends apu_base_class{
 		$opt = array('filter' => $sess_apu_dl['filter'],
 					 'get_domain_names' => true);
 					 
-		if (!is_null($this->opt['domains_administrated_by']))
-			$opt['administrated_by'] = $this->opt['domains_administrated_by'];
+		if (!is_null($this->opt['only_domains']))
+			$opt['only_domains'] = $this->opt['only_domains'];
 		
 		if (false === $this->domains = 
 				$data->get_domains(
@@ -207,7 +207,7 @@ class apu_domain_list extends apu_base_class{
 			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&disable=1");
 			$this->domains[$key]['url_dele'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&delete=1");
 			$this->domains[$key]['url_layout'] = $sess->url($this->opt['script_layout']."?kvrk=".uniqID("")."&".$get);
-			$this->domains[$key]['url_preferences'] = $sess->url($this->opt['script_preferences']."?kvrk=".uniqID("")."&".$get);
+			$this->domains[$key]['url_attributes'] = $sess->url($this->opt['script_attributes']."?kvrk=".uniqID("")."&".$get);
 		}
 
 		return true;

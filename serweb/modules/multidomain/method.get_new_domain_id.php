@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_new_domain_id.php,v 1.2 2005/10/27 08:40:41 kozlik Exp $
+ * $Id: method.get_new_domain_id.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
  */
 
 class CData_Layer_get_new_domain_id {
@@ -21,11 +21,19 @@ class CData_Layer_get_new_domain_id {
 
 		if (!$this->connect_to_db($errors)) return false;
 
-		$cd = &$config->data_sql->domain;
-		$cp = &$config->data_sql->dom_pref;
+		/* table's name */
+		$td_name = &$config->data_sql->domain->table_name;
+		$ta_name = &$config->data_sql->domain_attrs->table_name;
+		/* col names */
+		$cd = &$config->data_sql->domain->cols;
+		$ca = &$config->data_sql->domain_attrs->cols;
+		/* flags */
+		$fd = &$config->data_sql->domain->flag_values;
+		$fa = &$config->data_sql->domain_attrs->flag_values;
 
-		$q="select max(".$cd->id.")
-		    from ".$config->data_sql->table_domain;
+
+		$q="select max(".$this->get_sql_cast_to_int_funct($cd->did).")
+		    from ".$td_name;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -33,8 +41,8 @@ class CData_Layer_get_new_domain_id {
 		$res->free();
 
 
-		$q="select max(".$cp->id.")
-		    from ".$config->data_sql->table_dom_preferences;
+		$q="select max(".$this->get_sql_cast_to_int_funct($ca->did).")
+		    from ".$ta_name;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

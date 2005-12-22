@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.4 2005/11/03 11:02:10 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.5 2005/12/22 12:38:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -60,7 +60,7 @@ class apu_domain_admin extends apu_base_class{
 	 *	@return array	array of required data layer methods
 	 */
 	function get_required_data_layer_methods(){
-		return array('get_domains', 'get_domains_of_admin', 'set_domain_admin');
+		return array('get_domains', 'get_domains_of_admin');
 	}
 
 	/**
@@ -134,7 +134,7 @@ class apu_domain_admin extends apu_base_class{
 		global $data, $sess, $sess_apu_da;
 		
 		$opt = array();
-		if (false === $this->assigned_ids = $data->get_domains_of_admin($this->controler->user_id, $opt, $errors)) return false;
+		if (false === $this->assigned_ids = $data->get_domains_of_admin($this->controler->user_id->uuid, $opt)) return false;
 
 		$opt = array("filter" => $sess_apu_da['filter'],
 		             "return_all" => true,
@@ -178,6 +178,33 @@ class apu_domain_admin extends apu_base_class{
 		$this->f->load_defaults();
 	}
 
+	function set_domain_admin($add){
+		global $config;
+		
+		$an = &$config->attr_names;
+
+		$da = &Domain_Attrs::Singleton($this->controler->domain_id);
+		$admins = $da->get_attribute($an['admin']);
+		if (is_null($admins)) $admins = array();
+
+		if ($add){
+			$admins[] = $this->controler->user_id->get_uid();
+		}
+		else {
+			foreach($admins as $k => $v){
+				if ($v == $this->controler->user_id->get_uid()){
+					unset($admins[$k]);
+					break;
+				}
+			}
+		}
+
+		
+		if (false === $da->set_attribute($an['admin'], $admins)) return false;
+
+		return true;
+	}
+	
 	/**
 	 *	Assign domain to admin
 	 *
@@ -185,12 +212,10 @@ class apu_domain_admin extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 	function action_assign_domain(&$errors){
-		global $data;
-		
-		$opt = array("add_domain" => true);
-		
-		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
-	
+		global $config;
+
+		if (false === $this->set_domain_admin(true)) return false;
+				
 		return true;
 	}
 	
@@ -201,15 +226,13 @@ class apu_domain_admin extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 	function action_unassign_domain(&$errors){
-		global $data;
+		global $config;
 		
-		$opt = array("add_domain" => false);
-		
-		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
-	
+		if (false === $this->set_domain_admin(false)) return false;
+
 		return true;
 	}
-	
+
 	/**
 	 *	Method perform default action
 	 *

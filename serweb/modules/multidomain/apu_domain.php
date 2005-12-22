@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.9 2005/11/28 14:06:30 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.10 2005/12/22 12:38:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -87,8 +87,8 @@ class apu_domain extends apu_base_class{
 	var $dom_names = array();
 	/** owner of this domain */
 	var $owner = null;
-	/** domain preferences */
-	var $preferences = array();
+	/** domain attributes */
+	var $domain_attrs = array();
 	/** admins of domain */
 	var $admins;
 	/** used by function generate_domain_id and revert_domain_id */
@@ -100,11 +100,10 @@ class apu_domain extends apu_base_class{
 	 *	@return array	array of required data layer methods
 	 */
 	function get_required_data_layer_methods(){
-		return array('get_owner_of_domain', 'get_domain', 'get_customers', 
+		return array('get_domain', 'get_customers', 
 			'get_new_domain_id', 'enable_domain', 'del_domain_alias', 
-			'add_domain_alias', 'update_owner_of_domain', 'reload_domains',
-			'mark_domain_deleted', 'get_domain_preferences', 'get_admins_of_domain',
-			'set_domain_admin');
+			'add_domain_alias', 'reload_domains', 'mark_domain_deleted',
+			'get_users');
 	}
 
 	/**
@@ -245,9 +244,9 @@ class apu_domain extends apu_base_class{
 		}
 
 		$opt = array();
-		$opt['filter']['id'] = $this->id;
+		$opt['filter']['did'] = $this->id;
 	
-		if (false === $this->dom_names = $data->get_domain($opt, $errors)) return false;
+		if (false === $this->dom_names = $data->get_domain($opt)) return false;
 
 		foreach($this->dom_names as $key=>$val){
 			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name']));
@@ -265,14 +264,31 @@ class apu_domain extends apu_base_class{
 	 */
 
 	function get_admins(&$errors){
-		global $data, $sess;
+		global $data, $sess, $config;
 		
-		if (false === $this->admins = $data->get_admins_of_domain($this->id, null, $errors)) return false;
+		$an = &$config->attr_names;
+		
+		if (!isset($this->domain_attrs[$an['admin']])){
+			$admins = array();
+		} else{
+			$admins = $this->domain_attrs[$an['admin']];
+		}
+
+		if (!count($admins)) { $this->admins = array(); return true; }
+
+
+		$o = array("only_users" => $admins,
+		           "get_user_aliases" => false,
+				   "return_all" => true);
+
+		if (false === $this->admins = $data->get_users(array(), $o)) return false;
+
 
 		foreach ($this->admins as $k => $v){
 			$this->admins[$k]['url_unset_admin'] = 
-				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&do_unset_admin=1&".
-					user_to_get_param($v['uuid'], $v['username'], $v['domain'], 'u'));
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&do_unset_admin=".RawURLEncode($this->opt['instance_id']).
+						"&".$v['get_param']);
 		}
 
 		return true;
@@ -294,19 +310,19 @@ class apu_domain extends apu_base_class{
 		}
 
 		if (isset($_GET['enable'])){
-			$opt['id'] = $this->id;
+			$opt['did'] = $this->id;
 			$opt['disable'] = false;
 
 			if (false === $this->create_or_remove_all_symlinks(true, $errors)) return false;
 		}
 		else {
-			$opt['id'] = $this->id;
+			$opt['did'] = $this->id;
 			$opt['disable'] = true;
 
 			if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
 		}
 
-		if (false === $data->enable_domain($opt, $errors)) return false;
+		if (false === $data->enable_domain($opt)) return false;
 
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
@@ -336,10 +352,10 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
-		$opt['id'] = $this->id;
+		$opt['did'] = $this->id;
 		if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
 
-		if (false === $data->mark_domain_deleted($opt, $errors)) return false;
+		if (false === $data->mark_domain_deleted($opt)) return false;
 
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
@@ -394,13 +410,29 @@ class apu_domain extends apu_base_class{
 		$values['id'] = $this->id;
 		$values['name'] = $_POST['do_new_name'];
 		
-		if (false === $data->add_domain_alias($values, null, $errors)) {
+		if (count($this->dom_names)){
+			$disabled = true;
+			// domain is disabled if all domain names are disabled
+			foreach($this->dom_names as $v){
+				$disabled = ($disabled and ((bool)$v['disabled']));
+			}
+		}
+		else{
+			// POZOR! tady muze obcas nastavat problem
+			$disabled = false;
+		}
+
+		$o = array();
+		$o['disabled'] = $disabled;
+		$o['set_canon'] = !(bool)count($this->dom_names);
+
+		if (false === $data->add_domain_alias($values, $o, $errors)) {
 			$this->revert_domain_id();
 			return false;
 		}
-
+				
 		/* create symlinks and notify ser only if domain isn't disabled */
-		if (empty($this->preferences['disabled'])){
+		if (!$disabled){
 			if (false === domain_create_symlinks($this->id, $values['name'], $errors)) return false;
 	
 			/* notify SER to reload domains */
@@ -418,20 +450,47 @@ class apu_domain extends apu_base_class{
 	 */
 
 	function action_update(&$errors){
-		global $data;
+		global $data, $config;
+
+		$an = &$config->attr_names;
 
 		if (false === $this->generate_domain_id($errors)) return false;
 
-		if (!$this->owner or is_null($this->owner['id']))
-			$opt['insert'] = true;
-		else
-			$opt['insert'] = false;
+		$domain_attrs = &Domain_Attrs::singleton($this->id);
 
-		if (false === $data->update_owner_of_domain($this->id, $_POST['do_customer'], $opt, $errors)) {
-			$this->revert_domain_id();
-			return false;
+		if ($_POST['do_customer'] == -1){
+			if (false === $domain_attrs->unset_attribute($an['dom_owner'])){
+				$this->revert_domain_id();
+				return false;
+			}
+		}
+		else{
+			if (false === $domain_attrs->set_attribute($an['dom_owner'], $_POST['do_customer'])){
+				$this->revert_domain_id();
+				return false;
+			}
 		}
 
+		/*
+		 *	If digest realm is not set, set it by the canonical domain name
+		 */
+		if (!isset($this->domain_attrs[$an['digest_realm']])){
+			$digest_realm = "";
+
+			foreach($this->dom_names as $v){
+				if ($v['canon']) {
+					$digest_realm = $v['name'];
+					break;
+				}
+			}
+
+			if ($digest_realm and 
+				false === $domain_attrs->set_attribute($an['digest_realm'], $digest_realm)){
+				
+				$this->revert_domain_id();
+				return false;
+			}
+		}
 
 		if ($this->opt['redirect_on_update']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
@@ -447,12 +506,23 @@ class apu_domain extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 	function action_unset_admin(&$errors){
-		global $data;
+		global $config;
 		
-		$opt = array("add_domain" => false);
+		$an = &$config->attr_names;
+
+		$domain_attrs = &Domain_Attrs::singleton($this->id);
+		$admins = $domain_attrs->get_attribute($an['admin']);
+		if (is_null($admins)) $admins = array();
+
+		foreach($admins as $k => $v){
+			if ($v == $this->controler->user_id->get_uid()){
+				unset($admins[$k]);
+				break;
+			}
+		}
 		
-		if (false === $data->set_domain_admin($this->controler->user_id, $this->controler->domain_id, $opt, $errors)) return false;
-	
+		if (false === $domain_attrs->set_attribute($an['admin'], $admins)) return false;
+
 		return true;
 	}
 
@@ -539,30 +609,36 @@ class apu_domain extends apu_base_class{
 	 *	@return null			FALSE on failure
 	 */
 	function create_html_form(&$errors){
-		global $data, $lang_str;
+		global $data, $lang_str, $config;
 		parent::create_html_form($errors);
+
+		$an = &$config->attr_names;
 
 		/* get list of customers */
 		if (false === $this->customers = $data->get_customers(array(), $errors)) return false;
 		
 		/* if domain id is set */
 		if (!is_null($this->id)){
-			/* get domain preferences */
-			if (false === $this->preferences = $data->get_domain_preferences($this->id, array(), $errors)) return false;
+			$domain_attrs = &Domain_Attrs::singleton($this->id);
+			/* get domain attributes */
+			if (false === $this->domain_attrs = $domain_attrs->get_attributes()) return false;
 		}
 
 
 		$options = array();
 		$options[] = array('label' => "--- ".$lang_str['none']." ---", 'value' => -1);
 		foreach ($this->customers as $v){
-			$options[] = array('label' => $v['name'], 'value' => $v['id']);
+			$options[] = array('label' => $v['name'], 'value' => $v['cid']);
 		}
 
 		/* if domain id is set */
 		if (!is_null($this->id)){
 			/* get owner of the domain */
-			if (false === $this->owner = $data->get_owner_of_domain($this->id, null, $errors)) return false;
-
+			if (isset($this->domain_attrs[$an['dom_owner']])){
+				$this->owner['id']   = $this->domain_attrs[$an['dom_owner']];
+				$this->owner['name'] = $this->customers[$this->owner['id']]['name'];
+			}
+			
 			/* get list of the domain names */
 			if (false === $this->get_domain_names($errors)) return false;
 		}

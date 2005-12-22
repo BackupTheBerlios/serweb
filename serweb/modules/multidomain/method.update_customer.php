@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.2 2005/10/05 12:38:26 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -34,7 +34,10 @@ class CData_Layer_update_customer {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-		$c = &$config->data_sql->customer;
+		/* table's name */
+		$tc_name = &$config->data_sql->customers->table_name;
+		/* col names */
+		$cc = &$config->data_sql->customers->cols;
 
 		$opt_insert = isset($opt['insert']) ? (bool)$opt['insert'] : false;
 		if (!$opt_insert and 
@@ -47,20 +50,20 @@ class CData_Layer_update_customer {
 
 		if ($opt_insert) {
 
-			$q="insert into ".$config->data_sql->table_customer." (
-					   ".$c->name.", ".$c->address.", ".$c->email.", ".$c->phone."
+			$q="insert into ".$tc_name." (
+					   ".$cc->name.", ".$cc->address.", ".$cc->email.", ".$cc->phone."
 			    ) 
 				values (
 					   '".$values['name']."', '".$values['address']."', '".$values['email']."', '".$values['phone']."'
 				 )";
 		}
 		else {
-			$q="update ".$config->data_sql->table_customer." 
-			    set ".$c->name."='".$values['name']."',  
-			        ".$c->address."='".$values['address']."', 
-			        ".$c->email."='".$values['email']."', 
-			        ".$c->phone."='".$values['phone']."'
-				where ".$c->id."='".$opt['primary_key']['id']."'";
+			$q="update ".$tc_name." 
+			    set ".$cc->name."='".$values['name']."',  
+			        ".$cc->address."='".$values['address']."', 
+			        ".$cc->email."='".$values['email']."', 
+			        ".$cc->phone."='".$values['phone']."'
+				where ".$cc->cid."='".$opt['primary_key']['cid']."'";
 		}
 
 

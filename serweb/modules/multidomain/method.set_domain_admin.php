@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.set_domain_admin.php,v 1.1 2005/10/04 10:03:42 kozlik Exp $
+ * $Id: method.set_domain_admin.php,v 1.2 2005/12/22 12:38:54 kozlik Exp $
  */
 
 class CData_Layer_set_domain_admin {
@@ -13,34 +13,39 @@ class CData_Layer_set_domain_admin {
 	 *    add_domain  	(bool) default:true
 	 *      if true function append domain to admin, otherwise remove it
 	 *      
-	 *	@param object $user		user - instance of class Cserweb_auth
-	 *	@param string $domain	id of domain
+	 *	@param string $uid		id of admin
+	 *	@param string $did		id of domain
 	 *	@param array $opt		associative array of options
-	 *	@param array $errors	error messages
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */ 
-	function set_domain_admin($user, $domain, $opt, &$errors){
+	function set_domain_admin($uid, $did, $opt){
 		global $config, $serweb_auth, $sess;
 
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
+		}
 
-		$c = &$config->data_sql->dom_pref;
+		/* table's name */
+		$t_name = &$config->data_sql->domain_attrs->table_name;
+		/* col names */
+		$c = &$config->data_sql->domain_attrs->cols;
+		/* flags */
+		$f = &$config->data_sql->domain_attrs->flag_values;
 
-		$u = ($config->users_indexed_by=='uuid') ?
-				$user->uuid :
-				($user->uname."@".$user->domain);
+		$an = &$config->attr_names;
 
 	    $o_add = (isset($opt['add_domain'])) ? (bool)$opt['add_domain'] : true;
 
 		if ($o_add)
-			$q = "insert into ".$config->data_sql->table_dom_preferences."
-				        (".$c->id.", ".$c->att_name.", ".$c->att_value.")
-				  values ('".$domain."', 'admin', '".$u."')";
+			$q = "insert into ".$t_name."
+				        (".$c->did.", ".$c->name.", ".$c->value.")
+				  values ('".$did."', '".$an['admin']."', '".$uid."')";
 		else
-			$q = "delete from ".$config->data_sql->table_dom_preferences."
-			      where ".$c->id." = '".$domain."' and 
-				        ".$c->att_name."='admin' and
-			            ".$c->att_value." = '".$u."'";
+			$q = "delete from ".$t_name."
+			      where ".$c->did." = '".$did."' and 
+				        ".$c->name."='".$an['admin']."' and
+			            ".$c->value." = '".$uid."'";
 		
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
