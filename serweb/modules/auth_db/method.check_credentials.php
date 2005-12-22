@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.check_credentials.php,v 1.2 2005/12/22 13:15:53 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.3 2005/12/22 16:58:57 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -23,6 +23,10 @@ class CData_Layer_check_credentials {
 	 *		- 'clear'
 	 *		- 'ha1'
 	 *		- 'ha1b'
+	 *
+	 *    check_pass	(bool)     default: true
+	 *		check the password?
+	 *
 	 *
 	 *	@param string $uname	username
 	 *	@param string $realm	realm
@@ -49,19 +53,22 @@ class CData_Layer_check_credentials {
 		
 		/* set default values for options */
 		$opt_hash = isset($opt["hash"]) ? $opt["hash"] : "clear";
+		$opt_check_pass = isset($opt["check_pass"]) ? (bool)$opt["check_pass"] : true;
 		
 		
 		/* prepare SQL query */
 		$q="select c.".$c->uid.", c.".$c->flags.
 		    " from ". $t_name." c ".
 			" where c.".$c->uname."='".addslashes($uname)."' and c.".$c->realm."='".addslashes($realm)."'";
-			
-		if     ($opt_hash == "clear") $q .= " and c.".$c->password."='".addslashes($passw)."'";
-		elseif ($opt_hash == "ha1")   $q .= " and c.".$c->ha1."='".addslashes($passw)."'";
-		elseif ($opt_hash == "ha1b")  $q .= " and c.".$c->ha1b."='".addslashes($passw)."'";
-		else   {
-			sw_log("Invalid hash method: '".$opt_hash."'", PEAR_LOG_CRIT);
-			return 0;
+
+		if ($opt_check_pass){			
+			if     ($opt_hash == "clear") $q .= " and c.".$c->password."='".addslashes($passw)."'";
+			elseif ($opt_hash == "ha1")   $q .= " and c.".$c->ha1."='".addslashes($passw)."'";
+			elseif ($opt_hash == "ha1b")  $q .= " and c.".$c->ha1b."='".addslashes($passw)."'";
+			else   {
+				sw_log("Invalid hash method: '".$opt_hash."'", PEAR_LOG_CRIT);
+				return 0;
+			}
 		}
 
 		$res=$this->db->query($q);

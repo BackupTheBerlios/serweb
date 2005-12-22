@@ -1,10 +1,12 @@
 <?
 /*
- * $Id: get_pass.php,v 1.3 2005/05/20 08:32:56 kozlik Exp $
+ * $Id: get_pass.php,v 1.4 2005/12/22 16:58:56 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session");
+
+$_required_modules = array('auth');
 
 $_required_apu = array('apu_forgotten_password');						   
 

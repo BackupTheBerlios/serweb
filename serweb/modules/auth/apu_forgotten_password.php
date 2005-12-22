@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.7 2005/11/28 14:28:26 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.1 2005/12/22 16:58:57 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -62,8 +62,7 @@ class apu_forgotten_password extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_sip_user', 'update_sip_user_confirmation', 
-					'get_sip_user_by_confirm_nr', 'set_password_to_user');
+		return array('check_credentials', 'get_attr_by_val', 'set_password_to_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -73,7 +72,7 @@ class apu_forgotten_password extends apu_base_class{
 	
 	/* constructor */
 	function apu_forgotten_password(){
-		global $config, $lang_str, $sess_lang;
+		global $config, $lang_str;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -100,37 +99,41 @@ class apu_forgotten_password extends apu_base_class{
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => $lang_str['b_forgot_pass_submit'],
-										'src'  => get_path_to_buttons("btn_get_pass.gif", $sess_lang));
+										'src'  => get_path_to_buttons("btn_get_pass.gif", $_SESSION['lang']));
 	}
 
+	/* this metod is called always at begining */
+	function init(){
+		parent::init();
+	}
+	
 	function action_send_conf(&$errors){
-		global $config, $data, $sess_lang, $lang_str;
+		global $config, $data, $lang_str;
 
 		$confirm=md5(uniqid(rand()));
+		$an = &$config->attr_names;
 	
 		if (isModuleLoaded('xxl')){
 			if (false === $proxy = $data->get_home_proxy($errors))
 				return false;
 		}
 
-		if (false === $data->update_sip_user_confirmation(
-						new Cserweb_auth($this->sip_user['uuid'],
-						                 $this->sip_user['uname'],
-										 $this->sip_user['domain']),
-						$confirm,
-						null,
-						$errors)){
-			return false;
-		}
+		$user_attrs = &User_Attrs::singleton($this->sip_user['uid']);
+		if (false === $user_attrs->set_attribute($an['confirmation'], $confirm)) return false;
+
+		if (false === $email = $user_attrs->get_attribute($an['email'])) return false;
+
 
 		$confirmation_url = $config->root_uri.
 		                    $_SERVER['PHP_SELF'].
-							"?nr=".$confirm.
+							"?u=".RawURLEncode($this->sip_user['uname']).
+							"&r=".RawURLEncode($this->sip_user['realm']).
+							"&nr=".$confirm.
 							(isModuleLoaded('xxl') ? 
 								"&pr=".RawURLEncode(base64_encode($proxy)):
 								"");
 
-		$mail = read_lang_txt_file($this->opt['mail_file_conf'], "txt", $sess_lang, 
+		$mail = read_lang_txt_file($this->opt['mail_file_conf'], "txt", $_SESSION['lang'], 
 					array(array("domain", $this->opt['domain']),
 						  array("confirmation_url", $confirmation_url)));
 					
@@ -140,7 +143,7 @@ class apu_forgotten_password extends apu_base_class{
 			return false;	
 		}
 
-		if (!send_mail($this->sip_user['email'], $mail['body'], $mail['headers'])){
+		if (!send_mail($email, $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			
 			$this->controler->_form_load_defaults();
@@ -152,7 +155,7 @@ class apu_forgotten_password extends apu_base_class{
 	}
 
 	function action_send_pass(&$errors){
-		global $data, $config, $sess_lang, $lang_str;
+		global $data, $config, $lang_str;
 		
 		if (isset($_GET['pr'])){
 			$proxy = base64_decode($_GET['pr']);
@@ -167,24 +170,40 @@ class apu_forgotten_password extends apu_base_class{
 			return false;
 		}
 
-		if (false === $sip_user=$data->get_sip_user_by_confirm_nr($this->nr, null, $errors)){ 
+		if (empty($_GET['u']) or empty($_GET['r'])){
 			$errors[] = $lang_str['err_reg_conf_not_exists_conf_num'];
 			return false;
 		}
+
+		$an = &$config->attr_names;
+
+		/* get uid */
+		$o = array('name' =>  $an['confirmation'],
+		           'value' => $this->nr);
+		if (false === $attrs = $data->get_attr_by_val("user", $o)) return false;
+
+		if (empty($attrs[0]['id'])) {
+			ErrorHandler::add_error($lang_str['err_reg_conf_not_exists_conf_num']);
+			return false;
+		}
+
+		$uid = $attrs[0]['id'];
+
+		/* get email address of user */
+		$user_attrs = &User_Attrs::singleton($uid);
+		if (false === $email = $user_attrs->get_attribute($an['email'])) return false;
 
 		/* generate new password */
 		$password = substr(md5(uniqid('')), 0, 5);
 
 		if (false === $data->set_password_to_user(
-						new Cserweb_auth($sip_user['uuid'],
-						                 $sip_user['username'],
-										 $sip_user['domain']),
+						new SerwebUser($uid, $_GET['u'], $_GET['r']),
 						$password,  
 						$errors)){ 
 			return false;
 		}
 
-		$mail = read_lang_txt_file($this->opt['mail_file_pass'], "txt", $sess_lang, 
+		$mail = read_lang_txt_file($this->opt['mail_file_pass'], "txt", $_SESSION['lang'], 
 					array(array("domain", $this->opt['domain']),
 						  array("password", $password)));
 					
@@ -194,20 +213,19 @@ class apu_forgotten_password extends apu_base_class{
 			return false;	
 		}
 
-		if (!send_mail($sip_user['email_address'], $mail['body'], $mail['headers'])){
+		if (!send_mail($email, $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
 			return false;
 		}
+
+		/* unset attribute confirmation */
+		if (false === $user_attrs->unset_attribute($an['confirmation'])) return false;
+
 
 		return array("m_fp_pass_sended=".RawURLEncode($this->opt['instance_id']));
 		
 	}
 
-	
-	/* this metod is called always at begining */
-	function init(){
-		parent::init();
-	}
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
@@ -254,7 +272,7 @@ class apu_forgotten_password extends apu_base_class{
 			// parse username and domain from it
 			if (ereg("^([^@]+)@(.+)", $_POST['fp_uname'], $regs)){
 				$username=$regs[1];
-				$domain=$regs[2];
+				$realm=$regs[2];
 				
 			}
 			else {
@@ -265,19 +283,31 @@ class apu_forgotten_password extends apu_base_class{
 		}
 		else{
 			$username=$_POST['fp_uname'];
-			$domain=$this->opt['domain'];
+			$realm=$this->opt['domain'];
 		}
 
-		$data->set_xxl_user_id('sip:'.$username.'@'.$domain);
+		$data->set_xxl_user_id('sip:'.$username.'@'.$realm);
 		$data->expect_user_id_may_not_exists();
 
-		if (false === $this->sip_user = $data->get_sip_user($username, $domain, $errors)) {
-			$errors[] = $lang_str['err_no_user'];
+		$o = array('check_pass' => false );
+		$uid = $data->check_credentials($username, $realm, null, $o);
+
+		if (is_int($uid) and $uid == -3){
+			sw_log("Get password: account disabled ", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['account_disabled']);
 			return false;
 		}
 
+		if ((is_int($uid) and $uid <= 0) or is_null($uid)) {
+			sw_log("Get password: bad username or realm ", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['err_no_user']);
+			return false;
+		}
+
+
 		$this->sip_user['uname'] = $username;
-		$this->sip_user['domain'] = $domain;
+		$this->sip_user['realm'] = $realm;
+		$this->sip_user['uid']   = $uid;
 
 		return true;
 	}
