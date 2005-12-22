@@ -1,0 +1,394 @@
+<?php
+/*
+ * $Id: apu_attributes.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ */ 
+
+/*	Application unit user preferences */
+
+/**
+ *	This application unit is used for view and change values in table user preferences
+ *	
+ *	Configuration:
+ *	--------------
+ *	'attributes'					(array) default: array containing all atributes 
+ *	 array containing attributes which should be displayed
+ *
+ *	'exclude_attributes'			(array) default: array()
+ *	 array containing attributes which shouldn't be displayed
+ *
+ *	'error_messages'			(assoc) default: array()
+ *	 keys are names of attributes, values are custom error messages
+ *	 displayed when value of attribute is wrong
+ *
+ *	'validate_funct'			(string) default: ""
+ *	 name of validate function
+ *	 validate function must return true or false, first parametr is associative array of
+ *	 attributes, second one is property 'error_messages' and third one is reference to errors 
+ *	 array - function can add error message to it which is dispayed to user
+ *	
+ *		 example:
+ *			function validate_form($values, $error_messages, &$errors){
+ *				//validate only one attribute
+ *				if (ereg('^[0-9]+$', $values['some_attribute'])) return true;
+ *				else {
+ *					$errors[]=$error_messages['some_attribute'];
+ *					return false;
+ *				}
+ *			}
+ *
+ *			set_opt('validate_funct') = 'validate_form';
+ *	
+ *	'optionals'   				(array) default: array()
+ *	 associative array - keys are names of attributes, values are booleans
+ *	 can be used to make value of attribute optional
+ *	 (have efect only for some types of attributes (e.g. sip_adr, int)
+ *								
+ *	'redirect_on_update'		(string) default: ''
+ *	 name of script to which is browser redirected after succesfull update
+ *	 if empty, browser isn't redirected
+ *
+ *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
+ *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
+ *
+ *
+ *	'smarty_attributes'			name of smarty variable - see below
+ *	'smarty_form'				name of smarty variable - see below
+ *	'smarty_action'				name of smarty variable - see below
+ *	'form_name'					name of html form
+ *	
+ *	'form_submit'				(assoc)
+ *	  assotiative array describe submit element of form. For details see description 
+ *	  of method add_submit in class form_ext
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	opt['smarty_attributes'] 	(attributes)	associative array containing info about attributes
+ *													keys: 
+ *														'att_name' - name of attribute
+ *														'att_desc' - human readable name of attribute
+ *	
+ *	opt['smarty_form'] 			(form)			phplib html form
+ *	
+ *	opt['smarty_action']		(action)		tells what should smarty display. Values:
+ *												'default' - 
+ *												'was_updated' - when user submited form and data was succefully stored
+ */
+ 
+class apu_attributes extends apu_base_class{
+	var $uid = null;
+	var $did = null;
+	var $attr_types;	
+	var $user_attrs;	
+	var $domain_attrs;	
+	var $global_attrs;	
+	var $smarty_action = 'default';
+	var $js_on_subm = ""; //javascript which is called on form submit
+
+	/* return required data layer methods - static class */
+	function get_required_data_layer_methods(){
+		return array('get_attr_types', 'get_user_attrs', 'get_domain_attrs', 'get_global_attrs');
+	}
+
+	/* return array of strings - requred javascript files */
+	function get_required_javascript(){
+		return array("sip_address_completion.js.php");
+	}
+	
+	/* constructor */
+	function apu_attributes(){
+		global $lang_str, $config;
+		parent::apu_base_class();
+
+		/* with which attributes we will work, if this array is ampty we will work with all defined attributes */		
+		$this->opt['attributes'] = array();	
+		$this->opt['exclude_attributes'] = array();	
+
+		$this->opt['error_messages'] = array();	
+		$this->opt['validate_funct'] = null;	
+
+		$this->opt['optionals'] = array();	
+
+		$this->opt['attrs_kind'] = 'user';	
+		$this->opt['redirect_on_update']  = "";
+
+		
+		/* message on attributes update */
+		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
+		$this->opt['msg_update']['long']  =	&$lang_str['msg_changes_saved_l'];
+		
+		/*** names of variables assigned to smarty ***/
+		/* array containing names of attributes */
+		$this->opt['smarty_attributes'] =	'attributes';
+		/* form */
+		$this->opt['smarty_form'] =			'form';
+		/* smarty action */
+		$this->opt['smarty_action'] =		'action';
+
+		/* name of html form */
+		$this->opt['form_name'] =			'';
+	}
+
+	/* this metod is called always at begining */
+	function init(){
+		global $_SERWEB;
+		parent::init();
+
+		switch($this->opt['attrs_kind']){
+		case "user":
+			$this->uid = $this->controler->user_id->get_uid();
+			$this->did = $this->controler->user_id->get_did();
+			break;
+		case "domain":
+			$this->did = $this->controler->domain_id;
+			break;
+		}
+	}
+
+	/**
+	 *	returned two dimensional array of attributes
+	 *	it is ordered array which elements contain associative array, with keys:
+	 *		'att_name'
+	 *		'att_desc'
+	 *		'att_type'
+	 *		'att_spec' (for type 'radio' only)
+	 *	
+	 *	this method also return javascript on form submit for attributes which type is sip address
+	 *	
+	 *	@access private
+	 */
+	function format_attributes_for_output(){
+	
+		$out=array();
+		foreach($this->opt['attributes'] as $att){
+
+			if ($this->attr_types[$att]->get_type() == "sip_adr")		
+					$this->js_on_subm.="sip_address_completion(f.".$att.");";
+
+			// set description of attributes
+//			if (isset($this->opt['att_description'][$name_of_attribute]))
+//				$out[$name_of_attribute]['att_desc'] = $this->opt['att_description'][$name_of_attribute];
+//			else
+//				$out[$name_of_attribute]['att_desc'] = $name_of_attribute;
+
+			$out[$att]['att_desc'] = $this->attr_types[$att]->get_description();
+			$out[$att]['att_name'] = $att;
+			$out[$att]['att_type'] = $this->attr_types[$att]->get_type();
+			
+			/* if type of attribute is radio, create list of options
+			 * ass array of asociative arrays with entries 'label' and 'value'
+			 */
+			if ($this->attr_types[$att]->get_type() == "radio") {
+				foreach($this->f->elements[$att]['ob']->options as $v){
+					$out[$att]['att_spec'][] = $v;
+				}
+			}
+
+		}
+		return $out;
+	}
+	
+	function action_update(&$errors){
+		global $data;
+
+		//update all changed attributes
+		foreach($this->opt['attributes'] as $att){
+			//if att value is changed
+			if ($_POST[$att] != $_POST["_hidden_".$att]){
+				
+				switch($this->opt['attrs_kind']){
+				case "user":
+					if (false === $this->user_attrs->set_attribute($att, $_POST[$att])) return false;
+				break;
+				case "domain":
+					if (false === $this->domain_attrs->set_attribute($att, $_POST[$att])) return false;
+				break;
+				case "global":
+					if (false === $this->global_attrs->set_attribute($att, $_POST[$att])) return false;
+				break;
+				}
+			}
+		}
+
+		if ($this->opt['redirect_on_update']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
+		}
+
+		return array("m_attrs_updated=".RawURLEncode($this->opt['instance_id']));
+	}
+	
+			
+	/* check _get and _post arrays and determine what we will do */
+	function determine_action(){
+		if ($this->was_form_submited()){	// Is there data to process?
+			$this->action=array('action'=>"update",
+			                    'validate_form'=>true,
+								'reload'=>true);
+		}
+		else $this->action=array('action'=>"default",
+			                     'validate_form'=>false,
+								 'reload'=>false);
+	}
+	
+	/* create html form */
+	function create_html_form(&$errors){
+		global $data, $config;
+		parent::create_html_form($errors);
+
+		$attr_types = &Attr_types::singleton();
+	
+		//get list of attributes
+		if (false === $this->attr_types = &$attr_types->get_attr_types()) return false;
+
+		switch($this->opt['attrs_kind']){
+		case "user":
+			// get user_attrs
+			$this->user_attrs = &User_Attrs::singleton($this->uid);
+			if (false === $user_attrs = &$this->user_attrs->get_attributes()) return false;
+
+		case "domain":
+			// get domain_attrs
+			$this->domain_attrs = &Domain_Attrs::singleton($this->did);
+			if (false === $domain_attrs = &$this->domain_attrs->get_attributes()) return false;
+
+		case "global":
+			// get global_attrs
+			$this->global_attrs = &Global_Attrs::singleton();
+			if (false === $global_attrs = &$this->global_attrs->get_attributes()) return false;
+		}
+
+		$this->attr_values = array();
+		foreach($this->attr_types as $k => $v){
+			if     ($this->opt['attrs_kind'] == 'user' and 
+			        !$this->attr_types[$k]->is_for_users()) 
+				    continue;
+
+			elseif ($this->opt['attrs_kind'] == 'domain' and 
+			        !$this->attr_types[$k]->is_for_domains()) 
+					continue;
+
+			elseif ($this->opt['attrs_kind'] == 'global' and 
+			        !$this->attr_types[$k]->is_for_globals()) 
+					continue;
+
+		
+			switch($this->opt['attrs_kind']){
+			case "user":
+				if (isset($user_attrs[$k])){
+					$this->attr_values[$k] = $user_attrs[$k];
+					break;
+				}		
+			case "domain":
+				if (isset($domain_attrs[$k])){
+					$this->attr_values[$k] = $domain_attrs[$k];
+					break;
+				}		
+			case "global":
+				if (isset($global_attrs[$k])){
+					$this->attr_values[$k] = $global_attrs[$k];
+					break;
+				}
+			}
+			
+			/*
+			 *	If the value of attribute is not found, set it as null
+			 */
+			if (!isset($this->attr_values[$k])) $this->attr_values[$k] = null;	
+					
+		}
+
+		// if option 'atributes' is not given, that mean we will work with all attributes
+		if (empty($this->opt['attributes'])){
+			foreach($this->attr_values as $k => $v){
+				$this->opt['attributes'][] = $k;
+			}
+		}
+		//else check if all opt['attributes'] is known
+		else {
+			foreach($this->opt['attributes'] as $k=>$v){
+				if (!array_key_exists($v, $this->attr_values)){
+                    log_errors(PEAR::RaiseError("Attribute named '".$v."' does not exists"), $errors); 
+					unset($this->opt['attributes'][$k]);
+				}
+			}
+		}
+
+		//except unwanted arguments
+		$this->opt['attributes'] = array_diff($this->opt['attributes'], $this->opt['exclude_attributes']);
+
+
+		// add elements to form object
+		foreach($this->opt['attributes'] as $att){
+			$opt = array();
+			$opt['optional'] = isset($this->opt['optionals'][$att]) ? $this->opt['optionals'][$att] : false;
+			$opt['err_msg']  = isset($this->opt['error_messages'][$att]) ? $this->opt['error_messages'][$att] : null;
+
+			$this->attr_types[$att]->form_element($this->f, 
+			                                      $this->attr_values[$att],
+			                                      $opt);
+		}
+
+	}
+
+	/* validate html form */
+	function validate_form(&$errors){
+		global $lang_str;
+		if (false === parent::validate_form($errors)) return false;
+
+		//check values of attributes and format its
+		foreach($this->opt['attributes'] as $att){
+			if (!$this->attr_types[$att]->check_value($_POST[$att])){
+
+				// value of attribute is wrong
+				// if is set error message for this attribute, add it to $errors array
+				// otherwise add to $errors array default message: $lang_str['fe_invalid_value_of_attribute']
+				
+				if (isset($this->opt['error_messages'][$att]))
+					$errors[]=$this->opt['error_messages'][$att];
+				else
+					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attr_types[$att]->get_description(); 
+
+				return false;
+			}
+		}
+		
+
+		//value of attributes seems to be ok, try to call user checking function yet
+		if (!empty($this->opt['validate_funct']) and
+			!call_user_func_array($this->opt['validate_funct'], array(&$_POST, $this->opt['error_messages'], &$errors))){
+				//user checking function returned false -> value of attribute is wrong
+				return false;
+		}
+
+		return true;
+	}
+	
+	/* add messages to given array */
+	function return_messages(&$msgs){
+		global $_GET;
+		
+		if (isset($_GET['m_attrs_updated']) and $_GET['m_attrs_updated'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_update'];
+			$this->smarty_action="was_updated";
+		}
+	}
+
+	/* assign variables to smarty */
+	function pass_values_to_html(){
+		global $smarty;
+		
+		$smarty->assign($this->opt['smarty_attributes'], 
+		                $this->format_attributes_for_output());
+		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+	}
+
+	/* return info need to assign html form to smarty */
+	function pass_form_to_html(){
+		return array('smarty_name' => $this->opt['smarty_form'],
+		             'form_name'   => $this->opt['form_name'],
+		             'before'      => $this->js_on_subm
+		            );
+	}
+
+}
+
+?>
