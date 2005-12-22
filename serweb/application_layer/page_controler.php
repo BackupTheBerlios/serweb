@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.18 2005/11/14 15:21:31 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.19 2005/12/22 13:02:59 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -44,10 +44,17 @@ class page_conroler{
 	var $template_name;
 	/** flag which indicated that user come from admin interface */
 	var $come_from_admin_interface=false;
-	/** auth info of user with which setting we are working. Usualy is same as $serweb_auth, only admin can change it */
+
+	/** auth info of user with which setting we are working. 
+	 *	Usualy is same as $serweb_auth, only admin can change it 
+	 */
 	var $user_id = null;		
-	/** id of domain with which setting we are working. Only admin can change it */
+
+	/** id of domain with which setting we are working. 
+	 *	Only admin can change it 
+	 */
 	var $domain_id = null;		
+
 	/** associative array of controller options */
 	var $opt=array();
 	/** array of html forms */
@@ -88,6 +95,9 @@ class page_conroler{
 		global $sess_page_controler_domain_id;
 
 		$this->reg = Creg::singleton();				// create regular expressions class
+
+		$eh = &ErrorHandler::singleton();
+		$eh -> set_errors_ref($this->errors);
 
 		// register session variable sess_xxl_selected_proxy
 		if (!$sess->is_registered('sess_xxl_selected_proxy')) $sess->register('sess_xxl_selected_proxy');
@@ -155,6 +165,7 @@ class page_conroler{
 
 		}
 		else $this->user_id=$serweb_auth;
+
 		
 		// if $data_selected_proxy was not set, reference it to $data_auth
 		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
@@ -190,7 +201,7 @@ class page_conroler{
 	 * @static
 	 */
 	function get_required_data_layer_methods(){
-		return array('check_admin_perms_to_user', 'check_admin_perms_to_domain', 'set_timezone');
+		return array('check_admin_perms_to_user', 'check_admin_perms_to_domain');
 	}
 
 	/* add application unit to $apu_objects array*/
@@ -224,14 +235,24 @@ class page_conroler{
 	 *	@param Cserweb_auth $user	user to which timezone should be set - if not given $this->user_id is used
 	 */
 	function set_timezone($user = null){
-		global $data;
+		global $config;
 		if (is_null($user)) $user = $this->user_id;
+
+		$an = &$config->attr_names;
 
 		/* if timezone is already set for this user, do not set it again */
 		if (!$this->is_set_timezone or $this->is_set_timezone != $user){
-			if (false === $data->set_timezone($user, $this->errors)) return;
-			$this->is_set_timezone = $user;
+
+			$o = array('uid' => $user->uuid);
+			if (false === $tz = Attributes::get_attribute($an['timezone'], $o)) return false;
+
+			if (!is_null($tz)){
+				putenv("TZ=".$tz); //set timezone
+				$this->is_set_timezone = $user;
+			}
 		}
+		
+		return true;
 	}
 
 	function set_onload_js($js){
@@ -631,12 +652,12 @@ class page_conroler{
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
 			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
-				$pp=$GLOBALS['data']->check_admin_perms_to_user($serweb_auth, $this->user_id, $this->errors);
+				$pp=$GLOBALS['data']->check_admin_perms_to_user($_SESSION['auth'], $this->user_id, array());
 	
 				if (0 > $pp or !$pp){
-					if (0 > $pp) echo "Database error \n";
+					if (0 > $pp) echo "Permission check error \n";
 	
-					$sess_page_controler_user_id = $serweb_auth;
+					$sess_page_controler_user_id = null;
 					page_close();			
 					die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
 				} 
@@ -647,10 +668,10 @@ class page_conroler{
 		/* check if admin have perms to manage domain */
 		if ($this->check_perms_to_domain){
 			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
-				$pp=$GLOBALS['data']->check_admin_perms_to_domain($serweb_auth, $this->domain_id, array(), $this->errors);
+				$pp=$GLOBALS['data']->check_admin_perms_to_domain($_SESSION['auth'], $this->domain_id, array());
 
 				if (0 > $pp or !$pp){
-					if (0 > $pp) echo "Permissin check error \n";
+					if (0 > $pp) echo "Permission check error \n";
 	
 					$sess_page_controler_domain_id = null;
 					page_close();			
