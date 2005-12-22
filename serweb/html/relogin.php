@@ -1,15 +1,13 @@
 <?
 /*
- * $Id: relogin.php,v 1.2 2005/11/30 11:18:11 kozlik Exp $
+ * $Id: relogin.php,v 1.3 2005/12/22 12:57:29 kozlik Exp $
  */
 
-	global $config, $page_attributes, $errors, $smarty, $lang_str, $_SERWEB;
+	global $config, $page_attributes, $smarty, $lang_str, $_SERWEB;
 	
 	print_html_head();
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
-
-	if (!isset($errors)) $errors=array();
 
 	print_html_body_begin($page_attributes);
 
@@ -23,8 +21,10 @@
 	$cfg->domains_path =		$config->domains_path;
 
 
-	$page_attributes['errors']=&$errors;
-	$page_attributes['message']=&$message;
+	$eh = &ErrorHandler::singleton();
+
+	$page_attributes['errors'] = &$eh->get_errors_array();
+//	$page_attributes['message'] = &$message;
 
 	$smarty->assign_by_ref('parameters', $page_attributes);
 
@@ -39,7 +39,7 @@
 
 	$form = array();
 	$form['start']    = '<form name="login_form" action="'.$this->url().'" method=post>';
-	$form['username'] = '<input type="text" name="username" id="username" value="'.$f_uname.'" size=32 disabled>';
+	$form['username'] = '<input type="text" name="username" id="username" value="'.$f_uname.'" autocomplete="off" size=32 disabled>';
 	$form['password'] = '<input type="password" name="password" id="password" size=32 maxlength=128>';
 	$form['okey']     = '<input type="submit" name="okey_x" id="okey" value="'.$lang_str['b_login'].'">';
 	$form['finish']   = '</form>';

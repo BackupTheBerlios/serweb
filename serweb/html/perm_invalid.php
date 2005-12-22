@@ -1,15 +1,13 @@
 <?
 /*
- * $Id: perm_invalid.php,v 1.1 2005/11/30 11:17:24 kozlik Exp $
+ * $Id: perm_invalid.php,v 1.2 2005/12/22 12:57:29 kozlik Exp $
  */ 
 
-	global $config, $page_attributes, $errors, $smarty, $lang_str, $sess;
+	global $config, $page_attributes, $smarty, $lang_str, $sess;
 	
 	print_html_head();
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
-
-	if (!isset($errors)) $errors=array();
 
 	print_html_body_begin($page_attributes);
 
@@ -23,8 +21,10 @@
 	$cfg->domains_path =		$config->domains_path;
 
 
-	$page_attributes['errors']=&$errors;
-	$page_attributes['message']=&$message;
+	$eh = &ErrorHandler::singleton();
+
+	$page_attributes['errors'] = &$eh->get_errors_array();
+//	$page_attributes['message']=&$message;
 
 	$smarty->assign_by_ref('parameters', $page_attributes);
 
