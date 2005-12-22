@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.4 2005/12/01 12:06:10 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.5 2005/12/22 13:14:12 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -30,6 +30,10 @@
  *	
  *	'cookie_domain'				(string) default: null
  *	 The domain that the cookie in which is stored username is available 
+ *	
+ *	'unset_lang_on_login'		(bool) default: true
+ *	 Unset session variable containg language after successful log in
+ *	 It allows to set language by user attribute
  *	
  *	'msg_logout'				default: $lang_str['msg_logout_s'] and $lang_str['msg_logout_l']
  *	 message which should be showed on user logout - assoc array with keys 'short' and 'long'
@@ -59,6 +63,7 @@
 class apu_login extends apu_base_class{
 	var $smarty_action='default';
 	var $uid = null;
+	var $did = null;
 	var $username = null;
 	var $realm = null;
 	var $password = null;
@@ -76,7 +81,7 @@ class apu_login extends apu_base_class{
 	
 	/* constructor */
 	function apu_login(){
-		global $lang_str, $sess_lang, $config;
+		global $lang_str, $config;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -92,6 +97,7 @@ class apu_login extends apu_base_class{
 
 		$this->opt['auth_class'] = 'Auth';
 
+		$this->opt['unset_lang_on_login'] = true;
 
 		/* message on attributes update */
 		$this->opt['msg_logout']['short'] =	&$lang_str['msg_logout_s'];
@@ -107,7 +113,7 @@ class apu_login extends apu_base_class{
 		
 		$this->opt['form_submit']=array('type' => 'image',
 										'text' => $lang_str['b_login'],
-										'src'  => get_path_to_buttons("btn_login.gif", $sess_lang));
+										'src'  => get_path_to_buttons("btn_login.gif", $_SESSION['lang']));
 		
 	}
 
@@ -147,7 +153,8 @@ class apu_login extends apu_base_class{
 		}
 
 		$_SESSION['auth'] = new $this->opt['auth_class'];
-		$_SESSION['auth']->authenticate_as($this->uid, $this->username, $this->realm);
+		$_SESSION['auth'] -> authenticate_as($this->uid, $this->username, $this->realm);
+		$_SESSION['auth'] -> set_did($this->did);
 
 		if (is_array($this->perms))
 			$_SESSION['auth']->set_perms($this->perms);
@@ -155,6 +162,7 @@ class apu_login extends apu_base_class{
 		sw_log("User login: redirecting to page: ".$this->opt['redirect_on_login'], PEAR_LOG_DEBUG);
 
 		$this->controler->change_url_for_reload($this->opt['redirect_on_login']);
+		if ($this->opt['unset_lang_on_login']) unset($_SESSION['lang']);
 		return true;
 	}
 	
@@ -256,13 +264,19 @@ class apu_login extends apu_base_class{
 
 		/* validate credentials */
 		$uid = call_user_func_array(array($this->opt['auth_class'], 'validate_credentials'), 
-		                            array($this->username, $this->realm, $this->password, array(), &$errors));
+		                            array($this->username, $this->realm, $this->password, array()));
 
 		if (false === $uid) return false;
 
+		/* find out domain id */
+		$did = call_user_func_array(array($this->opt['auth_class'], 'find_out_did'), 
+		                            array($this->username, $this->realm, $uid, array()));
+
+		if (false === $did) return false;
+
 		/* set_permissions */
 		$perms = call_user_func_array(array($this->opt['auth_class'], 'find_out_perms'), 
-		                              array($uid, array(), &$errors));
+		                              array($uid, array()));
 
 		if (false === $perms) return false;
 
@@ -275,6 +289,7 @@ class apu_login extends apu_base_class{
 		}
 
 		$this->uid = $uid;
+		$this->did = $did;
 		$this->perms = $perms;
 
 		sw_log("User login: authentication succeeded, uid: ".$this->uid, PEAR_LOG_DEBUG);
