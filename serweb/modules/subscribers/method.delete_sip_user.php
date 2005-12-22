@@ -1,28 +1,31 @@
 <?
 /*
- * $Id: method.delete_sip_user.php,v 1.2 2005/08/24 12:56:31 kozlik Exp $
+ * $Id: method.delete_sip_user.php,v 1.3 2005/12/22 12:45:00 kozlik Exp $
  */
 
 class CData_Layer_delete_sip_user {
 	var $required_methods = array('delete_user_calls_forwarding', 'delete_user_speed_dial', 
-		'delete_user_msilo', 'delete_user_vsilo', 'delete_user_phonebook', 'delete_user_usr_preferences', 
-		'delete_user_acl', 'delete_user_admin_privileges', 'delete_user_aliases', 'delete_user_from_subscriber',
+		'delete_user_msilo', 'delete_user_vsilo', 'delete_user_phonebook', 'delete_user_attrs', 
+		'delete_user_acl', 'delete_user_uri', 'delete_user_credentials',
 		'delete_user_missed_calls');
 	
-	function delete_sip_user($user, &$errors){
+	function delete_sip_user($uid){
 	 	global $config;
 
-		if (false === $this->delete_user_calls_forwarding($user, $errors)) return false;
-		if (false === $this->delete_user_speed_dial($user, $errors)) return false;
-		if (false === $this->delete_user_msilo($user, $errors)) return false;
-		if (false === $this->delete_user_vsilo($user, $errors)) return false;
-		if (false === $this->delete_user_missed_calls($user, NULL, $errors)) return false;
-		if (false === $this->delete_user_phonebook($user, $errors)) return false;
-		if (false === $this->delete_user_usr_preferences($user, $errors)) return false;
-		if (false === $this->delete_user_acl($user, $errors)) return false;
-		if (false === $this->delete_user_admin_privileges($user, $errors)) return false;
-		if (false === $this->delete_user_aliases($user, $errors)) return false;
-		if (false === $this->delete_user_from_subscriber($user, $errors)) return false;
+		if (false === $this->transaction_start()) return false;
+
+//		if (false === $this->delete_user_calls_forwarding($user, $errors)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_speed_dial($uid)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_msilo($uid)) { $this->transaction_rollback(); return false;}
+//		if (false === $this->delete_user_vsilo($user, $errors)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_missed_calls($uid, NULL)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_phonebook($uid)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_attrs($uid)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_acl($uid)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_uri($uid)) { $this->transaction_rollback(); return false;}
+		if (false === $this->delete_user_credentials($uid)) { $this->transaction_rollback(); return false;}
+
+		if (false === $this->transaction_commit()) return false;
 		
 		return true;
 	}

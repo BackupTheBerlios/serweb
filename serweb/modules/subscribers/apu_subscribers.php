@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.3 2005/11/01 17:58:40 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.4 2005/12/22 12:45:00 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -26,10 +26,6 @@
  *	
  *	'def_chk_onlineonly'		(bool) default: false
  *	 set to true if checkbox 'onlineonly' should be initialy checked
- *	
- *	'only_from_same_domain'		(bool) default: false
- *	 set to true for display only users from same domain as admin
- *	 DEPRECATED
  *	
  *	'only_from_administrated_domains'	(bool) default: false
  *	 set to true for display only users from domains administrated by admin
@@ -78,7 +74,6 @@
 
 class apu_subscribers extends apu_base_class{
 	var $smarty_action='default';
-	var $dele_user = null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -104,7 +99,6 @@ class apu_subscribers extends apu_base_class{
 
 		$this->opt['sess_seed'] =	0;
 
-		$this->opt['only_from_same_domain'] = false;
 		$this->opt['only_from_administrated_domains'] = false;
 
 		$this->opt['get_user_aliases'] = false;
@@ -135,10 +129,10 @@ class apu_subscribers extends apu_base_class{
 	function action_enable(&$errors){
 		global $data;
 		
-		$opt = array("user"    => $this->controler->user_id,
+		$opt = array("uid"    => $this->controler->user_id->uuid,
 		             "disable" => false);
-	
-		if (!$data->enable_user($opt, $errors)) return false;
+
+		if (!$data->enable_user($opt)) return false;
 
 		return array("m_sc_user_enabled=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -147,28 +141,19 @@ class apu_subscribers extends apu_base_class{
 	function action_disable(&$errors){
 		global $data;
 		
-		$opt = array("user"    => $this->controler->user_id,
+		$opt = array("uid"    => $this->controler->user_id->uuid,
 		             "disable" => true);
 	
-		if (!$data->enable_user($opt, $errors)) return false;
+		if (!$data->enable_user($opt)) return false;
 
 		return array("m_sc_user_disabled=".RawURLEncode($this->opt['instance_id']));
 	}
 
 
 	function action_delete(&$errors){
-		global $data, $lang_str, $serweb_auth;
+		global $data;
 	
-/*		if ($this->opt['only_from_same_domain'] or $this->opt['only_from_administrated_domains']){
-			if (0 > ($pp=$data->check_admin_perms_to_user($serweb_auth, $this->dele_user, $errors))) return false;
-			
-			if (!$pp){
-				$errors[]=$lang_str['err_admin_can_not_delete_user_1']." '".$this->dele_user->uname."' ".$lang_str['err_admin_can_not_delete_user_2'];
-				return false;
-			}
-		}
-*/
-		if (!$data->mark_user_deleted(array("user"=>$this->dele_user), $errors)) return false;
+		if (!$data->mark_user_deleted(array("uid"=>$this->controler->user_id->uuid))) return false;
 
 		return array("m_sc_user_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -178,16 +163,13 @@ class apu_subscribers extends apu_base_class{
 
 		$data->set_act_row($sess_apu_sc[$this->opt['sess_seed']]['act_row']);
 
-		if (isset($serweb_auth->domains_perm) and is_array($serweb_auth->domains_perm)) $domains_perm = $serweb_auth->domains_perm;
-		else $domains_perm = array();
 		
-		$opt = array('only_domain' => $this->opt['only_from_same_domain']?
-							$serweb_auth->domain:
-							null,
-					 'from_domains' => $this->opt['only_from_administrated_domains']?
-					 		$domains_perm:
-					 		null,
-					 'get_user_aliases' => $this->opt['get_user_aliases']);
+		$opt = array('get_user_aliases' => $this->opt['get_user_aliases']);
+
+		if ($this->opt['only_from_administrated_domains']){
+			if (false === $domains_perm = $_SESSION['auth']->get_administrated_domains()) return false;
+			$opt['from_domains'] = $domains_perm;
+		}
 		
 		
 		if (false === $this->subscribers = 
@@ -240,7 +222,7 @@ class apu_subscribers extends apu_base_class{
 			$tmp['filter']['fname'] = '';
 			$tmp['filter']['lname'] = '';
 			$tmp['filter']['email'] = '';
-			$tmp['filter']['domain'] = '';
+			$tmp['filter']['realm'] = '';
 			$tmp['filter']['onlineonly'] = $this->opt['def_chk_onlineonly'];
 			$tmp['filter']['adminsonly'] = $this->opt['def_chk_adminsonly'];
 
@@ -267,7 +249,7 @@ class apu_subscribers extends apu_base_class{
 		if (isset($_POST['fname'])) $filter['fname']=$_POST['fname'];
 		if (isset($_POST['lname'])) $filter['lname']=$_POST['lname'];
 		if (isset($_POST['email'])) $filter['email']=$_POST['email'];
-		if (isset($_POST['domain'])) $filter['domain']=$_POST['domain'];
+		if (isset($_POST['realm'])) $filter['realm']=$_POST['realm'];
 
 		if ($this->opt['use_chk_onlineonly']){
 			if (isset($_POST['onlineonly'])) 
@@ -288,8 +270,6 @@ class apu_subscribers extends apu_base_class{
 	function determine_action(){
 
 		if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
-			$this->dele_user = $this->controler->user_id;
-			
 			$this->action=array('action'=>"delete",
 			                    'validate_form'=>false,
 								'reload'=>true);
@@ -353,10 +333,10 @@ class apu_subscribers extends apu_base_class{
 		                             "value"=>$filter['email']));
 
 		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"domain",
+		                             "name"=>"realm",
 									 "size"=>11,
 									 "maxlength"=>128,
-	        	                     "value"=>$filter['domain']));
+	        	                     "value"=>$filter['realm']));
 
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "value"=>1,
