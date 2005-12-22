@@ -2,12 +2,12 @@
 /**
  * Cron job maintenances database - should be run after midnight
  *
- * $Id: daily.php,v 1.1 2005/11/08 15:43:14 kozlik Exp $
+ * $Id: daily.php,v 1.2 2005/12/22 13:07:22 kozlik Exp $
  */
 
-$_data_layer_required_methods=array('get_domains', 'get_users', 'mark_user_deleted', 
-									'delete_sip_user', 'delete_domain', 
-									'delete_pending_users', 'delete_acc');
+$_data_layer_required_methods=array('get_deleted_domains', 'get_deleted_users',  
+									'get_domains', 'delete_sip_user', 'delete_domain', 
+									'delete_acc');
 
 $_required_modules = array('multidomain', 'subscribers', 'accounting');
 
@@ -25,9 +25,15 @@ $GLOBALS['now'] = time();
 function clean_domain_config(&$errors){
 	global $config, $data;
 
-	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400) , 
-	             'get_domain_names' => true, 
-				 'return_all' => true);
+	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400));
+
+	if (false === $deleted_dids = $data->get_deleted_domains($opt)) return false;
+
+
+	$opt = array('get_domain_names' => true, 
+				 'return_all' => true,
+				 'only_domains' => $deleted_dids,
+				 'check_deleted_flag' => false);
 
 	if (false === $deleted_domains = $data->get_domains($opt, $errors)) return false;
 	
@@ -46,20 +52,17 @@ function clean_domain_config(&$errors){
 /**
  *	Purge deleted users
  *
- *	@param array $errors	error messages
  *	@return bool			TRUE on success, FALSE on failure
  */
-function purge_deleted_users(&$errors){
+function purge_deleted_users(){
 	global $config, $data;
 
-	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400) , 
-	             'get_user_aliases' => false, 
-				 'return_all' => true);
+	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400));
 
-	if (false === $deleted_users = $data->get_users(array(), $opt, $errors)) return false;
+	if (false === $deleted_users = $data->get_deleted_users($opt)) return false;
 
 	foreach($deleted_users as $v){
-		if (false === $data->delete_sip_user($v['serweb_auth'], $errors)) return false;
+		if (false === $data->delete_sip_user($v)) return false;
 	}
 
 }
@@ -68,20 +71,17 @@ function purge_deleted_users(&$errors){
 /**
  *	Purge deleted domains
  *
- *	@param array $errors	error messages
  *	@return bool			TRUE on success, FALSE on failure
  */
-function purge_deleted_domains(&$errors){
+function purge_deleted_domains(){
 	global $config, $data;
 
-	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400) , 
-	             'get_domain_names' => false, 
-				 'return_all' => true);
+	$opt = array('deleted_before' => $GLOBALS['now'] - ($config->keep_deleted_interval * 86400));
 
-	if (false === $deleted_domains = $data->get_domains($opt, $errors)) return false;
+	if (false === $deleted_domains = $data->get_deleted_domains($opt)) return false;
 	
 	foreach($deleted_domains as $dom){
-		if (false === $data->delete_domain($dom['id'], null, $errors)) return false;
+		if (false === $data->delete_domain($dom, null)) return false;
 	}
 	return true;
 }
@@ -90,12 +90,25 @@ function purge_deleted_domains(&$errors){
 /**
  *	Purge non-confirmed registrations
  *
- *	@param array $errors	error messages
  *	@return bool			TRUE on success, FALSE on failure
  */
-function purge_pending_users(&$errors){
+function purge_pending_users(){
 	global $config, $data;
-	if (false === $data->delete_pending_users(null, $errors)) return false;
+
+	$an = &$config->attr_names;
+	$pending_ts = $GLOBALS['now'] - ($config->keep_pending_interval * 3600);
+
+	/* get IDs of pending users */
+	$o = array("name" => $an['pending_ts']);
+	if (false === $attrs = $data->get_attr_by_val('user', $o)) return false;
+
+
+	foreach ($attrs as $v){
+		if ((int)$v['value'] < (int)$pending_ts) {
+			if (false === $data->delete_sip_user($v['id'])) return false;
+		}
+	}
+
 	return true;
 }
 
@@ -103,29 +116,35 @@ function purge_pending_users(&$errors){
 /**
  *	Purge old acc record
  *
- *	@param array $errors	error messages
  *	@return bool			TRUE on success, FALSE on failure
  */
-function purge_acc(&$errors){
+function purge_acc(){
 	global $config, $data;
-	if (false === $data->delete_acc(null, $errors)) return false;
+	if (false === $data->delete_acc(null)) return false;
 	return true;
 }
 
 
 function main(&$errors){
 
-	if (false === purge_deleted_users($errors)) return false;
+	if (false === purge_deleted_users()) return false;
 	if (false === clean_domain_config($errors)) return false;
-	if (false === purge_deleted_domains($errors)) return false;
-	if (false === purge_pending_users($errors)) return false;
-	if (false === purge_acc($errors)) return false;
+	if (false === purge_deleted_domains()) return false;
+	if (false === purge_pending_users()) return false;
+	if (false === purge_acc()) return false;
 
 	return true;
 }
 
 $errors = array();
+
+$eh = &ErrorHandler::singleton();
+$eh->set_errors_ref($errors);
+
+
 main($errors);
+
+$errors = &$eh->get_errors_array();
 
 if (is_array($errors) and count($errors)) {
 	foreach($errors as $val) sw_log("cron job: daily maintenance - ".$val, PEAR_LOG_ERR);
