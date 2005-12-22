@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.2 2005/12/14 16:19:58 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.3 2005/12/22 13:28:09 kozlik Exp $
  */ 
 
 /** Application unit speed dial */
@@ -148,7 +148,7 @@ class apu_speed_dial extends apu_base_class{
 		$this->opt['username_in_target_only'] =		false;
 		$this->opt['domain_for_targets'] = $controler->user_id->domain;
 
-		$this->opt['domain_for_requests'] = $controler->did;
+		$this->opt['domain_for_requests'] = $controler->user_id->get_did();
 
 		/* blacklist */
 		$this->opt['blacklist'] = null;
@@ -233,7 +233,7 @@ class apu_speed_dial extends apu_base_class{
 				                'fname' => $_POST['fname_'.$val['index']],
 								'lname'  => $_POST['lname_'.$val['index']]);			
 								
-				if (false === $data->update_speed_dial($this->controler->uid, $values, $opt)) return false;
+				if (false === $data->update_speed_dial($this->controler->user_id->get_uid(), $values, $opt)) return false;
 			}
 		
 		}
@@ -315,7 +315,7 @@ class apu_speed_dial extends apu_base_class{
 		$data->set_act_row($sess_sd_act_row);
 		$data->set_showed_rows(10);
 			
-		if (false === $this->speed_dials = $data->get_speed_dials($this->controler->uid, $opt)) return false;
+		if (false === $this->speed_dials = $data->get_speed_dials($this->controler->user_id->get_uid(), $opt)) return false;
 		
 		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 		$this->pager['pos']=$data->get_act_row();
