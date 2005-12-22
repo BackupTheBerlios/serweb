@@ -1,11 +1,11 @@
 <?php
 /*
- * $Id: method.get_attribute.php,v 1.3 2005/12/01 12:02:48 kozlik Exp $
+ * $Id: method.get_attribute.php,v 1.4 2005/12/22 13:24:40 kozlik Exp $
  */
 
 class CData_Layer_get_attribute {
 	var $required_methods = array();
-	
+
 	/**
 	 *  Get value of attribute
 	 *
@@ -53,7 +53,6 @@ class CData_Layer_get_attribute {
 		$opt_uid = isset($opt["uid"]) ? $opt["uid"] : null;
 		$opt_did = isset($opt["did"]) ? $opt["did"] : null;
 
-
 		
 		/*
 		 *	look up the attribute among user_attrs
@@ -69,10 +68,8 @@ class CData_Layer_get_attribute {
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
-			if ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
-				return array('value' => $row['value'],
-				             'origin' => 'user');
-			}
+			$out = $this->get_attrib_format_output($res, 'user');
+			if (is_array($out)) return $out;
 		}
 
 
@@ -90,10 +87,8 @@ class CData_Layer_get_attribute {
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
-			if ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
-				return array('value' => $row['value'],
-				             'origin' => 'domain');
-			}
+			$out = $this->get_attrib_format_output($res, 'domain');
+			if (is_array($out)) return $out;
 		}
 
 
@@ -108,13 +103,41 @@ class CData_Layer_get_attribute {
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
 
-		if ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
-			return array('value' => $row['value'],
-			             'origin' => 'global');
-		}
+		$out = $this->get_attrib_format_output($res, 'global');
+		if (is_array($out)) return $out;
 
 		return null;
 
+	}
+
+	/**
+	 *  Format the result of DB query into array
+	 *	
+	 *	(@see get_attribute)
+	 *	
+	 *	@private
+	 *	@param	DB_Result	$res		result of DB query
+	 *	@param	string		$origin		
+	 *	@return mixed				see above
+	 */ 
+	function get_attrib_format_output(&$res, $origin){
+
+		if ($res->numRows() > 1){
+			$out = array('value' => array(),
+			             'origin' => $origin);
+
+			while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
+				$out['value'][] = $row['value'];
+			}
+			return $out;
+		}
+
+		if ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
+			return array('value' => $row['value'],
+			             'origin' => $origin);
+		}
+
+		return null;
 	}
 	
 }
