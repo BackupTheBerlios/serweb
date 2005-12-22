@@ -1,15 +1,7 @@
-<?
+<?php
 /*
- * $Id: class_definitions.php,v 1.4 2005/10/07 14:00:35 kozlik Exp $
+ * $Id: class_definitions.php,v 1.5 2005/12/22 13:06:04 kozlik Exp $
  */
-
-class Csub_not {
-	var $uri, $desc;
-	function Csub_not($uri, $desc){
-		$this->uri=$uri;
-		$this->desc=$desc;
-	}
-}
 
 class CREG_list_item {
 	var $reg, $label;
@@ -84,9 +76,9 @@ class Cconfig{
  
 //class for storing authentication information
 class Cserweb_auth{
-	var $uuid, $uname, $domain, $domains_perm;
+	var $uuid, $uname, $domain;
 	var $classname='Cserweb_auth';
-	var $persistent_slots = array("uuid", "uname", "domain", "domains_perm");
+	var $persistent_slots = array("uuid", "uname", "domain");
 
 	function Cserweb_auth($uuid=null, $uname=null, $domain=null){
 		$this->uuid   =	$uuid;
@@ -94,4 +86,235 @@ class Cserweb_auth{
 		$this->domain =	$domain;
 	}
 }
+
+class SerwebUser extends Cserweb_auth{
+	var $classname='SerwebUser';
+	var $did = null;
+
+	function SerwebUser($uid=null, $uname=null, $domain=null){
+		$this->uuid   =	$uid;
+		$this->uname  =	$uname;
+		$this->domain =	$domain;
+	}
+	
+	function get_uid(){
+		return $this->uuid;
+	}
+
+	function get_username(){
+		return $this->uname;
+	}
+
+	function get_realm(){
+		return $this->domain;
+	}
+
+	function get_did(){
+		if (!is_null($this->did)) return $this->did;
+
+		/* find out domain id */
+		$did = call_user_func_array(array('phplib_Auth', 'find_out_did'), 
+		                            array($this->uname, $this->domain, $this->uuid, array()));
+
+		if (false === $did) return false;
+		$this->did = $did;
+
+		return $this->did;
+	}
+}
+
+class ErrorHandler{
+	var $errors = array();
+
+    /**
+     * Return a reference to a ErrorHandler instance, only creating a new instance 
+	 * if no ErrorHandler instance currently exists.
+     *
+     * You should use this if there are multiple places you might create a
+     * ErrorHandler, you don't want to create multiple instances, and you don't 
+	 * want to check for the existance of one each time. The singleton pattern 
+	 * does all the checking work for you.
+     *
+     * <b>You MUST call this method with the $var = &ErrorHandler::singleton() 
+	 * syntax. Without the ampersand (&) in front of the method name, you will 
+	 * not get a reference, you will get a copy.</b>
+     *
+     * @access public
+     */
+
+    function &singleton() {
+        static $instance = null;
+
+		if (is_null($instance)) {
+			$instance = new ErrorHandler();
+		}
+        return $instance;
+    }
+
+    /**
+     *	Add an error message to the array of error messages
+     *
+     *	This method may be called staticaly e.g.: ErrorHandler::add_error($message);
+     *	or dynamicaly e.g. $e = &ErrorHandler::singleton(); $e->add_error($message);
+     *
+     *	@param	mixed	$message	string or array of strings
+     *	@return	none
+     */
+     
+	function add_error($message){
+		
+		if (isset($this) and is_a($this, 'ErrorHandler')) $in = &$this;
+		else $in = &ErrorHandler::singleton();
+
+		if (is_array($message)){
+			$in->errors = array_merge($in->errors, $message);
+		}
+		else
+			$in->errors[] = $message;
+	}
+
+	/**
+	 *	get error message from PEAR_Error object and write it to $errors array and to error log
+	 *
+     *	This method may be called staticaly e.g.: ErrorHandler::log_errors($err_object);
+     *	or dynamicaly e.g. $e = &ErrorHandler::singleton(); $e->log_errors($err_object);
+     *
+	 *	@param object $err_object PEAR_Error object
+     *	@return	none
+	 */
+
+	function log_errors($err_object){
+		
+		if (isset($this) and is_a($this, 'ErrorHandler')) $in = &$this;
+		else $in = &ErrorHandler::singleton();
+
+		log_errors($err_object, $in->errors);
+	}
+
+
+
+    /**
+     *	Set internal variable containing error messages to be a reference to given array
+     *
+     *	@param	array	$errors
+     *	@return	none
+     */
+     
+	function set_errors_ref(&$errors){
+		$this->errors = &$errors;
+	}	
+
+    /**
+     *	Return array of error messages (as reference))
+     *
+     *	@return	array
+     */
+     
+	function &get_errors_array(){
+		return $this->errors;
+	}	
+}
+
+class Domains{
+
+	var $domains = null;
+	var $domain_names = null;
+
+    function &singleton() {
+        static $instance = null;
+
+		if (is_null($instance)) $instance = new Domains();
+        return $instance;
+    }
+
+	/*
+	 *	Load info about domains from DB
+	 */
+	function load_domains(){
+		global $data;
+		
+		$o = array('order_by' => 'canon',	//canonical domain names will be first
+		           'order_desc' => true);
+
+		$data->add_method('get_domain');
+		if (false === $domains = $data->get_domain($o)) return false;
+		
+		foreach($domains as $k => $v){
+			$this->domains[$v['name']] = &$domains[$k];
+			$this->domain_names[$v['did']][] = $v['name'];
+		}
+	
+		return true;
+	}
+
+	/**
+	 *	Return array of domains indexed by domain names
+	 *
+	 *	@return	array 				array of domains or FALSE on error
+	 */
+	function &get_domains(){
+
+		if (is_null($this->domains) and false === $this->load_domains()) 
+			return false;
+		
+		return $this->domains;
+	}
+
+	/**
+	 *	Return name of domain with given did
+	 *
+	 *	If canonical name is set, is returned preferentially
+	 *	On error this function return FALSE. If domain with given $did doesn't 
+	 *	exist, NULL is returned
+	 *
+	 *	@param	string	$did	domain id
+	 *	@return	string			domain name or FALSE on error
+	 */
+	function get_domain_name($did){
+
+		if (is_null($this->domain_names) and false === $this->load_domains()) 
+			return false;
+	
+		if (!isset($this->domain_names[$did][0])) return null;
+	
+		return $this->domain_names[$did][0];
+	}
+
+	/**
+	 *	Return array of all alocated domain IDs 
+	 *	
+	 *	@return	array	array of domain IDs or FALSE on error
+	 */
+	function get_all_dids(){
+
+		if (is_null($this->domain_names) and false === $this->load_domains()) 
+			return false;
+
+		return array_keys($this->domain_names);
+	}
+	
+
+	/**
+	 *	Return array of pairs (ID, name)
+	 *	
+	 *	array is indexed by IDs
+	 *	
+	 *	@return	array	array or FALSE on error
+	 */
+
+	function get_id_name_pairs(){
+
+		if (is_null($this->domain_names) and false === $this->load_domains()) 
+			return false;
+
+		$out = array();
+	
+		foreach($this->domain_names as $k => $v)
+			$out[$k] = $v[0];
+			
+		return $out;
+	}
+	
+}
+
 ?>
