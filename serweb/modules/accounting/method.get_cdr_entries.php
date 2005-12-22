@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cdr_entries.php,v 1.3 2005/09/19 13:46:33 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
@@ -190,7 +190,7 @@ class CData_Layer_get_cdr_entries {
 
 			$o['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($o['to_uri'])."');";
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));
-			$o['status']  = $this->get_status($o['to_uri'], $errors);
+			$o['status']  = $this->get_status($o['to_uri'], null);
 			$o['name']    = $this->get_user_name_from_phonebook($user, $o['to_uri'], $errors);
 			$o['call_dir']= $row->call_type=='outgoing'?'outgoing':'incoming';
 

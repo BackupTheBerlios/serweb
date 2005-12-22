@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.3 2005/09/19 13:46:33 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
  */
 
 /*
@@ -64,6 +64,7 @@ class CData_Layer_get_acc_entries {
 		global $config, $serweb_auth, $sip_status_messages_array;
 
 		if (!$this->connect_to_db($errors)) return false;
+
 
 	    $opt_filter_outgoing = (isset($opt['filter_outgoing'])) ? (bool)$opt['filter_outgoing'] : true;
 	    $opt_filter_incoming = (isset($opt['filter_incoming'])) ? (bool)$opt['filter_incoming'] : true;
@@ -200,7 +201,7 @@ class CData_Layer_get_acc_entries {
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));
 
 			if ($opt_get_user_status)
-				$o['status']  = $this->get_status($o['to_uri'], $errors);
+				$o['status']  = $this->get_status($o['to_uri'], null);
 
 			if ($opt_get_phonebook_names)			
 				$o['name']    = $this->get_user_name_from_phonebook($user, $o['to_uri'], $errors);
@@ -224,6 +225,10 @@ class CData_Layer_get_acc_entries {
 	/* prepare parts of SQL queries */
 	function acc_prepare_SQL(){
 		global $config;
+
+		/* table's name */
+		$t_acc = &$config->data_sql->acc->table_name;
+
 			/*
 				select calls from accounting table
 				first SELECT selects pairs INVITE,BYE and unpaired INVITE records
@@ -234,42 +239,42 @@ class CData_Layer_get_acc_entries {
 				"select t1.to_uri as inv_to_uri, 
 						t1.sip_to as inv_sip_to, 
 						t1.sip_callid as inv_callid, 
-						t1.time as inv_time, 
-						t1.fromtag as inv_fromtag,
+						t1.response_timestamp as inv_time, 
+						t1.from_tag as inv_fromtag,
 						t1.sip_status as inv_status,
 						t2.to_uri as bye_to_uri, 
 						t2.sip_to as bye_sip_to, 
 						t2.sip_callid as bye_callid, 
-						t2.time as bye_time, 
-						t2.fromtag as bye_fromtag, 
-						t2.totag as bye_totag,
+						t2.request_timestamp as bye_time, 
+						t2.from_tag as bye_fromtag, 
+						t2.to_tag as bye_totag,
 						t2.from_uri as bye_from_uri, 
 						t2.sip_from as bye_sip_from,
-						coalesce(t1.time, t2.time) as ttime ";
+						coalesce(t1.response_timestamp, t2.request_timestamp) as ttime ";
 
 			$this->acc_sql['select_in'] = 
 				"select t1.from_uri as inv_to_uri, 
 						t1.sip_from as inv_sip_to, 
 						t1.sip_callid as inv_callid, 
-						t1.time as inv_time, 
-						t1.fromtag as inv_fromtag,
+						t1.response_timestamp as inv_time, 
+						t1.from_tag as inv_fromtag,
 						t1.sip_status as inv_status,
 						t2.from_uri as bye_to_uri, 
 						t2.sip_from as bye_sip_to, 
 						t2.sip_callid as bye_callid, 
-						t2.time as bye_time, 
-						t2.fromtag as bye_fromtag, 
-						t2.totag as bye_totag,
+						t2.request_timestamp as bye_time, 
+						t2.from_tag as bye_fromtag, 
+						t2.to_tag as bye_totag,
 						t2.from_uri as bye_from_uri, 
 						t2.sip_from as bye_sip_from,
-						coalesce(t1.time, t2.time) as ttime ";
+						coalesce(t1.response_timestamp, t2.request_timestamp) as ttime ";
 
 			$this->acc_sql['select_missed'] = 
 				"select t1.from_uri as inv_to_uri, 
 						t1.sip_from as inv_sip_to, 
 						t1.sip_callid as inv_callid, 
-						t1.time as inv_time, 
-						t1.fromtag as inv_fromtag,
+						t1.request_timestamp as inv_time, 
+						t1.from_tag as inv_fromtag,
 						t1.sip_status as inv_status,
 						null as bye_to_uri, 
 						null as bye_sip_to, 
@@ -279,20 +284,20 @@ class CData_Layer_get_acc_entries {
 						null as bye_totag,
 						null as bye_from_uri, 
 						null as bye_sip_from,
-						t1.time as ttime ";
+						t1.request_timestamp as ttime ";
 						
 			$this->acc_sql['from_1'] = 
-				"from ".$config->data_sql->table_accounting." t1 left outer join ".$config->data_sql->table_accounting." t2 on
+				"from ".$t_acc." t1 left outer join ".$t_acc." t2 on
 							t1.sip_callid=t2.sip_callid and
-							((t1.totag=t2.totag and t1.fromtag=t2.fromtag) or
-							 (t1.totag=t2.fromtag and t1.fromtag=t2.totag)) and
+							((t1.to_tag=t2.to_tag and t1.from_tag=t2.from_tag) or
+							 (t1.to_tag=t2.from_tag and t1.from_tag=t2.to_tag)) and
 							t2.sip_method='BYE' ";
 
 			$this->acc_sql['from_2'] = 
-				"from ".$config->data_sql->table_accounting." t1 right outer join ".$config->data_sql->table_accounting." t2 on
+				"from ".$t_acc." t1 right outer join ".$t_acc." t2 on
 							t1.sip_callid=t2.sip_callid and
-							((t1.totag=t2.totag and t1.fromtag=t2.fromtag) or
-							 (t1.totag=t2.fromtag and t1.fromtag=t2.totag)) and
+							((t1.to_tag=t2.to_tag and t1.from_tag=t2.from_tag) or
+							 (t1.to_tag=t2.from_tag and t1.from_tag=t2.to_tag)) and
 							t1.sip_method='INVITE' ";
 
 			$this->acc_sql['where_1'] = 
@@ -310,22 +315,25 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_outgoing($user){
 		global $config;
 
+		/* flags */
+		$f_acc = &$config->data_sql->acc->flag_values;
+
 		if ($config->users_indexed_by=='uuid') // in UUIDzed version we not able to get unpaired BYE records
 			$q = "(".$this->acc_sql['select_out'].", 'outgoing' as call_type ".
 			         $this->acc_sql['from_1'].
-			         $this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.caller_UUID', 't1.username', 't1.domain').
-					 		" and t1.caller_deleted != '1' ".
+			         $this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
+					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ".
 				 ")";
 		else
 			$q = "(".$this->acc_sql['select_out'].", 'outgoing' as call_type ".
 			         $this->acc_sql['from_1'].
-			         $this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.caller_UUID', 't1.username', 't1.domain').
-					 		" and t1.caller_deleted != '1' ".
+			         $this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
+					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ".
 				 ") union (".
 				     $this->acc_sql['select_out'].", 'outgoing' as call_type ".
 			         $this->acc_sql['from_2'].
-			         $this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.callee_UUID', 't2.username', 't2.domain').
-					 		" and t2.callee_deleted != '1' ".
+			         $this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.to_uid', 't2.username', 't2.domain').
+					 		" and (t2.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ".
 				 ")";
 		return $q;
 	
@@ -335,22 +343,25 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_outgoing_count($user){
 		global $config;
 
+		/* flags */
+		$f_acc = &$config->data_sql->acc->flag_values;
+
 		$q=array();
 		if ($config->users_indexed_by=='uuid'){
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_1'].
-					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.caller_UUID', 't1.username', 't1.domain').
-					 		" and t1.caller_deleted != '1' ";
+					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
+					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
 		}
 		else{
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_1'].
-					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.caller_UUID', 't1.username', 't1.domain').
-					 		" and t1.caller_deleted != '1' ";
+					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
+					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_2'].
-					$this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.callee_UUID', 't2.username', 't2.domain').
-					 		" and t2.callee_deleted != '1' ";
+					$this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.to_uid', 't2.username', 't2.domain').
+					 		" and (t2.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ";
 		}
 		return $q;	
 	}
@@ -359,11 +370,14 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_incoming($user){
 		global $config;
 
+		/* flags */
+		$f_acc = &$config->data_sql->acc->flag_values;
+
 		if ($config->users_indexed_by=='uuid'){
 			$q = "(".$this->acc_sql['select_in'].", 'incoming' as call_type ".
 			         $this->acc_sql['from_1'].
-			         $this->acc_sql['where_1']." and t1.callee_UUID = '".$user->uuid."'".
-					 		" and t1.callee_deleted != '1' ".
+			         $this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
+					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ".
 				 ")";
 		}
 		else {
@@ -381,12 +395,15 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_incoming_count($user){
 		global $config;
 
+		/* flags */
+		$f_acc = &$config->data_sql->acc->flag_values;
+
 		$q=array();
 		if ($config->users_indexed_by=='uuid'){
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_1'].
-					$this->acc_sql['where_1']." and t1.callee_UUID = '".$user->uuid."'".
-					 		" and t1.callee_deleted != '1' ";
+					$this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
+					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ";
 		}
 		else{
 		}
@@ -398,20 +415,28 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_missed($user){
 		global $config;
 
+		/* table's name */
+		$t_mc  = &$config->data_sql->missed_calls->table_name;
+		/* flags */
+		$f_mc = &$config->data_sql->missed_calls->flag_values;
+
 		if ($config->users_indexed_by=='uuid'){
 			$q="(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
-				    "FROM ".$config->data_sql->table_missed_calls." t1 ".
-				    "WHERE t1.callee_UUID='".$user->uuid."' )";
+				    "FROM ".$t_mc." t1 ".
+				    "WHERE t1.to_uid='".$user->uuid."' and 
+					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ";
 		}
 		else{
 			$q="(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
-					"FROM ".$config->data_sql->table_missed_calls." t1 ".
-					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."' ) ".
+					"FROM ".$t_mc." t1 ".
+					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."' and 
+					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ".
 				"UNION ".
 				"(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
-					"FROM ".$config->data_sql->table_missed_calls." t1, ".$config->data_sql->table_aliases." t2 ".
+					"FROM ".$t_mc." t1, ".$config->data_sql->table_aliases." t2 ".
 					"WHERE 'sip:".$user->uname."@".$user->domain."'".
-						"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain ) ";
+						"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain and 
+					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ";
 		}
 		return $q;
 	
@@ -421,19 +446,27 @@ class CData_Layer_get_acc_entries {
 	function acc_get_SQL_select_missed_count($user){
 		global $config;
 
+		/* table's name */
+		$t_mc  = &$config->data_sql->missed_calls->table_name;
+		/* flags */
+		$f_mc = &$config->data_sql->missed_calls->flag_values;
+
 		$q=array();
 		if ($config->users_indexed_by=='uuid'){
 			$q[]="SELECT count(*) ".
-				"FROM ".$config->data_sql->table_missed_calls." t1 ".
-                "WHERE t1.callee_UUID='".$user->uuid."'";
+				"FROM ".$t_mc." t1 ".
+                "WHERE t1.to_uid='".$user->uuid."' and 
+					   (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 		}
 		else{
 			$q[]="SELECT count(*)  ".
-					"FROM ".$config->data_sql->table_missed_calls." t1 ".
-					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."'";
+					"FROM ".$t_mc." t1 ".
+					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."' and 
+					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 			$q[]="SELECT count(*) ".
-					"FROM ".$config->data_sql->table_missed_calls." t1, ".$config->data_sql->table_aliases." t2 ".
-					"WHERE 'sip:".$user->uname."@".$user->domain."'=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain";
+					"FROM ".$t_mc." t1, ".$config->data_sql->table_aliases." t2 ".
+					"WHERE 'sip:".$user->uname."@".$user->domain."'=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain and 
+					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 		}
 		return $q;	
 	}

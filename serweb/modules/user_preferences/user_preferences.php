@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.4 2005/10/21 14:22:09 kozlik Exp $
+ * $Id: user_preferences.php,v 1.5 2005/12/22 12:46:26 kozlik Exp $
  */
 
 /*
@@ -39,7 +39,6 @@ class UP_providers{
 	
 	function UP_providers(){
 		global $data;
-		$this->items=Array();
 		
 		$data->add_method('get_providers');
 	}

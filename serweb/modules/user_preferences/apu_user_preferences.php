@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_user_preferences.php,v 1.4 2005/12/01 16:11:29 kozlik Exp $
+ * $Id: apu_user_preferences.php,v 1.5 2005/12/22 12:46:26 kozlik Exp $
  */ 
 
 /* Application unit user preferences */
@@ -72,7 +72,7 @@ class apu_user_preferences extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_attr_types', 'get_att_values', 'update_attribute_of_user');
+		return array('get_attr_types', 'get_attributes', 'update_attribute');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -162,10 +162,12 @@ class apu_user_preferences extends apu_base_class{
 		foreach($this->opt['attributes'] as $att){
 			//if att value is changed
 			if ($_POST[$this->attributes[$att]->att_name] != $_POST["_hidden_".$this->attributes[$att]->att_name]){
-				if (false === $data->update_attribute_of_user($this->user_id, 
-																$this->attributes[$att]->att_name, 
-																$_POST[$this->attributes[$att]->att_name], 
-																$errors)) 
+				$opt = array("uid" => $this->user_id->uuid);
+			
+				if (false === $data->update_attribute($this->attributes[$att]->att_name, 
+													  $_POST[$this->attributes[$att]->att_name], 
+													  $opt,
+													  $errors)) 
 					return false;
 			}
 		}
@@ -226,7 +228,15 @@ class apu_user_preferences extends apu_base_class{
 
 
 			// get attributes values
-			if (false === $data->get_att_values($this->user_id, $this->attributes, $errors)) break;
+			$opt = array();
+	echo "nastavit opt";
+			if (false === $att_vals = $data->get_attributes($opt, $errors)) break;
+
+			foreach($this->attributes as $k => $v){
+				if (isset($att_vals[$v->att_name])){
+					$this->attributes[$k] = $att_vals[$v->att_name]['value'];
+				}
+			}
 
 			// add elements to form object
 			foreach($this->opt['attributes'] as $att){

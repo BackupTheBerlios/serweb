@@ -1,16 +1,18 @@
 <?
 /*
- * $Id: method.get_attr_types.php,v 1.1 2005/12/01 16:11:29 kozlik Exp $
+ * $Id: method.get_attr_types.php,v 1.2 2005/12/22 12:46:26 kozlik Exp $
  */
 
 class Cattrib{
 	var $att_name;
 	var $att_value;
+	var $att_raw_type;
 	var $att_rich_type;
 	var $att_type_spec;
 
-	function Cattrib($att_name, $att_rich_type, $att_type_spec){
+	function Cattrib($att_name, $att_raw_type, $att_rich_type, $att_type_spec){
 		$this->att_name=$att_name;
+		$this->att_raw_type=$att_raw_type;
 		$this->att_rich_type=$att_rich_type;
 		$this->att_type_spec=$att_type_spec;
 	}
@@ -38,7 +40,7 @@ class CData_Layer_get_attr_types{
 		if (! is_null($att_edit)) $qw=" ".$c->name." != '".$att_edit."' "; 
 		else $qw = $this->get_sql_bool(true);
 
-		$q="select ".$c->name.", ".$c->rich_type.", ".$c->type_spec." 
+		$q="select ".$c->name.", ".$c->raw_type.", ".$c->rich_type.", ".$c->type_spec." 
 		    from ".$t_at." 
 			where ".$qw." 
 			order by ".$c->name;
@@ -48,7 +50,8 @@ class CData_Layer_get_attr_types{
 	
 		$out=array();
 		while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
-			$out[$row->att_name]=new Cattrib($row[$c->name], 
+			$out[$row[$c->name]]=new Cattrib($row[$c->name], 
+											 $row[$c->raw_type], 
 											 $row[$c->rich_type], 
 											 $row[$c->type_spec]);
 		}

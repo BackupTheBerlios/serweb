@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_acc.php,v 1.1 2005/11/08 15:43:14 kozlik Exp $
+ * $Id: method.delete_acc.php,v 1.2 2005/12/22 12:47:03 kozlik Exp $
  */
 
 class CData_Layer_delete_acc {
@@ -13,22 +13,31 @@ class CData_Layer_delete_acc {
 	 *		none
 	 *
 	 *	@param array $opt		associative array of options
-	 *	@param array $errors	error messages
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */ 
-	function delete_acc($opt, &$errors){
+	function delete_acc($opt){
 		global $config;
 		
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return 0;
+		}
 
-		$q="delete from ".$config->data_sql->table_accounting." 
-			where DATE_ADD(timestamp, INTERVAL ".$config->keep_acc_interval." DAY) < now()";
+		/* table's name */
+		$t_name = &$config->data_sql->acc->table_name;
+		/* col names */
+		$c = &$config->data_sql->acc->cols;
+		/* flags */
+		$f = &$config->data_sql->acc->flag_values;
+
+		$q="delete from ".$t_name." 
+			where DATE_ADD(".$c->request_timestamp.", INTERVAL ".$config->keep_acc_interval." DAY) < now()";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
 			//expect that table mayn't exist in installed version
 			if ($res->getCode() != DB_ERROR_NOSUCHTABLE) {
-				log_errors($res, $errors); return false;
+				ErrorHandler::log_errors($res); return false;
 			} 
 		}
 

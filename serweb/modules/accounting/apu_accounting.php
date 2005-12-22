@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.3 2005/09/01 15:22:58 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -289,7 +289,7 @@ class apu_accounting extends apu_base_class{
 		/* if missed calls are displayed, delete its too */
 		if ($this->opt['display_missed']){
 			if (!$opt['timestamp']) $opt['timestamp']=null;
-			if (false === $data->delete_user_missed_calls($this->user_id, $opt['timestamp'], $errors)) return false;
+			if (false === $data->delete_user_missed_calls($this->user_id->get_uid(), $opt['timestamp'])) return false;
 		} 
 
 		return array("m_acc_calls_deleted=".RawURLEncode($this->opt['instance_id']));
