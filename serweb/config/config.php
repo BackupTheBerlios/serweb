@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.26 2005/11/28 14:30:27 kozlik Exp $
+ * $Id: config.php,v 1.27 2005/12/22 13:54:14 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -14,11 +14,7 @@
 		"html_title", "html_doctype", "html_headers", "display_page_heading", 
 		"alias_generation",	"first_alias_number", "alias_prefix", 
 		"alias_postfix", "alias_lenght", "alias_generation_retries",
-		"infomail", "regmail", "lang");
-
-
-	/* set to true if SERWEB is used for more domains */
-	$config->multidomain = false;
+		"infomail", "regmail");
 
 
 	/* ------------------------------------------------------------*/
@@ -30,7 +26,24 @@
 	
 	$config->modules = array();
 	$config->modules['auth'] = true;
+	$config->modules['attributes'] = true;
 		
+	/* ------------------------------------------------------------*/
+	/* Language settings                                           */
+	/* ------------------------------------------------------------*/
+
+	/* Default language to use, if not browser-defined or user-defined
+	*/
+	
+	$config->default_lang = 'en-utf-8';
+	
+	/* Force: always use this language - must be defined in
+	   config/config_lang.php
+
+	   $config->force_lang = 'en-iso-8859-1';
+	*/
+	$config->force_lang = '';
+
 	/* ------------------------------------------------------------*/
 	/* serweb appearance                                           */
 	/* ------------------------------------------------------------*/
@@ -89,9 +102,10 @@
 	$config->admin_tabs[]=new Ctab (true, "tab_users", "users.php");							// $lang_str['tab_users']
 	$config->admin_tabs[]=new Ctab (true, "tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
 	$config->admin_tabs[]=new Ctab (true, "tab_ser_moni", "ser_moni.php");						// $lang_str['tab_ser_moni']
-	$config->admin_tabs[]=new Ctab (true, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
+	$config->admin_tabs[]=new Ctab (false, "tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
 	$config->admin_tabs[]=new Ctab (true, "tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
 	$config->admin_tabs[]=new Ctab (true, "tab_customers", "customers.php");					// $lang_str['tab_customers']
+	$config->admin_tabs[]=new Ctab (true, "tab_global_attributes", "global_attributes.php");	// $lang_str['tab_global_attributes']
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
@@ -131,6 +145,7 @@
 	
 	$config->allow_change_email=true;
 	$config->allow_change_password=true;
+	$config->allow_change_usrloc=false;
 
 	/* name of attribute in user preference for set visibility status of user
 	   set to empty string if status of users should be always visible
@@ -217,33 +232,6 @@
 	 */
 	$config->auth_lifetime = 20;
 	
-	/* ------------------------------------------------------------*/
-	/*                    domain preferences     	               */
-	/* ------------------------------------------------------------*/
-
-	/*
-	 *	 array describing attributes of domain preferences
-	 *	 the keys in array are names of attributes. Each item in array should contain
-	 *	 associative array with these keys:
-	 *		'type'    - type of attribute, possible values are: 
-	 *		            'boolean', 'int', 'string', 'sip_adr', 'list', 'radio'
-	 *		            see class User_Preferences for details
-	 *		'desc'    - description of attribute. May contain reference into $lang_str array
-	 *		'options' - associative array of options for types: 'list' and 'radio'
-	 *		            keys contain values of options and values are description 
-	 *		            of options
-	 *
-	 *  Example: 
-	 *
-	 *	$config->domain_preferences['attrib1'] =    array('type' => 'list',
-	 *	                                                  'options' => array ('opt1' => 'first',
-	 *												                          'opt2' => 'second',
-	 *															              'opt3' => 'third'),
-	 *												      'desc' => 'List of options');
-	 *
-	 *	$config->domain_preferences['attrib2'] =    array('type' => 'string',
-	 *	                                                  'desc' => 'A string');
-	 */
 
 	/* ------------------------------------------------------------*/
 	/* applications (experimental)                                 */
