@@ -1,5 +1,5 @@
 ; <?php die( 'Please do not access this page directly.' ); ?>
-; $Id: config.ini.php,v 1.1 2005/10/19 11:07:23 kozlik Exp $
+; $Id: config.ini.php,v 1.2 2005/12/22 12:48:27 kozlik Exp $
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;       basic local configuration options                       ;
@@ -43,21 +43,6 @@ html_doctype = "strict"
 ;		html_headers_2 = ''
 ;		html_headers_3 = ''
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;  Language settings                                            ;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;  Default language to use, if not browser-defined or user-defined
-
-default_lang = "en-utf-8"
-
-;  Force: always use this language - must be defined in
-;  config/config_lang.php
-;
-;  force_lang = "en-iso-8859-1" 
-
-force_lang = ""
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;  aliases generation                                           ;
