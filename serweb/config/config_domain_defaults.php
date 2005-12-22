@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.7 2005/11/11 13:03:34 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.8 2005/12/22 13:55:15 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -54,23 +54,6 @@
 		is not coresponding with this, use 'transitional' for HTML 4.0 Transitional or empty string for none DOCTYPE  */		
 	$config->html_doctype="strict";
 
-
-	/* ------------------------------------------------------------*/
-	/* Language settings                                           */
-	/* ------------------------------------------------------------*/
-
-	/* Default language to use, if not browser-defined or user-defined
-	*/
-	
-	$config->lang['default_lang'] = 'en-utf-8';
-	
-	/* Force: always use this language - must be defined in
-	   config/config_lang.php
-
-	   $config->lang['lang'] = 'en-iso-8859-1';
-	*/
-	$config->lang['lang'] = '';
-	
 
 	/* ------------------------------------------------------------*/
 	/* aliases generation                                          */
