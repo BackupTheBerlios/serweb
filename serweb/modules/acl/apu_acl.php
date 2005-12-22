@@ -3,7 +3,7 @@
  * Application unit acl (Access Control List)
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_acl.php,v 1.1 2005/08/24 11:57:51 kozlik Exp $
+ * @version   $Id: apu_acl.php,v 1.2 2005/12/22 13:26:27 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -66,7 +66,7 @@ class apu_acl extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_acl_of_user', 'get_admin_acl_privileges', 'update_acl_of_user');
+		return array('get_acl_of_user', 'update_acl_of_user');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -140,7 +140,7 @@ class apu_acl extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $data_auth, $serweb_auth;
+		global $data, $data_auth, $config;
 		parent::create_html_form($errors);
 
 		/* get access control list of user */
@@ -150,9 +150,13 @@ class apu_acl extends apu_base_class{
 		
 		if ($this->opt['allow_edit']){
 
+			$an = &$config->attr_names;
+
 			/* get admin ACL control privileges */
-			if (false === $this->acl_control = $data_auth->get_admin_acl_privileges($serweb_auth, $errors)) return false;
-		
+			$user_attrs = &User_Attrs::singleton($_SESSION['auth']->get_uid());
+			if (false === $this->acl_control = $user_attrs->get_attribute($an['acl_control'])) return false;
+			
+			if (is_null($this->acl_control)) $this->acl_control=array();		
 			
 			$grp_val=array();
 			foreach($this->acl as $val) $grp_val[]=$val['grp'];

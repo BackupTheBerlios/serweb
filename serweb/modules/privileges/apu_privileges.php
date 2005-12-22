@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.5 2005/11/04 13:26:03 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.6 2005/12/22 13:26:28 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -66,7 +66,7 @@ class apu_privileges extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('add_privilege_to_user', 'del_privilege_of_user', 'get_privileges_of_user');
+		return array();
 	}
 
 	/* return array of strings - requred javascript files */
@@ -111,76 +111,70 @@ class apu_privileges extends apu_base_class{
 		$errors - array in which arrors messages are returned
 	*/
 	
-	function update_db($priv_name, $priv_type, &$errors){
-		global $config, $data;
+	/* this metod is called always at begining */
+	function init(){
+		parent::init();
+
+		$this->privileges = array();
+		$this->privileges['acl_control'] = array();
+		$this->privileges['is_admin'] = false;
+		$this->privileges['hostmaster'] = false;
+
+		$this->enabled_privileges = array('is_admin' => 1,
+										  'hostmaster' => 1,
+										  'acl_control' => 1 );
+
+		foreach ($this->opt['disabled_privileges'] as $v){
+			$this->enabled_privileges[$v] = 0;
+		}
+	}
 	
-		switch ($priv_type['type']){
-		case "boolean":
-			//if checkbox isn't checked, assign value "0" to variable
-			if (!isset($_POST["pr_chk_".$priv_name])) $_POST["pr_chk_".$priv_name] = "0";
+	function update_db($priv_name, $attr_name, $values){
+		global $config;
+
+		/* get user attrs object */
+		$ua = &User_Attrs::singleton($this->user_id->get_uid());
+
+		/* get type of attribute */
+		$at = &Attr_Types::singleton();
+		if (false === $type = $at->get_attr_type($attr_name)) return false;
 	
-			if ($_POST["pr_chk_".$priv_name] != $_POST["pr_hidden_".$priv_name]){
-				if ($_POST["pr_chk_".$priv_name]){
-					if (false === $data->add_privilege_to_user($this->user_id, $priv_name, '1', isset($ad_priv[$priv_name][0]), $errors)) return false;
-				}
-				else{
-					if (false === $data->del_privilege_of_user($this->user_id, $priv_name, NULL, $errors)) return false;
-				}
+		if ($type->is_multivalue()){
+			$priv_values = array();
+			foreach ($values as $row){
+				//if checkbox is checked, assign value to $priv_vals
+				if (!empty($_POST["pr_chk_".$row])) $priv_values[] = $row;
 			}
-			break;
-	
-		case "multivalue":
-			foreach ($priv_type['values'] as $row){
-				//if checkbox isn't checked, assign value "0" to variable
-				if (!isset($_POST["pr_chk_".$row])) $_POST["pr_chk_".$row] = "0";
-	
-				//if state of checkbox was changed
-				if ($_POST["pr_chk_".$row] != $_POST["pr_hidden_".$row]){
-					if ($_POST["pr_chk_".$row]){
-						if (false === $data->add_privilege_to_user($this->user_id, $priv_name, $row, false, $errors)) return false;
-					}
-					else{
-						if (false === $data->del_privilege_of_user($this->user_id, $priv_name, $row, $errors)) return false;
-					}
-				}
+
+			if (false === $ua->set_attribute($attr_name, $priv_values)) return false;
+		
+		}
+		else{
+			if (!empty($_POST["pr_chk_".$priv_name])){
+				if (false === $ua->set_attribute($attr_name, "1")) return false;
 			}
-			break;
-		default:
-			$errors[]="non existent priv type"; return false;
-		}//end switch
+			else{
+				if (false === $ua->unset_attribute($attr_name)) return false;
+			}
+		}
 	
 		return true;
 	} //end function update_db
 
 
-	function check_access(&$errors){
-		global $perm, $lang_str;
-		
-		if (!$perm->have_perm('hostmaster') and !empty ($this->privileges['hostmaster'][0])){
-			$errors[] = $lang_str['err_cant_ch_priv_of_hostmaster'];
-			$this->allow_change_priv = false;
-			return false;
-		}
-		
-		return true;
-	}
-
 	function action_update(&$errors){
 		global $config;
 		
-		if (false === $this->check_access($errors)) return false;
+		$an = &$config->attr_names;
 		
 		if ($this->enabled_privileges['is_admin']){
-			if (false === $this->update_db('is_admin', array('type'=>'boolean'), $errors)) return false;
-		}
-		if ($this->enabled_privileges['change_privileges']){
-			if (false === $this->update_db('change_privileges', array('type'=>'boolean'), $errors)) return false;
+			if (false === $this->update_db('is_admin', $an['is_admin'], null)) return false;
 		}
 		if ($this->enabled_privileges['hostmaster']){
-			if (false === $this->update_db('hostmaster', array('type'=>'boolean'), $errors)) return false;
+			if (false === $this->update_db('hostmaster', $an['is_hostmaster'], null)) return false;
 		}
 		if ($this->enabled_privileges['acl_control']){
-			if (false === $this->update_db('acl_control', array('type'=>'multivalue', 'values'=>$config->grp_values), $errors)) return false;
+			if (false === $this->update_db('acl_control', $an['acl_control'], $config->grp_values)) return false;
 		}
 
 		if ($this->opt['redirect_on_update'])
@@ -190,51 +184,21 @@ class apu_privileges extends apu_base_class{
 	}
 
 	function action_set_admin_privileges(&$errors){
-		global $data;
+		global $config;
 
-		if (false === $this->check_access($errors)) return false;
+		$an = &$config->attr_names;
 
-		$set_privs = array();
-		$set_privs[] = "is_admin";
-		$set_privs[] = "change_privileges";
+		/* get user attrs object */
+		$ua = &User_Attrs::singleton($this->user_id->get_uid());
+		if (false === $ua->set_attribute($an['is_admin'], "1")) return false;
 
-		foreach($set_privs as $v){
-			if (isset($this->privileges[$v][0])) $update = true;
-			else $update = false;
-			
-			/* update only if user still does not have admin privilege */
-			if (empty($this->privileges[$v][0])){
-				if (false === $data->add_privilege_to_user($this->user_id, $v, '1', $update, $errors)) return false;
-			}
-		}
 	
 		return array("m_pr_updated=".RawURLEncode($this->opt['instance_id']));
 	}
 	
 	function action_default(&$errors){
-		if (false === $this->check_access($errors)) return false;
 	}
 
-	/* this metod is called always at begining */
-	function init(){
-		parent::init();
-
-		$this->privileges = array();
-		$this->privileges['acl_control'] = array();
-		$this->privileges['change_privileges'] = array();
-		$this->privileges['is_admin'] = array();
-		$this->privileges['hostmaster'] = array();
-
-		$this->enabled_privileges = array('is_admin' => 1,
-		                                  'change_privileges' => 1,
-										  'hostmaster' => 1,
-										  'acl_control' => 1 );
-
-		foreach ($this->opt['disabled_privileges'] as $v){
-			$this->enabled_privileges[$v] = 0;
-		}
-	}
-	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
 		if (isset($_GET['pr_set_admin_privilege'])){
@@ -256,13 +220,17 @@ class apu_privileges extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $config;
+		global $config;
 		parent::create_html_form($errors);
 
-		/* get privileges of user */
-		if (false === $privs = $data->get_privileges_of_user($this->user_id, NULL, $errors)) return false;
-		foreach($privs as $row)	
-			$this->privileges[$row->priv_name][]=$row->priv_value;
+		$an = &$config->attr_names;
+
+		$ua = &User_Attrs::singleton($this->user_id->get_uid());
+		if (false === $user_attrs = &$ua->get_attributes()) return false;
+
+		$this->privileges['is_admin']    = isset($user_attrs[$an['is_admin']]) ? $user_attrs[$an['is_admin']] : false;
+		$this->privileges['hostmaster']  = isset($user_attrs[$an['is_hostmaster']]) ? $user_attrs[$an['is_hostmaster']] : false;
+		$this->privileges['acl_control'] = isset($user_attrs[$an['acl_control']]) ? $user_attrs[$an['acl_control']] :array();
 	
 		/* add form elements */
 		foreach ($config->grp_values as $row){
@@ -270,30 +238,12 @@ class apu_privileges extends apu_base_class{
 			                      "name"=>"pr_chk_".$row,
 			                      "checked"=>in_array($row, $this->privileges['acl_control'])?"1":"0",
 			                      "value"=>"1"));
-	
-			$this->f->add_element(array("type"=>"hidden",
-			                      "name"=>"pr_hidden_".$row,
-			                      "value"=>in_array($row, $this->privileges['acl_control'])?"1":"0"));
 		}
 	
-		$this->f->add_element(array("type"=>"checkbox",
-		                      "name"=>"pr_chk_change_privileges",
-		                      "checked"=>isset($this->privileges['change_privileges'][0]) and $this->privileges['change_privileges'][0]?"1":"0",
-		                      "value"=>"1"));
-	
-		$this->f->add_element(array("type"=>"hidden",
-		                      "name"=>"pr_hidden_change_privileges",
-		                      "value"=>isset($this->privileges['change_privileges'][0]) and $this->privileges['change_privileges'][0]?"1":"0"));
-
-
 		$this->f->add_element(array("type"=>"checkbox",
 		                      "name"=>"pr_chk_hostmaster",
 		                      "checked"=>isset($this->privileges['hostmaster'][0]) and $this->privileges['hostmaster'][0]?"1":"0",
 		                      "value"=>"1"));
-	
-		$this->f->add_element(array("type"=>"hidden",
-		                      "name"=>"pr_hidden_hostmaster",
-		                      "value"=>isset($this->privileges['hostmaster'][0]) and $this->privileges['hostmaster'][0]?"1":"0"));
 
 	
 		$this->f->add_element(array("type"=>"checkbox",
@@ -302,9 +252,6 @@ class apu_privileges extends apu_base_class{
 		                      "value"=>"1",
 							  "extrahtml"=>"onclick='disable_chk(this);'"));
 	
-		$this->f->add_element(array("type"=>"hidden",
-		                      "name"=>"pr_hidden_is_admin",
-		                      "value"=>isset($this->privileges['is_admin'][0]) and $this->privileges['is_admin'][0]?"1":"0"));
 
 		$js = "
 			/* disable other checkboxes if is_admin checkbox is not checked */
@@ -314,7 +261,6 @@ class apu_privileges extends apu_base_class{
 
 				dis = !is_admin.checked;
 
-				if (f.pr_chk_change_privileges) f.pr_chk_change_privileges.disabled = dis;
 				if (f.pr_chk_hostmaster)        f.pr_chk_hostmaster.disabled = dis;
 		";
 
