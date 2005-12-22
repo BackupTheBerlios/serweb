@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.18 2005/12/01 12:04:59 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.19 2005/12/22 13:55:46 kozlik Exp $
  */
 
 
@@ -146,7 +146,7 @@
 		   or 'username' (for keyiing by username and domain). The right value depends on your
 		   database schema.
 		*/
-		$config->users_indexed_by= "username";
+		$config->users_indexed_by= "uuid";
 
 		/* if true, serweb will create/delete entries in table uri when alisa will be created/deleted
 		   (working only in uuidized version)
@@ -178,7 +178,6 @@
 		$config->data_sql->table_user_preferences_types="usr_preferences_types";
 		$config->data_sql->table_providers="providers";
 		$config->data_sql->table_admin_privileges="admin_privileges";
-		$config->data_sql->table_speed_dial="speed_dial";
 		$config->data_sql->table_calls_forwarding="calls_forwarding";
 		$config->data_sql->table_domain="domain";
 		$config->data_sql->table_whitelist="whitelist";
@@ -189,23 +188,44 @@
 
 
 		$config->flags = array(
-							"DB_LOAD_SER"   => 1,	// if set, attribute is mean for SER
-							"DB_DISABLED"   => 2,   // if set, attribute is disabled
-							"DB_CANON"      => 4,	// canonical domain name (domain table)
-							"DB_IS_TO"      => 8,   // URI may be used in r-uri
-							"DB_IS_FROM"    => 16,  // URI may be used in from
-							"DB_FOR_SERWEB" => 32,  // if set, attribute is mean for SERWEB
-							"DB_PENDING"    => 64,  // account is pending for confirmation
-							"DB_DELETED"    => 128	// row is marked as deleted
+							"DB_LOAD_SER"		=> 1,	// if set, attribute is mean for SER
+							"DB_DISABLED"		=> 2,   // if set, attribute is disabled
+							"DB_CANON"			=> 4,	// canonical domain name (domain table)
+							"DB_IS_TO"			=> 8,   // URI may be used in r-uri
+							"DB_IS_FROM"		=> 16,  // URI may be used in from
+							"DB_FOR_SERWEB"		=> 32,  // if set, attribute is mean for SERWEB
+							"DB_PENDING"		=> 64,  // account is pending for confirmation
+							"DB_DELETED"		=> 128,	// row is marked as deleted
+							"DB_CALLER_DELETED"	=> 256,	// row is marked as deleted
+							"DB_CALLEE_DELETED"	=> 512	// row is marked as deleted
 		                  );
-		
 
-		$config->data_layer_always_required_functions=array('check_passw_of_user',
-															'get_privileges_of_user',
-															'get_user_dom_from_uid',
-															'set_db_charset',
-															'set_db_collation',
-															'get_domains_of_admin');
+		$config->attr_names = array(
+								'digest_realm'		=> 'digest_realm',
+								'lang'				=> 'lang',
+								'fname'				=> 'sw_fname',
+								'lname'				=> 'sw_lname',
+								'phone'				=> 'sw_phone',
+								'email'				=> 'sw_email',
+								'timezone'			=> 'sw_timezone',
+								'show_status'		=> 'sw_show_status',
+								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
+								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
+								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
+								'is_admin'			=> 'sw_is_admin',		//have admin privilege
+								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege
+								'acl_control'		=> 'sw_acl_control',	//have to be declared as multivalue, contain list of ACL entries which may admin change
+								'dom_owner'			=> 'sw_owner',
+								'sd_fname'			=> 'sw_fname',
+								'sd_lname'			=> 'sw_lname',
+								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
+								'domain_default_flags'		=> 'sw_domain_default_flags',
+								'credential_default_flags'	=> 'sw_credential_default_flags',
+								'uri_default_flags'			=> 'sw_uri_default_flags'
+		                      );
+
+		$config->data_layer_always_required_functions=array('set_db_charset',
+															'set_db_collation');
 
 
 		/*
@@ -287,59 +307,143 @@
 
 
 		/*
-		 *  names of columns in table speed dial
-		 *
-		 *	DON'T CHANGE IF YOU DOESN'T KNOW WHAT YOU ARE DOING 
+		 *	Definition of table attr_types
+		 */
+		 
+		$config->data_sql->attr_types = new stdClass();
+ 		$config->data_sql->attr_types->cols = new stdClass();
+		
+		$config->data_sql->attr_types->table_name = 		"attr_types";
+		
+ 		$config->data_sql->attr_types->cols->name = 		"name";
+ 		$config->data_sql->attr_types->cols->rich_type = 	"rich_type";
+ 		$config->data_sql->attr_types->cols->raw_type = 	"raw_type";
+ 		$config->data_sql->attr_types->cols->type_spec = 	"type_spec";
+ 		$config->data_sql->attr_types->cols->desc = 		"description";
+ 		$config->data_sql->attr_types->cols->default_flags = 	"default_flags";
+ 		$config->data_sql->attr_types->cols->flags = 		"flags";
+ 		$config->data_sql->attr_types->cols->priority = 	"priority";
+ 		$config->data_sql->attr_types->cols->order = 		"ordering";
+
+ 		$config->data_sql->attr_types->flag_values = 		array(
+		                                                      "DB_MULTIVALUE" => 1, 
+		                                                      "DB_FILL_ON_REG" =>   1 << 1 
+		                                                    );
+		
+ 		$config->data_sql->attr_types->priority_values = 	array(
+		                                                       "USER" =>   1 << 8,
+		                                                       "DOMAIN" => 1 << 16,
+		                                                       "GLOBAL" => 1 << 30 
+		                                                    );
+
+		/*
+		 *	Definition of table acc
+		 */
+
+		$config->data_sql->acc = new stdClass();
+ 		$config->data_sql->acc->cols = new stdClass();
+		
+		$config->data_sql->acc->table_name = 				"acc";
+ 		$config->data_sql->acc->cols->request_timestamp = 	"request_timestamp";
+ 		$config->data_sql->acc->cols->response_timestamp =	"response_timestamp";
+ 		$config->data_sql->acc->flag_values = 				&$config->flags;
+		
+		/*
+		 *	Definition of table missed_calls
+		 */
+
+		$config->data_sql->missed_calls = new stdClass();
+		
+		$config->data_sql->missed_calls->table_name = 	"missed_calls";
+ 		$config->data_sql->missed_calls->flag_values = 	&$config->flags;
+
+
+		/*
+		 *	Definition of table domain
+		 */															
+		$config->data_sql->domain = new stdClass();															
+ 		$config->data_sql->domain->cols = new stdClass();
+		
+		$config->data_sql->domain->table_name = 		"domain";
+ 		$config->data_sql->domain->cols->did = 			"did";
+ 		$config->data_sql->domain->cols->name = 		"domain";
+ 		$config->data_sql->domain->cols->flags = 		"flags";
+
+// 		$config->data_sql->domain->id = 				"d_id";
+// 		$config->data_sql->domain->name = 				"domain";
+
+ 		$config->data_sql->domain->flag_values = 		&$config->flags;
+
+
+		/*
+		 *	Definition of table speed dial
 		 */															
 		$config->data_sql->speed_dial = new stdClass();															
- 		$config->data_sql->speed_dial->sd_username = 	"sd_username";
- 		$config->data_sql->speed_dial->sd_domain = 		"sd_domain";
- 		$config->data_sql->speed_dial->new_uri = 		"new_uri";
- 		$config->data_sql->speed_dial->fname = 			"fname";
- 		$config->data_sql->speed_dial->lname = 			"lname";
+ 		$config->data_sql->speed_dial->cols = new stdClass();
+		
+		$config->data_sql->speed_dial->table_name = 		"speed_dial";
+ 		$config->data_sql->speed_dial->cols->id = 			"id";
+ 		$config->data_sql->speed_dial->cols->uid = 			"uid";
+ 		$config->data_sql->speed_dial->cols->dial_username= "dial_username";
+ 		$config->data_sql->speed_dial->cols->dial_did = 	"dial_did";
+ 		$config->data_sql->speed_dial->cols->new_uri = 		"new_uri";
+
+		/*
+		 *	Definition of table sd_attrs
+		 */															
+		$config->data_sql->sd_attrs = new stdClass();															
+ 		$config->data_sql->sd_attrs->cols = new stdClass();
+		
+		$config->data_sql->sd_attrs->table_name = 		"sd_attrs";
+ 		$config->data_sql->sd_attrs->cols->id = 		"id";
+ 		$config->data_sql->sd_attrs->cols->name = 		"name";
+ 		$config->data_sql->sd_attrs->cols->value = 		"value";
+ 		$config->data_sql->sd_attrs->cols->type = 		"type";
+ 		$config->data_sql->sd_attrs->cols->flags = 		"flags";
+
+ 		$config->data_sql->sd_attrs->flag_values = 		&$config->flags;
+
+
+		/*
+		 *	Definition of table uri
+		 */															
+		$config->data_sql->uri = new stdClass();															
+ 		$config->data_sql->uri->cols = new stdClass();
+		
+		$config->data_sql->uri->table_name = 		"uri";
+ 		$config->data_sql->uri->cols->uid = 		"uid";
+ 		$config->data_sql->uri->cols->did = 		"did";
+ 		$config->data_sql->uri->cols->username = 	"username";
+ 		$config->data_sql->uri->cols->flags = 		"flags";
+
+ 		$config->data_sql->uri->flag_values = 		&$config->flags;
+
+
+		/*
+		 *	Definition of table location
+		 */															
+		$config->data_sql->location = new stdClass();															
+ 		$config->data_sql->location->cols = new stdClass();
+		
+		$config->data_sql->location->table_name = 		"location";
+ 		$config->data_sql->location->cols->uid = 		"uid";
+ 		$config->data_sql->location->cols->contact = 	"contact";
+ 		$config->data_sql->location->cols->flags = 		"flags";
+
+ 		$config->data_sql->location->flag_values = 		&$config->flags;
 
 
 		/*
 		 *  names of columns in table customer
 		 */															
-		$config->data_sql->customer = new stdClass();															
- 		$config->data_sql->customer->id = 				"c_id";
- 		$config->data_sql->customer->name = 			"name";
- 		$config->data_sql->customer->address = 			"address";
- 		$config->data_sql->customer->phone = 			"phone";
- 		$config->data_sql->customer->email = 			"email";
-
-		/*
-		 *  names of columns in table domain
-		 */															
-		$config->data_sql->domain = new stdClass();															
- 		$config->data_sql->domain->id = 				"d_id";
- 		$config->data_sql->domain->name = 				"domain";
-
-		/*
-		 *  names of columns in table dom_preferences
-		 */															
-		$config->data_sql->dom_pref = new stdClass();															
- 		$config->data_sql->dom_pref->id = 				"d_id";
- 		$config->data_sql->dom_pref->att_name = 		"att_name";
- 		$config->data_sql->dom_pref->att_value = 		"att_value";
-
-		/*
-		 *  names of columns in table subscriber
-		 */															
-		$config->data_sql->subscriber = new stdClass();															
- 		$config->data_sql->subscriber->uuid = 			$config->users_indexed_by=='uuid' ? "uuid" : "phplib_id";
- 		$config->data_sql->subscriber->username = 		"username";
- 		$config->data_sql->subscriber->domain = 		"domain";
-
-		/*
-		 *  names of columns in table usr_preferences
-		 */															
-		$config->data_sql->usr_pref = new stdClass();															
- 		$config->data_sql->usr_pref->uuid = 			"uuid";
- 		$config->data_sql->usr_pref->username = 		"username";
- 		$config->data_sql->usr_pref->domain = 			"domain";
- 		$config->data_sql->usr_pref->att_name = 		"attribute";
- 		$config->data_sql->usr_pref->att_value = 		"value";
+		$config->data_sql->customers = new stdClass();															
+ 		$config->data_sql->customers->cols = new stdClass();
+		
+		$config->data_sql->customers->table_name = 		"customers";
+ 		$config->data_sql->customers->cols->cid = 		"cid";
+ 		$config->data_sql->customers->cols->name = 		"name";
+ 		$config->data_sql->customers->cols->address = 	"address";
+ 		$config->data_sql->customers->cols->phone = 	"phone";
+ 		$config->data_sql->customers->cols->email = 	"email";
 
 ?>
