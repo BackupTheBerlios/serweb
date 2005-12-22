@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.14 2005/12/01 12:06:12 kozlik Exp $
+ * $Id: local.inc,v 1.15 2005/12/22 13:38:15 kozlik Exp $
  */
 
 
@@ -38,6 +38,7 @@ class phplib_Auth extends Auth {
 		$this->Auth();
 		
 		$this->lifetime = $config->auth_lifetime;
+		$this->auth['adm_domains'] = null;
 	}
 
 	/**
@@ -51,6 +52,8 @@ class phplib_Auth extends Auth {
 	function auth_loginform() {
 		global $sess;
 		global $_SERWEB;
+
+		$this->auth['adm_domains'] = null;
 		
 		//user is not logged in, forward to login screen
 		if (empty($this->auth["uid"])){
@@ -72,18 +75,21 @@ class phplib_Auth extends Auth {
 	 */
 
 	function auth_validatelogin() {
-		global $errors;
 	
 		$password = "";
 		if (isset($_POST['password'])) $password = $_POST['password'];
 
-		if (false === $this->validate_credentials($this->auth['uname'], $this->auth['realm'], $password, array(), $errors)){
+		if (false === $this->validate_credentials($this->auth['uname'], $this->auth['realm'], $password, array())){
 			return false;
 		}
-		else{
-			$this->authenticate();
-			return true;
-		}
+
+		$this->authenticate();
+
+		$perms = $this->find_out_perms($this->auth['uid'], array());
+		if (false === $perms) return false;
+		$this->set_perms($perms);
+
+		return true;
 	}
 
 	/**
@@ -94,11 +100,10 @@ class phplib_Auth extends Auth {
 	 *	@param	string	$realm		
 	 *	@param	string	$password	
 	 *	@param	array	$opt		
-	 *	@param	array 	$errors		array with error messages
 	 *	@return	string				UID if credentials are valid, false otherwise
 	 */
 
-	function validate_credentials($username, $realm, $password, $opt, &$errors){
+	function validate_credentials($username, $realm, $password, $opt){
 		global $lang_str, $data_auth, $config;
 
 		$data_auth->set_xxl_user_id('sip:'.$username.'@'.$realm);
@@ -116,28 +121,49 @@ class phplib_Auth extends Auth {
 			$ha = md5($username.":".$realm.":".$password);
 		}
 
-		$uid = $data_auth->check_credentials($username, $realm, $ha, $opt, $errors);
+		$uid = $data_auth->check_credentials($username, $realm, $ha, $opt);
 
 		if (is_int($uid) and $uid == -3){
 			sw_log("User login: authentication failed: account disabled ", PEAR_LOG_INFO);
-			$errors[]=$lang_str['account_disabled'];
+			ErrorHandler::add_error($lang_str['account_disabled']);
 			return false;
 		}
 
 		if (is_int($uid) and $uid <= 0) {
 			sw_log("User login: authentication failed: bad username or realm or password ", PEAR_LOG_INFO);
-			$errors[]=$lang_str['bad_username'];
+			ErrorHandler::add_error($lang_str['bad_username']);
 			return false;
 		}
 
 
 		if (is_null($uid)){
 			sw_log("User login: authentication failed: no user ID", PEAR_LOG_INFO);
-			$errors[]=$lang_str['bad_username'];
+			ErrorHandler::add_error($lang_str['bad_username']);
 			return false;
 		}
 
 		return $uid;	
+	}
+
+	/**
+	 *	Get domain id of domain of the user
+	 *	
+	 *	@static
+	 *	@param	string	$username	
+	 *	@param	string	$realm		
+	 *	@param	string	$uid	
+	 *	@param	array	$opt		
+	 *	@return	string				domain ID, FALSE on error
+	 */
+
+	function find_out_did($username, $realm, $uid, $opt){
+		global $data_auth;
+
+		$data_auth->add_method('get_did_by_realm');
+		$did = $data_auth->get_did_by_realm($realm, null);
+		if (false === $did) return false;
+
+		return $did;
 	}
 
 	/**
@@ -148,31 +174,44 @@ class phplib_Auth extends Auth {
 	 *	@static
 	 *	@param	string	$uid
 	 *	@param	array	$opt		
-	 *	@param	array 	$errors		array with error messages
 	 *	@return	array				array of permissions or FALSE on error
 	 */
 
-	function find_out_perms($uid, $opt, &$errors){
-		global $lang_str, $data_auth;
+	function find_out_perms($uid, $opt){
+		global $lang_str, $data_auth, $config;
+
+		$an = $config->attr_names;
 
 		$perms = array();
 
-		$data_auth->add_method('get_attribute');
+		$attrs = &User_Attrs::singleton($uid);
 		
-		$o = array('uid' => $uid);
-		if (false === $attrib = $data_auth->get_attribute("sw_is_admin", $o, $errors)) return false;
+		if (false === $attrib = $attrs->get_attribute($an["is_admin"])) return false;
+		if ($attrib) $perms[] = 'admin';
 
-		if (is_array($attrib) and $attrib['origin'] == 'user'){ //accept only attribute from user_attrs
-			if ($attrib['value']) $perms[] = 'admin';
-		}
+		if (false === $attrib = $attrs->get_attribute($an["is_hostmaster"])) return false;
+		if ($attrib) $perms[] = 'hostmaster';
 
-		if (false === $attrib = $data_auth->get_attribute("sw_is_hostmaster", $o, $errors)) return false;
-
-		if (is_array($attrib) and $attrib['origin'] == 'user'){ //accept only attribute from user_attrs
-			if ($attrib['value']) $perms[] = 'hostmaster';
-		}
-		
 		return $perms;
+	}
+	
+	/**
+	 *	Get array of domains administrated by user
+	 *	
+	 *	@param	string	$uid
+	 *	@param	array	$opt		
+	 *	@return	array				array of domain IDs or FALSE on error
+	 */
+
+	function get_administrated_domains(){
+		global $data_auth;
+		
+		if (!is_null($this->auth['adm_domains'])) return $this->auth['adm_domains'];
+		
+		$data_auth->add_method('get_domains_of_admin');
+		if (false === $domains = $data_auth->get_domains_of_admin($this->auth['uid'], null)) return false;
+		
+		return $this->auth['adm_domains'] = $domains;
 	}
 }
 
