@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.1 2005/07/08 11:08:36 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.1 2005/12/23 08:59:21 kozlik Exp $
  */
 
-class CData_Layer_check_passw_of_user {
+class CData_Layer_check_credentials {
 	var $required_methods = array();
 	
 	/*
@@ -11,10 +11,15 @@ class CData_Layer_check_passw_of_user {
 	 * return: uuid
 	 */
 
-	function check_passw_of_user($user, $domain, $passw, &$errors){
+	function check_credentials($user, $domain, $passw, $opt){
 		global $config;
 
-		if (!$this->connect_to_ldap($errors)) return false;
+		$errors = array();
+
+		if (!$this->connect_to_ldap($errors)) {
+			ErrorHandler::add_error($errors);
+			return 0;
+		}
 
 		$a=&$config->auth_ldap['attrib'];
 
@@ -29,11 +34,11 @@ class CData_Layer_check_passw_of_user {
 		if (DB::isError($res)) {
 			//if user is not found
 			if ($res->getCode()==DB_ERROR_NOSUCHTABLE) {
-				return false;
+				return -1;
 			}
 			else {
-				log_errors($res, $errors); 
-				return false;
+				ErrorHandler::log_errors($res); 
+				return 0;
 			}
 		}
 
@@ -42,7 +47,7 @@ class CData_Layer_check_passw_of_user {
 		
 		// check password
 		if ($row[$a['pass']] != $passw) {
-			return false;
+			return -1;
 		}
 		
 		return $row[$a['uuid']];

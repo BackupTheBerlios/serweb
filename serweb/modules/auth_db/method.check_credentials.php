@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.check_credentials.php,v 1.3 2005/12/22 16:58:57 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.4 2005/12/23 08:59:20 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -41,7 +41,7 @@ class CData_Layer_check_credentials {
 
 		if (!$this->connect_to_db($errors)) {
 			ErrorHandler::add_error($errors);
-			return false;
+			return 0;
 		}
 
 		/* table name */

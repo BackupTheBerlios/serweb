@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_passw_of_user.php,v 1.1 2005/07/08 11:08:36 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.1 2005/12/23 08:59:21 kozlik Exp $
  */
 
 require_once 'Auth/RADIUS.php';
@@ -18,7 +18,7 @@ class Serweb_Auth_RADIUS_CHAP_MD5 extends Auth_RADIUS_CHAP_MD5{
 	}
 }
 
-class CData_Layer_check_passw_of_user {
+class CData_Layer_check_credentials {
 	var $required_methods = array();
 	
 	/*
@@ -26,11 +26,15 @@ class CData_Layer_check_passw_of_user {
 	 * return: uuid
 	 */
 
-	function check_passw_of_user($user, $domain, $passw, &$errors){
+	/**
+	 *	@todo: uuideize
+	 *	@todo: change return values to be same as in auth_db
+	 */
+	function check_credentials($user, $domain, $passw, $opt){
 		global $config, $lang_str;
 
 		if ($config->users_indexed_by=='uuid'){
-			Die("Module 'auth_radius' is not ready for UUIDized version of serweb. Set \$config->users_indexed_by=='username' in config file");
+			Die("Module 'auth_radius' is not ready for UUIDized version of serweb.");
 		}
 
 		if ($config->clear_text_pw){
@@ -52,13 +56,13 @@ class CData_Layer_check_passw_of_user {
 
 
 		if (!$rauth->start()){
-			log_errors(PEAR::raiseError("Radius: ".$rauth->getError()), $errors); 
+			ErrorHandler::log_errors(PEAR::raiseError("Radius: ".$rauth->getError())); 
 			return false;
 		}
 		
 		$result = $rauth->send();
 		if (PEAR::isError($result)) {
-			log_errors($result, $errors); 
+			ErrorHandler::log_errors($result); 
 			return false;
 		}
 	
