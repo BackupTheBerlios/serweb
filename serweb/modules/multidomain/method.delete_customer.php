@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_customer.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.delete_customer.php,v 1.2 2005/12/23 09:45:18 kozlik Exp $
  */
 
 class CData_Layer_delete_customer {
@@ -23,7 +23,10 @@ class CData_Layer_delete_customer {
 		
 		if (!$this->connect_to_db($errors)) return false;
 
-		$c = &$config->data_sql->customer;
+		/* table's name */
+		$tc_name = &$config->data_sql->customers->table_name;
+		/* col names */
+		$cc = &$config->data_sql->customers->cols;
 
 		if (!isset($opt['primary_key']) or 
 			!is_array($opt['primary_key']) or 
@@ -32,8 +35,8 @@ class CData_Layer_delete_customer {
 		}
 
 
-		$q="delete from ".$config->data_sql->table_customer." 
-			where ".$c->id."='".$opt['primary_key']['id']."'";
+		$q="delete from ".$tc_name." 
+			where ".$cc->cid."='".$opt['primary_key']['cid']."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

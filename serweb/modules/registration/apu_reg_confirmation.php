@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_reg_confirmation.php,v 1.1 2005/12/22 13:49:48 kozlik Exp $
+ * $Id: apu_reg_confirmation.php,v 1.2 2005/12/23 09:45:18 kozlik Exp $
  */ 
 
 /* Application unit reg_confirmation */
@@ -17,9 +17,6 @@
 	'create_numeric_alias'		(bool) default: $config->create_numeric_alias_to_new_users
 	 If true, create numeric alias for new subscriber
 	
-	'add_to_aliases_table_too'	(bool) default: $config->copy_new_subscribers_to_aliases_table
-	 If true, serweb will add new subscriber also into aliases table instead of into subscriber table only
-	 
 	 
    'smarty_action'				name of smarty variable - see below
    'smarty_status'				name of smarty variable - see below
@@ -64,7 +61,6 @@ class apu_reg_confirmation extends apu_base_class{
 
 		/* alias generation */
 		$this->opt['create_numeric_alias'] =		$config->create_numeric_alias_to_new_users;
-		$this->opt['add_to_aliases_table_too'] =	$config->copy_new_subscribers_to_aliases_table;
 		
 		/*** names of variables assigned to smarty ***/
 		/* smarty action */

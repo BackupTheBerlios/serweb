@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.19 2005/12/22 13:55:46 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.20 2005/12/23 09:45:17 kozlik Exp $
  */
 
 
@@ -142,63 +142,11 @@
 		// If you want to configure more LDAP backup servers, copy and paste the above (including the "$i++;")
 		
 
-		/* next line specify how are users keyed. May contains values: 'uuid' (for keying by uuid) 
-		   or 'username' (for keyiing by username and domain). The right value depends on your
-		   database schema.
-		*/
-		$config->users_indexed_by= "uuid";
-
-		/* if true, serweb will create/delete entries in table uri when alisa will be created/deleted
-		   (working only in uuidized version)
-		*/
-		$config->use_table_uri = false;
-
-		/* 	if true, serweb will add new subscriber also into aliases table instead of into subscriber table only
-		*/
-		$config->copy_new_subscribers_to_aliases_table = false;		
-		
-		/* Unless you used brute-force to change SER table names */
-		$config->data_sql->table_subscriber="subscriber";
-		$config->data_sql->table_pending="pending";
-		$config->data_sql->table_grp="grp";
-		$config->data_sql->table_aliases="aliases";
-		$config->data_sql->table_uuidaliases="uuidaliases";
-		$config->data_sql->table_location="location";
-		$config->data_sql->table_missed_calls="missed_calls";
-		$config->data_sql->table_accounting="acc";
-		$config->data_sql->table_cdr="cdr";
-		$config->data_sql->table_phonebook="phonebook";
-		$config->data_sql->table_event="event";
-		$config->data_sql->table_netgeo_cache="netgeo_cache";
-		$config->data_sql->table_ser_mon="server_monitoring";
-		$config->data_sql->table_ser_mon_agg="server_monitoring_agg";
-		$config->data_sql->table_message_silo="silo";
-		$config->data_sql->table_voice_silo="voice_silo";
-		$config->data_sql->table_user_preferences="usr_preferences";
-		$config->data_sql->table_user_preferences_types="usr_preferences_types";
-		$config->data_sql->table_providers="providers";
-		$config->data_sql->table_admin_privileges="admin_privileges";
-		$config->data_sql->table_calls_forwarding="calls_forwarding";
-		$config->data_sql->table_domain="domain";
-		$config->data_sql->table_whitelist="whitelist";
-		$config->data_sql->table_lcr="lcr";
-		$config->data_sql->table_uri="uri";
-		$config->data_sql->table_customer="customer";
-		$config->data_sql->table_dom_preferences="dom_preferences";
-
-
-		$config->flags = array(
-							"DB_LOAD_SER"		=> 1,	// if set, attribute is mean for SER
-							"DB_DISABLED"		=> 2,   // if set, attribute is disabled
-							"DB_CANON"			=> 4,	// canonical domain name (domain table)
-							"DB_IS_TO"			=> 8,   // URI may be used in r-uri
-							"DB_IS_FROM"		=> 16,  // URI may be used in from
-							"DB_FOR_SERWEB"		=> 32,  // if set, attribute is mean for SERWEB
-							"DB_PENDING"		=> 64,  // account is pending for confirmation
-							"DB_DELETED"		=> 128,	// row is marked as deleted
-							"DB_CALLER_DELETED"	=> 256,	// row is marked as deleted
-							"DB_CALLEE_DELETED"	=> 512	// row is marked as deleted
-		                  );
+		/**
+		 *	Names of attributes used internaly by serweb
+		 *	
+		 *	DON'T CHANGE IF YOU DON'T KNOW WHAT YOU ARE DOING !!
+		 */
 
 		$config->attr_names = array(
 								'digest_realm'		=> 'digest_realm',
@@ -224,8 +172,48 @@
 								'uri_default_flags'			=> 'sw_uri_default_flags'
 		                      );
 
-		$config->data_layer_always_required_functions=array('set_db_charset',
-															'set_db_collation');
+
+
+		$config->flags = array(
+							"DB_LOAD_SER"		=> 1,	// if set, attribute is mean for SER
+							"DB_DISABLED"		=> 2,   // if set, attribute is disabled
+							"DB_CANON"			=> 4,	// canonical domain name (domain table)
+							"DB_IS_TO"			=> 8,   // URI may be used in r-uri
+							"DB_IS_FROM"		=> 16,  // URI may be used in from
+							"DB_FOR_SERWEB"		=> 32,  // if set, attribute is mean for SERWEB
+							"DB_PENDING"		=> 64,  // account is pending for confirmation
+							"DB_DELETED"		=> 128,	// row is marked as deleted
+							"DB_CALLER_DELETED"	=> 256,	// row is marked as deleted
+							"DB_CALLEE_DELETED"	=> 512	// row is marked as deleted
+		                  );
+
+
+
+		////////////////////////////////////////////////////////////////
+		//            Definitions of SQL tables
+		//
+		//	DON'T CHANGE IF YOU DON'T KNOW WHAT YOU ARE DOING !!
+		//
+		
+		/* Unless you used brute-force to change SER table names */
+		$config->data_sql->table_subscriber="subscriber";
+		$config->data_sql->table_grp="grp";
+		$config->data_sql->table_aliases="aliases";
+		$config->data_sql->table_uuidaliases="uuidaliases";
+		$config->data_sql->table_location="location";
+		$config->data_sql->table_missed_calls="missed_calls";
+		$config->data_sql->table_cdr="cdr";
+		$config->data_sql->table_phonebook="phonebook";
+		$config->data_sql->table_netgeo_cache="netgeo_cache";
+		$config->data_sql->table_ser_mon="server_monitoring";
+		$config->data_sql->table_ser_mon_agg="server_monitoring_agg";
+		$config->data_sql->table_message_silo="silo";
+		$config->data_sql->table_voice_silo="voice_silo";
+		$config->data_sql->table_user_preferences="usr_preferences";
+		$config->data_sql->table_user_preferences_types="usr_preferences_types";
+		$config->data_sql->table_providers="providers";
+		$config->data_sql->table_calls_forwarding="calls_forwarding";
+		$config->data_sql->table_whitelist="whitelist";
 
 
 		/*
@@ -249,6 +237,20 @@
 
  		$config->data_sql->credentials->flag_values = &$config->flags;
 
+
+
+		/*
+		 *	Definition of table domain
+		 */															
+		$config->data_sql->domain = new stdClass();															
+ 		$config->data_sql->domain->cols = new stdClass();
+		
+		$config->data_sql->domain->table_name = 		"domain";
+ 		$config->data_sql->domain->cols->did = 			"did";
+ 		$config->data_sql->domain->cols->name = 		"domain";
+ 		$config->data_sql->domain->cols->flags = 		"flags";
+
+ 		$config->data_sql->domain->flag_values = 		&$config->flags;
 
 
 		/*
@@ -359,23 +361,6 @@
 
 
 		/*
-		 *	Definition of table domain
-		 */															
-		$config->data_sql->domain = new stdClass();															
- 		$config->data_sql->domain->cols = new stdClass();
-		
-		$config->data_sql->domain->table_name = 		"domain";
- 		$config->data_sql->domain->cols->did = 			"did";
- 		$config->data_sql->domain->cols->name = 		"domain";
- 		$config->data_sql->domain->cols->flags = 		"flags";
-
-// 		$config->data_sql->domain->id = 				"d_id";
-// 		$config->data_sql->domain->name = 				"domain";
-
- 		$config->data_sql->domain->flag_values = 		&$config->flags;
-
-
-		/*
 		 *	Definition of table speed dial
 		 */															
 		$config->data_sql->speed_dial = new stdClass();															
@@ -445,5 +430,22 @@
  		$config->data_sql->customers->cols->address = 	"address";
  		$config->data_sql->customers->cols->phone = 	"phone";
  		$config->data_sql->customers->cols->email = 	"email";
+
+
+
+
+
+		$config->data_layer_always_required_functions=array('set_db_charset',
+															'set_db_collation');
+
+
+		/* next line specify how are users keyed. May contains values: 'uuid' (for keying by uuid) 
+		   or 'username' (for keyiing by username and domain). The right value depends on your
+		   database schema.
+		   
+		   Notice: indexing by username is DEPRECATED and WILL NOT WORK
+		*/
+		$config->users_indexed_by= "uuid";
+
 
 ?>
