@@ -1,20 +1,34 @@
 <?
 /*
- * $Id: method.del_im.php,v 1.1 2005/08/24 10:42:34 kozlik Exp $
+ * $Id: method.del_im.php,v 1.2 2005/12/27 16:13:48 kozlik Exp $
  */
 
 class CData_Layer_del_im {
 	var $required_methods = array();
 	
-	function del_im($user, $mid, &$errors){
+	function del_im($uid, $mid){
 		global $config;
 		
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors);
+			return false;
+		}
 
-		$q="delete from ".$config->data_sql->table_message_silo.
-			" where mid=".$mid." and ".$this->get_indexing_sql_where_phrase($user);
+		$t_name = &$config->data_sql->msg_silo->table_name;	/* table's name */
+		$c = &$config->data_sql->msg_silo->cols;				/* col names */
+
+		if (!is_numeric($mid)) {
+			ErrorHandler::log_errors(PEAR::raiseError("Wrong message ID: ".$mid)); 
+			return false;
+		}
+
+		$q="delete from ".$t_name." 
+		    where ".$c->mid." = ".$mid." and 
+			      ".$c->uid." = '".$uid."'";
+		    
 		$res=$this->db->query($q);
-		if (DB::isError($res)) {log_errors($res, $errors); return false;}
+		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 		return true;
 	}
 	

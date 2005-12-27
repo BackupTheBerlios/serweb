@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.21 2005/12/27 13:55:01 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.22 2005/12/27 16:13:47 kozlik Exp $
  */
 
 
@@ -212,7 +212,6 @@
 		$config->data_sql->table_netgeo_cache="netgeo_cache";
 		$config->data_sql->table_ser_mon="server_monitoring";
 		$config->data_sql->table_ser_mon_agg="server_monitoring_agg";
-		$config->data_sql->table_message_silo="silo";
 		$config->data_sql->table_voice_silo="voice_silo";
 		$config->data_sql->table_user_preferences="usr_preferences";
 		$config->data_sql->table_user_preferences_types="usr_preferences_types";
@@ -421,6 +420,24 @@
  		$config->data_sql->location->cols->flags = 		"flags";
 
  		$config->data_sql->location->flag_values = 		&$config->flags;
+
+
+		/*
+		 *	Definition of table silo
+		 */															
+		$config->data_sql->msg_silo = new stdClass();															
+ 		$config->data_sql->msg_silo->cols = new stdClass();
+		
+		$config->data_sql->msg_silo->table_name = 		"silo";
+ 		$config->data_sql->msg_silo->cols->mid = 		"mid";
+ 		$config->data_sql->msg_silo->cols->uid = 		"uid";
+ 		$config->data_sql->msg_silo->cols->from = 		"from_hdr";
+ 		$config->data_sql->msg_silo->cols->to = 		"to_hdr";
+ 		$config->data_sql->msg_silo->cols->ruri = 		"ruri";
+ 		$config->data_sql->msg_silo->cols->inc_time = 	"inc_time";
+ 		$config->data_sql->msg_silo->cols->exp_time = 	"exp_time";
+ 		$config->data_sql->msg_silo->cols->ctype = 		"ctype";
+ 		$config->data_sql->msg_silo->cols->body = 		"body";
 
 
 		/*

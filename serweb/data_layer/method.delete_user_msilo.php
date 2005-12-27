@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_msilo.php,v 1.2 2005/12/22 13:19:54 kozlik Exp $
+ * $Id: method.delete_user_msilo.php,v 1.3 2005/12/27 16:13:47 kozlik Exp $
  */
 
 class CData_Layer_delete_user_msilo {
@@ -18,7 +18,10 @@ class CData_Layer_delete_user_msilo {
 			ErrorHandler::add_error($errors); return false;
 		}
 
-		$q="delete from ".$config->data_sql->table_message_silo." where uid='".$uid."'";
+		$t_name = &$config->data_sql->msg_silo->table_name;	/* table's name */
+		$c = &$config->data_sql->msg_silo->cols;				/* col names */
+
+		$q="delete from ".$t_name." where ".$c->uid." = '".$uid."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

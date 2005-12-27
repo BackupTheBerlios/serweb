@@ -3,7 +3,7 @@
  * Application unit msilo 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_msilo.php,v 1.1 2005/08/24 10:42:34 kozlik Exp $
+ * @version   $Id: apu_msilo.php,v 1.2 2005/12/27 16:13:48 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -80,7 +80,7 @@ class apu_msilo extends apu_base_class{
 
 		$data->set_act_row($sess_ms_act_row);
 
-		if(false === $this->im = $data->get_IMs($this->user_id, $errors)) return false;
+		if (false === $this->im = $data->get_IMs($this->user_id->get_uid())) return false;
 
 		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
 		$this->pager['pos']=$data->get_act_row();
@@ -100,7 +100,7 @@ class apu_msilo extends apu_base_class{
 
 	function action_dele(&$errors){
 		global $data;
-		if (!$data->del_IM($this->user_id, $_GET['im_dele_id'], $errors)) return false;
+		if (false === $data->del_im($this->user_id->get_uid(), $_GET['im_dele_id'])) return false;
 
 		return array("m_im_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
