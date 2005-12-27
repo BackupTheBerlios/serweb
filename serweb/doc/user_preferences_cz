@@ -1,4 +1,4 @@
-$Id: user_preferences_cz,v 1.1 2004/08/26 13:09:20 kozlik Exp $
+$Id: user_preferences_cz,v 1.2 2005/12/27 13:55:01 kozlik Exp $
 
 User preferences
 ----------------
@@ -22,3 +22,43 @@ do smarty templates se pak jednotlive radio buttony vkladaji jako:
 <value> je value prislusneho buttonu
 
 Ve vygenerovanem tagu je 'name' rovno <name> a 'id' <name>_<value>
+
+
+
+List of user preferences used internaly in serweb
+-------------------------------------------------
+
+scope:
+U - user attribute
+D - domain attribute
+S - speeddial attribute
+G - global attribute
+
+
+
+name						scope	description
+----						-----	-----------
+sw_fname					US		first name of user
+sw_lname					US		last name of user
+sw_email					U		email address of user
+sw_phone					U		phone of user
+sw_show_status				U		show to others if user is online
+sw_timezone					UDG		timezone
+lang						UDG		language
+
+sw_is_admin					U		user has admin permission
+sw_is_hostmaster			U		user has hostmaster permission
+sw_acl_control				U		contain list of ACL entries which admin may change
+
+sw_confirmation				U		confirmation number (when user is registering or when forgot password)
+sw_pending_ts				U		pending timestamp
+sw_deleted_ts				UD		deleted timestamp
+
+digest_realm				D
+sw_admin					D		contain list of admins of domain
+sw_owner					D		contain id of customer owning domain
+
+sw_domain_default_flags		G		default flags for domains
+sw_credential_default_flags	G		default flags for credentials
+sw_uri_default_flags		G		default flags for URIs
+

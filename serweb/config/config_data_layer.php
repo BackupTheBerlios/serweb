@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.20 2005/12/23 09:45:17 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.21 2005/12/27 13:55:01 kozlik Exp $
  */
 
 
@@ -149,27 +149,32 @@
 		 */
 
 		$config->attr_names = array(
-								'digest_realm'		=> 'digest_realm',
-								'lang'				=> 'lang',
-								'fname'				=> 'sw_fname',
-								'lname'				=> 'sw_lname',
-								'phone'				=> 'sw_phone',
-								'email'				=> 'sw_email',
-								'timezone'			=> 'sw_timezone',
-								'show_status'		=> 'sw_show_status',
-								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
-								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
-								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
+								'fname'				=> 'sw_fname',			//first name of user
+								'lname'				=> 'sw_lname',			//last name of user
+								'phone'				=> 'sw_phone',			//phone of user
+								'email'				=> 'sw_email',			//email address of user
+								'show_status'		=> 'sw_show_status',	//show to others if user is online
+								'lang'				=> 'lang',				//language
+								'timezone'			=> 'sw_timezone',		//timezone
+
 								'is_admin'			=> 'sw_is_admin',		//have admin privilege
 								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege
-								'acl_control'		=> 'sw_acl_control',	//have to be declared as multivalue, contain list of ACL entries which may admin change
-								'dom_owner'			=> 'sw_owner',
-								'sd_fname'			=> 'sw_fname',
-								'sd_lname'			=> 'sw_lname',
+								'acl_control'		=> 'sw_acl_control',	//have to be declared as multivalue, contain list of ACL entries which admin may change
+
+								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
+								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
 								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
-								'domain_default_flags'		=> 'sw_domain_default_flags',
-								'credential_default_flags'	=> 'sw_credential_default_flags',
-								'uri_default_flags'			=> 'sw_uri_default_flags'
+
+								'digest_realm'		=> 'digest_realm',		
+								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
+								'dom_owner'			=> 'sw_owner',			//contain id of customer owning domain
+
+								'sd_fname'			=> 'sw_fname',			//speed dial first name
+								'sd_lname'			=> 'sw_lname',			//speed dial last name
+
+								'domain_default_flags'		=> 'sw_domain_default_flags',		//default flags for domains
+								'credential_default_flags'	=> 'sw_credential_default_flags',	//default flags for credentials
+								'uri_default_flags'			=> 'sw_uri_default_flags'			//default flags for URIs
 		                      );
 
 
