@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: attr_types.php,v 1.2 2005/12/28 11:00:29 kozlik Exp $
  */
 
 /**
@@ -94,6 +94,18 @@ class Attr_type{
 	}
 
 	function get_description(){
+		global $lang_str;
+		
+		if (substr($this->description, 0, 1) == '@' and 
+		    isset($lang_str[substr($this->description, 1)])){
+		
+			return $lang_str[substr($this->description, 1)];
+		}
+		
+		return $this->description;
+	}
+	
+	function get_raw_description(){
 		return $this->description;
 	}
 	
