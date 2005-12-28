@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_missed_calls.tpl,v 1.4 2005/08/10 13:56:25 kozlik Exp $ *}
+{* $Id: u_missed_calls.tpl,v 1.5 2005/12/28 09:39:49 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -20,7 +20,7 @@
 		{else} {$row.sip_to|empty2nbsp}
 		{/if}
 	</a></td>
-	<td align="center">{$row.status|empty2nbsp}</td>
+	<td align="center">{$row.status|empty2nbsp|user_status}</td>
 	<td align="center">{$row.timestamp|my_date_format:$lang_set.date_time_format|empty2nbsp}</td>
 	<td align="left">{$row.sip_status|empty2nbsp}</td>
 	</tr>

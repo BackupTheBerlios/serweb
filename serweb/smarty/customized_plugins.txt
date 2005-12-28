@@ -8,3 +8,4 @@ modifier.add_html_attrib_to_tag.php
 modifier.my_date_format.php
 modifier.toCSV.php
 modifier.empty2nbsp.php
+modifier.user_status.php

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.4 2005/12/22 15:31:05 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.5 2005/12/28 09:39:49 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -43,7 +43,7 @@
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="left"><a href="{$row.url_ctd}">{$row.sip_uri}</a></td>
 	<td align="left">{$row.aliases|empty2nbsp}</td>
-	<td align="center">{$row.status|empty2nbsp}</td>
+	<td align="center">{$row.status|empty2nbsp|user_status}</td>
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
 	</tr>
