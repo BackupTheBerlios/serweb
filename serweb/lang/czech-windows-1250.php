@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.12 2005/12/22 12:37:44 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.13 2005/12/28 10:58:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -261,7 +261,7 @@ $lang_str['customize_greetings'] = 				"Pøizpùsobit pozdrav";
 $lang_str['err_can_not_open_greeting'] = 		"Nelze otevøít pozdrav";
 
 /* ------------------------------------------------------------*/
-/*      user preferences                                       */
+/*      attributes                                             */
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_invalid_value_of_attribute'] = 	"neplatná hodnota";
@@ -270,6 +270,11 @@ $lang_str['fe_is_not_sip_adr'] = 				"není platná SIP adresa";
 $lang_str['no_attributes_defined'] = 			"Žádné nastavení není povoleno administrátorem";
 
 $lang_str['ff_send_daily_missed_calls'] =		"posílejte mi dennì seznam zmeškaných hovorù na email";
+
+$lang_str['ff_uri_def_f'] =						"default flags for uri";	//to translate 
+$lang_str['ff_credential_def_f'] =				"default flags for credentials";	//to translate 
+$lang_str['ff_domain_def_f'] =					"default flags for domain";	//to translate 
+
 
 /* ------------------------------------------------------------*/
 /*      speed dial                                             */

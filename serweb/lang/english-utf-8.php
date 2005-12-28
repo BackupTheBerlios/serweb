@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.15 2005/12/22 12:37:44 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.16 2005/12/28 10:58:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -261,7 +261,7 @@ $lang_str['customize_greetings'] = 				"Customize greetings";
 $lang_str['err_can_not_open_greeting'] = 		"Can't open greeting";
 
 /* ------------------------------------------------------------*/
-/*      user preferences                                       */
+/*      attributes                                             */
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_invalid_value_of_attribute'] = 	"invalid value of attribute";
@@ -270,6 +270,11 @@ $lang_str['fe_is_not_sip_adr'] = 				"is not valid sip address";
 $lang_str['no_attributes_defined'] = 			"No attributes defined by admin";
 
 $lang_str['ff_send_daily_missed_calls'] =		"send me daily my missed calls to my email";
+
+$lang_str['ff_uri_def_f'] =						"default flags for uri";
+$lang_str['ff_credential_def_f'] =				"default flags for credentials";
+$lang_str['ff_domain_def_f'] =					"default flags for domain";
+
 
 /* ------------------------------------------------------------*/
 /*      speed dial                                             */

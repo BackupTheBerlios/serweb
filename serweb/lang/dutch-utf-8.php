@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.12 2005/12/22 12:37:44 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.13 2005/12/28 10:58:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -261,7 +261,7 @@ $lang_str['customize_greetings'] = 				"Welkomsbericht wijzigen";
 $lang_str['err_can_not_open_greeting'] = 		"Kan welkomsbericht niet openen";
 
 /* ------------------------------------------------------------*/
-/*      user preferences                                       */
+/*      attributes                                             */
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_invalid_value_of_attribute'] = 	"ongeldige waarde voor dit attribuut";
@@ -270,6 +270,11 @@ $lang_str['fe_is_not_sip_adr'] = 				"ongeldig sip adres";
 $lang_str['no_attributes_defined'] = 			"Geen rechten gegeven door de beheerder";
 
 $lang_str['ff_send_daily_missed_calls'] =		"verstuur dagelijks mijn gemiste berichten naar mijn emailadres";
+
+$lang_str['ff_uri_def_f'] =						"default flags for uri";	//to translate 
+$lang_str['ff_credential_def_f'] =				"default flags for credentials";	//to translate 
+$lang_str['ff_domain_def_f'] =					"default flags for domain";	//to translate 
+
 
 /* ------------------------------------------------------------*/
 /*      speed dial                                             */
