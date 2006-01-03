@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.2 2006/01/03 14:59:39 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -37,6 +37,16 @@
  *			}
  *
  *			set_opt('validate_funct') = 'validate_form';
+ *	
+ *	'attrs_options'				(array) default: array()
+ *	 Various options for attributes. Array is indexed by attr names. Each
+ *	 element have to contain another associative array of options.
+ *	
+ *		 example:
+ *			array ('lang' => array('save_to_cookie' => true,
+ *			                       'save_to_session' => true),
+ *			       'foo'  => array('foobar => 42'));
+ *	
  *	
  *	'optionals'   				(array) default: array()
  *	 associative array - keys are names of attributes, values are booleans
@@ -105,6 +115,7 @@ class apu_attributes extends apu_base_class{
 
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
+		$this->opt['attrs_options'] = array();	
 
 		$this->opt['optionals'] = array();	
 
@@ -315,6 +326,16 @@ class apu_attributes extends apu_base_class{
 		//except unwanted arguments
 		$this->opt['attributes'] = array_diff($this->opt['attributes'], $this->opt['exclude_attributes']);
 
+		//set options to attributes
+		foreach($this->opt['attributes'] as $att){
+			if (isset($this->opt['attrs_options'][$att]) and 
+			    is_array($this->opt['attrs_options'][$att])){
+			
+				foreach($this->opt['attrs_options'][$att] as $k => $v){
+					$this->attr_types[$att]->set_opt($k, $v);
+				}
+			}
+		}
 
 		// add elements to form object
 		foreach($this->opt['attributes'] as $att){

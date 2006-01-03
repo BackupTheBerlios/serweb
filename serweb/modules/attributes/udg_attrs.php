@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: udg_attrs.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: udg_attrs.php,v 1.2 2006/01/03 14:59:39 kozlik Exp $
  */
 
 /**
@@ -83,6 +83,11 @@ class Attrs_Common{
 		if (false === $this->save_attr($name, $value)) return false;
 
 		$this->attributes[$name] = $value;
+		
+		/* call on_update method of attribute */
+		$attr_types = &Attr_types::singleton();
+		if (false === $att = &$attr_types->get_attr_type($name)) return false;
+		if (false === $att->on_update($value)) return false;
 
 		return true;
 	}

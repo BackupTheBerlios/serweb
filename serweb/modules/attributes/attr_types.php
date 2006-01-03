@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.2 2005/12/28 11:00:29 kozlik Exp $
+ * $Id: attr_types.php,v 1.3 2006/01/03 14:59:39 kozlik Exp $
  */
 
 /**
@@ -15,6 +15,7 @@ class Attr_type{
 	var $default_flags;
 	var $flags;
 	var $priority;
+	var $opt = array();
 
 
 	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
@@ -129,6 +130,13 @@ class Attr_type{
 	}
 
 	/**
+	 *	Method called after attribute update
+	 */
+	function on_update($value){
+		return true;
+	}
+	
+	/**
 	 *	Function add form element to the given form object	
 	 *	
 	 *	Possible options:
@@ -146,6 +154,13 @@ class Attr_type{
 	                             "name"=>"_hidden_".$this->name,
 		                         "value"=>$value));
 
+	}
+
+	/**
+	 *	
+	 */
+	function set_opt($name, $value){
+		$this->opt[$name] = $value;
 	}
 
 } 
