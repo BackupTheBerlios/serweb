@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.6 2005/12/22 13:40:39 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.7 2006/01/03 15:00:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -98,8 +98,6 @@ class apu_lang_select extends apu_base_class{
 		global $available_languages, $config;
 		
 		$_SESSION['lang'] = $_POST['ls_language'];
-
-		$opt = array("uid" => $this->user_id->uuid);
 
 		if ($this->opt['save_to_cookie']){
 			setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path);
