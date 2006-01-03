@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.13 2005/12/22 12:54:33 kozlik Exp $
+ * $Id: my_account.php,v 1.14 2006/01/03 15:01:20 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -11,7 +11,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('auth', 'attributes', 'usrloc', 'acl', 'uri');
 
-$_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 'apu_acl', 'apu_usrloc', 'apu_lang_select'); 
+$_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 'apu_acl', 'apu_usrloc'); 
 
 require "prepend.php";
 
@@ -28,7 +28,6 @@ $pu			= new apu_password_update();
 $usr_pref	= new apu_attributes();
 $aliases	= new apu_aliases();
 $acl		= new apu_acl();
-$ls		    = new apu_lang_select();
 
 
 if ($config->allow_change_usrloc){
@@ -57,12 +56,16 @@ $att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
 $att_desc['send_daily_missed_calls'] = $lang_str['ff_send_daily_missed_calls'];
 $usr_pref->set_opt('att_description', $att_desc);
 
+$an = &$config->attr_names;
+$attrs_options = array($an['lang'] => array('save_to_session' => true,
+                                            'save_to_cookie'  => true)) ;
+
+$usr_pref->set_opt('attrs_options', $attrs_options);
 $usr_pref->set_opt('attrs_kind', 'user');
 
 
 $pu->set_opt('change_pass', $config->allow_change_password);
 
-$ls->set_opt('save_to_user_attr', true);
 
 
 
@@ -87,11 +90,9 @@ $controler->add_apu($pu);
 $controler->add_apu($aliases);
 $controler->add_apu($acl);
 $controler->add_apu($usr_pref);
-$controler->add_apu($ls);
 
 $controler->assign_form_name("pd", $pu);
 $controler->assign_form_name("pd", $usr_pref);
-$controler->assign_form_name("pd", $ls);
 
 if ($config->allow_change_usrloc){
 	$controler->add_apu($ul);

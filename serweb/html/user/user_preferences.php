@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.5 2005/12/14 16:28:37 kozlik Exp $
+ * $Id: user_preferences.php,v 1.6 2006/01/03 15:01:20 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -23,6 +23,12 @@ $att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
 $att_desc['send_daily_missed_calls'] = $lang_str['ff_send_daily_missed_calls'];
 $usr_pref->set_opt('att_description', $att_desc);
 
+
+$an = &$config->attr_names;
+$attrs_options = array($an['lang'] => array('save_to_session' => true,
+                                            'save_to_cookie'  => true)) ;
+
+$usr_pref->set_opt('attrs_options', $attrs_options);
 $usr_pref->set_opt('attrs_kind', 'user');
 
 

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.12 2005/12/14 16:27:11 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.13 2006/01/03 15:01:21 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -41,11 +41,6 @@
  	{/if}
 {/foreach}
 
-	</tr>
-	<tr>
-	<td><label for="ls_language">{$lang_str.ff_language}:</label></td>
-	<td>{$form_pd.ls_language}</td>
-	</tr>
 
 {* If you need display only one specific user preference, see the examples 
  * below. In first case is displayed user preference of name NAME_OF_UP.
