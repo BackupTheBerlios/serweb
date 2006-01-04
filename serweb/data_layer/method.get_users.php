@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.6 2005/12/22 12:45:00 kozlik Exp $
+ * $Id: method.get_users.php,v 1.7 2006/01/04 14:34:06 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -98,6 +98,13 @@ class CData_Layer_get_users {
 							adm.".$ca->value."='1') ";
 		}
 
+		$q_uri = "";
+		if(!empty($filter['alias'])){
+			$q_uri = " join ".$tu_name." uri 
+			            on (cr.".$cc->uid." = uri.".$cu->uid." and 
+						    uri.".$cu->username." like '%".$filter['alias']."%') ";
+		}
+
 		$q_domains = "";
 		if (!is_null($opt_from_domains)){
 			
@@ -116,7 +123,7 @@ class CData_Layer_get_users {
 		if (!$opt_return_all){
 			/* get num rows */		
 			$q = "select cr.".$cc->uid." as uid
-				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains."
+				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 				        left outer join ".$ta_name." aln
@@ -130,7 +137,7 @@ class CData_Layer_get_users {
 				  group by cr.".$cc->uid;
 	
 			$res=$this->db->query($q);
-			if (DB::isError($res)) {log_errors($res, $errors); return false;}
+			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 			$this->set_num_rows($res->numRows());
 			$res->free();
 	
@@ -148,7 +155,7 @@ class CData_Layer_get_users {
 					 aph.".$ca->value." as phone,
 					 aem.".$ca->value." as email,
 					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled
-			  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains."
+			  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri."
 			        left outer join ".$ta_name." afn
 			            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 			        left outer join ".$ta_name." aln
@@ -185,7 +192,7 @@ class CData_Layer_get_users {
 
 			if ($opt_get_aliases){
 				$out[$i]['aliases']='';
-				if (false === ($aliases = $this->get_aliases(new Cserweb_auth($row['uid'], null, null), $errors))) return false;
+				if (false === ($aliases = $this->get_aliases($row['uid'], null))) return false;
 
 				$alias_arr=array();
 				foreach($aliases as $val) $alias_arr[] = $val->username;

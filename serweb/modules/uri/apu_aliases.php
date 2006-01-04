@@ -3,7 +3,7 @@
  * Application unit aliases
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.1 2005/12/22 13:48:46 kozlik Exp $
+ * @version   $Id: apu_aliases.php,v 1.2 2006/01/04 14:34:06 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -115,7 +115,7 @@ class apu_aliases extends apu_base_class{
 	function get_aliases(&$errors){
 		global $data, $sess;
 
-		if (false === $aliases = $data->get_aliases($this->user_id, $errors)) return false;
+		if (false === $aliases = $data->get_aliases($this->user_id->get_uid(), null)) return false;
 
 		foreach($aliases as $k=>$v){
 

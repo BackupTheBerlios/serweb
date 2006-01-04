@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.4 2005/12/14 16:30:19 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.5 2006/01/04 14:34:06 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
@@ -20,6 +20,7 @@ class CData_Layer_get_aliases_by_uri {
 	function get_aliases_by_uri($sip_uri, $opt){
 		global $config;
 
+		$errors = array();
 		/* create connection to proxy where are stored data of user */
 		if (isModuleLoaded('xxl') and $this->name != "get_aliases_tmp"){
 
@@ -31,7 +32,6 @@ class CData_Layer_get_aliases_by_uri {
 			
 		}
 
-		$errors = array();
 		if (!$this->connect_to_db($errors)) {
 			ErrorHandler::add_error($errors); return false;
 		}
@@ -70,10 +70,7 @@ class CData_Layer_get_aliases_by_uri {
 		
 		$uid = $row['uid'];
 
-		$errors = array();
-		if (false === $out = $this->get_aliases(new Cserweb_auth($uid, $uname, $realm), $errors)){
-			ErrorHandler::add_error($errors); return false;
-		}
+		if (false === $out = $this->get_aliases($uid, null)) return false;
 
 		return $out;
 	}
