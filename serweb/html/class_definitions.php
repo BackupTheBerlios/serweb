@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.5 2005/12/22 13:06:04 kozlik Exp $
+ * $Id: class_definitions.php,v 1.6 2006/01/05 15:01:39 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -215,6 +215,9 @@ class ErrorHandler{
 	}	
 }
 
+/**
+ *	Class handling domains
+ */
 class Domains{
 
 	var $domains = null;
@@ -279,6 +282,25 @@ class Domains{
 	
 		return $this->domain_names[$did][0];
 	}
+	
+	/**
+	 *	Return ID of domain with given domain name
+	 *
+	 *	On error this function return FALSE. If domain with given name doesn't 
+	 *	exist, NULL is returned
+	 *
+	 *	@param	string	$domainname	domain name
+	 *	@return	string				domain ID or FALSE on error
+	 */
+	function get_did($domainname){
+
+		if (is_null($this->domain_names) and false === $this->load_domains()) 
+			return false;
+
+		if (!isset($this->domains[$domainname]['did'])) return null;
+	
+		return $this->domains[$domainname]['did'];
+	}
 
 	/**
 	 *	Return array of all alocated domain IDs 
@@ -317,4 +339,168 @@ class Domains{
 	
 }
 
+/**
+ *	Class representating one sip uri
+ */
+class URI{
+	var $flags;
+	var $uid;
+	var $did;
+	var $username;
+
+	function URI($uid, $did, $username, $flags){
+		$this->uid		= $uid;
+		$this->did		= $did;
+		$this->username	= $username;
+		$this->flags	= $flags;
+	}
+
+	function is_canonical(){
+		global $config;
+		
+		$f = &$config->data_sql->uri->flag_values;
+		return (bool)($this->flags & $f['DB_CANON']);
+	}
+
+	function is_to(){
+		global $config;
+		
+		$f = &$config->data_sql->uri->flag_values;
+		return (bool)($this->flags & $f['DB_IS_TO']);
+	}
+
+	function is_from(){
+		global $config;
+		
+		$f = &$config->data_sql->uri->flag_values;
+		return (bool)($this->flags & $f['DB_IS_FROM']);
+	}
+	
+	/**
+	 *	Return username part of uri
+	 *	
+	 *	@return	string
+	 */
+	function get_username(){
+		return $this->username;
+	}
+	
+	/**
+	 *	Return URI in form 'sip:username@domain'
+	 *	
+	 *	@return	string		sip uri or FALSE on error
+	 */
+	function to_string(){
+		$dom = &Domains::singleton();
+		
+		if (false === $dn = $dom->get_domain_name($this->did)) return false;
+		
+		return "sip:".$this->username."@".$dn;
+	}
+}
+
+
+/**
+ *	Class handling URIs of user
+ */
+class URIs{
+	var $uid;
+	/** index of canonical URI */
+	var $canon = null;
+	/** array of URIs of user */
+	var $URIs = null;
+
+    /**
+     *
+     * @access private
+     */
+	function URIs($uid){
+		$this->uid = $uid;
+	}
+
+    /**
+     * Return a reference to a URIs instance, only creating a new instance 
+	 * if no URIs instance currently exists.
+     *
+     * You should use this if there are multiple places you might create a
+     * URIs, you don't want to create multiple instances, and you don't 
+	 * want to check for the existance of one each time. The singleton pattern 
+	 * does all the checking work for you.
+     *
+     * <b>You MUST call this method with the $var = &URIs::singleton($uid) 
+	 * syntax. Without the ampersand (&) in front of the method name, you will 
+	 * not get a reference, you will get a copy.</b>
+     *
+     * @access public
+     */
+
+    function &singleton($uid) {
+        static $instances = array();
+
+		if (!isset($instances[$uid])) $instances[$uid] = new URIs($uid);
+        return $instances[$uid];
+    }
+	
+	
+	/**
+	 *	
+	 *	
+	 *	@access private
+	 *	@todo: select correct data layer class in XXL envirnment
+	 */
+	function load_URIs(){
+		global $data;
+		
+		$data->add_method('get_aliases');
+		if (false === $uris = $data->get_aliases($this->uid, null)) return false;
+		$this->URIs = &$uris;
+
+		return true;	
+	}
+	
+	
+	/**
+	 *	Return array of URIs of user 
+	 *	
+	 *	@return	array	array of URIs or FALSE on error
+	 */
+	function get_URIs(){
+
+		if (is_null($this->URIs) and false === $this->load_URIs()) 
+			return false;
+
+		return $this->URIs;
+	}
+
+	/**
+	 *	Return URI of user 
+	 *	
+	 *	If canonical URI is set, is returned preferentially
+	 *	On error this function return FALSE. If no URI exists
+	 *	NULL is returned
+	 *	
+	 *	@return	array	URI of user or FALSE on error
+	 */
+	function get_URI(){
+
+		if (is_null($this->URIs) and false === $this->load_URIs()) 
+			return false;
+
+		/* if array of URIs is empty */
+		if (!count($this->URIs)) return null;
+
+		/* if index of canonical URI is known, return it */
+		if (!is_null($this->canon)) return $this->URIs[$this->canon];
+
+		/* try found the canonical URI */
+		foreach($this->URIs as $k=>$v){
+			if ($v->is_canonical()) {$this->canon = $k; break;}
+		}
+
+		/* if canonical uri doesn't exists use first URI instead of it */
+		if (is_null($this->canon)) $this->canon = 0;
+		
+		return $this->URIs[$this->canon];
+	}
+}
 ?>
