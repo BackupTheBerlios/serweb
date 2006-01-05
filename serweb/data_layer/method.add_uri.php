@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_uri.php,v 1.1 2005/12/22 13:44:41 kozlik Exp $
+ * $Id: method.add_uri.php,v 1.2 2006/01/05 14:55:16 kozlik Exp $
  */
 
 class CData_Layer_add_uri {
@@ -41,9 +41,8 @@ class CData_Layer_add_uri {
 		$opt_disabled = isset($opt["disabled"]) ? (bool)$opt["disabled"] : false;
 		$opt_canon    = isset($opt["canon"]) ? (bool)$opt["canon"] : false;
 
-
 		$ga = &Global_attrs::singleton();
-		if (false === $flags = &$ga->get_attribute($an['uri_default_flags'])) return false;
+		if (false === $flags = $ga->get_attribute($an['uri_default_flags'])) return false;
 
 		if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
 		if ($opt_canon)    $flags = ($flags | $f['DB_CANON']);
