@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_aliases.php,v 1.3 2006/01/04 14:34:06 kozlik Exp $
+ * $Id: method.get_aliases.php,v 1.4 2006/01/05 14:57:33 kozlik Exp $
  */
 
 class CData_Layer_get_aliases {
@@ -29,7 +29,8 @@ class CData_Layer_get_aliases {
 		$flags_val = $f['DB_IS_TO'];
 
 		$q="select ".$c->username." as username, 
-		           ".$c->did." as did 
+		           ".$c->did." as did,
+				   ".$c->flags." as flags
 		    from ".$t_name." 
 			where ".$c->uid." = '".$uid."' and 
 			      (".$c->flags." & ".$flags_val.") = ".$flags_val."
@@ -40,8 +41,8 @@ class CData_Layer_get_aliases {
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 
 		$out=array();
-		while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)){
-			$out[]=$row;
+		for ($i=0; $row = $res->fetchRow(DB_FETCHMODE_OBJECT); $i++){
+			$out[$i] = new URI($uid, $row->did, $row->username, $row->flags);
 		}
 		$res->free();
 		return $out;
