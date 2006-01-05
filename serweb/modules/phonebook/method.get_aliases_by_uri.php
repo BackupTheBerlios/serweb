@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.5 2006/01/04 14:34:06 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.1 2006/01/05 15:12:19 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
