@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.28 2005/12/22 15:31:04 kozlik Exp $
+ * $Id: config.php,v 1.29 2006/01/05 15:03:41 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -163,7 +163,13 @@
 	/* Phonebook TAB                                              */
 	/* ------------------------------------------------------------*/
 
-	$config->whitepages=false;
+	/* Enable whitepages - searching for other subscribers.
+	   
+	   Please note that whitepages script require quite complex SQL query.
+	   So it may be slow in high loaded environment and may be better disable
+	   it.
+	 */
+	$config->enable_whitepages = true;
 	
 
 	/* ------------------------------------------------------------*/

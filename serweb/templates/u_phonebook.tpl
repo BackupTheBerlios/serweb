@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.5 2005/12/28 09:39:49 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.6 2006/01/05 15:03:41 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -61,7 +61,7 @@
 <div class="swNumOfFoundRecords">{$lang_str.no_records}</div>
 {/foreach}
 
-{if $config->whitepages}
+{if $config->enable_whitepages}
 <div class="swLinkToTabExtension"><a href="{url url='whitepages.php'}">{$lang_str.l_find_user}</a></div>
 {/if}
 
