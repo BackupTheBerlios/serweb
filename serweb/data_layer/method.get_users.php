@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.7 2006/01/04 14:34:06 kozlik Exp $
+ * $Id: method.get_users.php,v 1.8 2006/01/05 15:00:08 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -29,16 +29,24 @@ class CData_Layer_get_users {
 	 *		returned all subscribers. 
 	 *  
 	 *    get_user_aliases	  	(bool) default: true
-	 *      should returned aliases of users?
+	 *      should return aliases of users?
 	 *      Could be disabled from performance reasons.
 	 *  
+	 *    get_sip_uri			(bool) default: false
+	 *  	return sip address of user
+	 *  
+	 *	  get_timezones
+	 *  	return timezone of users
+	 *	
 	 *	  only_users			(array)	default:null
 	 *		Array of user IDs. if is set, only users from this array are returned
 	 *
 	 *	  return_all			(bool)	default: false
  	 *		if true, the result isn't limited by LIMIT sql phrase
- 	 *
-	 *  
+ 	 *	
+	 *    only_agreeing			(bool)	default: false
+ 	 *		if true, only subscribers agreeing to look up for them are returned
+ 	 *	
 	 *  
 	 *	@return array	array of users or FALSE on error
 	 */ 
@@ -71,8 +79,12 @@ class CData_Layer_get_users {
 
 	    $opt_from_domains = (isset($opt['from_domains'])) ? $opt['from_domains'] : null;
 	    $opt_get_aliases = (isset($opt['get_user_aliases'])) ? (bool)$opt['get_user_aliases'] : true;
+	    $opt_get_sip_uri = (isset($opt['get_sip_uri'])) ? (bool)$opt['get_sip_uri'] : false;
+	    $opt_get_timezones = (isset($opt['get_timezones'])) ? (bool)$opt['get_timezones'] : false;
 	    $opt_uid_filter =  (isset($opt['only_users'])) ? $opt['only_users'] : null;
 	    $opt_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
+	    $opt_agreeing = (isset($opt['only_agreeing'])) ? (bool)$opt['only_agreeing'] : false;
+	    $opt_get_disabled = (isset($opt['get_disabled'])) ? (bool)$opt['get_disabled'] : true;
 
 
 
@@ -84,6 +96,8 @@ class CData_Layer_get_users {
 		if (!empty($filter['fname']))  $query_c .= "afn.".$ca->value." like '%".$filter['fname']."%' and ";
 		if (!empty($filter['lname']))  $query_c .= "aln.".$ca->value." like '%".$filter['lname']."%' and ";
 		if (!empty($filter['email']))  $query_c .= "aem.".$ca->value." like '%".$filter['email']."%' and ";
+
+		if (!$opt_get_disabled) $query_c .= "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0 and ";
 
 		$q_online = "";
 		if (!empty($filter['onlineonly'])){
@@ -98,11 +112,39 @@ class CData_Layer_get_users {
 							adm.".$ca->value."='1') ";
 		}
 
+		$q_agree = "";
+		if($opt_agreeing){
+			$q_agree = " join ".$ta_name." aag 
+			            on (cr.".$cc->uid." = aag.".$ca->uid." and 
+						    aag.".$ca->name."='".$an['allow_find']."' and
+							aag.".$ca->value."='1') ";
+		}
+
 		$q_uri = "";
 		if(!empty($filter['alias'])){
 			$q_uri = " join ".$tu_name." uri 
 			            on (cr.".$cc->uid." = uri.".$cu->uid." and 
 						    uri.".$cu->username." like '%".$filter['alias']."%') ";
+		}
+
+		$q_suri = "";
+		if(!empty($filter['sip_uri'])){
+		
+			$reg = &CReg::singleton();
+
+			$s_uname = $reg->get_username($filter['sip_uri']);
+			$s_dname = $reg->get_domainname($filter['sip_uri']);
+
+			$dom_handler = &Domains::singleton();
+			if (false === $s_did = $dom_handler->get_did($s_dname)) return false;
+			
+			if (is_null($s_did)) $qs_did = $this->get_sql_bool(false);	//domain don't exist return nothing
+			else $qs_did = "suri.".$cu->did." = '".$s_did."'";
+		
+			$q_suri = " join ".$tu_name." suri 
+			            on (cr.".$cc->uid." = suri.".$cu->uid." and 
+						    suri.".$cu->username." = '".$s_uname."' and
+							".$qs_did.") ";
 		}
 
 		$q_domains = "";
@@ -119,11 +161,18 @@ class CData_Layer_get_users {
 			$q_uid_filter = $this->get_sql_in("cr.".$cc->uid, $opt_uid_filter, true)." and ";
 		}
 
+		$q_tz_cols = $q_tz_from = "";
+		if ($opt_get_timezones){
+			$q_tz_from = " left outer join ".$ta_name." atz 
+			            on (cr.".$cc->uid." = atz.".$ca->uid." and 
+						    atz.".$ca->name."='".$an['timezone']."') ";
+			$q_tz_cols = ", atz.".$ca->value." as timezone ";
+		}
 
 		if (!$opt_return_all){
 			/* get num rows */		
 			$q = "select cr.".$cc->uid." as uid
-				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri."
+				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri.$q_suri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 				        left outer join ".$ta_name." aln
@@ -155,7 +204,8 @@ class CData_Layer_get_users {
 					 aph.".$ca->value." as phone,
 					 aem.".$ca->value." as email,
 					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled
-			  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri."
+					 ".$q_tz_cols."
+			  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri.$q_suri.$q_agree.$q_tz_from."
 			        left outer join ".$ta_name." afn
 			            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 			        left outer join ".$ta_name." aln
@@ -190,14 +240,30 @@ class CData_Layer_get_users {
 			$out[$i]['get_param']      = user_to_get_param($row['uid'], $row['username'], $row['realm'], 'u');
 			$out[$i]['disabled']       = (bool)$row['disabled'];
 
-			if ($opt_get_aliases){
-				$out[$i]['aliases']='';
-				if (false === ($aliases = $this->get_aliases($row['uid'], null))) return false;
+			if ($opt_get_timezones){
+				$out[$i]['timezone']   = $row['timezone'];
+			}
 
-				$alias_arr=array();
-				foreach($aliases as $val) $alias_arr[] = $val->username;
-			
-				$out[$i]['aliases'] = implode(", ", $alias_arr);
+			if ($opt_get_aliases or $opt_get_sip_uri){
+				$out[$i]['aliases']='';
+				$out[$i]['sip_uri']='';
+
+				$uri_handler = &URIs::singleton($row['uid']);
+				if (false === $uris = &$uri_handler->get_URIs()) return false;
+
+				if ($opt_get_aliases){
+					$alias_arr=array();
+					foreach($uris as $val) $alias_arr[] = $val->get_username();
+				
+					$out[$i]['aliases'] = implode(", ", $alias_arr);
+				}
+
+				if ($opt_get_sip_uri){
+					if (false === $uri = &$uri_handler->get_URI()) return false;
+					if (!is_null($uri)){
+						if (false === $out[$i]['sip_uri'] = $uri->to_string()) return false;
+					}
+				}
 			}
 
 		}

@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.4 2005/12/22 12:45:00 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.5 2006/01/05 15:00:08 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -32,6 +32,23 @@
  *	
  *	'get_user_aliases'			(bool) default: false
  *	 set to true if you want display aliases of users
+ *	
+ *	'get_user_sip_uri'			(bool) default: false
+ *	 set to true if you want display sip uri of users
+ *	
+ *	'get_timezones'				(bool) default: false
+ *	 set to true if you want display timezone of users
+ *	
+ *	'get_only_agreeing'			(bool) default: false
+ *	 set to true if you want limit result of founded users to only them 
+ *	 which agree with it (attribute allow_find = 1)
+ *	
+ *	'get_disabled'				(bool) default: true
+ *	 if true, disabled users are also displayed
+ *	
+ *	'script_phonebook'			(string) default: ''
+ *	 Name of script with phonebook. If is set, array of users will contain 
+ *	 field 'url_add_to_pb' which is url for add subscriber to phonebook.
  *	
  *	'sess_seed'					(int or string) default:0
  *	 this is used for distinguish session variables of multiple instances of this
@@ -74,6 +91,7 @@
 
 class apu_subscribers extends apu_base_class{
 	var $smarty_action='default';
+	var $js_before='';
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -83,7 +101,7 @@ class apu_subscribers extends apu_base_class{
 
 	/* return array of strings - requred javascript files */
 	function get_required_javascript(){
-		return array();
+		return array('sip_address_completion.js.php');
 	}
 	
 	/* constructor */
@@ -101,7 +119,13 @@ class apu_subscribers extends apu_base_class{
 
 		$this->opt['only_from_administrated_domains'] = false;
 
-		$this->opt['get_user_aliases'] = false;
+		$this->opt['get_user_aliases']		= false;
+		$this->opt['get_user_sip_uri']		= false;
+		$this->opt['get_timezones']			= false;
+		$this->opt['get_only_agreeing']		= false;
+		$this->opt['get_disabled']			= true;
+		
+		$this->opt['script_phonebook'] =			'';
 
 		/* message on attributes update */
 		$this->opt['msg_delete']['short'] =	&$lang_str['msg_user_deleted_s'];
@@ -164,7 +188,11 @@ class apu_subscribers extends apu_base_class{
 		$data->set_act_row($sess_apu_sc[$this->opt['sess_seed']]['act_row']);
 
 		
-		$opt = array('get_user_aliases' => $this->opt['get_user_aliases']);
+		$opt = array('get_user_aliases' => $this->opt['get_user_aliases'],
+		             'get_sip_uri'      => $this->opt['get_user_sip_uri'],
+					 'get_timezones'    => $this->opt['get_timezones'],
+					 'only_agreeing'	=> $this->opt['get_only_agreeing'],
+					 'get_disabled'		=> $this->opt['get_disabled']);
 
 		if ($this->opt['only_from_administrated_domains']){
 			if (false === $domains_perm = $_SESSION['auth']->get_administrated_domains()) return false;
@@ -201,6 +229,15 @@ class apu_subscribers extends apu_base_class{
 				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
 						"&sc_disable=".RawURLEncode($this->opt['instance_id']).
 						"&".$val['get_param']);
+
+			if ($this->opt['script_phonebook']){
+				$this->subscribers[$key]['url_add_to_pb'] = 
+					$sess->url($this->opt['script_phonebook']."?kvrk=".uniqID("").
+							"&add_from_wp=1".
+							"&fname=".RawURLEncode($val['fname']).
+							"&lname=".RawURLEncode($val['lname']).
+							"&sip_uri=".RawURLEncode($val['sip_uri']));
+			}
 		}
 
 		return true;
@@ -225,6 +262,8 @@ class apu_subscribers extends apu_base_class{
 			$tmp['filter']['realm'] = '';
 			$tmp['filter']['onlineonly'] = $this->opt['def_chk_onlineonly'];
 			$tmp['filter']['adminsonly'] = $this->opt['def_chk_adminsonly'];
+			$tmp['filter']['alias'] = '';
+			$tmp['filter']['sip_uri'] = '';
 
 			$tmp['act_row'] = 0;
 
@@ -250,6 +289,8 @@ class apu_subscribers extends apu_base_class{
 		if (isset($_POST['lname'])) $filter['lname']=$_POST['lname'];
 		if (isset($_POST['email'])) $filter['email']=$_POST['email'];
 		if (isset($_POST['realm'])) $filter['realm']=$_POST['realm'];
+		if (isset($_POST['alias'])) $filter['alias']=$_POST['alias'];
+		if (isset($_POST['sipuri'])) $filter['sip_uri']=$_POST['sipuri'];
 
 		if ($this->opt['use_chk_onlineonly']){
 			if (isset($_POST['onlineonly'])) 
@@ -303,10 +344,12 @@ class apu_subscribers extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $sess_apu_sc;
+		global $sess_apu_sc, $lang_str;
 		parent::create_html_form($errors);
 
 		$filter = &$sess_apu_sc[$this->opt['sess_seed']]['filter'];
+
+		$reg = &CReg::singleton();
 
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"usrnm",
@@ -337,6 +380,23 @@ class apu_subscribers extends apu_base_class{
 									 "size"=>11,
 									 "maxlength"=>128,
 	        	                     "value"=>$filter['realm']));
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"alias",
+									 "size"=>11,
+									 "maxlength"=>64,
+	        	                     "value"=>$filter['alias']));
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"sipuri",
+									 "size"=>11,
+									 "maxlength"=>255,
+									 "value" => $filter['sip_uri'],
+									 "valid_regex" => "^(".$reg->sip_address.")?$",
+									 "valid_e" => $lang_str['fe_not_valid_sip'],
+									 "extrahtml" => "onBlur='sip_address_completion(this)'"));
+	
+		$this->js_before .= 'sip_address_completion(f.sip_uri);';
 
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "value"=>1,
@@ -383,7 +443,7 @@ class apu_subscribers extends apu_base_class{
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
 		             'after'       => '',
-					 'before'      => '');
+					 'before'      => $this->js_before);
 	}
 }
 
