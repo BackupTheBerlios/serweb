@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.22 2005/12/27 16:13:47 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.23 2006/01/05 14:53:33 kozlik Exp $
  */
 
 
@@ -156,6 +156,7 @@
 								'show_status'		=> 'sw_show_status',	//show to others if user is online
 								'lang'				=> 'lang',				//language
 								'timezone'			=> 'sw_timezone',		//timezone
+								'allow_find'		=> 'sw_allow_find',		//allow other to look up for this user
 
 								'is_admin'			=> 'sw_is_admin',		//have admin privilege
 								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege
