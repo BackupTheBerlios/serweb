@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_did_by_realm.php,v 1.1 2005/12/22 13:44:42 kozlik Exp $
+ * $Id: method.get_did_by_realm.php,v 1.2 2006/01/06 15:14:13 kozlik Exp $
  */
 
 class CData_Layer_get_did_by_realm {
@@ -12,7 +12,9 @@ class CData_Layer_get_did_by_realm {
 	 *	On error this method returning FALSE. I domian is not found return NULL
 	 *
 	 *  Possible options:
-	 *		none
+	 *
+	 *	  check_disabled	(bool)	default: true
+	 *		If true, flag 'disabled' is checked and records with this flag set are ignored
 	 *
 	 *	@return string		domain id
 	 */ 
@@ -32,6 +34,9 @@ class CData_Layer_get_did_by_realm {
 		$f_d  = &$config->data_sql->domain->flag_values;
 		$f_da = &$config->data_sql->domain_attrs->flag_values;
 
+
+		$opt_check_disabled = isset($opt['check_disabled']) ? (bool)$opt['check_disabled'] : true;
+
 		$out = array();
 		$errors = array();
 
@@ -40,7 +45,11 @@ class CData_Layer_get_did_by_realm {
 		 */
 
 		$flags_set   = $f_da['DB_FOR_SERWEB'];
-		$flags_clear = $f_da['DB_DISABLED'] | $f_da['DB_DELETED'];
+
+		if ($opt_check_disabled)
+			$flags_clear = $f_da['DB_DISABLED'] | $f_da['DB_DELETED'];
+		else
+			$flags_clear = $f_da['DB_DELETED'];
 
 		$q="select ".$c_da->did."
 		    from ".$t_da."
@@ -68,7 +77,11 @@ class CData_Layer_get_did_by_realm {
 		 */
 
 		$flags_set   = $f_d['DB_FOR_SERWEB'];
-		$flags_clear = $f_d['DB_DISABLED'] | $f_d['DB_DELETED'];
+
+		if ($opt_check_disabled)
+			$flags_clear = $f_d['DB_DISABLED'] | $f_d['DB_DELETED'];
+		else
+			$flags_clear = $f_d['DB_DELETED'];
 		
 		$q="select ".$c_d->did."
 		    from ".$t_d."
