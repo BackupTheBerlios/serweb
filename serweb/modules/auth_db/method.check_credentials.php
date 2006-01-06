@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.check_credentials.php,v 1.4 2005/12/23 08:59:20 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.5 2006/01/06 10:50:19 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -13,8 +13,7 @@ class CData_Layer_check_credentials {
 	 *		-1 - this tripple (uname, realm, password) not exists
 	 *		-2 - this credentials is not for use in serweb
 	 *		-3 - account is disabled
-	 *		-4 - account pending for confirmation
-	 *		-5 - account is deleted
+	 *		-4 - account is deleted
 	 *
 	 *  Possible options:
 	 *    hash	(string)     default: "clear"
@@ -97,14 +96,9 @@ class CData_Layer_check_credentials {
 			return -3;
 		}
 
-		if ( $row[$c->flags] & $f["DB_PENDING"]){
-			sw_log("Account '".$uname."@".$realm."' pending for confirmation", PEAR_LOG_INFO);
-			return -4;
-		}
-
 		if ( $row[$c->flags] & $f["DB_DELETED"]){
 			sw_log("Account '".$uname."@".$realm."' is marked as deleted", PEAR_LOG_INFO);
-			return -5;
+			return -4;
 		}
 
 
