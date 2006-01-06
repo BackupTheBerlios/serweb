@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.65 2005/12/22 13:09:02 kozlik Exp $
+ * @version   $Id: functions.php,v 1.66 2006/01/06 16:20:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -727,6 +727,8 @@ function read_lang_txt_file($filename, $ddir, $lang, $replacements){
  *	@return array				parsed file or false on error
  */
 function read_txt_file($filename, $replacements){
+	global $lang_set;
+	
 	$fp = fopen($filename, "r");
 	if (!$fp){
 		sw_log("Can't open txt file ".$filename, PEAR_LOG_ERR);
@@ -761,7 +763,21 @@ function read_txt_file($filename, $replacements){
 	}
 	fclose($fp);
 
+
+	/* get charset */
+	$file_charset = null;
+	if (isset($headers['content-type']) and 
+	    eregi("charset=([-a-z0-9]+)", $headers['content-type'], $regs)){
+		
+		$file_charset = $regs[1];
+	}
+
+
 	foreach($replacements as $row){
+		if (!empty($file_charset) and !empty($lang_set['charset'])){
+			$row[1] = iconv($lang_set['charset'], $file_charset."//TRANSLIT", $row[1]);
+		}
+		
 		//do replace in body
 		$body=str_replace("#@#".$row[0]."#@#", $row[1], $body);
 
