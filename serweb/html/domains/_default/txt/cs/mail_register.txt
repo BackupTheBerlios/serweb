@@ -44,7 +44,7 @@ Uživatelské jméno: #@#username#@#
 
        Sip adresa: #@#sip_address#@# 
 
-(Toto také můžete zjistit pomoci odkazu "Zapoměli jste heslo?" na přihlašovací stránce)
+(Toto také můžete zjistit pomocí odkazu "Zapoměli jste heslo?" na přihlašovací stránce)
 
 
 
