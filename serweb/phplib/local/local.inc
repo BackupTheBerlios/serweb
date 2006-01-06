@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.15 2005/12/22 13:38:15 kozlik Exp $
+ * $Id: local.inc,v 1.16 2006/01/06 15:15:08 kozlik Exp $
  */
 
 
@@ -157,11 +157,36 @@ class phplib_Auth extends Auth {
 	 */
 
 	function find_out_did($username, $realm, $uid, $opt){
-		global $data_auth;
+		global $data_auth, $lang_str;
 
 		$data_auth->add_method('get_did_by_realm');
-		$did = $data_auth->get_did_by_realm($realm, null);
+		$data_auth->add_method('get_domain_flags');
+		
+		$opt = array('check_disabled' => false);
+		
+		$did = $data_auth->get_did_by_realm($realm, $opt);
 		if (false === $did) return false;
+
+		if (is_null($did)){
+			sw_log("User login: authentication failed: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['domain_not_found']);
+			return false;
+		}
+
+		if (false === $flags = $data_auth->get_domain_flags($did, null)) return false;
+
+		if ($flags['disabled']){
+			sw_log("User login: authentication failed: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['account_disabled']);
+			return false;
+		}
+
+		if ($flags['deleted']){
+			sw_log("User login: authentication failed: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['bad_username']);
+			return false;
+		}
+
 
 		return $did;
 	}
