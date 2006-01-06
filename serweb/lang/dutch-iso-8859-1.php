@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.13 2005/12/28 10:58:35 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.14 2006/01/06 15:15:36 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -136,6 +136,7 @@ $lang_str['th_email'] = 						"email";
 
 $lang_str['bad_username'] = 					"Ongeldige gebruikersnaam of wachtwoord";
 $lang_str['account_disabled'] = 				"Your account was disabled";	//to translate 
+$lang_str['domain_not_found'] = 				"Your domain not found";	//to translate 
 $lang_str['msg_logout_s'] = 					"U bent uitgelogd";
 $lang_str['msg_logout_l'] = 					"U bent uitgelogd, om opnieuw in te loggen, toets hieronder uw gebruikersnaam en wachtwood in";
 $lang_str['userlogin'] = 						"Gebruikers login";

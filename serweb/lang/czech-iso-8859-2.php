@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.13 2005/12/28 10:58:35 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.14 2006/01/06 15:15:36 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -136,6 +136,7 @@ $lang_str['th_email'] = 						"email";
 
 $lang_str['bad_username'] = 					"Chybné u¾ivatelské jméno nebo heslo";
 $lang_str['account_disabled'] = 				"Your account was disabled";	//to translate 
+$lang_str['domain_not_found'] = 				"Your domain not found";	//to translate 
 $lang_str['msg_logout_s'] = 					"Odhlá¹en";
 $lang_str['msg_logout_l'] = 					"Byl jste odhlá¹en. Pro nové pøihlá¹ení vyplòte u¾ivatelské jméno a heslo";
 $lang_str['userlogin'] = 						"pøihlá¹ení u¾ivatele";

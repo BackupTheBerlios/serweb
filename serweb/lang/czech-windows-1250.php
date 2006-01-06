@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.13 2005/12/28 10:58:35 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.14 2006/01/06 15:15:36 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -136,6 +136,7 @@ $lang_str['th_email'] = 						"email";
 
 $lang_str['bad_username'] = 					"Chybné uživatelské jméno nebo heslo";
 $lang_str['account_disabled'] = 				"Your account was disabled";	//to translate 
+$lang_str['domain_not_found'] = 				"Your domain not found";	//to translate 
 $lang_str['msg_logout_s'] = 					"Odhlášen";
 $lang_str['msg_logout_l'] = 					"Byl jste odhlášen. Pro nové pøihlášení vyplòte uživatelské jméno a heslo";
 $lang_str['userlogin'] = 						"pøihlášení uživatele";
