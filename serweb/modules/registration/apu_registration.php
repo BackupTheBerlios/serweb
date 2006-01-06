@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.1 2005/12/22 13:49:49 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.2 2006/01/06 14:02:09 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -166,9 +166,6 @@ class apu_registration extends apu_base_class{
 
 		$an = &$config->attr_names;
 
-		/* generate uid */
-		$uid = md5(uniqid($_SERVER["SERVER_ADDR"]));
-
 		/* generate confirmation string */
 		$confirm=md5(uniqid(rand()));
 
@@ -196,7 +193,11 @@ class apu_registration extends apu_base_class{
 		if (false === $realm = &$da->get_attribute($an['digest_realm'])) return false;
 		if (is_null($realm)) $realm = $domain_name;
 		
+		/* generate uid */
+		$uid = $_POST['uname'].'@'.$realm;
+
 		$user_param = user_to_get_param($uid, $_POST['uname'], $realm, "u");
+
 
 		if (false === $data->transaction_start()) return false;
 
@@ -208,9 +209,7 @@ class apu_registration extends apu_base_class{
 		}
 
 		/* store uri */
-//		$o = array('disabled' => $this->opt['require_confirmation'],
-//		           'canon' => true);
-		$o = array('disabled' => false,
+		$o = array('disabled' => $this->opt['require_confirmation'],
 		           'canon' => true);
 		if (false === $data->add_uri($uid, $_POST['uname'], $did, $o)) {
 			$data->transaction_rollback();
@@ -246,9 +245,7 @@ class apu_registration extends apu_base_class{
 			}
 	
 			/* store alias to URI table */
-//			$o = array('disabled' => $this->opt['require_confirmation'],
-//			           'canon' => false);
-			$o = array('disabled' => false,
+			$o = array('disabled' => $this->opt['require_confirmation'],
 			           'canon' => false);
 			if (false === $data->add_uri($uid, $alias, $did, $o)) {
 				$data->transaction_rollback();
