@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.enable_user.php,v 1.1 2005/12/22 12:45:00 kozlik Exp $
+ * $Id: method.enable_user.php,v 1.2 2006/01/06 13:20:02 kozlik Exp $
  */
 
 class CData_Layer_enable_user {
@@ -32,13 +32,13 @@ class CData_Layer_enable_user {
 
 		/* table's name */
 		$tc_name = &$config->data_sql->credentials->table_name;
-		$ta_name = &$config->data_sql->user_attrs->table_name;
+		$tu_name = &$config->data_sql->uri->table_name;
 		/* col names */
 		$cc = &$config->data_sql->credentials->cols;
-		$ca = &$config->data_sql->user_attrs->cols;
+		$cu = &$config->data_sql->uri->cols;
 		/* flags */
 		$fc = &$config->data_sql->credentials->flag_values;
-		$fa = &$config->data_sql->user_attrs->flag_values;
+		$fu = &$config->data_sql->uri->flag_values;
 
 		$an = &$config->attr_names;
 
@@ -65,10 +65,10 @@ class CData_Layer_enable_user {
 		}
 
 
-		$q = "update ".$ta_name." set ";
-		if ($o_disable) $q .= $ca->flags." = ".$ca->flags." | ".$fa['DB_DISABLED'];
-		else            $q .= $ca->flags." = ".$ca->flags." & ~".$fa['DB_DISABLED'];
-		$q .= " where ".$ca->uid." = '".$o_uid."'";
+		$q = "update ".$tu_name." set ";
+		if ($o_disable) $q .= $cu->flags." = ".$cu->flags." | ".$fu['DB_DISABLED'];
+		else            $q .= $cu->flags." = ".$cu->flags." & ~".$fu['DB_DISABLED'];
+		$q .= " where ".$cu->uid." = '".$o_uid."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
