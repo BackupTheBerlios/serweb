@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.7 2005/12/22 12:38:54 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.8 2006/01/06 13:05:30 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -182,7 +182,8 @@ class apu_domain_list extends apu_base_class{
 		$data->set_act_row($sess_apu_dl['act_row']);
 
 		$opt = array('filter' => $sess_apu_dl['filter'],
-					 'get_domain_names' => true);
+					 'get_domain_names' => true,
+					 'get_domain_flags' => true);
 					 
 		if (!is_null($this->opt['only_domains']))
 			$opt['only_domains'] = $this->opt['only_domains'];

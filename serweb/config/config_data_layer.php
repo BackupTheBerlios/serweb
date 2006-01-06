@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.23 2006/01/05 14:53:33 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.24 2006/01/06 13:05:30 kozlik Exp $
  */
 
 
@@ -187,7 +187,7 @@
 							"DB_IS_TO"			=> 8,   // URI may be used in r-uri
 							"DB_IS_FROM"		=> 16,  // URI may be used in from
 							"DB_FOR_SERWEB"		=> 32,  // if set, attribute is mean for SERWEB
-							"DB_PENDING"		=> 64,  // account is pending for confirmation
+							"DB_PENDING"		=> 64,  // not used
 							"DB_DELETED"		=> 128,	// row is marked as deleted
 							"DB_CALLER_DELETED"	=> 256,	// row is marked as deleted
 							"DB_CALLEE_DELETED"	=> 512	// row is marked as deleted

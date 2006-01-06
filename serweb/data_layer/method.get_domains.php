@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.3 2005/12/22 13:21:21 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.4 2006/01/06 13:05:30 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
-	var $required_methods = array('get_domain');
+	var $required_methods = array('get_domain', 'get_domain_flags');
 	
 	/**
 	 *  return array of associtive arrays containig domains
@@ -22,6 +22,9 @@ class CData_Layer_get_domains {
 	 *	  get_domain_names (bool) default: false
 	 *		if true, function return aliases of domain in 'names' keys of returned array.
 	 *		Otherwise the keys 'names' are empty
+	 *
+	 *	  get_domain_flags	(bool)	default: false
+	 *		if true, function return flags of domain in 'deleted' and 'disabled' keys of returned array.
 	 *
 	 *	  return_all		(bool)	default: false
 	 *		if true, the result isn't limited by LIMIT sql phrase
@@ -59,10 +62,12 @@ class CData_Layer_get_domains {
 
 	    $o_filter =      (isset($opt['filter'])) ? $opt['filter'] : array();
 	    $o_get_names =   (isset($opt['get_domain_names'])) ? (bool)$opt['get_domain_names'] : false;
+	    $o_get_flags =   (isset($opt['get_domain_flags'])) ? (bool)$opt['get_domain_flags'] : false;
 	    $o_order_names = (isset($opt['order_names'])) ? (bool)$opt['order_names'] : true;
 	    $o_return_all =  (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
 	    $o_did_filter =  (isset($opt['only_domains'])) ? $opt['only_domains'] : null;
 	    $o_check_deleted =  (isset($opt['check_deleted_flag'])) ? $opt['check_deleted_flag'] : true;
+	    
 
 		$qw="";
 		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did." LIKE '%".$o_filter['id']."%' and ";
@@ -92,8 +97,7 @@ class CData_Layer_get_domains {
 
 
 		$q1="select d.".$cd->did." as did, 
-		            c.".$cc->name.", 
-					d.".$cd->flags." & ".$fd['DB_DISABLED']." as disabled
+		            c.".$cc->name."
 		    from (".$td_name." d left outer join ".$ta_name." dac 
 			           on d.".$cd->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
 				   left outer join ".$tc_name." c
@@ -103,8 +107,7 @@ class CData_Layer_get_domains {
 
 
 		$q2="select d.".$ca->did." as did, 
-		            c.".$cc->name.", 
-					d.".$ca->flags." & ".$fa['DB_DISABLED']." as disabled
+		            c.".$cc->name."
 		    from (".$ta_name." d left outer join ".$ta_name." dac 
 			           on d.".$ca->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
 				   left outer join ".$tc_name." c
@@ -142,7 +145,12 @@ class CData_Layer_get_domains {
 		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
 			$out[$i]['id']		   = $row['did'];
 			$out[$i]['customer']   = $row[$cc->name];
-			$out[$i]['disabled']   = $row['disabled'];
+
+			if ($o_get_flags){
+				if (false === $flags = $this->get_domain_flags($row['did'], null)) return false;
+				$out[$i]['disabled']   = $flags['disabled'];
+				$out[$i]['deleted']    = $flags['deleted'];
+			}
 
 			if ($o_get_names){
 				$o = array('filter' => array('did' => $row['did']),
