@@ -3,7 +3,13 @@
 # replacements in allowed this file: 
 # 	- #@#domain#@# - is replaced by domain name
 #	- #@#sip_address#@#	- replaced by SIP address reserved for user
+#	- #@#login_url#@# - URL of serweb login page
 #	- #@#confirmation_url#@# - URL of confirmation script
+#	- #@#username#@# - username of user
+#	- #@#password#@# - password of user
+#	- #@#email#@#    - email of user
+#	- #@#first_name#@# - first name of user
+#	- #@#last_name#@# - last name of user
 #
 # notice: line ends of non empty lines are stripped
 #
@@ -24,7 +30,27 @@ Pro dokončení registrace prosím navštivte následující adresu během 24 ho
 (Pokud ji navštívíte později, budete se muset zaregistrovat znovu.)
 
 
+Zde jsou detaily vašeho účtu:
+
+---------------------------------------------------------------------
+
+Uživatelské jméno: #@#username#@#
+
+            Heslo: #@#password#@#
+
+            Email: #@#email#@#
+
+       Vaše jméno: #@#first_name#@# #@#last_name#@#
+
+       Sip adresa: #@#sip_address#@# 
+
+(Toto také můžete zjistit pomoci odkazu "Zapoměli jste heslo?" na přihlašovací stránce)
+
+
+
 Uživatelé Windows Messengeru mohou navštívit následující adresu pro rady
 a tipy ohledně konfigurace:
 http://www.iptel.org/phpBB/viewtopic.php?topic=11&forum=1&0
 
+
+-- Tato zpráva byla vygenerována automaticky.
