@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.1 2005/12/22 16:58:57 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.2 2006/01/09 15:08:11 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -62,7 +62,9 @@ class apu_forgotten_password extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('check_credentials', 'get_attr_by_val', 'set_password_to_user');
+		return array('check_credentials', 'get_attr_by_val', 
+		             'set_password_to_user', 'get_did_by_realm', 
+					 'get_domain_flags');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -304,10 +306,37 @@ class apu_forgotten_password extends apu_base_class{
 			return false;
 		}
 
-
 		$this->sip_user['uname'] = $username;
 		$this->sip_user['realm'] = $realm;
 		$this->sip_user['uid']   = $uid;
+
+
+		/* check flags of the domain of user */
+		$opt = array('check_disabled_flag' => false);
+		
+		$did = $data->get_did_by_realm($realm, $opt);
+		if (false === $did) return false;
+
+		if (is_null($did)){
+			sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['domain_not_found']);
+			return false;
+		}
+
+		if (false === $flags = $data->get_domain_flags($did, null)) return false;
+
+		if ($flags['disabled']){
+			sw_log("Get password: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['account_disabled']);
+			return false;
+		}
+
+		if ($flags['deleted']){
+			sw_log("Get password: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['domain_not_found']);
+			return false;
+		}
+
 
 		return true;
 	}
