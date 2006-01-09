@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.16 2006/01/06 15:15:08 kozlik Exp $
+ * $Id: local.inc,v 1.17 2006/01/09 14:59:50 kozlik Exp $
  */
 
 
@@ -162,7 +162,7 @@ class phplib_Auth extends Auth {
 		$data_auth->add_method('get_did_by_realm');
 		$data_auth->add_method('get_domain_flags');
 		
-		$opt = array('check_disabled' => false);
+		$opt = array('check_disabled_flag' => false);
 		
 		$did = $data_auth->get_did_by_realm($realm, $opt);
 		if (false === $did) return false;

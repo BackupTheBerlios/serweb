@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_did_by_realm.php,v 1.2 2006/01/06 15:14:13 kozlik Exp $
+ * $Id: method.get_did_by_realm.php,v 1.3 2006/01/09 14:59:50 kozlik Exp $
  */
 
 class CData_Layer_get_did_by_realm {
@@ -13,7 +13,7 @@ class CData_Layer_get_did_by_realm {
 	 *
 	 *  Possible options:
 	 *
-	 *	  check_disabled	(bool)	default: true
+	 *	  check_disabled_flag	(bool)	default: true
 	 *		If true, flag 'disabled' is checked and records with this flag set are ignored
 	 *
 	 *	@return string		domain id
@@ -35,7 +35,7 @@ class CData_Layer_get_did_by_realm {
 		$f_da = &$config->data_sql->domain_attrs->flag_values;
 
 
-		$opt_check_disabled = isset($opt['check_disabled']) ? (bool)$opt['check_disabled'] : true;
+		$opt_check_disabled = isset($opt['check_disabled_flag']) ? (bool)$opt['check_disabled_flag'] : true;
 
 		$out = array();
 		$errors = array();
