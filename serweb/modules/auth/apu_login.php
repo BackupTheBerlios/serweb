@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.5 2005/12/22 13:14:12 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.6 2006/01/11 15:16:50 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -34,7 +34,10 @@
  *	'unset_lang_on_login'		(bool) default: true
  *	 Unset session variable containg language after successful log in
  *	 It allows to set language by user attribute
- *	
+ *								
+ *	'set_lang_attr'				(bool) default: true
+ *	 Set user attribute 'lang' on login if it is not set.
+ *								
  *	'msg_logout'				default: $lang_str['msg_logout_s'] and $lang_str['msg_logout_l']
  *	 message which should be showed on user logout - assoc array with keys 'short' and 'long'
  *								
@@ -99,6 +102,8 @@ class apu_login extends apu_base_class{
 
 		$this->opt['unset_lang_on_login'] = true;
 
+		$this->opt['set_lang_attr']	= true;
+
 		/* message on attributes update */
 		$this->opt['msg_logout']['short'] =	&$lang_str['msg_logout_s'];
 		$this->opt['msg_logout']['long']  =	&$lang_str['msg_logout_l'];
@@ -162,7 +167,35 @@ class apu_login extends apu_base_class{
 		sw_log("User login: redirecting to page: ".$this->opt['redirect_on_login'], PEAR_LOG_DEBUG);
 
 		$this->controler->change_url_for_reload($this->opt['redirect_on_login']);
+
+		if ($this->opt['set_lang_attr']){
+			$an = &$config->attr_names;
+			
+			/* get the lang attribute */
+			$ua_handler = &User_Attrs::singleton($this->uid);
+			if (false === $u_lang = $ua_handler->get_attribute($an['lang'])) return false;
+
+
+			/* if lang attribute is not set, set it */
+			if (is_null($u_lang)){
+				$u_lang = $_SESSION['lang'];
+
+				/* get the attr_type of the lang attribute */
+				$at_handler = &Attr_types::singleton();
+				if (false === $lang_type = $at_handler->get_attr_type($an['lang'])) return false;
+				if (is_null($lang_type)) {ErrorHandler::add_error("Type of attribute 'lang' doesn't exists"); return false;}
+				
+				/* format the value */
+				$lang_type->check_value($u_lang);
+			
+				/* store lang into DB */
+				if (false === $ua_handler->set_attribute($an['lang'], $u_lang)) return false;
+			}
+		}
+
 		if ($this->opt['unset_lang_on_login']) unset($_SESSION['lang']);
+		
+
 		return true;
 	}
 	

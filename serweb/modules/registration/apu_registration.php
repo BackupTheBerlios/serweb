@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.3 2006/01/11 11:57:17 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.4 2006/01/11 15:16:50 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -43,6 +43,8 @@
  *	
  *	
  *	
+ *	'set_lang_attr'				(string)	default: null
+ *	 Set the 'lang' attribute of registering user by the given lang
  *	
  *	'terms_file					(string) default: terms.txt
  *	 name of file containing terms and conditions
@@ -142,6 +144,8 @@ class apu_registration extends apu_base_class{
 		$this->opt['login_script'] =	'';
 		$this->opt['redirect_on_register'] = "";
 		$this->opt['confirmation_script'] =	"";
+
+		$this->opt['set_lang_attr']	= null;
 
 		/* alias generation */
 		$this->opt['create_numeric_alias'] =		$config->create_numeric_alias_to_new_users;
@@ -243,6 +247,32 @@ class apu_registration extends apu_base_class{
 				$data->transaction_rollback();
 				return false;
 			}
+		}
+
+		if (!is_null($this->opt['set_lang_attr'])){
+			$u_lang = $this->opt['set_lang_attr'];
+
+			/* get the attr_type of the lang attribute */
+			$at_handler = &Attr_types::singleton();
+			if (false === $lang_type = $at_handler->get_attr_type($an['lang'])) {
+				$data->transaction_rollback();
+				return false;
+			}
+			if (is_null($lang_type)) {
+				ErrorHandler::add_error("Type of attribute 'lang' doesn't exists"); 
+				$data->transaction_rollback();
+				return false;
+			}
+			
+			/* format the value */
+			$lang_type->check_value($u_lang);
+		
+			/* store lang into DB */
+			if (false === $ua->set_attribute($an['lang'], $u_lang)) {
+				$data->transaction_rollback();
+				return false;
+			}
+			
 		}
 
 		if ($this->opt['require_confirmation']){

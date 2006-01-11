@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.4 2006/01/11 11:57:17 kozlik Exp $
+ * $Id: index.php,v 1.5 2006/01/11 15:16:50 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_did_by_realm');
@@ -28,6 +28,7 @@ $register->set_opt('mail_file', "mail_register.txt");
 $register->set_opt('mail_file_conf', "mail_register_conf.txt");
 $register->set_opt('confirmation_script', "reg/confirmation.php");
 $register->set_opt('register_in_domain', $did);
+$register->set_opt('set_lang_attr', $_SESSION['lang']);
 
 										
 $config->html_headers = array_merge($config->html_headers, 
