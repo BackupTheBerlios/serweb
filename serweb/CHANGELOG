@@ -65,3 +65,13 @@
 
 2005-09-19
 	* fixed security issue: the click2dial applet works without authentication.
+	
+2006-01-11	
+	* rewrited classes from phplib (Auth, Perms and session management)
+	* domain management support (tabs domains and customers in admin interface)
+	* user attributes expanded by domain attrs and global attrs
+	* users are now indexed by uid. Indexing by username@domain is no more supported
+	* addapted to new database structure
+	* added possibility to register user by admin
+	* added possibility to disable requiring confirmation of registration
+	
