@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.2 2006/01/06 14:02:09 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.3 2006/01/11 11:57:17 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -18,7 +18,14 @@
  *	--------------
  *	
  *	'mail_file'					(string) default: mail_registered_by_admin.txt
- *	 name of file contining text of mail which is send after successfull registration
+ *	 Name of file containing text of mail which is send after successfull registration.
+ *	
+ *	'mail_file_conf'			(string) default: null
+ *	 Name of file continaing text of mail which is send after successfull registration.
+ *	 If 'mail_file_conf' is set, 'mail_file_conf' is send when confirmation of 
+ *	 registration is required and 'mail_file' is send when confirmation is not
+ *	 required. Otherwise (if 'mail_file_conf' is not set) 'mail_file' is always
+ *	 send.
  *	
  *	'create_numeric_alias'		(bool) default: $config->create_numeric_alias_to_new_users
  *	 If true, create numeric alias for new subscriber
@@ -28,10 +35,9 @@
  *	
  *	
  *	
- *	'require_confirmation'		(bool)		default: true
- *	
- *	
- *	
+ *	'require_confirmation'		(bool)		default: null
+ *	 Require confirmation of registration. This option override attribute 
+ *	 'require_conf'.
  *	
  *	'choose_passw'				(bool)		default: true
  *	
@@ -67,6 +73,7 @@
  *	'smarty_action'				name of smarty variable - see below
  *	'smarty_reg_adress'			name of smarty variable - see below
  *	'smarty_attributes'			name of smarty variable - see below
+ *	'smarty_req_conf'			name of smarty variable - see below
  *	
  *	Exported smarty variables:
  *	--------------------------
@@ -87,6 +94,9 @@
  *	opt['smarty_reg_adress']	(reg_sip_address)
  *	  contain sip uri of user who registered (avaiable only if smarty_action == finished)
  *
+ *	opt['smarty_req_conf']		(require_confirmation)
+ *	  Contain true if confirmation of registration is required.
+ *	  (avaiable only if smarty_action == finished)
  *
  *	@package   serweb
  */
@@ -121,13 +131,14 @@ class apu_registration extends apu_base_class{
 		$this->opt['allowed_domains'] = null;
 		$this->opt['pre_selected_domain'] = null;
 
-		$this->opt['require_confirmation'] = true;
+		$this->opt['require_confirmation'] = null;
 		$this->opt['choose_passw'] = true;
 
 		$this->opt['terms_file'] =	null;
 
 		
 		$this->opt['mail_file'] =	'mail_registered_by_admin.txt';
+		$this->opt['mail_file_conf'] =	null;
 		$this->opt['login_script'] =	'';
 		$this->opt['redirect_on_register'] = "";
 		$this->opt['confirmation_script'] =	"";
@@ -151,7 +162,8 @@ class apu_registration extends apu_base_class{
 		$this->opt['form_name'] =			'';
 		/* registered sip address */
 		$this->opt['smarty_reg_adress'] = 	'reg_sip_address';
-			
+
+		$this->opt['smarty_req_conf'] = 	'require_confirmation';			
 	}
 
 	/* this metod is called always at begining */
@@ -182,6 +194,14 @@ class apu_registration extends apu_base_class{
 		$did = is_null($this->opt['register_in_domain']) ? 
 		           $_POST['domain'] :
 		           $this->opt['register_in_domain'];
+
+		/* set value of option 'require_confirmation' */
+		if (is_null($this->opt['require_confirmation'])){
+			$o = array('did' => $did);
+			if (false === $this->opt['require_confirmation'] = 
+					Attributes::get_attribute($an['require_conf'], $o)) return false;
+		}
+
 
 		/* get domain name */
 		$domains = &Domains::singleton();
@@ -272,7 +292,13 @@ class apu_registration extends apu_base_class{
 								"&pr=".RawURLEncode(base64_encode($proxy['proxy'])):
 								"");
 
-		$mail = read_lang_txt_file($this->opt['mail_file'], "txt", $_SESSION['lang'], 
+		if (is_null($this->opt['mail_file_conf'])) 
+			$this->opt['mail_file_conf'] = $this->opt['mail_file'];
+
+		if ($this->opt['require_confirmation'])	$mail_file = $this->opt['mail_file_conf'];
+		else $mail_file = $this->opt['mail_file'];
+
+		$mail = read_lang_txt_file($mail_file, "txt", $_SESSION['lang'], 
 					array(array("domain", $domain_name),
 					      array("sip_address", $sip_address),
 						  array("login_url", $login_url),
@@ -306,6 +332,7 @@ class apu_registration extends apu_base_class{
 
 		return array("m_user_registered=".RawURLEncode($this->opt['instance_id']),
 		             "reg_sip_adr=".RawURLEncode($sip_address),
+		             "require_conf=".RawURLEncode($this->opt['require_confirmation']),
 		             $user_param);
 	}
 
@@ -605,8 +632,10 @@ class apu_registration extends apu_base_class{
 
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 
-		if ($this->smarty_action == "finished")
+		if ($this->smarty_action == "finished"){
 			$smarty->assign_by_ref($this->opt['smarty_reg_adress'], $_GET['reg_sip_adr']);
+			$smarty->assign_by_ref($this->opt['smarty_req_conf'], $_GET['require_conf']);
+		}
 		
 	}
 	

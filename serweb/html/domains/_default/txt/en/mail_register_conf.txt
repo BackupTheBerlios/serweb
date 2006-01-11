@@ -1,5 +1,5 @@
 # This file contain text of confirmation email sent during account registration
-# when confirmation of registration is not required
+# when confirmation of registration is required
 # 
 # replacements in allowed this file: 
 # 	- #@#domain#@# - is replaced by domain name
@@ -24,7 +24,12 @@ Thank you for registering with #@#domain#@#.
 
 We are reserving the following SIP address for you: #@#sip_address#@#
 
-You can now login at: #@#login_url#@#
+
+To finalize your registration please check the following URL within 24 hours:
+#@#confirmation_url#@#
+
+(If you confirm later you will have to re-register.)
+
 
 Here are the details of your account:
 

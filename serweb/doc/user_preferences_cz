@@ -1,4 +1,4 @@
-$Id: user_preferences_cz,v 1.3 2006/01/05 14:53:33 kozlik Exp $
+$Id: user_preferences_cz,v 1.4 2006/01/11 11:57:16 kozlik Exp $
 
 User preferences
 ----------------
@@ -54,6 +54,7 @@ sw_acl_control				U		contain list of ACL entries which admin may change
 sw_confirmation				U		confirmation number (when user is registering or when forgot password)
 sw_pending_ts				U		pending timestamp
 sw_deleted_ts				UD		deleted timestamp
+sw_require_conf				DG		require confirmation of registration
 
 digest_realm				D
 sw_admin					D		contain list of admins of domain

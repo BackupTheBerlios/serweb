@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.30 2006/01/06 15:15:36 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.31 2006/01/11 11:57:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -115,6 +115,7 @@ $lang_str['ff_username'] = 						"username";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"show on-line users only";
 $lang_str['ff_language'] = 						"language";
+$lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */

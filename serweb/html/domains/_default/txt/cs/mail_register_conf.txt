@@ -1,5 +1,5 @@
 # This file contain text of confirmation email sent during account registration
-# when confirmation of registration is not required
+# when confirmation of registration is required
 # 
 # replacements in allowed this file: 
 # 	- #@#domain#@# - is replaced by domain name
@@ -25,7 +25,10 @@ Děkujeme Vám za registraci u #@#domain#@#.
 Rezervujeme pro Vás následující SIP adresu: #@#sip_address#@#
 
 
-Nyní se můžete přihlásit na: #@#login_url#@#
+Pro dokončení registrace prosím navštivte následující adresu během 24 hodin:
+#@#confirmation_url#@#
+
+(Pokud ji navštívíte později, budete se muset zaregistrovat znovu.)
 
 
 Zde jsou detaily vašeho účtu:

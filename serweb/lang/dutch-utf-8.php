@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.14 2006/01/06 15:15:36 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.15 2006/01/11 11:57:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -115,6 +115,7 @@ $lang_str['ff_username'] = 						"gebruikersnaam";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"alleen on-line gebruikers";
 $lang_str['ff_language'] = 						"language";	//to translate 
+$lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */

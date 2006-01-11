@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.3 2005/12/22 13:39:34 kozlik Exp $ *}
+{* $Id: registration.tpl,v 1.4 2006/01/11 11:57:17 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -115,10 +115,16 @@
 
 		<br>
 
+	{if $require_confirmation}
 		<p>{$lang_str.reg_finish_thanks}.<br>
+
 		<br>
 		{$lang_str.reg_finish_app_forwarded}<br>
 		{$lang_str.reg_finish_confirm_msg}<br>
+	{else}
+		<p>{$lang_str.reg_conf_congratulations}</p>
+		<p>{$lang_str.reg_finish_thanks}.<br>
+	{/if}
 		<br>
 		{$lang_str.reg_finish_sip_address} {$reg_sip_address}.<br>
 		<br>

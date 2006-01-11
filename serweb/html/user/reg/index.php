@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.3 2005/12/22 12:54:34 kozlik Exp $
+ * $Id: index.php,v 1.4 2006/01/11 11:57:17 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_did_by_realm');
@@ -25,8 +25,8 @@ $register->set_opt('form_name', 'form1');
 $register->set_opt('form_submit', $form_submit);
 $register->set_opt('terms_file', "terms.txt");
 $register->set_opt('mail_file', "mail_register.txt");
+$register->set_opt('mail_file_conf', "mail_register_conf.txt");
 $register->set_opt('confirmation_script', "reg/confirmation.php");
-$register->set_opt('require_confirmation', true);
 $register->set_opt('register_in_domain', $did);
 
 										

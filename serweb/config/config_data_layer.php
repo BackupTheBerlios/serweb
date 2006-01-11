@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.24 2006/01/06 13:05:30 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.25 2006/01/11 11:57:16 kozlik Exp $
  */
 
 
@@ -165,6 +165,7 @@
 								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
 								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
 								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
+								'require_conf' 		=> 'sw_require_conf',	//require confirmation
 
 								'digest_realm'		=> 'digest_realm',		
 								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
