@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_uri.php,v 1.2 2006/01/05 14:55:16 kozlik Exp $
+ * $Id: method.add_uri.php,v 1.3 2006/01/12 14:40:47 kozlik Exp $
  */
 
 class CData_Layer_add_uri {
@@ -43,6 +43,10 @@ class CData_Layer_add_uri {
 
 		$ga = &Global_attrs::singleton();
 		if (false === $flags = $ga->get_attribute($an['uri_default_flags'])) return false;
+		if (!is_numeric($flags)){
+			ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$ca['uri_default_flags']."' is not defined or is not a number Can't create URI."));
+			return false;
+		}
 
 		if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
 		if ($opt_canon)    $flags = ($flags | $f['DB_CANON']);

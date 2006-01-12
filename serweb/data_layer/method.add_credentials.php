@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_credentials.php,v 1.1 2005/12/22 13:44:41 kozlik Exp $
+ * $Id: method.add_credentials.php,v 1.2 2006/01/12 14:40:47 kozlik Exp $
  */
 
 class CData_Layer_add_credentials {
@@ -43,6 +43,10 @@ class CData_Layer_add_credentials {
 
 		$ga = &Global_attrs::singleton();
 		if (false === $flags = &$ga->get_attribute($an['credential_default_flags'])) return false;
+		if (!is_numeric($flags)){
+			ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$ca['credential_default_flags']."' is not defined or is not a number Can't create credentials."));
+			return false;
+		}
 
 		if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
 
