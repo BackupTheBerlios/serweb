@@ -29,7 +29,7 @@ class Attr_type_int extends Attr_type{
     	                         "value"=>$value,
 	                             "valid_regex"=> $opt_optional ? "^[0-9]*$" :
 								                                 "^[0-9]+$",
-	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ($this->description." ".$lang_str['fe_is_not_number'])));
+	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ("'".$this->get_description()."' ".$lang_str['fe_is_not_number'])));
 	}
 }
 

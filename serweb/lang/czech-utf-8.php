@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.16 2006/01/12 15:32:20 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.17 2006/01/12 15:55:38 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -52,6 +52,7 @@ $lang_str['none'] = 							"none";	//to translate
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_valid_email'] =	 			"neplatná emailová adresa";
+$lang_str['fe_is_not_valid_email'] =	 		"is not valid email address";	//to translate 
 $lang_str['fe_not_valid_sip'] = 				"neplatná SIP adresa";
 $lang_str['fe_not_valid_phonenumber'] = 		"neplatné telefonní číslo";
 $lang_str['fe_not_filled_sip'] = 				"SIP adresu musíte vyplnit";

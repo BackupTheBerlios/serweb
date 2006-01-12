@@ -34,7 +34,7 @@ class Attr_type_email_adr extends Attr_type{
     	                         "value"=>$value,
 	                             "valid_regex"=> $opt_optional ? "^(".$reg->email.")?$" :
 								                                 "^".$reg->email."$",
-	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ($this->description." ".$lang_str['fe_not_valid_email'])));
+	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ("'".$this->get_description()."' ".$lang_str['fe_is_not_valid_email'])));
 	}
 }
 

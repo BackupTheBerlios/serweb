@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.19 2006/01/12 15:32:20 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.20 2006/01/12 15:55:38 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -52,6 +52,7 @@ $lang_str['none'] = 							"none";
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_valid_email'] =	 			"not valid email address";
+$lang_str['fe_is_not_valid_email'] =	 		"is not valid email address";
 $lang_str['fe_not_valid_sip'] = 				"not valid sip address";
 $lang_str['fe_not_valid_phonenumber'] = 		"not valid phonenumber";
 $lang_str['fe_not_filled_sip'] = 				"you must fill sip address";

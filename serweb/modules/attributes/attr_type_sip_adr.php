@@ -34,7 +34,7 @@ class Attr_type_sip_adr extends Attr_type{
     	                         "value"=>$value,
 	                             "valid_regex"=> $opt_optional ? "^(".$reg->sip_address.")?$" :
 								                                 "^".$reg->sip_address."$",
-	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ($this->description." ".$lang_str['fe_is_not_sip_adr']),
+	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ("'".$this->get_description()."' ".$lang_str['fe_is_not_sip_adr']),
 								 "extrahtml"=>"onBlur='sip_address_completion(this)'"));
 	}
 }
