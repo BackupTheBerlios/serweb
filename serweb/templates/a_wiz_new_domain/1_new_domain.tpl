@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: 1_new_domain.tpl,v 1.1 2005/11/03 11:02:11 kozlik Exp $ *}
+{* $Id: 1_new_domain.tpl,v 1.2 2006/01/12 15:32:21 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -28,7 +28,7 @@
 		{/if}
 		<tr>
 		<td align="left">{$row.name}</td>
-		<td><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a></td>
+		<td>{if $row.allow_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
 		</tr>
 		{if $smarty.foreach.names.last}
 		</table>

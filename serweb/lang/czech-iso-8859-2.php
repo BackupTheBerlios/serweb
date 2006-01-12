@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.15 2006/01/11 11:57:17 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.16 2006/01/12 15:32:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -544,6 +544,7 @@ $lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";	//t
 $lang_str['l_create_new_domain'] = 				"create new domain";	//to translate 
 $lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to translate 
+$lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name";	//to translate 
 
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
 $lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";	//to translate 

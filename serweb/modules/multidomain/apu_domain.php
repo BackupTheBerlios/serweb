@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.10 2005/12/22 12:38:54 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.11 2006/01/12 15:32:21 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -250,6 +250,7 @@ class apu_domain extends apu_base_class{
 
 		foreach($this->dom_names as $key=>$val){
 			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name']));
+			$this->dom_names[$key]['allow_dele'] = (count($this->dom_names) > 1) ? true : false;
 		}
 
 		return true;		
@@ -375,11 +376,16 @@ class apu_domain extends apu_base_class{
 	 */
 
 	function action_delete_domain_alias(&$errors){
-		global $data;
+		global $data, $lang_str;
 
 		if (is_null($this->id)) {
 			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
 			return false;
+		}
+
+		if (count($this->dom_names) <= 1){
+			$errors[] = $lang_str['can_not_del_last_dom_name'];
+			return false;			
 		}
 
 		$opt['id'] = $this->id;
@@ -418,7 +424,7 @@ class apu_domain extends apu_base_class{
 			}
 		}
 		else{
-			// POZOR! tady muze obcas nastavat problem
+			// POZOR! tady muze obcas nastavat problem pokud neexistujou zaznamy v DB
 			$disabled = false;
 		}
 
