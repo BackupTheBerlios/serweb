@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.6 2006/01/05 15:03:41 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.7 2006/01/12 13:49:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -41,7 +41,7 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.name|empty2nbsp}</td>
-	<td align="left"><a href="{$row.url_ctd}">{$row.sip_uri}</a></td>
+	<td align="left">{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}{$row.sip_uri}{if $config->enable_ctd}</a>{/if}</td>
 	<td align="left">{$row.aliases|empty2nbsp}</td>
 	<td align="center">{$row.status|empty2nbsp|user_status}</td>
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>

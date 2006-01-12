@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_accounting.tpl,v 1.6 2005/12/28 09:39:49 kozlik Exp $ *}
+{* $Id: u_accounting.tpl,v 1.7 2006/01/12 13:49:27 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
@@ -22,11 +22,12 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">
-	<a href="{$row.url_ctd}">
-		{if $row.name}{$row.name|empty2nbsp}
-		{else} {$row.sip_to|empty2nbsp}
-		{/if}
-	</a></td>
+		{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}
+			{if $row.name}{$row.name|empty2nbsp}
+			{else} {$row.sip_to|empty2nbsp}
+			{/if}
+		{if $config->enable_ctd}</a>{/if}
+	</td>
 	<td align="center">{$row.status|empty2nbsp|user_status}</td>
 	<td align="left">{$row.timestamp|my_date_format:$lang_set.date_time_format|empty2nbsp}</td>
 	<td align="left">{$row.length|empty2nbsp}</td>

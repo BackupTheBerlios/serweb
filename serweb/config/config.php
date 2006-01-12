@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.29 2006/01/05 15:03:41 kozlik Exp $
+ * $Id: config.php,v 1.30 2006/01/12 13:49:26 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -330,6 +330,9 @@
 	/* ------------------------------------------------------------*/
 	/*            click to dial                                    */
 	/* ------------------------------------------------------------*/
+
+	/* enable click to dial */
+	$config->enable_ctd = true;
 
 	/* address of the final destination to which we want to transfer
 	   initial CSeq and CallId */
