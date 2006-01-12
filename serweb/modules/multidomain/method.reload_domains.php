@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.reload_domains.php,v 1.1 2005/09/22 14:29:16 kozlik Exp $
+ * $Id: method.reload_domains.php,v 1.2 2006/01/12 12:58:59 kozlik Exp $
  */
 
 class CData_Layer_reload_domains {
@@ -20,16 +20,21 @@ class CData_Layer_reload_domains {
 		global $config;
 
 		if ($config->use_rpc){
-			if (!$this->connect_to_xml_rpc(null, $errors)) return false;
+//			if (!$this->connect_to_xml_rpc(null, $errors)) return false;
 
 			$params = array();
 			                
-			$msg = new XML_RPC_Message_patched('domain_reload', $params);
-			$res = $this->rpc->send($msg);
-	
-			if ($this->rpc_is_error($res)){
-				log_errors($res, $errors); return false;
+			$msg = new XML_RPC_Message_patched('domain.reload', $params);
+			$res = $this->rpc_send_to_all($msg, array('break_on_error'=>false));
+
+			if (!$res->ok){
+				foreach($res->results as $v){
+					if (PEAR::isError($v)) ErrorHandler::log_errors($v);
+				}
+				return false;
 			}
+			return true;
+
 		}
 		else{	
 			/* construct FIFO command */

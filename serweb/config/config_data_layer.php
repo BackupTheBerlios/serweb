@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.25 2006/01/11 11:57:16 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.26 2006/01/12 12:58:59 kozlik Exp $
  */
 
 
@@ -23,6 +23,26 @@
 		$config->ser_rpc['host']	= "localhost";		//SER host
 		$config->ser_rpc['port']	= 5060;
 
+
+		/**
+		 *	Following array contain list of all sip proxies. Uncoment this if
+		 *	there are more sip proxies in your environment. This list is used 
+		 *	for xml-rpc comunication.
+		 */
+/*
+		$config->sip_proxies[] = array('host'=>'proxy1.mydomain.org', 'port'=>5060);
+		$config->sip_proxies[] = array('host'=>'proxy2.mydomain.org', 'port'=>5060);
+		$config->sip_proxies[] = array('host'=>'proxy3.mydomain.org', 'port'=>5060);
+		$config->sip_proxies[] = array('host'=>'proxy4.mydomain.org', 'port'=>5060);
+		$config->sip_proxies[] = array('host'=>'proxy5.mydomain.org', 'port'=>5060);
+*/
+
+		/**
+		 *	Obtain setting of database from SER - *** EXPERIMENTAL ***
+		 *	To enable this option must be $config->use_rpc = true
+		 */
+
+		$config->get_db_uri_from_ser = false;
 
 		////////////////////////////////////////////////////////////////
 		//            configure database

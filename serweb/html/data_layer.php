@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.14 2005/12/22 13:10:57 kozlik Exp $
+ * $Id: data_layer.php,v 1.15 2006/01/12 12:58:59 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -391,16 +391,69 @@ class CData_Layer{
 
 
 	/**
+	 *	Sends XML RPC message to all proxies
+	 *	
+	 *  Possible options parameters:
+	 *	  break_on_error			(bool)	default: true
+	 *		Break sending messages when some error occur. If false messages
+	 *		are always sent to all proxies
+	 *	
+	 *	@param	object	$msg	XML_RPC_Message
+	 *	@param	array 	$opt	array of options
+	 *	@return	object
+	 */
+	function rpc_send_to_all($msg, $opt){
+		global $config;
+		
+		$opt_break_on_error = isset($opt['break_on_error']) ? (bool)$opt['break_on_error'] : true;
+		
+		if (!empty($config->sip_proxies) and is_array($config->sip_proxies)){
+			$proxies = &$config->sip_proxies;
+		}
+		else{
+			$proxies = array();
+			$proxies[] = array('host'=>$config->ser_rpc['host'], 'port'=>$config->ser_rpc['port']);
+		}
+	
+		$i=0;
+		$out = new stdclass();
+		$out->ok = true;
+		$out->results = array();
+
+		foreach($proxies as $v){
+			$client = new XML_RPC_Client('/', $v['host'], $v['port']);
+
+			if ($i==1) $res = $client->send("ddd");
+			else $res = $client->send($msg);
+
+			if ($this->rpc_is_error($res, $client)){
+				$out->ok = false;
+				if ($opt_break_on_error){
+					$out->results[$i] = &$res;
+					return $out;
+				}
+			}
+			$out->results[$i] = $res;
+			$i++;
+		}
+
+		return $out;
+	}
+
+
+	/**
 	 *	Check if there was error during xml_rpc request
 	 *
 	 *	@param object $resp		result of XML_RPC_Client::send
 	 *	@param object $client	instance of XML_RPC_Client, $this->rpc is used by default
 	 *	@return bool			true on error, false on everything is OK
 	 */
-	function rpc_is_error(&$resp){
+	function rpc_is_error(&$resp, $client=null){
+		if (is_null($client)) $client = $this->rpc;
+	
 		if (!$resp) {
 			$resp = PEAR::raiseError("xml_rpc communication error",
-									 null, null, null, $this->rpc->errstr);
+									 null, null, null, $client->errstr);
 			return true;
 		}
 		
@@ -446,7 +499,7 @@ class CData_Layer{
 		if ($this->db) return $this->db;
 
 
-		if ($config->use_rpc){
+		if ($config->use_rpc and $config->get_db_uri_from_ser ){
 
 			//if not set DSN of DB to connect, get it
 			if (! $sess_data_conn[$this->name]['db_dsn']){
