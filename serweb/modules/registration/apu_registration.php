@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.4 2006/01/11 15:16:50 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.5 2006/01/12 15:54:41 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -597,6 +597,9 @@ class apu_registration extends apu_base_class{
 			}
 		}
 
+		/* Check email for the case somebody makes the attribute optional.
+		 * We need it.
+		 */
 		if (!$_POST[$an['email']]){
 			$errors[]=$lang_str['fe_not_valid_email']; 
 			return false;
