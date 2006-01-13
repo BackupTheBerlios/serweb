@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.33 2006/01/12 15:55:38 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.34 2006/01/13 11:12:41 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -117,6 +117,7 @@ $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"show on-line users only";
 $lang_str['ff_language'] = 						"language";
 $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";
+$lang_str['ff_uid'] = 							"uid";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -131,6 +132,7 @@ $lang_str['th_calling_subscriber'] = 			"calling subscriber";
 $lang_str['th_time'] = 							"time";
 $lang_str['th_username'] = 						"username";
 $lang_str['th_email'] = 						"email";
+$lang_str['th_uid'] = 							"uid";
 
 /* ------------------------------------------------------------*/
 /*      login messages                                         */

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.17 2006/01/12 15:55:38 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.18 2006/01/13 11:12:41 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -117,6 +117,7 @@ $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"zobraz jenom on-line uživatele";
 $lang_str['ff_language'] = 						"language";	//to translate 
 $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
+$lang_str['ff_uid'] = 							"uid";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -131,6 +132,7 @@ $lang_str['th_calling_subscriber'] = 			"volající";
 $lang_str['th_time'] = 							"čas";
 $lang_str['th_username'] = 						"uživatelské jméno";
 $lang_str['th_email'] = 						"email";
+$lang_str['th_uid'] = 							"uid";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      login messages                                         */

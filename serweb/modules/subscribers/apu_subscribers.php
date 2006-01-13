@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.5 2006/01/05 15:00:08 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.6 2006/01/13 11:12:41 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -255,6 +255,7 @@ class apu_subscribers extends apu_base_class{
 		/* set default value for session variable */
 		if (!isset($sess_apu_sc[$this->opt['sess_seed']])){ 
 			$tmp = array();
+			$tmp['filter']['uid'] = '';
 			$tmp['filter']['usrnm'] = '';
 			$tmp['filter']['fname'] = '';
 			$tmp['filter']['lname'] = '';
@@ -284,6 +285,7 @@ class apu_subscribers extends apu_base_class{
 		/* set search filter by values submited by form */
 		$filter = &$sess_apu_sc[$this->opt['sess_seed']]['filter'];
 	
+		if (isset($_POST['uid']))   $filter['uid']=$_POST['uid'];
 		if (isset($_POST['usrnm'])) $filter['usrnm']=$_POST['usrnm'];
 		if (isset($_POST['fname'])) $filter['fname']=$_POST['fname'];
 		if (isset($_POST['lname'])) $filter['lname']=$_POST['lname'];
@@ -350,6 +352,12 @@ class apu_subscribers extends apu_base_class{
 		$filter = &$sess_apu_sc[$this->opt['sess_seed']]['filter'];
 
 		$reg = &CReg::singleton();
+
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"uid",
+									 "size"=>11,
+									 "maxlength"=>50,
+		                             "value"=>$filter['uid']));
 
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"usrnm",

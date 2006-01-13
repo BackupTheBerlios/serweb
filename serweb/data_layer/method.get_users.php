@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.8 2006/01/05 15:00:08 kozlik Exp $
+ * $Id: method.get_users.php,v 1.9 2006/01/13 11:12:41 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -96,6 +96,7 @@ class CData_Layer_get_users {
 		if (!empty($filter['fname']))  $query_c .= "afn.".$ca->value." like '%".$filter['fname']."%' and ";
 		if (!empty($filter['lname']))  $query_c .= "aln.".$ca->value." like '%".$filter['lname']."%' and ";
 		if (!empty($filter['email']))  $query_c .= "aem.".$ca->value." like '%".$filter['email']."%' and ";
+		if (!empty($filter['uid']))    $query_c .= "cr.".$cc->uid." like '%".$filter['uid']."%' and ";
 
 		if (!$opt_get_disabled) $query_c .= "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0 and ";
 

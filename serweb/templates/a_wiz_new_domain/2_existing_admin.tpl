@@ -1,13 +1,14 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.2 2005/12/22 13:39:35 kozlik Exp $ *}
+{* $Id: 2_existing_admin.tpl,v 1.3 2006/01/13 11:12:42 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
-	#usrnm,  #lusrnm {width:120px;}
-	#realm,  #lrealm {width:120px;}
-	#fname,  #lfname {width:120px;}
-	#lname,  #llname {width:120px;}
-	#email,  #lemail {width:120px;}
+	#uid,    #luid   {width:100px;}
+	#usrnm,  #lusrnm {width:100px;}
+	#realm,  #lrealm {width:100px;}
+	#fname,  #lfname {width:100px;}
+	#lname,  #llname {width:100px;}
+	#email,  #lemail {width:100px;}
 
 	#link_close{
 		float: left;
@@ -32,6 +33,7 @@
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
+<td><label for="uid" id="luid">{$lang_str.ff_uid}</label></td>
 <td><label for="usrnm"  id="lusrnm" >{$lang_str.ff_username}</label></td>
 <td><label for="realm"  id="lrealm">{$lang_str.ff_realm}</label></td>
 <td><label for="fname"  id="lfname" >{$lang_str.ff_first_name}</label></td>
@@ -40,6 +42,7 @@
 </tr>
 
 <tr>
+<td>{$form.uid}</td>
 <td>{$form.usrnm}</td>
 <td>{$form.realm}</td>
 <td>{$form.fname}</td>
@@ -47,9 +50,9 @@
 <td>{$form.email}</td>
 </tr>
 
-<tr><td colspan="5"><label for="adminsonly" style="display: inline;">{$lang_str.ff_show_admins_only}:</label>{$form.adminsonly}</td></tr>
+<tr><td colspan="6"><label for="adminsonly" style="display: inline;">{$lang_str.ff_show_admins_only}:</label>{$form.adminsonly}</td></tr>
 				
-<tr><td colspan="5" align="right">{$form.okey}</td></tr>
+<tr><td colspan="6" align="right">{$form.okey}</td></tr>
 </table>
 {$form.finish}
 </div>
@@ -60,6 +63,7 @@
 	{if $smarty.foreach.admins.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
+	<th>{$lang_str.th_uid}</th>
 	<th>{$lang_str.th_username}</th>
 	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
@@ -73,6 +77,7 @@
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<td align="left"><span class="{$usr_class}">{$row.uid|empty2nbsp}</span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
 	<td align="left">{$row.name|empty2nbsp}</td>

@@ -74,4 +74,6 @@
 	* addapted to new database structure
 	* added possibility to register user by admin
 	* added possibility to disable requiring confirmation of registration
-	
+
+
+	* UIDs are displayed in list of subscribers in admin interface	
