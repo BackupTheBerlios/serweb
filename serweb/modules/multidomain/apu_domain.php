@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.11 2006/01/12 15:32:21 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.12 2006/01/13 09:25:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -30,6 +30,10 @@
  *	
  *	'no_domain_name_e'			(string) default: $lang_str['no_domain_name_is_set']
  *	 error message displayed when any domain names is not set
+ *	
+ *	'preselected_customer'		(string) default: null
+ *	 ID of preselected customer. If is set, customer with given ID is preselected
+ *	 in select box.
  *	
  *	'msg_delete'				default: $lang_str['msg_domain_deleted_s'] and $lang_str['msg_domain_deleted_l']
  *	 message which should be showed on domain delete - assoc array with keys 'short' and 'long'
@@ -128,6 +132,8 @@ class apu_domain extends apu_base_class{
 		$this->opt['redirect_on_disable'] = "";
 		$this->opt['redirect_on_update']  = "";
 		$this->opt['redirect_on_delete']  = "";
+
+		$this->opt['preselected_customer']  = null;
 
 		$this->opt['no_domain_name_e'] = $lang_str['no_domain_name_is_set'];
 		
@@ -401,20 +407,19 @@ class apu_domain extends apu_base_class{
 		return array("m_do_alias_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
-	/**
-	 *	Method create new alias of the domain. Alias name depend on $_POST param
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
-	 */
 
-	function action_add_alias(&$errors){
+	/**
+	 *	Method create new alias of the domain. 
+	 *
+	 *	@param string $alias	name of new alias
+	 *	@param array $errors	array with error messages
+	 *	@return bool			TRUE on success, FALSE on error
+	 */
+	function add_alias($alias, &$errors){
 		global $data;
 
-		if (false === $this->generate_domain_id($errors)) return false;
-
 		$values['id'] = $this->id;
-		$values['name'] = $_POST['do_new_name'];
+		$values['name'] = $alias;
 		
 		if (count($this->dom_names)){
 			$disabled = true;
@@ -433,7 +438,6 @@ class apu_domain extends apu_base_class{
 		$o['set_canon'] = !(bool)count($this->dom_names);
 
 		if (false === $data->add_domain_alias($values, $o, $errors)) {
-			$this->revert_domain_id();
 			return false;
 		}
 				
@@ -444,36 +448,34 @@ class apu_domain extends apu_base_class{
 			/* notify SER to reload domains */
 			if (false === $data->reload_domains(null, $errors)) return false;
 		}
-		
-		return array("m_do_alias_created=".RawURLEncode($this->opt['instance_id']));
+	
+		return true;
 	}
 
 	/**
-	 *	Method update the owner of domain. New owner depend on $_POST param
+	 *	Method update the owner of domain and diges realm. 
 	 *
+	 *	@param string $id		ID of owner (customer)
 	 *	@param array $errors	array with error messages
-	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 *	@return bool			TRUE on success, FALSE on error
 	 */
-
-	function action_update(&$errors){
-		global $data, $config;
-
+	function update_domain_attrs($id, $alias, &$errors){
+		global $config;
+		
 		$an = &$config->attr_names;
-
-		if (false === $this->generate_domain_id($errors)) return false;
 
 		$domain_attrs = &Domain_Attrs::singleton($this->id);
 
-		if ($_POST['do_customer'] == -1){
-			if (false === $domain_attrs->unset_attribute($an['dom_owner'])){
-				$this->revert_domain_id();
-				return false;
+		if (!is_null($id) and $id != $this->owner['id']){
+			if ($id == -1){
+				if (false === $domain_attrs->unset_attribute($an['dom_owner'])){
+					return false;
+				}
 			}
-		}
-		else{
-			if (false === $domain_attrs->set_attribute($an['dom_owner'], $_POST['do_customer'])){
-				$this->revert_domain_id();
-				return false;
+			else{
+				if (false === $domain_attrs->set_attribute($an['dom_owner'], $id)){
+					return false;
+				}
 			}
 		}
 
@@ -490,13 +492,89 @@ class apu_domain extends apu_base_class{
 				}
 			}
 
+			if (!$digest_realm and !empty($alias)) $digest_realm = $alias;
+
 			if ($digest_realm and 
 				false === $domain_attrs->set_attribute($an['digest_realm'], $digest_realm)){
-				
+				return false;
+			}
+		}
+
+
+		return true;	
+	}
+
+	/**
+	 *	Method create new alias of the domain and stay on the same page
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_add_alias(&$errors){
+		global $data;
+
+		if (false === $this->generate_domain_id($errors)) return false;
+
+		if (false === $data->transaction_start()) return false;
+
+		if (!empty($_POST['do_new_name'])){
+			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
+				$data->transaction_rollback();
 				$this->revert_domain_id();
 				return false;
 			}
 		}
+
+		$owner_id = $alias = null;
+		if (isset($_POST['do_customer'])) $owner_id = $_POST['do_customer'];
+		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
+			
+		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
+			$data->transaction_rollback();
+			$this->revert_domain_id();
+			return false;
+		}
+
+		if (false === $data->transaction_commit()) return false;
+		
+		return array("m_do_alias_created=".RawURLEncode($this->opt['instance_id']));
+	}
+
+	/**
+	 *	Method update the domain. 
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_update(&$errors){
+		global $data, $config;
+
+		if (false === $this->generate_domain_id($errors)) return false;
+
+		if (false === $data->transaction_start()) return false;
+
+		if (!empty($_POST['do_new_name'])){
+			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
+				$data->transaction_rollback();
+				$this->revert_domain_id();
+				return false;
+			}
+		}
+
+		$owner_id = $alias = null;
+		if (isset($_POST['do_customer'])) $owner_id = $_POST['do_customer'];
+		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
+			
+		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
+			$data->transaction_rollback();
+			$this->revert_domain_id();
+			return false;
+		}
+
+
+		if (false === $data->transaction_commit()) return false;
 
 		if ($this->opt['redirect_on_update']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
@@ -636,6 +714,12 @@ class apu_domain extends apu_base_class{
 		foreach ($this->customers as $v){
 			$options[] = array('label' => $v['name'], 'value' => $v['cid']);
 		}
+		$selected_owner = null;
+
+		/* set preselected customer */
+		if (!is_null($this->opt['preselected_customer'])){
+			$selected_owner   = $this->opt['preselected_customer'];
+		}
 
 		/* if domain id is set */
 		if (!is_null($this->id)){
@@ -643,6 +727,7 @@ class apu_domain extends apu_base_class{
 			if (isset($this->domain_attrs[$an['dom_owner']])){
 				$this->owner['id']   = $this->domain_attrs[$an['dom_owner']];
 				$this->owner['name'] = $this->customers[$this->owner['id']]['name'];
+				$selected_owner      = $this->owner['id'];
 			}
 			
 			/* get list of the domain names */
@@ -661,7 +746,7 @@ class apu_domain extends apu_base_class{
 		                             "name"=>"do_customer",
 									 "size"=>1,
 									 "options"=>$options,
-		                             "value"=>$this->owner['id']));
+		                             "value"=>$selected_owner));
 
 	}
 
@@ -674,9 +759,10 @@ class apu_domain extends apu_base_class{
 	function validate_form(&$errors){
 		if (false === parent::validate_form($errors)) return false;
 
-		if ($this->action['action'] == "update" and !count($this->dom_names)){
-			$errors[] = $this->opt['no_domain_name_e'];
-			return false;
+		if ($this->action['action'] == "update" and 
+		    !count($this->dom_names) and empty($_POST['do_new_name'])){
+				$errors[] = $this->opt['no_domain_name_e'];
+				return false;
 		}
 
 		return true;

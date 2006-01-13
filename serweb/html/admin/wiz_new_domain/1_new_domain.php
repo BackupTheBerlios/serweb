@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: 1_new_domain.php,v 1.2 2005/12/22 12:54:33 kozlik Exp $
+ * $Id: 1_new_domain.php,v 1.3 2006/01/13 09:25:58 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -20,6 +20,10 @@ $page_attributes['title'] .= " - ".$lang_str['step']." 1/3";
 
 $do	= new apu_domain();
 $do->set_opt('redirect_on_update', '2_new_admin.php?save_domain_id=1');
+
+if (isset($_GET['new_cust_id']))
+	$do->set_opt('preselected_customer', $_GET['new_cust_id']);
+
 
 $controler->add_apu($do);
 $controler->add_reqired_javascript('functions.js');

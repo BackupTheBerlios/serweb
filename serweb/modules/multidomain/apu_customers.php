@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.5 2005/12/22 12:38:54 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.6 2006/01/13 09:25:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -200,7 +200,8 @@ class apu_customers extends apu_base_class{
 			$this->controler->change_url_for_reload($this->opt['redirect_on_create']);
 		}
 
-		return array("m_cu_added=".RawURLEncode($this->opt['instance_id']));
+		return array("m_cu_added=".RawURLEncode($this->opt['instance_id']),
+		             "new_cust_id=".RawURLEncode($opt['new_id']));
 	}
 
 	/**

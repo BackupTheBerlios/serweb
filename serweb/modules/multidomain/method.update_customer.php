@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.4 2006/01/13 09:25:58 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -24,12 +24,16 @@ class CData_Layer_update_customer {
 	 *    insert  	(bool) default:true
 	 *      if true, function insert new record, otherwise update old record
 	 *
+	 *	  new_id	(bool)
+	 *		In this option is returned ID of new created customer. 
+	 *		Option is created only if 'insert'=true
+	 *
 	 *	@param array $values	values
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */ 
-	function update_customer($values, $opt, &$errors){
+	function update_customer($values, &$opt, &$errors){
 		global $config;
 		
 		if (!$this->connect_to_db($errors)) return false;
@@ -49,13 +53,24 @@ class CData_Layer_update_customer {
 
 
 		if ($opt_insert) {
+			$q = "select max(".$cc->cid.") from ".$tc_name;
+
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {ErrorHandler::log_errors($res, $errors); return false;}
+
+			$next_id = 0;
+			if ($row=$res->fetchRow(DB_FETCHMODE_ORDERED)){
+				if (!is_null($row[0])) $next_id = $row[0] + 1;
+			}
 
 			$q="insert into ".$tc_name." (
-					   ".$cc->name.", ".$cc->address.", ".$cc->email.", ".$cc->phone."
+					   ".$cc->cid.", ".$cc->name.", ".$cc->address.", ".$cc->email.", ".$cc->phone."
 			    ) 
 				values (
-					   '".$values['name']."', '".$values['address']."', '".$values['email']."', '".$values['phone']."'
+					   ".$next_id.", '".$values['name']."', '".$values['address']."', '".$values['email']."', '".$values['phone']."'
 				 )";
+				 
+			$opt['new_id'] = $next_id;
 		}
 		else {
 			$q="update ".$tc_name." 
