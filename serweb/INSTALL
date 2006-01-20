@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.26 2005/11/11 13:06:54 kozlik Exp $
+$Id: INSTALL,v 1.27 2006/01/20 14:56:54 kozlik Exp $
 
 serweb - Installation
 
@@ -14,6 +14,7 @@ serweb - Installation
 		see http://pear.php.net/manual/en/installation.getting.php for details
   - PECL package Classkit (only PHP5 users)
   		see http://www.php.net/manual/en/ref.classkit.php
+  - overlib (http://www.bosrup.com/web/overlib/)
   - MySQL 4.0 (we use UNIONs)
   - running SER with MySQL support
 
