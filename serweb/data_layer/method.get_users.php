@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.9 2006/01/13 11:12:41 kozlik Exp $
+ * $Id: method.get_users.php,v 1.10 2006/01/20 14:42:01 kozlik Exp $
  */
 
 class CData_Layer_get_users {
-	var $required_methods = array('get_aliases');
+	var $required_methods = array();
 	
 
 	/**
