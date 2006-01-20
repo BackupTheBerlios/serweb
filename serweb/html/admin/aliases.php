@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: aliases.php,v 1.5 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: aliases.php,v 1.6 2006/01/20 14:43:57 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -25,7 +25,12 @@ $page_attributes['selected_tab']="users.php";
 $smarty->assign('uname', $controler->user_id->uname);
 $smarty->assign('domain',$config->domain);
 
+$al->set_opt('get_all_uids_for_uri', true);
 $al->set_opt('allow_edit', true);
+if (!$perm->have_perm('hostmaster')){
+	if (false === $dom = $_SESSION['auth']->get_administrated_domains()) $dom = array();
+	$al->set_opt('allowed_domains', $dom);
+}
 
 
 $controler->add_apu($al);

@@ -1,14 +1,24 @@
 <?
 /*
- * $Id: method.get_aliases.php,v 1.4 2006/01/05 14:57:33 kozlik Exp $
+ * $Id: method.get_aliases.php,v 1.5 2006/01/20 14:43:57 kozlik Exp $
  */
 
 class CData_Layer_get_aliases {
 	var $required_methods = array();
 	
-	/*
-	 *	return array of aliases of user
-	 */
+	/**
+	 *  return array of URI
+	 *
+	 *	return array of instances of class URI
+	 *
+	 *  Possible options:
+	 *	  filter	(array)	default: null
+	 *    	filter URI by 'did' or by 'username'
+	 *
+	 *	@param	string	$uid	uid of user - if is null return all URIs
+	 *	@param	array	$opt	array of options
+	 *	@return array			array of URI or FALSE on error
+	 */ 
 	  
 	function get_aliases($uid, $opt){
 		global $config;
@@ -26,15 +36,25 @@ class CData_Layer_get_aliases {
 		/* flags */
 		$f = &$config->data_sql->uri->flag_values;
 
-		$flags_val = $f['DB_IS_TO'];
+		$qw = "";
+		if (!is_null($uid)) 
+			$qw .= $c->uid." = '".$uid."' and ";
 
-		$q="select ".$c->username." as username, 
-		           ".$c->did." as did,
+		if (!empty($opt['filter']['did'])) 
+			$qw .= $c->did." = '".$opt['filter']['did']."' and ";
+
+		if (!empty($opt['filter']['username'])) 
+			$qw .= $c->username." = '".$opt['filter']['username']."' and ";
+
+		$qw .= $this->get_sql_bool(true);
+
+		$q="select ".$c->uid." as uid, 
+		           ".$c->username." as username, 
+				   ".$c->did." as did,
 				   ".$c->flags." as flags
 		    from ".$t_name." 
-			where ".$c->uid." = '".$uid."' and 
-			      (".$c->flags." & ".$flags_val.") = ".$flags_val."
-			order by ".$c->username;
+			where ".$qw."
+			order by ".$c->did.", ".$c->username;
 
 		
 		$res=$this->db->query($q);
@@ -42,7 +62,7 @@ class CData_Layer_get_aliases {
 
 		$out=array();
 		for ($i=0; $row = $res->fetchRow(DB_FETCHMODE_OBJECT); $i++){
-			$out[$i] = new URI($uid, $row->did, $row->username, $row->flags);
+			$out[$i] = new URI($row->uid, $row->did, $row->username, $row->flags);
 		}
 		$res->free();
 		return $out;

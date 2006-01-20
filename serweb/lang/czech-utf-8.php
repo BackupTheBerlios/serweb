@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.18 2006/01/13 11:12:41 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.19 2006/01/20 14:43:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -416,6 +416,20 @@ $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Opravdu chcete smazat tento alias?";
 $lang_str['user_have_not_any_aliases'] = 		"Uživatel nemá žádné aliasy";
+$lang_str['ff_is_canon'] = 						"is canonical";	//to translate 
+$lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";	//to translate 
+$lang_str['ff_uri_is_from'] = 					"can be used as 'from' uri";	//to translate 
+$lang_str['th_is_canon'] = 						"canonical";	//to translate 
+$lang_str['th_uri_is_to'] = 					"to";	//to translate 
+$lang_str['th_uri_is_from'] = 					"from";	//to translate 
+$lang_str['l_ack'] = 							"acknowledge";	//to translate 
+$lang_str['l_deny'] = 							"deny";	//to translate 
+$lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";	//to translate 
+$lang_str['ack_values'] = 						"Acknowledge values";	//to translate 
+$lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please acknowledge the values.";	//to translate 
+$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";	//to translate 
+$lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";	//to translate 
+$lang_str['uid_with_alias'] = 					"List of UID with alias";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */

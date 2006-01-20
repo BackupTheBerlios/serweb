@@ -23,6 +23,18 @@
 }
 
 /*
+ * Popup links - links used for display popup window by the Overlib library
+ */
+.swMain a.swPopupLink, 
+.swMain a.swPopupLink:visited, 
+.swMain a.swPopupLink:active, 
+.swMain a.swPopupLink:hover{
+	color: Black;
+	cursor: default;
+}
+
+ 
+/*
  *	popup window
  */
 .swPopUpWin{
@@ -248,12 +260,28 @@ table.swTable td{
 	padding-right: 4px;
 }
 
+table.swTable .swValignMid{
+	vertical-align: middle;
+}
+
 table.swTable tr.swTrEven{
 	background-color : White;
 }
 
 table.swTable tr.swTrOdd{
 	background-color : #EAF0F4;
+}
+
+/*
+ *	ACK table
+ */
+.swAckTableName{
+	text-align: right;
+	padding-right: 1em;
+}
+.swAckTableValue{
+	text-align: left;
+	padding-left: 1em;
 }
 
 /*
@@ -469,6 +497,27 @@ table.swTable tr.swTrOdd{
 }
 
 
+.swMarkYes, .swMarkNo{
+	width: 11px;
+	height: 11px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.swMarkYes{
+	background-image: url(img/mark_yes.gif);
+}
+
+.swMarkNo{
+	background-image: url(img/mark_no.gif);
+}
+
+.swMarkYes div,
+.swMarkNo div{
+	display: none;
+}
+
 /*
  *	errors and messages
  */
@@ -485,6 +534,10 @@ table.swTable tr.swTrOdd{
 	font-style : italic;
 	color : #993300;
 	text-align : center;
+}
+
+.swWarning{
+	color: red;
 }
 
 .statusonline{
@@ -507,25 +560,21 @@ table.swTable tr.swTrOdd{
 	font-style : italic;
 }
 
-.swDomainEnabled{
+
+.swDomainEnabled,
+.swUserEnabled,
+.swUriEnabled{
 	color: Black;
 	white-space: nowrap;
 }
 
-.swDomainDisabled{
+.swDomainDisabled,
+.swUserDisabled,
+.swUriDisabled{
 	color: Gray;
 	white-space: nowrap;
 }
 
-.swUserEnabled{
-	color: Black;
-	white-space: nowrap;
-}
-
-.swUserDisabled{
-	color: Gray;
-	white-space: nowrap;
-}
 
 /*
  *	server monitoring statistics

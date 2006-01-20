@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.34 2006/01/13 11:12:41 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.35 2006/01/20 14:43:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -416,6 +416,20 @@ $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
 $lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";
+$lang_str['ff_is_canon'] = 						"is canonical";
+$lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";
+$lang_str['ff_uri_is_from'] = 					"can be used as 'from' uri";
+$lang_str['th_is_canon'] = 						"canonical";
+$lang_str['th_uri_is_to'] = 					"to";
+$lang_str['th_uri_is_from'] = 					"from";
+$lang_str['l_ack'] = 							"acknowledge";
+$lang_str['l_deny'] = 							"deny";
+$lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";
+$lang_str['ack_values'] = 						"Acknowledge values";
+$lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please acknowledge the values.";
+$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";
+$lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";
+$lang_str['uid_with_alias'] = 					"List of UID with alias";
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */

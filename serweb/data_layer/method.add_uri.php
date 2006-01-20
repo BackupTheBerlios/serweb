@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_uri.php,v 1.3 2006/01/12 14:40:47 kozlik Exp $
+ * $Id: method.add_uri.php,v 1.4 2006/01/20 14:43:57 kozlik Exp $
  */
 
 class CData_Layer_add_uri {
@@ -14,6 +14,13 @@ class CData_Layer_add_uri {
 	 *  Possible options:
 	 *	  disabled	(bool)	default: false
 	 *    	set flag disabled
+	 *
+	 *	  canon	(bool)	default: false
+	 *    	set flag canonical
+	 *
+	 *	  flags	(int)	default: null
+	 *    	Set value of flags directly. If is set, options 'canon' and 
+	 *		'disabled' are ignored.
 	 *
 	 *	@return bool
 	 */ 
@@ -40,16 +47,23 @@ class CData_Layer_add_uri {
 		/* set default values for options */
 		$opt_disabled = isset($opt["disabled"]) ? (bool)$opt["disabled"] : false;
 		$opt_canon    = isset($opt["canon"]) ? (bool)$opt["canon"] : false;
+		$opt_flags    = isset($opt["flags"]) ? $opt["flags"] : null;
 
-		$ga = &Global_attrs::singleton();
-		if (false === $flags = $ga->get_attribute($an['uri_default_flags'])) return false;
-		if (!is_numeric($flags)){
-			ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$ca['uri_default_flags']."' is not defined or is not a number Can't create URI."));
-			return false;
+
+		if (!is_null($opt_flags)){
+			$flags = $opt_flags;
 		}
-
-		if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
-		if ($opt_canon)    $flags = ($flags | $f['DB_CANON']);
+		else {
+			$ga = &Global_attrs::singleton();
+			if (false === $flags = $ga->get_attribute($an['uri_default_flags'])) return false;
+			if (!is_numeric($flags)){
+				ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$an['uri_default_flags']."' is not defined or is not a number Can't create URI."));
+				return false;
+			}
+	
+			if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
+			if ($opt_canon)    $flags = ($flags | $f['DB_CANON']);
+		}
 
 		$q = "insert into ".$t_name."(
 	             ".$c->uid.", ".$c->username.", ".$c->did.", ".$c->flags.")

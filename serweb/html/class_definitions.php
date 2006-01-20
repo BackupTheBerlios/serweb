@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.6 2006/01/05 15:01:39 kozlik Exp $
+ * $Id: class_definitions.php,v 1.7 2006/01/20 14:43:57 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -375,14 +375,49 @@ class URI{
 		$f = &$config->data_sql->uri->flag_values;
 		return (bool)($this->flags & $f['DB_IS_FROM']);
 	}
+
+	function is_disabled(){
+		global $config;
+		
+		$f = &$config->data_sql->uri->flag_values;
+		return (bool)($this->flags & $f['DB_DISABLED']);
+	}
+
 	
 	/**
-	 *	Return username part of uri
+	 *	Return uid of the uri
+	 *	
+	 *	@return	string
+	 */
+	function get_uid(){
+		return $this->uid;
+	}
+	
+	/**
+	 *	Return username part of the uri
 	 *	
 	 *	@return	string
 	 */
 	function get_username(){
 		return $this->username;
+	}
+	
+	/**
+	 *	Return did of the uri
+	 *	
+	 *	@return	string
+	 */
+	function get_did(){
+		return $this->did;
+	}
+	
+	/**
+	 *	Return flags of the uri
+	 *	
+	 *	@return	int
+	 */
+	function get_flags(){
+		return $this->flags;
 	}
 	
 	/**
@@ -405,6 +440,10 @@ class URI{
  */
 class URIs{
 	var $uid;
+	/** filter URI by username */
+	var $f_username = null;
+	/** filter URI by did */
+	var $f_did = null;
 	/** index of canonical URI */
 	var $canon = null;
 	/** array of URIs of user */
@@ -441,6 +480,37 @@ class URIs{
         return $instances[$uid];
     }
 	
+    /**
+     * Return a reference to a URIs instance, only creating a new instance 
+	 * if no URIs instance currently exists.
+     *
+     * URIs instance will contain URI with given username and did
+     *
+     * You should use this if there are multiple places you might create a
+     * URIs, you don't want to create multiple instances, and you don't 
+	 * want to check for the existance of one each time. The singleton pattern 
+	 * does all the checking work for you.
+     *
+     * <b>You MUST call this method with the $var = &URIs::singleton_2($username, $did) 
+	 * syntax. Without the ampersand (&) in front of the method name, you will 
+	 * not get a reference, you will get a copy.</b>
+     *
+     * @access public
+     */
+
+    function &singleton_2($username, $did) {
+        static $instances = array();
+
+		$key = $username."@".$did;
+
+		if (!isset($instances[$key])) {
+			$instances[$key] = new URIs(null);
+			$instances[$key]->f_username = $username;
+			$instances[$key]->f_did      = $did;
+		}
+        return $instances[$key];
+    }
+	
 	
 	/**
 	 *	
@@ -452,12 +522,28 @@ class URIs{
 		global $data;
 		
 		$data->add_method('get_aliases');
-		if (false === $uris = $data->get_aliases($this->uid, null)) return false;
+		
+		$opt = array();
+		$opt['filter'] = array();
+		
+		if (!is_null($this->f_username)) $opt['filter']['username'] = $this->f_username;
+		if (!is_null($this->f_did))      $opt['filter']['did']      = $this->f_did;
+		
+		if (false === $uris = $data->get_aliases($this->uid, $opt)) return false;
 		$this->URIs = &$uris;
 
 		return true;	
 	}
 	
+	/**
+	 *	Invalidate cached URI
+	 *
+	 *	When get_uri or get_uris is called next time, URI will be re-readed
+	 *	from DB 
+	 */
+	function invalidate(){
+		$this->URIs = null;
+	}
 	
 	/**
 	 *	Return array of URIs of user 

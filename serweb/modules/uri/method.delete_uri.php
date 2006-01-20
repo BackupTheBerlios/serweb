@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_uri.php,v 1.1 2005/12/22 13:48:46 kozlik Exp $
+ * $Id: method.delete_uri.php,v 1.2 2006/01/20 14:43:58 kozlik Exp $
  */
 
 class CData_Layer_delete_uri {
@@ -16,14 +16,15 @@ class CData_Layer_delete_uri {
 	/**
 	 *	delete alias of user
 	 *
-	 *	@param Cserweb_auth $user	owner of the contact 
-	 *	@param string $alias_u		username part from alias
-	 *	@param string $alias_d		domain part from alias
-	 *	@param array $errors	
+	 *	@param string	$uid		owner of the contact 
+	 *	@param string	$username	username part from URI
+	 *	@param string	$did		domain part from URI
+	 *	@param string	$flags		flags of the URI
+	 *	@param array	$opt		various options
 	 *	@return bool				TRUE on success, FALSE on failure
 	 */
 
-	function delete_uri($uid, $alias_u, $alias_did, $opt){
+	function delete_uri($uid, $username, $did, $flags, $opt){
 	 	global $config;
 
 		$errors = array();
@@ -41,15 +42,17 @@ class CData_Layer_delete_uri {
 
 		$q = "delete from ".$t_name."
 		      where ".$c->uid." = '".$uid."' and 
-		            ".$c->username." = '".$alias_u."' and 
-		            ".$c->did." = '".$alias_did."'";
+		            ".$c->username." = '".$username."' and 
+		            ".$c->did." = '".$did."' and 
+		            ".$c->flags." = '".$flags."'";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 
 
 		if (isModuleLoaded('xxl')){
-			$alias_uri = "sip:".$alias_u."@".$alias_d;
+			// get domain: $alias_d = domainname of $did
+			$alias_uri = "sip:".$username."@".$alias_d;
 
 			if (false === $this->clear_proxy_xxl($alias_uri, null, $errors)) {
 				ErrorHandler::add_error($errors);
