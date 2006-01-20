@@ -1,5 +1,12 @@
 <?
 
+/**
+ *	This class overides method parseResponseFile() from class XML_RPC_Message
+ *	
+ *	The diference is that this class parse content-length header and read only
+ *	number of bytes specified by this header from server. This method do not 
+ *	wait to closing the TCP connection by the server.
+ */
 class XML_RPC_Message_patched extends XML_RPC_Message{
 
     function parseResponseFile($fp){
