@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.10 2006/01/20 14:42:01 kozlik Exp $
+ * $Id: method.get_users.php,v 1.11 2006/01/23 14:15:34 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -257,6 +257,7 @@ class CData_Layer_get_users {
 					foreach($uris as $val) $alias_arr[] = $val->get_username();
 				
 					$out[$i]['aliases'] = implode(", ", $alias_arr);
+					$out[$i]['uris'] = &$uris;
 				}
 
 				if ($opt_get_sip_uri){

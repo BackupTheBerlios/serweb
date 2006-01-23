@@ -1,7 +1,9 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.7 2006/01/12 13:49:27 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.8 2006/01/23 14:15:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <div class="swForm">
 {$form.start}
@@ -42,7 +44,7 @@
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="left">{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}{$row.sip_uri}{if $config->enable_ctd}</a>{/if}</td>
-	<td align="left">{$row.aliases|empty2nbsp}</td>
+	<td align="left">{include file="includes/inline_aliases.tpl" uris=$row.uris}</td>
 	<td align="center">{$row.status|empty2nbsp|user_status}</td>
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>

@@ -1,7 +1,9 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.13 2006/01/03 15:01:21 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.14 2006/01/23 14:15:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {if $come_from_admin_interface}
 <div class="swNameOfUser">{$lang_str.user}: {$user_auth->uname}</div>
@@ -77,7 +79,14 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>{$lang_str.your_aliases}:</th></tr>
 	{/if}
-	<tr><td align="center">{$row.username}</td></tr>
+
+	{assign var='uri_class' value='swUriEnabled'}
+	{if $row.disabled} {assign var='uri_class' value='swUriDisabled'} {/if}
+
+	{include file="includes/popup_uri_details.tpl" uri=$row.uri_obj assign="popup_text"}
+	<tr><td align="center"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_text caption=$row.uri_obj->to_string()}>
+	   <span class="{$uri_class}">sip:{$row.username}@{$row.domain}</span></a></td></tr>
+
 	{if $smarty.foreach.aliases.last}
 	</table>
 	</div>

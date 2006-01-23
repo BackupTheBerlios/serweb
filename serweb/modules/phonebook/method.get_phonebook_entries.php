@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.4 2005/12/22 13:16:38 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.5 2006/01/23 14:15:35 kozlik Exp $
  */
 
 /*
@@ -96,6 +96,7 @@ class CData_Layer_get_phonebook_entries {
 				$alias_arr=array();
 				foreach($aliases as $val) $alias_arr[] = $val->username;
 				$out[$row->id]['aliases'] = implode(", ", $alias_arr);
+				$out[$row->id]['uris'] = $aliases;
 			}
 		}
 		$res->free();

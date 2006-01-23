@@ -1,7 +1,9 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.11 2006/01/13 11:12:42 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.12 2006/01/23 14:15:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <h2 class="swTitle">{$lang_str.search_filter}:</h2>
 
@@ -76,7 +78,7 @@
 	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="right">{$row.phone|empty2nbsp}</td>
-	<td align="right">{$row.aliases|empty2nbsp}</td>
+	<td align="right">{include file="includes/inline_aliases.tpl" uris=$row.uris}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a></td>
 	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>

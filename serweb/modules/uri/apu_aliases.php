@@ -3,7 +3,7 @@
  * Application unit aliases
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.3 2006/01/20 14:43:58 kozlik Exp $
+ * @version   $Id: apu_aliases.php,v 1.4 2006/01/23 14:15:35 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -214,6 +214,7 @@ class apu_aliases extends apu_base_class{
 			}
 
 			$this->aliases[$k] = $this->uri_to_assoc($v);
+			$this->aliases[$k]['uri_obj'] = &$aliases[$k];
 
 			// check if admin has parmission to change this URI
 			if (!$this->check_did($v->get_did())) {

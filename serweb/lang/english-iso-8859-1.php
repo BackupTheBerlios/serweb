@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.35 2006/01/20 14:43:58 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.36 2006/01/23 14:15:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -417,6 +417,7 @@ $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
 $lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";
 $lang_str['ff_is_canon'] = 						"is canonical";
+$lang_str['ff_is_enabled'] = 					"is enabled";
 $lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";
 $lang_str['ff_uri_is_from'] = 					"can be used as 'from' uri";
 $lang_str['th_is_canon'] = 						"canonical";

@@ -1,7 +1,9 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.2 2006/01/05 15:00:08 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.3 2006/01/23 14:15:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <h2 class="swTitle">{$lang_str.find_user}</h2>
 
@@ -56,7 +58,7 @@
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.name|empty2nbsp}</td>
 	<td align="left">{$row.sip_uri|empty2nbsp}</td>
-	<td align="left">{$row.aliases|empty2nbsp}</td>
+	<td align="left">{include file="includes/inline_aliases.tpl" uris=$row.uris}</td>
 	<td align="left">{$row.timezone|empty2nbsp}</td>
 	<td align="center"><a href="{$row.url_add_to_pb}">{$lang_str.l_add_to_phonebook}</a></td>
 	</tr>
