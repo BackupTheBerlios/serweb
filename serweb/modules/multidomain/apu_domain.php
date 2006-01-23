@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.12 2006/01/13 09:25:58 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.13 2006/01/23 15:23:17 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -107,7 +107,7 @@ class apu_domain extends apu_base_class{
 		return array('get_domain', 'get_customers', 
 			'get_new_domain_id', 'enable_domain', 'del_domain_alias', 
 			'add_domain_alias', 'reload_domains', 'mark_domain_deleted',
-			'get_users');
+			'get_users', 'set_domain_canon');
 	}
 
 	/**
@@ -256,7 +256,8 @@ class apu_domain extends apu_base_class{
 
 		foreach($this->dom_names as $key=>$val){
 			$this->dom_names[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&dele_name=".RawURLEncode($val['name']));
-			$this->dom_names[$key]['allow_dele'] = (count($this->dom_names) > 1) ? true : false;
+			$this->dom_names[$key]['url_set_canon'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&set_canon=1&dom_name=".RawURLEncode($val['name']));
+			$this->dom_names[$key]['allow_dele'] = (!$val['canon'] and (count($this->dom_names) > 1) ? true : false);
 		}
 
 		return true;		
@@ -407,6 +408,31 @@ class apu_domain extends apu_base_class{
 		return array("m_do_alias_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
+
+	/**
+	 *	Method set domain name to be canonical. Domain name depend on $_GET param
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_set_canonical(&$errors){
+		global $data, $lang_str;
+
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
+
+		if (empty($_GET['dom_name'])) {
+			log_errors(PEAR::raiseError('domain name is not specified'), $errors); 
+			return false;
+		}
+
+		if (false === $data->set_domain_canon($this->id, $_GET['dom_name'], null)) return false;
+
+		return array("m_do_set_canon=".RawURLEncode($this->opt['instance_id']));
+	}
 
 	/**
 	 *	Method create new alias of the domain. 
@@ -668,6 +694,13 @@ class apu_domain extends apu_base_class{
 
 		if (isset($_GET['dele_name'])){
 			$this->action=array('action'=>"delete_domain_alias",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
+		if (isset($_GET['set_canon'])){
+			$this->action=array('action'=>"set_canonical",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;

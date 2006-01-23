@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.36 2006/01/23 14:15:35 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.37 2006/01/23 15:23:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -578,6 +578,7 @@ $lang_str['l_assigned_domains'] = 				"assigned domains";
 $lang_str['l_change_layout'] = 					"change layout";
 $lang_str['l_domain_attributes'] = 				"domain attributes";
 $lang_str['l_unassign_admin'] = 				"unassign admin";
+$lang_str['l_set_canon'] = 						"set canonical";
 
 $lang_str['admins_of_domain'] = 				"Admins of this domain";
 $lang_str['no_admins'] = 						"No admins";

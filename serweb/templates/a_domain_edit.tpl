@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_edit.tpl,v 1.3 2006/01/12 15:32:21 kozlik Exp $ *}
+{* $Id: a_domain_edit.tpl,v 1.4 2006/01/23 15:23:17 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -25,7 +25,8 @@
 		<table border="0" cellspacing="0" cellpadding="2" align="left" style="margin-left:0px">
 		{/if}
 		<tr>
-		<td align="left">{$row.name}</td>
+		<td align="left">{if $row.canon}<strong>{$row.name}</strong>{else}{$row.name}{/if}</td>
+		<td>{if !$row.canon}<a href="{$row.url_set_canon}">{$lang_str.l_set_canon}</a>{else}&nbsp;{/if}</td>
 		<td>{if $row.allow_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
 		</tr>
 		{if $smarty.foreach.names.last}

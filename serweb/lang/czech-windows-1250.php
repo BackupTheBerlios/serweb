@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.20 2006/01/23 14:15:35 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.21 2006/01/23 15:23:17 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -578,6 +578,7 @@ $lang_str['l_assigned_domains'] = 				"assigned domains";	//to translate
 $lang_str['l_change_layout'] = 					"change layout";	//to translate 
 $lang_str['l_domain_attributes'] = 				"domain attributes";	//to translate 
 $lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
+$lang_str['l_set_canon'] = 						"set canonical";	//to translate 
 
 $lang_str['admins_of_domain'] = 				"Admins of this domain";	//to translate 
 $lang_str['no_admins'] = 						"No admins";	//to translate 
