@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.1 2006/01/05 15:12:19 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.2 2006/01/23 14:12:29 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
-	var $required_methods = array('get_did_by_realm', 'get_aliases');
+	var $required_methods = array('get_did_by_realm');
 	
 	/**
 	 *  Get array of aliases of user with given sip-uri
@@ -69,8 +69,11 @@ class CData_Layer_get_aliases_by_uri {
 		if (!$row){	unset($res); array(); }
 		
 		$uid = $row['uid'];
+		
+		if (is_null($uid)) return array();
 
-		if (false === $out = $this->get_aliases($uid, null)) return false;
+		$uri_handler = &URIs::singleton($uid);
+		if (false === $out = $uri_handler->get_URIs()) return false;
 
 		return $out;
 	}
