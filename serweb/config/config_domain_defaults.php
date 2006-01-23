@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.8 2005/12/22 13:55:15 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.9 2006/01/23 14:10:47 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -70,7 +70,7 @@
 	   notice: if xxl module is loaded always 'rand' is used 
 	*/
 
-	$config->alias_generation='inc';
+	$config->alias_generation='rand';
 
 	/* initial nummerical alias for new subscriber - only if aliases
 	   are generated incrementaly
