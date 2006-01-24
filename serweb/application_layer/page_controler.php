@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.19 2005/12/22 13:02:59 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.20 2006/01/24 11:37:51 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -41,7 +41,7 @@ class page_conroler{
 	/** array of application units */
 	var $apu_objects=array();
 	/** file with smarty template */
-	var $template_name;
+	var $template_name="_default.tpl";
 	/** flag which indicated that user come from admin interface */
 	var $come_from_admin_interface=false;
 
