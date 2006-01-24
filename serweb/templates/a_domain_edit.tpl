@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_edit.tpl,v 1.4 2006/01/23 15:23:17 kozlik Exp $ *}
+{* $Id: a_domain_edit.tpl,v 1.5 2006/01/24 11:40:54 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -62,11 +62,13 @@
 	<td><a href="{$row.url_unset_admin}">{$lang_str.l_unassign_admin	}</a></td>
 	</tr>
 	{if $smarty.foreach.admins.last}
-	</table>
+	</table><br />
 	{/if}
 {foreachelse}
 <div class="swNumOfFoundRecords">{$lang_str.no_admins}</div>
 {/foreach}
+
+<div><a href="javascript: open_wizard_win('{url url=$admin_select_url uniq=1}');">{$lang_str.assign_admin_to_domain}</a></div>
 
 <div class="swBackToMainPage"><a href="{url url='list_of_domains.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 

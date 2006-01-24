@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: domain_edit.php,v 1.2 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: domain_edit.php,v 1.3 2006/01/24 11:40:54 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -17,6 +17,8 @@ require "prepend.php";
 
 $perm->check("admin,hostmaster");
 if (!$sess->is_registered('sess_admin')) {$sess->register('sess_admin'); $sess_admin=1;}
+
+$smarty->assign('admin_select_url', 'admin_select.php');
 
 $page_attributes['selected_tab']="list_of_domains.php";
 
