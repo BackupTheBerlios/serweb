@@ -3,7 +3,7 @@
  * Application unit usrloc
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_usrloc.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
+ * @version   $Id: apu_usrloc.php,v 1.2 2006/01/25 12:40:33 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -99,7 +99,7 @@ class apu_usrloc extends apu_base_class{
 	function get_usrloc(&$errors){
 		global $data, $sess;
 		
-		if (false === $this->usrloc = $data->get_usrloc($this->user_id->uname, $this->user_id->domain, $errors)) return false;
+		if (false === $this->usrloc = $data->get_usrloc($this->user_id->get_uid(), $errors)) return false;
 
 		foreach($this->usrloc as $key=>$val){
 			$this->usrloc[$key]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&ul_dele_id=".rawURLEncode($val['uri']));
@@ -116,14 +116,14 @@ class apu_usrloc extends apu_base_class{
 
 	function action_delete(&$errors){
 		global $data;
-		if (false === $data->del_contact($this->user_id->uname, $this->user_id->domain, $_GET['ul_dele_id'], $errors)) return false;
+		if (false === $data->del_contact($this->user_id->get_uid(), $_GET['ul_dele_id'], $errors)) return false;
 
 		return array("m_ul_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	function action_add(&$errors){
 		global $data;
-		if (false === $data->add_contact($this->user_id->uname, $this->user_id->domain, $_POST['ul_sip_address'], $_POST['ul_expires'], $errors)) return false;
+		if (false === $data->add_contact($this->user_id->get_uid(), $_POST['ul_sip_address'], $_POST['ul_expires'], $errors)) return false;
 
 		return array("m_ul_added=".RawURLEncode($this->opt['instance_id']));
 	}

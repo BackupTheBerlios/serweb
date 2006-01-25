@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_contact.php,v 1.1 2005/08/23 12:58:13 kozlik Exp $
+ * $Id: method.add_contact.php,v 1.2 2006/01/25 12:40:33 kozlik Exp $
  */
 
 class CData_Layer_add_contact {
@@ -9,15 +9,14 @@ class CData_Layer_add_contact {
 	/**
 	 *	add contact to USRLOC
 	 *
-	 *	@param string $user		username of the owner of the contact
-	 *	@param string $domain	domain of the owner of the contact.
+	 *	@param string $uid		uid of the owner of the contact
 	 *	@param string $contact	contact which should be added
 	 *	@param string $expires	when should the contact expire
 	 *	@param array $errors	
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */
 	
-	function add_contact($user, $domain, $contact, $expires, &$errors){
+	function add_contact($uid, $contact, $expires, &$errors){
 		global $config;
 
 		$replication="0";
@@ -32,20 +31,17 @@ class CData_Layer_add_contact {
 		}
 		else $flags="";
 
-		$ul_name=$user."@".$domain;
-
 		if ($config->use_rpc){
 			if (!$this->connect_to_xml_rpc(null, $errors)) return false;
 			
 			$params = array(new XML_RPC_Value($config->ul_table, 'string'),
-			                new XML_RPC_Value($ul_name, 'string'),
+			                new XML_RPC_Value($uid, 'string'),
 			                new XML_RPC_Value($contact, 'string'),
-			                new XML_RPC_Value($expires, 'string'),
-			                new XML_RPC_Value($config->ul_priority, 'string'),
-			                new XML_RPC_Value($replication, 'string'),
-			                new XML_RPC_Value($flags, 'string'));
+			                new XML_RPC_Value($expires, 'int'),
+			                new XML_RPC_Value($config->ul_priority, 'double'),
+			                new XML_RPC_Value($flags, 'int'));
 			                
-			$msg = new XML_RPC_Message_patched('ul_add', $params);
+			$msg = new XML_RPC_Message_patched('usrloc.add_contact', $params);
 			$res = $this->rpc->send($msg);
 	
 			if ($this->rpc_is_error($res)){
@@ -55,21 +51,13 @@ class CData_Layer_add_contact {
 		else{
 		
 			/* construct FIFO command */
-			$fifo_cmd=":ul_add:".$config->reply_fifo_filename."\n".
+			$fifo_cmd=":usrloc.add_contact:".$config->reply_fifo_filename."\n".
 				$config->ul_table."\n".			//table
-				$ul_name."\n".
+				$uid."\n".
 				$contact."\n".				//contact
 				$expires."\n".					//expires
 				$config->ul_priority."\n".	// priority
-
-	    		($config->ul_replication ? 			// if replication is supported by FIFO 
-					$replication."\n":
-					"").
-
-				($config->ul_flags ?				// if flags is supported by FIFO
-					$flags."\n":
-					"").
-
+				$flags."\n".
 				"\n";
 	
 			$message=write2fifo($fifo_cmd, $errors, $status);
