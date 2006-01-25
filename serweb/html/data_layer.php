@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.15 2006/01/12 12:58:59 kozlik Exp $
+ * $Id: data_layer.php,v 1.16 2006/01/25 12:39:28 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -459,12 +459,15 @@ class CData_Layer{
 		
 		if ($resp->faultCode()){
 			$resp = PEAR::raiseError("xml_rpc request error",
-									 null, null, null, $resp->faultCode().":".$resp->faultString());
+									 $resp->faultCode(), null, null, $resp->faultCode().":".$resp->faultString());
 			return true;
 		}
 
+/**	disabled - errors should be correctly returned in UR version */
+/*
 	    $val = $resp->value();
 		$val = $val->scalarval();
+
 		if (is_numeric(substr($val, 0, 3))){
 			if (substr($val, 0, 1) >= 4){
 				$lines = explode("\n", $val);
@@ -474,7 +477,7 @@ class CData_Layer{
 				return true;
 			}
 		}
-
+*/
 		return false;	
 	}
 
