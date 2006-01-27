@@ -78,3 +78,5 @@
 
 	* UIDs are displayed in list of subscribers in admin interface	
 	* updated interface for URI editing
+	* added possibility to assign admin to domain
+	
