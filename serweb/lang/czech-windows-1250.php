@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.21 2006/01/23 15:23:17 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.22 2006/01/31 11:48:18 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -78,6 +78,7 @@ $lang_str['b_next'] =		 					"Další";
 $lang_str['b_register'] = 						"Registrovat se";
 $lang_str['b_send'] =		 					"Odeslat";
 $lang_str['b_submit'] =		 					"Uložit";
+$lang_str['b_select'] =		 					"Vyber";
 $lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
 

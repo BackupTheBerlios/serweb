@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: config.php,v 1.2 2005/09/14 06:40:19 kozlik Exp $
+ * $Id: config.php,v 1.3 2006/01/31 11:48:18 kozlik Exp $
  */
 
 /** 
@@ -134,6 +134,10 @@ $bg_cfg['button'][13]['type']		= 'blue_wide';
 $bg_cfg['button'][14]['filename']	= 'btn_upload_greeting';
 $bg_cfg['button'][14]['lang_str']	= 'b_upload_greeting';
 $bg_cfg['button'][14]['type']		= 'blue_wide';
+
+$bg_cfg['button'][15]['filename']	= 'btn_select';
+$bg_cfg['button'][15]['lang_str']	= 'b_select';
+$bg_cfg['button'][15]['type']		= 'blue';
 
 
 
