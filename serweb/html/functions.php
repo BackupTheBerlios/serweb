@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.66 2006/01/06 16:20:03 kozlik Exp $
+ * @version   $Id: functions.php,v 1.67 2006/02/01 11:13:45 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -303,6 +303,11 @@ function send_mail($to, $text, $headers = array()){
 	    eregi("charset=([-a-z0-9]+)", $headers['content-type'], $regs)){
 		
 		$charset = $regs[1];
+	}
+
+	if (!function_exists('imap_8bit')){
+		ErrorHandler::log_errors(PEAR::raiseError("Can not send mail. IMAP extension for PHP is not installed."));
+		return false;
 	}
 
 	/* add information about charset to the header */

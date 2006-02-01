@@ -2,7 +2,7 @@
 /*
  * this script should be run after midnight - sends missed calls of previous day
  *
- * $Id: send_daily_missed_calls.php,v 1.2 2005/06/02 11:27:19 kozlik Exp $
+ * $Id: send_daily_missed_calls.php,v 1.3 2006/02/01 11:13:46 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_missed_calls_of_yesterday', 'get_send_mc_default_value', 'get_send_mc_list_of_users');
@@ -51,6 +51,11 @@ function send_missed_calls($email_address, $user, $data, &$errors){
 	$body[1]=$part1;
 	$body[2]=$part2;
 	$body[3]=$part3;
+
+	if (!function_exists('imap_mail_compose')){
+		$errors[]="Can not send mail. IMAP extension for PHP is not installed.";
+		return false;
+	}
 
 	$mail=imap_mail_compose($envelope, $body);
 	list($m_header, $m_body)=split("\r\n\r\n",$mail,2);

@@ -65,7 +65,7 @@
 
 2005-09-19
 	* fixed security issue: the click2dial applet works without authentication.
-	
+
 2006-01-11	
 	* rewrited classes from phplib (Auth, Perms and session management)
 	* domain management support (tabs domains and customers in admin interface)
@@ -79,4 +79,5 @@
 	* UIDs are displayed in list of subscribers in admin interface	
 	* updated interface for URI editing
 	* added possibility to assign admin to domain
+	* added checks if IMAP extension is installed	
 	
