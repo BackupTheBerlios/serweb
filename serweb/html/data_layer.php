@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.16 2006/01/25 12:39:28 kozlik Exp $
+ * $Id: data_layer.php,v 1.17 2006/02/07 15:27:35 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -915,6 +915,36 @@ class CData_Layer{
 
 		return (" ".$expr." IN (".$set.") ");
 
+	}
+
+	/**
+	 *	Format string value to be used in sql queries
+	 *
+	 *	If value is NULL return string "NULL" otherwise return quoted value
+	 *
+	 *	@param	string	$val
+	 *	@return	string		
+	 */
+	function sql_null_str($val){
+
+		if (is_null($val)) return "NULL";
+
+		return "'".$val."'";
+	}
+
+	/**
+	 *	Format int value to be used in sql queries
+	 *
+	 *	If value is NULL return string "NULL" otherwise return int value
+	 *
+	 *	@param	int	$val
+	 *	@return	string		
+	 */
+	function sql_null_int($val){
+
+		if (is_null($val)) return "NULL";
+
+		return (int)$val;
 	}
 
 	/* return filter for ldap commands depending on how are user's indexed */
