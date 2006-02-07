@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.12 2006/01/23 14:15:35 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.13 2006/02/07 09:15:59 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -89,7 +89,7 @@
 	{else}
 	<td align="center"><a href="{$row.url_disable}">{$lang_str.l_disable}</a></td>
 	{/if}
-	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, 'Realy you want delete user?')">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_user}')">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.users.last}
 	</table>

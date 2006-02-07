@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.22 2006/01/31 11:48:18 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.23 2006/02/07 09:15:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -397,6 +397,7 @@ $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"aliasy";
 $lang_str['l_account'] = 						"úèet";
 $lang_str['l_accounting'] = 					"pøehled volání";
+$lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
