@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.2 2006/01/03 14:59:39 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.3 2006/02/08 10:42:35 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -254,17 +254,17 @@ class apu_attributes extends apu_base_class{
 		case "user":
 			// get user_attrs
 			$this->user_attrs = &User_Attrs::singleton($this->uid);
-			if (false === $user_attrs = &$this->user_attrs->get_attributes()) return false;
+			if (false === $user_attrs = $this->user_attrs->get_attributes()) return false;
 
 		case "domain":
 			// get domain_attrs
 			$this->domain_attrs = &Domain_Attrs::singleton($this->did);
-			if (false === $domain_attrs = &$this->domain_attrs->get_attributes()) return false;
+			if (false === $domain_attrs = $this->domain_attrs->get_attributes()) return false;
 
 		case "global":
 			// get global_attrs
 			$this->global_attrs = &Global_Attrs::singleton();
-			if (false === $global_attrs = &$this->global_attrs->get_attributes()) return false;
+			if (false === $global_attrs = $this->global_attrs->get_attributes()) return false;
 		}
 
 		$this->attr_values = array();

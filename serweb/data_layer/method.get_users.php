@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.11 2006/01/23 14:15:34 kozlik Exp $
+ * $Id: method.get_users.php,v 1.12 2006/02/08 10:42:35 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -250,7 +250,7 @@ class CData_Layer_get_users {
 				$out[$i]['sip_uri']='';
 
 				$uri_handler = &URIs::singleton($row['uid']);
-				if (false === $uris = &$uri_handler->get_URIs()) return false;
+				if (false === $uris = $uri_handler->get_URIs()) return false;
 
 				if ($opt_get_aliases){
 					$alias_arr=array();

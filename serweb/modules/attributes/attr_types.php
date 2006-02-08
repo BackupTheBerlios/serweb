@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.3 2006/01/03 14:59:39 kozlik Exp $
+ * $Id: attr_types.php,v 1.4 2006/02/08 10:42:35 kozlik Exp $
  */
 
 /**
@@ -26,7 +26,8 @@ class Attr_type{
 			include_once $classfile;
 
 		if (class_exists($class)){
-			return new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+			$obj = new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+			return $obj;
 		}
 
 		sw_log("Unknown type '".$rich_type."' of attribute '".$name."'", PEAR_LOG_WARNING);	
