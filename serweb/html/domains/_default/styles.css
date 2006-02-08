@@ -188,6 +188,13 @@ div.swForm table{
 
 .swHorizontalForm label{
 	text-align: left;
+	margin-right: 0.25em;
+	margin-left: 0.25em;
+}
+
+.swHorizontalForm input{
+	margin-right : 0.25em;
+	margin-left  : 0.25em;
 }
 
 .swFormElementInvisible{
