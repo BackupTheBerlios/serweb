@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.17 2006/02/07 15:27:35 kozlik Exp $
+ * $Id: data_layer.php,v 1.18 2006/02/09 09:45:52 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -879,7 +879,8 @@ class CData_Layer{
 
 	/**
 	 *	Return a boolean constant which may be used in SQL queries depending on which DB host is useing
-	 *
+	 *	
+	 *	@deprecated				Deprecated by method sql_format()
 	 *	@param bool $argument	if true return "true" or "1", if false return "false" or "0"
 	 *	@return string		
 	 */
@@ -918,34 +919,49 @@ class CData_Layer{
 	}
 
 	/**
-	 *	Format string value to be used in sql queries
+	 *	Format value to it can be used in sql query
 	 *
-	 *	If value is NULL return string "NULL" otherwise return quoted value
+	 *	Type of value is one of:
+	 *	  "n" - number (int or float)
+	 *	  "N" - number (int or float) - allow NULL values
+	 *	  "s" - string
+	 *	  "S" - string - allow NULL values
+	 *	  "b" - bool
+	 *	  "B" - bool - allow NULL values
 	 *
-	 *	@param	string	$val
+	 *	@param	mixed	$val
+	 *	@param	string	$type
 	 *	@return	string		
 	 */
-	function sql_null_str($val){
 
-		if (is_null($val)) return "NULL";
+	function sql_format($val, $type){
 
-		return "'".$val."'";
+		switch ($type){
+		case "S":	
+			if (is_null($val)) return "NULL";
+		case "s":	
+			return "'".addslashes($val)."'";
+		
+		case "N":	
+			if (is_null($val)) return "NULL";
+		case "n":	
+			return (int)$val;
+
+		case "B":	
+			if (is_null($val)) return "NULL";
+		case "b":	
+			if ($this->db_host['parsed']['phptype'] == 'mysql'){
+				return $argument ? "1" : "0";
+			}
+			else {
+				return $argument ? "true" : "false";
+			}
+		default:
+			return "";
+		}
+	
 	}
 
-	/**
-	 *	Format int value to be used in sql queries
-	 *
-	 *	If value is NULL return string "NULL" otherwise return int value
-	 *
-	 *	@param	int	$val
-	 *	@return	string		
-	 */
-	function sql_null_int($val){
-
-		if (is_null($val)) return "NULL";
-
-		return (int)$val;
-	}
 
 	/* return filter for ldap commands depending on how are user's indexed */
 	
