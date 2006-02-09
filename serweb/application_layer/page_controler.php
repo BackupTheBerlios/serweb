@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.20 2006/01/24 11:37:51 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.21 2006/02/09 09:35:22 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -73,6 +73,9 @@ class page_conroler{
 	var $js_after_document = array();
 	/** url to which header location will redirect - default is self */
 	var $url_for_reload = null;
+
+	/** temporary solution - Hack protect will be removed - by setting this var to false may by disabled for single page*/
+	var $perform_hack_protect = true;
 
 	/** instance of Creg class 
 	 *	for backward compatibility, shouldn't be used
@@ -681,10 +684,23 @@ class page_conroler{
 			}
 		}
 
-
+		/* make code portable - if magic_quotes_gpc is set to on, strip slashes */
+		if (get_magic_quotes_gpc()) {
+		   function stripslashes_deep($value){
+		       $value = is_array($value) ?
+		                   array_map('stripslashes_deep', $value) :
+		                   stripslashes($value);
+		
+		       return $value;
+		   }
+		
+		   $_POST = array_map('stripslashes_deep', $_POST);
+		   $_GET = array_map('stripslashes_deep', $_GET);
+		   $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+		}
 
 		/* translate chars '<', '>', etc. to &lt; &gt; etc.. */
-		$this->hack_protection();
+		if ($this->perform_hack_protect) $this->hack_protection();
 
 		/* propagate user_id and reference to this to all application units */
 		foreach($this->apu_objects as $key=>$val){
