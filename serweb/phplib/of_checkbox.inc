@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_checkbox.inc,v 1.3 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: of_checkbox.inc,v 1.4 2006/02/09 09:32:12 kozlik Exp $
  */
 
 class of_checkbox extends of_element {
@@ -20,7 +20,7 @@ class of_checkbox extends of_element {
     
     if ($this->multiple) {
       $n = $this->name . "[]";
-      $str .= "<input type='checkbox' name='$n' value='$val' id='$this->name'";
+      $str .= "<input type='checkbox' name='$n' value=\"".htmlspecialchars($val, ENT_QUOTES)."\" id='$this->name'";
       if (is_array($this->value)) {
         reset($this->value);
         while (list($k,$v) = each($this->value)) {
@@ -32,7 +32,7 @@ class of_checkbox extends of_element {
       }
     } else {
       $str .= "<input type='checkbox' name='$this->name' id='$this->name'";
-      $str .= " value='$this->value'";
+      $str .= " value=\"".htmlspecialchars($this->value, ENT_QUOTES)."\"";
       if ($this->checked) 
         $str .= " checked";
     }
@@ -56,7 +56,7 @@ class of_checkbox extends of_element {
         while (list($k,$v) = each($this->value)) {
           if ($v==$val) {
 	          $x = 1;
-            $str .= "<input type='hidden' name='$this->name' value='$v'>\n";
+            $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($v, ENT_QUOTES)."\">\n";
             $t =" bgcolor=#333333";
             break;
           }
@@ -67,7 +67,7 @@ class of_checkbox extends of_element {
         $x = 1;
         $t = " bgcolor=#333333";
         $str .= "<input type='hidden' name='$this->name'";
-        $str .= " value='$this->value'>";
+        $str .= " value=\"".htmlspecialchars($this->value, ENT_QUOTES)."\">";
       }
     }
     $str .= "<table$t border=1><tr><td>&nbsp</td></tr></table>\n";

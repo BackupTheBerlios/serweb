@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.7 2005/11/16 09:49:49 kozlik Exp $
+ * $Id: oohforms.inc,v 1.8 2006/02/09 09:32:12 kozlik Exp $
  */
 
 class of_element {
@@ -99,7 +99,7 @@ class of_hidden extends of_element {
     $n = $this->name . ($this->multiple ? "[]" : "");
     reset($v);
     while (list($k,$tv) = each($v)) {
-      $str .= "<input type='hidden' name='$n' value='$tv'";
+      $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($tv, ENT_QUOTES)."\"";
       if ($this->extrahtml)
         $str .=" $this->extrahtml";
       $str .= ">";
@@ -118,7 +118,7 @@ class of_reset extends of_element {
   }
 
   function self_get($val, $which, &$count) {
-    $str = "<input name='$this->name' type=reset value='$val'";
+    $str = "<input name='$this->name' type=reset value=\"".htmlspecialchars($val, ENT_QUOTES)."\"";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
     $str .= ">";
@@ -139,7 +139,7 @@ class of_submit extends of_element {
     $str = "";
     
     $sv = empty($val) ? $this->value : $val;
-    $str .= "<input name='$this->name' value='$sv'";
+    $str .= "<input name='$this->name' value=\"".htmlspecialchars($sv, ENT_QUOTES)."\"";
     if ($this->src) 
       $str .= " type='image' src='$this->src' border='0'";
     else 

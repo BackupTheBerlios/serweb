@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.5 2004/09/16 17:06:47 kozlik Exp $
+ * $Id: of_select.inc,v 1.6 2006/02/09 09:32:12 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -43,7 +43,7 @@ class of_select extends of_element {
     while (list($k,$o) = each($this->options)) {
       $str .= "<option";
       if (is_array($o)) 
-        $str .= " value='" .  $o["value"] . "'";
+        $str .= " value=\"" .  htmlspecialchars($o["value"], ENT_QUOTES) . "\"";
       if (!$this->multiple && ((is_array($o) && $this->value==$o["value"]) || $this->value==$o))
         $str .= " selected";
       elseif ($this->multiple && is_array($this->value)) {
@@ -77,7 +77,7 @@ class of_select extends of_element {
            (($tmp=$v["value"])==$tv || $v["label"]==$tv))
          || ($tmp=$v)==$tv) {
           $x++;
-          $str .= "<input type='hidden' name='$n' value='$tmp'>\n";
+          $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($tmp, ENT_QUOTES)."\">\n";
           $str .= "<tr><td>" . (is_array($v) ? $v["label"] : $v) . "</td></tr>\n";
         }
       }

@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_radio.inc,v 1.4 2004/08/26 13:09:20 kozlik Exp $
+ * $Id: of_radio.inc,v 1.5 2006/02/09 09:32:12 kozlik Exp $
  */
 
 class of_radio extends of_element {
@@ -18,7 +18,7 @@ class of_radio extends of_element {
   function self_get($val, $which, &$count) {
     $str = "";
     
-    $str .= "<input type='radio' name='$this->name' id='".$this->name."_$val' value='$val'";
+    $str .= "<input type='radio' name='$this->name' id='".$this->name."_$val' value=\"".htmlspecialchars($val, ENT_QUOTES)."\"";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
     if ($this->value==$val) 
@@ -35,7 +35,7 @@ class of_radio extends of_element {
     $x = 0;
     if ($this->value==$val) {
       $x = 1;
-      $str .= "<input type='hidden' name='$this->name' value='$val'>\n";
+      $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($val, ENT_QUOTES)."\">\n";
       $str .= "<table border=1 bgcolor=#333333>";
     } else {
       $str .= "<table border=1>";

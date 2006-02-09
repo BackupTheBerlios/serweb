@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.3 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: of_text.inc,v 1.4 2006/02/09 09:32:12 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -28,9 +28,9 @@ class of_text extends of_element {
     $str = "";
     
     if (is_array($this->value))
-      $v = htmlspecialchars($this->value[$which]);
+      $v = htmlspecialchars($this->value[$which], ENT_QUOTES);
     else 
-      $v = htmlspecialchars($this->value);
+      $v = htmlspecialchars($this->value, ENT_QUOTES);
     $n = $this->name . ($this->multiple ? "[]" : "");
     $str .= "<input name='$n' id='$n' value=\"$v\"";
     $str .= ($this->pass)? " type='password'" : " type='text'";
@@ -54,7 +54,7 @@ class of_text extends of_element {
     else 
       $v = $this->value;
     $n = $this->name . ($this->multiple ? "[]" : "");
-    $str .= "<input type='hidden' name='$n' value='$v'>\n";
+    $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($v, ENT_QUOTES)."\">\n";
     $str .= "<table border=1><tr><td>$v</td></tr></table>\n";
     
     $count = 1;
