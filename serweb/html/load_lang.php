@@ -3,7 +3,7 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.8 2005/12/14 16:39:25 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.9 2006/02/16 13:13:25 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -140,6 +140,38 @@ function determine_lang(){
 
 }
 
+/**
+ *	Function load additional language file
+ *	
+ *	This function may be used for example to loading modules purpose 
+ *	
+ *	@param	string	$ldir	path to directory which is scanned for language files
+ *	@return	bool			TRUE on success, FALSE when file is not found
+ */
+function load_another_lang($ldir){
+	global $_SERWEB, $reference_language, $available_languages, $lang_str, $lang_set;
+
+	$ldir = $_SERWEB["serwebdir"]."../lang/".$ldir."/";
+
+	$primary_lang_file   = $ldir.$available_languages[$_SESSION['lang']][1].".php";
+	$secondary_lang_file = $ldir.$available_languages[$reference_language][1].".php";
+	
+	if (file_exists($primary_lang_file)){
+		require_once($primary_lang_file);
+	}
+	elseif(file_exists($secondary_lang_file)){
+		require_once($secondary_lang_file);
+	}
+	else{
+		ErrorHandler::log_errors(PEAR::RaiseError("Can't find requested language file", 
+		                         NULL, NULL, NULL, 
+								 "Nor requested(".$primary_lang_file.") neither default(".$secondary_lang_file.") language file not exists"));
+		
+		return false;
+	}
+
+	return true;
+}
 
 $_SESSION['lang'] = determine_lang();
 
@@ -153,12 +185,12 @@ setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path)
 
 
 /** load strings of selected language */
-require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$sess_lang][1].".php");
+require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$_SESSION['lang']][1].".php");
 
 internationalize_tabs();
 
 /* set value of $lang_set[ldir] by avaiable_languages array */
-$lang_set['ldir'] = $available_languages[$sess_lang][2];
+$lang_set['ldir'] = $available_languages[$_SESSION['lang']][2];
 
 global $data;
 
