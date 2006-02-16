@@ -3,28 +3,11 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.9 2006/02/16 13:13:25 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.10 2006/02/16 15:26:36 kozlik Exp $
  * @package   serweb
  */ 
 
 require_once($_SERWEB["serwebdir"]."../config/config_lang.php");
-
-/**
- *	Change names of tabs according to $lang_str
- *  @access  private
- */
-
-function internationalize_tabs(){
-	global $config, $lang_str;
-
-	foreach ($config->user_tabs as $k=>$v){
-		$config->user_tabs[$k]->name = $lang_str[$v->lang_str];
-	}
-
-	foreach ($config->admin_tabs as $k=>$v){
-		$config->admin_tabs[$k]->name = $lang_str[$v->lang_str];
-	}
-}
 
 /**
  * Analyzes some PHP environment variables to find the most probable language
@@ -186,8 +169,6 @@ setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path)
 
 /** load strings of selected language */
 require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$_SESSION['lang']][1].".php");
-
-internationalize_tabs();
 
 /* set value of $lang_set[ldir] by avaiable_languages array */
 $lang_set['ldir'] = $available_languages[$_SESSION['lang']][2];

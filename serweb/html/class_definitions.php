@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.7 2006/01/20 14:43:57 kozlik Exp $
+ * $Id: class_definitions.php,v 1.8 2006/02/16 15:26:36 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -19,13 +19,71 @@ class Capplet_params {
 	}
 }
 
+/**
+ *	Class representating tabs on html page
+ */
 class Ctab{
-	var $name, $page, $enabled, $lang_str;
-	function Ctab($enabled, $lang_str, $page){
-		$this->lang_str = $lang_str;
-		$this->name = $lang_str;
+	var $name, $page, $enabled;
+	
+	/**
+	 *	Constructor
+	 *
+	 *	@param	bool	$enabled	Should be tab displayed?
+	 *	@param	string	$name		Name of tab. If starting by '@' is translated by $lang_str array
+	 *	@param	string	$page		Script which generate html page after click on this tab
+	 */
+	function Ctab($enabled, $name, $page){
+		$this->name = $name;
 		$this->page = $page;
 		$this->enabled = $enabled;
+	}
+	
+	/**
+	 *	Return name of the tab
+	 *	
+	 *	If the name starting by "@" translate it by $lang_str array - internationalization
+	 *	
+	 *	@return	string
+	 */
+	function get_name(){
+		global $lang_str;
+		
+		if ($this->name[0] == "@" and isset($lang_str[substr($this->name, 1)]))
+			return $lang_str[substr($this->name, 1)];
+		else
+			return $this->name;	
+	}
+	
+	/**
+	 *	Return script which generate content of this tab
+	 *
+	 *	@return	string	
+	 */
+	function get_page(){
+		return $this->page;
+	}
+	
+	/**
+	 *	Is tab enabled?
+	 *	
+	 *	@return	bool
+	 */
+	function is_enabled(){
+		return (bool)$this->enabled;
+	}
+	
+	/**
+	 *	Enable tab
+	 */
+	function enable(){
+		$this->enabled = true;
+	}
+
+	/**
+	 *	Disable tab
+	 */
+	function disable(){
+		$this->enabled = false;
 	}
 }
 

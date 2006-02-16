@@ -49,14 +49,14 @@ function smarty_function_html_tabs($params, &$smarty){
 	$out='<div id="swTabs"><ul>';
 
 	foreach($tabs as $i => $value){
-		if ($value->enabled){
-			if ($value->page==$selected and !$no_select){
-				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong><span>'.$value->name.'</span></strong><div class="swTabsR"></div></li>';
+		if ($value->is_enabled()){
+			if ($value->get_page()==$selected and !$no_select){
+				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong><span>'.$value->get_name().'</span></strong><div class="swTabsR"></div></li>';
 			}
 			else{
-				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->page."?kvrk=".uniqID("")).'" '.$anchor_extra_html.' class="tabl"><span>'.$value->name.'</span></a><div class="swTabsR"></div></li>';
-			}//if ($value->page==$selected)
-		}// if ($value->enabled)
+				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->get_page()."?kvrk=".uniqID("")).'" '.$anchor_extra_html.' class="tabl"><span>'.$value->get_name().'</span></a><div class="swTabsR"></div></li>';
+			}//if ($value->get_page()==$selected)
+		}// if ($value->is_enabled())
 	} //foreach		
 	
 	$out.='</ul></div>';

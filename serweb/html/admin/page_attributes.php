@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.5 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: page_attributes.php,v 1.6 2006/02/16 15:26:36 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -11,23 +11,23 @@ function _disable_unneeded_tabs(&$page_attributes){
 
 			if ($val->page == "list_of_admins.php"){
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->enabled=false;
+					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "customers.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->enabled=false;
+					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "user_preferences.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->enabled=false;
+					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "ser_moni.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->enabled=false;
+					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "global_attributes.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->enabled=false;
+					$page_attributes['tab_collection'][$key]->disable();
 			}
 		}
 	}
