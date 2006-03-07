@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.6 2006/01/13 11:12:41 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.7 2006/03/07 16:57:51 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -46,6 +46,10 @@
  *	'get_disabled'				(bool) default: true
  *	 if true, disabled users are also displayed
  *	
+ *	'allow_edit'				(bool) default: false
+ *   set true if instance of this APU should be used for change values
+ *	 by default only get list of subscribers is enabled
+ *
  *	'script_phonebook'			(string) default: ''
  *	 Name of script with phonebook. If is set, array of users will contain 
  *	 field 'url_add_to_pb' which is url for add subscriber to phonebook.
@@ -124,6 +128,8 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['get_timezones']			= false;
 		$this->opt['get_only_agreeing']		= false;
 		$this->opt['get_disabled']			= true;
+
+		$this->opt['allow_edit']			= false;
 		
 		$this->opt['script_phonebook'] =			'';
 
@@ -312,27 +318,28 @@ class apu_subscribers extends apu_base_class{
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
 
-		if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
-			$this->action=array('action'=>"delete",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			return;
-		}
-
-		if (isset($_GET['sc_enable']) and $_GET['sc_enable'] == $this->opt['instance_id']){
-			$this->action=array('action'=>"enable",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			return;
-		}
-
-		if (isset($_GET['sc_disable']) and $_GET['sc_disable'] == $this->opt['instance_id']){
-			$this->action=array('action'=>"disable",
-			                    'validate_form'=>false,
-								'reload'=>true);
-			return;
-		}
-		
+		if ($this->opt['allow_edit']){
+			if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
+				$this->action=array('action'=>"delete",
+				                    'validate_form'=>false,
+									'reload'=>true);
+				return;
+			}
+	
+			if (isset($_GET['sc_enable']) and $_GET['sc_enable'] == $this->opt['instance_id']){
+				$this->action=array('action'=>"enable",
+				                    'validate_form'=>false,
+									'reload'=>true);
+				return;
+			}
+	
+			if (isset($_GET['sc_disable']) and $_GET['sc_disable'] == $this->opt['instance_id']){
+				$this->action=array('action'=>"disable",
+				                    'validate_form'=>false,
+									'reload'=>true);
+				return;
+			}
+		}		
 
 		if ($this->was_form_submited()){	// Is there data to process?
 			$this->action=array('action'=>"default",
