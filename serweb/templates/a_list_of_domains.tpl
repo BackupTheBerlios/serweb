@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.3 2005/12/22 13:39:34 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.4 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -54,15 +54,15 @@
 	{/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left">{$row.id|empty2nbsp}</td>
+	<td align="left">{$row.id|escape|empty2nbsp}</td>
 	<td align="left">
 		{assign var='dom_class' value='swDomainEnabled'}
 		{if $row.disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 		{foreach from=$row.names item='dom' name='one_domain'}
-			<span class="{$dom_class}">{$dom.name}</span>{if !$smarty.foreach.one_domain.last}, {/if}
+			<span class="{$dom_class}">{$dom.name|escape}</span>{if !$smarty.foreach.one_domain.last}, {/if}
 		{/foreach}&nbsp;
 	</td>
-	<td align="left">{$row.customer|empty2nbsp}</td>
+	<td align="left">{$row.customer|escape|empty2nbsp}</td>
 	<td align="center"><a href="{$row.url_layout}">{$lang_str.l_change_layout}</a></td>
 	<td align="center"><a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a></td>
 {if $hostmaster_actions}

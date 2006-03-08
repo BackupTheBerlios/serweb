@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.13 2006/02/07 09:15:59 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.14 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -47,7 +47,6 @@
 {$form.finish}
 </div>
 
-
 {foreach from=$users item='row' name='users'}
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -73,11 +72,11 @@
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left"><span class="{$usr_class}">{$row.uid|empty2nbsp}</span></td>
-	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
-	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
-	<td align="left">{$row.name|empty2nbsp}</td>
-	<td align="right">{$row.phone|empty2nbsp}</td>
+	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
+	<td align="left">{$row.name|escape|empty2nbsp}</td>
+	<td align="right">{$row.phone|escape|empty2nbsp}</td>
 	<td align="right">{include file="includes/inline_aliases.tpl" uris=$row.uris}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a></td>

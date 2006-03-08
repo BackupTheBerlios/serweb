@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.14 2006/01/23 14:15:35 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.15 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -20,29 +20,8 @@
 	<td><label for="pu_passwd_r">{$lang_str.ff_retype_password}:</label></td>
 	<td>{$form_pd.pu_passwd_r}</td>
 	</tr>
-
-{foreach from=$attributes item='row' name='attributes'}
- 	{if $row.att_type == 'radio'}
- 		
- 		<tr><td colspan=2>&nbsp;</td></tr>
- 		{foreach from=$row.att_spec item='r'}
- 			{assign var='f_element' value="`$row.att_name`_`$r.value`"}
- 			<tr>
- 			<td><label for="{$row.att_name}_{$r.value}">{$r.label}:</label></td>
- 			<td>{$form_pd.$f_element}</td>
- 			</tr>
- 		{/foreach}
- 		<tr><td colspan=2>&nbsp;</td></tr>
- 		
- 	{else}
- 		{assign var='f_element' value=$row.att_name}
- 		<tr>
- 		<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
- 		<td>{$form_pd.$f_element}</td>
- 		</tr>
- 	{/if}
-{/foreach}
-
+	
+	{include file="_attr_form.tpl" attributes=$attributes form=$form_pd}
 
 {* If you need display only one specific user preference, see the examples 
  * below. In first case is displayed user preference of name NAME_OF_UP.
@@ -84,8 +63,8 @@
 	{if $row.disabled} {assign var='uri_class' value='swUriDisabled'} {/if}
 
 	{include file="includes/popup_uri_details.tpl" uri=$row.uri_obj assign="popup_text"}
-	<tr><td align="center"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_text caption=$row.uri_obj->to_string()}>
-	   <span class="{$uri_class}">sip:{$row.username}@{$row.domain}</span></a></td></tr>
+	<tr><td align="center"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_text caption=$row.uri_obj->to_string()|escape|escape}>
+	   <span class="{$uri_class}">sip:{$row.username|escape}@{$row.domain|escape}</span></a></td></tr>
 
 	{if $smarty.foreach.aliases.last}
 	</table>
@@ -115,7 +94,7 @@
 	{if $smarty.foreach.usrloc.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>{$lang_str.th_contact}</th>
+	<th>{$lang_str.th_contact|escape}</th>
 	<th>{$lang_str.th_expires}</th>
 	<th>{$lang_str.th_priority}</th>
 	<th>{$lang_str.th_location}</th>

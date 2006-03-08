@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.3 2006/01/20 14:43:58 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.4 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
 
@@ -21,15 +21,15 @@
 	
 	<table border=0 cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><td class="swAckTableName" >{$lang_str.ff_alias}({$lang_str.ff_username}):</td>
-	    <td class="swAckTableValue">{$uri_for_ack.username}</td></tr>
+	    <td class="swAckTableValue">{$uri_for_ack.username|escape}</td></tr>
 	<tr><td class="swAckTableName" >{$lang_str.ff_alias}({$lang_str.ff_domain}):</td>
-	    <td class="swAckTableValue">{$uri_for_ack.domain}</td></tr>
+	    <td class="swAckTableValue">{$uri_for_ack.domain|escape}</td></tr>
 	<tr><td class="swAckTableName" >{$lang_str.ff_is_canon}:</td>
-	    <td class="swAckTableValue">{if $uri_for_ack.is_canon}X{else}&nbsp;{/if}</td></tr>
+	    <td class="swValignMid swAckTableValue">{include file="includes/yes_no.tpl" ok=$uri_for_ack.is_canon}</td></tr>
 	<tr><td class="swAckTableName" >{$lang_str.ff_uri_is_to}:</td>
-	    <td class="swAckTableValue">{if $uri_for_ack.is_to}X{else}&nbsp;{/if}</td></tr>
+	    <td class="swValignMid swAckTableValue">{include file="includes/yes_no.tpl" ok=$uri_for_ack.is_to}</td></tr>
 	<tr><td class="swAckTableName" >{$lang_str.ff_uri_is_from}:</td>
-	    <td class="swAckTableValue">{if $uri_for_ack.is_from}X{else}&nbsp;{/if}</td></tr>
+	    <td class="swValignMid swAckTableValue">{include file="includes/yes_no.tpl" ok=$uri_for_ack.is_from}</td></tr>
 	</table>
 
 
@@ -55,11 +55,11 @@
 		{/if}
 	
 		<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-		<td align="left" style="padding-right:1em;">{$row.uid}</td>
-		<td align="right" style="padding-right:1em;">{$row.username}@{$row.domain}</td>
-		<td align="center">{if $row.is_canon}X{else}&nbsp;{/if}</td>
-		<td align="center">{if $row.is_to}X{else}&nbsp;{/if}</td>
-		<td align="center">{if $row.is_from}X{else}&nbsp;{/if}</td>
+		<td align="left" style="padding-right:1em;">{$row.uid|escape}</td>
+		<td align="right" style="padding-right:1em;">{$row.username|escape}@{$row.domain|escape}</td>
+		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_canon}</td>
+		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_to}</td>
+		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_from}</td>
 		</tr>
 		{if $smarty.foreach.ack_uris.last}
 		</table>
@@ -123,8 +123,8 @@
 			{if $row.s_uris}
 				{include file="popup_show_uri.tpl" uris=$row.s_uris assign="popup_text"}
 			
-				<a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_text caption="`$lang_str.uid_with_alias`: `$row.username`@`$row.domain`"}><span class="{$uri_class}">{$row.username}@{$row.domain}</span></a>
-			{else}<span class="{$uri_class}">{$row.username}@{$row.domain}</span>
+				<a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_text caption="`$lang_str.uid_with_alias`: `$row.username`@`$row.domain`"|escape|escape}><span class="{$uri_class}">{$row.username|escape}@{$row.domain|escape}</span></a>
+			{else}<span class="{$uri_class}">{$row.username|escape}@{$row.domain|escape}</span>
 			{/if}
 		</td>
 		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_canon}</td>

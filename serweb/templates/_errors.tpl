@@ -1,6 +1,6 @@
 {* Smarty *}
-{* $Id: _errors.tpl,v 1.1 2004/08/09 12:33:56 kozlik Exp $ *}
+{* $Id: _errors.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {foreach from=$errors item='row'}
-	<div class="errors">{$row}</div>
+	<div class="errors">{$row|escape}</div>
 {/foreach}

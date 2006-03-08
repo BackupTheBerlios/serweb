@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_customers.tpl,v 1.1 2005/10/19 10:33:07 kozlik Exp $ *}
+{* $Id: a_customers.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
@@ -44,10 +44,10 @@
 	</tr>
 	{/if}
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left">{$row.name|empty2nbsp}</td>
-	<td align="left">{$row.address|truncate:45:"..."|empty2nbsp}</td>
-	<td align="left">{$row.phone|truncate:45:"..."|empty2nbsp}</td>
-	<td align="left">{if $row.email}<a href="mailto:{$row.email}">{$row.email|truncate:45:"..."}{else}&nbsp;{/if}</td>
+	<td align="left">{$row.name|escape|empty2nbsp}</td>
+	<td align="left">{$row.address|escape|truncate:45:"..."|empty2nbsp}</td>
+	<td align="left">{$row.phone|escape|truncate:45:"..."|empty2nbsp}</td>
+	<td align="left">{if $row.email}<a href="mailto:{$row.email}">{$row.email|escape|truncate:45:"..."}{else}&nbsp;{/if}</td>
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
 	</tr>

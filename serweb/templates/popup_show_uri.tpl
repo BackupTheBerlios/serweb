@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: popup_show_uri.tpl,v 1.1 2006/01/20 14:43:58 kozlik Exp $ *}
+{* $Id: popup_show_uri.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {foreach from=$uris item='uri' name='popup_show_uri'}
 	{if $smarty.foreach.popup_show_uri.first}
@@ -16,7 +16,7 @@
 	{if $uri.disabled} {assign var='uri_class' value='swUriDisabled'} {/if}
 	<tr>
 	<td>{$uri.uid}</td>
-	<td><span class='{$uri_class}'>{$row.username}@{$row.domain}</span></td>
+	<td><span class='{$uri_class}'>{$row.username|escape|escape}@{$row.domain|escape|escape}</span></td>
 	<td align='center' class='swValignMid'>{include file="includes/yes_no.tpl" ok=$uri.is_canon}</td>
 	<td align='center' class='swValignMid'>{include file="includes/yes_no.tpl" ok=$uri.is_to}</td>
 	<td align='center' class='swValignMid'>{include file="includes/yes_no.tpl" ok=$uri.is_from}</td>

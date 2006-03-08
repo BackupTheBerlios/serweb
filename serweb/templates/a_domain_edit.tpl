@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_edit.tpl,v 1.5 2006/01/24 11:40:54 kozlik Exp $ *}
+{* $Id: a_domain_edit.tpl,v 1.6 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -15,7 +15,7 @@
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
 	<tr>
 	<td><label>{$lang_str.d_id}:</label></td>
-	<td>{$dom_id}</td>
+	<td>{$dom_id|escape}</td>
 	</tr>
 	<tr valign="top">
 	<td><label>{$lang_str.d_name}:</label></td>
@@ -25,7 +25,7 @@
 		<table border="0" cellspacing="0" cellpadding="2" align="left" style="margin-left:0px">
 		{/if}
 		<tr>
-		<td align="left">{if $row.canon}<strong>{$row.name}</strong>{else}{$row.name}{/if}</td>
+		<td align="left">{if $row.canon}<strong>{$row.name|escape}</strong>{else}{$row.name|escape}{/if}</td>
 		<td>{if !$row.canon}<a href="{$row.url_set_canon}">{$lang_str.l_set_canon}</a>{else}&nbsp;{/if}</td>
 		<td>{if $row.allow_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
 		</tr>
@@ -58,7 +58,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	{/if}
 	<tr>
-	<td align="left">{$row.username}@{$row.domain}</td>
+	<td align="left">{$row.username|escape}@{$row.domain|escape}</td>
 	<td><a href="{$row.url_unset_admin}">{$lang_str.l_unassign_admin	}</a></td>
 	</tr>
 	{if $smarty.foreach.admins.last}

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _message.tpl,v 1.2 2004/08/25 10:19:48 kozlik Exp $ *}
+{* $Id: _message.tpl,v 1.3 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {*
 {if $message}
@@ -10,9 +10,9 @@
 {foreach from=$message item='row' key='key'}
 	{if $key === "short"}				{* backward compatibility - if only one message is given *}
 	{elseif $key === "long"}
-	<div class="message">{$row}</div>
+	<div class="message">{$row|escape}</div>
 	{else}
-	<div class="message">{$row.long}</div>
+	<div class="message">{$row.long|escape}</div>
 	{/if}
 {/foreach}
 

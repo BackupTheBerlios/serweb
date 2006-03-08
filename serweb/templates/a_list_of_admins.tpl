@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.8 2006/01/13 11:12:42 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.9 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -65,10 +65,10 @@
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left"><span class="{$usr_class}">{$row.uid|empty2nbsp}</span></td>
-	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
-	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
-	<td align="left">{$row.name|empty2nbsp}</td>
+	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
+	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="{url url='admin_privileges.php' uniq=1}&{$row.get_param}">{$lang_str.l_change_privileges}</a></td>
 	{if $change_domain_admin}

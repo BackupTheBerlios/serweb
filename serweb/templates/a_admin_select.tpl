@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_admin_select.tpl,v 1.1 2006/01/24 11:40:54 kozlik Exp $ *}
+{* $Id: a_admin_select.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -76,10 +76,10 @@
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left"><span class="{$usr_class}">{$row.uid|empty2nbsp}</span></td>
-	<td align="left"><span class="{$usr_class}">{$row.username|empty2nbsp}</span></td>
-	<td align="left"><span class="{$dom_class}">{$row.domain|empty2nbsp}</span></td>
-	<td align="left">{$row.name|empty2nbsp}</td>
+	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
+	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="javascript: opener.location.href='{url url=$finish_url uniq=1}&{$row.get_param}'; window.close();">{$lang_str.l_select}</a></td>
 	</tr>

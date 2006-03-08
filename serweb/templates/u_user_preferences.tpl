@@ -1,21 +1,18 @@
 {* Smarty *}
-{* $Id: u_user_preferences.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: u_user_preferences.tpl,v 1.4 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-{foreach from=$attributes item='row' name='attributes'}
-	{if $smarty.foreach.attributes.first}
+
+{if $attributes}
 	<div class="swForm">
 	{$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	{/if}
+{/if}
 
-		<tr>
-		<td align="right" class="f12b"><label for="{$row.att_name}">{$row.att_desc}:</label></td>
-		<td>{assign var='att_name' value=$row.att_name}{$form.$att_name}</td>
-		</tr>
+{include file="_attr_form.tpl" attributes=$attributes form=$form}
 
-	{if $smarty.foreach.attributes.last}
+{if $attributes}
 	<tr>
 	<td>&nbsp;</td>
 	<td align="right">{$form.okey}</td>
@@ -23,10 +20,9 @@
 	</table>
 	{$form.finish}
 	</div>
-	{/if}
-{foreachelse}
-<div class="swNumOfFoundRecords">{$lang_str.no_attributes_defined}</div>
-{/foreach}
+{else}
+	<div class="swNumOfFoundRecords">{$lang_str.no_attributes_defined}</div>
+{/if}
 
 <br>
 {include file='_tail.tpl'}

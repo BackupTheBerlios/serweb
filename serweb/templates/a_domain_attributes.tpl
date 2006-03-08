@@ -1,34 +1,17 @@
 {* Smarty *}
-{* $Id: a_domain_attributes.tpl,v 1.1 2005/12/22 13:41:53 kozlik Exp $ *}
+{* $Id: a_domain_attributes.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-{foreach from=$attributes item='row' name='attributes'}
-	{if $smarty.foreach.attributes.first}
+{if $attributes}
 	<div class="swForm">
 	{$form.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
-	{/if}
+{/if}
 
- 	{if $row.att_type == 'radio'}
- 		<tr><td colspan=2>&nbsp;</td></tr>
- 		{foreach from=$row.att_spec item='r'}
- 			{assign var='f_element' value="`$row.att_name`_`$r.value`"}
- 			<tr>
- 			<td><label for="{$row.att_name}_{$r.value}">{$r.label}:</label></td>
- 			<td>{$form.$f_element}</td>
- 			</tr>
- 		{/foreach}
- 		<tr><td colspan=2>&nbsp;</td></tr>
- 	{else}
- 		{assign var='f_element' value=$row.att_name}
- 		<tr>
- 		<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
- 		<td>{$form.$f_element}</td>
- 		</tr>
- 	{/if}
+{include file="_attr_form.tpl" attributes=$attributes form=$form}
 
-	{if $smarty.foreach.attributes.last}
+{if $attributes}
 	<tr>
 	<td>&nbsp;</td>
 	<td align="right">{$form.okey}</td>
@@ -36,10 +19,9 @@
 	</table>
 	{$form.finish}
 	</div>
-	{/if}
-{foreachelse}
-<div class="swNumOfFoundRecords">{$lang_str.no_attributes_defined}</div>
-{/foreach}
+{else}
+	<div class="swNumOfFoundRecords">{$lang_str.no_attributes_defined}</div>
+{/if}
 
 <div class="swBackToMainPage"><a href="{url url='list_of_domains.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 

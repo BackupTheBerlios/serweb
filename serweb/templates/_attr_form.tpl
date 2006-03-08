@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _attr_form.tpl,v 1.1 2005/12/22 13:42:45 kozlik Exp $ *}
+{* $Id: _attr_form.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {foreach from=$attributes item='row' name='attributes'}
 
@@ -8,7 +8,7 @@
  		{foreach from=$row.att_spec item='r'}
  			{assign var='f_element' value="`$row.att_name`_`$r.value`"}
  			<tr>
- 			<td><label for="{$row.att_name}_{$r.value}">{$r.label}:</label></td>
+ 			<td><label for="{$row.att_name}_{$r.value}">{$r.label|escape}:</label></td>
  			<td>{$form.$f_element}</td>
  			</tr>
  		{/foreach}
@@ -16,7 +16,7 @@
  	{else}
  		{assign var='f_element' value=$row.att_name}
  		<tr>
- 		<td><label for="{$row.att_name}">{$row.att_desc}:</label></td>
+ 		<td><label for="{$row.att_name}">{$row.att_desc|escape}:</label></td>
  		<td>{$form.$f_element}</td>
  		</tr>
  	{/if}

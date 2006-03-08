@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_admin.tpl,v 1.2 2005/12/22 13:39:34 kozlik Exp $ *}
+{* $Id: a_domain_admin.tpl,v 1.3 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -61,16 +61,16 @@
 	{/if}
 	
 	<tr valign="top" class="{cycle name='assigned' values='swTrOdd,swTrEven'}">
-	<td align="left">{$row.id|empty2nbsp}</td>
+	<td align="left">{$row.id|escape|empty2nbsp}</td>
 	<td align="left">
 		{assign var='d_aliases' value=''}
 		{foreach from=$row.names item='dom' name='one_domain'}
 			{assign var='d_aliases' value="$d_aliases`$dom.name`"}
 			{if !$smarty.foreach.one_domain.last}{assign var='d_aliases' value="$d_aliases, "}{/if}
 		{/foreach}
-		{$d_aliases|truncate:45:"..."}
+		{$d_aliases|escape|truncate:45:"..."}
 	</td>
-	<td align="left">{$row.customer|empty2nbsp}</td>
+	<td align="left">{$row.customer|escape|empty2nbsp}</td>
 	<td align="center"><a href="{$row.url_unassign}" style="white-space: nowrap;" title="{$lang_str.l_unassign_domain}">&gt;&gt;&gt;</a></td>
 	</tr>
 	{if $smarty.foreach.domains.last}
@@ -99,16 +99,16 @@
 	
 	<tr valign="top" class="{cycle name='unassigned' values='swTrOdd,swTrEven'}">
 	<td align="center"><a href="{$row.url_assign}" style="white-space: nowrap;" title="{$lang_str.l_assign_domain}">&lt;&lt;&lt;</a></td>
-	<td align="left">{$row.id|empty2nbsp}</td>
+	<td align="left">{$row.id|escape|empty2nbsp}</td>
 	<td align="left">
 		{assign var='d_aliases' value=''}
 		{foreach from=$row.names item='dom' name='one_domain'}
 			{assign var='d_aliases' value="$d_aliases`$dom.name`"}
 			{if !$smarty.foreach.one_domain.last}{assign var='d_aliases' value="$d_aliases, "}{/if}
 		{/foreach}
-		{$d_aliases|truncate:45:"..."}
+		{$d_aliases|escape|truncate:45:"..."}
 	</td>
-	<td align="left">{$row.customer|empty2nbsp}</td>
+	<td align="left">{$row.customer|escape|empty2nbsp}</td>
 	</tr>
 	{if $smarty.foreach.domains.last}
 	</table>

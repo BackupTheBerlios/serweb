@@ -1,12 +1,12 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.5 2005/12/14 16:34:06 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.6 2006/03/08 15:36:27 kozlik Exp $ *}
 
 {if $parameters.user_name}
-	<div class="swHeadingUser">{$parameters.user_name.fname} {$parameters.user_name.lname} &lt;{$parameters.user_name.uname}@{$parameters.user_name.realm}&gt;</div>
+	<div class="swHeadingUser">{$parameters.user_name.fname|escape} {$parameters.user_name.lname|escape} &lt;{$parameters.user_name.uname|escape}@{$parameters.user_name.realm|escape}&gt;</div>
 {/if}
 
 {if $parameters.logout}
-	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout}</a></div>
+	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout|escape}</a></div>
 {/if}
 
 {if $parameters.user_name or $parameters.logout}
