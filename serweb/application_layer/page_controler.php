@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.21 2006/02/09 09:35:22 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.22 2006/03/08 15:21:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -74,8 +74,8 @@ class page_conroler{
 	/** url to which header location will redirect - default is self */
 	var $url_for_reload = null;
 
-	/** temporary solution - Hack protect will be removed - by setting this var to false may by disabled for single page*/
-	var $perform_hack_protect = true;
+	/** for backward compatibility - Hack protect will be removed - by setting this var to true may be enabled for single page*/
+	var $perform_hack_protect = false;
 
 	/** instance of Creg class 
 	 *	for backward compatibility, shouldn't be used
