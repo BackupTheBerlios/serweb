@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.6 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: of_select.inc,v 1.7 2006/03/08 15:20:22 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -54,7 +54,7 @@ class of_select extends of_element {
           }
         }
       }
-      $str .= ">" . (is_array($o) ? $o["label"] : $o) . "\n";
+      $str .= ">" . htmlspecialchars((is_array($o) ? $o["label"] : $o), ENT_QUOTES) . "\n";
     }
     $str .= "</select>";
     
