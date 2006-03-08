@@ -3,7 +3,7 @@
  * Application unit aliases
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.4 2006/01/23 14:15:35 kozlik Exp $
+ * @version   $Id: apu_aliases.php,v 1.5 2006/03/08 15:34:16 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -717,11 +717,15 @@ class apu_aliases extends apu_base_class{
 			foreach ($alowed_domain_names as $k => $v) 
 				$dom_options[]=array("label"=>$v, "value"=>$k);
 
+			$reg = &Creg::singleton();
+
 			$this->f->add_element(array("type"=>"text",
 			                             "name"=>"al_username",
 										 "size"=>16,
 										 "maxlength"=>64,
 										 "minlength"=>1,
+										 "valid_regex"=>"^".$reg->user."$",
+										 "valid_e"=>$lang_str['fe_not_valid_username'],
 										 "length_e"=>$lang_str['fe_not_filled_username'],
 			                             "value"=>isset($this->act_alias['username']) ? $this->act_alias['username'] : ""));
 	
