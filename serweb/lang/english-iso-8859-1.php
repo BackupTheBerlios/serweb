@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.39 2006/02/07 09:15:58 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.40 2006/03/08 15:35:42 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -60,6 +60,8 @@ $lang_str['fe_passwords_not_match'] =			"passwords not match";
 $lang_str['fe_not_filled_username'] = 			"You must fill username";
 $lang_str['fe_not_allowed_uri'] = 				"Not allowed sip address";
 $lang_str['fe_max_entries_reached'] = 			"Maximum number of entries reached";
+$lang_str['fe_not_valid_username'] = 			"not valid username";
+$lang_str['fe_not_valid_domainname'] = 			"not valid domainname";
 
 /* ------------------------------------------------------------*/
 /*      buttons                                                */

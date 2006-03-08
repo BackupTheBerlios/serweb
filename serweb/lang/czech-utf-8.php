@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.23 2006/02/07 09:15:58 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.24 2006/03/08 15:35:42 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -60,6 +60,8 @@ $lang_str['fe_passwords_not_match'] =			"hesla si neodpovídají";
 $lang_str['fe_not_filled_username'] = 			"uživatelské jméno musíte vyplnit";
 $lang_str['fe_not_allowed_uri'] = 				"Nepovolená SIP adresa";
 $lang_str['fe_max_entries_reached'] = 			"Dosažen maximální povolený počet položek";
+$lang_str['fe_not_valid_username'] = 			"not valid username";	//to translate 
+$lang_str['fe_not_valid_domainname'] = 			"not valid domainname";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      buttons                                                */
