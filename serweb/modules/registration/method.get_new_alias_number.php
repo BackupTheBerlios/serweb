@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_new_alias_number.php,v 1.1 2005/12/22 13:49:49 kozlik Exp $
+ * $Id: method.get_new_alias_number.php,v 1.2 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_get_new_alias_number {
@@ -39,8 +39,8 @@ class CData_Layer_get_new_alias_number {
 				//check if alias isn't used
 				$q="select count(username) 
 				    from ".$t_name." 
-					where ".$c->did." = '".$did."' and 
-					      ".$c->username." = '".$alias."'";
+					where ".$c->did."      = ".$this->sql_format($did,   "s")." and 
+					      ".$c->username." = ".$this->sql_format($alias, "s");
 
 				$res=$this->db->query($q);
 				if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -63,7 +63,7 @@ class CData_Layer_get_new_alias_number {
 
 			$q="select max(".$this->get_sql_cast_to_int_funct($c->username).") 
 			    from ".$t_name." 
-				where ".$c->did." = '".$did."' and 
+				where ".$c->did." = ".$this->sql_format($did, "s")." and 
 				      ".$c->username." REGEXP \"^[0-9]+$\"";
 
 

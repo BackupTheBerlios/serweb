@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_did_by_realm.php,v 1.3 2006/01/09 14:59:50 kozlik Exp $
+ * $Id: method.get_did_by_realm.php,v 1.4 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_did_by_realm {
@@ -85,7 +85,7 @@ class CData_Layer_get_did_by_realm {
 		
 		$q="select ".$c_d->did."
 		    from ".$t_d."
-			where ".$c_d->name." = '".$realm."' and 
+			where ".$c_d->name." = ".$this->sql_format($realm, "s")." and 
 			      ".$c_d->flags." & ".$flags_set." = ".$flags_set." and
 				  ".$c_d->flags." & ".$flags_clear." = 0 ";
 

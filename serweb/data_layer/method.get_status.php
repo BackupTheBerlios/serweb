@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_status.php,v 1.5 2005/12/14 16:30:19 kozlik Exp $
+ * $Id: method.get_status.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_status {
@@ -63,7 +63,7 @@ class CData_Layer_get_status {
 		$q="select ".$cu->uid." as uid
 		    from ".$tu_name."
 			where  ".$cu->did." = '".$did."' and 
-			       ".$cu->username." = '".$uname."' and 
+			       ".$cu->username." = ".$this->sql_format($uname, "s")." and 
 				  (".$cu->flags." & ".$flags_val.") = 0";
 
 		$res=$this->db->query($q);

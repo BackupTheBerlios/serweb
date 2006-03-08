@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_domain_attr.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: method.update_domain_attr.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_update_domain_attr {
@@ -54,16 +54,20 @@ class CData_Layer_update_domain_attr {
 			foreach($insert as $v){
 				$q = "insert into ".$t_name."(
 				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
-				      values ('".$did."', '".$name."', '".$v."', ".$type.", ".$flags.")";
+				      values (".$this->sql_format($did,   "s").", 
+					          ".$this->sql_format($name,  "s").", 
+							  ".$this->sql_format($v,     "s").", 
+							  ".$this->sql_format($type,  "n").", 
+							  ".$this->sql_format($flags, "n").")";
 				$res=$this->db->query($q);
 				if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 			}
 
 			foreach($delete as $v){
 				$q = "delete from ".$t_name." 
-				      where ".$c->name." = '".$name."' and 
-					        ".$c->value." = '".$v."' and 
-							".$c->did."  = '".$did."'";
+				      where ".$c->name."  = ".$this->sql_format($name, "s")." and 
+					        ".$c->value." = ".$this->sql_format($v,    "s")." and 
+							".$c->did."   = ".$this->sql_format($did,  "s");
 				$res=$this->db->query($q);
 				if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 			}
@@ -75,7 +79,11 @@ class CData_Layer_update_domain_attr {
 				
 				$q = "insert into ".$t_name."(
 				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
-				      values ('".$did."', '".$name."', '".$value."', ".$type.", ".$flags.")";
+				      values (".$this->sql_format($did,   "s").", 
+					          ".$this->sql_format($name,  "s").", 
+							  ".$this->sql_format($value, "s").", 
+							  ".$this->sql_format($type,  "n").", 
+							  ".$this->sql_format($flags, "n").")";
 			}
 			elseif($opt['old_value'] == $value) {
 				/* don't need update DB */
@@ -83,9 +91,9 @@ class CData_Layer_update_domain_attr {
 			}
 			else{
 				$q = "update ".$t_name." 
-				      set ".$c->value."  = '".$value."'
-				      where ".$c->name." = '".$name."' and 
-					        ".$c->did."  = '".$did."'";
+				      set ".$c->value."  = ".$this->sql_format($value, "s")."
+				      where ".$c->name." = ".$this->sql_format($name,  "s")." and 
+					        ".$c->did."  = ".$this->sql_format($did,   "s");
 			}
 
 			$res=$this->db->query($q);

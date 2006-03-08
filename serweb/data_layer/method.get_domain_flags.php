@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain_flags.php,v 1.1 2006/01/06 13:05:30 kozlik Exp $
+ * $Id: method.get_domain_flags.php,v 1.2 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_domain_flags {
@@ -39,7 +39,7 @@ class CData_Layer_get_domain_flags {
 
 		$q="select ".$cd->flags."
 		    from ".$td_name."
-			where ".$cd->did."='".$did."'"; 
+			where ".$cd->did."=".$this->sql_format($did, "s"); 
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}

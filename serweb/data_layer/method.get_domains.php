@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.4 2006/01/06 13:05:30 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -70,10 +70,10 @@ class CData_Layer_get_domains {
 	    
 
 		$qw="";
-		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did." LIKE '%".$o_filter['id']."%' and ";
-		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE '%".$o_filter['name']."%' and ";
-		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE '%".$o_filter['customer']."%' and ";
-		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = '".$o_filter['customer_id']."' and ";
+		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did."  LIKE ".$this->sql_format("%".$o_filter['id']."%",       "s")." and ";
+		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE ".$this->sql_format("%".$o_filter['name']."%",     "s")." and ";
+		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE ".$this->sql_format("%".$o_filter['customer']."%", "s")." and ";
+		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = ".$this->sql_format($o_filter['customer_id'], "s")." and ";
 
 		/* prepare SQL query */
 
@@ -82,7 +82,7 @@ class CData_Layer_get_domains {
 			$q_did_filter = $this->get_sql_in("d.".$cd->did, $o_did_filter, true)." and ";
 		}
 
-		$q1_deleted = $q2_deleted = $this->get_sql_bool(true);
+		$q1_deleted = $q2_deleted = $this->sql_format(true, "b");
 		if ($o_check_deleted){
 			$q1_deleted = " (d.".$cd->flags." & ".$fd['DB_DELETED'].") = 0";
 			$q2_deleted = " (d.".$ca->flags." & ".$fa['DB_DELETED'].") = 0";

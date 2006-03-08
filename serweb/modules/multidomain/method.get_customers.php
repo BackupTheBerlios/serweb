@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_customers.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.get_customers.php,v 1.4 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_get_customers {
@@ -41,8 +41,8 @@ class CData_Layer_get_customers {
 	    $o_exclude = (isset($opt['exclude'])) ? $opt['exclude'] : null;
 	    $o_single  = (isset($opt['single']))  ? $opt['single']  : null;
 
-		if (!is_null($o_single)) $qw=" where ".$cc->cid." = ".$o_single." "; 
-		elseif (!is_null($o_exclude)) $qw=" where ".$cc->cid." != ".$o_exclude." "; 
+		if (!is_null($o_single))      $qw=" where ".$cc->cid."  = ".$this->sql_format($o_single,  "n")." "; 
+		elseif (!is_null($o_exclude)) $qw=" where ".$cc->cid." != ".$this->sql_format($o_exclude, "n")." "; 
 		else $qw="";
 
 		if (is_null($o_single)){

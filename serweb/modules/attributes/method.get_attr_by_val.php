@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attr_by_val.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: method.get_attr_by_val.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_get_attr_by_val {
@@ -51,8 +51,8 @@ class CData_Layer_get_attr_by_val {
 
 
 		$qw = "";
-		if (isset($opt['name']))  $qw .= " and ".$c->name." = '".$opt['name']."'";
-		if (isset($opt['value'])) $qw .= " and ".$c->value." = '".$opt['value']."'";
+		if (isset($opt['name']))  $qw .= " and ".$c->name."  = ".$this->sql_format($opt['name'],  "s");
+		if (isset($opt['value'])) $qw .= " and ".$c->value." = ".$this->sql_format($opt['value'], "s");
 
 
 		/*

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_uri.php,v 1.1 2006/01/20 14:43:58 kozlik Exp $
+ * $Id: method.update_uri.php,v 1.2 2006/03/08 15:46:33 kozlik Exp $
  */
 
 class CData_Layer_update_uri {
@@ -39,17 +39,17 @@ class CData_Layer_update_uri {
 		$an = &$config->attr_names;
 
 		$qw = "";
-		if (isset($filter['uid']))      $qw .= $c->uid." = '".$filter['uid']."' and ";
-		if (isset($filter['did']))      $qw .= $c->did." = '".$filter['did']."' and ";
-		if (isset($filter['username'])) $qw .= $c->username." = '".$filter['username']."' and ";
-		if (isset($filter['flags']))    $qw .= $c->flags." = '".$filter['flags']."' and ";
+		if (isset($filter['uid']))      $qw .= $c->uid."      = ".$this->sql_format($filter['uid'],      "s")." and ";
+		if (isset($filter['did']))      $qw .= $c->did."      = ".$this->sql_format($filter['did'],      "s")." and ";
+		if (isset($filter['username'])) $qw .= $c->username." = ".$this->sql_format($filter['username'], "s")." and ";
+		if (isset($filter['flags']))    $qw .= $c->flags."    = ".$this->sql_format($filter['flags'],    "s")." and ";
 		$qw .= $this->get_sql_bool(true);
 
 		$qs = array();
-		if (isset($values['uid']))      $qs[] = $c->uid." = '".$values['uid']."'";
-		if (isset($values['did']))      $qs[] = $c->did." = '".$values['did']."'";
-		if (isset($values['username'])) $qs[] = $c->username." = '".$values['username']."'";
-		if (isset($values['flags']))    $qs[] = $c->flags." = '".$values['flags']."'";
+		if (isset($values['uid']))      $qs[] = $c->uid."      = ".$this->sql_format($values['uid'],      "s");
+		if (isset($values['did']))      $qs[] = $c->did."      = ".$this->sql_format($values['did'],      "s");
+		if (isset($values['username'])) $qs[] = $c->username." = ".$this->sql_format($values['username'], "s");
+		if (isset($values['flags']))    $qs[] = $c->flags."    = ".$this->sql_format($values['flags'],    "n");
 
 		$qs = implode(", ", $qs);
 

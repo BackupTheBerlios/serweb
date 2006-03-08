@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_domain_alias.php,v 1.2 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.del_domain_alias.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_del_domain_alias {
@@ -45,9 +45,9 @@ class CData_Layer_del_domain_alias {
 		}
 
 		$qw="";
-		if ($o_did)          $qw .= $cd->did.  "= '".$o_did."'";
+		if ($o_did)          $qw .= $cd->did.  "= ".$this->sql_format($o_did, "s");
 		if ($qw and $o_name) $qw .= " and ";
-		if ($o_name)         $qw .= $cd->name. "= '".$o_name."'";
+		if ($o_name)         $qw .= $cd->name. "= ".$this->sql_format($o_name, "s");
 		
 
 		$q="delete from ".$td_name."

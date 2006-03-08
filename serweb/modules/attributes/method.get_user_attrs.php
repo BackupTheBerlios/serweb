@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_user_attrs.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: method.get_user_attrs.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_get_user_attrs {
@@ -43,7 +43,7 @@ class CData_Layer_get_user_attrs {
 		$q="select ".$c->name." as name,
 		           ".$c->value." as value 
 		    from ".$t_name."
-			where  ".$c->uid." = '".$uid."' and 
+			where  ".$c->uid." = ".$this->sql_format($uid, "s")." and 
 			      (".$c->flags." & ".$flags_val.") = ".$flags_val;
 		
 		$res=$this->db->query($q);

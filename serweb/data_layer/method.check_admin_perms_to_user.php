@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_admin_perms_to_user.php,v 1.4 2005/12/22 13:17:46 kozlik Exp $
+ * $Id: method.check_admin_perms_to_user.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_check_admin_perms_to_user {
@@ -42,7 +42,7 @@ class CData_Layer_check_admin_perms_to_user {
 
 		$q = "select count(*) 
 		      from ".$t_name."
-			  where ".$c->uid." = '".$uid."' and 
+			  where ".$c->uid." = ".$this->sql_format($uid, "s")." and 
 			        ".$this->get_sql_in($c->did, $adm_domains, true)." and 
 					".$c->flags." & ".$f['DB_DELETED']." = 0";
 

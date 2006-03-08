@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attribute.php,v 1.4 2005/12/22 13:24:40 kozlik Exp $
+ * $Id: method.get_attribute.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_attribute {
@@ -60,9 +60,10 @@ class CData_Layer_get_attribute {
 		if ($opt_uid){
 			$flags_val = $fu['DB_FOR_SERWEB'];
 
-			$q="select ".$cu->value." as value from ".$t_ua."
-				where ".$cu->name." = '".$name."' and 
-				      ".$cu->uid." = '".$opt_uid."' and 
+			$q="select ".$cu->value." as value 
+			    from ".$t_ua."
+				where ".$cu->name." = ".$this->sql_format($name,    "s")." and 
+				      ".$cu->uid."  = ".$this->sql_format($opt_uid, "s")." and 
 					  (".$cu->flags." & ".$flags_val.") = ".$flags_val;
 			
 			$res=$this->db->query($q);
@@ -79,9 +80,10 @@ class CData_Layer_get_attribute {
 		if ($opt_did){
 			$flags_val = $fd['DB_FOR_SERWEB'];
 
-			$q="select ".$cd->value." as value from ".$t_da."
-				where ".$cd->name." = '".$name."' and 
-				      ".$cd->did." = '".$opt_did."' and 
+			$q="select ".$cd->value." as value 
+			    from ".$t_da."
+				where ".$cd->name." = ".$this->sql_format($name,    "s")." and 
+				      ".$cd->did."  = ".$this->sql_format($opt_did, "s")." and 
 					  (".$cd->flags." & ".$flags_val.") = ".$flags_val;
 			
 			$res=$this->db->query($q);
@@ -97,8 +99,10 @@ class CData_Layer_get_attribute {
 		 */
 		$flags_val = $fg['DB_FOR_SERWEB'];
 
-		$q="select ".$cg->value." as value from ".$t_ga."
-			where ".$cg->name." = '".$name."' and (".$cg->flags." & ".$flags_val.") = ".$flags_val;
+		$q="select ".$cg->value." as value 
+		    from ".$t_ga."
+			where ".$cg->name." = ".$this->sql_format($name, "s")." and 
+			      (".$cg->flags." & ".$flags_val.") = ".$flags_val;
 		
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

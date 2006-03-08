@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.set_domain_canon.php,v 1.1 2006/01/23 15:23:17 kozlik Exp $
+ * $Id: method.set_domain_canon.php,v 1.2 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_set_domain_canon {
@@ -39,7 +39,7 @@ class CData_Layer_set_domain_canon {
 
 		$q="update ".$td_name." 
 			set ".$cd->flags."=(".$cd->flags." & (~".$fd['DB_CANON']."))
-			where ".$cd->did."='".$did."'";
+			where ".$cd->did."=".$this->sql_format($did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -49,7 +49,8 @@ class CData_Layer_set_domain_canon {
 
 		$q="update ".$td_name." 
 			set ".$cd->flags."=(".$cd->flags." | ".$fd['DB_CANON'].")
-			where ".$cd->did."='".$did."' and ".$cd->name."='".$domname."'";
+			where ".$cd->did. "=".$this->sql_format($did, "s")." and 
+			      ".$cd->name."=".$this->sql_format($domname, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

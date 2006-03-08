@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_uri.php,v 1.4 2006/01/20 14:43:57 kozlik Exp $
+ * $Id: method.add_uri.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_add_uri {
@@ -67,7 +67,10 @@ class CData_Layer_add_uri {
 
 		$q = "insert into ".$t_name."(
 	             ".$c->uid.", ".$c->username.", ".$c->did.", ".$c->flags.")
-		      values ('".$uid."', '".$uname."', '".$did."', ".$flags.")";
+		      values (".$this->sql_format($uid,   "s").", 
+			          ".$this->sql_format($uname, "s").", 
+					  ".$this->sql_format($did,   "s").", 
+					  ".$this->sql_format($flags, "n").")";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

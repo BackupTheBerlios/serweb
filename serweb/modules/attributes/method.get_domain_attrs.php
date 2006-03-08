@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain_attrs.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: method.get_domain_attrs.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_get_domain_attrs {
@@ -43,7 +43,7 @@ class CData_Layer_get_domain_attrs {
 		$q="select ".$c->name." as name,
 		           ".$c->value." as value 
 		    from ".$t_name."
-			where  ".$c->did." = '".$did."' and 
+			where  ".$c->did." = ".$this->sql_format($did, "s")." and 
 			      (".$c->flags." & ".$flags_val.") = ".$flags_val;
 		
 		$res=$this->db->query($q);

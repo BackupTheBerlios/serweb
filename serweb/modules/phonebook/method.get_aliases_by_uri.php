@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.2 2006/01/23 14:12:29 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
@@ -58,8 +58,8 @@ class CData_Layer_get_aliases_by_uri {
 
 		$q="select ".$cu->uid." as uid
 		    from ".$tu_name."
-			where  ".$cu->did." = '".$did."' and 
-			       ".$cu->username." = '".$uname."' and 
+			where  ".$cu->did."      = ".$this->sql_format($did,   "s")." and 
+			       ".$cu->username." = ".$this->sql_format($uname, "s")." and 
 				  (".$cu->flags." & ".$flags_val.") = 0";
 
 		$res=$this->db->query($q);

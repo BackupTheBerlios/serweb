@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_domain.php,v 1.4 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.delete_domain.php,v 1.5 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_delete_domain {
@@ -36,7 +36,7 @@ class CData_Layer_delete_domain {
 		$fd = &$config->data_sql->domain->flag_values;
 
 		$q="delete from ".$td_name." 
-			where ".$cd->did."='".$did."'";
+			where ".$cd->did."=".$this->sql_format($did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -47,7 +47,7 @@ class CData_Layer_delete_domain {
 		}
 
 		$q="delete from ".$ta_name." 
-			where ".$ca->did."='".$did."'";
+			where ".$ca->did."=".$this->sql_format($did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.4 2006/01/13 09:25:58 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.5 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -67,18 +67,22 @@ class CData_Layer_update_customer {
 					   ".$cc->cid.", ".$cc->name.", ".$cc->address.", ".$cc->email.", ".$cc->phone."
 			    ) 
 				values (
-					   ".$next_id.", '".$values['name']."', '".$values['address']."', '".$values['email']."', '".$values['phone']."'
+					   ".$this->sql_format($next_id,           "n").", 
+					   ".$this->sql_format($values['name'],    "s").", 
+					   ".$this->sql_format($values['address'], "s").", 
+					   ".$this->sql_format($values['email'],   "s").", 
+					   ".$this->sql_format($values['phone'],   "s")."
 				 )";
 				 
 			$opt['new_id'] = $next_id;
 		}
 		else {
 			$q="update ".$tc_name." 
-			    set ".$cc->name."='".$values['name']."',  
-			        ".$cc->address."='".$values['address']."', 
-			        ".$cc->email."='".$values['email']."', 
-			        ".$cc->phone."='".$values['phone']."'
-				where ".$cc->cid."='".$opt['primary_key']['cid']."'";
+			    set ".$cc->name."   =".$this->sql_format($values['name'],    "s").",  
+			        ".$cc->address."=".$this->sql_format($values['address'], "s").", 
+			        ".$cc->email."  =".$this->sql_format($values['email'],   "s").", 
+			        ".$cc->phone."  =".$this->sql_format($values['phone'],   "s")."
+				where ".$cc->cid."  =".$this->sql_format($opt['primary_key']['cid'], "n");
 		}
 
 

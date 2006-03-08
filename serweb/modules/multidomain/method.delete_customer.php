@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_customer.php,v 1.2 2005/12/23 09:45:18 kozlik Exp $
+ * $Id: method.delete_customer.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_delete_customer {
@@ -36,7 +36,7 @@ class CData_Layer_delete_customer {
 
 
 		$q="delete from ".$tc_name." 
-			where ".$cc->cid."='".$opt['primary_key']['cid']."'";
+			where ".$cc->cid."=".$this->sql_format($opt['primary_key']['cid'], "n");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

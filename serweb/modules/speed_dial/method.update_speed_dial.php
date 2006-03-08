@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.3 2005/12/14 16:19:58 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.4 2006/03/08 15:46:28 kozlik Exp $
  */
 
 /*
@@ -144,11 +144,11 @@ class CData_Layer_update_speed_dial {
 				   ".$c->new_uri."
 		    ) 
 			values (
-			       ".$id.", 
-			       '".$uid."', 
-				   '".$values['dial_username']."', 
-				   '".$values['dial_did']."', 
-				   '".$values['new_uri']."'
+			       ".$this->sql_format($id,  "n").", 
+			       ".$this->sql_format($uid, "s").", 
+				   ".$this->sql_format($values['dial_username'], "s").", 
+				   ".$this->sql_format($values['dial_did'],      "s").", 
+				   ".$this->sql_format($values['new_uri'],       "s")."
 			 )";
 
 		$res=$this->db->query($q);
@@ -174,10 +174,10 @@ class CData_Layer_update_speed_dial {
 				   ".$ca->flags."
 		    ) 
 			values (
-			       ".$id.", 
-			       '".$name."', 
-				   '".$value."', 
-				   '".$fa['DB_FOR_SERWEB']."'
+			       ".$this->sql_format($id,    "n").", 
+			       ".$this->sql_format($name,  "s").", 
+				   ".$this->sql_format($value, "s").", 
+				   ".$this->sql_format($fa['DB_FOR_SERWEB'], "n")."
 			 )";
 
 		$res=$this->db->query($q);
@@ -197,14 +197,14 @@ class CData_Layer_update_speed_dial {
 		$ca = &$config->data_sql->sd_attrs->cols;
 
 		$q="delete from ".$t_name." 
-			where ".$c->id." = ".$id." and 
-				  ".$c->uid." = '".$uid."'";
+			where ".$c->id."  = ".$this->sql_format($id,  "n")." and 
+				  ".$c->uid." = ".$this->sql_format($uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 
 		$q="delete from ".$ta_name." 
-			where ".$ca->id." = ".$id;
+			where ".$ca->id." = ".$this->sql_format($id, "n");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -221,8 +221,8 @@ class CData_Layer_update_speed_dial {
 		$ca = &$config->data_sql->sd_attrs->cols;
 
 		$q="delete from ".$ta_name." 
-			where ".$ca->id." = ".$id." and 
-			      ".$ca->name." = '".$name."'";
+			where ".$ca->id."   = ".$this->sql_format($id,   "n")." and 
+			      ".$ca->name." = ".$this->sql_format($name, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -248,21 +248,21 @@ class CData_Layer_update_speed_dial {
 					   ".$c->new_uri."
 			    ) 
 				values (
-					   ".$id.",
-				       '".$uid."', 
-					   '".$values['dial_username']."', 
-					   '".$values['dial_did']."', 
-					   '".$values['new_uri']."'
+					   ".$this->sql_format($id,  "n").",
+				       ".$this->sql_format($uid, "s").", 
+					   ".$this->sql_format($values['dial_username'], "s").", 
+					   ".$this->sql_format($values['dial_did'],      "s").", 
+					   ".$this->sql_format($values['new_uri'],       "s")."
 				 )";
 		}
 		else{
 		// for other databases do insert or update
 			$q="update ".$t_name." 
-			    set ".$c->new_uri."='".$values['new_uri']."', 
-					".$c->dial_username."='".$values['dial_username']."', 
-					".$c->dial_did."='".$values['dial_did']."' 
-				where ".$c->id." = ".$id." and 
-					  ".$c->uid." = '".$uid."'";
+			    set ".$c->new_uri."      = ".$this->sql_format($values['new_uri'],       "s").", 
+					".$c->dial_username."= ".$this->sql_format($values['dial_username'], "s").", 
+					".$c->dial_did."     = ".$this->sql_format($values['dial_did'],      "s")." 
+				where ".$c->id."  = ".$this->sql_format($id,  "n")." and 
+					  ".$c->uid." = ".$this->sql_format($uid, "s");
 		}
 	
 		$res=$this->db->query($q);
@@ -283,9 +283,9 @@ class CData_Layer_update_speed_dial {
 		           bacause it cause insert into sd_attrs instead of update
 		 */
 		$q="update ".$ta_name." 
-		    set ".$ca->value."='".$value."'
-			where ".$ca->id." = ".$id." and 
-				  ".$ca->name." = '".$name."'";
+		    set ".$ca->value."  = ".$this->sql_format($value, "s")."
+			where ".$ca->id."   = ".$this->sql_format($id,   "n")." and 
+				  ".$ca->name." = ".$this->sql_format($name, "s");
 	
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}

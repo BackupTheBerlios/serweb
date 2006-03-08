@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_acl_of_user.php,v 1.1 2005/08/24 11:57:51 kozlik Exp $
+ * $Id: method.update_acl_of_user.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_update_ACL_of_user {
@@ -15,11 +15,14 @@ class CData_Layer_update_ACL_of_user {
 			$att=$this->get_indexing_sql_insert_attribs($user);
 			
 			$q="insert into ".$config->data_sql->table_grp." (".$att['attributes'].", grp, last_modified) ".
-				"values (".$att['values'].", '".$grp."', now())";
+				"values (".$att['values'].", 
+				         ".$this->sql_format($grp, "s").", 
+						 now())";
 		}
 		else
-			$q="delete from ".$config->data_sql->table_grp." where ".
-				$this->get_indexing_sql_where_phrase($user)." and grp='".$grp."'";
+			$q="delete from ".$config->data_sql->table_grp." 
+			    where ".$this->get_indexing_sql_where_phrase($user)." and 
+				       grp = ".$this->sql_format($grp, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

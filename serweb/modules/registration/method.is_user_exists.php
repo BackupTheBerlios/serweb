@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_user_exists.php,v 1.1 2005/12/22 13:49:49 kozlik Exp $
+ * $Id: method.is_user_exists.php,v 1.2 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_is_user_exists {
@@ -47,7 +47,7 @@ class CData_Layer_is_user_exists {
 
 			/* select all credentials with given username */
 			$q="select ".$cc->realm." from ".$tc_name." 
-			    where lower(".$cc->uname.")=lower('".$uname."')";
+			    where lower(".$cc->uname.")=lower(".$this->sql_format($uname, "s").")";
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return 0;}
 
@@ -69,8 +69,8 @@ class CData_Layer_is_user_exists {
 			 *	Credentials not found, check uri table 
 			 */
 			$q="select count(*) from ".$tu_name." 
-			    where lower(".$cu->username.")=lower('".$uname."') and 
-				      lower(".$cu->did.")=lower('".$did."')";
+			    where lower(".$cu->username.")=lower(".$this->sql_format($uname, "s").") and 
+				      lower(".$cu->did.")=lower(".$this->sql_format($did, "s").")";
 			$res=$this->db->query($q);
 	
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return 0;}

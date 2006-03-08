@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_aliases.php,v 1.5 2006/01/20 14:43:57 kozlik Exp $
+ * $Id: method.get_aliases.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_aliases {
@@ -38,13 +38,13 @@ class CData_Layer_get_aliases {
 
 		$qw = "";
 		if (!is_null($uid)) 
-			$qw .= $c->uid." = '".$uid."' and ";
+			$qw .= $c->uid." = ".$this->sql_format($uid, "s")." and ";
 
 		if (!empty($opt['filter']['did'])) 
-			$qw .= $c->did." = '".$opt['filter']['did']."' and ";
+			$qw .= $c->did." = ".$this->sql_format($opt['filter']['did'], "s")." and ";
 
 		if (!empty($opt['filter']['username'])) 
-			$qw .= $c->username." = '".$opt['filter']['username']."' and ";
+			$qw .= $c->username." = ".$this->sql_format($opt['filter']['username'], "s")." and ";
 
 		$qw .= $this->get_sql_bool(true);
 

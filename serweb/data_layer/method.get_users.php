@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.12 2006/02/08 10:42:35 kozlik Exp $
+ * $Id: method.get_users.php,v 1.13 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -91,12 +91,12 @@ class CData_Layer_get_users {
 		/* get users */
 
 		$query_c="";
-		if (!empty($filter['usrnm']))  $query_c .= "cr.".$cc->uname." like '%".$filter['usrnm']."%' and ";
-		if (!empty($filter['realm']))  $query_c .= "cr.".$cc->realm." like '%".$filter['realm']."%' and ";
-		if (!empty($filter['fname']))  $query_c .= "afn.".$ca->value." like '%".$filter['fname']."%' and ";
-		if (!empty($filter['lname']))  $query_c .= "aln.".$ca->value." like '%".$filter['lname']."%' and ";
-		if (!empty($filter['email']))  $query_c .= "aem.".$ca->value." like '%".$filter['email']."%' and ";
-		if (!empty($filter['uid']))    $query_c .= "cr.".$cc->uid." like '%".$filter['uid']."%' and ";
+		if (!empty($filter['usrnm']))  $query_c .= "cr.".$cc->uname."  like ".$this->sql_format("%".$filter['usrnm']."%", "s")." and ";
+		if (!empty($filter['realm']))  $query_c .= "cr.".$cc->realm."  like ".$this->sql_format("%".$filter['realm']."%", "s")." and ";
+		if (!empty($filter['fname']))  $query_c .= "afn.".$ca->value." like ".$this->sql_format("%".$filter['fname']."%", "s")." and ";
+		if (!empty($filter['lname']))  $query_c .= "aln.".$ca->value." like ".$this->sql_format("%".$filter['lname']."%", "s")." and ";
+		if (!empty($filter['email']))  $query_c .= "aem.".$ca->value." like ".$this->sql_format("%".$filter['email']."%", "s")." and ";
+		if (!empty($filter['uid']))    $query_c .= "cr.".$cc->uid."    like ".$this->sql_format("%".$filter['uid']."%",   "s")." and ";
 
 		if (!$opt_get_disabled) $query_c .= "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0 and ";
 
@@ -125,7 +125,7 @@ class CData_Layer_get_users {
 		if(!empty($filter['alias'])){
 			$q_uri = " join ".$tu_name." uri 
 			            on (cr.".$cc->uid." = uri.".$cu->uid." and 
-						    uri.".$cu->username." like '%".$filter['alias']."%') ";
+						    uri.".$cu->username." like ".$this->sql_format("%".$filter['alias']."%", "s").") ";
 		}
 
 		$q_suri = "";
@@ -144,7 +144,7 @@ class CData_Layer_get_users {
 		
 			$q_suri = " join ".$tu_name." suri 
 			            on (cr.".$cc->uid." = suri.".$cu->uid." and 
-						    suri.".$cu->username." = '".$s_uname."' and
+						    suri.".$cu->username." = ".$this->sql_format($s_uname, "s")." and
 							".$qs_did.") ";
 		}
 
@@ -257,7 +257,7 @@ class CData_Layer_get_users {
 					foreach($uris as $val) $alias_arr[] = $val->get_username();
 				
 					$out[$i]['aliases'] = implode(", ", $alias_arr);
-					$out[$i]['uris'] = &$uris;
+					$out[$i]['uris'] = $uris;
 				}
 
 				if ($opt_get_sip_uri){

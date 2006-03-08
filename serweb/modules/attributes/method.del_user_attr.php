@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_user_attr.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: method.del_user_attr.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
  */
 
 class CData_Layer_del_user_attr {
@@ -35,8 +35,8 @@ class CData_Layer_del_user_attr {
 
 
 		$q = "delete from ".$t_name." 
-		      where ".$c->name." = '".$name."' and 
-			        ".$c->uid."  = '".$uid."'";
+		      where ".$c->name." = ".$this->sql_format($name, "s")." and 
+			        ".$c->uid."  = ".$this->sql_format($uid,  "s");
 		
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

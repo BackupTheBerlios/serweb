@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_domain_alias.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.add_domain_alias.php,v 1.4 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_add_domain_alias {
@@ -59,9 +59,9 @@ class CData_Layer_add_domain_alias {
 				   ".$cd->flags."
 		    ) 
 			values (
-				   '".$values['id']."', 
-				   '".$values['name']."',
-				   ".$flags."
+				   ".$this->sql_format($values['id'], "s").", 
+				   ".$this->sql_format($values['name'], "s").",
+				   ".$this->sql_format($flags, "n")."
 			 )";
 
 		$res=$this->db->query($q);

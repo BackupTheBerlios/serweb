@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_credentials.php,v 1.2 2006/01/12 14:40:47 kozlik Exp $
+ * $Id: method.add_credentials.php,v 1.3 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_add_credentials {
@@ -56,8 +56,13 @@ class CData_Layer_add_credentials {
 		$q = "insert into ".$t_name."(
 	             ".$c->uid.", ".$c->uname.", ".$c->realm.", ".$c->password.", 
 				 ".$c->ha1.", ".$c->ha1b.", ".$c->flags.")
-		      values ('".$uid."', '".$uname."', '".$realm."', '".$passw."', 
-			          '".$ha1."', '".$ha1b."', ".$flags.")";
+		      values (".$this->sql_format($uid,   "s").", 
+			          ".$this->sql_format($uname, "s").", 
+					  ".$this->sql_format($realm, "s").", 
+					  ".$this->sql_format($passw, "s").", 
+			          ".$this->sql_format($ha1,   "s").", 
+					  ".$this->sql_format($ha1b,  "s").", 
+					  ".$this->sql_format($flags, "n").")";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

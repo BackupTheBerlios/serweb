@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domain.php,v 1.5 2005/12/22 13:21:21 kozlik Exp $
+ * $Id: method.get_domain.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_domain {
@@ -51,9 +51,9 @@ class CData_Layer_get_domain {
 	    $o_order_desc = (isset($opt['order_desc'])) ? "desc" : "";
 	    $o_check_deleted =  (isset($opt['check_deleted_flag'])) ? $opt['check_deleted_flag'] : true;
 
-		$qw=" ".$this->get_sql_bool(true)." ";
+		$qw = $this->sql_format(true, "b");
 		foreach($o_filter as $k=>$v){
-			$qw .= "and ".$cd->$k." = '".$v."' ";
+			$qw .= " and ".$cd->$k." = ".$this->sql_format($v, "s");
 		}
 
 		$q_deleted = "";

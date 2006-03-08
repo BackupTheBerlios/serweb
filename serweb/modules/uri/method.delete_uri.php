@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_uri.php,v 1.2 2006/01/20 14:43:58 kozlik Exp $
+ * $Id: method.delete_uri.php,v 1.3 2006/03/08 15:46:28 kozlik Exp $
  */
 
 class CData_Layer_delete_uri {
@@ -41,10 +41,10 @@ class CData_Layer_delete_uri {
 		$f = &$config->data_sql->uri->flag_values;
 
 		$q = "delete from ".$t_name."
-		      where ".$c->uid." = '".$uid."' and 
-		            ".$c->username." = '".$username."' and 
-		            ".$c->did." = '".$did."' and 
-		            ".$c->flags." = '".$flags."'";
+		      where ".$c->uid."      = ".$this->sql_format($uid,      "s")." and 
+		            ".$c->username." = ".$this->sql_format($username, "s")." and 
+		            ".$c->did."      = ".$this->sql_format($did,      "s")." and 
+		            ".$c->flags."    = ".$this->sql_format($flags,    "n");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

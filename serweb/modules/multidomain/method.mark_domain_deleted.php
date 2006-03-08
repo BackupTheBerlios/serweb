@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.mark_domain_deleted.php,v 1.2 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.mark_domain_deleted.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_mark_domain_deleted {
@@ -60,7 +60,7 @@ class CData_Layer_mark_domain_deleted {
 
 		$q = "update ".$td_name." 
 		      set ".$cd->flags." = ".$cd->flags." | ".$fd['DB_DELETED']."
-			  where ".$cd->did." = '".$o_did."'";
+			  where ".$cd->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -71,7 +71,7 @@ class CData_Layer_mark_domain_deleted {
 
 		$q = "update ".$ta_name." 
 		      set ".$ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED']."
-			  where ".$ca->did." = '".$o_did."'";
+			  where ".$ca->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -83,7 +83,7 @@ class CData_Layer_mark_domain_deleted {
 
 		$q = "update ".$tu_name." 
 		      set ".$cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED']." 
-			  where ".$cu->did." = '".$o_did."'";
+			  where ".$cu->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

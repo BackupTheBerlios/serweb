@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.mark_user_deleted.php,v 1.3 2005/12/22 12:45:00 kozlik Exp $
+ * $Id: method.mark_user_deleted.php,v 1.4 2006/03/08 15:46:28 kozlik Exp $
  */
 
 class CData_Layer_mark_user_deleted {
@@ -66,7 +66,7 @@ class CData_Layer_mark_user_deleted {
 
 		$q = "update ".$tc_name." 
 		      set ".$cc->flags." = ".$cc->flags." | ".$fc['DB_DELETED']." 
-			  where ".$cc->uid." = '".$o_uid."'";
+			  where ".$cc->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -78,7 +78,7 @@ class CData_Layer_mark_user_deleted {
 
 		$q = "update ".$ta_name." 
 		      set ".$ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED']." 
-			  where ".$ca->uid." = '".$o_uid."'";
+			  where ".$ca->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -90,7 +90,7 @@ class CData_Layer_mark_user_deleted {
 
 		$q = "update ".$tu_name." 
 		      set ".$cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED']." 
-			  where ".$cu->uid." = '".$o_uid."'";
+			  where ".$cu->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

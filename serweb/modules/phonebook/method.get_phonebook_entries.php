@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.5 2006/01/23 14:15:35 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.6 2006/03/08 15:46:27 kozlik Exp $
  */
 
 /*
@@ -52,7 +52,8 @@ class CData_Layer_get_phonebook_entries {
 					
 		}
 		
-		if (!is_null($pbid)) $qw=" and id!=".$pbid." "; else $qw="";
+		if (!is_null($pbid)) $qw=" and id!=".$this->sql_format($pbid, "n")." "; 
+		else $qw="";
 
 		/* get num rows */		
 		$q="select count(*) from ".$config->data_sql->table_phonebook.
@@ -67,8 +68,10 @@ class CData_Layer_get_phonebook_entries {
 		/* if act_row is bigger then num_rows, correct it */
 		$this->correct_act_row();
 	
-		$q="select id, fname, lname, sip_uri from ".$config->data_sql->table_phonebook.
-			" where ".$this->get_indexing_sql_where_phrase($user).$qw." order by lname".
+		$q="select id, fname, lname, sip_uri 
+		    from ".$config->data_sql->table_phonebook." 
+			where ".$this->get_indexing_sql_where_phrase($user).$qw." 
+			order by lname".
 			$this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.enable_domain.php,v 1.4 2006/01/06 13:05:30 kozlik Exp $
+ * $Id: method.enable_domain.php,v 1.5 2006/03/08 15:46:27 kozlik Exp $
  */
 
 class CData_Layer_enable_domain {
@@ -48,7 +48,7 @@ class CData_Layer_enable_domain {
 		$q = "update ".$td_name." set ";
 		if ($o_disable)	$q .= $cd->flags." = ".$cd->flags." | ".$fd['DB_DISABLED'];
 		else            $q .= $cd->flags." = ".$cd->flags." & ~".$fd['DB_DISABLED'];
-		$q .= " where ".$cd->did." = '".$o_did."'";
+		$q .= " where ".$cd->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

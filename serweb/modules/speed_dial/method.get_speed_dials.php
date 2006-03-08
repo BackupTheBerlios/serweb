@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_speed_dials.php,v 1.3 2005/12/14 16:19:58 kozlik Exp $
+ * $Id: method.get_speed_dials.php,v 1.4 2006/03/08 15:46:28 kozlik Exp $
  */
 
 /**
@@ -119,7 +119,7 @@ class CData_Layer_get_speed_dials {
 			         (sd.".$c->id." = fn.".$ca->id." and fn.".$ca->name." = '".$an['sd_fname']."')
 			       left outer join ".$ta_name." ln on 
 			         (sd.".$c->id." = ln.".$ca->id." and ln.".$ca->name." = '".$an['sd_lname']."')
-			where sd.".$c->uid." = '".$uid."' ".$where_phrase.
+			where sd.".$c->uid." = ".$this->sql_format($uid, "s")." ".$where_phrase.
 		   " order by ".$q_ord.
 		   $q_limit;
 		
@@ -318,7 +318,7 @@ class CData_Layer_get_speed_dials {
 		/* get used speed dials */	
 		$q="select ".$c->dial_username." as dial_username 
 		    from ".$t_name.
-			" where ".$c->uid." = '".$uid."' order by dial_username";
+			" where ".$c->uid." = ".$this->sql_format($uid, "s")." order by dial_username";
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -381,7 +381,7 @@ class CData_Layer_get_speed_dials {
 		$c  = &$config->data_sql->speed_dial->cols;
 
 		$q="select count(*) from ".$t_name.
-			" where ".$c->uid." = '".$uid."' ".$where_phrase;
+			" where ".$c->uid." = ".$this->sql_format($uid, "s")." ".$where_phrase;
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}

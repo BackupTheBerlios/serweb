@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains_of_admin.php,v 1.2 2005/12/22 13:21:22 kozlik Exp $
+ * $Id: method.get_domains_of_admin.php,v 1.3 2006/03/08 15:46:25 kozlik Exp $
  */
 
 class CData_Layer_get_domains_of_admin {
@@ -36,8 +36,8 @@ class CData_Layer_get_domains_of_admin {
 
 		$q="select ".$c->did." 
 		    from ".$t_name."
-			where  ".$c->name." = '".$an['admin']."' and 
-			       ".$c->value." = '".$uid."' and 
+			where  ".$c->name."  = '".$an['admin']."' and 
+			       ".$c->value." = ".$this->sql_format($uid, "s")." and 
 			      (".$c->flags." & ".$f['DB_DELETED'].") = 0 and
 				  (".$c->flags." & ".$f['DB_FOR_SERWEB'].") = ".$f['DB_FOR_SERWEB'];
 
