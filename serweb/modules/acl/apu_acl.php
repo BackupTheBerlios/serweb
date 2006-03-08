@@ -3,7 +3,7 @@
  * Application unit acl (Access Control List)
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_acl.php,v 1.2 2005/12/22 13:26:27 kozlik Exp $
+ * @version   $Id: apu_acl.php,v 1.3 2006/03/08 15:38:37 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -109,7 +109,7 @@ class apu_acl extends apu_base_class{
 	
 			//if state of checkbox was changed
 			if ($_POST["acl_chk_".$row] != $_POST["acl_hidden_".$row]){
-				if (!$data->update_ACL_of_user($this->user_id, $row, $_POST["acl_chk_".$row]?'set':'del', $errors)) break;
+				if (false === $data->update_ACL_of_user($this->user_id, $row, $_POST["acl_chk_".$row]?'set':'del', $errors)) return false;
 			}
 		}
 
