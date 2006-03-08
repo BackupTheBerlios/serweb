@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.13 2006/01/23 15:23:17 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.14 2006/03/08 15:32:57 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -767,11 +767,14 @@ class apu_domain extends apu_base_class{
 			if (false === $this->get_domain_names($errors)) return false;
 		}
 
+		$reg = &CReg::singleton();
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"do_new_name",
 									 "size"=>16,
 									 "maxlength"=>128,
-		                             "value"=>""));
+		                             "value"=>"",
+									 "valid_regex"=>"^(".$reg->host.")?$",
+									 "valid_e"=>$lang_str['fe_not_valid_domainname']));
 		
 		$this->f->add_extra_submit("do_okey_add", $this->opt['form_add_submit']);
 
