@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.18 2006/02/09 09:45:52 kozlik Exp $
+ * $Id: data_layer.php,v 1.19 2006/03/08 15:30:45 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -774,7 +774,7 @@ class CData_Layer{
 	function get_indexing_sql_where_phrase($user, $uuid_col='uid', $uname_col='username', $domain_col='domain'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
-			return $uuid_col."='".$user->uuid."'";
+			return $uuid_col."='".addslashes($user->uuid)."'";
 		else 
 			return "(".$uname_col."='".addslashes($user->uname)."' and ".$domain_col."='".addslashes($user->domain)."')";
 	}
@@ -784,9 +784,9 @@ class CData_Layer{
 	function get_indexing_sql_where_phrase_uri($user, $uuid_col='uid', $r_uri_col='r_uri'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
-			return $uuid_col."='".$user->uuid."'";
+			return $uuid_col."='".addslashes($user->uuid)."'";
 		else 
-			return $r_uri_col." like 'sip:".$user->uname."@".$user->domain."%'";
+			return $r_uri_col." like 'sip:".addslashes($user->uname)."@".addslashes($user->domain)."%'";
 	}
 	
 
@@ -797,7 +797,7 @@ class CData_Layer{
 
 		if ($config->users_indexed_by=='uuid') {
 			$attributes=$uuid_col;
-			$values="'".$user->uuid."'";
+			$values="'".addslashes($user->uuid)."'";
 		}
 		else{
 			$attributes=$uname_col.", ".$domain_col;
@@ -909,7 +909,7 @@ class CData_Layer{
 		if (!count($set)) return (" ".$this->get_sql_bool(false)." ");
 
 		if ($quote){
-			foreach($set as $k=>$v) $set[$k] = "'".$v."'";
+			foreach($set as $k=>$v) $set[$k] = "'".addslashes($v)."'";
 		}
 		
 		$set = implode(", ", $set);
@@ -951,10 +951,10 @@ class CData_Layer{
 			if (is_null($val)) return "NULL";
 		case "b":	
 			if ($this->db_host['parsed']['phptype'] == 'mysql'){
-				return $argument ? "1" : "0";
+				return $val ? "1" : "0";
 			}
 			else {
-				return $argument ? "true" : "false";
+				return $val ? "true" : "false";
 			}
 		default:
 			return "";
