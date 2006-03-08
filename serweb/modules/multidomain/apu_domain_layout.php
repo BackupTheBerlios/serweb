@@ -3,7 +3,7 @@
  * Application unit domain_layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_layout.php,v 1.6 2005/11/14 15:36:05 kozlik Exp $
+ * @version   $Id: apu_domain_layout.php,v 1.7 2006/03/08 15:44:48 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -226,7 +226,7 @@ class apu_domain_layout extends apu_base_class{
 			fwrite($fp, "; <?php die( 'Please do not access this page directly.' ); ?".">\n");
 		}
 	
-		fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
+		fwrite($fp, $_POST['dl_content']);
 		fclose($fp);
 	}
 
@@ -552,15 +552,12 @@ class apu_domain_layout extends apu_base_class{
 	 */
 	function validate_form(&$errors){
 
-		if (ini_get('magic_quotes_gpc'))
-			$_POST['dl_content'] = stripslashes($_POST['dl_content']);
-	
 		if (false === parent::validate_form($errors)) return false;
 
 		/* check syntax of inifile */
 		if (!empty($this->fileinfo['ini']) and $this->opt['tmp_file']){
 			$fp=fopen($this->opt['tmp_file'], "w");
-			fwrite($fp, html_entity_decode($_POST['dl_content'], ENT_QUOTES));
+			fwrite($fp, $_POST['dl_content']);
 			fclose($fp);
 			
 			$this->error_in_ini_file = false;
