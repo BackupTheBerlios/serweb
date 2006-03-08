@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.27 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: users.php,v 1.28 2006/03/08 15:31:40 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -39,6 +39,7 @@ $smarty->assign('xxl_support', isModuleLoaded('xxl'));
 $sc->set_opt('use_chk_onlineonly', true);
 $sc->set_opt('get_user_aliases', true);
 $sc->set_opt('sess_seed', 0);
+$sc->set_opt('allow_edit', 1);
 if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 
 $controler->add_apu($sc);
