@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_whitelist_entry.php,v 1.1 2005/08/24 12:17:31 kozlik Exp $
+ * $Id: method.del_whitelist_entry.php,v 1.2 2006/03/09 11:51:52 kozlik Exp $
  */
 
 /*
@@ -29,7 +29,7 @@ class CData_Layer_del_whitelist_entry {
 
 
 		$q="delete from ".$config->data_sql->table_whitelist." 
-			where uri='".$opt['primary_key']['uri']."' and 
+			where uri=".$this->sql_format($opt['primary_key']['uri'], "s")." and 
 				  ".$this->get_indexing_sql_where_phrase($user);
 
 		$res=$this->db->query($q);

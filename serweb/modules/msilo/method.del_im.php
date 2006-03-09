@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_im.php,v 1.2 2005/12/27 16:13:48 kozlik Exp $
+ * $Id: method.del_im.php,v 1.3 2006/03/09 11:51:52 kozlik Exp $
  */
 
 class CData_Layer_del_im {
@@ -24,8 +24,8 @@ class CData_Layer_del_im {
 		}
 
 		$q="delete from ".$t_name." 
-		    where ".$c->mid." = ".$mid." and 
-			      ".$c->uid." = '".$uid."'";
+		    where ".$c->mid." = ".$this->sql_format($mid, "n")." and 
+			      ".$c->uid." = ".$this->sql_format($uid, "s");
 		    
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

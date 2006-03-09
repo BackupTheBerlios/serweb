@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_ims.php,v 1.3 2005/12/27 16:13:48 kozlik Exp $
+ * $Id: method.get_ims.php,v 1.4 2006/03/09 11:51:52 kozlik Exp $
  */
 
 class CData_Layer_get_ims {
@@ -20,7 +20,7 @@ class CData_Layer_get_ims {
 
 		/* get num rows */		
 		$q="select count(*) from ".$t_name."
-		    where ".$c->uid." = '".$uid."'";
+		    where ".$c->uid." = ".$this->sql_format($uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -34,7 +34,7 @@ class CData_Layer_get_ims {
 
 		$q="select ".$c->mid.", ".$c->from.", ".$c->inc_time.", ".$c->body." 
 		    from ".$t_name.
-			" where ".$c->uid." = '".$uid."'".
+			" where ".$c->uid." = ".$this->sql_format($uid, "s").
 			$this->get_sql_limit_phrase();
 			
 		$res=$this->db->query($q);

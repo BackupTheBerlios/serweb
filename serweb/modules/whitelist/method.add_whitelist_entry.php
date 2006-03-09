@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_whitelist_entry.php,v 1.1 2005/08/24 12:17:31 kozlik Exp $
+ * $Id: method.add_whitelist_entry.php,v 1.2 2006/03/09 11:51:52 kozlik Exp $
  */
 
 /*
@@ -32,7 +32,7 @@ class CData_Layer_add_whitelist_entry {
 		    ) 
 			values (
 			       ".$att['values'].", 
-				   '".$values['uri']."'
+				   ".$this->sql_format($values['uri'], "s")."
 			 )";
 
 		$res=$this->db->query($q);
