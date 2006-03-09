@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.4 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.5 2006/03/09 09:17:53 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
 
@@ -68,7 +68,7 @@
 
 {else}
 
-	<h2 class="swTitle">{$lang_str.change_aliases_of_user}: {$uname}</h2>
+	<h2 class="swTitle">{$lang_str.change_aliases_of_user}: {$uname|escape}</h2>
 	
 	<div class="swForm">
 	{$form.start}

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_message_store.tpl,v 1.3 2005/04/21 15:09:46 kozlik Exp $ *}
+{* $Id: u_message_store.tpl,v 1.4 2006/03/09 09:17:53 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -11,9 +11,9 @@
 			<a href="{$row.url_reply}" class="msgtitle">{$lang_str.l_reply}</a>
 			<a href="{$row.url_dele}" class="msgtitle">{$lang_str.l_delete}</a>
 			<span class="swIMtime">{$row.time|my_date_format:$lang_set.date_time_format|empty2nbsp}</span>
-			<span class="swIMSrcAdr">{$row.src_addr}</span>
+			<span class="swIMSrcAdr">{$row.src_addr|escape}</span>
 		</div>
-		<div class="swIMbody">{$row.body|empty2nbsp}</div>
+		<div class="swIMbody">{$row.body|escape|empty2nbsp}</div>
 	</div>
 {foreachelse}
 	<div class="swNumOfFoundRecords">{$lang_str.no_stored_instant_messages}</div>
@@ -42,7 +42,7 @@
 
 	<tr valign="top">
 	<td align="left"><a href="{$row.url_reply}">{$row.src_addr}</a></td>
-	<td align="left"><a href="{$row.url_get}">{$row.subject|empty2nbsp}</a></td>
+	<td align="left"><a href="{$row.url_get}">{$row.subject|escape|empty2nbsp}</a></td>
 	<td align="center">{$row.time|empty2nbsp}</td>
 	<td align="center"><a href="{$row.url_dele}" class="msgtitle">{$lang_str.l_delete}</a></td>
 	</tr>
