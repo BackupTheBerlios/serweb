@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.enable_user.php,v 1.2 2006/01/06 13:20:02 kozlik Exp $
+ * $Id: method.enable_user.php,v 1.3 2006/03/09 09:17:22 kozlik Exp $
  */
 
 class CData_Layer_enable_user {
@@ -55,7 +55,7 @@ class CData_Layer_enable_user {
 		$q = "update ".$tc_name." set ";
 		if ($o_disable)	$q .= $cc->flags." = ".$cc->flags." | ".$fc['DB_DISABLED'];
 		else            $q .= $cc->flags." = ".$cc->flags." & ~".$fc['DB_DISABLED'];
-		$q .= " where ".$cc->uid." = '".$o_uid."'";
+		$q .= " where ".$cc->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -68,7 +68,7 @@ class CData_Layer_enable_user {
 		$q = "update ".$tu_name." set ";
 		if ($o_disable) $q .= $cu->flags." = ".$cu->flags." | ".$fu['DB_DISABLED'];
 		else            $q .= $cu->flags." = ".$cu->flags." & ~".$fu['DB_DISABLED'];
-		$q .= " where ".$cu->uid." = '".$o_uid."'";
+		$q .= " where ".$cu->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
