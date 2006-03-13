@@ -1,13 +1,13 @@
 <?
 /*
- * $Id: load_apu.php,v 1.3 2005/05/03 09:06:05 kozlik Exp $
+ * $Id: load_apu.php,v 1.4 2006/03/13 15:30:47 kozlik Exp $
  */ 
 
-function _apu_require($_required_apu){
+function _apu_require($_required_apu, $add_controler_dl = true){
 	global $data, $_SERWEB;
 	static $_loaded_apu = array();
 
-	$reguired_data_layer = array();
+	$required_data_layer = array();
 
 	$loaded_modules = getLoadedModules();
 
@@ -32,13 +32,22 @@ function _apu_require($_required_apu){
 				require_once ($_SERWEB["serwebdir"] . "../application_layer/".$item.".php");	
 			}
 				
-			$reguired_data_layer = array_merge($reguired_data_layer, call_user_func(array($item, 'get_required_data_layer_methods')));	
+			$_loaded_apu[] = $item;
+			$required_data_layer = array_merge($required_data_layer, call_user_func(array($item, 'get_required_data_layer_methods')));	
 		}
 	}
-	$reguired_data_layer = array_merge($reguired_data_layer, page_conroler::get_required_data_layer_methods());	
+	
+	if ($add_controler_dl){
+		$required_data_layer = array_merge($required_data_layer, page_conroler::get_required_data_layer_methods());	
+	}
 
-	$data->add_method($reguired_data_layer);
+	$data->add_method($required_data_layer);
 } 
+
+function load_apu($apu){
+	$apu = array($apu);
+	_apu_require($apu, false);
+}
 
 require_once ($_SERWEB["serwebdir"] . "../application_layer/oohform_ext.php");
 require_once ($_SERWEB["serwebdir"] . "../application_layer/apu_base_class.php");
