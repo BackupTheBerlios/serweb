@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.27 2006/03/08 15:35:42 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.28 2006/03/13 15:34:06 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -46,6 +46,7 @@ $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Displaying users";
 $lang_str['no_users_found'] = 					"No users found";
 $lang_str['none'] = 							"none";
+$lang_str['warning'] = 							"Warning!";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -83,6 +84,7 @@ $lang_str['b_submit'] =		 					"Save";
 $lang_str['b_select'] =		 					"Select";
 $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload greeting";
+$lang_str['b_extended_settings'] =		 		"Extended settings";
 
 
 /* ------------------------------------------------------------*/
@@ -106,6 +108,7 @@ $lang_str['tab_ser_moni'] =	 					"server monitoring";
 $lang_str['tab_domains'] =	 					"domains";
 $lang_str['tab_customers'] =	 				"customers";
 $lang_str['tab_global_attributes'] =	 		"global attributes";
+$lang_str['tab_attr_types'] =	 				"types of attributes";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -484,22 +487,58 @@ $lang_str['ser_moni_usrLoc_stats'] = 			"UsrLoc Statistics";
 $lang_str['domain'] = 							"domain";
 
 
+/* ------------------------------------------------------------*/
+/*      attribute types                                        */
+/* ------------------------------------------------------------*/
+
 $lang_str['fe_not_filled_name_of_attribute'] = 	"you must fill attribute name";
+$lang_str['ff_order'] = 						"order";
 $lang_str['ff_att_name'] = 						"attribute name";
 $lang_str['ff_att_type'] = 						"attribute type";
-$lang_str['ff_att_default_value'] = 			"default value";
+$lang_str['ff_label'] = 						"label";
+$lang_str['ff_for_ser'] = 						"for SER";
+$lang_str['ff_for_serweb'] = 					"for SerWeb";
+$lang_str['ff_att_user'] = 						"user";
+$lang_str['ff_att_domain'] = 					"domain";
+$lang_str['ff_att_global'] = 					"global";
+$lang_str['ff_multivalue'] = 					"multivalue";
+$lang_str['ff_att_reg'] = 						"required on registration";
+
 $lang_str['th_att_name'] = 						"attribute name";
 $lang_str['th_att_type'] = 						"attribute type";
-$lang_str['th_att_default_value'] = 			"default value";
+$lang_str['th_order'] = 						"order";
+$lang_str['th_label'] = 						"label";
+$lang_str['fe_order_is_not_number'] = 			"'order' is not valid number";
+
 $lang_str['fe_not_filled_item_label'] = 		"you must fill item label";
 $lang_str['fe_not_filled_item_value'] = 		"you must fill item value";
-$lang_str['edit_items_of_the_list'] = 			"edit items of the list";
 $lang_str['ff_item_label'] = 					"item label";
 $lang_str['ff_item_value'] = 					"item value";
-$lang_str['ff_set_as_default'] = 				"set as default";
 $lang_str['th_item_label'] = 					"item label";
 $lang_str['th_item_value'] = 					"item value";
 $lang_str['l_back_to_editing_attributes'] = 	"back to editing attributes";
+$lang_str['realy_want_you_delete_this_attr'] = 	"Realy want you delete this attribute?";
+$lang_str['realy_want_you_delete_this_item'] = 	"Realy want you delete this item?";
+
+
+$lang_str['attr_type_warning'] = 				"On this page you may define new attributes and change types of them, their flags, etc. Preddefined attributes are mostly used internaly by SerWeb or by SER. Do not change them if you do not know what are you doing!!!";
+$lang_str['at_hint_order'] = 					"Attributes are arranged in this order in SerWeb";
+$lang_str['at_hint_label'] = 					"Label of attribute displayed in SerWeb. If starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";
+$lang_str['at_hint_for_ser'] = 					"Attribute is loaded by SER. Only newly created attributes are affected by change of this.";
+$lang_str['at_hint_for_serweb'] = 				"Attribute is loaded by SerWeb. Only newly created attributes are affected by change of this.";
+$lang_str['at_hint_user'] = 					"Attribute is displayed on user preferences page";
+$lang_str['at_hint_domain'] = 					"Attribute is displayed on domain preferences page";
+$lang_str['at_hint_global'] = 					"Attribute is displayed on global preferences page";
+$lang_str['at_hint_multivalue'] = 				"Attribute may have multiple values";
+$lang_str['at_hint_registration'] = 			"Attribute is displayed on user registration form";
+
+
+
+$lang_str['ff_att_default_value'] = 			"default value";
+$lang_str['th_att_default_value'] = 			"default value";
+$lang_str['ff_set_as_default'] = 				"set as default";
+$lang_str['edit_items_of_the_list'] = 			"edit items of the list";
+
 
 
 /* ------------------------------------------------------------*/

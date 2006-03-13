@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.31 2006/02/16 15:26:35 kozlik Exp $
+ * $Id: config.php,v 1.32 2006/03/13 15:34:05 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -106,6 +106,7 @@
 	$config->admin_tabs[]=new Ctab (true, "@tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
 	$config->admin_tabs[]=new Ctab (true, "@tab_customers", "customers.php");					// $lang_str['tab_customers']
 	$config->admin_tabs[]=new Ctab (true, "@tab_global_attributes", "global_attributes.php");	// $lang_str['tab_global_attributes']
+	$config->admin_tabs[]=new Ctab (true, "@tab_attr_types", "attr_types.php");	// $lang_str['tab_global_attributes']
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */

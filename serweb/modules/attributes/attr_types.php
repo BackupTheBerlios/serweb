@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.4 2006/02/08 10:42:35 kozlik Exp $
+ * $Id: attr_types.php,v 1.5 2006/03/13 15:34:06 kozlik Exp $
  */
 
 /**
@@ -16,9 +16,10 @@ class Attr_type{
 	var $flags;
 	var $priority;
 	var $opt = array();
+	var $order;
 
 
-	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
+	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
 		$class = "Attr_type_".$rich_type;
 		$classfile = dirname(__FILE__)."/attr_type_".$rich_type.".php";
 
@@ -26,19 +27,20 @@ class Attr_type{
 			include_once $classfile;
 
 		if (class_exists($class)){
-			$obj = new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+			$obj = new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
 			return $obj;
 		}
 
 		sw_log("Unknown type '".$rich_type."' of attribute '".$name."'", PEAR_LOG_WARNING);	
 
-		return new Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+		$obj = new Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+		return $obj;
 	}
 
 	/**
 	 *	@access private
 	 */
-	function Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
+	function Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
 		$this->name 			= $name;
 		$this->raw_type			= $raw_type;
 		$this->rich_type		= $rich_type;
@@ -47,8 +49,87 @@ class Attr_type{
 		$this->default_flags	= $def_flags;
 		$this->flags			= $flags;
 		$this->priority			= $priority;
+		$this->order			= $order;
+	}
+
+	/**
+	 *	Get raw type for given rich type
+	 *	
+	 *	@static
+	 *	@param	string	$rich_type
+	 *	@return	int					raw type or FALSE on error
+	 */
+	function get_raw_for_rich($rich_type){
+		$class = "Attr_type_".$rich_type;
+		$classfile = dirname(__FILE__)."/attr_type_".$rich_type.".php";
+
+		if (class_exists($class)){
+			return call_user_func(array($class, "raw_type"));
+		}
+
+        if (file_exists($classfile))
+			include_once $classfile;
+
+		if (class_exists($class)){
+			return call_user_func(array($class, "raw_type"));
+		}
+	
+		sw_log("Unknown type '".$rich_type."'", PEAR_LOG_WARNING);	
+		
+		return false;
+	}
+
+	/**
+	 *	Return name of APU for editing 'type_spec' of specified type
+	 *	If empty string is returned, this type does not use 'type_spec'
+	 *	
+	 *	@static
+	 *	@param	string	$type
+	 *	@return	string			name of APU or FALSE on error
+	 */
+	function get_apu_edit($type){
+		$class = "Attr_type_".$type;
+		$classfile = dirname(__FILE__)."/attr_type_".$type.".php";
+
+		if (class_exists($class)){
+			if (is_callable(array($class, 'apu_edit')))
+				return call_user_func(array($class, "apu_edit"));
+			else
+				return "";
+		}
+
+        if (file_exists($classfile))
+			include_once $classfile;
+
+		if (class_exists($class)){
+			if (is_callable(array($class, 'apu_edit')))
+				return call_user_func(array($class, "apu_edit"));
+			else
+				return "";
+		}
+	
+		sw_log("Unknown type '".$type."'", PEAR_LOG_WARNING);	
+		
+		return false;
+	}
+
+	/**
+	 *	@static
+	 *	@abstract
+	 */
+	function raw_type(){
+		return 0;
 	}
 	
+	/**
+	 *	Return name of APU for edit 'type_spec'
+	 *	
+	 *	@return	string
+	 */
+	function apu_edit(){
+		return "";
+	}
+
 	/**
 	 *	Return true if attribute is multivalue
 	 *
@@ -95,6 +176,18 @@ class Attr_type{
 		return ($this->priority & $pr) == $pr;
 	}
 
+	function is_for_ser(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_LOAD_SER'];
+		return ($this->default_flags & $f) == $f;
+	}
+
+	function is_for_serweb(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_FOR_SERWEB'];
+		return ($this->default_flags & $f) == $f;
+	}
+
 	function get_description(){
 		global $lang_str;
 		
@@ -107,6 +200,14 @@ class Attr_type{
 		return $this->description;
 	}
 	
+	function get_name(){
+		return $this->name;
+	}
+
+	function get_order(){
+		return $this->order;
+	}
+
 	function get_raw_description(){
 		return $this->description;
 	}
@@ -119,8 +220,52 @@ class Attr_type{
 		return $this->raw_type;
 	}
 	
+	function get_type_spec(){
+		return $this->type_spec;
+	}
+	
 	function get_default_flags(){
 		return $this->default_flags;
+	}
+	
+	function get_flags(){
+		return $this->flags;
+	}
+	
+	function get_priority(){
+		return $this->priority;
+	}
+	
+	/**
+	 *	Transfer attribute type to associative array which can be displayed by Smarty
+	 *	
+	 *	@return	array
+	 */
+	function to_table_row(){
+		global $config;
+
+		$f = &$config->data_sql->attr_types->flag_values;
+		$p = &$config->data_sql->attr_types->priority_values;
+		$df = &$config->data_sql->user_attrs->flag_values;
+		
+		$out = array("name" => $this->name,
+		             "type" => $this->rich_type,
+		             "order" => $this->order,
+					 "description" => $this->description);
+
+		foreach($f as $k => $v){
+			$out['flags'][$k] = (bool)(($this->flags & $v) == $v);
+		}
+					 
+		foreach($p as $k => $v){
+			$out['priority'][$k] = (bool)(($this->priority & $v) == $v);
+		}
+
+		foreach($df as $k => $v){
+			$out['default_flags'][$k] = (bool)(($this->default_flags & $v) == $v);
+		}
+
+		return $out;
 	}
 
 	/**
@@ -157,6 +302,116 @@ class Attr_type{
 
 	}
 
+	function set_name($str){
+		$this->name = $str;
+	}
+
+	function set_type($str){
+		if (false === $raw = Attr_type::get_raw_for_rich($str)) return false;
+
+		$this->rich_type = $str;
+		$this->raw_type = $raw;
+	}
+
+	/**
+	 *	@param	mixed	$p
+	 */
+	function set_type_spec($p){
+		$this->type_spec = $p;
+	}
+
+	function set_description($str){
+		$this->description = $str;
+	}
+
+	function set_order($str){
+		$this->order = $str;
+	}
+
+	function set_for_users(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['USER'];
+		$this->priority |= $pr;
+	}
+
+	function reset_for_users(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['USER'];
+		$this->priority &= ~$pr;
+	}
+
+	function set_for_domains(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['DOMAIN'];
+		$this->priority |= $pr;
+	}
+
+	function reset_for_domains(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['DOMAIN'];
+		$this->priority &= ~$pr;
+	}
+
+	function set_for_globals(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['GLOBAL'];
+		$this->priority |= $pr;
+	}
+
+	function reset_for_globals(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['GLOBAL'];
+		$this->priority &= ~$pr;
+	}
+
+	function set_for_ser(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_LOAD_SER'];
+		$this->default_flags |= $f;
+	}
+
+	function reset_for_ser(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_LOAD_SER'];
+		$this->default_flags &= ~$f;
+	}
+
+	function set_for_serweb(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_FOR_SERWEB'];
+		$this->default_flags |= $f;
+	}
+
+	function reset_for_serweb(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_FOR_SERWEB'];
+		$this->default_flags &= ~$f;
+	}
+
+	function set_multivalue(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_MULTIVALUE'];
+		$this->flags |= $f;
+	}
+
+	function reset_multivalue(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_MULTIVALUE'];
+		$this->flags &= ~$f;
+	}
+
+	function set_registration(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_FILL_ON_REG'];
+		$this->flags |= $f;
+	}
+
+	function reset_registration(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_FILL_ON_REG'];
+		$this->flags &= ~$f;
+	}
+
 	/**
 	 *	
 	 */
@@ -169,6 +424,16 @@ class Attr_type{
 
 
 class Attr_type_lists extends Attr_type{
+
+
+	/**
+	 *	Return name of APU for edit 'type_spec'
+	 *	
+	 *	@return	string
+	 */
+	function apu_edit(){
+		return "apu_attr_lists";
+	}
 
 	/**
 	 *	Convert $this->type_spec into array which can be passed to phplib form object.
@@ -244,6 +509,16 @@ class Attr_types{
 		if (is_null($instance)) $instance = new Attr_types();
         return $instance;
     }
+
+	/**
+	 *	Return array of all possible types of attribute
+	 *	
+	 *	@return array
+	 */
+	function get_all_types(){
+		return array('boolean', 'email', 'int', 'lang', 'list', 'provider', 
+		             'radio', 'sip_adr', 'string', 'timezone');
+	}
 
 	/**
 	 *	Return array of types of attributes

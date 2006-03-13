@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.6 2006/02/16 15:26:36 kozlik Exp $
+ * $Id: page_attributes.php,v 1.7 2006/03/13 15:34:05 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -26,6 +26,10 @@ function _disable_unneeded_tabs(&$page_attributes){
 					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "global_attributes.php") {
+				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+					$page_attributes['tab_collection'][$key]->disable();
+			}
+			elseif ($val->page == "attr_types.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
 					$page_attributes['tab_collection'][$key]->disable();
 			}

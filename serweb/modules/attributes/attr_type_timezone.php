@@ -3,8 +3,12 @@
 class Attr_type_timezone extends Attr_type{
 	var $timezones = array();
 
-	function Attr_type_timezone($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
-		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+	function Attr_type_timezone($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
+		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+	}
+
+	function raw_type(){
+		return 2;
 	}
 
 	function &get_timezones(){

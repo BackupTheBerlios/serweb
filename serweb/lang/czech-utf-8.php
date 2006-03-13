@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.24 2006/03/08 15:35:42 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.25 2006/03/13 15:34:06 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -46,6 +46,7 @@ $lang_str['search_filter'] = 					"filtr";
 $lang_str['showed_users'] = 					"Zobrazení uživatelé";
 $lang_str['no_users_found'] = 					"Žádní uživatelé nenalezeni";
 $lang_str['none'] = 							"none";	//to translate 
+$lang_str['warning'] = 							"Warning!";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -83,6 +84,7 @@ $lang_str['b_submit'] =		 					"Uložit";
 $lang_str['b_select'] =		 					"Vyber";
 $lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
+$lang_str['b_extended_settings'] =		 		"Rozšířené nastavení";
 
 
 /* ------------------------------------------------------------*/
@@ -106,6 +108,7 @@ $lang_str['tab_ser_moni'] =	 					"monitorování serveru";
 $lang_str['tab_domains'] =	 					"domains";	//to translate 
 $lang_str['tab_customers'] =	 				"customers";	//to translate 
 $lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
+$lang_str['tab_attr_types'] =	 				"types of attributes";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -484,22 +487,58 @@ $lang_str['ser_moni_usrLoc_stats'] = 			"Statistiky UsrLoc";
 $lang_str['domain'] = 							"tabulka";
 
 
+/* ------------------------------------------------------------*/
+/*      attribute types                                        */
+/* ------------------------------------------------------------*/
+
 $lang_str['fe_not_filled_name_of_attribute'] = 	"musíte vyplnit jméno atributu";
+$lang_str['ff_order'] = 						"order";	//to translate 
 $lang_str['ff_att_name'] = 						"jméno atributu";
 $lang_str['ff_att_type'] = 						"typ atributu";
-$lang_str['ff_att_default_value'] = 			"defaultní hodnota";
+$lang_str['ff_label'] = 						"label";	//to translate 
+$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
+$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
+$lang_str['ff_att_user'] = 						"user";	//to translate 
+$lang_str['ff_att_domain'] = 					"domain";	//to translate 
+$lang_str['ff_att_global'] = 					"global";	//to translate 
+$lang_str['ff_multivalue'] = 					"multivalue";	//to translate 
+$lang_str['ff_att_reg'] = 						"required on registration";	//to translate 
+
 $lang_str['th_att_name'] = 						"jméno atributu";
 $lang_str['th_att_type'] = 						"typ atributu";
-$lang_str['th_att_default_value'] = 			"defaultní hodnota";
+$lang_str['th_order'] = 						"order";	//to translate 
+$lang_str['th_label'] = 						"label";	//to translate 
+$lang_str['fe_order_is_not_number'] = 			"'order' is not valid number";	//to translate 
+
 $lang_str['fe_not_filled_item_label'] = 		"musíte vyplnit jméno položky";
 $lang_str['fe_not_filled_item_value'] = 		"musíte vyplnit hodnotu položky";
-$lang_str['edit_items_of_the_list'] = 			"změnit seznam položek";
 $lang_str['ff_item_label'] = 					"jméno položky";
 $lang_str['ff_item_value'] = 					"hodnota položky";
-$lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
 $lang_str['th_item_label'] = 					"jméno položky";
 $lang_str['th_item_value'] = 					"hodnota položky";
 $lang_str['l_back_to_editing_attributes'] = 	"zpět k editaci atributů";
+$lang_str['realy_want_you_delete_this_attr'] = 	"Realy want you delete this attribute?";	//to translate 
+$lang_str['realy_want_you_delete_this_item'] = 	"Realy want you delete this item?";	//to translate 
+
+
+$lang_str['attr_type_warning'] = 				"On this page you may define new attributes and change types of them, their flags, etc. Preddefined attributes are mostly used internaly by SerWeb or by SER. Do not change them if you do not know what are you doing!!!";	//to translate 
+$lang_str['at_hint_order'] = 					"Attributes are arranged in this order in SerWeb";	//to translate 
+$lang_str['at_hint_label'] = 					"Label of attribute displayed in SerWeb. If starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";	//to translate 
+$lang_str['at_hint_for_ser'] = 					"Attribute is loaded by SER. Only newly created attributes are affected by change of this.";	//to translate 
+$lang_str['at_hint_for_serweb'] = 				"Attribute is loaded by SerWeb. Only newly created attributes are affected by change of this.";	//to translate 
+$lang_str['at_hint_user'] = 					"Attribute is displayed on user preferences page";	//to translate 
+$lang_str['at_hint_domain'] = 					"Attribute is displayed on domain preferences page";	//to translate 
+$lang_str['at_hint_global'] = 					"Attribute is displayed on global preferences page";	//to translate 
+$lang_str['at_hint_multivalue'] = 				"Attribute may have multiple values";	//to translate 
+$lang_str['at_hint_registration'] = 			"Attribute is displayed on user registration form";	//to translate 
+
+
+
+$lang_str['ff_att_default_value'] = 			"defaultní hodnota";
+$lang_str['th_att_default_value'] = 			"defaultní hodnota";
+$lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
+$lang_str['edit_items_of_the_list'] = 			"změnit seznam položek";
+
 
 
 /* ------------------------------------------------------------*/

@@ -19,13 +19,17 @@
 class Attr_type_lang extends Attr_type{
 	var $timezones = array();
 
-	function Attr_type_lang($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
-		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+	function Attr_type_lang($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
+		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
 
 		/* set default values to $this->opt */		
 		$this->opt['use_charset_only'] =	'utf-8';
 		$this->opt['save_to_session'] =		false;
 		$this->opt['save_to_cookie'] =		false;
+	}
+
+	function raw_type(){
+		return 2;
 	}
 
 	function &get_languages(){

@@ -4,10 +4,14 @@
 class Attr_type_provider extends Attr_type{
 	var $items;
 
-	function Attr_type_provider($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority){
-		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority);
+	function Attr_type_provider($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
+		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
 
 		$this->items=Array();
+	}
+
+	function raw_type(){
+		return 2;
 	}
 
 	/*
