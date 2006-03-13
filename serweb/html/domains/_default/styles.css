@@ -526,6 +526,24 @@ table.swTable tr.swTrOdd{
 }
 
 /*
+ * warning box
+ */
+.swWarningBox{
+	background-color: Silver;
+	padding: 1em 4em;
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 1px solid Black;
+}
+
+.swWarningBox h1{
+	text-align: center;
+	font-size: 1.5em;
+	margin-top: 0;
+	margin-bottom: 0.3em;
+}
+/*
  *	errors and messages
  */
 
