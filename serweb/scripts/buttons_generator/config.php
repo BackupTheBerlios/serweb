@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: config.php,v 1.3 2006/01/31 11:48:18 kozlik Exp $
+ * $Id: config.php,v 1.4 2006/03/13 15:26:46 kozlik Exp $
  */
 
 /** 
@@ -138,6 +138,10 @@ $bg_cfg['button'][14]['type']		= 'blue_wide';
 $bg_cfg['button'][15]['filename']	= 'btn_select';
 $bg_cfg['button'][15]['lang_str']	= 'b_select';
 $bg_cfg['button'][15]['type']		= 'blue';
+
+$bg_cfg['button'][16]['filename']	= 'btn_extended_settings';
+$bg_cfg['button'][16]['lang_str']	= 'b_extended_settings';
+$bg_cfg['button'][16]['type']		= 'blue_wide';
 
 
 
