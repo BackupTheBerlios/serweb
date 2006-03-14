@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.26 2006/01/12 12:58:59 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.27 2006/03/14 09:21:32 kozlik Exp $
  */
 
 
@@ -223,10 +223,8 @@
 		//
 		
 		/* Unless you used brute-force to change SER table names */
-		$config->data_sql->table_subscriber="subscriber";
 		$config->data_sql->table_grp="grp";
 		$config->data_sql->table_aliases="aliases";
-		$config->data_sql->table_uuidaliases="uuidaliases";
 		$config->data_sql->table_location="location";
 		$config->data_sql->table_missed_calls="missed_calls";
 		$config->data_sql->table_cdr="cdr";
@@ -235,9 +233,6 @@
 		$config->data_sql->table_ser_mon="server_monitoring";
 		$config->data_sql->table_ser_mon_agg="server_monitoring_agg";
 		$config->data_sql->table_voice_silo="voice_silo";
-		$config->data_sql->table_user_preferences="usr_preferences";
-		$config->data_sql->table_user_preferences_types="usr_preferences_types";
-		$config->data_sql->table_providers="providers";
 		$config->data_sql->table_calls_forwarding="calls_forwarding";
 		$config->data_sql->table_whitelist="whitelist";
 
