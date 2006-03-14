@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.5 2006/03/13 15:34:06 kozlik Exp $
+ * $Id: attr_types.php,v 1.6 2006/03/14 09:30:25 kozlik Exp $
  */
 
 /**
@@ -516,7 +516,7 @@ class Attr_types{
 	 *	@return array
 	 */
 	function get_all_types(){
-		return array('boolean', 'email', 'int', 'lang', 'list', 'provider', 
+		return array('boolean', 'email', 'int', 'lang', 'list', 
 		             'radio', 'sip_adr', 'string', 'timezone');
 	}
 
