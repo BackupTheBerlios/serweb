@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.27 2006/03/14 09:21:32 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.28 2006/03/16 12:06:21 kozlik Exp $
  */
 
 
@@ -177,6 +177,7 @@
 								'lang'				=> 'lang',				//language
 								'timezone'			=> 'sw_timezone',		//timezone
 								'allow_find'		=> 'sw_allow_find',		//allow other to look up for this user
+								'send_mc'			=> 'sw_send_missed',	//send missed calls
 
 								'is_admin'			=> 'sw_is_admin',		//have admin privilege
 								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege
