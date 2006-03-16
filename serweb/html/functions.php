@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.67 2006/02/01 11:13:45 kozlik Exp $
+ * @version   $Id: functions.php,v 1.68 2006/03/16 11:57:38 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -1035,6 +1035,10 @@ function my_aggregate_methods(&$object, $class_name){
 
 	if (function_exists('classkit_aggregate_methods')){
 		return @classkit_aggregate_methods(get_class($object), $class_name);
+	}
+
+	if (function_exists('runkit_class_adopt')){
+		return @runkit_class_adopt(get_class($object), $class_name);
 	}
 
 	die("Function aggregate_methods() doesn't exists. Try install Classkit extension. http://pecl.php.net/package/classkit");
