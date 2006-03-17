@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.8 2006/02/16 15:26:36 kozlik Exp $
+ * $Id: class_definitions.php,v 1.9 2006/03/17 14:26:52 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -645,6 +645,32 @@ class URIs{
 		if (is_null($this->canon)) $this->canon = 0;
 		
 		return $this->URIs[$this->canon];
+	}
+}
+
+class Credential{
+	var $uid;
+	var $uname;
+	var $realm;
+	var $flags;
+
+	function Credential($uid, $uname, $realm, $flags){
+		$this->uid = $uid;
+		$this->uname = $uname;
+		$this->realm = $realm;
+		$this->flags = $flags;
+	}
+	
+	function get_uid(){
+		return $this->uid;
+	}
+
+	function get_uname(){
+		return $this->uname;
+	}
+
+	function get_realm(){
+		return $this->realm;
 	}
 }
 ?>

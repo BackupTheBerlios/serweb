@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.28 2006/03/13 15:34:06 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.29 2006/03/17 14:26:52 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -403,6 +403,8 @@ $lang_str['l_aliases'] = 						"aliases";
 $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
 $lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";
+$lang_str['l_credentials'] = 					"credentials";
+$lang_str['user_has_no_credentials'] = 			"User has no credentials";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */

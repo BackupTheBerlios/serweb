@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.7 2006/03/07 16:57:51 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.8 2006/03/17 14:26:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -42,6 +42,9 @@
  *	'get_only_agreeing'			(bool) default: false
  *	 set to true if you want limit result of founded users to only them 
  *	 which agree with it (attribute allow_find = 1)
+ *	
+ *	'get_credentials'			(bool) default: false
+ *	 set to true if you want display credentials of users
  *	
  *	'get_disabled'				(bool) default: true
  *	 if true, disabled users are also displayed
@@ -128,6 +131,7 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['get_timezones']			= false;
 		$this->opt['get_only_agreeing']		= false;
 		$this->opt['get_disabled']			= true;
+		$this->opt['get_credentials']		= false;
 
 		$this->opt['allow_edit']			= false;
 		
@@ -198,7 +202,8 @@ class apu_subscribers extends apu_base_class{
 		             'get_sip_uri'      => $this->opt['get_user_sip_uri'],
 					 'get_timezones'    => $this->opt['get_timezones'],
 					 'only_agreeing'	=> $this->opt['get_only_agreeing'],
-					 'get_disabled'		=> $this->opt['get_disabled']);
+					 'get_disabled'		=> $this->opt['get_disabled'],
+					 'get_credentials'	=> $this->opt['get_credentials']);
 
 		if ($this->opt['only_from_administrated_domains']){
 			if (false === $domains_perm = $_SESSION['auth']->get_administrated_domains()) return false;

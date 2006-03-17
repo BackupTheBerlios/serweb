@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.14 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.15 2006/03/17 14:26:52 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -46,7 +46,7 @@
 </table>
 {$form.finish}
 </div>
-
+{debug}
 {foreach from=$users item='row' name='users'}
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -70,9 +70,11 @@
 	{assign var='dom_class' value='swDomainEnabled'}
 	{if $row.disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
-	
+	{include file="includes/popup_credentials.tpl" credentials=$row.credentials assign="popup_cr"}
+		
+
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
-	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$usr_class}"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_cr caption=$lang_str.l_credentials}>{$row.uid|escape|empty2nbsp}</a></span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>

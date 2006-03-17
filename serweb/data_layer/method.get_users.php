@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.13 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_users.php,v 1.14 2006/03/17 14:26:51 kozlik Exp $
  */
 
 class CData_Layer_get_users {
-	var $required_methods = array();
+	var $required_methods = array('get_credentials');
 	
 
 	/**
@@ -47,7 +47,9 @@ class CData_Layer_get_users {
 	 *    only_agreeing			(bool)	default: false
  	 *		if true, only subscribers agreeing to look up for them are returned
  	 *	
-	 *  
+	 *    get_credentials		(bool) 	default: false
+ 	 *		return credentials of users in output array
+ 	 *	
 	 *	@return array	array of users or FALSE on error
 	 */ 
 	 
@@ -85,6 +87,7 @@ class CData_Layer_get_users {
 	    $opt_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
 	    $opt_agreeing = (isset($opt['only_agreeing'])) ? (bool)$opt['only_agreeing'] : false;
 	    $opt_get_disabled = (isset($opt['get_disabled'])) ? (bool)$opt['get_disabled'] : true;
+	    $opt_get_credentials = (isset($opt['get_credentials'])) ? (bool)$opt['get_credentials'] : false;
 
 
 
@@ -266,6 +269,10 @@ class CData_Layer_get_users {
 						if (false === $out[$i]['sip_uri'] = $uri->to_string()) return false;
 					}
 				}
+			}
+
+			if ($opt_get_credentials){
+				if (false === $out[$i]['credentials'] = $this->get_credentials($row['uid'], null)) return false;
 			}
 
 		}
