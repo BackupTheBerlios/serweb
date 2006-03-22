@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.15 2006/03/17 14:26:52 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.16 2006/03/22 14:00:15 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -46,7 +46,7 @@
 </table>
 {$form.finish}
 </div>
-{debug}
+
 {foreach from=$users item='row' name='users'}
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -58,6 +58,7 @@
 	<th>{$lang_str.th_phone}</th>
 	<th>{$lang_str.th_alias}</th>
 	<th>{$lang_str.th_email}</th>
+	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
@@ -85,6 +86,7 @@
 	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a></td>
 	<td align="center"><a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a></td>
+	<td align="center"><a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a></td>
 	{if $row.disabled}
 	<td align="center"><a href="{$row.url_enable}">{$lang_str.l_enable}</a></td>
 	{else}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.29 2006/03/17 14:26:52 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.30 2006/03/22 14:00:15 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -541,6 +541,21 @@ $lang_str['th_att_default_value'] = 			"default value";
 $lang_str['ff_set_as_default'] = 				"set as default";
 $lang_str['edit_items_of_the_list'] = 			"edit items of the list";
 
+
+/* ------------------------------------------------------------*/
+/*      credentials                                            */
+/* ------------------------------------------------------------*/
+
+
+$lang_str['change_credentials_of_user'] = 		"Change credentials of user";
+$lang_str['ff_for_ser'] = 						"for SER";
+$lang_str['ff_for_serweb'] = 					"for SerWeb";
+
+$lang_str['th_password'] = 						"password";
+$lang_str['th_for_ser'] = 						"for SER";
+$lang_str['th_for_serweb'] = 					"for SerWeb";
+
+$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";
 
 
 /* ------------------------------------------------------------*/

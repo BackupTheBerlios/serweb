@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.9 2006/03/17 14:26:52 kozlik Exp $
+ * $Id: class_definitions.php,v 1.10 2006/03/22 14:00:14 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -653,12 +653,18 @@ class Credential{
 	var $uname;
 	var $realm;
 	var $flags;
+	var $password;
+	var $ha1;
+	var $ha1b;
 
-	function Credential($uid, $uname, $realm, $flags){
-		$this->uid = $uid;
-		$this->uname = $uname;
-		$this->realm = $realm;
-		$this->flags = $flags;
+	function Credential($uid, $uname, $realm, $password, $ha1, $ha1b, $flags){
+		$this->uid      = $uid;
+		$this->uname    = $uname;
+		$this->realm    = $realm;
+		$this->password = $password;
+		$this->ha1      = $ha1;
+		$this->ha1b     = $ha1b;
+		$this->flags    = $flags;
 	}
 	
 	function get_uid(){
@@ -671,6 +677,83 @@ class Credential{
 
 	function get_realm(){
 		return $this->realm;
+	}
+	
+	function get_password(){
+		return $this->password;
+	}
+
+	function get_flags(){
+		return $this->flags;
+	}
+
+	function get_ha1(){
+		return $this->ha1;
+	}
+
+	function get_ha1b(){
+		return $this->ha1b;
+	}
+
+	function is_for_ser(){
+		global $config;
+		return (bool)($this->flags & $config->data_sql->credentials->flag_values['DB_LOAD_SER']);
+	}
+
+	function is_for_serweb(){
+		global $config;
+		return (bool)($this->flags & $config->data_sql->credentials->flag_values['DB_FOR_SERWEB']);
+	}
+
+	function set_uname($str){
+		$this->uname = $str;
+	}
+
+	function set_realm($str){
+		$this->realm = $str;
+	}
+	
+	function set_password($str){
+		$this->password = $str;
+	}
+
+	function set_for_ser(){
+		global $config;
+		$this->flags = ($this->flags | $config->data_sql->credentials->flag_values['DB_LOAD_SER']);
+	}
+
+	function set_for_serweb(){
+		global $config;
+		$this->flags = ($this->flags | $config->data_sql->credentials->flag_values['DB_FOR_SERWEB']);
+	}
+	
+	function reset_for_ser(){
+		global $config;
+		$this->flags = ($this->flags & ~$config->data_sql->credentials->flag_values['DB_LOAD_SER']);
+	}
+
+	function reset_for_serweb(){
+		global $config;
+		$this->flags = ($this->flags & ~$config->data_sql->credentials->flag_values['DB_FOR_SERWEB']);
+	}
+	
+	function recalc_ha1(){
+		$this->ha1  = md5($this->uname.":".$this->realm.":".$this->password);
+		$this->ha1b = md5($this->uname."@".$this->realm.":".$this->realm.":".$this->password);
+	}
+	
+	function to_table_row(){
+		global $config;
+		$f = &$config->data_sql->credentials->flag_values;
+
+		return array("uid"        => $this->uid,
+		             "uname"      => $this->uname,
+					 "realm"      => $this->realm,
+					 "password"   => $this->password,
+		             "ha1"        => $this->ha1,
+		             "ha1b"       => $this->ha1b,
+					 "for_ser"    => ($this->flags & $f['DB_LOAD_SER']),
+					 "for_serweb" => ($this->flags & $f['DB_FOR_SERWEB']));
 	}
 }
 ?>

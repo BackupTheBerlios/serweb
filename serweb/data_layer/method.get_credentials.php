@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_credentials.php,v 1.1 2006/03/17 14:26:50 kozlik Exp $
+ * $Id: method.get_credentials.php,v 1.2 2006/03/22 14:00:14 kozlik Exp $
  */
 
 class CData_Layer_get_credentials {
@@ -36,9 +36,13 @@ class CData_Layer_get_credentials {
 
 		$q="select ".$c->uname.", 
 		           ".$c->realm.",
+		           ".$c->password.",
+		           ".$c->ha1.",
+		           ".$c->ha1b.",
 		           ".$c->flags."
 		    from ".$t_name." 
-			where ".$c->uid." = ".$this->sql_format($uid, "s")."
+			where ".$c->uid." = ".$this->sql_format($uid, "s")." and
+			      ".$c->flags." & ".$f['DB_DELETED']." = 0
 			order by ".$c->realm.", ".$c->uname;
 
 		
@@ -47,7 +51,9 @@ class CData_Layer_get_credentials {
 
 		$out=array();
 		for ($i=0; $row = $res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i] = new Credential($uid, $row[$c->uname], $row[$c->realm], $row[$c->flags]);
+			$out[$i] = new Credential($uid, $row[$c->uname], $row[$c->realm], 
+									$row[$c->password], $row[$c->ha1], 
+									$row[$c->ha1b], $row[$c->flags]);
 		}
 		$res->free();
 		return $out;

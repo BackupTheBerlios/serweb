@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_credentials.php,v 1.3 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.add_credentials.php,v 1.4 2006/03/22 14:00:13 kozlik Exp $
  */
 
 class CData_Layer_add_credentials {
@@ -14,6 +14,14 @@ class CData_Layer_add_credentials {
 	 *  Possible options:
 	 *	  disabled	(bool)	default: false
 	 *    	set flag disabled
+	 *
+	 *	  for_ser	(bool)	default: null
+	 *    	set flag DB_LOAD_SER
+	 *		by default value of this flag depends on global attribute 'credential_default_flags'
+	 *
+	 *	  for_serweb	(bool)	default: null
+	 *    	set flag DB_FOR_SERWEB
+	 *		by default value of this flag depends on global attribute 'credential_default_flags'
 	 *
 	 *	@return bool
 	 */ 
@@ -38,17 +46,30 @@ class CData_Layer_add_credentials {
 
 
 		/* set default values for options */
-		$opt_disabled = isset($opt["disabled"]) ? (bool)$opt["disabled"] : false;
+		$opt_disabled   = isset($opt["disabled"])   ? (bool)$opt["disabled"]   : false;
+		$opt_for_ser    = isset($opt["for_ser"])    ? (bool)$opt["for_ser"]    : null;
+		$opt_for_serweb = isset($opt["for_serweb"]) ? (bool)$opt["for_serweb"] : null;
 
 
 		$ga = &Global_attrs::singleton();
-		if (false === $flags = &$ga->get_attribute($an['credential_default_flags'])) return false;
+		if (false === $flags = $ga->get_attribute($an['credential_default_flags'])) return false;
 		if (!is_numeric($flags)){
 			ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$ca['credential_default_flags']."' is not defined or is not a number Can't create credentials."));
 			return false;
 		}
 
 		if ($opt_disabled) $flags = ($flags | $f['DB_DISABLED']);
+
+		if (!is_null($opt_for_ser)){
+			if ($opt_for_ser) $flags = ($flags |  $f['DB_LOAD_SER']);
+			else              $flags = ($flags & ~$f['DB_LOAD_SER']);
+		}
+
+		if (!is_null($opt_for_serweb)){
+			if ($opt_for_serweb) $flags = ($flags |  $f['DB_FOR_SERWEB']);
+			else                 $flags = ($flags & ~$f['DB_FOR_SERWEB']);
+		}
+
 
 		$ha1  = md5($uname.":".$realm.":".$passw);
 		$ha1b = md5($uname."@".$realm.":".$realm.":".$passw);

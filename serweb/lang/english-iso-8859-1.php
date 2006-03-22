@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.41 2006/03/13 15:34:06 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.42 2006/03/22 14:00:15 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -403,6 +403,8 @@ $lang_str['l_aliases'] = 						"aliases";
 $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
 $lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";
+$lang_str['l_credentials'] = 					"credentials";
+$lang_str['user_has_no_credentials'] = 			"User has no credentials";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -539,6 +541,21 @@ $lang_str['th_att_default_value'] = 			"default value";
 $lang_str['ff_set_as_default'] = 				"set as default";
 $lang_str['edit_items_of_the_list'] = 			"edit items of the list";
 
+
+/* ------------------------------------------------------------*/
+/*      credentials                                            */
+/* ------------------------------------------------------------*/
+
+
+$lang_str['change_credentials_of_user'] = 		"Change credentials of user";
+$lang_str['ff_for_ser'] = 						"for SER";
+$lang_str['ff_for_serweb'] = 					"for SerWeb";
+
+$lang_str['th_password'] = 						"password";
+$lang_str['th_for_ser'] = 						"for SER";
+$lang_str['th_for_serweb'] = 					"for SerWeb";
+
+$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";
 
 
 /* ------------------------------------------------------------*/
