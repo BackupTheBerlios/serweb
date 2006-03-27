@@ -3,7 +3,7 @@
  * Application unit privileges 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_privileges.php,v 1.6 2005/12/22 13:26:28 kozlik Exp $
+ * @version   $Id: apu_privileges.php,v 1.7 2006/03/27 14:31:48 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -226,7 +226,7 @@ class apu_privileges extends apu_base_class{
 		$an = &$config->attr_names;
 
 		$ua = &User_Attrs::singleton($this->user_id->get_uid());
-		if (false === $user_attrs = &$ua->get_attributes()) return false;
+		if (false === $user_attrs = $ua->get_attributes()) return false;
 
 		$this->privileges['is_admin']    = isset($user_attrs[$an['is_admin']]) ? $user_attrs[$an['is_admin']] : false;
 		$this->privileges['hostmaster']  = isset($user_attrs[$an['is_hostmaster']]) ? $user_attrs[$an['is_hostmaster']] : false;

@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.5 2006/01/12 15:54:41 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.6 2006/03/27 14:31:48 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -214,7 +214,7 @@ class apu_registration extends apu_base_class{
 		
 		/* get realm */
 		$da = &Domain_Attrs::singleton($did);
-		if (false === $realm = &$da->get_attribute($an['digest_realm'])) return false;
+		if (false === $realm = $da->get_attribute($an['digest_realm'])) return false;
 		if (is_null($realm)) $realm = $domain_name;
 		
 		/* generate uid */
@@ -510,12 +510,12 @@ class apu_registration extends apu_base_class{
 		if (!is_null($this->opt['register_in_domain'])){
 			// get domain_attrs
 			$da = &Domain_Attrs::singleton($this->opt['register_in_domain']);
-			if (false === $domain_attrs = &$da->get_attributes()) return false;
+			if (false === $domain_attrs = $da->get_attributes()) return false;
 		}
 		
 		// get global_attrs
 		$ga = &Global_Attrs::singleton();
-		if (false === $global_attrs = &$ga->get_attributes()) return false;
+		if (false === $global_attrs = $ga->get_attributes()) return false;
 		
 		
 		$this->attr_values = array();
