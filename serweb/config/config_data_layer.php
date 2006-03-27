@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.28 2006/03/16 12:06:21 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.29 2006/03/27 13:58:51 kozlik Exp $
  */
 
 
@@ -15,26 +15,93 @@
 		 *	If this is set to true the database setting is irelevant. In this 
 		 *  case, this is obtained from SER automaticaly. 
 		 */
-		$config->use_rpc = false;
+		$config->use_rpc = true;
 
-		/* these are options for connect to XML-RPC interface of SER
-		*/
+		/**
+		 * These are options for connect to XML-RPC interface of SER
+		 */
 
-		$config->ser_rpc['host']	= "localhost";		//SER host
-		$config->ser_rpc['port']	= 5060;
+		/**
+		 * The hostname for xml-rpc requests 
+		 */
+		$config->ser_rpc['host']		= "localhost";
+
+		/**
+		 * The port for xml-rpc requests. 5060 is used by default
+		 */
+		//$config->ser_rpc['port']		= 5060;
+
+		/**
+		 * Username for xml-rpc authentication (if required)
+		 */
+		//$config->ser_rpc['user']		= "xmlrpc";
+
+		/**
+		 * Password for xml-rpc authentication (if required) 
+		 */
+		//$config->ser_rpc['pass']		= "heslo";
+
+		/**
+		 * Use encrypted connections for xml-rpc requests 
+		 */
+		//$config->ser_rpc['use_ssl']		= true;
+
+		/**
+		 * Verify host - check if the common name in SSL peer 
+		 * certificate matches the hostname provided 
+		 * Is true by default
+		 */
+		//$config->ser_rpc['ssl_vh']		= true;
+
+		/**
+		 * The SSL version to use. By default PHP will try 
+		 * to determine this itself.
+		 */
+		//$config->ser_rpc['ssl_ver']		= 1;
+
+		/**
+		 * The name of a file holding one or more PEM formated certificates 
+		 * to verify the peer with.
+		 */
+		//$config->ser_rpc['ssl_ca']		= "/etc/serweb/ca.crt";
+
+		/**
+		 * The name of a file containing a PEM formatted client certificate. 
+		 */
+		//$config->ser_rpc['ssl_cert']	= "/etc/serweb/serweb.crt";
+
+		/**
+		 * The secret password needed to use the client certificate
+		 */
+		//$config->ser_rpc['ssl_cert_pass']	= "abrakadabra";
+
+		/**
+		 * The name of a file containing a PEM formatted private SSL key. 
+		 */
+		//$config->ser_rpc['ssl_key']		= "/etc/serweb/serweb.key";
+
+		/**
+		 * The secret password needed to use the private SSL key 
+		 */
+		//$config->ser_rpc['ssl_key_pass']	= "abrakadabra";
+		
 
 
 		/**
 		 *	Following array contain list of all sip proxies. Uncoment this if
 		 *	there are more sip proxies in your environment. This list is used 
 		 *	for xml-rpc comunication.
+		 *	
+		 *	Each array may contains the same keys as $config->ser_rpc. Only the
+		 *	'host' key is required. If some keys are not specified in some 
+		 *	array, the default values from $config->ser_rpc are used.
 		 */
 /*
-		$config->sip_proxies[] = array('host'=>'proxy1.mydomain.org', 'port'=>5060);
-		$config->sip_proxies[] = array('host'=>'proxy2.mydomain.org', 'port'=>5060);
-		$config->sip_proxies[] = array('host'=>'proxy3.mydomain.org', 'port'=>5060);
-		$config->sip_proxies[] = array('host'=>'proxy4.mydomain.org', 'port'=>5060);
-		$config->sip_proxies[] = array('host'=>'proxy5.mydomain.org', 'port'=>5060);
+		$config->sip_proxies[] = array('host'=>'proxy1.mydomain.org');
+		$config->sip_proxies[] = array('host'=>'proxy2.mydomain.org');
+		$config->sip_proxies[] = array('host'=>'proxy3.mydomain.org');
+		$config->sip_proxies[] = array('host'=>'proxy4.mydomain.org');
+		$config->sip_proxies[] = array('host'=>'proxy5.mydomain.org');
 */
 
 		/**

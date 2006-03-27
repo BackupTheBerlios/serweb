@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.19 2006/03/08 15:30:45 kozlik Exp $
+ * $Id: data_layer.php,v 1.20 2006/03/27 13:58:51 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -412,7 +412,7 @@ class CData_Layer{
 		}
 		else{
 			$proxies = array();
-			$proxies[] = array('host'=>$config->ser_rpc['host'], 'port'=>$config->ser_rpc['port']);
+			$proxies[] = array('host'=>$config->ser_rpc['host']);
 		}
 	
 		$i=0;
@@ -421,10 +421,9 @@ class CData_Layer{
 		$out->results = array();
 
 		foreach($proxies as $v){
-			$client = new XML_RPC_Client('/', $v['host'], $v['port']);
+			$client = $this->make_rpc_client('/', $v);
 
-			if ($i==1) $res = $client->send("ddd");
-			else $res = $client->send($msg);
+			$res = $client->send($msg);
 
 			if ($this->rpc_is_error($res, $client)){
 				$out->ok = false;
@@ -578,12 +577,61 @@ class CData_Layer{
 		return $db;
 	}
 
+	/**
+	 *	Make instance of XML_RPC_CLient
+	 *	
+	 *	@access	private
+	 *	@param	string	$path	path to RPC server script
+	 *	@param	array	$my_cfg	alternative configs to use instead of $config->ser_rpc
+	 */
+	function &make_rpc_client($path, $my_cfg=null){
+		global $config;
+
+		$cfg = $config->ser_rpc;
+		
+		/* replace default config by alternative configs */
+		if (is_array($my_cfg)){
+			foreach($my_cfg as $k => $v) $cfg[$k] = $v;
+		}
+		
+		$port = isset($cfg['port']) ? $cfg['port'] : 5060;
+		$host = empty($cfg['use_ssl']) ? $cfg['host'] : "https://".$cfg['host'];
+
+		$rpc = new XML_RPC_Client_curl($path, $host, $port);
+		
+		/* set credentials */
+		if (isset($cfg['user']) and isset($cfg['pass'])){
+			$rpc->setCredentials($cfg['user'], $cfg['pass']);
+		}
+
+		/* set SSL settings */
+		if (!empty($cfg['use_ssl'])){
+			if (isset($cfg['ssl_vh'])){
+				if ($cfg['ssl_vh']) $rpc->setSSLVerifyHost(2);
+				else                $rpc->setSSLVerifyHost(0);
+			}
+			if (isset($cfg['ssl_ver']))	$rpc->setSSLVersion($cfg['ssl_ver']);
+			if (isset($cfg['ssl_ca']))	$rpc->setSSLCA($cfg['ssl_ca']);
+			if (isset($cfg['ssl_cert'])){
+				$pw = isset($cfg['ssl_cert_pass']) ? $cfg['ssl_cert_pass'] : null;
+				$rpc->setSSLCert($cfg['ssl_cert'], $pw);
+			}
+			if (isset($cfg['ssl_key'])){
+				$pw = isset($cfg['ssl_key_pass']) ? $cfg['ssl_key_pass'] : null;
+				$rpc->setSSLKey($cfg['ssl_key'], $pw);
+			}
+		}
+		
+		return $rpc;
+	}
 
 	/**
 	 *	create instance of xml rpc client 
 	 */
 	function connect_to_xml_rpc($opt, &$errors){
 		global $config, $sess_data_conn;
+
+		$cfg = &$config->ser_rpc;
 
 		if (isset($opt['cluster'])) {
 			$proxy = "sip:".$config->ser_rpc['host'];
@@ -606,10 +654,8 @@ class CData_Layer{
 
 		if ($this->rpc and $this->rpc->path == '/'.$proxy) return $this->rpc;
 
-		$rpc = new XML_RPC_Client('/'.$proxy, $config->ser_rpc['host'], $config->ser_rpc['port']);
-
-		$this->rpc=&$rpc;
-		return $rpc;
+		$this->rpc = $this->make_rpc_client('/'.$proxy);
+		return $this->rpc;
 	}
 
 	
