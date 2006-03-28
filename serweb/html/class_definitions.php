@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.11 2006/03/28 15:04:21 kozlik Exp $
+ * $Id: class_definitions.php,v 1.12 2006/03/28 16:12:33 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -803,6 +803,7 @@ class Shm_Semaphore{
 			ErrorHandler::log_errors(PEAR::raiseError("cannot release semaphore"));
 			return false;
 		}
+		return true;
     }
 }
 
