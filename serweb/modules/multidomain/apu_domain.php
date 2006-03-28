@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.14 2006/03/08 15:32:57 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.15 2006/03/28 15:05:01 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -540,14 +540,23 @@ class apu_domain extends apu_base_class{
 	function action_add_alias(&$errors){
 		global $data;
 
-		if (false === $this->generate_domain_id($errors)) return false;
+		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
 
 		if (false === $data->transaction_start()) return false;
+
+		/* set semaphore to be sure there will not be generated same domain id for two domains */
+		if (!$sem->acquire()){
+			$data->transaction_rollback();
+			return false;
+		}
+
+		if (false === $this->generate_domain_id($errors)) return false;
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
 				$data->transaction_rollback();
 				$this->revert_domain_id();
+				$sem->release();
 				return false;
 			}
 		}
@@ -559,10 +568,13 @@ class apu_domain extends apu_base_class{
 		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
 			$data->transaction_rollback();
 			$this->revert_domain_id();
+			$sem->release();
 			return false;
 		}
 
 		if (false === $data->transaction_commit()) return false;
+
+		$sem->release();
 		
 		return array("m_do_alias_created=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -577,14 +589,23 @@ class apu_domain extends apu_base_class{
 	function action_update(&$errors){
 		global $data, $config;
 
-		if (false === $this->generate_domain_id($errors)) return false;
+		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
 
 		if (false === $data->transaction_start()) return false;
+
+		/* set semaphore to be sure there will not be generated same domain id for two domains */
+		if (!$sem->acquire()){
+			$data->transaction_rollback();
+			return false;
+		}
+
+		if (false === $this->generate_domain_id($errors)) return false;
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
 				$data->transaction_rollback();
 				$this->revert_domain_id();
+				$sem->release();
 				return false;
 			}
 		}
@@ -596,11 +617,14 @@ class apu_domain extends apu_base_class{
 		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
 			$data->transaction_rollback();
 			$this->revert_domain_id();
+			$sem->release();
 			return false;
 		}
 
 
 		if (false === $data->transaction_commit()) return false;
+
+		$sem->release();
 
 		if ($this->opt['redirect_on_update']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);

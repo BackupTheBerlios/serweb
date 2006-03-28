@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.6 2006/03/27 14:31:48 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.7 2006/03/28 15:05:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -108,6 +108,8 @@ class apu_registration extends apu_base_class{
 	var $domain_names;
 	var $attr_types;
 	var $js_after="";
+	/** semaphore */
+	var $sem_id;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -288,9 +290,19 @@ class apu_registration extends apu_base_class{
 		}
 
 		if ($this->opt['create_numeric_alias']){
+		
+			$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+
+			/* set semaphore to be sure there will not be same aliases for two users */
+			if (!$sem->acquire()){
+				$data->transaction_rollback();
+				return false;
+			}
+
 			// generate alias number 
 			if (false === $alias=$data->get_new_alias_number($did, null)) {
 				$data->transaction_rollback();
+				$sem->release();
 				return false;
 			}
 	
@@ -298,6 +310,13 @@ class apu_registration extends apu_base_class{
 			$o = array('disabled' => $this->opt['require_confirmation'],
 			           'canon' => false);
 			if (false === $data->add_uri($uid, $alias, $did, $o)) {
+				$data->transaction_rollback();
+				$sem->release();
+				return false;
+			}
+
+			/* reset the semaphore */
+			if (!$sem->release()){
 				$data->transaction_rollback();
 				return false;
 			}

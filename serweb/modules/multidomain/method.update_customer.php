@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.5 2006/03/08 15:46:27 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.6 2006/03/28 15:05:01 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -53,10 +53,19 @@ class CData_Layer_update_customer {
 
 
 		if ($opt_insert) {
+		
+			$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+			/* set semaphore to be sure there will not be generated same id for two customers */
+			if (!$sem->acquire())	return false;
+	
 			$q = "select max(".$cc->cid.") from ".$tc_name;
 
 			$res=$this->db->query($q);
-			if (DB::isError($res)) {ErrorHandler::log_errors($res, $errors); return false;}
+			if (DB::isError($res)) {
+				ErrorHandler::log_errors($res, $errors);
+				$sem->release();
+				return false;
+			}
 
 			$next_id = 0;
 			if ($row=$res->fetchRow(DB_FETCHMODE_ORDERED)){
@@ -75,6 +84,15 @@ class CData_Layer_update_customer {
 				 )";
 				 
 			$opt['new_id'] = $next_id;
+
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {
+				log_errors($res, $errors); 
+				$sem->release();
+				return false;
+			}
+
+			$sem->release();
 		}
 		else {
 			$q="update ".$tc_name." 
@@ -83,18 +101,16 @@ class CData_Layer_update_customer {
 			        ".$cc->email."  =".$this->sql_format($values['email'],   "s").", 
 			        ".$cc->phone."  =".$this->sql_format($values['phone'],   "s")."
 				where ".$cc->cid."  =".$this->sql_format($opt['primary_key']['cid'], "n");
+
+			$res=$this->db->query($q);
+			if (DB::isError($res)) {
+				log_errors($res, $errors); 
+				return false;
+			}
 		}
 
-
-		$res=$this->db->query($q);
-		if (DB::isError($res)) {
-			log_errors($res, $errors); 
-			return false;
-		}
 		return true;
-
 	}
-
 }
 
 ?>
