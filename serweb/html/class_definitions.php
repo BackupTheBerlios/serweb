@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.10 2006/03/22 14:00:14 kozlik Exp $
+ * $Id: class_definitions.php,v 1.11 2006/03/28 15:04:21 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -756,4 +756,54 @@ class Credential{
 					 "for_serweb" => ($this->flags & $f['DB_FOR_SERWEB']));
 	}
 }
+
+/**
+ *	OO extension for IPC semaphores
+ */
+class Shm_Semaphore{
+	var $max_acquire;
+	var $perm;
+	var $sem_id;
+	
+	/**
+	 *	Constructor
+	 *
+	 *	@param	string	$path_name		
+	 *	@param	string	$proj			project identifier - one character
+	 *	@param	int		$max_acquire	The number of processes that can acquire the semaphore simultaneously
+	 *	@param	int		$perm			permission bits 
+	 */
+    function Shm_Semaphore($path_name, $proj, $max_acquire = 1, $perm=0666){
+        $key = ftok($path_name, $proj);
+        $this->max_acquire = $max_acquire;
+        $this->perm = $perm;
+        $this->sem_id = sem_get($key, $this->max_acquire, $this->perm, true);
+    }
+
+	/**
+	 *	blocks (if necessary) until the semaphore can be acquired
+	 *
+	 *	@return bool 	Returns TRUE on success or FALSE on failure.
+	 */
+    function acquire(){
+        if (!sem_acquire($this->sem_id)) {
+			ErrorHandler::log_errors(PEAR::raiseError("cannot acquire semaphore"));
+            return false;
+        }
+        return true;
+    }
+
+	/**
+	 *	releases the semaphore if it is currently acquired by the calling process
+	 *
+	 *	@return bool 	Returns TRUE on success or FALSE on failure.
+	 */
+    function release(){
+		if (!sem_release($this->sem_id)) {
+			ErrorHandler::log_errors(PEAR::raiseError("cannot release semaphore"));
+			return false;
+		}
+    }
+}
+
 ?>
