@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.68 2006/03/16 11:57:38 kozlik Exp $
+ * @version   $Id: functions.php,v 1.69 2006/03/29 11:46:38 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -1114,7 +1114,7 @@ function copyr($source, $dest)
 function rm($fileglob)
 {
    if (is_string($fileglob)) {
-       if (is_file($fileglob)) {
+       if (is_link($fileglob) or is_file($fileglob)) {
            return unlink($fileglob);
        } else if (is_dir($fileglob)) {
            $ok = rm("$fileglob/*");
