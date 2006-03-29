@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.15 2006/03/28 15:05:01 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.16 2006/03/29 11:48:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -317,20 +317,31 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
+		FileJournal::clear();
+
 		if (isset($_GET['enable'])){
 			$opt['did'] = $this->id;
 			$opt['disable'] = false;
 
-			if (false === $this->create_or_remove_all_symlinks(true, $errors)) return false;
+			if (false === $this->create_or_remove_all_symlinks(true, $errors)) {
+				FileJournal::rollback();
+				return false;
+			}
 		}
 		else {
 			$opt['did'] = $this->id;
 			$opt['disable'] = true;
 
-			if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
+			if (false === $this->create_or_remove_all_symlinks(false, $errors)) {
+				FileJournal::rollback();
+				return false;
+			}
 		}
 
-		if (false === $data->enable_domain($opt)) return false;
+		if (false === $data->enable_domain($opt)) {
+			FileJournal::rollback();
+			return false;
+		}
 
 		/* notify SER to reload domains */
 		if (false === $data->reload_domains(null, $errors)) return false;
@@ -543,6 +554,7 @@ class apu_domain extends apu_base_class{
 		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
 
 		if (false === $data->transaction_start()) return false;
+		FileJournal::clear();
 
 		/* set semaphore to be sure there will not be generated same domain id for two domains */
 		if (!$sem->acquire()){
@@ -554,6 +566,7 @@ class apu_domain extends apu_base_class{
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
+				FileJournal::rollback();
 				$data->transaction_rollback();
 				$this->revert_domain_id();
 				$sem->release();
@@ -566,6 +579,7 @@ class apu_domain extends apu_base_class{
 		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
 			
 		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
+			FileJournal::rollback();
 			$data->transaction_rollback();
 			$this->revert_domain_id();
 			$sem->release();
@@ -592,6 +606,7 @@ class apu_domain extends apu_base_class{
 		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
 
 		if (false === $data->transaction_start()) return false;
+		FileJournal::clear();
 
 		/* set semaphore to be sure there will not be generated same domain id for two domains */
 		if (!$sem->acquire()){
@@ -603,6 +618,7 @@ class apu_domain extends apu_base_class{
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
+				FileJournal::rollback();
 				$data->transaction_rollback();
 				$this->revert_domain_id();
 				$sem->release();
@@ -615,6 +631,7 @@ class apu_domain extends apu_base_class{
 		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
 			
 		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
+			FileJournal::rollback();
 			$data->transaction_rollback();
 			$this->revert_domain_id();
 			$sem->release();
