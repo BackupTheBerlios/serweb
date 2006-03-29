@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.2 2006/01/25 12:40:33 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {
@@ -25,7 +25,7 @@ class CData_Layer_get_usrloc {
 			$params = array(new XML_RPC_Value($config->ul_table, 'string'),
 			                new XML_RPC_Value($uid, 'string'));
 			                
-			$msg = new XML_RPC_Message_patched('usrloc.show_contacts', $params);
+			$msg = new XML_RPC_Message('usrloc.show_contacts', $params);
 			$res = $this->rpc->send($msg);
 	
 			if ($this->rpc_is_error($res)){

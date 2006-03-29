@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.del_contact.php,v 1.2 2006/01/25 12:40:33 kozlik Exp $
+ * $Id: method.del_contact.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
  */
 
 class CData_Layer_del_contact {
@@ -25,7 +25,7 @@ class CData_Layer_del_contact {
 			                new XML_RPC_Value($uid, 'string'),
 							new XML_RPC_Value($contact, 'string'));
 			                
-			$msg = new XML_RPC_Message_patched('usrloc.delete_contact', $params);
+			$msg = new XML_RPC_Message('usrloc.delete_contact', $params);
 			$res = $this->rpc->send($msg);
 	
 			if ($this->rpc_is_error($res)){

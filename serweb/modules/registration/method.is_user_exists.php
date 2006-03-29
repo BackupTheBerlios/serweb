@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_user_exists.php,v 1.2 2006/03/08 15:46:27 kozlik Exp $
+ * $Id: method.is_user_exists.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
  */
 
 class CData_Layer_is_user_exists {
@@ -18,7 +18,7 @@ class CData_Layer_is_user_exists {
 			if (!$this->connect_to_xml_rpc(array("uri" => "sip:".$uname."@".$udomain), $errors)) return false;
 			
 			$params = array(new XML_RPC_Value("sip:".$uname."@".$udomain, 'string'));
-			$msg = new XML_RPC_Message_patched('get_proxy', $params);
+			$msg = new XML_RPC_Message('get_proxy', $params);
 			$res = $this->rpc->send($msg);
 
 			if ($this->rpc_is_error($res)){

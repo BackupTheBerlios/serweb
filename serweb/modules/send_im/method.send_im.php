@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.send_im.php,v 1.2 2006/03/08 15:46:28 kozlik Exp $
+ * $Id: method.send_im.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
  */
 
 class CData_Layer_send_im {
@@ -26,7 +26,7 @@ class CData_Layer_send_im {
 			if (!$this->connect_to_xml_rpc(null, $errors)) return false;
 			
 			$params = array(new XML_RPC_Value($sip_msg, 'string'));
-			$msg = new XML_RPC_Message_patched('t_uac_dlg', $params);
+			$msg = new XML_RPC_Message('t_uac_dlg', $params);
 			$res = $this->rpc->send($msg);
 	
 			if ($this->rpc_is_error($res)){

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_contact.php,v 1.2 2006/01/25 12:40:33 kozlik Exp $
+ * $Id: method.add_contact.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
  */
 
 class CData_Layer_add_contact {
@@ -41,7 +41,7 @@ class CData_Layer_add_contact {
 			                new XML_RPC_Value($config->ul_priority, 'double'),
 			                new XML_RPC_Value($flags, 'int'));
 			                
-			$msg = new XML_RPC_Message_patched('usrloc.add_contact', $params);
+			$msg = new XML_RPC_Message('usrloc.add_contact', $params);
 			$res = $this->rpc->send($msg);
 	
 			if ($this->rpc_is_error($res)){

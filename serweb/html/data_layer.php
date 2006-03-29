@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.20 2006/03/27 13:58:51 kozlik Exp $
+ * $Id: data_layer.php,v 1.21 2006/03/29 14:53:12 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -217,7 +217,7 @@ class CData_Layer{
 		if (!$this->connect_to_xml_rpc(array('uri' => $user_id), $errors)) return false;
 		
 		$params = array(new XML_RPC_Value($user_id, 'string'));
-		$msg = new XML_RPC_Message_patched('get_proxy', $params);
+		$msg = new XML_RPC_Message('get_proxy', $params);
 		$res = $this->rpc->send($msg);
 
 		if ($this->rpc_is_error($res)){
@@ -374,7 +374,7 @@ class CData_Layer{
 		if (!$this->connect_to_xml_rpc(array("uri" => $proxy_uri), $errors)) 
 			return false;
 
-		$msg = new XML_RPC_Message_patched('get_db_uri');
+		$msg = new XML_RPC_Message('get_db_uri');
 		$res = $this->rpc->send($msg);
 
 		if ($this->rpc_is_error($res)){
