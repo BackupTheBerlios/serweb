@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.29 2006/03/27 13:58:51 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.30 2006/03/29 14:49:33 kozlik Exp $
  */
 
 
@@ -198,6 +198,15 @@
 		 *	are not backuped on update of them.
 		 */
 		$config->backup_versions_nr = 10;
+		
+		/**
+		 *	Set to true if SER caching domain table
+		 *
+		 *	modparam("domain", "db_mode", 1) is set in ser.cfg
+		 *	
+		 *	Otherwise set this option to false
+		 */
+		$config->ser_domain_cache = true;
 		
 		/* these are setting required by ldap, you need to change it only if you are using ldap to 
 		   store some data. If you are using ldap, you need to instal PEAR package db_ldap2 by command:
