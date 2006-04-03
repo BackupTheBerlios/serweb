@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.14 2006/03/17 14:26:51 kozlik Exp $
+ * $Id: method.get_users.php,v 1.15 2006/04/03 11:44:39 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -264,7 +264,7 @@ class CData_Layer_get_users {
 				}
 
 				if ($opt_get_sip_uri){
-					if (false === $uri = &$uri_handler->get_URI()) return false;
+					if (false === $uri = $uri_handler->get_URI()) return false;
 					if (!is_null($uri)){
 						if (false === $out[$i]['sip_uri'] = $uri->to_string()) return false;
 					}
