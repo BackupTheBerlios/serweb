@@ -1,13 +1,21 @@
 <?php
 /*
- * $Id: mod_auth.php,v 1.1 2005/07/08 11:06:52 kozlik Exp $
+ * $Id: mod_auth.php,v 1.2 2006/04/03 14:56:04 kozlik Exp $
  */ 
+
+
+/*
+ *	Configuration variables for this module
+ *	
+ *	$config->auth['backend'] = 'db';	allowed values: "db", "radius", "ldap"
+ *		notice: "radius" and "ldap"	are experimental
+ *	
+ */
+
 
 /*
  *	If config variables are not set, initialize them to default values
  */
-
-$config->auth['backend'] = 'db';
 
  
 /**
