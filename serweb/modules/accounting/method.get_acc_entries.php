@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.5 2006/04/03 13:01:56 kozlik Exp $
  */
 
 /*
@@ -198,7 +198,7 @@ class CData_Layer_get_acc_entries {
 //				$o['length']=0;
 			}
 			$o['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($o['to_uri'])."');";
-			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));
+			$o['sip_to']  = ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']);
 
 			if ($opt_get_user_status)
 				$o['status']  = $this->get_status($o['to_uri'], null);
@@ -265,8 +265,8 @@ class CData_Layer_get_acc_entries {
 						t2.request_timestamp as bye_time, 
 						t2.from_tag as bye_fromtag, 
 						t2.to_tag as bye_totag,
-						t2.from_uri as bye_from_uri, 
-						t2.sip_from as bye_sip_from,
+						t2.to_uri as bye_from_uri, 
+						t2.sip_to as bye_sip_from,
 						coalesce(t1.response_timestamp, t2.request_timestamp) as ttime ";
 
 			$this->acc_sql['select_missed'] = 
@@ -304,7 +304,7 @@ class CData_Layer_get_acc_entries {
 				"where t1.sip_method='INVITE' ";
 
 			$this->acc_sql['where_2'] = 
-				"where t2.sip_method='BYE' and t1.username IS NULL ";
+				"where t2.sip_method='BYE' and t1.from_uid IS NULL ";
 
 			$this->acc_sql['order'] = 
 				"order by ttime desc ";
@@ -318,11 +318,16 @@ class CData_Layer_get_acc_entries {
 		/* flags */
 		$f_acc = &$config->data_sql->acc->flag_values;
 
-		if ($config->users_indexed_by=='uuid') // in UUIDzed version we not able to get unpaired BYE records
+		if ($config->users_indexed_by=='uuid') 
 			$q = "(".$this->acc_sql['select_out'].", 'outgoing' as call_type ".
 			         $this->acc_sql['from_1'].
 			         $this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
 					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ".
+				 ") union (".	// get unpaired BYE records
+				     $this->acc_sql['select_out'].", 'outgoing' as call_type ".
+			         $this->acc_sql['from_2'].
+			         $this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.to_uid', 't2.username', 't2.domain').
+					 		" and (t2.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ".
 				 ")";
 		else
 			$q = "(".$this->acc_sql['select_out'].", 'outgoing' as call_type ".
@@ -352,12 +357,20 @@ class CData_Layer_get_acc_entries {
 					$this->acc_sql['from_1'].
 					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
 					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
+
+			// count unpaired BYE requests
+			$q[] = "select count(*) ".
+					$this->acc_sql['from_2'].
+					$this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.to_uid', 't2.username', 't2.domain').
+					 		" and (t2.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ";
 		}
 		else{
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_1'].
 					$this->acc_sql['where_1']." and ".$this->get_indexing_sql_where_phrase($user, 't1.from_uid', 't1.username', 't1.domain').
 					 		" and (t1.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
+
+			// count unpaired BYE requests
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_2'].
 					$this->acc_sql['where_2']." and ".$this->get_indexing_sql_where_phrase($user, 't2.to_uid', 't2.username', 't2.domain').
@@ -378,7 +391,13 @@ class CData_Layer_get_acc_entries {
 			         $this->acc_sql['from_1'].
 			         $this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
 					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ".
+				 ") union (".	// get unpaired BYE records
+				     $this->acc_sql['select_in'].", 'incoming' as call_type ".
+			         $this->acc_sql['from_2'].
+			         $this->acc_sql['where_2']." and t2.from_uid = '".$user->uuid."'".
+					 		" and (t2.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ".
 				 ")";
+
 		}
 		else {
 			$q = ""; 
@@ -404,6 +423,12 @@ class CData_Layer_get_acc_entries {
 					$this->acc_sql['from_1'].
 					$this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
 					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ";
+
+			// count unpaired BYE requests
+			$q[] = "select count(*) ".
+					$this->acc_sql['from_2'].
+					$this->acc_sql['where_2']." and t2.from_uid = '".$user->uuid."'".
+					 		" and (t2.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
 		}
 		else{
 		}
