@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: reg_confirmation.tpl,v 1.2 2005/08/10 13:56:25 kozlik Exp $ *}
+{* $Id: reg_confirmation.tpl,v 1.3 2006/04/04 10:33:24 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -19,8 +19,8 @@
 		<p>{$lang_str.reg_conf_set_up}<br>
 		<b>{$lang_str.reg_conf_jabber_failed}</b><br>
 		{$lang_str.reg_conf_contact_infomail}</p><br>
-	{elseif ($status=="already_done")}
-		<b>{$lang_str.err_reg_conf_already_created}</b><br>
+	{elseif ($status=="nr_not_exists")}
+		<b>{$lang_str.reg_conf_nr_not_exists}</b><br>
 	{/if}
 
 	<br>

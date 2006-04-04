@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.42 2006/03/22 14:00:15 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.43 2006/04/04 10:33:23 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -371,8 +371,8 @@ $lang_str['reg_conf_set_up'] = 					"Your ".$config->domain." account was set up
 $lang_str['reg_conf_jabber_failed'] = 			"But your ".$config->domain." Jabber Gateway registration failed.";
 $lang_str['reg_conf_contact_infomail'] = 		"Please contact <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> for further assistance.";
 $lang_str['reg_conf_failed'] = 					"We regret but your ".$config->domain." confirmation attempt failed.";
+$lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. No such a confirmation number exists";
-$lang_str['err_reg_conf_already_created'] = 	"Your account has already been created";
 
 /* ------------------------------------------------------------*/
 /*      registration - forgot password                         */

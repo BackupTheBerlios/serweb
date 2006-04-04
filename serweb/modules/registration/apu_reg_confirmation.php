@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_reg_confirmation.php,v 1.2 2005/12/23 09:45:18 kozlik Exp $
+ * $Id: apu_reg_confirmation.php,v 1.3 2006/04/04 10:33:24 kozlik Exp $
  */ 
 
 /* Application unit reg_confirmation */
@@ -40,6 +40,7 @@
 class apu_reg_confirmation extends apu_base_class{
 	var $smarty_action='default';
 	var $nr;		//confirmation number
+	var $wrong_nr = false;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -98,6 +99,7 @@ class apu_reg_confirmation extends apu_base_class{
 		if (false === $attrs = $data->get_attr_by_val("user", $o)) return false;
 
 		if (empty($attrs[0]['id'])) {
+			$this->wrong_nr = true;
 			ErrorHandler::add_error($lang_str['err_reg_conf_not_exists_conf_num']);
 			return false;
 		}
@@ -167,8 +169,8 @@ class apu_reg_confirmation extends apu_base_class{
 		global $smarty;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		
-		if (isset($_GET['conf_already_done']) and $_GET['conf_already_done']) 
-			$smarty->assign($this->opt['smarty_status'], "already_done");
+		if ($this->wrong_nr) 
+			$smarty->assign($this->opt['smarty_status'], "nr_not_exists");
 		elseif (isset($_GET['conf_jabber_failed']) and $_GET['conf_jabber_failed']) 
 			$smarty->assign($this->opt['smarty_status'], "jabber_failed");
 		else

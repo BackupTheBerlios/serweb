@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.26 2006/03/22 14:00:15 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.27 2006/04/04 10:33:23 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
