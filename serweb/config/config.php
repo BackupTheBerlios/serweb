@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.32 2006/03/13 15:34:05 kozlik Exp $
+ * $Id: config.php,v 1.33 2006/04/05 12:28:45 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -101,7 +101,6 @@
 	$config->admin_tabs=array();
 	$config->admin_tabs[]=new Ctab (true, "@tab_users", "users.php");							// $lang_str['tab_users']
 	$config->admin_tabs[]=new Ctab (true, "@tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
-	$config->admin_tabs[]=new Ctab (true, "@tab_ser_moni", "ser_moni.php");						// $lang_str['tab_ser_moni']
 	$config->admin_tabs[]=new Ctab (false, "@tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
 	$config->admin_tabs[]=new Ctab (true, "@tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
 	$config->admin_tabs[]=new Ctab (true, "@tab_customers", "customers.php");					// $lang_str['tab_customers']
@@ -310,23 +309,6 @@
 	// $config->stun_applet_param[]=new Capplet_params("sourceport", 5000);
 
 
-
-	/* ------------------------------------------------------------*/
-	/*            configure server monitoring					   */
-	/* ------------------------------------------------------------*/
-
-	/* if you change this values, please delete all data from table	
-	   "table_ser_mon_agg" and "table_ser_mon" by reason that the 
-		aggregated data may be calculated bad if you don't do it
-	*/
-
-	/* length of marginal period in seconds */
-	$config->ser_moni_marginal_period_length=60*5;   //5 minutes
-	
-	/* length of interval (in seconds) for which will data stored, 
-	   data older then this interval will be deleted
-	*/
-	$config->ser_moni_aggregation_interval=60*15;	//15 minut
 
 	/* ------------------------------------------------------------*/
 	/*            click to dial                                    */

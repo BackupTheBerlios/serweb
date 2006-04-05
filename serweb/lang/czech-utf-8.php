@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.25 2006/03/13 15:34:06 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.26 2006/04/05 12:28:46 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -47,6 +47,7 @@ $lang_str['showed_users'] = 					"Zobrazení uživatelé";
 $lang_str['no_users_found'] = 					"Žádní uživatelé nenalezeni";
 $lang_str['none'] = 							"none";	//to translate 
 $lang_str['warning'] = 							"Warning!";	//to translate 
+$lang_str['domain'] = 							"tabulka";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -104,7 +105,6 @@ $lang_str['tab_caller_screening'] =	 			"filtrování volajících";
 
 $lang_str['tab_users'] =	 					"uživatelé";
 $lang_str['tab_admin_privileges'] =	 			"oprávnění správců";
-$lang_str['tab_ser_moni'] =	 					"monitorování serveru";
 $lang_str['tab_domains'] =	 					"domains";	//to translate 
 $lang_str['tab_customers'] =	 				"customers";	//to translate 
 $lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
@@ -124,6 +124,8 @@ $lang_str['ff_show_online_only'] = 				"zobraz jenom on-line uživatele";
 $lang_str['ff_language'] = 						"language";	//to translate 
 $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
 $lang_str['ff_uid'] = 							"uid";	//to translate 
+$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
+$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -371,8 +373,8 @@ $lang_str['reg_conf_set_up'] = 					"Váš ".$config->domain." účet je připra
 $lang_str['reg_conf_jabber_failed'] = 			"Ale vaše registrace v Jabber bráně ".$config->domain." selhala.";
 $lang_str['reg_conf_contact_infomail'] = 		"Prosím kontaktujte <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> pro další pomoc.";
 $lang_str['reg_conf_failed'] = 					"Omlouváme se ale váš pokus o potvrzení selhal.";
+$lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Litujeme. Toto potvrzovací číslo neexistuje";
-$lang_str['err_reg_conf_already_created'] = 	"Váš účet již byl vytvořen";
 
 /* ------------------------------------------------------------*/
 /*      registration - forgot password                         */
@@ -403,6 +405,8 @@ $lang_str['l_aliases'] = 						"aliasy";
 $lang_str['l_account'] = 						"účet";
 $lang_str['l_accounting'] = 					"přehled volání";
 $lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";	//to translate 
+$lang_str['l_credentials'] = 					"credentials";	//to translate 
+$lang_str['user_has_no_credentials'] = 			"User has no credentials";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -460,32 +464,6 @@ $lang_str['th_realm'] = 						"realm";	//to translate
 $lang_str['ff_show_admins_only'] = 				"zobrazit jenom administrátory";
 $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
 
-/* ------------------------------------------------------------*/
-/*      server monitoring                                      */
-/* ------------------------------------------------------------*/
-
-$lang_str['ser_moni_current'] = 				"aktuálně";
-$lang_str['ser_moni_average'] = 				"průměrně";
-$lang_str['ser_moni_waiting_cur'] = 			"aktuálně čekajících";
-$lang_str['ser_moni_waiting_avg'] = 			"průměrně čekajících";
-$lang_str['ser_moni_total_cur'] = 				"aktuální souhrn";
-$lang_str['ser_moni_total_avg'] = 				"průměrný souhrn";
-$lang_str['ser_moni_local_cur'] = 				"aktuálně lokálních";
-$lang_str['ser_moni_local_avg'] = 				"průměrně lokálních";
-$lang_str['ser_moni_replies_cur'] = 			"akt. lokál. odpovědí";
-$lang_str['ser_moni_replies_avg'] = 			"prům. lokál. odpovědí";
-$lang_str['ser_moni_registered_cur'] = 			"akt. registrováno";
-$lang_str['ser_moni_registered_avg'] = 			"prům. registrováno";
-$lang_str['ser_moni_expired_cur'] = 			"aktuálně vypršených";
-$lang_str['ser_moni_expired_avg'] = 			"průměrně vypršených";
-$lang_str['ser_moni_general_values'] = 			"obecné hodnoty";
-$lang_str['ser_moni_diferencial_values'] = 		"rozdílové hodnoty";
-$lang_str['ser_moni_transaction_statistics'] = 	"Transakční statistiky";
-$lang_str['ser_moni_completion_status'] = 		"Stav dokončení";
-$lang_str['ser_moni_stateless_server_statis'] = "Statistiky bezestavového serveru";
-$lang_str['ser_moni_usrLoc_stats'] = 			"Statistiky UsrLoc";
-$lang_str['domain'] = 							"tabulka";
-
 
 /* ------------------------------------------------------------*/
 /*      attribute types                                        */
@@ -496,8 +474,6 @@ $lang_str['ff_order'] = 						"order";	//to translate
 $lang_str['ff_att_name'] = 						"jméno atributu";
 $lang_str['ff_att_type'] = 						"typ atributu";
 $lang_str['ff_label'] = 						"label";	//to translate 
-$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
-$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
 $lang_str['ff_att_user'] = 						"user";	//to translate 
 $lang_str['ff_att_domain'] = 					"domain";	//to translate 
 $lang_str['ff_att_global'] = 					"global";	//to translate 
@@ -539,6 +515,19 @@ $lang_str['th_att_default_value'] = 			"defaultní hodnota";
 $lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
 $lang_str['edit_items_of_the_list'] = 			"změnit seznam položek";
 
+
+/* ------------------------------------------------------------*/
+/*      credentials                                            */
+/* ------------------------------------------------------------*/
+
+
+$lang_str['change_credentials_of_user'] = 		"Change credentials of user";	//to translate 
+
+$lang_str['th_password'] = 						"password";	//to translate 
+$lang_str['th_for_ser'] = 						"for SER";	//to translate 
+$lang_str['th_for_serweb'] = 					"for SerWeb";	//to translate 
+
+$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";	//to translate 
 
 
 /* ------------------------------------------------------------*/
@@ -674,5 +663,27 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['tab_ser_moni'] =	 					"monitorování serveru";
+$lang_str['err_reg_conf_already_created'] = 	"Váš účet již byl vytvořen";
+$lang_str['ser_moni_current'] = 				"aktuálně";
+$lang_str['ser_moni_average'] = 				"průměrně";
+$lang_str['ser_moni_waiting_cur'] = 			"aktuálně čekajících";
+$lang_str['ser_moni_waiting_avg'] = 			"průměrně čekajících";
+$lang_str['ser_moni_total_cur'] = 				"aktuální souhrn";
+$lang_str['ser_moni_total_avg'] = 				"průměrný souhrn";
+$lang_str['ser_moni_local_cur'] = 				"aktuálně lokálních";
+$lang_str['ser_moni_local_avg'] = 				"průměrně lokálních";
+$lang_str['ser_moni_replies_cur'] = 			"akt. lokál. odpovědí";
+$lang_str['ser_moni_replies_avg'] = 			"prům. lokál. odpovědí";
+$lang_str['ser_moni_registered_cur'] = 			"akt. registrováno";
+$lang_str['ser_moni_registered_avg'] = 			"prům. registrováno";
+$lang_str['ser_moni_expired_cur'] = 			"aktuálně vypršených";
+$lang_str['ser_moni_expired_avg'] = 			"průměrně vypršených";
+$lang_str['ser_moni_general_values'] = 			"obecné hodnoty";
+$lang_str['ser_moni_diferencial_values'] = 		"rozdílové hodnoty";
+$lang_str['ser_moni_transaction_statistics'] = 	"Transakční statistiky";
+$lang_str['ser_moni_completion_status'] = 		"Stav dokončení";
+$lang_str['ser_moni_stateless_server_statis'] = "Statistiky bezestavového serveru";
+$lang_str['ser_moni_usrLoc_stats'] = 			"Statistiky UsrLoc";
 $lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
 ?>

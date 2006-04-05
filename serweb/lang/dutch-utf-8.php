@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.25 2006/03/13 15:34:06 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.26 2006/04/05 12:28:46 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -47,6 +47,7 @@ $lang_str['showed_users'] = 					"Overzicht gebruikers";
 $lang_str['no_users_found'] = 					"Geen gebruikers gevonden";
 $lang_str['none'] = 							"none";	//to translate 
 $lang_str['warning'] = 							"Warning!";	//to translate 
+$lang_str['domain'] = 							"domein";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -104,7 +105,6 @@ $lang_str['tab_caller_screening'] =	 			"caller screening";
 
 $lang_str['tab_users'] =	 					"gebruikers";
 $lang_str['tab_admin_privileges'] =	 			"admin rechten";
-$lang_str['tab_ser_moni'] =	 					"server status";
 $lang_str['tab_domains'] =	 					"domains";	//to translate 
 $lang_str['tab_customers'] =	 				"customers";	//to translate 
 $lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
@@ -124,6 +124,8 @@ $lang_str['ff_show_online_only'] = 				"alleen on-line gebruikers";
 $lang_str['ff_language'] = 						"language";	//to translate 
 $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
 $lang_str['ff_uid'] = 							"uid";	//to translate 
+$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
+$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -371,8 +373,8 @@ $lang_str['reg_conf_set_up'] = 					"Uw ".$config->domain." account is aangemaak
 $lang_str['reg_conf_jabber_failed'] = 			"Helaas uw ".$config->domain." Jabber Gateway registratie is mislukt.";
 $lang_str['reg_conf_contact_infomail'] = 		"Neem contact op met <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> voor verdere ondersteuning.";
 $lang_str['reg_conf_failed'] = 					"Helaas uw ".$config->domain." bevestiging is mislukt.";
+$lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. Dit nummer komt niet voor op onze server!";
-$lang_str['err_reg_conf_already_created'] = 	"Uw account was al aangemakt";
 
 /* ------------------------------------------------------------*/
 /*      registration - forgot password                         */
@@ -403,6 +405,8 @@ $lang_str['l_aliases'] = 						"alias";
 $lang_str['l_account'] = 						"gebruiker";
 $lang_str['l_accounting'] = 					"rekening";
 $lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";	//to translate 
+$lang_str['l_credentials'] = 					"credentials";	//to translate 
+$lang_str['user_has_no_credentials'] = 			"User has no credentials";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -460,32 +464,6 @@ $lang_str['th_realm'] = 						"realm";	//to translate
 $lang_str['ff_show_admins_only'] = 				"alleen administrators";
 $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
 
-/* ------------------------------------------------------------*/
-/*      server monitoring                                      */
-/* ------------------------------------------------------------*/
-
-$lang_str['ser_moni_current'] = 				"huidig";
-$lang_str['ser_moni_average'] = 				"gemiddeld";
-$lang_str['ser_moni_waiting_cur'] = 			"onderweg huidig";
-$lang_str['ser_moni_waiting_avg'] = 			"onderweg gemiddeld";
-$lang_str['ser_moni_total_cur'] = 				"totaal huidig";
-$lang_str['ser_moni_total_avg'] = 				"totaal gemiddeld";
-$lang_str['ser_moni_local_cur'] = 				"lokaal huidig";
-$lang_str['ser_moni_local_avg'] = 				"lokaal gemiddeld";
-$lang_str['ser_moni_replies_cur'] = 			"replied localy huidig";
-$lang_str['ser_moni_replies_avg'] = 			"replied localy gemiddeld";
-$lang_str['ser_moni_registered_cur'] = 			"geregistreerd huidig";
-$lang_str['ser_moni_registered_avg'] = 			"geregistreerd gemiddeld";
-$lang_str['ser_moni_expired_cur'] = 			"verlopen huidig";
-$lang_str['ser_moni_expired_avg'] = 			"verlopen gemiddeld";
-$lang_str['ser_moni_general_values'] = 			"totaalwaarde";
-$lang_str['ser_moni_diferencial_values'] = 		"verschilwaarde";
-$lang_str['ser_moni_transaction_statistics'] = 	"Transactiestatistiek";
-$lang_str['ser_moni_completion_status'] = 		"Compleet status";
-$lang_str['ser_moni_stateless_server_statis'] = "Serverstatistiek";
-$lang_str['ser_moni_usrLoc_stats'] = 			"Gebruikers (Loc) Statistiek";
-$lang_str['domain'] = 							"domein";
-
 
 /* ------------------------------------------------------------*/
 /*      attribute types                                        */
@@ -496,8 +474,6 @@ $lang_str['ff_order'] = 						"order";	//to translate
 $lang_str['ff_att_name'] = 						"attribuut naam";
 $lang_str['ff_att_type'] = 						"attribuut type";
 $lang_str['ff_label'] = 						"label";	//to translate 
-$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
-$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
 $lang_str['ff_att_user'] = 						"user";	//to translate 
 $lang_str['ff_att_domain'] = 					"domain";	//to translate 
 $lang_str['ff_att_global'] = 					"global";	//to translate 
@@ -539,6 +515,19 @@ $lang_str['th_att_default_value'] = 			"standaard waarde";
 $lang_str['ff_set_as_default'] = 				"zet als standaard waarde";
 $lang_str['edit_items_of_the_list'] = 			"wijzig item uit de lijst";
 
+
+/* ------------------------------------------------------------*/
+/*      credentials                                            */
+/* ------------------------------------------------------------*/
+
+
+$lang_str['change_credentials_of_user'] = 		"Change credentials of user";	//to translate 
+
+$lang_str['th_password'] = 						"password";	//to translate 
+$lang_str['th_for_ser'] = 						"for SER";	//to translate 
+$lang_str['th_for_serweb'] = 					"for SerWeb";	//to translate 
+
+$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";	//to translate 
 
 
 /* ------------------------------------------------------------*/
@@ -674,5 +663,27 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['tab_ser_moni'] =	 					"server status";
+$lang_str['err_reg_conf_already_created'] = 	"Uw account was al aangemakt";
+$lang_str['ser_moni_current'] = 				"huidig";
+$lang_str['ser_moni_average'] = 				"gemiddeld";
+$lang_str['ser_moni_waiting_cur'] = 			"onderweg huidig";
+$lang_str['ser_moni_waiting_avg'] = 			"onderweg gemiddeld";
+$lang_str['ser_moni_total_cur'] = 				"totaal huidig";
+$lang_str['ser_moni_total_avg'] = 				"totaal gemiddeld";
+$lang_str['ser_moni_local_cur'] = 				"lokaal huidig";
+$lang_str['ser_moni_local_avg'] = 				"lokaal gemiddeld";
+$lang_str['ser_moni_replies_cur'] = 			"replied localy huidig";
+$lang_str['ser_moni_replies_avg'] = 			"replied localy gemiddeld";
+$lang_str['ser_moni_registered_cur'] = 			"geregistreerd huidig";
+$lang_str['ser_moni_registered_avg'] = 			"geregistreerd gemiddeld";
+$lang_str['ser_moni_expired_cur'] = 			"verlopen huidig";
+$lang_str['ser_moni_expired_avg'] = 			"verlopen gemiddeld";
+$lang_str['ser_moni_general_values'] = 			"totaalwaarde";
+$lang_str['ser_moni_diferencial_values'] = 		"verschilwaarde";
+$lang_str['ser_moni_transaction_statistics'] = 	"Transactiestatistiek";
+$lang_str['ser_moni_completion_status'] = 		"Compleet status";
+$lang_str['ser_moni_stateless_server_statis'] = "Serverstatistiek";
+$lang_str['ser_moni_usrLoc_stats'] = 			"Gebruikers (Loc) Statistiek";
 $lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
 ?>

@@ -80,4 +80,4 @@
 	* updated interface for URI editing
 	* added possibility to assign admin to domain
 	* added checks if IMAP extension is installed	
-	
+	* "server monitoring" removed

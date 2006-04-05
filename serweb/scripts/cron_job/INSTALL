@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.2 2005/11/08 15:43:14 kozlik Exp $
+$Id: INSTALL,v 1.3 2006/04/05 12:28:46 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -57,18 +57,3 @@ Extra require:
 
 
 
-	 
-Server monitoring
------------------
-Short description:
-    Read SER statistics, store them in DB and create source data for 
-    server monitoring tab in admin interface
-    
-At what time to run?
-    Each minute
-
-Crontab line: 
-   * * * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/read_ser_moni.php
-
-Extra require:
-   * nothing

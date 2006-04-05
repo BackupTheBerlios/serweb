@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.7 2006/03/13 15:34:05 kozlik Exp $
+ * $Id: page_attributes.php,v 1.8 2006/04/05 12:28:46 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -18,10 +18,6 @@ function _disable_unneeded_tabs(&$page_attributes){
 					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "user_preferences.php") {
-				if (is_object($perm) and !$perm->have_perm("hostmaster"))
-					$page_attributes['tab_collection'][$key]->disable();
-			}
-			elseif ($val->page == "ser_moni.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
 					$page_attributes['tab_collection'][$key]->disable();
 			}

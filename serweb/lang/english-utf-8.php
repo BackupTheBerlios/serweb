@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.31 2006/04/04 10:33:23 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.32 2006/04/05 12:28:46 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -47,6 +47,7 @@ $lang_str['showed_users'] = 					"Displaying users";
 $lang_str['no_users_found'] = 					"No users found";
 $lang_str['none'] = 							"none";
 $lang_str['warning'] = 							"Warning!";
+$lang_str['domain'] = 							"domain";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -104,7 +105,6 @@ $lang_str['tab_caller_screening'] =	 			"caller screening";
 
 $lang_str['tab_users'] =	 					"users";
 $lang_str['tab_admin_privileges'] =	 			"admin privileges";
-$lang_str['tab_ser_moni'] =	 					"server monitoring";
 $lang_str['tab_domains'] =	 					"domains";
 $lang_str['tab_customers'] =	 				"customers";
 $lang_str['tab_global_attributes'] =	 		"global attributes";
@@ -124,6 +124,8 @@ $lang_str['ff_show_online_only'] = 				"show on-line users only";
 $lang_str['ff_language'] = 						"language";
 $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";
 $lang_str['ff_uid'] = 							"uid";
+$lang_str['ff_for_ser'] = 						"for SER";
+$lang_str['ff_for_serweb'] = 					"for SerWeb";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -462,32 +464,6 @@ $lang_str['th_realm'] = 						"realm";
 $lang_str['ff_show_admins_only'] = 				"show admins only";
 $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";
 
-/* ------------------------------------------------------------*/
-/*      server monitoring                                      */
-/* ------------------------------------------------------------*/
-
-$lang_str['ser_moni_current'] = 				"current";
-$lang_str['ser_moni_average'] = 				"average";
-$lang_str['ser_moni_waiting_cur'] = 			"waiting current";
-$lang_str['ser_moni_waiting_avg'] = 			"waiting average";
-$lang_str['ser_moni_total_cur'] = 				"total current";
-$lang_str['ser_moni_total_avg'] = 				"total average";
-$lang_str['ser_moni_local_cur'] = 				"local current";
-$lang_str['ser_moni_local_avg'] = 				"local average";
-$lang_str['ser_moni_replies_cur'] = 			"replied localy current";
-$lang_str['ser_moni_replies_avg'] = 			"replied localy average";
-$lang_str['ser_moni_registered_cur'] = 			"registered current";
-$lang_str['ser_moni_registered_avg'] = 			"registered average";
-$lang_str['ser_moni_expired_cur'] = 			"expired current";
-$lang_str['ser_moni_expired_avg'] = 			"expired average";
-$lang_str['ser_moni_general_values'] = 			"general values";
-$lang_str['ser_moni_diferencial_values'] = 		"diferencial values";
-$lang_str['ser_moni_transaction_statistics'] = 	"Transaction Statistics";
-$lang_str['ser_moni_completion_status'] = 		"Completion status";
-$lang_str['ser_moni_stateless_server_statis'] = "Stateless Server Statistics";
-$lang_str['ser_moni_usrLoc_stats'] = 			"UsrLoc Statistics";
-$lang_str['domain'] = 							"domain";
-
 
 /* ------------------------------------------------------------*/
 /*      attribute types                                        */
@@ -498,8 +474,6 @@ $lang_str['ff_order'] = 						"order";
 $lang_str['ff_att_name'] = 						"attribute name";
 $lang_str['ff_att_type'] = 						"attribute type";
 $lang_str['ff_label'] = 						"label";
-$lang_str['ff_for_ser'] = 						"for SER";
-$lang_str['ff_for_serweb'] = 					"for SerWeb";
 $lang_str['ff_att_user'] = 						"user";
 $lang_str['ff_att_domain'] = 					"domain";
 $lang_str['ff_att_global'] = 					"global";
@@ -548,8 +522,6 @@ $lang_str['edit_items_of_the_list'] = 			"edit items of the list";
 
 
 $lang_str['change_credentials_of_user'] = 		"Change credentials of user";
-$lang_str['ff_for_ser'] = 						"for SER";
-$lang_str['ff_for_serweb'] = 					"for SerWeb";
 
 $lang_str['th_password'] = 						"password";
 $lang_str['th_for_ser'] = 						"for SER";
