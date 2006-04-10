@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.6 2006/01/13 09:25:58 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.7 2006/04/10 13:01:57 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -294,7 +294,7 @@ class apu_customers extends apu_base_class{
 	function determine_action(){
 
 		if ($this->was_form_submited()){	// Is there data to process?
-			if ($_POST['cu_id']){
+			if ($_POST['cu_id'] !== ""){
 				$this->act_id = $_POST['cu_id'];
 				$this->action = array('action'=>"update",
 			                    'validate_form'=>true,
