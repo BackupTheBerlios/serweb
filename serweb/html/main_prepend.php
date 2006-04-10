@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.12 2005/07/18 11:34:06 kozlik Exp $
+ * $Id: main_prepend.php,v 1.13 2006/04/10 15:29:20 kozlik Exp $
  */ 
 
 //require class defintions
@@ -42,7 +42,7 @@ require_once 'XML/RPC.php';
 require_once ($_SERWEB["serwebdir"] . "xml_rpc_patch.php");
 
 //create log instance
-if ($config->enable_loging){
+if ($config->enable_logging){
 	require_once 'Log.php';
 	eval('$serwebLog  = &Log::singleton("file", $config->log_file, "serweb", array(), '.$config->log_level.');');
 }

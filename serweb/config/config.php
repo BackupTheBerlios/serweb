@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.35 2006/04/10 15:26:06 kozlik Exp $
+ * $Id: config.php,v 1.36 2006/04/10 15:29:20 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -167,15 +167,15 @@
 
 
 	/* ------------------------------------------------------------*/
-	/* Loging                                                      */
+	/* Logging                                                      */
 	/* ------------------------------------------------------------*/
 
-	/* When you enable loging be sure if you have instaleld PEAR package
+	/* When you enable logging be sure if you have instaleld PEAR package
 	   Log. See http://pear.php.net/manual/en/installation.getting.php 
 	   for more information
 	*/
 
-	$config->enable_loging = false;
+	$config->enable_logging = false;
 	$config->log_file = "/var/log/serweb";
 
 	/* Log messages up to and including this level. Possible values:
