@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.44 2006/04/05 12:28:46 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.45 2006/04/10 15:01:12 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -101,7 +101,6 @@ $lang_str['tab_message_store'] =	 			"message store";
 $lang_str['tab_voicemail'] =	 				"voicemail";
 $lang_str['tab_user_preferences'] =	 			"user preferences";
 $lang_str['tab_speed_dial'] =	 				"speed dial";
-$lang_str['tab_caller_screening'] =	 			"caller screening";
 
 $lang_str['tab_users'] =	 					"users";
 $lang_str['tab_admin_privileges'] =	 			"admin privileges";
@@ -297,28 +296,6 @@ $lang_str['th_speed_dial'] = 					"Speed dial";
 $lang_str['th_new_uri'] = 						"New uri";
 
 
-
-
-/* ------------------------------------------------------------*/
-/*      caller screening                                       */
-/* ------------------------------------------------------------*/
-
-$lang_str['msg_caller_screening_deleted_s'] = 	"Screened uri deleted";
-$lang_str['msg_caller_screening_deleted_l'] = 	"Screened uri has been deleted";
-$lang_str['msg_caller_screening_updated_s'] = 	"Screened uri changed";
-$lang_str['msg_caller_screening_updated_l'] = 	"Screened uri has been changed";
-$lang_str['msg_caller_screening_added_s'] = 	"Screened uri added";
-$lang_str['msg_caller_screening_added_l'] = 	"Screened uri has been added";
-$lang_str['fe_not_caller_uri'] = 				"you must fill caller uri";
-$lang_str['ff_screening_caller_uri'] = 			"caller uri (regular expression)";
-$lang_str['ff_action'] = 						"action";
-$lang_str['th_caller_uri'] = 					"caller uri";
-$lang_str['th_action'] = 						"action";
-$lang_str['no_caller_screenings_defined'] = 	"No caller screenings defined";
-$lang_str['err_screening_already_exists'] = 	"Record with this caller uri already exists";
-$lang_str['cs_decline'] = 						"decline";
-$lang_str['cs_reply_busy'] = 					"reply you are busy";
-$lang_str['cs_fw_to_voicemail'] = 				"forward to voicemail";
 
 
 /* ------------------------------------------------------------*/

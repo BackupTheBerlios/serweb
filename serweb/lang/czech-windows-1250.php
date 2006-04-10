@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.28 2006/04/05 12:28:46 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.29 2006/04/10 15:01:12 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -101,7 +101,6 @@ $lang_str['tab_message_store'] =	 			"uložené zprávy";
 $lang_str['tab_voicemail'] =	 				"hlasová schránka";
 $lang_str['tab_user_preferences'] =	 			"nastavení";
 $lang_str['tab_speed_dial'] =	 				"rychlá volba";
-$lang_str['tab_caller_screening'] =	 			"filtrování volajících";
 
 $lang_str['tab_users'] =	 					"uživatelé";
 $lang_str['tab_admin_privileges'] =	 			"oprávnìní správcù";
@@ -297,28 +296,6 @@ $lang_str['th_speed_dial'] = 					"zkrácená volba";
 $lang_str['th_new_uri'] = 						"nová SIP adresa";
 
 
-
-
-/* ------------------------------------------------------------*/
-/*      caller screening                                       */
-/* ------------------------------------------------------------*/
-
-$lang_str['msg_caller_screening_deleted_s'] = 	"Adresa vymazána";
-$lang_str['msg_caller_screening_deleted_l'] = 	"Adresa byla vymazána ze seznamu filtrovaných adres";
-$lang_str['msg_caller_screening_updated_s'] = 	"Adresa zmìnìna";
-$lang_str['msg_caller_screening_updated_l'] = 	"Filtrovaná adresa byla zmìnìna";
-$lang_str['msg_caller_screening_added_s'] = 	"Adresa pøidána";
-$lang_str['msg_caller_screening_added_l'] = 	"Adresa byla pøidána do seznamu filtrovaných adres";
-$lang_str['fe_not_caller_uri'] = 				"musíte vyplnit adresu volajícího";
-$lang_str['ff_screening_caller_uri'] = 			"adresa volajícího (regulární výraz)";
-$lang_str['ff_action'] = 						"akce";
-$lang_str['th_caller_uri'] = 					"adresa volajícího";
-$lang_str['th_action'] = 						"akce";
-$lang_str['no_caller_screenings_defined'] = 	"žádné filtrování volajících není definováno";
-$lang_str['err_screening_already_exists'] = 	"záznam s touto adresou volajícího už existuje";
-$lang_str['cs_decline'] = 						"odmítnout";
-$lang_str['cs_reply_busy'] = 					"odpovìdìt: jsem zaneprázdnìn";
-$lang_str['cs_fw_to_voicemail'] = 				"pøesmìrovat do hlasové schránky";
 
 
 /* ------------------------------------------------------------*/
@@ -663,6 +640,23 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['tab_caller_screening'] =	 			"filtrování volajících";
+$lang_str['msg_caller_screening_deleted_s'] = 	"Adresa vymazána";
+$lang_str['msg_caller_screening_deleted_l'] = 	"Adresa byla vymazána ze seznamu filtrovaných adres";
+$lang_str['msg_caller_screening_updated_s'] = 	"Adresa zmìnìna";
+$lang_str['msg_caller_screening_updated_l'] = 	"Filtrovaná adresa byla zmìnìna";
+$lang_str['msg_caller_screening_added_s'] = 	"Adresa pøidána";
+$lang_str['msg_caller_screening_added_l'] = 	"Adresa byla pøidána do seznamu filtrovaných adres";
+$lang_str['fe_not_caller_uri'] = 				"musíte vyplnit adresu volajícího";
+$lang_str['ff_screening_caller_uri'] = 			"adresa volajícího (regulární výraz)";
+$lang_str['ff_action'] = 						"akce";
+$lang_str['th_caller_uri'] = 					"adresa volajícího";
+$lang_str['th_action'] = 						"akce";
+$lang_str['no_caller_screenings_defined'] = 	"žádné filtrování volajících není definováno";
+$lang_str['err_screening_already_exists'] = 	"záznam s touto adresou volajícího už existuje";
+$lang_str['cs_decline'] = 						"odmítnout";
+$lang_str['cs_reply_busy'] = 					"odpovìdìt: jsem zaneprázdnìn";
+$lang_str['cs_fw_to_voicemail'] = 				"pøesmìrovat do hlasové schránky";
 $lang_str['tab_ser_moni'] =	 					"monitorování serveru";
 $lang_str['err_reg_conf_already_created'] = 	"Váš úèet již byl vytvoøen";
 $lang_str['ser_moni_current'] = 				"aktuálnì";

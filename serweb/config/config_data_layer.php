@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.31 2006/04/05 12:28:45 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.32 2006/04/10 15:01:11 kozlik Exp $
  */
 
 
@@ -308,7 +308,6 @@
 		$config->data_sql->table_phonebook="phonebook";
 		$config->data_sql->table_netgeo_cache="netgeo_cache";
 		$config->data_sql->table_voice_silo="voice_silo";
-		$config->data_sql->table_calls_forwarding="calls_forwarding";
 		$config->data_sql->table_whitelist="whitelist";
 
 

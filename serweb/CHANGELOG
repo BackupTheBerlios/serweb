@@ -81,3 +81,4 @@
 	* added possibility to assign admin to domain
 	* added checks if IMAP extension is installed	
 	* "server monitoring" removed
+	* "caller screening" removed

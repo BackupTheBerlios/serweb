@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.28 2006/04/05 12:28:46 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.29 2006/04/10 15:01:12 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -101,7 +101,6 @@ $lang_str['tab_message_store'] =	 			"berichten";
 $lang_str['tab_voicemail'] =	 				"voicemail";
 $lang_str['tab_user_preferences'] =	 			"instellingen";
 $lang_str['tab_speed_dial'] =	 				"direct bellen";
-$lang_str['tab_caller_screening'] =	 			"caller screening";
 
 $lang_str['tab_users'] =	 					"gebruikers";
 $lang_str['tab_admin_privileges'] =	 			"admin rechten";
@@ -297,28 +296,6 @@ $lang_str['th_speed_dial'] = 					"Verkorte code";
 $lang_str['th_new_uri'] = 						"Nieuwe uri";
 
 
-
-
-/* ------------------------------------------------------------*/
-/*      caller screening                                       */
-/* ------------------------------------------------------------*/
-
-$lang_str['msg_caller_screening_deleted_s'] = 	"Gecontroleerde uri verwijderd";
-$lang_str['msg_caller_screening_deleted_l'] = 	"Gecontroleerde uri is verwijderd";
-$lang_str['msg_caller_screening_updated_s'] = 	"Gecontroleerde uri gewijzigd";
-$lang_str['msg_caller_screening_updated_l'] = 	"Gecontroleerde uri is gewijzigd";
-$lang_str['msg_caller_screening_added_s'] = 	"Gecontroleerde uri toegevoegd";
-$lang_str['msg_caller_screening_added_l'] = 	"Gecontroleerde uri is toegevoegd";
-$lang_str['fe_not_caller_uri'] = 				"u moet een beller uri opgeven";
-$lang_str['ff_screening_caller_uri'] = 			"beller uri (standaard weergave)";
-$lang_str['ff_action'] = 						"actie";
-$lang_str['th_caller_uri'] = 					"beller uri";
-$lang_str['th_action'] = 						"actie";
-$lang_str['no_caller_screenings_defined'] = 	"Geen beller controles gedefinieerd";
-$lang_str['err_screening_already_exists'] = 	"Dit beller uri is reeds aanwezig";
-$lang_str['cs_decline'] = 						"decline";
-$lang_str['cs_reply_busy'] = 					"antwoorden in gesprek";
-$lang_str['cs_fw_to_voicemail'] = 				"doorsturen naa voicemail";
 
 
 /* ------------------------------------------------------------*/
@@ -663,6 +640,23 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['tab_caller_screening'] =	 			"caller screening";
+$lang_str['msg_caller_screening_deleted_s'] = 	"Gecontroleerde uri verwijderd";
+$lang_str['msg_caller_screening_deleted_l'] = 	"Gecontroleerde uri is verwijderd";
+$lang_str['msg_caller_screening_updated_s'] = 	"Gecontroleerde uri gewijzigd";
+$lang_str['msg_caller_screening_updated_l'] = 	"Gecontroleerde uri is gewijzigd";
+$lang_str['msg_caller_screening_added_s'] = 	"Gecontroleerde uri toegevoegd";
+$lang_str['msg_caller_screening_added_l'] = 	"Gecontroleerde uri is toegevoegd";
+$lang_str['fe_not_caller_uri'] = 				"u moet een beller uri opgeven";
+$lang_str['ff_screening_caller_uri'] = 			"beller uri (standaard weergave)";
+$lang_str['ff_action'] = 						"actie";
+$lang_str['th_caller_uri'] = 					"beller uri";
+$lang_str['th_action'] = 						"actie";
+$lang_str['no_caller_screenings_defined'] = 	"Geen beller controles gedefinieerd";
+$lang_str['err_screening_already_exists'] = 	"Dit beller uri is reeds aanwezig";
+$lang_str['cs_decline'] = 						"decline";
+$lang_str['cs_reply_busy'] = 					"antwoorden in gesprek";
+$lang_str['cs_fw_to_voicemail'] = 				"doorsturen naa voicemail";
 $lang_str['tab_ser_moni'] =	 					"server status";
 $lang_str['err_reg_conf_already_created'] = 	"Uw account was al aangemakt";
 $lang_str['ser_moni_current'] = 				"huidig";
