@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.70 2006/04/10 15:42:12 kozlik Exp $
+ * @version   $Id: functions.php,v 1.71 2006/04/10 15:47:44 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -237,29 +237,6 @@ class Creg{
 	function convert_phonenumber_to_strict_js($in_var, $out_var){
 		return $out_var." = ".$in_var.".replace(/[-\\/ ()]/g, '')";
 	}
-}
-
-
-/* obsoleted - should be removed */
-
-function connect_to_db(&$errors){
-	global $config;
-
-	$i = 0;
-	$dsn =  $config->data_sql->type."://".
-			$config->data_sql->host[$i]['user'].":".
-			$config->data_sql->host[$i]['pass']."@".
-			$config->data_sql->host[$i]['host'].
-				(empty($config->data_sql->db_port)?
-					"":
-					":".$config->data_sql->db_port)."/".
-			$config->data_sql->host[$i]['name'];
-			
-	$db = DB::connect($dsn);
-
-	if (DB::isError($db)) { log_errors($db, $errors); return false; }
-
-	return $db;
 }
 
 
