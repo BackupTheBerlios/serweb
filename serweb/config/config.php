@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.34 2006/04/10 15:01:11 kozlik Exp $
+ * $Id: config.php,v 1.35 2006/04/10 15:26:06 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -54,10 +54,6 @@
 
 	$config->fully_qualified_name_on_login=true;
 	
-	/* the default timezone which is assigned to user on register
-	*/		
-	
-	$config->default_timezone='America/New_York';
 
 	/* set to true if should be displayed confirmation page on deleting anything.
 	   This option is INCOPLETE and need to be supported in templates.
@@ -122,7 +118,7 @@
 	   this require enable more lanaguages in config_lang.php and do 
 	   the translations
 	*/
-	$config->allow_change_language_on_login = false;
+	$config->allow_change_language_on_login = true;
 
 
 	$config->jserver = "localhost";   		# Jabber server hostname
@@ -146,17 +142,6 @@
 	$config->allow_change_password=true;
 	$config->allow_change_usrloc=false;
 
-	/* name of attribute in user preference for set visibility status of user
-	   set to empty string if status of users should be always visible
-
-	   When enabling this option you should create user preference named
-	   same as this option of type boolean. Use tab user preferences in
-	   admin interface for create it or install script scripts/sql/usr_preferences.sql
-	   into database.
-
-	   $config->status_vibility = "sw_user_status_visible";
-	 */
-	$config->status_vibility = "";
 
 	/* ------------------------------------------------------------*/
 	/* Phonebook TAB                                              */
@@ -207,7 +192,7 @@
 
 
 	/* ------------------------------------------------------------*/
-	/* ACLs                                                        */
+	/* Usrloc                                                      */
 	/* ------------------------------------------------------------*/
 
 	/* there may be SIP contacts which you wish to prevent from being added
@@ -220,6 +205,10 @@
 	$config->denny_reg=array();
 	$config->denny_reg[]=new CREG_list_item("iptel\.org$", "acl_err_local_forward");
 	$config->denny_reg[]=new CREG_list_item("gateway", "acl_err_gateway_forward");
+
+	/* ------------------------------------------------------------*/
+	/* ACLs                                                        */
+	/* ------------------------------------------------------------*/
 
 	/* SER configuration script may check for group membership of users
 	   identified using digest authentication; e.g., it may only allow
@@ -354,7 +343,6 @@
 
 	/* these are table names as reffered from script and via FIFO */
 	$config->ul_table="location";
-	$config->fifo_aliases_table="aliases";
 
 	/* serweb version */
 	$config->psignature="Web_interface_Karel_Kozlik-0.9";
@@ -362,11 +350,7 @@
 	/* IM paging configuration */
 	$config->im_length=1300;
 
-	/* expiration times, priorities, etc. for usrloc/alias contacts */
-	$config->new_alias_expires='567648000';
-	$config->new_alias_q=1.00;
-	$config->new_alias_callid="web_call_id@fox";
-	$config->new_alias_cseq=1;
+	/* priority for usrloc contacts */
 	$config->ul_priority="1.00";
 	/* replication support ? (a new ser feature) */
 	$config->ul_replication=1;
@@ -380,22 +364,5 @@
 	   incorrect domain during installation process
 	*/
 	$config->clear_text_pw=true;
-
-	/* ------------------------------------------------------------*/
-	/*            send daily missed calls by email                 */
-	/* ------------------------------------------------------------*/
-	
-	/*
-		name of attribute in user preferences for daily sending missed  
-		calls to email, it's type should be boolean
-	*/
-	$config->up_send_daily_missed_calls="send_daily_missed_calls";
-	
-	/*
-		subject and body of daily sended email with missed calls
-	*/
-	$config->send_daily_missed_calls_mail_subj="your missed calls";
-	$config->send_daily_missed_calls_mail_body=" Hello, \n".
-			"we are sending your missed calls";
  				
 ?>
