@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_contact.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
+ * $Id: method.add_contact.php,v 1.4 2006/04/10 15:32:58 kozlik Exp $
  */
 
 class CData_Layer_add_contact {
@@ -22,14 +22,10 @@ class CData_Layer_add_contact {
 		$replication="0";
 		$flags="0";
 		
-		/* if flags is supported by FIFO */
-		if ($config->ul_flags){
-			if ($expires > 567640000 or $expires <= 0){	//contact that should expire later than 18 year, never expire
-				$expires=0;
-				$flags="128";
-			}
+		if ($expires > 567640000 or $expires <= 0){	//contact that should expire later than 18 year, never expire
+			$expires=0;
+			$flags="128";
 		}
-		else $flags="";
 
 		if ($config->use_rpc){
 			if (!$this->connect_to_xml_rpc(null, $errors)) return false;

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.36 2006/04/10 15:29:20 kozlik Exp $
+ * $Id: config.php,v 1.37 2006/04/10 15:32:58 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -352,10 +352,6 @@
 
 	/* priority for usrloc contacts */
 	$config->ul_priority="1.00";
-	/* replication support ? (a new ser feature) */
-	$config->ul_replication=1;
-	/* flags support ? (a new ser feature) */
-	$config->ul_flags=1;
 
 	/* is the sql database query for user authentication formed
 	   with clear text password or a hashed one; the former is less
