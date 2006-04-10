@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.7 2006/03/28 15:05:02 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.8 2006/04/10 15:42:12 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -175,8 +175,6 @@ class apu_registration extends apu_base_class{
 	/* this metod is called always at begining */
 	function init(){
 		parent::init();
-
-		$this->reg = Creg::singleton();		// get reference to regular expressions class
 	}
 
 	function action_register(&$errors){
@@ -454,7 +452,7 @@ class apu_registration extends apu_base_class{
 		                             "value"=>"",
 									 "minlength"=>1,
 									 "length_e"=>$lang_str['fe_not_filled_username'],
-		                             "valid_regex"=>$this->reg->serweb_username,
+		                             "valid_regex"=>$config->username_regex,
 		                             "valid_e"=>$lang_str['fe_uname_not_follow_conventions'],
 									 "extrahtml"=>"autocomplete'off'"));
 

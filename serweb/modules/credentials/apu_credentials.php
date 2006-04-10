@@ -4,7 +4,7 @@
  * Application unit apu_credentials
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_credentials.php,v 1.1 2006/03/22 14:00:15 kozlik Exp $
+ * @version   $Id: apu_credentials.php,v 1.2 2006/04/10 15:42:12 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -256,7 +256,7 @@ class apu_credentials extends apu_base_class{
 	 */
 	function create_html_form(&$errors){
 		parent::create_html_form($errors);
-		global $data, $lang_str;
+		global $data, $lang_str, $config;
 
 		/* get list of credentials */
 		if (false === $this->credentials = $data->get_credentials($this->controler->user_id->get_uid(), null)) return false;
@@ -278,8 +278,6 @@ class apu_credentials extends apu_base_class{
 			}
 		}
 
-		$reg = &Creg::singleton();
-
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"cr_uname",
 									 "size"=>16,
@@ -287,7 +285,7 @@ class apu_credentials extends apu_base_class{
 		                             "value"=>$uname,
 		                             "minlength"=>1,
 									 "length_e"=>$lang_str['fe_not_filled_username'],
-		                             "valid_regex"=>$reg->serweb_username,
+		                             "valid_regex"=>$config->username_regex,
 		                             "valid_e"=>$lang_str['fe_uname_not_follow_conventions']));
 
 		$this->f->add_element(array("type"=>"text",

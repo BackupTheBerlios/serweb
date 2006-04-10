@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.37 2006/04/10 15:32:58 kozlik Exp $
+ * $Id: config.php,v 1.38 2006/04/10 15:42:11 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -59,6 +59,19 @@
 	   This option is INCOPLETE and need to be supported in templates.
 	*/
 	$config->require_delete_confirmation_page=false;
+
+
+	/* Regular expressions for check if username (username part of sip address) 
+	   entered by user is valid.
+
+	   By default username may be either a numerical address starting with 
+	   '8' (e.g., '8910') or a lower-case alphanumerical address starting 
+	   with an alphabetical character (e.g., john.doe01).
+
+	   $config->username_regex = '^((8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*))$';
+	*/
+	
+	$config->username_regex = '^((8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*))$';
 
 	/* Regular expressions for check if phonenumber entered by user is valid
 	   (is used only if serweb is workong with phonenumbers instead of sip addresses)

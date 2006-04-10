@@ -3,14 +3,12 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.69 2006/03/29 11:46:38 kozlik Exp $
+ * @version   $Id: functions.php,v 1.70 2006/04/10 15:42:12 kozlik Exp $
  * @package   serweb
  */ 
 
 
 $reg_validate_email="^[^@]+@[^.]+\.[^,;@ ]+$";
-
-$reg_validate_username="^((8[0-9]*)|([a-zA-Z][a-zA-Z0-9.]*))$";
 
 $name_of_month[1]="Jan";
 $name_of_month[2]="Feb";
@@ -111,7 +109,7 @@ class Creg{
 	var $sip_address;
 
 	function Creg(){
-		global $config, $reg_validate_email, $reg_validate_username;
+		global $config, $reg_validate_email;
 		
 		$this->alphanum="[a-zA-Z0-9]";
 		$this->mark="[-_.!~*'()]";
@@ -156,7 +154,6 @@ class Creg{
 		/** strict phonenumber - only numbers and optional initial + */
 		$this->phonenumber_strict = $config->strict_phonenumber_regex;		// "\\+?[1-9]+"
 		
-		$this->serweb_username = $reg_validate_username;
 		$this->email = $reg_validate_email;
 	}
 
