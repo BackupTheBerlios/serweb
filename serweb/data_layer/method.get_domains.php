@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.6 2006/04/10 13:03:35 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -73,7 +73,7 @@ class CData_Layer_get_domains {
 		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did."  LIKE ".$this->sql_format("%".$o_filter['id']."%",       "s")." and ";
 		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE ".$this->sql_format("%".$o_filter['name']."%",     "s")." and ";
 		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE ".$this->sql_format("%".$o_filter['customer']."%", "s")." and ";
-		if (!empty($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = ".$this->sql_format($o_filter['customer_id'], "s")." and ";
+		if ( isset($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = ".$this->sql_format($o_filter['customer_id'], "s")." and ";
 
 		/* prepare SQL query */
 
@@ -88,6 +88,19 @@ class CData_Layer_get_domains {
 			$q2_deleted = " (d.".$ca->flags." & ".$fa['DB_DELETED'].") = 0";
 		}
 
+
+		if ($this->db_host['parsed']['phptype'] == 'mysql') {
+			$q_dist1 = $q_dist2 = "";
+			$q_grp1 = " group by d.".$cd->did;
+			$q_grp2 = " group by d.".$ca->did;
+		}
+		else {
+			$q_dist1 = " distinct on (d.".$cd->did.") ";
+			$q_dist2 = " distinct on (d.".$ca->did.") ";
+			$q_grp1 = $q_grp2 = "";
+		}
+
+
 		/* second select is necessary to get domains without aliases 
 		   both selects are same except the table from which is obtained list of domains.
 		   table_domain in first select and table_dom_preferences in second select 
@@ -96,24 +109,24 @@ class CData_Layer_get_domains {
 		*/
 
 
-		$q1="select d.".$cd->did." as did, 
+		$q1="select ".$q_dist1."
+		            d.".$cd->did." as did, 
 		            c.".$cc->name."
 		    from (".$td_name." d left outer join ".$ta_name." dac 
 			           on d.".$cd->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
 				   left outer join ".$tc_name." c
 			           on (dac.".$ca->value." = c.".$cc->cid." and dac.".$ca->name." = '".$an['dom_owner']."')
-			where ".$qw.$q_did_filter.$q1_deleted."
-			group by d.".$cd->did;
+			where ".$qw.$q_did_filter.$q1_deleted.$q_grp1;
 
 
-		$q2="select d.".$ca->did." as did, 
+		$q2="select ".$q_dist2."
+		            d.".$ca->did." as did, 
 		            c.".$cc->name."
 		    from (".$ta_name." d left outer join ".$ta_name." dac 
 			           on d.".$ca->did." = dac.".$ca->did." and dac.".$ca->name." = '".$an['dom_owner']."')
 				   left outer join ".$tc_name." c
 			           on (dac.".$ca->value." = c.".$cc->cid." and dac.".$ca->name." = '".$an['dom_owner']."')
-			where ".$qw.$q_did_filter.$q2_deleted."
-			group by d.".$ca->did;
+			where ".$qw.$q_did_filter.$q2_deleted.$q_grp2;
 
 
 

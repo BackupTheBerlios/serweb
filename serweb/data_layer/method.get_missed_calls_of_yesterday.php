@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_missed_calls_of_yesterday.php,v 1.2 2006/03/14 16:14:46 kozlik Exp $
+ * $Id: method.get_missed_calls_of_yesterday.php,v 1.3 2006/04/10 13:03:35 kozlik Exp $
  */
 
 class CData_Layer_get_missed_calls_of_yesterday {
@@ -15,11 +15,18 @@ class CData_Layer_get_missed_calls_of_yesterday {
 			return false;
 		}
 	
+		if ($this->db_host['parsed']['phptype'] == 'mysql') {
+			$q_date = " date_format(request_timestamp, '%Y-%m-%d')=date_format(DATE_SUB(CURDATE(), INTERVAL 1 DAY), '%Y-%m-%d') ";
+		}
+		else {
+			$q_date = " date_trunc('day', request_timestamp)=date_trunc('day', (CURRENT_DATE - INTERVAL '1 DAY')) ";
+		}
+
 		$q="SELECT from_uri, sip_from, request_timestamp, sip_status  ".
 			"FROM ".$config->data_sql->table_missed_calls." ".
-			"WHERE to_uid='".$uid."' and ".
-					"date_format(request_timestamp, '%Y-%m-%d')=date_format(DATE_SUB(CURDATE(), INTERVAL 1 DAY), '%Y-%m-%d') ".
+			"WHERE to_uid='".$uid."' and ".$q_date.
 			"ORDER BY request_timestamp DESC ";
+
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

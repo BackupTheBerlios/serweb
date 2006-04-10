@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_deleted_domains.php,v 1.1 2005/12/22 13:47:28 kozlik Exp $
+ * $Id: method.get_deleted_domains.php,v 1.2 2006/04/10 13:03:36 kozlik Exp $
  */
 
 class CData_Layer_get_deleted_domains {
@@ -55,16 +55,16 @@ class CData_Layer_get_deleted_domains {
 				if ((int)$v['value'] < (int)$opt_deleted_before) $dids[]=$v['id'];
 			}
 
-			$q1_w = " and ".$this->get_sql_in("do.".$cd->did, $dids, true);
+			$q1_w = " and ".$this->get_sql_in("dom.".$cd->did, $dids, true);
 			$q2_w = " and ".$this->get_sql_in("at.".$ca->did, $dids, true);
 		}
 
 
-		$q1 = "select do.".$cd->did." as did
-			  from ".$td_name." do 
-			  where (do.".$cd->flags." & ".$fd['DB_DELETED'].") = ".$fd['DB_DELETED'].
+		$q1 = "select dom.".$cd->did." as did
+			  from ".$td_name." dom 
+			  where (dom.".$cd->flags." & ".$fd['DB_DELETED'].") = ".$fd['DB_DELETED'].
 			        $q1_w." 
-			  group by do.".$cd->did;
+			  group by dom.".$cd->did;
 
 		$q2 = "select at.".$ca->did." as did
 			  from ".$ta_name." at 

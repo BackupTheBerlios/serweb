@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.21 2006/03/29 14:53:12 kozlik Exp $
+ * $Id: data_layer.php,v 1.22 2006/04/10 13:03:35 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -920,6 +920,23 @@ class CData_Layer{
 		else {
 //			return " cast(".$argument." as integer) ";					// working in pgsql 8.0
 			return " cast(cast(".$argument." as text) as integer) "; 	// change for pgsql 7.*
+		}
+	}
+
+	/**
+	 *	Return a regular expression matching which may be used in SQL queries depending on which DB host is useing
+	 *
+	 *	@param string $patern
+	 *	@param string $string
+	 *	@param array $opt
+	 *	@return string		
+	 */
+	function get_sql_regex_match($patern, $string, $opt = null){
+		if ($this->db_host['parsed']['phptype'] == 'mysql'){
+			return $string." REGEXP \"".$patern."\"";
+		}
+		else {
+			return $string." ~* '".$patern."'";
 		}
 	}
 

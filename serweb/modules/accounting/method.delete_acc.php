@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_acc.php,v 1.2 2005/12/22 12:47:03 kozlik Exp $
+ * $Id: method.delete_acc.php,v 1.3 2006/04/10 13:03:36 kozlik Exp $
  */
 
 class CData_Layer_delete_acc {
@@ -30,8 +30,14 @@ class CData_Layer_delete_acc {
 		/* flags */
 		$f = &$config->data_sql->acc->flag_values;
 
-		$q="delete from ".$t_name." 
-			where DATE_ADD(".$c->request_timestamp.", INTERVAL ".$config->keep_acc_interval." DAY) < now()";
+		if ($this->db_host['parsed']['phptype'] == 'mysql') {
+			$q="delete from ".$t_name." 
+				where DATE_ADD(".$c->request_timestamp.", INTERVAL ".$config->keep_acc_interval." DAY) < now()";
+		}
+		else{
+			$q="delete from ".$t_name." 
+				where (".$c->request_timestamp." + INTERVAL '".$config->keep_acc_interval." DAY') < now()";
+		}
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

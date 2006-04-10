@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.15 2006/04/03 11:44:39 kozlik Exp $
+ * $Id: method.get_users.php,v 1.16 2006/04/10 13:03:35 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -175,7 +175,7 @@ class CData_Layer_get_users {
 
 		if (!$opt_return_all){
 			/* get num rows */		
-			$q = "select cr.".$cc->uid." as uid
+			$q = "select distinct cr.".$cc->uid." as uid
 				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri.$q_suri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
@@ -186,8 +186,7 @@ class CData_Layer_get_users {
 				        left outer join ".$ta_name." aem
 				            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')
 				  where ".$query_c.$q_uid_filter." 
-				       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0
-				  group by cr.".$cc->uid;
+				       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
 	
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -199,8 +198,18 @@ class CData_Layer_get_users {
 		}
 
 
+		if ($this->db_host['parsed']['phptype'] == 'mysql') {
+			$q_dist = "";
+			$q_grp = " group by cr.".$cc->uid;
+		}
+		else {
+			$q_dist = " distinct on (cr.".$cc->uid.") ";
+			$q_grp = "";
+		}
 
-		$q = "select cr.".$cc->uid." as uid,
+
+		$q = "select ".$q_dist."
+		             cr.".$cc->uid." as uid,
 			         cr.".$cc->uname." as username,
 			         cr.".$cc->realm." as realm,
 					 afn.".$ca->value." as fname,
@@ -219,8 +228,8 @@ class CData_Layer_get_users {
 			        left outer join ".$ta_name." aem
 			            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')
 			  where ".$query_c.$q_uid_filter." 
-			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0
-			  group by cr.".$cc->uid;
+			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0".
+			  $q_grp;
 
 		$q.=($opt_return_all ? "" : $this->get_sql_limit_phrase());
 
