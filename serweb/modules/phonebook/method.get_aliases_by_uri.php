@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_aliases_by_uri.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
+ * $Id: method.get_aliases_by_uri.php,v 1.4 2006/04/12 13:41:20 kozlik Exp $
  */
 
 class CData_Layer_get_aliases_by_uri {
@@ -51,8 +51,13 @@ class CData_Layer_get_aliases_by_uri {
 
 		if (!$uname or !$realm) return array();
 
-		if (false === $did = $this->get_did_by_realm($realm, null)) return false;
-		if (is_null($did)) array();
+		if ($config->multidomain) {
+			if (false === $did = $this->get_did_by_realm($realm, null)) return false;
+			if (is_null($did)) return array();
+		}
+		else {
+			$did = $config->default_did;
+		}
 
 		$flags_val = $fu['DB_DISABLED'] | $fu['DB_DELETED'];
 
@@ -66,7 +71,7 @@ class CData_Layer_get_aliases_by_uri {
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 		
 		$row = $res->fetchRow(DB_FETCHMODE_ASSOC);
-		if (!$row){	unset($res); array(); }
+		if (!$row){	unset($res); return array(); }
 		
 		$uid = $row['uid'];
 		

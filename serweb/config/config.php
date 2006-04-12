@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.38 2006/04/10 15:42:11 kozlik Exp $
+ * $Id: config.php,v 1.39 2006/04/12 13:41:18 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -53,6 +53,26 @@
 	*/
 
 	$config->fully_qualified_name_on_login=true;
+
+	/* Use serweb in multidomain setup 
+	 * Serweb can work in two diferent modes. 
+	 * - singledomain - Use if your SER control only one domain.
+	 *     In this case the name of the apache host under which the serweb is 
+	 *     running is always used as domain. If the serweb is running on a 
+	 *     virtual host, this will be the value defined for that virtual host.
+	 *     The name of domain may be a bit changed (for example initial 'sip.'
+	 *     may be stripped). See file set_domain.php in config directory.
+	 *     
+	 * - multidomain - Use if your SER control more domains.
+	 *     In this case the domain is checked against the 'domain' sql table.
+	 *     Also tabs for manage domains are enabled in admin interface.
+	 */
+	$config->multidomain = false;
+	
+	/* Default id of domains in single domain setups 
+	 * Probably you does not need change this value.
+	 */
+	$config->default_did = "0";
 	
 
 	/* set to true if should be displayed confirmation page on deleting anything.
@@ -105,11 +125,15 @@
 
 	/* admin tabs definitions
 		Ctab (enabled, name_of_tab, php_script)
+		
+		The $config->multidomain has to be true to display tabs 
+		'list_of_domains' and 'customers'. Also some other tabs are not 
+		displayed if logged user doesn't have the hostmaster privilege.
 	*/
 	$config->admin_tabs=array();
 	$config->admin_tabs[]=new Ctab (true, "@tab_users", "users.php");							// $lang_str['tab_users']
 	$config->admin_tabs[]=new Ctab (true, "@tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
-	$config->admin_tabs[]=new Ctab (false, "@tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
+	$config->admin_tabs[]=new Ctab (false, "@tab_user_preferences", "user_preferences.php");	// $lang_str['tab_user_preferences']
 	$config->admin_tabs[]=new Ctab (true, "@tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
 	$config->admin_tabs[]=new Ctab (true, "@tab_customers", "customers.php");					// $lang_str['tab_customers']
 	$config->admin_tabs[]=new Ctab (true, "@tab_global_attributes", "global_attributes.php");	// $lang_str['tab_global_attributes']

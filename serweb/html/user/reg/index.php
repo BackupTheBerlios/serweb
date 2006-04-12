@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.5 2006/01/11 15:16:50 kozlik Exp $
+ * $Id: index.php,v 1.6 2006/04/12 13:41:19 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_did_by_realm');
@@ -17,8 +17,21 @@ $form_submit=array('type' => 'image',
 				   'src'  => get_path_to_buttons("btn_register.gif", $_SESSION['lang']));
 
 
-$did = $data->get_did_by_realm($config->domain, null);
-if ((false === $did) or is_null($did)) die("Can't find domain ID");
+if (!$config->multidomain) {
+	$did = $config->default_did;
+}
+else{
+	$did = $data->get_did_by_realm($config->domain, null);
+
+	if ((false === $did) or is_null($did)) {
+		ErrorHandler::add_error("Can't obtain domain ID of domain you want register in (".$config->domain."). See the serweb log for more info.");
+
+		$controler->set_template_name('_default.tpl');
+		$controler->start();
+		exit;
+	}
+}
+
 
 $register=new apu_registration();
 $register->set_opt('form_name', 'form1');

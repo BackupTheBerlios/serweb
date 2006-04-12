@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.2 2006/01/09 15:08:11 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.3 2006/04/12 13:41:19 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -310,33 +310,33 @@ class apu_forgotten_password extends apu_base_class{
 		$this->sip_user['realm'] = $realm;
 		$this->sip_user['uid']   = $uid;
 
-
-		/* check flags of the domain of user */
-		$opt = array('check_disabled_flag' => false);
-		
-		$did = $data->get_did_by_realm($realm, $opt);
-		if (false === $did) return false;
-
-		if (is_null($did)){
-			sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['domain_not_found']);
-			return false;
+		if ($config->multidomain) {
+			/* check flags of the domain of user - only if useing multiple domains*/
+			$opt = array('check_disabled_flag' => false);
+			
+			$did = $data->get_did_by_realm($realm, $opt);
+			if (false === $did) return false;
+	
+			if (is_null($did)){
+				sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
+				ErrorHandler::add_error($lang_str['domain_not_found']);
+				return false;
+			}
+	
+			if (false === $flags = $data->get_domain_flags($did, null)) return false;
+	
+			if ($flags['disabled']){
+				sw_log("Get password: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
+				ErrorHandler::add_error($lang_str['account_disabled']);
+				return false;
+			}
+	
+			if ($flags['deleted']){
+				sw_log("Get password: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
+				ErrorHandler::add_error($lang_str['domain_not_found']);
+				return false;
+			}
 		}
-
-		if (false === $flags = $data->get_domain_flags($did, null)) return false;
-
-		if ($flags['disabled']){
-			sw_log("Get password: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['account_disabled']);
-			return false;
-		}
-
-		if ($flags['deleted']){
-			sw_log("Get password: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['domain_not_found']);
-			return false;
-		}
-
 
 		return true;
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.12 2006/03/28 16:12:33 kozlik Exp $
+ * $Id: class_definitions.php,v 1.13 2006/04/12 13:41:19 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -292,7 +292,19 @@ class Domains{
 	 *	Load info about domains from DB
 	 */
 	function load_domains(){
-		global $data;
+		global $data, $config;
+		
+		if (!$config->multidomain){
+			$this->domains = array();
+			$this->domain_names = array();
+
+			$this->domains[$config->domain] = array('did' => $config->default_did,
+			                                        'name' => $config->domain,
+													'disabled' => false,
+													'canon' => true);
+			$this->domain_names[$config->default_did][] = $config->domain;
+			return true;		
+		}
 		
 		$o = array('order_by' => 'canon',	//canonical domain names will be first
 		           'order_desc' => true);
@@ -300,6 +312,9 @@ class Domains{
 		$data->add_method('get_domain');
 		if (false === $domains = $data->get_domain($o)) return false;
 		
+		$this->domains = array();
+		$this->domain_names = array();
+
 		foreach($domains as $k => $v){
 			$this->domains[$v['name']] = &$domains[$k];
 			$this->domain_names[$v['did']][] = $v['name'];
@@ -339,6 +354,25 @@ class Domains{
 		if (!isset($this->domain_names[$did][0])) return null;
 	
 		return $this->domain_names[$did][0];
+	}
+	
+	/**
+	 *	Return array of all names of domain with given did
+	 *
+	 *	On error this function return FALSE. If domain with given $did doesn't 
+	 *	exist, NULL is returned
+	 *
+	 *	@param	string	$did	domain id
+	 *	@return	array			array of domain names or FALSE on error
+	 */
+	function get_domain_names($did){
+
+		if (is_null($this->domain_names) and false === $this->load_domains()) 
+			return false;
+	
+		if (!isset($this->domain_names[$did])) return null;
+	
+		return $this->domain_names[$did];
 	}
 	
 	/**

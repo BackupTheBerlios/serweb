@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.8 2006/04/05 12:28:46 kozlik Exp $
+ * $Id: page_attributes.php,v 1.9 2006/04/12 13:41:19 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -14,7 +14,8 @@ function _disable_unneeded_tabs(&$page_attributes){
 					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "customers.php") {
-				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+				if ((is_object($perm) and !$perm->have_perm("hostmaster")) or
+				    !$config->multidomain)
 					$page_attributes['tab_collection'][$key]->disable();
 			}
 			elseif ($val->page == "user_preferences.php") {
@@ -27,6 +28,10 @@ function _disable_unneeded_tabs(&$page_attributes){
 			}
 			elseif ($val->page == "attr_types.php") {
 				if (is_object($perm) and !$perm->have_perm("hostmaster"))
+					$page_attributes['tab_collection'][$key]->disable();
+			}
+			elseif ($val->page == "list_of_domains.php") {
+				if (!$config->multidomain)
 					$page_attributes['tab_collection'][$key]->disable();
 			}
 		}

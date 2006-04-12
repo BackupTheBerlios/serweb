@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_status.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_status.php,v 1.7 2006/04/12 13:41:19 kozlik Exp $
  */
 
 class CData_Layer_get_status {
@@ -55,8 +55,14 @@ class CData_Layer_get_status {
 
 		if (!$uname or !$realm) return "unknown";
 
-		if (false === $did = $this->get_did_by_realm($realm, null)) return false;
-		if (is_null($did)) return "nonlocal";
+		if ($config->multidomain) {
+			if (false === $did = $this->get_did_by_realm($realm, null)) return false;
+			if (is_null($did)) return "nonlocal";
+		}
+		else {
+			if ($realm != $config->domain) return "nonlocal";
+			$did = $config->default_did;
+		}
 
 		$flags_val = $fu['DB_DISABLED'] | $fu['DB_DELETED'];
 

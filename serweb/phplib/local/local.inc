@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.17 2006/01/09 14:59:50 kozlik Exp $
+ * $Id: local.inc,v 1.18 2006/04/12 13:41:20 kozlik Exp $
  */
 
 
@@ -157,7 +157,9 @@ class phplib_Auth extends Auth {
 	 */
 
 	function find_out_did($username, $realm, $uid, $opt){
-		global $data_auth, $lang_str;
+		global $data_auth, $lang_str, $config;
+
+		if (!$config->multidomain) return $config->default_did;
 
 		$data_auth->add_method('get_did_by_realm');
 		$data_auth->add_method('get_domain_flags');

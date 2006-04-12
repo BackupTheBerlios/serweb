@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_did_by_realm.php,v 1.4 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_did_by_realm.php,v 1.5 2006/04/12 13:41:18 kozlik Exp $
  */
 
 class CData_Layer_get_did_by_realm {
@@ -102,6 +102,12 @@ class CData_Layer_get_did_by_realm {
 		}
 
 		$res->free();
+
+		sw_log("Domain ID for '".$realm."' not found. There should be either ".
+		   "domain '".$realm."' in table '".$t_d."' or domain attribute ".
+		   "'".$config->attr_names['digest_realm']."' with value '".$realm."'.".
+		   "But it isn't.", 
+		   PEAR_LOG_INFO);
 
 		return null;
 	}
