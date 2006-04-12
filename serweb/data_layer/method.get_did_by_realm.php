@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_did_by_realm.php,v 1.5 2006/04/12 13:41:18 kozlik Exp $
+ * $Id: method.get_did_by_realm.php,v 1.6 2006/04/12 13:51:42 kozlik Exp $
  */
 
 class CData_Layer_get_did_by_realm {
@@ -21,6 +21,10 @@ class CData_Layer_get_did_by_realm {
 	 
 	function get_did_by_realm($realm, $opt){
 		global $config;
+
+		if (!$config->multidomain) {
+			return ($realm == $config->domain) ? $config->default_did : null;
+		}
 		
 		if (!$this->connect_to_db($errors)) return false;
 
