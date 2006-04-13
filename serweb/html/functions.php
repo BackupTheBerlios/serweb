@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.72 2006/04/13 10:12:47 kozlik Exp $
+ * @version   $Id: functions.php,v 1.73 2006/04/13 12:33:39 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -288,9 +288,17 @@ function send_mail($to, $text, $headers = array()){
 	if ($charset)
 		$headers['subject'] = "=?".$charset."?Q?".imap_8bit($headers['subject'])."?=";
 
+	/* enable tracking errors */
+	ini_set('track_errors', 1);
 
 	/* send email */
 	@$a= mail($to, $headers['subject'], $text, $str_headers);
+
+	/* if there was error during sending mail and error message is present, log the error */
+	if (!$a and !empty($php_errormsg)){
+		ErrorHandler::log_errors(PEAR::raiseError(html_entity_decode($php_errormsg)));
+	}
+
 	return $a;
 }
 
