@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.1 2006/03/13 15:34:06 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.2 2006/04/13 11:39:46 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -127,13 +127,16 @@ class apu_attr_types extends apu_base_class{
 	 *	and store them to $this->smarty_attrs array
 	 */
 	function format_attrs(){
-		global $sess;
+		global $sess, $lang;
 	
 		if (false === $at = $this->attrs->get_attr_types()) return false;
 
 		$this->smarty_attrs = array();
 		foreach($at as $k => $v){
 			$this->smarty_attrs[$k]	= $at[$k]->to_table_row();
+			$this->smarty_attrs[$k]['translate_desc'] = $this->smarty_attrs[$k]['description'][0] == "@";
+			$this->smarty_attrs[$k]['desc_translated'] = $this->smarty_attrs[$k]['translate_desc'] ? $at[$k]->get_description() : "";
+			$this->smarty_attrs[$k]['translation_lack'] = (isset($this->smarty_attrs[$k]['desc_translated'][0]) and ($this->smarty_attrs[$k]['desc_translated'][0] == "@"));
 			$this->smarty_attrs[$k]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_id=".RawURLEncode($k)."&edit=1");
 			$this->smarty_attrs[$k]['url_dele'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_id=".RawURLEncode($k)."&dele=1");
 		}

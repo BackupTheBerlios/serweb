@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.1 2006/03/13 15:34:07 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.2 2006/04/13 11:39:47 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -129,7 +129,14 @@
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.priority.GLOBAL}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.default_flags.DB_LOAD_SER}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.default_flags.DB_FOR_SERWEB}</td>
-	<td align="left">{$row.description|escape|empty2nbsp}</td>
+	<td align="left">{
+		if $row.translate_desc}{
+			if $row.translation_lack
+			     }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp fgcolor="red"}>{$row.description|escape|empty2nbsp}</a>{
+			else }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp}>{$row.description|escape|empty2nbsp}</a>{
+			/if}{
+		else}{$row.description|escape|empty2nbsp}{
+		/if}</td>
 	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
 	</tr>
