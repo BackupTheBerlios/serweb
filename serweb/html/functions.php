@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.71 2006/04/10 15:47:44 kozlik Exp $
+ * @version   $Id: functions.php,v 1.72 2006/04/13 10:12:47 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -522,7 +522,7 @@ function multidomain_get_file($filename, $html_tree=true, $domain=null){
 			($dir.$domain."/".$filename);
 	}
 	else if (file_exists($dir."_default/".$filename)){
-		sw_log("Useing file from default domain for filename: ".$filename.", requested domain: ".$domain, PEAR_LOG_INFO);
+		sw_log("Useing file from default domain for filename: ".$filename.", requested domain: ".$domain, PEAR_LOG_DEBUG);
 		return $html_tree ? 
 			($config->domains_path."_default/".$filename) :
 			($dir."_default/".$filename);
@@ -564,7 +564,7 @@ function get_file_by_lang($filename, $ddir, $lang){
 		return $ln."/".$filename;
 
 	else if (file_exists($dir."/".$ddir.$ref_ln."/".$filename)){
-		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_DEBUG);
 		return $ref_ln."/".$filename;
 	}
 
@@ -618,17 +618,17 @@ function multidomain_get_lang_file($filename, $ddir, $lang, $domain=null){
 		return $dir.$domain."/".$ddir.$ln."/".$filename;
 	
 	else if (file_exists($dir.$domain."/".$ddir.$ref_ln."/".$filename)){
-		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_DEBUG);
 		return $dir.$domain."/".$ddir.$ref_ln."/".$filename;
 	}
 		
 	else if (file_exists($dir."_default/".$ddir.$ln."/".$filename)){
-		sw_log("Useing file from default domain for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file from default domain for filename: ".$filename, PEAR_LOG_DEBUG);
 		return $dir."_default/".$ddir.$ln."/".$filename;
 	}
 
 	else if (file_exists($dir."_default/".$ddir.$ref_ln."/".$filename)){
-		sw_log("Useing file from default domain and in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_INFO);
+		sw_log("Useing file from default domain and in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_DEBUG);
 		return $dir."_default/".$ddir.$ref_ln."/".$filename;
 	}
 
