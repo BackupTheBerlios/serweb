@@ -3,7 +3,7 @@
  * Application unit aliases
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.5 2006/03/08 15:34:16 kozlik Exp $
+ * @version   $Id: apu_aliases.php,v 1.6 2006/04/13 10:01:14 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -196,8 +196,18 @@ class apu_aliases extends apu_base_class{
 		return $out;
 	}
 
+	/**
+	 *	Get table of URIs of user
+	 *
+	 *	return	bool 	TRUE on success, FALSE on error
+	 */
 	function get_aliases(&$errors){
 		global $sess;
+
+		static $done = false;
+		
+		/* if aliases were been already obtained */
+		if ($done) return true;
 
 		/* get URIs of the user */
 		$uri_handler = &URIs::singleton($this->user_id->get_uid());
@@ -242,6 +252,7 @@ class apu_aliases extends apu_base_class{
 
 		}
 		
+		$done = true;
 		return true;
 	}
 
@@ -423,13 +434,14 @@ class apu_aliases extends apu_base_class{
 		}
 
 		/* Walk throught all existing URIs and find if newly created URI 
-		 * will be disabled or not. If there is at least one URI which
-		 * is not disabled, newly created URI will not be disabled too.
+		 * will be disabled or not. If all URIs are disabled, newly created 
+		 * URI will be disabled too.
 		 */
 		$uri_disabled = true; 
 		foreach($uris as $k=>$v){
 			$uri_disabled = ($uri_disabled and $v->is_disabled());
 		}
+		if (!count($uris)) $uri_disabled = false;
 
 		if ($uri_disabled) $flags |= $f['DB_DISABLED'];
 		else $flags &= ~$f['DB_DISABLED'];
@@ -703,10 +715,15 @@ class apu_aliases extends apu_base_class{
 			if (!isset($this->act_alias['flags'])){
 				$ga_handler = &Global_attrs::singleton();
 				if (false === $this->act_alias['flags'] = $ga_handler->get_attribute($an['uri_default_flags'])) return false;
+
 				if (!is_numeric($this->act_alias['flags'])){
 					ErrorHandler::log_errors(PEAR::raiseError("Global attribute '".$an['uri_default_flags']."' is not defined or is not a number Can't create URI."));
 					return false;
 				}
+
+				/* if user ha not aliases set he 'canon' flag to true */
+				if (false === $this->get_aliases($errors)) return false;
+				if (!count($this->aliases)) $this->act_alias['flags'] |= $f['DB_CANON'];
 			}
 
 			$f_canon =   (bool)($this->act_alias['flags'] & $f['DB_CANON']);
