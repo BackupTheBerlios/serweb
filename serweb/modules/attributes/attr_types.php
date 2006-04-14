@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.6 2006/03/14 09:30:25 kozlik Exp $
+ * $Id: attr_types.php,v 1.7 2006/04/14 16:24:02 kozlik Exp $
  */
 
 /**
@@ -558,7 +558,10 @@ class Attr_types{
 			$this->attr_types = &$at;
 		}
 		
-		if (!isset($this->attr_types[$name])) return null;
+		if (!isset($this->attr_types[$name])) {
+			$ret = null;
+			return $ret;
+		}
 		
 		return $this->attr_types[$name];
 	}
