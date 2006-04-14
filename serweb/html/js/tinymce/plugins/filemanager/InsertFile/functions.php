@@ -13,14 +13,16 @@
 function dirs($dir,$abs_path) {
         $d = dir($dir);
         $dirs = array();
-        while (false !== ($entry = $d->read())) {
-                if(is_dir($dir.'/'.$entry) && substr($entry,0,1) != '.')  {
-                        $path['path'] = $dir.'/'.$entry;
-                        $path['name'] = $entry;
-                        $dirs[$entry] = $path;
-                }
-        }
-        $d->close();
+        if (is_object($d)){
+	        while (false !== ($entry = $d->read())) {
+	                if(is_dir($dir.'/'.$entry) && substr($entry,0,1) != '.')  {
+	                        $path['path'] = $dir.'/'.$entry;
+	                        $path['name'] = $entry;
+	                        $dirs[$entry] = $path;
+	                }
+	        }
+	        $d->close();
+		}
         ksort($dirs);
         $cntDir = count($dirs);
         for($i=0; $i<$cntDir; $i++) {

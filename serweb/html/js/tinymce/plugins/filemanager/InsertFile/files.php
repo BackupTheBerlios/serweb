@@ -460,7 +460,7 @@ if ($err) {
 
 <?php
 $d = @dir($MY_DOCUMENT_ROOT.$MY_PATH);
-if($d) {
+if($MY_DOCUMENT_ROOT and $d) {
         $t_header = '<table class="sort-table" id="tableHeader" cellspacing="0" width="100%"  border="0" >
         <col />
         <col />
