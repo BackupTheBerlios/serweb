@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.40 2006/04/14 12:04:05 kozlik Exp $
+ * $Id: config.php,v 1.41 2006/04/14 12:09:08 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -110,6 +110,9 @@
 
 	/* user tabs definitions
 		Ctab (enabled, name_of_tab, php_script)
+		
+		Tab Send IM is temporary disabled because sending instant messages 
+		with xml-rpc is not curently possible
 	*/
 
 	$config->user_tabs=array();
@@ -117,7 +120,7 @@
 	$config->user_tabs[]=new Ctab (true, "@tab_phonebook", "phonebook.php");						// $lang_str['tab_phonebook']
 	$config->user_tabs[]=new Ctab (true, "@tab_missed_calls", "missed_calls.php");				// $lang_str['tab_missed_calls']
 	$config->user_tabs[]=new Ctab (true, "@tab_accounting", "accounting.php");					// $lang_str['tab_accounting']
-	$config->user_tabs[]=new Ctab (true, "@tab_send_im", "send_im.php");							// $lang_str['tab_send_im']
+	$config->user_tabs[]=new Ctab (false, "@tab_send_im", "send_im.php");							// $lang_str['tab_send_im']
 	$config->user_tabs[]=new Ctab (true, "@tab_message_store", "message_store.php");				// $lang_str['tab_message_store']
 	$config->user_tabs[]=new Ctab (false, "@tab_voicemail", "voicemail.php");					// $lang_str['tab_voicemail']
 	$config->user_tabs[]=new Ctab (false, "@tab_user_preferences", "user_preferences.php");		// $lang_str['tab_user_preferences']
@@ -339,7 +342,8 @@
 	/* ------------------------------------------------------------*/
 
 	/* enable click to dial */
-	$config->enable_ctd = true;
+	/* temporary disabled because CTD not working with xml-rpc */
+	$config->enable_ctd = false;
 
 	/* address of the final destination to which we want to transfer
 	   initial CSeq and CallId */
