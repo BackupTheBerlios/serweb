@@ -1,4 +1,4 @@
-$Id: README,v 1.1 2005/11/11 13:06:55 kozlik Exp $
+$Id: README,v 1.2 2006/04/14 10:58:05 kozlik Exp $
 
 Multidomain module
 ------------------
@@ -28,33 +28,68 @@ Instalation and configuration
 	
 	    chown apache:apache <apache_vhosts_dir>
 
- 4. Reconfigure apache to use module mod_vhost_alias. This is need for dynamic
-    virtual host configuration. Detailed info about it you can found here:
-    http://httpd.apache.org/docs/2.1/vhosts/mass.html Add to your httpd.conf
-    something like this:
+ 4. There are two possible ways how to configure apache. 
+ 
+    A.  The simlier is if you are useing serweb for all hosted domains. Add 
+	    this to your apache config:
     
-        LoadModule vhost_alias_module /usr/lib/apache2/modules/mod_vhost_alias.so
-
-        UseCanonicalName Off
-        
-        <Directory />
-            Options FollowSymLinks
-            AllowOverride None
-        </Directory>
-        
-	    VirtualDocumentRoot /usr/local/share/serweb/vhosts/%0
-
-	Where "/usr/local/share/serweb/vhosts/" is content of $config->apache_vhosts_dir
+			NameVirtualHost *
+			<VirtualHost *>
+		        ServerAdmin webmaster@localhost
+		
+		        DocumentRoot /usr/share/serweb/html/
+		        <Directory /usr/share/serweb/html/>
+		                Options FollowSymLinks
+		                AllowOverride None
+		                Order allow,deny
+		                allow from all
+		
+		                php_flag magic_quotes_gpc Off
+		        </Directory>
+		
+		        ErrorLog /var/log/apache2/serweb-error.log
+		
+		        # Possible values include: debug, info, notice, warn, error, crit,
+		        # alert, emerg.
+		        LogLevel warn
+		
+		        CustomLog /var/log/apache2/serweb-access.log combined
+		        ServerSignature On
+			</VirtualHost>  
+		
+	    Or change your apache config appropriately. The $config->root_path variable
+	    should be "/" if you use the apache config above. 
 	
- 5. Create symlink for first domain in <apache_vhosts_dir> directory to allow 
-    the first login to serweb. The domain for which you are creating the symlink
-	should be the domain of hostmaster. So if account of your hostmaster is
-	admin@mydomain.org create symlink:
+	B.  If you want run serweb only for some hosting domains you have to use module
+	    mod_vhost_alias. This is need for dynamic virtual host configuration. 
+	    Detailed info about it you can found here:
+        
+			http://httpd.apache.org/docs/2.1/vhosts/mass.html
+		
+		Add to your httpd.conf something like this:
+    
+	        LoadModule vhost_alias_module /usr/lib/apache2/modules/mod_vhost_alias.so
 	
-		ln -s /your/serweb/dir/html  /usr/local/share/serweb/vhosts/mydomain.org
+	        UseCanonicalName Off
+	        
+	        <Directory />
+	            Options FollowSymLinks
+	            AllowOverride None
+	        </Directory>
+	        
+		    VirtualDocumentRoot /usr/local/share/serweb/vhosts/%0
 
-	From now you should be able login to serweb at http://mydomain.org/user and
-	http://mydomain.org/admin
+	    Where "/usr/local/share/serweb/vhosts/" is content of $config->apache_vhosts_dir
+	
+        Create symlink for first domain in <apache_vhosts_dir> directory to allow 
+        the first login to serweb. The domain for which you are creating the symlink
+	    should be the domain of hostmaster. So if account of your hostmaster is
+	    admin@mydomain.org create symlink:
+	
+			ln -s /your/serweb/dir/html  /usr/local/share/serweb/vhosts/mydomain.org
+
+	    From now you should be able login to serweb at http://mydomain.org/user and
+	    http://mydomain.org/admin
 	
 
 

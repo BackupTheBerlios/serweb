@@ -1,13 +1,28 @@
 <?
 /*
- * $Id: config_paths.php,v 1.7 2005/09/22 14:42:54 kozlik Exp $
+ * $Id: config_paths.php,v 1.8 2006/04/14 10:58:04 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user_interface" 
-		   directories begin to spread; If set up to be in root (http://www/admin ...),
-           set just "/" here. Set a specific path otherwise, e.g., "/iptel/html/". 
-		   Don't forget trailing slash.  
+		   directories begin to spread; Don't forget trailing slash.
+		   This setting depends on your apache configuration.
+		   
 			Hint: if path incorrect, image buttons do not show up
+			
+			Examples:
+			- If your serweb will be accesible by this url:
+			
+	 		  http://www.foo.bar/some/dir/to/serweb/admin/  and
+			  http://www.foo.bar/some/dir/to/serweb/user/
+			  
+			  set $config->root_path="/some/dir/to/serweb/";
+			
+			- If set up to be in root 
+		      
+			  http://www.foo.bar/admin/ and
+			  http://www.foo.bar/user/
+			  
+			  set just "/" in $config->root_path. 
 		*/
 		$config->root_path="/serweb/";
 
