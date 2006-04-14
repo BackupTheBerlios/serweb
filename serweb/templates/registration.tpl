@@ -1,9 +1,9 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.4 2006/01/11 11:57:17 kozlik Exp $ *}
+{* $Id: registration.tpl,v 1.5 2006/04/14 16:41:36 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
-	#uname, #passwd, #passwd_r, #sw_fname, #sw_lname, #sw_email, #sw_phone, #sw_timezone {width:250px;}
+	#uname, #passwd, #passwd_r, #first_name, #last_name, #email, #phone, #timezone {width:250px;}
 	#terms {width:415px;}
 </style>	
 {/literal}
@@ -30,32 +30,32 @@
 		<div class="rbcontentwrap"><div class="rbcontent">
 				<table border="0" cellspacing="0" cellpadding="0" align="center">
 				<tr>
-				<td><label for="sw_fname">{$lang_str.ff_first_name}:</label></td>
-				<td >{$form.sw_fname}</td>
+				<td><label for="first_name">{$lang_str.ff_first_name}:</label></td>
+				<td >{$form.first_name}</td>
 				</tr>
 				<tr>
-				<td><label for="sw_lname">{$lang_str.ff_last_name}:</label></td>
-				<td>{$form.sw_lname}</td>
+				<td><label for="last_name">{$lang_str.ff_last_name}:</label></td>
+				<td>{$form.last_name}</td>
 				</tr>
 				<tr>
-				<td><label for="sw_email">{$lang_str.ff_email}:</label></td>
-				<td>{$form.sw_email}</td>
+				<td><label for="email">{$lang_str.ff_email}:</label></td>
+				<td>{$form.email}</td>
 				</tr>
 				<tr>
 				<td>&nbsp;</td>
 				<td><div class="swRegFormDesc">{$lang_str.reg_email_desc}</div></td>
 				</tr>
 				<tr>
-				<td><label for="sw_phone">{$lang_str.ff_phone}:</label></td>
-				<td>{$form.sw_phone}</td>
+				<td><label for="phone">{$lang_str.ff_phone}:</label></td>
+				<td>{$form.phone}</td>
 				</tr>
 				<tr>
 				<td>&nbsp;</td>
 				<td><div class="swRegFormDesc">{$lang_str.reg_phone_desc}</div></td>
 				</tr>
 				<tr>
-				<td><label for="sw_timezone">{$lang_str.ff_your_timezone}:</label></td>
-				<td>{$form.sw_timezone}</td>
+				<td><label for="timezone">{$lang_str.ff_your_timezone}:</label></td>
+				<td>{$form.timezone}</td>
 				</tr>
 				<tr>
 				<td><label for="uname">{$lang_str.ff_pick_username}:</label></td>
