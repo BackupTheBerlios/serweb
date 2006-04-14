@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.39 2006/04/12 13:41:18 kozlik Exp $
+ * $Id: config.php,v 1.40 2006/04/14 12:04:05 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -133,7 +133,6 @@
 	$config->admin_tabs=array();
 	$config->admin_tabs[]=new Ctab (true, "@tab_users", "users.php");							// $lang_str['tab_users']
 	$config->admin_tabs[]=new Ctab (true, "@tab_admin_privileges", "list_of_admins.php");		// $lang_str['tab_admin_privileges']
-	$config->admin_tabs[]=new Ctab (false, "@tab_user_preferences", "user_preferences.php");	// $lang_str['tab_user_preferences']
 	$config->admin_tabs[]=new Ctab (true, "@tab_domains", "list_of_domains.php");				// $lang_str['tab_domains']
 	$config->admin_tabs[]=new Ctab (true, "@tab_customers", "customers.php");					// $lang_str['tab_customers']
 	$config->admin_tabs[]=new Ctab (true, "@tab_global_attributes", "global_attributes.php");	// $lang_str['tab_global_attributes']
