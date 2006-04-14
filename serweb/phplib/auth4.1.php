@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: auth4.1.php,v 1.4 2005/12/22 13:36:19 kozlik Exp $
+ * $Id: auth4.1.php,v 1.5 2006/04/14 18:29:01 kozlik Exp $
  */ 
 
 class Auth {
@@ -112,7 +112,7 @@ class Auth {
 		#  1) Not logged in (no valid auth info or auth expired)
 		#  2) Logged in (valid auth info)
 		#  3) Login in progress (if $$cl, revert to state 1)
-		if ($this->is_authenticated()) {
+		if (false !== $this->is_authenticated()) {
 			# User is authenticated and auth not expired
 			$state = 2;
 
@@ -123,7 +123,7 @@ class Auth {
 				# and set state to "Not logged in", so eventually
 				# default or automatic authentication may take place
 				$this->unauth();
-				$state = 1;
+				$state = 1; 
 			} else {
 				# Set state to "Login in progress"
 				$state = 3;
@@ -140,7 +140,7 @@ class Auth {
 			# No valid auth info or auth is expired
 			
 			# Check for user supplied automatic login procedure 
-			if ( $this->auth_preauth() and $this->is_authenticated()) {
+			if ( $this->auth_preauth() and (false !== $this->is_authenticated())) {
 				$this->auth['in_progress'] = false; // to be sure
 				return true;
 			}
@@ -199,7 +199,7 @@ class Auth {
 			switch ($this->mode) {
 			case "yes":
 			case "log":
-				if ( $this->auth_validatelogin() and $this->is_authenticated()) {
+				if ( $this->auth_validatelogin() and (false !== $this->is_authenticated())) {
 					$this->auth['in_progress'] = false;
 					return true;
 				} else {
@@ -209,7 +209,7 @@ class Auth {
 				}
 				break;
 			case "reg":
-				if ( $this->auth_doregister() and $this->is_authenticated()) {
+				if ( $this->auth_doregister() and (false !== $this->is_authenticated())) {
 					$this->auth['in_progress'] = false;
 					return true;
 				} else {
@@ -259,7 +259,7 @@ class Auth {
 	function is_authenticated() {
 		if (
 			isset($this->auth["uid"]) &&
-			$this->auth["uid"] && 
+			!is_null($this->auth["uid"]) && 
 			$this->auth["authenticated"] && 
 			(($this->lifetime <= 0) || (time() < $this->auth["exp"]))
 		) {

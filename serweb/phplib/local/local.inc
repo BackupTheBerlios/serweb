@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.18 2006/04/12 13:41:20 kozlik Exp $
+ * $Id: local.inc,v 1.19 2006/04/14 18:29:01 kozlik Exp $
  */
 
 
@@ -56,7 +56,7 @@ class phplib_Auth extends Auth {
 		$this->auth['adm_domains'] = null;
 		
 		//user is not logged in, forward to login screen
-		if (empty($this->auth["uid"])){
+		if (!isset($this->auth["uid"]) or is_null($this->auth["uid"])){
 			Header("Location: ".$sess->url("index.php"));
 			exit;
 		}
