@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.15 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.16 2006/04/14 19:14:44 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -29,7 +29,7 @@ $sc	= new apu_subscribers();
 
 $smarty->assign('domain',$config->domain);
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
-$smarty->assign('change_domain_admin', $perm->have_perm('hostmaster'));
+$smarty->assign('change_domain_admin', $config->multidomain and $perm->have_perm('hostmaster'));
 
 $sc->set_opt('use_chk_adminsonly', true);
 $sc->set_opt('def_chk_adminsonly', true);
