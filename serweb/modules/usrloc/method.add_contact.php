@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.add_contact.php,v 1.4 2006/04/10 15:32:58 kozlik Exp $
+ * $Id: method.add_contact.php,v 1.5 2006/04/14 09:46:34 kozlik Exp $
  */
 
 class CData_Layer_add_contact {
@@ -23,7 +23,7 @@ class CData_Layer_add_contact {
 		$flags="0";
 		
 		if ($expires > 567640000 or $expires <= 0){	//contact that should expire later than 18 year, never expire
-			$expires=0;
+			$expires=-1;
 			$flags="128";
 		}
 

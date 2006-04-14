@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_usrloc.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
+ * $Id: method.get_usrloc.php,v 1.4 2006/04/14 09:46:34 kozlik Exp $
  */
 
 class CData_Layer_get_usrloc {
@@ -131,7 +131,8 @@ class CData_Layer_get_usrloc {
 			if (substr($expires,0,10)==date('Y-m-d')) $date=substr($expires,11,5);
 			else $date=substr($expires,0,10);
 
-			if ((int)$val->expires < 0 ) {
+			// 567640000 means 18 years
+			if ((int)$val->expires < 0 or (int)$val->expires > 567640000) {
 				$date = "never";
 				$exp_timestamp = -1;
 			}
