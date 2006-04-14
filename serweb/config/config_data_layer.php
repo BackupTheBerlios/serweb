@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.33 2006/04/14 08:27:32 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.34 2006/04/14 10:27:40 kozlik Exp $
  */
 
 
@@ -254,6 +254,7 @@
 								'timezone'			=> 'timezone',			//timezone
 								'allow_find'		=> 'sw_allow_find',		//allow other to look up for this user
 								'send_mc'			=> 'sw_send_missed',	//send missed calls
+								'acl'				=> 'acl',				//contain access control list of user - have to be declared as multivalue
 
 								'is_admin'			=> 'sw_is_admin',		//have admin privilege
 								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege

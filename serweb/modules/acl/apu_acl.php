@@ -3,7 +3,7 @@
  * Application unit acl (Access Control List)
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_acl.php,v 1.3 2006/03/08 15:38:37 kozlik Exp $
+ * @version   $Id: apu_acl.php,v 1.4 2006/04/14 10:27:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -50,8 +50,7 @@
  *	  'was_updated' - when user submited form and data was succefully stored
  *
  *	opt['smarty_acl'] 				(acl)	
- *	 associative array containing user's Access Control List 
- *	 The array have same keys as function get_acl_of_user (from data layer) returned. 
+ *	 array containing user's Access Control List 
  *	
  *	opt['smarty_acl_control'] 		(acl_control)	
  *	 array containing list of ACLs which may currently logged user change
@@ -66,7 +65,7 @@ class apu_acl extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_acl_of_user', 'update_acl_of_user');
+		return array();
 	}
 
 	/* return array of strings - requred javascript files */
@@ -101,17 +100,25 @@ class apu_acl extends apu_base_class{
 	}
 
 	function action_update(&$errors){
-		global $data;
+		global $config;
 		
+		$an = &$config->attr_names;
+
 		foreach ($this->acl_control as $row){
-			//if checkbox isn't checked, assign value "0" to variable
-			if (!isset($_POST["acl_chk_".$row])) $_POST["acl_chk_".$row] = "0";
-	
-			//if state of checkbox was changed
-			if ($_POST["acl_chk_".$row] != $_POST["acl_hidden_".$row]){
-				if (false === $data->update_ACL_of_user($this->user_id, $row, $_POST["acl_chk_".$row]?'set':'del', $errors)) return false;
+			// if value has been checked
+			if (!empty($_POST["acl_chk_".$row]) and !in_array($row, $this->acl)){
+				$this->acl[] = $row; //add value to the array
+			}
+
+			// if value has been unchecked
+			if (empty($_POST["acl_chk_".$row]) and (false !== $k = array_search($row, $this->acl))){
+				unset($this->acl[$k]); //remove value from array
 			}
 		}
+
+		/* get user attrs object */
+		$ua = &User_Attrs::singleton($this->user_id->get_uid());
+		if (false === $ua->set_attribute($an['acl'], $this->acl)) return false;
 
 		if ($this->opt['redirect_on_update'])
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
@@ -140,17 +147,17 @@ class apu_acl extends apu_base_class{
 	
 	/* create html form */
 	function create_html_form(&$errors){
-		global $data, $data_auth, $config;
+		global $config;
 		parent::create_html_form($errors);
 
-		/* get access control list of user */
-		if (false === $this->acl = $data->get_acl_of_user($this->user_id, $errors)) 
-			return false;
+		$an = &$config->attr_names;
 
+		$ua = &User_Attrs::singleton($this->user_id->get_uid());
+		if (false === $this->acl = $ua->get_attribute($an['acl'])) return false;
+
+		if (is_null($this->acl)) $this->acl = array();
 		
 		if ($this->opt['allow_edit']){
-
-			$an = &$config->attr_names;
 
 			/* get admin ACL control privileges */
 			$user_attrs = &User_Attrs::singleton($_SESSION['auth']->get_uid());
@@ -158,21 +165,13 @@ class apu_acl extends apu_base_class{
 			
 			if (is_null($this->acl_control)) $this->acl_control=array();		
 			
-			$grp_val=array();
-			foreach($this->acl as $val) $grp_val[]=$val['grp'];
-		
 			/* add form elements */
 			foreach ($this->acl_control as $row){
 				$this->f->add_element(array("type"=>"checkbox",
 				                      "name"=>"acl_chk_".$row,
-				                      "checked"=>in_array($row, $grp_val)?"1":"0",
+				                      "checked"=>in_array($row, $this->acl)?"1":"0",
 				                      "value"=>"1"));
-		
-				$this->f->add_element(array("type"=>"hidden",
-				                      "name"=>"acl_hidden_".$row,
-				                      "value"=>in_array($row, $grp_val)?"1":"0"));
 			}
-	
 		}
 	}
 
@@ -210,7 +209,6 @@ class apu_acl extends apu_base_class{
 		             'after'       => '',
 					 'before'      => '');
 	}
-	
 }
 
 ?>

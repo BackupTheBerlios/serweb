@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.16 2006/03/09 09:17:53 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.17 2006/04/14 10:27:40 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -79,7 +79,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr><th>{$lang_str.your_acl}:</td></tr>
 	{/if}
-	<tr><td align="center">{$row.grp}</td></tr>
+	<tr><td align="center">{$row}</td></tr>
 	{if $smarty.foreach.acl.last}
 	</table>
 	</div>
