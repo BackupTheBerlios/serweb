@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.32 2006/04/10 15:01:11 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.33 2006/04/14 08:27:32 kozlik Exp $
  */
 
 
@@ -245,13 +245,13 @@
 		 */
 
 		$config->attr_names = array(
-								'fname'				=> 'sw_fname',			//first name of user
-								'lname'				=> 'sw_lname',			//last name of user
-								'phone'				=> 'sw_phone',			//phone of user
-								'email'				=> 'sw_email',			//email address of user
+								'fname'				=> 'first_name',		//first name of user
+								'lname'				=> 'last_name',			//last name of user
+								'phone'				=> 'phone',				//phone of user
+								'email'				=> 'email',				//email address of user
 								'show_status'		=> 'sw_show_status',	//show to others if user is online
 								'lang'				=> 'lang',				//language
-								'timezone'			=> 'sw_timezone',		//timezone
+								'timezone'			=> 'timezone',			//timezone
 								'allow_find'		=> 'sw_allow_find',		//allow other to look up for this user
 								'send_mc'			=> 'sw_send_missed',	//send missed calls
 
@@ -262,14 +262,14 @@
 								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
 								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
 								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
-								'require_conf' 		=> 'sw_require_conf',	//require confirmation
+								'require_conf' 		=> 'sw_require_confirm',//require confirmation
 
 								'digest_realm'		=> 'digest_realm',		
 								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
 								'dom_owner'			=> 'sw_owner',			//contain id of customer owning domain
 
-								'sd_fname'			=> 'sw_fname',			//speed dial first name
-								'sd_lname'			=> 'sw_lname',			//speed dial last name
+								'sd_fname'			=> 'first_name',		//speed dial first name
+								'sd_lname'			=> 'last_name',			//speed dial last name
 
 								'domain_default_flags'		=> 'sw_domain_default_flags',		//default flags for domains
 								'credential_default_flags'	=> 'sw_credential_default_flags',	//default flags for credentials
