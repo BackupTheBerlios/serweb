@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.8 2006/01/06 13:05:30 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.9 2006/04/14 19:15:35 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -202,6 +202,8 @@ class apu_domain_list extends apu_base_class{
 		$this->pager['to']=$data->get_res_to();
 
 		foreach($this->domains as $key=>$val){
+			if ($val['id'] == '0') continue; //skip create urls for default domain
+			
 			$get = $this->controler->domain_to_get_param($val['id']);
 			$this->domains[$key]['url_edit'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&edit=1");
 			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&enable=1");

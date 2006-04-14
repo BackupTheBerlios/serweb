@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.22 2006/03/08 15:21:40 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.23 2006/04/14 19:15:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -651,6 +651,7 @@ class page_conroler{
 	/*****************  start processing of page *******************/
 	function start(){
 		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm, $sess;
+		global $sess_page_controler_domain_id, $sess_page_controler_user_id;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
@@ -682,6 +683,12 @@ class page_conroler{
 				} 
 
 			}
+		}
+		/* do not allow change parameters of default domain */
+		if ($this->domain_id == '0'){
+			$sess_page_controler_domain_id = null;
+			page_close();			
+			die("Change parameters of default domain is not possible");
 		}
 
 		/* make code portable - if magic_quotes_gpc is set to on, strip slashes */

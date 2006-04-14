@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.5 2005/12/22 12:38:54 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.6 2006/04/14 19:15:35 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -144,6 +144,7 @@ class apu_domain_admin extends apu_base_class{
 		$this->assigned_domains = array();
 		$this->unassigned_domains = array();
 		foreach ($domains as $k => $v){
+			if ($v['id'] == '0') continue;	//skip default domain
 			if (in_array($v['id'], $this->assigned_ids)) {
 				$domains[$k]['url_unassign'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
 						"&da_unassign=1&".$this->controler->domain_to_get_param($v['id']));
