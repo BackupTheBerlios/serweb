@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.33 2006/04/10 15:01:12 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.34 2006/04/18 08:44:28 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -456,6 +456,8 @@ $lang_str['ff_att_domain'] = 					"domain";
 $lang_str['ff_att_global'] = 					"global";
 $lang_str['ff_multivalue'] = 					"multivalue";
 $lang_str['ff_att_reg'] = 						"required on registration";
+$lang_str['ff_fr_timer'] = 						"final response timer";
+$lang_str['ff_fr_inv_timer'] = 					"final response invite timer";
 
 $lang_str['th_att_name'] = 						"attribute name";
 $lang_str['th_att_type'] = 						"attribute type";
