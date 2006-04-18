@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.41 2006/04/14 12:09:08 kozlik Exp $
+ * $Id: config.php,v 1.42 2006/04/18 09:30:35 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -67,7 +67,7 @@
 	 *     In this case the domain is checked against the 'domain' sql table.
 	 *     Also tabs for manage domains are enabled in admin interface.
 	 */
-	$config->multidomain = false;
+	$config->multidomain = true;
 	
 	/* Default id of domains in single domain setups 
 	 * Probably you does not need change this value.
