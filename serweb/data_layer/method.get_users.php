@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.16 2006/04/10 13:03:35 kozlik Exp $
+ * $Id: method.get_users.php,v 1.17 2006/04/18 14:51:43 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -245,7 +245,7 @@ class CData_Layer_get_users {
 			$out[$i]['username']       = $row['username'];
 			$out[$i]['domain']         = $row['realm'];
 			$out[$i]['serweb_auth']    = new Cserweb_auth($row['uid'], $row['username'], $row['realm']);
-			$out[$i]['name']           = implode(' ', array($row['lname'], $row['fname']));
+			$out[$i]['name']           = implode(' ', array($row['fname'], $row['lname']));
 			$out[$i]['fname']          = $row['fname'];
 			$out[$i]['lname']          = $row['lname'];
 			$out[$i]['phone']          = $row['phone'];
