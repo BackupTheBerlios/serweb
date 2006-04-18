@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.16 2006/03/22 14:00:15 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.17 2006/04/18 14:52:36 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -55,8 +55,6 @@
 	<th>{$lang_str.th_username}</th>
 	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
-	<th>{$lang_str.th_phone}</th>
-	<th>{$lang_str.th_alias}</th>
 	<th>{$lang_str.th_email}</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
@@ -79,8 +77,6 @@
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
-	<td align="right">{$row.phone|escape|empty2nbsp}</td>
-	<td align="right">{include file="includes/inline_aliases.tpl" uris=$row.uris}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	<td align="center"><a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a></td>
 	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>
