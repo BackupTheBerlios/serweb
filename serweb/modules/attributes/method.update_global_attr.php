@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_global_attr.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
+ * $Id: method.update_global_attr.php,v 1.3 2006/04/18 10:36:09 kozlik Exp $
  */
 
 class CData_Layer_update_global_attr {
@@ -87,9 +87,15 @@ class CData_Layer_update_global_attr {
 				return true;
 			}
 			else{
-				$q = "update ".$t_name." 
-				      set ".$c->value."  = ".$this->sql_format($value, "s")."
-				      where ".$c->name." = ".$this->sql_format($name,  "s");
+				if ($value === ""){
+					$q = "delete from ".$t_name." 
+		    		      where ".$c->name." = ".$this->sql_format($name, "s");
+				}
+				else{
+					$q = "update ".$t_name." 
+					      set ".$c->value."  = ".$this->sql_format($value, "s")."
+					      where ".$c->name." = ".$this->sql_format($name,  "s");
+				}
 			}
 
 			$res=$this->db->query($q);

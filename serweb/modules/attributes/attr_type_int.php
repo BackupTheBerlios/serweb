@@ -14,6 +14,10 @@ class Attr_type_int extends Attr_type{
 			$value=$regs[1];
 			return true;
 		}
+		/* hack: set all numbers as optional*/
+		else if ($value == ""){
+			return true;
+		}
 		else return false;
 	}
 
@@ -21,6 +25,9 @@ class Attr_type_int extends Attr_type{
 		parent::form_element($form, $value, $opt);
 
 		global $lang_str;
+
+		/* hack: set all numbers as optional*/
+		$opt["optional"] = true;
 
 		/* set default values for options */
 		$opt_optional = isset($opt["optional"]) ? $opt["optional"] : false;
