@@ -2,16 +2,18 @@
 /**
  * Cron job maintenances database - should be run after midnight
  *
- * $Id: daily.php,v 1.2 2005/12/22 13:07:22 kozlik Exp $
+ * $Id: daily.php,v 1.3 2006/04/18 11:08:53 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_deleted_domains', 'get_deleted_users',  
 									'get_domains', 'delete_sip_user', 'delete_domain', 
-									'delete_acc');
+									'delete_acc', 'get_missed_calls_of_yesterday', 
+									'get_users');
 
 $_required_modules = array('multidomain', 'subscribers', 'accounting');
 
 require "prepend.php";
+require "missed_calls.php";
 
 /* Get current time and store it. It is need to use the same time in all sql queries */
 $GLOBALS['now'] = time();
@@ -132,6 +134,7 @@ function main(&$errors){
 	if (false === purge_deleted_domains()) return false;
 	if (false === purge_pending_users()) return false;
 	if (false === purge_acc()) return false;
+	if (false === send_missed_calls()) return false;
 
 	return true;
 }
@@ -147,8 +150,11 @@ main($errors);
 $errors = &$eh->get_errors_array();
 
 if (is_array($errors) and count($errors)) {
-	foreach($errors as $val) sw_log("cron job: daily maintenance - ".$val, PEAR_LOG_ERR);
-	echo "There were errors during scripts run. See log file for details.\n";
+	echo "There were errors during scripts run.\n";
+	foreach($errors as $val) {
+		fwrite(STDERR, $val."\n");
+		sw_log("cron job: daily maintenance - ".$val, PEAR_LOG_ERR);
+	}
 	exit (1);
 }
 

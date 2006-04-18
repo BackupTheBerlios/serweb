@@ -1,13 +1,8 @@
-<?
+<?php
+
 /*
- * this script should be run after midnight - sends missed calls of previous day
- *
- * $Id: send_daily_missed_calls.php,v 1.4 2006/03/16 12:06:21 kozlik Exp $
+ * $Id: missed_calls.php,v 1.1 2006/04/18 11:08:53 kozlik Exp $
  */
-
-$_data_layer_required_methods=array('get_missed_calls_of_yesterday', 'get_users');
-
-require "prepend.php";
 
 /**
  *	function sends missed calls of user to given email address
@@ -180,7 +175,7 @@ function send_missed_calls(){
 			if (is_null($send)) {
 				if (false === $send = get_send_mc_of_dom($row['uris'])) return false;
 			}
-	
+
 			if ($send) {
 				if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'])) return false;
 			}
@@ -189,18 +184,4 @@ function send_missed_calls(){
 	} while (false);
 }
 
-send_missed_calls();
-
-$eh = &ErrorHandler::singleton();
-$errors = &$eh->get_errors_array();
-if (is_array($errors)) {
-	foreach($errors as $val) {
-		sw_log("send_daily_missed_call - ".$val, PEAR_LOG_ERR);
-		fwrite(STDERR, $val."\n");
-	}
-	
-	if (count($errors)){
-		echo "\nThere were errors during script running. Check serweb log for more info.\n";
-	}
-}
 ?>

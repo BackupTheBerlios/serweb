@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.3 2006/04/05 12:28:46 kozlik Exp $
+$Id: INSTALL,v 1.4 2006/04/18 11:08:53 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -19,7 +19,7 @@ Database daily maintenance
 --------------------------
 Short description:
     Purge subscribers and domains marked as deleted, purge pending registrations
-    and purge old accounting records
+    and purge old accounting records, send missed calls of subscribers
 
 At what time to run?
     Daily a while after midnight
@@ -30,28 +30,6 @@ Crontab line:
 Extra require:
    * nothing
 	 
-
-
-
-
-Send daily missed calls
------------------------
-Short description:
-    Send missed calls of subscribers to their email addresses.
-
-At what time to run?
-    Daily a while after midnight
-
-Crontab line: 
-    5 0 * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/send_daily_missed_calls.php
-
-Extra require:
-    * imap support for PHP (package php4-imap or see php manual: 
-                            http://www.php.net/manual/en/ref.imap.php)
-    * create user preference of same name as value of 
-      $config->up_send_daily_missed_calls is and of type boolean. If you
-	  installed script scripts/sql/usr_preferences.sql, this user preference is 
-	  already created.
 	 
 
 
