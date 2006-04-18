@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_acc.php,v 1.3 2006/04/10 13:03:36 kozlik Exp $
+ * $Id: method.delete_acc.php,v 1.4 2006/04/18 11:10:47 kozlik Exp $
  */
 
 class CData_Layer_delete_acc {
@@ -17,6 +17,8 @@ class CData_Layer_delete_acc {
 	 */ 
 	function delete_acc($opt){
 		global $config;
+
+		if (!$config->keep_acc_interval) return true;
 		
 		$errors = array();
 		if (!$this->connect_to_db($errors)) {

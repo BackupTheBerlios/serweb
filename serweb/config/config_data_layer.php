@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.34 2006/04/14 10:27:40 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.35 2006/04/18 11:10:46 kozlik Exp $
  */
 
 
@@ -188,8 +188,11 @@
 		 *	Lifetime of acc records. (in days)
 		 *	Accounting records will be kept in DB for given time
 		 *	interval. After expiring it, records will be permanently deleted.
+		 *	
+		 *	If $config->keep_acc_interval is 0, accounting records are not 
+		 *	deleted.
 		 */
-		$config->keep_acc_interval = 60;
+		$config->keep_acc_interval = 0;
 		
 		/**
 		 *	Number of kept versions of one file
