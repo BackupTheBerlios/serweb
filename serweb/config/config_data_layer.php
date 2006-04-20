@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.35 2006/04/18 11:10:46 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.36 2006/04/20 07:42:36 kozlik Exp $
  */
 
 
@@ -304,7 +304,6 @@
 		//
 		
 		/* Unless you used brute-force to change SER table names */
-		$config->data_sql->table_grp="grp";
 		$config->data_sql->table_aliases="aliases";
 		$config->data_sql->table_location="location";
 		$config->data_sql->table_missed_calls="missed_calls";
