@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_speed_dial.php,v 1.2 2005/12/14 16:36:58 kozlik Exp $
+ * $Id: method.delete_user_speed_dial.php,v 1.3 2006/04/20 07:38:29 kozlik Exp $
  */
 
 class CData_Layer_delete_user_speed_dial {
@@ -36,11 +36,11 @@ class CData_Layer_delete_user_speed_dial {
 
 		$ids = array();
 		while ($row=$res->fetchRow(DB_FETCHMODE_ASSOC)){
-			$ids[] = $ca->id." = ".$row['id'];
+			$ids[] = $row['id'];
 		}
 
 		if (count($ids)){
-			$q = "delete from ".$ta_name." where ".implode(" or ", $ids);
+			$q = "delete from ".$ta_name." where ".$this->get_sql_in($ca->id, $ids);
 
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {
