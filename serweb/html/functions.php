@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.73 2006/04/13 12:33:39 kozlik Exp $
+ * @version   $Id: functions.php,v 1.74 2006/04/21 07:55:10 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -504,6 +504,35 @@ function click_to_dial($target, $uri, &$errors){
    
 }
 
+
+/**
+ *	Get domain ID of domain of current virtualhost (the value in $config->domain)
+ *	
+ *	If domain ID is not found, this function return NULL
+ *	
+ *	@return	string		domain ID or FALSE on error
+ */
+
+function get_did_of_virtualhost(){
+	global $config;
+
+	if (isset($_SESSION['get_did_of_virtualhost']['domain']) and 
+	    $_SESSION['get_did_of_virtualhost']['domain'] == $config->domain and
+		isset($_SESSION['get_did_of_virtualhost']['did'])){
+
+		return $_SESSION['get_did_of_virtualhost']['did'];
+	}
+
+	$dh = &Domains::singleton();
+	if (false === $did = $dh->get_did($config->domain)) return false;
+	if (is_null($did)) return null;
+	
+	$_SESSION['get_did_of_virtualhost']['did'] = $did;
+	$_SESSION['get_did_of_virtualhost']['domain'] = $config->domain;
+	
+	return $did;
+}
+
  
 /**
  *	Return path to file from directory for concrete domain
@@ -515,22 +544,28 @@ function click_to_dial($target, $uri, &$errors){
  *
  *	@param string $filename
  *	@param bool   $html_tree	if true path in html tree is returned, otherwise path in filesystem is returned
- *	@param string $domain		domain from which the file is requested. If not set, value from $config->domain is used
+ *	@param string $did			domain from which the file is requested. If not set, the DID of $config->domain is used
  *	@return string				path to file on success, false on error
  */ 
-function multidomain_get_file($filename, $html_tree=true, $domain=null){
+function multidomain_get_file($filename, $html_tree=true, $did=null){
 	global $config;
 	
 	$dir=dirname(__FILE__)."/domains/";
-	if (is_null($domain)) $domain = $config->domain;
+	if (is_null($did)) {
+		$did = get_did_of_virtualhost();
+		if (is_null($did) or false === $did){
+			sw_log("Useing file from default domain. Domain: ".$config->domain." not found", PEAR_LOG_WARNING);
+			$did = "_default";
+		} 
+	}
 
-	if (file_exists($dir.$domain."/".$filename)){ 
+	if (file_exists($dir.$did."/".$filename)){ 
 		return $html_tree ? 
-			($config->domains_path.$domain."/".$filename) :
-			($dir.$domain."/".$filename);
+			($config->domains_path.$did."/".$filename) :
+			($dir.$did."/".$filename);
 	}
 	else if (file_exists($dir."_default/".$filename)){
-		sw_log("Useing file from default domain for filename: ".$filename.", requested domain: ".$domain, PEAR_LOG_DEBUG);
+		sw_log("Useing file from default domain for filename: ".$filename.", requested domain: ".$did, PEAR_LOG_DEBUG);
 		return $html_tree ? 
 			($config->domains_path."_default/".$filename) :
 			($dir."_default/".$filename);
@@ -609,25 +644,32 @@ function get_path_to_buttons($button, $lang){
  *	@param string $filename		name of file is searching for
  *	@param string $ddir			subdirectory within domain dir
  *	@param string $lang			language in "official" ISO 639 language code see {@link config_lang.php} for more info
- *	@param string $domain		domain from which the file is requested. If not set, value from $config->domain is used
+ *	@param string $did			domain from which the file is requested. If not set, the DID of $config->domain is used
  *	@return string				path to file on success, false on error
  */
-function multidomain_get_lang_file($filename, $ddir, $lang, $domain=null){
+function multidomain_get_lang_file($filename, $ddir, $lang, $did=null){
 	global $config, $reference_language, $available_languages;
 	
 	$dir=dirname(__FILE__)."/domains/";
 	$ln = $available_languages[$lang][2];
 	$ref_ln = $available_languages[$reference_language][2];
-	if (is_null($domain)) $domain = $config->domain;
+
+	if (is_null($did)) {
+		$did = get_did_of_virtualhost();
+		if (is_null($did) or false === $did){
+			sw_log("Useing file from default domain. Domain: ".$config->domain." not found", PEAR_LOG_WARNING);
+			$did = "_default";
+		} 
+	}
 
 	if (!empty($ddir) and substr($ddir, -1) != "/") $ddir.="/";
 
-	if (file_exists($dir.$domain."/".$ddir.$ln."/".$filename)) 
-		return $dir.$domain."/".$ddir.$ln."/".$filename;
+	if (file_exists($dir.$did."/".$ddir.$ln."/".$filename)) 
+		return $dir.$did."/".$ddir.$ln."/".$filename;
 	
-	else if (file_exists($dir.$domain."/".$ddir.$ref_ln."/".$filename)){
+	else if (file_exists($dir.$did."/".$ddir.$ref_ln."/".$filename)){
 		sw_log("Useing file in default language (requested lang: ".$ln.") for filename: ".$filename, PEAR_LOG_DEBUG);
-		return $dir.$domain."/".$ddir.$ref_ln."/".$filename;
+		return $dir.$did."/".$ddir.$ref_ln."/".$filename;
 	}
 		
 	else if (file_exists($dir."_default/".$ddir.$ln."/".$filename)){

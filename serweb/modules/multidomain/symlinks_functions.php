@@ -3,7 +3,7 @@
  * Functions for creating and deleting domains
  * 
  * @author    Karel Kozlik
- * @version   $Id: symlinks_functions.php,v 1.2 2006/03/29 11:48:03 kozlik Exp $
+ * @version   $Id: symlinks_functions.php,v 1.3 2006/04/21 07:55:11 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -186,19 +186,8 @@ function domain_create_symlinks($domain_id, $domain_name, &$errors){
 	
 	$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
 
-	$target = $serweb_root."html/domains/".$domain_id;
-	$file = $serweb_root."html/domains/".$domain_name;
-
 	if (false === create_domain_config_dir($domain_id, $errors)) return false;
 
-	FileJournal::add_created_file($file);
-
-	if (false === symlink($target, $file)){
-		log_errors(PEAR::raiseError("Can't create domain specific config", NULL, NULL, 
-		           NULL, "Can't create symlink. Link:".$file." target:".$target), $errors);
-		return false;
-	}
-	
 	if ($config->apache_vhosts_dir){
 		$target = $serweb_root."html/";
 		$file = $config->apache_vhosts_dir.$domain_name;
@@ -229,23 +218,14 @@ function domain_create_symlinks($domain_id, $domain_name, &$errors){
 function domain_remove_symlinks($domain_name, &$errors){
 	global $config;
 	
-	$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
-
-	$success = TRUE;
-	$file = $serweb_root."html/domains/".$domain_name;
-	if(file_exists($file)) $success = @unlink($file);
-//	$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
-	if (false === $success) {
-		log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
-		           NULL, "Filename:".$file), $errors);
-		return false;
-	}
-	FileJournal::add_deleted_file($file);
-	
 	if ($config->apache_vhosts_dir){
+
+		$success = TRUE;
 		$file = $config->apache_vhosts_dir.$domain_name;
+
 		if(file_exists($file)) $success = @unlink($file);
 //		$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
+
 		if (false === $success) {
 			log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
 			           NULL, "Filename:".$file), $errors);
