@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.4 2006/04/18 11:08:53 kozlik Exp $
+$Id: INSTALL,v 1.5 2006/04/26 10:58:23 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -32,6 +32,21 @@ Extra require:
 	 
 	 
 
+Domain sync
+-----------
+Short description:
+	Synchronize files in directories with domain specific config on all servers.
+	You need to run this script only if you useing serweb on more servers after 
+	load balancer.
+
+At what time to run?
+    Each 5-10 minutes
+
+Crontab line: 
+    */5 * * * *	/usr/local/bin/php /your/serweb/dir/scripts/cron_job/domain_sync.php
+
+Extra require:
+   * nothing
 
 
 

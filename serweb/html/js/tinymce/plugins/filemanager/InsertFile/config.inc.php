@@ -12,6 +12,9 @@
 $_phplib_page_open = array("sess" => "phplib_Session",
 						   "auth" => "phplib_Pre_Auth",
 						   "perm" => "phplib_Perm");
+
+$_required_modules = array('multidomain');
+
 $_SERWEB = array();
 $_PHPLIB = array();
 
@@ -23,6 +26,14 @@ $_PHPLIB["libdir"]  = "../../../../../../phplib/";
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");
 
+	phplib_load("sess");
+
+require($_SERWEB["serwebdir"] . "load_lang.php");
+
+	phplib_load(array("auth", "perm"));
+
+require($_SERWEB["serwebdir"] . "../modules/multidomain/domain_settings.php");
+
 phplib_load();
 
 
@@ -31,13 +42,21 @@ $perm->check("admin");
 /* check if domain is set */
 if (empty($sess_page_controler_domain_id)) die("Domain ID is not set - permission denied");
 
+/* directory within domain dir */
+$domain_dir_prefix = "/img";
+
+
 /* create path to image directory */
-$doc_root = realpath(dirname(__FILE__)."/../../../../../domains/".$sess_page_controler_domain_id."/img");
+$doc_root = dirname(__FILE__)."/../../../../../domains/".$sess_page_controler_domain_id.$domain_dir_prefix;
+
+if (!file_exists($doc_root)) RecursiveMkdir($doc_root, 0770);
+$doc_root = realpath($doc_root);
+
 
 /* create directory if not exists */
 //RecursiveMkdir($doc_root);
 
-$base_url = $config->domains_path.$sess_page_controler_domain_id."/img";
+$base_url = $config->domains_path.$sess_page_controler_domain_id.$domain_dir_prefix;
 
 
 /*
@@ -70,9 +89,9 @@ $MY_ALLOW_CREATE     = true;
 /* $MY_ALLOW_DELETE  Boolean (false or true) whether deleting files and folders is allowed or not. */
 $MY_ALLOW_DELETE     = true;
 /* $MY_ALLOW_RENAME  Boolean (false or true) whether renaming files and folders is allowed or not. */
-$MY_ALLOW_RENAME     = true;
+$MY_ALLOW_RENAME     = false;
 /* $MY_ALLOW_MOVE    Boolean (false or true) whether moving files and folders is allowed or not. */
-$MY_ALLOW_MOVE       = true;
+$MY_ALLOW_MOVE       = false;
 /* $MY_ALLOW_UPLOAD  Boolean (false or true) whether uploading files is allowed or not. */
 $MY_ALLOW_UPLOAD     = true;
 /* MY_LIST_EXTENSIONS This array specifies which files are listed in dialog. Setting to null causes that all files are listed,case insensitive. */

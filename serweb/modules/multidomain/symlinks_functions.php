@@ -3,7 +3,7 @@
  * Functions for creating and deleting domains
  * 
  * @author    Karel Kozlik
- * @version   $Id: symlinks_functions.php,v 1.3 2006/04/21 07:55:11 kozlik Exp $
+ * @version   $Id: symlinks_functions.php,v 1.4 2006/04/26 10:58:22 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -171,6 +171,61 @@ function remove_domain_config_dir($domainname, &$errors){
 
 
 /**
+ *	Method create symlinks into directory with virtual hosts (for purpose of apache)
+ *
+ *	@param string $domain_name	name of domain (alias)
+ *	@return bool				return TRUE on success, FALSE on failure
+ */
+function create_vhost_symlink($domain_name){
+	global $config;
+	$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
+
+	if ($config->apache_vhosts_dir){
+		$target = $serweb_root."html/";
+		$file = $config->apache_vhosts_dir.$domain_name;
+
+		FileJournal::add_created_file($file);
+	
+		if (false === symlink($target, $file)){
+			ErrorHandler::log_errors(PEAR::raiseError("Can't create virtual server", NULL, NULL, 
+			           NULL, "Can't create symlink. Link:".$file." target:".$target));
+			return false;
+		}
+	}
+	return true;
+}
+
+
+/**
+ *	Method remove symlinks from directory with virtual hosts (for purpose of apache)
+ *
+ *	@param string $domain_name	name of domain (alias)
+ *	@return bool				return TRUE on success, FALSE on failure
+ */
+function remove_vhost_symlink($domain_name){
+	global $config;
+
+	if ($config->apache_vhosts_dir){
+
+		$success = TRUE;
+		$file = $config->apache_vhosts_dir.$domain_name;
+
+		if(file_exists($file)) $success = @unlink($file);
+//		$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
+
+		if (false === $success) {
+			ErrorHandler::log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
+			           NULL, "Filename:".$file));
+			return false;
+		}
+
+		FileJournal::add_deleted_file($file);
+	}
+
+	return true;
+}
+
+/**
  *	Method create symlinks for new domain name (alias)
  *
  *	Method create symlinks into directory with domain specific config and 
@@ -184,22 +239,9 @@ function remove_domain_config_dir($domainname, &$errors){
 function domain_create_symlinks($domain_id, $domain_name, &$errors){
 	global $config;
 	
-	$serweb_root = dirname(dirname(dirname(__FILE__)))."/";
-
 	if (false === create_domain_config_dir($domain_id, $errors)) return false;
 
-	if ($config->apache_vhosts_dir){
-		$target = $serweb_root."html/";
-		$file = $config->apache_vhosts_dir.$domain_name;
-
-		FileJournal::add_created_file($file);
-	
-		if (false === symlink($target, $file)){
-			log_errors(PEAR::raiseError("Can't create virtual server", NULL, NULL, 
-			           NULL, "Can't create symlink. Link:".$file." target:".$target), $errors);
-			return false;
-		}
-	}
+	if (false === create_vhost_symlink($domain_name)) return false;
 	
 	return true;
 }
@@ -218,23 +260,7 @@ function domain_create_symlinks($domain_id, $domain_name, &$errors){
 function domain_remove_symlinks($domain_name, &$errors){
 	global $config;
 	
-	if ($config->apache_vhosts_dir){
-
-		$success = TRUE;
-		$file = $config->apache_vhosts_dir.$domain_name;
-
-		if(file_exists($file)) $success = @unlink($file);
-//		$success = @system('rm  "'.$file.'"');		// substitute of previous line for windows cygwim
-
-		if (false === $success) {
-			log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
-			           NULL, "Filename:".$file), $errors);
-			return false;
-		}
-
-		FileJournal::add_deleted_file($file);
-	}
-	
+	if (false === remove_vhost_symlink($domain_name)) return false;
 	return true;
 }
 

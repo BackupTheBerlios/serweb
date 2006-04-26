@@ -38,6 +38,8 @@ $MY_UP_PATH = substr($MY_PATH,0,strrpos(substr($MY_PATH,0,strlen($MY_PATH)-1),'/
 function createFolder() {
         global $MY_ALLOW_CREATE, $MY_MESSAGES, $MY_DOCUMENT_ROOT, $refresh_dirs;
         global $MY_PATH;
+        global $sess_page_controler_domain_id, $domain_dir_prefix;
+
         if (!$MY_ALLOW_CREATE) return ($MY_MESSAGES['nopermtocreatefolder']);
         if (!(is_dir($MY_DOCUMENT_ROOT.$MY_PATH))) return ($MY_MESSAGES['pathnotfound']);
         if ( !isset($_REQUEST['file'])) return ($MY_MESSAGES['foldernamemissing']);
@@ -46,8 +48,19 @@ function createFolder() {
         $newFolder = $MY_DOCUMENT_ROOT.$MY_PATH.$Folder;
         if (is_dir($newFolder)) return ($MY_MESSAGES['folderalreadyexists']);
         $newFolder = unsanitize($newFolder);
-        if (!(@mkdir($newFolder,0755))) return ($MY_MESSAGES['mkdirfailed']);
-        chmod($newFolder,0755);
+
+/*--- modified in order to store files in DB ---*/
+				$my_file = $domain_dir_prefix.$MY_PATH.$Folder;
+				if ($my_file[0]=='/') $my_file = substr($my_file, 1);
+		
+				$ds = &Domain_settings::singleton($sess_page_controler_domain_id, 
+				                                  $my_file, 1);
+		
+				if (false === $ds->create_directory()) return $MY_MESSAGES['mkdirfailed'];
+
+//        if (!(@mkdir($newFolder,0755))) return ($MY_MESSAGES['mkdirfailed']);
+//        chmod($newFolder,0755);
+/*--- end of modified code ---*/
         $refresh_dirs = true;
         return false;
 }
@@ -55,22 +68,49 @@ function createFolder() {
 function deleteFile() {
         $error = false;
         global $MY_ALLOW_DELETE, $MY_MESSAGES, $MY_DOCUMENT_ROOT, $MY_PATH ;
+        global $sess_page_controler_domain_id, $domain_dir_prefix;
+
         if (!$MY_ALLOW_DELETE) return ($MY_MESSAGES['nopermtodelete']);
         if (isset($_REQUEST['folders']) && is_array($_REQUEST['folders'])) {
             foreach ($_REQUEST['folders'] as $folder) {
-                        $folder = unsanitize($folder);
-                        deldir($MY_DOCUMENT_ROOT.$MY_PATH.$folder);
+				$folder = unsanitize($folder);
+
+/*--- modified in order to store files in DB ---*/
+				$my_file = $domain_dir_prefix.$MY_PATH.$folder;
+				if ($my_file[0]=='/') $my_file = substr($my_file, 1);
+		
+				$ds = &Domain_settings::singleton($sess_page_controler_domain_id, 
+				                                  $my_file, 1);
+		
+				if (false === $ds->delete_file()) return "Unknown error";
+
+//                        deldir($MY_DOCUMENT_ROOT.$MY_PATH.$folder);
+/*--- end of modified code ---*/
             }
         }
         if (isset($_REQUEST['files']) && is_array($_REQUEST['files'])) {
             foreach ($_REQUEST['files'] as $file) {
-                        $file = unsanitize($file);
-                        $delFile = $MY_DOCUMENT_ROOT.$MY_PATH.$file;
-                        if (is_file($delFile)) {
-                                if (!(unlink($delFile))) $error = $error.'\n'.alertSanitize($MY_MESSAGES['unlinkfailed'].' ('.$delFile.')');
-                        } else {
-                                $error = $error.'\n'.alertSanitize($MY_MESSAGES['filenotfound'].' ('.$delFile.')');
-                        }
+                $file = unsanitize($file);
+/*--- modified in order to store files in DB ---*/
+				$my_file = $domain_dir_prefix.$MY_PATH.$file;
+				if ($my_file[0]=='/') $my_file = substr($my_file, 1);
+		
+				$ds = &Domain_settings::singleton($sess_page_controler_domain_id, 
+				                                  $my_file, 1);
+		
+				if (false === $ds->delete_file()) return "Unknown error";
+
+
+
+/*
+                $delFile = $MY_DOCUMENT_ROOT.$MY_PATH.$file;
+                if (is_file($delFile)) {
+                        if (!(unlink($delFile))) $error = $error.'\n'.alertSanitize($MY_MESSAGES['unlinkfailed'].' ('.$delFile.')');
+                } else {
+                        $error = $error.'\n'.alertSanitize($MY_MESSAGES['filenotfound'].' ('.$delFile.')');
+                }
+*/
+/*--- end of modified code ---*/
             }
         }
         $refresh_dirs = true;
@@ -189,6 +229,8 @@ function moveFile() {
 function uploadFile() {
         global $MY_ALLOW_UPLOAD, $MY_MESSAGES, $MY_DOCUMENT_ROOT, $MY_PATH, $clear_upload;
         global $MY_ALLOW_EXTENSIONS, $MY_DENY_EXTENSIONS, $MY_MAX_FILE_SIZE ;
+        global $sess_page_controler_domain_id, $domain_dir_prefix;
+        
         if (!$MY_ALLOW_UPLOAD) return ($MY_MESSAGES['nopermtoupload']);
         if (!(is_dir($MY_DOCUMENT_ROOT.$MY_PATH))) return ($MY_MESSAGES['pathnotfound']);
         $filename = checkName($_FILES['uploadFile']['name']);
@@ -206,8 +248,22 @@ function uploadFile() {
                 if ($_FILES['uploadFile']['size'] > $MY_MAX_FILE_SIZE) return ($MY_MESSAGES['filesizeexceedlimit'].' of '.($MY_MAX_FILE_SIZE/1024).'kB.');
         }
         if (!is_file($_FILES['uploadFile']['tmp_name']))  return ($MY_MESSAGES['filenotuploaded']);
-        move_uploaded_file($_FILES['uploadFile']['tmp_name'], $newFile);
-        chmod($newFile, 0666);
+
+/*--- modified in order to store files in DB ---*/
+		if (!is_uploaded_file($_FILES['uploadFile']['tmp_name'])) return ($MY_MESSAGES['filenotuploaded']);
+
+		$my_file = $domain_dir_prefix.$MY_PATH.$filename;
+		if ($my_file[0]=='/') $my_file = substr($my_file, 1);
+
+		$ds = &Domain_settings::singleton($sess_page_controler_domain_id, 
+		                                  $my_file, 
+										  1);
+
+		if (false === $ds->save_file($_FILES['uploadFile']['tmp_name'])) return "Unknown error";
+
+//        move_uploaded_file($_FILES['uploadFile']['tmp_name'], $newFile);
+//        chmod($newFile, 0666);
+/*--- end of modified code ---*/
         $clear_upload = true;
         return false;
 }

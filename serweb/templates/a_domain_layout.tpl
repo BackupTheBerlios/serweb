@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_layout.tpl,v 1.3 2005/11/14 15:36:05 kozlik Exp $ *}
+{* $Id: a_domain_layout.tpl,v 1.4 2006/04/26 10:58:23 kozlik Exp $ *}
 
 {literal}
 <script language="javascript" type="text/javascript">
@@ -64,7 +64,7 @@
 			{/if}
 			
 			<tr valign="top">
-			<td align="left"><a href="{$row.url_edit}">{$row.date|empty2nbsp}</a></td>
+			<td align="left"><a href="{$row.url_edit}">{$row.version|empty2nbsp}{if $row.timestamp} - {$row.timestamp|my_date_format:$lang_set.date_time_format}{/if}</a></td>
 			</tr>
 			{if $smarty.foreach.backup.last}
 			</table>
