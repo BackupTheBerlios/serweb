@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.74 2006/04/21 07:55:10 kozlik Exp $
+ * @version   $Id: functions.php,v 1.75 2006/04/26 10:53:22 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -1149,8 +1149,9 @@ function rm($fileglob)
        } else {
            $matching = glob($fileglob);
            if ($matching === false) {
-               trigger_error(sprintf('No files match supplied glob %s', $fileglob), E_USER_WARNING);
-               return false;
+//               trigger_error(sprintf('No files match supplied glob %s', $fileglob), E_USER_WARNING);
+//               return false;
+				return true; //nothing to delete
            }       
            $rcs = array_map('rm', $matching);
            if (in_array(false, $rcs)) {
