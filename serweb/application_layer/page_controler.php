@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.23 2006/04/14 19:15:34 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.24 2006/04/26 10:47:51 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -68,7 +68,7 @@ class page_conroler{
 	/** array contain required javascript files */
 	var	$required_javascript = array();
 	/** flag - is timezone already set? */
-	var $is_set_timezone = false;
+	var $is_set_timezone = null;
 	/** js which should be placed after document body */
 	var $js_after_document = array();
 	/** url to which header location will redirect - default is self */
@@ -235,23 +235,23 @@ class page_conroler{
 	 *	set timezone which is used by date/time formating function to timezone 
 	 *  of user
 	 *
-	 *	@param Cserweb_auth $user	user to which timezone should be set - if not given $this->user_id is used
+	 *	@param string $uid	user to which timezone should be set - if not given $this->user_id is used
 	 */
-	function set_timezone($user = null){
+	function set_timezone($uid = null){
 		global $config;
-		if (is_null($user)) $user = $this->user_id;
+		if (is_null($uid)) $uid = $this->user_id->get_uid();
 
 		$an = &$config->attr_names;
 
 		/* if timezone is already set for this user, do not set it again */
-		if (!$this->is_set_timezone or $this->is_set_timezone != $user){
+		if (is_null($this->is_set_timezone) or $this->is_set_timezone != $uid){
 
-			$o = array('uid' => $user->uuid);
+			$o = array('uid' => $uid);
 			if (false === $tz = Attributes::get_attribute($an['timezone'], $o)) return false;
 
 			if (!is_null($tz)){
 				putenv("TZ=".$tz); //set timezone
-				$this->is_set_timezone = $user;
+				$this->is_set_timezone = $uid;
 			}
 		}
 		
