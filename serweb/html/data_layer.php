@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.22 2006/04/10 13:03:35 kozlik Exp $
+ * $Id: data_layer.php,v 1.23 2006/04/26 10:51:59 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -991,6 +991,8 @@ class CData_Layer{
 	 *	  "S" - string - allow NULL values
 	 *	  "b" - bool
 	 *	  "B" - bool - allow NULL values
+	 *	  "i" - image (binary data)
+	 *	  "I" - image (binary data) - allow NULL values
 	 *
 	 *	@param	mixed	$val
 	 *	@param	string	$type
@@ -1019,12 +1021,39 @@ class CData_Layer{
 			else {
 				return $val ? "true" : "false";
 			}
+
+		case "I":	
+			if (is_null($val)) return "NULL";
+		case "i":	
+			if ($this->db_host['parsed']['phptype'] == 'pgsql'){
+				return "'".pg_escape_bytea($val)."'::bytea";
+			}
+			else {
+				return "'".$this->db->escapeSimple($val)."'";
+			}
+
 		default:
 			return "";
 		}
 	
 	}
 
+	/**
+	 *	Unescape binary data obtained from database
+	 *
+	 *	@param	string	$val
+	 *	@return	string		
+	 */
+
+	function sql_unescape_binary($val){
+
+		if ($this->db_host['parsed']['phptype'] == 'pgsql'){
+			return pg_unescape_bytea($val);
+		}
+		else {
+			return $val;
+		}
+	}
 
 	/* return filter for ldap commands depending on how are user's indexed */
 	
