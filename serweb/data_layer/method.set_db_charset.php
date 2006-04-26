@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.set_db_charset.php,v 1.2 2005/08/29 14:27:06 kozlik Exp $
+ * $Id: method.set_db_charset.php,v 1.3 2006/04/26 10:49:10 kozlik Exp $
  */
 
 class CData_Layer_set_db_charset {
@@ -49,12 +49,17 @@ class CData_Layer_set_db_charset {
 		
 			}
 	
-			$ch = isset($charset_mapping[$this->db_charset]) ?
-			            $charset_mapping[$this->db_charset] :
-			            $this->db_charset;
+			if (strtolower($charset) == 'default'){
+				$q="set NAMES DEFAULT";
+			}
+			else{
+				$ch = isset($charset_mapping[$this->db_charset]) ?
+				            $charset_mapping[$this->db_charset] :
+				            $this->db_charset;
 
-			$q="set NAMES '".$ch."'";
-	
+				$q="set NAMES '".$ch."'";
+			}
+		
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {
 				log_errors($res, $errors); return false;
