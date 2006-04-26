@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.36 2006/04/20 07:42:36 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.37 2006/04/26 10:55:16 kozlik Exp $
  */
 
 
@@ -548,6 +548,24 @@
  		$config->data_sql->customers->cols->email = 	"email";
 
 
+		/*
+		 *  names of columns in table domain_settings
+		 */															
+		$config->data_sql->domain_settings = new stdClass();															
+ 		$config->data_sql->domain_settings->cols = new stdClass();
+		
+		$config->data_sql->domain_settings->table_name = 		"domain_settings";
+ 		$config->data_sql->domain_settings->cols->did = 		"did";
+ 		$config->data_sql->domain_settings->cols->filename = 	"filename";
+ 		$config->data_sql->domain_settings->cols->version = 	"version";
+ 		$config->data_sql->domain_settings->cols->timestamp = 	"timestamp";
+ 		$config->data_sql->domain_settings->cols->content = 	"content";
+ 		$config->data_sql->domain_settings->cols->flags = 		"flags";
+
+ 		$config->data_sql->domain_settings->flag_values = 	array(
+		                                                      "DB_DELETED" => 1,
+		                                                      "DB_DIR"     => 2
+		                                                    );
 
 
 
