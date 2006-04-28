@@ -10,12 +10,15 @@ class Attr_type_email_adr extends Attr_type{
 	}
 
 	function check_value(&$value){
-		if (strlen($value)==0) return true;
 		
 		$reg = &CReg::Singleton();
 		
 		if (ereg("(".$reg->email.")", $value, $regs)){
 			$value=$regs[1];
+			return true;
+		}
+		/* if empty value is allowed */
+		else if (!$this->is_required() and $value == ""){
 			return true;
 		}
 		else return false;
@@ -27,7 +30,6 @@ class Attr_type_email_adr extends Attr_type{
 		global $lang_str;
 
 		/* set default values for options */
-		$opt_optional = isset($opt["optional"]) ? $opt["optional"] : false;
 		$opt_err_msg  = isset($opt["err_msg"]) ? $opt["err_msg"] : null;
 
 		$reg = &CReg::Singleton();
@@ -36,8 +38,8 @@ class Attr_type_email_adr extends Attr_type{
 								 "size"=>16,
 								 "maxlength"=>255,
     	                         "value"=>$value,
-	                             "valid_regex"=> $opt_optional ? "^(".$reg->email.")?$" :
-								                                 "^".$reg->email."$",
+	                             "valid_regex"=> $this->is_required() ? "^".$reg->email."$" :
+								                                        "^(".$reg->email.")?$",
 	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ("'".$this->get_description()."' ".$lang_str['fe_is_not_valid_email'])));
 	}
 }

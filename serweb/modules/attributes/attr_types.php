@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.8 2006/04/18 09:19:43 kozlik Exp $
+ * $Id: attr_types.php,v 1.9 2006/04/28 13:23:27 kozlik Exp $
  */
 
 /**
@@ -156,6 +156,20 @@ class Attr_type{
 		$f = &$config->data_sql->attr_types->flag_values;
 
 		return ($this->flags & $f['DB_FILL_ON_REG']) == $f['DB_FILL_ON_REG'];
+	}
+	
+	/**
+	 *	Return true if attribute has to been set (has to have any not empty value)
+	 *
+	 *	@return bool	
+	 *	@todo   implement	
+	 */
+	 
+	function is_required(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values;
+
+		return ($this->flags & $f['DB_REQUIRED']) == $f['DB_REQUIRED'];
 	}
 	
 	function is_for_users(){
@@ -409,6 +423,18 @@ class Attr_type{
 	function reset_registration(){
 		global $config;
 		$f = &$config->data_sql->attr_types->flag_values['DB_FILL_ON_REG'];
+		$this->flags &= ~$f;
+	}
+
+	function set_required(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_REQUIRED'];
+		$this->flags |= $f;
+	}
+
+	function reset_required(){
+		global $config;
+		$f = &$config->data_sql->attr_types->flag_values['DB_REQUIRED'];
 		$this->flags &= ~$f;
 	}
 

@@ -10,12 +10,13 @@ class Attr_type_int extends Attr_type{
 	}
 
 	function check_value(&$value){
+
 		if (ereg("([0-9]+)", $value, $regs)) {
 			$value=$regs[1];
 			return true;
 		}
-		/* hack: set all numbers as optional*/
-		else if ($value == ""){
+		/* if empty value is allowed */
+		else if (!$this->is_required() and $value == ""){
 			return true;
 		}
 		else return false;
@@ -26,11 +27,7 @@ class Attr_type_int extends Attr_type{
 
 		global $lang_str;
 
-		/* hack: set all numbers as optional*/
-		$opt["optional"] = true;
-
 		/* set default values for options */
-		$opt_optional = isset($opt["optional"]) ? $opt["optional"] : false;
 		$opt_err_msg  = isset($opt["err_msg"]) ? $opt["err_msg"] : null;
 
 		$form->add_element(array("type"=>"text",
@@ -38,8 +35,8 @@ class Attr_type_int extends Attr_type{
 								 "size"=>16,
 								 "maxlength"=>16,
     	                         "value"=>$value,
-	                             "valid_regex"=> $opt_optional ? "^[0-9]*$" :
-								                                 "^[0-9]+$",
+	                             "valid_regex"=> $this->is_required() ? "^[0-9]+$" :
+								                                        "^[0-9]*$",
 	                             "valid_e"=>$opt_err_msg ? $opt_err_msg : ("'".$this->get_description()."' ".$lang_str['fe_is_not_number'])));
 	}
 }

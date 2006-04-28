@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.37 2006/04/26 10:55:16 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.38 2006/04/28 13:23:26 kozlik Exp $
  */
 
 
@@ -426,8 +426,9 @@
  		$config->data_sql->attr_types->cols->order = 		"ordering";
 
  		$config->data_sql->attr_types->flag_values = 		array(
-		                                                      "DB_MULTIVALUE" => 1, 
-		                                                      "DB_FILL_ON_REG" =>   1 << 1 
+		                                                      "DB_MULTIVALUE"  => 1, 
+		                                                      "DB_FILL_ON_REG" => 1 << 1, 
+		                                                      "DB_REQUIRED"    => 1 << 2 
 		                                                    );
 		
  		$config->data_sql->attr_types->priority_values = 	array(

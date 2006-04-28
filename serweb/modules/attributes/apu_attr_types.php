@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.2 2006/04/13 11:39:46 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.3 2006/04/28 13:23:27 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -174,6 +174,9 @@ class apu_attr_types extends apu_base_class{
 		
 		if (!empty($_POST['registration'])) $at->set_registration();
 		else                                $at->reset_registration();
+		
+		if (!empty($_POST['required']))     $at->set_required();
+		else                                $at->reset_required();
 		
 	}	
 	
@@ -407,6 +410,11 @@ class apu_attr_types extends apu_base_class{
 		                             "name"=>"registration",
 		                             "value"=>"1",
 									 "checked"=>$atr->fill_on_register()));
+		
+		$this->f->add_element(array("type"=>"checkbox",
+		                             "name"=>"required",
+		                             "value"=>"1",
+									 "checked"=>$atr->is_required()));
 		
 		$this->f->add_element(array("type"=>"hidden",
 		                             "name"=>"edit_id",

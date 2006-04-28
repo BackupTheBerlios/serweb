@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.30 2006/04/18 08:44:27 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.31 2006/04/28 13:23:27 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -456,6 +456,7 @@ $lang_str['ff_att_domain'] = 					"domain";	//to translate
 $lang_str['ff_att_global'] = 					"global";	//to translate 
 $lang_str['ff_multivalue'] = 					"multivalue";	//to translate 
 $lang_str['ff_att_reg'] = 						"required on registration";	//to translate 
+$lang_str['ff_att_req'] = 						"required (not empty)";	//to translate 
 $lang_str['ff_fr_timer'] = 						"final response timer";	//to translate 
 $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translate 
 
@@ -486,6 +487,7 @@ $lang_str['at_hint_domain'] = 					"Attribute is displayed on domain preferences
 $lang_str['at_hint_global'] = 					"Attribute is displayed on global preferences page";	//to translate 
 $lang_str['at_hint_multivalue'] = 				"Attribute may have multiple values";	//to translate 
 $lang_str['at_hint_registration'] = 			"Attribute is displayed on user registration form";	//to translate 
+$lang_str['at_hint_required'] = 				"Attribute has to have any not empty value. Not used for all types. Used for types: int, email_adr, sip_adr, etc.";	//to translate 
 
 
 

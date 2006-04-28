@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.2 2006/04/13 11:39:47 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.3 2006/04/28 13:23:27 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -86,6 +86,10 @@
 	<tr>
 	<td><label for="registration"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_registration}>{$lang_str.ff_att_reg}</a>:</label></td>
 	<td>{$form.registration}</td>
+	</tr>
+	<tr>
+	<td><label for="required"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_required}>{$lang_str.ff_att_req}</a>:</label></td>
+	<td>{$form.required}</td>
 	</tr>
 	</table>
 	</div>
