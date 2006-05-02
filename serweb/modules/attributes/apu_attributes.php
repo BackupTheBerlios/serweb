@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.3 2006/02/08 10:42:35 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.4 2006/05/02 10:22:54 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -47,11 +47,6 @@
  *			                       'save_to_session' => true),
  *			       'foo'  => array('foobar => 42'));
  *	
- *	
- *	'optionals'   				(array) default: array()
- *	 associative array - keys are names of attributes, values are booleans
- *	 can be used to make value of attribute optional
- *	 (have efect only for some types of attributes (e.g. sip_adr, int)
  *								
  *	'redirect_on_update'		(string) default: ''
  *	 name of script to which is browser redirected after succesfull update
@@ -116,8 +111,6 @@ class apu_attributes extends apu_base_class{
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
 		$this->opt['attrs_options'] = array();	
-
-		$this->opt['optionals'] = array();	
 
 		$this->opt['attrs_kind'] = 'user';	
 		$this->opt['redirect_on_update']  = "";
@@ -340,7 +333,6 @@ class apu_attributes extends apu_base_class{
 		// add elements to form object
 		foreach($this->opt['attributes'] as $att){
 			$opt = array();
-			$opt['optional'] = isset($this->opt['optionals'][$att]) ? $this->opt['optionals'][$att] : false;
 			$opt['err_msg']  = isset($this->opt['error_messages'][$att]) ? $this->opt['error_messages'][$att] : null;
 
 			$this->attr_types[$att]->form_element($this->f, 
