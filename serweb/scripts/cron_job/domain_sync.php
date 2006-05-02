@@ -2,7 +2,7 @@
 /**
  * Cron job maintenances database - should be run after midnight
  *
- * $Id: domain_sync.php,v 1.1 2006/04/26 10:58:23 kozlik Exp $
+ * $Id: domain_sync.php,v 1.2 2006/05/02 14:58:07 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_latest_file_versions');
@@ -10,7 +10,7 @@ $_data_layer_required_methods=array('get_latest_file_versions');
 $_required_modules = array('multidomain');
 
 require "prepend.php";
-require "../../modules/multidomain/domain_settings.php";
+require $_SERWEB["serwebdir"]."../modules/multidomain/domain_settings.php";
 
 /**
  *	Update domain directory for soecified domain 
@@ -84,7 +84,7 @@ function main(&$errors){
 		$d = dir($config->apache_vhosts_dir);
 		while (false !== ($entry = $d->read())) {
   			if (is_link($config->apache_vhosts_dir.$entry) and 
-			    readlink($config->apache_vhosts_dir.$entry) == $target){
+			    realpath(readlink($config->apache_vhosts_dir.$entry)) == $target){
 
 				$local_links[] = $entry;
 			}
