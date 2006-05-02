@@ -64,12 +64,18 @@ class Attr_type_lang extends Attr_type{
 	function check_value(&$value){
 		global $available_languages;
 		
-		$value = $available_languages[$value][2];
+		/* do nothing if language is not selected */
+		if ($value){
+			$value = $available_languages[$value][2];
+		}
 		return true;
 	}
 
 	function on_update($value){
 		global $available_languages, $config;
+
+		/* do nothing if language is not selected */
+		if (!$value) return true;
 	
 		if (!($this->opt['save_to_session'] or $this->opt['save_to_cookie'])) return true;	//do nothing
 
@@ -96,21 +102,27 @@ class Attr_type_lang extends Attr_type{
 	}
 
 	function form_element(&$form, $value, $opt=array()){
-		global $available_languages;
+		global $available_languages, $lang_str;
 		parent::form_element($form, $value, $opt);
 
+		$options=array();
 
 		if (false === $languages = $this->get_languages()) return false;
 
-		/* lookup for given $value in $available_languages */
-		foreach($available_languages AS $k => $v) {
-			if ($v[2] == substr($value, 0, 2) and isset($languages[$k])) {
-				$value = $k;
-				break;
+		if ($value){
+			/* lookup for given $value in $available_languages */
+			foreach($available_languages AS $k => $v) {
+				if ($v[2] == substr($value, 0, 2) and isset($languages[$k])) {
+					$value = $k;
+					break;
+				}
 			}
 		}
-
-		$options=array();
+		else{
+			/* if attribute has not value, add option 'not selected' */
+			$options[]=array("label"=>"--- ".$lang_str['o_lang_not_selected']." ---", "value"=>"");
+		}
+		
 		foreach ($languages as $k => $v) $options[]=array("label"=>$v, "value"=>$k);
 	                             
 		$form->add_element(array("type"=>"select",
@@ -118,7 +130,6 @@ class Attr_type_lang extends Attr_type{
 	                             "options"=>$options,
 	                             "size"=>1,
 	                             "value"=>$value));
-	                             
 	}
 }
 

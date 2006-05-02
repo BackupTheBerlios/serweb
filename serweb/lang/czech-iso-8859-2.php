@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.31 2006/04/28 13:23:27 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.32 2006/05/02 10:24:01 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -490,11 +490,12 @@ $lang_str['at_hint_registration'] = 			"Attribute is displayed on user registrat
 $lang_str['at_hint_required'] = 				"Attribute has to have any not empty value. Not used for all types. Used for types: int, email_adr, sip_adr, etc.";	//to translate 
 
 
-
 $lang_str['ff_att_default_value'] = 			"defaultní hodnota";
 $lang_str['th_att_default_value'] = 			"defaultní hodnota";
 $lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
 $lang_str['edit_items_of_the_list'] = 			"zmìnit seznam polo¾ek";
+
+$lang_str['o_lang_not_selected'] = 				"not selected";	//to translate 
 
 
 /* ------------------------------------------------------------*/
