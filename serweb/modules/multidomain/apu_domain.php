@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.16 2006/03/29 11:48:02 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.17 2006/05/03 13:41:07 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -204,18 +204,62 @@ class apu_domain extends apu_base_class{
 	 *	@return bool			return TRUE on success, FALSE on failure
 	 */
 	 
-	function generate_domain_id(&$errors){
-		global $data;
+	function generate_domain_id($domainname, &$errors){
+		global $data, $config;
 		
-		/* if domain id is not set, get new id */
-		if (is_null($this->id)) {
+		/* if domain id is already set, return */
+		if (!is_null($this->id)) return true;
+
+		$an = &$config->attr_names;
+
+		/* get format of did to generate */
+		$ga = &Global_attrs::singleton();
+		if (false === $format = $ga->get_attribute($an['did_format'])) return false;
+
+
+		switch ($format){
+		/* numeric DID */
+		case 1:
 			if (false === $did = $data->get_new_domain_id(null, $errors)) return false;
-			$this->id = $did;
-			$this->revert_domain_id = true;
-			$this->controler->set_domain_id($this->id);
+			break;
+			
+		/* UUID by rfc4122 */
+		case 2:
+			$did = rfc4122_uuid();
+
+			/* check if did doesn't exists */
+			$dh = &Domains::singleton();
+			if (false === $dids = $dh->get_all_dids()) return false; 
+			
+			while (in_array($did, $dids, true)){
+				$did = rfc4122_uuid();
+			}
+			break;
+
+		/* DID as 'domainname' */
+		case 0:
+		default:  /* if format of UIDs is not set, assume the first choice */
+
+			if (!$domainname) $domainname = "default";	// if domain name is not provided
+			$did = $domainname;
+			
+			/* check if did doesn't exists */
+			$dh = &Domains::singleton();
+			if (false === $dids = $dh->get_all_dids()) return false; 
+
+			$i = 0;
+			while (in_array($did, $dids, true)){
+ 				$did = $domainname."_".$i++;
+			}
+			break;
 		}
-		
+
+		$this->id = $did;
+		$this->revert_domain_id = true;
+		$this->controler->set_domain_id($this->id);
+
 		return true;
+
 	}
 
 	/**
@@ -562,7 +606,7 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
-		if (false === $this->generate_domain_id($errors)) return false;
+		if (false === $this->generate_domain_id($_POST['do_new_name'], $errors)) return false;
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
@@ -614,7 +658,7 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
-		if (false === $this->generate_domain_id($errors)) return false;
+		if (false === $this->generate_domain_id($_POST['do_new_name'], $errors)) return false;
 
 		if (!empty($_POST['do_new_name'])){
 			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
@@ -838,6 +882,12 @@ class apu_domain extends apu_base_class{
 
 		if ($this->action['action'] == "update" and 
 		    !count($this->dom_names) and empty($_POST['do_new_name'])){
+				$errors[] = $this->opt['no_domain_name_e'];
+				return false;
+		}
+
+		if ($this->action['action'] == "add_alias" and 
+		    empty($_POST['do_new_name'])){
 				$errors[] = $this->opt['no_domain_name_e'];
 				return false;
 		}

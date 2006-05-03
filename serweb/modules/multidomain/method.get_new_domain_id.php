@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_new_domain_id.php,v 1.3 2005/12/22 12:38:54 kozlik Exp $
+ * $Id: method.get_new_domain_id.php,v 1.4 2006/05/03 13:41:07 kozlik Exp $
  */
 
 class CData_Layer_get_new_domain_id {
@@ -33,7 +33,8 @@ class CData_Layer_get_new_domain_id {
 
 
 		$q="select max(".$this->get_sql_cast_to_int_funct($cd->did).")
-		    from ".$td_name;
+		    from ".$td_name."
+			where ".$this->get_sql_regex_match("^[0-9]+$", $cd->did, null);
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -42,7 +43,8 @@ class CData_Layer_get_new_domain_id {
 
 
 		$q="select max(".$this->get_sql_cast_to_int_funct($ca->did).")
-		    from ".$ta_name;
+		    from ".$ta_name."
+			where ".$this->get_sql_regex_match("^[0-9]+$", $ca->did, null);
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

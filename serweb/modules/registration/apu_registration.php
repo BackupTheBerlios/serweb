@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.8 2006/04/10 15:42:12 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.9 2006/05/03 13:41:07 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -116,7 +116,8 @@ class apu_registration extends apu_base_class{
 		global $config;
 
 		return array('is_user_exists', 'add_credentials', 'add_uri',
-		             'get_new_alias_number');
+		             'get_new_alias_number', 'get_new_user_id', 
+					 'does_uid_exists');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -177,6 +178,55 @@ class apu_registration extends apu_base_class{
 		parent::init();
 	}
 
+	/**
+	 *	Generate UID for new subscriber
+	 */
+	function get_uid($username, $realm){
+		global $config, $data;
+		
+		$an = &$config->attr_names;
+
+		$ga = &Global_attrs::singleton();
+		if (false === $format = $ga->get_attribute($an['uid_format'])) return false;
+		
+		
+		switch ($format){
+		/* numeric UID */
+		case 1:
+			if (false === $uid = $data->get_new_user_id(null)) return false;
+			break;
+			
+		/* UUID by rfc4122 */
+		case 2:
+			$uid = rfc4122_uuid();
+			/* check if uid doesn't exists */
+			if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
+			
+			while ($exists){
+				$uid = rfc4122_uuid();
+				if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
+			}
+			break;
+
+		/* UID in format 'username@realm' */
+		case 0:
+		default:  /* if format of UIDs is not set, assume the first choice */
+			$uid = $username."@".$realm;
+			/* check if uid doesn't exists */
+			if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
+			
+			$i = 0;
+			while ($exists){
+				$uid = $username."@".$realm."_".$i++;
+				if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
+			}
+			
+			break;
+		}
+		
+		return $uid;
+	}
+
 	function action_register(&$errors){
 		global $config, $data, $lang_str;
 
@@ -217,13 +267,14 @@ class apu_registration extends apu_base_class{
 		if (false === $realm = $da->get_attribute($an['digest_realm'])) return false;
 		if (is_null($realm)) $realm = $domain_name;
 		
-		/* generate uid */
-		$uid = $_POST['uname'].'@'.$realm;
-
-		$user_param = user_to_get_param($uid, $_POST['uname'], $realm, "u");
-
 
 		if (false === $data->transaction_start()) return false;
+
+
+		/* generate uid */
+		if (false === $uid = $this->get_uid($_POST['uname'], $realm)) return false;
+
+		$user_param = user_to_get_param($uid, $_POST['uname'], $realm, "u");
 
 		/* store credentials */
 		$o = array('disabled' => $this->opt['require_confirmation']);

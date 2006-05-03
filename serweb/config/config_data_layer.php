@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.38 2006/04/28 13:23:26 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.39 2006/05/03 13:41:05 kozlik Exp $
  */
 
 
@@ -271,6 +271,9 @@
 								'digest_realm'		=> 'digest_realm',		
 								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
 								'dom_owner'			=> 'sw_owner',			//contain id of customer owning domain
+
+								'uid_format'		=> 'uid_format',		//format of newly created UIDs
+								'did_format'		=> 'did_format',		//format of newly created DIDs
 
 								'sd_fname'			=> 'first_name',		//speed dial first name
 								'sd_lname'			=> 'last_name',			//speed dial last name
