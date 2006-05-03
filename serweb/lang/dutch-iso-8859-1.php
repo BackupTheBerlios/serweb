@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.32 2006/05/02 10:24:01 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.33 2006/05/03 14:03:21 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -459,6 +459,10 @@ $lang_str['ff_att_reg'] = 						"required on registration";	//to translate
 $lang_str['ff_att_req'] = 						"required (not empty)";	//to translate 
 $lang_str['ff_fr_timer'] = 						"final response timer";	//to translate 
 $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translate 
+$lang_str['ff_uid_format'] = 					"format of newly created UIDs";	//to translate 
+$lang_str['ff_did_format'] = 					"format of newly created DIDs";	//to translate 
+
+
 
 $lang_str['th_att_name'] = 						"attribuut naam";
 $lang_str['th_att_type'] = 						"attribuut type";

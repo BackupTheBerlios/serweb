@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.36 2006/05/02 10:24:01 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.37 2006/05/03 14:03:22 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -459,6 +459,10 @@ $lang_str['ff_att_reg'] = 						"required on registration";
 $lang_str['ff_att_req'] = 						"required (not empty)";
 $lang_str['ff_fr_timer'] = 						"final response timer";
 $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";
+$lang_str['ff_uid_format'] = 					"format of newly created UIDs";
+$lang_str['ff_did_format'] = 					"format of newly created DIDs";
+
+
 
 $lang_str['th_att_name'] = 						"attribute name";
 $lang_str['th_att_type'] = 						"attribute type";
