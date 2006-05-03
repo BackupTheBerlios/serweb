@@ -4,7 +4,7 @@
  * Application unit apu_attr_lists 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_lists.php,v 1.1 2006/03/13 15:34:06 kozlik Exp $
+ * @version   $Id: apu_attr_lists.php,v 1.2 2006/05/03 08:33:56 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -133,7 +133,7 @@ class apu_attr_lists extends apu_base_class{
 		$out=array();
 		$i=0;
 		foreach($this->item_list as $value => $label){
-			if ($value == $this->item_id) continue;
+			if ($value == $this->item_id and !is_null($this->item_id)) continue;
 	
 			$out[$i]['label'] = $label;
 			$out[$i]['value'] = $value;
