@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.write_file_content.php,v 1.1 2006/04/26 10:58:22 kozlik Exp $
+ * $Id: method.write_file_content.php,v 1.2 2006/05/03 12:27:01 kozlik Exp $
  */
 
 class CData_Layer_write_file_content {
@@ -59,7 +59,7 @@ class CData_Layer_write_file_content {
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
-			ErrorHandler::log_errors($res, $errors);
+			ErrorHandler::log_errors($res);
 			$sem->release();
 			return false;
 		}
@@ -103,7 +103,7 @@ class CData_Layer_write_file_content {
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
-			log_errors($res, $errors); 
+			ErrorHandler::log_errors($res);
 			$sem->release();
 			return false;
 		}

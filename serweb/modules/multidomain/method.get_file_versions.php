@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_file_versions.php,v 1.1 2006/04/26 10:58:22 kozlik Exp $
+ * $Id: method.get_file_versions.php,v 1.2 2006/05/03 12:27:01 kozlik Exp $
  */
 
 class CData_Layer_get_file_versions {
@@ -41,7 +41,7 @@ class CData_Layer_get_file_versions {
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
-			ErrorHandler::log_errors($res, $errors);
+			ErrorHandler::log_errors($res);
 			return false;
 		}
 

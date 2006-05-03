@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.update_speed_dial.php,v 1.4 2006/03/08 15:46:28 kozlik Exp $
+ * $Id: method.update_speed_dial.php,v 1.5 2006/05/03 12:27:01 kozlik Exp $
  */
 
 /*
@@ -63,7 +63,7 @@ class CData_Layer_update_speed_dial {
 			$q = "select max(".$c->id.") from ".$t_name;
 
 			$res=$this->db->query($q);
-			if (DB::isError($res)) {ErrorHandler::log_errors($res, $errors); return false;}
+			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 
 			$next_id = 0;
 			if ($row=$res->fetchRow(DB_FETCHMODE_ORDERED)){

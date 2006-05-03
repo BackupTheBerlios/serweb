@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.6 2006/03/28 15:05:01 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.7 2006/05/03 12:27:01 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -62,7 +62,7 @@ class CData_Layer_update_customer {
 
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {
-				ErrorHandler::log_errors($res, $errors);
+				ErrorHandler::log_errors($res);
 				$sem->release();
 				return false;
 			}

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_file_version.php,v 1.1 2006/04/26 10:58:22 kozlik Exp $
+ * $Id: method.del_file_version.php,v 1.2 2006/05/03 12:27:00 kozlik Exp $
  */
 
 class CData_Layer_del_file_version {
@@ -21,7 +21,10 @@ class CData_Layer_del_file_version {
 	function del_file_version($did, $file, $version, $opt){
 		global $config;
 
-		if (!$this->connect_to_db($errors)) return false;
+		$errors = array();
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors); return false;
+		}
 
 		/* table's name */
 		$td_name = &$config->data_sql->domain_settings->table_name;
@@ -36,7 +39,7 @@ class CData_Layer_del_file_version {
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
-			ErrorHandler::log_errors($res, $errors);
+			ErrorHandler::log_errors($res);
 			return false;
 		}
 
