@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_customer.php,v 1.7 2006/05/03 12:27:01 kozlik Exp $
+ * $Id: method.update_customer.php,v 1.8 2006/05/05 08:49:22 kozlik Exp $
  */
 
 class CData_Layer_update_customer {
@@ -67,7 +67,7 @@ class CData_Layer_update_customer {
 				return false;
 			}
 
-			$next_id = 0;
+			$next_id = 1;
 			if ($row=$res->fetchRow(DB_FETCHMODE_ORDERED)){
 				if (!is_null($row[0])) $next_id = $row[0] + 1;
 			}
