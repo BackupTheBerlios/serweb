@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.7 2006/03/08 15:20:22 kozlik Exp $
+ * $Id: of_select.inc,v 1.8 2006/05/05 09:29:24 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -41,15 +41,20 @@ class of_select extends of_element {
 
     reset($this->options);
     while (list($k,$o) = each($this->options)) {
+    
+      // cast value of option to string for purpose of comparing
+	  if (is_array($o)) $o["value"] = (string)$o["value"];
+      else $o = (string)$o;
+    
       $str .= "<option";
       if (is_array($o)) 
         $str .= " value=\"" .  htmlspecialchars($o["value"], ENT_QUOTES) . "\"";
-      if (!$this->multiple && ((is_array($o) && $this->value==$o["value"]) || $this->value==$o))
+      if (!$this->multiple && ((is_array($o) && (string)$this->value==$o["value"]) || (string)$this->value==$o))
         $str .= " selected";
       elseif ($this->multiple && is_array($this->value)) {
         reset($this->value);
         while (list($tk,$v) = each($this->value)) {
-          if ($v==$o["value"] || $v==$o) { 
+          if ((string)$v==$o["value"] || (string)$v==$o) { 
             $str .= " selected"; break; 
           }
         }
