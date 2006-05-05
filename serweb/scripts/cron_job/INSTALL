@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.5 2006/04/26 10:58:23 kozlik Exp $
+$Id: INSTALL,v 1.6 2006/05/05 09:46:41 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -38,6 +38,9 @@ Short description:
 	Synchronize files in directories with domain specific config on all servers.
 	You need to run this script only if you useing serweb on more servers after 
 	load balancer.
+	
+	This script has to run under same user as your web server!
+	
 
 At what time to run?
     Each 5-10 minutes
