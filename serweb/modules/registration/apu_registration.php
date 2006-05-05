@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.9 2006/05/03 13:41:07 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.10 2006/05/05 09:31:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -61,6 +61,10 @@
  *	 name of script to which is browser redirected after succesfull registration of new user
  *	 if empty, browser isn't redirected
  *
+ *	'admin_login'				(bool)	default: false
+ *	 If is true, URL of login to admin interface is send in email instead of
+ *	 URL of login to user interface.
+ *	 
  *	'msg_update'				default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *								
@@ -147,6 +151,7 @@ class apu_registration extends apu_base_class{
 		$this->opt['login_script'] =	'';
 		$this->opt['redirect_on_register'] = "";
 		$this->opt['confirmation_script'] =	"";
+		$this->opt['admin_login'] =	false;
 
 		$this->opt['set_lang_attr']	= null;
 
@@ -375,7 +380,7 @@ class apu_registration extends apu_base_class{
 
 		$sip_address="sip:".$_POST['uname']."@".$domain_name;
 		$login_url = $config->root_uri.
-					 $config->user_pages_path.
+					 ($this->opt['admin_login'] ? $config->admin_pages_path : $config->user_pages_path).
 					 $this->opt['login_script'];
 
 		$username = $config->fully_qualified_name_on_login ? 
