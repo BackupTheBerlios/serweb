@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.39 2006/05/03 13:41:05 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.40 2006/05/10 14:38:51 kozlik Exp $
  */
 
 
@@ -286,16 +286,20 @@
 
 
 		$config->flags = array(
-							"DB_LOAD_SER"		=> 1,	// if set, attribute is mean for SER
-							"DB_DISABLED"		=> 2,   // if set, attribute is disabled
-							"DB_CANON"			=> 4,	// canonical domain name (domain table)
-							"DB_IS_TO"			=> 8,   // URI may be used in r-uri
-							"DB_IS_FROM"		=> 16,  // URI may be used in from
-							"DB_FOR_SERWEB"		=> 32,  // if set, attribute is mean for SERWEB
-							"DB_PENDING"		=> 64,  // not used
-							"DB_DELETED"		=> 128,	// row is marked as deleted
-							"DB_CALLER_DELETED"	=> 256,	// row is marked as deleted
-							"DB_CALLEE_DELETED"	=> 512	// row is marked as deleted
+							"DB_LOAD_SER"		=> 1,    	// if set, attribute is mean for SER
+							"DB_DISABLED"		=> 1 << 1,  // if set, attribute is disabled
+							"DB_CANON"			=> 1 << 2,	// canonical domain name (domain table)
+							"DB_IS_TO"			=> 1 << 3,  // URI may be used in r-uri
+							"DB_IS_FROM"		=> 1 << 4,  // URI may be used in from
+							"DB_FOR_SERWEB"		=> 1 << 5,  // if set, attribute is mean for SERWEB
+							"DB_PENDING"		=> 1 << 6,  // not used
+							"DB_DELETED"		=> 1 << 7,	// row is marked as deleted
+							"DB_CALLER_DELETED"	=> 1 << 8,	// row is marked as deleted
+							"DB_CALLEE_DELETED"	=> 1 << 9,	// row is marked as deleted
+							"DB_MULTIVALUE"     => 1 << 10, // attr_types
+							"DB_FILL_ON_REG"    => 1 << 11, // attr_types 
+							"DB_REQUIRED"       => 1 << 12, // attr_types
+							"DB_DIR" 		    => 1 << 13  // domain_settings
 		                  );
 
 
@@ -428,11 +432,8 @@
  		$config->data_sql->attr_types->cols->priority = 	"priority";
  		$config->data_sql->attr_types->cols->order = 		"ordering";
 
- 		$config->data_sql->attr_types->flag_values = 		array(
-		                                                      "DB_MULTIVALUE"  => 1, 
-		                                                      "DB_FILL_ON_REG" => 1 << 1, 
-		                                                      "DB_REQUIRED"    => 1 << 2 
-		                                                    );
+ 		$config->data_sql->attr_types->flag_values = 		&$config->flags;
+
 		
  		$config->data_sql->attr_types->priority_values = 	array(
 		                                                       "USER" =>   1 << 8,
@@ -566,10 +567,7 @@
  		$config->data_sql->domain_settings->cols->content = 	"content";
  		$config->data_sql->domain_settings->cols->flags = 		"flags";
 
- 		$config->data_sql->domain_settings->flag_values = 	array(
-		                                                      "DB_DELETED" => 1,
-		                                                      "DB_DIR"     => 2
-		                                                    );
+ 		$config->data_sql->domain_settings->flag_values = 	&$config->flags;
 
 
 
