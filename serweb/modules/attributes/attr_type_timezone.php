@@ -20,7 +20,11 @@ class Attr_type_timezone extends Attr_type{
 		$errors = array();
 		$data->add_method('get_time_zones');
 		$tz = $data->get_time_zones($errors);
-		if (count($errors)) { ErrorHandler::add_error($errors); return false; }
+		if (count($errors)) { 
+			ErrorHandler::add_error($errors); 
+			$out=false;  //Only variable references should be returned
+			return $out; 
+		}
 		
 		$timezones = &$tz;
 		return $timezones;
