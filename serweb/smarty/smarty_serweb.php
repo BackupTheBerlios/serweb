@@ -70,6 +70,13 @@ class Smarty_Serweb extends Smarty {
 						}
 					}
 				}
+				/* if element is submit and it is not image, we have to strip the '_x' from end of its name */
+				elseif (get_class($el['ob']) == 'of_submit'){
+					if (!$el['ob']->src) $f_nm = substr($nm, 0, -2);
+					else                 $f_nm = $nm;
+					
+					$f[$f_nm] = $form->get_element($nm);
+				}
 				else {
 					/* for all others elements simply add them to $f array */
 					$f[$nm] = $form->get_element($nm);
