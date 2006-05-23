@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.6 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.7 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname|escape} {$parameters.user_name.lname|escape} &lt;{$parameters.user_name.uname|escape}@{$parameters.user_name.realm|escape}&gt;</div>
@@ -9,10 +9,8 @@
 	<div class="swHeadingLogout"><a href="{url url='logout.php'}">{$lang_str.l_logout|escape}</a></div>
 {/if}
 
-{if $parameters.user_name or $parameters.logout}
-	<br class="cleaner" />
-	<br />
-{/if}
+<br class="cleaner" />
+<br />
 
 {if $xxl_form}
 	<div align="right">
@@ -34,13 +32,19 @@
 	{if $tab->enabled}{assign var="num_of_tabs" value="`$num_of_tabs+1`"}{/if}
 	{/foreach}
 
+	<div id="swHeader"></div>
 	<div id="swContent">
 
 	<!-- content of div must be sufficient wide in order to tabs displays in one line -->
 	<div style="height:1px; width:{$num_of_tabs*100-50}px;">&nbsp;</div>
 	
 {else}
-	<div id="swContentNoTabs">
+
+	<div id="swTabs"></div>
+	<div id="swHeader"></div>
+	<div id="swContent">
+		<div style="height:1px; width:550px;">&nbsp;</div>
+
 {/if}
 
 {include file='_errors.tpl' errors=$parameters.errors}

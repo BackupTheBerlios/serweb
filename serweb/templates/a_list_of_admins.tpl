@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.9 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.10 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -69,10 +69,10 @@
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
-	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
-	<td align="center"><a href="{url url='admin_privileges.php' uniq=1}&{$row.get_param}">{$lang_str.l_change_privileges}</a></td>
+	<td align="left"><a href="mailto:{$row.email_address}" class="emailstyle">{$row.email_address}</a>&nbsp;</td>
+	<td align="center"><a href="{url url='admin_privileges.php' uniq=1}&{$row.get_param}"  class="actionsrow">{$lang_str.l_change_privileges}</a></td>
 	{if $change_domain_admin}
-	<td align="center"><a href="{url url='domain_admin.php' uniq=1}&{$row.get_param}">{$lang_str.l_assigned_domains}</a></td>
+	<td align="center"><a href="{url url='domain_admin.php' uniq=1}&{$row.get_param}"  class="actionsrow">{$lang_str.l_assigned_domains}</a></td>
 	{/if}
 	</tr>
 	{if $smarty.foreach.admins.last}

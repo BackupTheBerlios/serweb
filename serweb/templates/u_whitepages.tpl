@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.5 2006/04/18 14:53:04 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -60,7 +60,7 @@
 	<td align="left">{$row.sip_uri|escape|empty2nbsp}</td>
 	<td align="left">{include file="includes/inline_aliases.tpl" uris=$row.uris no_flags=1}</td>
 	<td align="left">{$row.timezone|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_add_to_pb}">{$lang_str.l_add_to_phonebook}</a></td>
+	<td align="center"><a href="{$row.url_add_to_pb}" class="actionsrow">{$lang_str.l_add_to_phonebook}</a></td>
 	</tr>
 	{if $smarty.foreach.users.last}
 	</table>

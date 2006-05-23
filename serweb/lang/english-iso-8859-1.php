@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.49 2006/05/03 14:03:22 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.50 2006/05/23 09:13:38 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -434,7 +434,7 @@ $lang_str['msg_privileges_updated_s'] = 		"Privileges updated";
 $lang_str['msg_privileges_updated_l'] = 		"The privileges of user has been updated";
 $lang_str['list_of_users'] = 					"List of users";
 $lang_str['th_domain'] = 						"domain";
-$lang_str['l_change_privileges'] = 				"change privileges";
+$lang_str['l_change_privileges'] = 				"Privileges";
 $lang_str['ff_domain'] = 						"domain";
 $lang_str['ff_realm'] = 						"realm";
 $lang_str['th_realm'] = 						"realm";
@@ -592,9 +592,11 @@ $lang_str['assigned_domains'] = 				"Assigned domains";
 $lang_str['unassigned_domains'] = 				"Unassigned domains";
 $lang_str['l_assign_domain'] = 					"assign domain";
 $lang_str['l_unassign_domain'] = 				"unassign domain";
-$lang_str['l_assigned_domains'] = 				"assigned domains";
-$lang_str['l_change_layout'] = 					"change layout";
-$lang_str['l_domain_attributes'] = 				"domain attributes";
+$lang_str['l_assign'] =                                  "assign";
+$lang_str['l_unassign'] =                                "unassign";
+$lang_str['l_assigned_domains'] = 				"Domains";
+$lang_str['l_change_layout'] = 					"Layout";
+$lang_str['l_domain_attributes'] = 				"Attributes";
 $lang_str['l_unassign_admin'] = 				"unassign admin";
 $lang_str['l_set_canon'] = 						"set canonical";
 

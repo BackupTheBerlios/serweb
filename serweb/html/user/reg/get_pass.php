@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: get_pass.php,v 1.4 2005/12/22 16:58:56 kozlik Exp $
+ * $Id: get_pass.php,v 1.5 2006/05/23 09:13:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -18,13 +18,6 @@ $fp->set_opt('form_name', 'form1');
 //										'text' => $lang_str['b_submit'],
 //										'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang)));
 
-										
-$config->html_headers = array_merge($config->html_headers, 
-		array('<style type="text/css">
-				body, .swMain{
-					background: white;
-				}
-			   </style>'));
 										
 
 $controler->add_apu($fp);

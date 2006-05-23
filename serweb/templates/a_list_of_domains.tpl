@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.5 2006/04/14 19:15:35 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -43,17 +43,10 @@
 	<th>{$lang_str.d_id}</th>
 	<th>{$lang_str.d_name}</th>
 	<th>{$lang_str.owner}</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-{if $hostmaster_actions}
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-{/if}
 	</tr>
 	{/if}
 	
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false} informationrow">
 	<td align="left">{$row.id|escape|empty2nbsp}</td>
 	<td align="left">
 		{assign var='dom_class' value='swDomainEnabled'}
@@ -63,17 +56,22 @@
 		{/foreach}&nbsp;
 	</td>
 	<td align="left">{$row.customer|escape|empty2nbsp}</td>
-	<td align="center">{if $row.url_layout}<a href="{$row.url_layout}">{$lang_str.l_change_layout}</a>{else}&nbsp;{/if}</td>
-	<td align="center">{if $row.url_attributes}<a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a>{else}&nbsp;{/if}</td>
+	</tr>
+
+	<tr valign="top"  class="{cycle values='swTrOdd,swTrEven'} actionsrow">
+	<td align="left" colspan="3">
+		{if $row.url_layout}<a href="{$row.url_layout}">{$lang_str.l_change_layout}</a>{else}&nbsp;{/if}
+		{if $row.url_attributes}<a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a>{else}&nbsp;{/if}
 {if $hostmaster_actions}
-	<td align="center">{if $row.url_edit}<a href="{$row.url_edit}">{$lang_str.l_edit}</a>{else}&nbsp;{/if}</td>
+		{if $row.url_edit}<a href="{$row.url_edit}">{$lang_str.l_edit}</a>{else}&nbsp;{/if}
 	{if $row.disabled}
-	<td align="center">{if $row.url_enable}<a href="{$row.url_enable}">{$lang_str.l_enable}</a>{else}&nbsp;{/if}</td>
+		{if $row.url_enable}<a href="{$row.url_enable}">{$lang_str.l_enable}</a>{else}&nbsp;{/if}
 	{else}
-	<td align="center">{if $row.url_disable}<a href="{$row.url_disable}">{$lang_str.l_disable}</a>{else}&nbsp;{/if}</td>
+		{if $row.url_disable}<a href="{$row.url_disable}">{$lang_str.l_disable}</a>{else}&nbsp;{/if}
 	{/if}
-	<td align="center">{if $row.url_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
+		{if $row.url_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}
 {/if}
+	</td>
 	</tr>
 	{if $smarty.foreach.domains.last}
 	</table>
@@ -89,7 +87,7 @@
 {/foreach}
 
 {if $hostmaster_actions}
-<div><a href="javascript: open_wizard_win('{url url=$url_new_domain uniq=1}');">{$lang_str.l_create_new_domain}</a></div>
+<div id="orphanlinks"><a href="javascript: open_wizard_win('{url url=$url_new_domain uniq=1}');">{$lang_str.l_create_new_domain}</a></div>
 {/if}
 	
 <br>

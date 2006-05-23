@@ -1,33 +1,14 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.4 2006/03/08 15:36:28 kozlik Exp $ *}
-
-{literal}
-<style type="text/css">
-	#uid,    #luid   {width:100px;}
-	#usrnm,  #lusrnm {width:100px;}
-	#realm,  #lrealm {width:100px;}
-	#fname,  #lfname {width:100px;}
-	#lname,  #llname {width:100px;}
-	#email,  #lemail {width:100px;}
-
-	#link_close{
-		float: left;
-		text-align: left;
-	}
-
-	#link_skip{
-		float: right;
-		text-align: right;
-	}
-</style>	
-{/literal}
+{* $Id: 2_existing_admin.tpl,v 1.5 2006/05/23 09:13:39 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">{$lang_str.assign_admin_to_domain}</h2>
+<h2 class="swTitle">{$lang_str.assign_existing_admin}</h2>
 
-<div class="swLinkSelector"><span class="swLsNotSelected"><a href="{url url='2_new_admin.php' uniq=1}">{$lang_str.register_new_admin}</a></span> | <span class="swLsSelected">{$lang_str.assign_existing_admin}</a></span></div>
-<br /><br />
+<div id="orphanlinks">
+<a href="{url url='2_new_admin.php' uniq=1}">&raquo; {$lang_str.register_new_admin}</a>
+</div>
+<br />
 
 <div class="swForm swHorizontalForm">
 {$form.start}
@@ -81,8 +62,8 @@
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
-	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
-	<td align="center"><a href="{url url=$finish_url uniq=1}&{$row.get_param}">{$lang_str.l_select}</a></td>
+	<td align="left"><a href="mailto:{$row.email_address}" class="emailstyle">{$row.email_address}</a>&nbsp;</td>
+	<td align="center"><a href="{url url=$finish_url uniq=1}&{$row.get_param}" class="actionsrow">{$lang_str.l_select}</a></td>
 	</tr>
 	{if $smarty.foreach.admins.last}
 	</table>
@@ -98,7 +79,7 @@
 {/foreach}
 	
 <div class="swBackToMainPage" id="link_close"><a href="javascript: window.close();">{$lang_str.l_close_window}</a></div>
-<div class="swBackToMainPage" id="link_skip" ><a href="3_finish.php">{$lang_str.l_skip_asignment_of_admin}</a></div>
-
-<br>
+<div class="skipstep" id="link_skip" ><a href="3_finish.php">{$lang_str.l_skip_asignment_of_admin}</a></div>
+<div class="swCleaner"></div>
+<br style="clear:both;"/>
 {include file='_tail.tpl'}

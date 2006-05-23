@@ -1,28 +1,14 @@
 {* Smarty *}
-{* $Id: 2_new_admin.tpl,v 1.2 2005/12/22 13:39:35 kozlik Exp $ *}
-
-{literal}
-<style type="text/css">
-	#uname, #domain, #sw_fname, #sw_lname, #sw_email, #sw_phone, #sw_timezone {width:250px;}
-
-	#link_close{
-		float: left;
-		text-align: left;
-	}
-
-	#link_skip{
-		float: right;
-		text-align: right;
-	}
-</style>	
-{/literal}
+{* $Id: 2_new_admin.tpl,v 1.3 2006/05/23 09:13:39 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">{$lang_str.assign_admin_to_domain}</h2>
+<h2 class="swTitle">{$lang_str.register_new_admin}</h2>
 
-<div class="swLinkSelector"><span class="swLsSelected">{$lang_str.register_new_admin}</span> | <span class="swLsNotSelected"><a href="{url url='2_existing_admin.php' uniq=1}">{$lang_str.assign_existing_admin}</a></span></div>
+<div id="orphanlinks">
+<a href="{url url='2_existing_admin.php' uniq=1}">&raquo; {$lang_str.assign_existing_admin}</a>
+</div>
 <br /><br />
 
 
@@ -40,10 +26,13 @@
 	</tr>
 
 	{include file="_attr_form.tpl" attributes=$attributes form=$form}
-
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td>&nbsp;</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+	<td>{$form.okey}</td>
 	</tr>
 	</table>
 
@@ -51,8 +40,8 @@
 </div>
 
 <div class="swBackToMainPage" id="link_close"><a href="javascript: window.close();">{$lang_str.l_close_window}</a></div>
-<div class="swBackToMainPage" id="link_skip" ><a href="3_finish.php">{$lang_str.l_skip_asignment_of_admin}</a></div>
-
+<div class="skipstep" id="link_skip" ><a href="3_finish.php">{$lang_str.l_skip_asignment_of_admin}</a></div>
+<div class="swCleaner"></div>
 <br>
 {include file='_tail.tpl'}
 

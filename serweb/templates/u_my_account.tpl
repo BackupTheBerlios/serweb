@@ -1,12 +1,12 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.17 2006/04/14 10:27:40 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.18 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 {popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {if $come_from_admin_interface}
-<div class="swNameOfUser">{$lang_str.user}: {$user_auth->uname|escape}</div>
+<h2 class="swTitle">{$lang_str.user}: {$user_auth->uname|escape}</h2>
 {/if}
 
 <div class="swForm">
@@ -41,10 +41,13 @@
 	<td>{$form_pd.$f_element}</td>
 	</tr>
 *}
-
+	<tr>
+	<td>&nbsp;</td>	
+	<td>&nbsp;</td>	
+	</tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form_pd.okey}</td>
+	<td>{$form_pd.okey}</td>
 	</tr>
 	</table>
 {$form_pd.finish}
@@ -106,7 +109,7 @@
 	<td align="center">{$row.expires|empty2nbsp}</td>
 	<td align="center">{$row.q|empty2nbsp}</td>
 	<td align="center">{$row.geo_loc|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_dele}" class="actionsrow">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.usrloc.last}
 	</table>

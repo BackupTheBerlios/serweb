@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_layout.tpl,v 1.4 2006/04/26 10:58:23 kozlik Exp $ *}
+{* $Id: a_domain_layout.tpl,v 1.5 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <script language="javascript" type="text/javascript">
@@ -11,12 +11,13 @@
 		mode : "none",
 		theme : "advanced",
 		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print,paste,directionality,fullscreen,noneditable,contextmenu,filemanager",
-		theme_advanced_buttons1_add_before : "save,newdocument,separator",
+//		theme_advanced_buttons1_add_before : "save,newdocument,separator",
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,formatselect",
 		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
-		theme_advanced_buttons2_add : "separator,insertdate,inserttime,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add : "separator,preview,zoom,separator,forecolor,backcolor",
 		theme_advanced_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
 		theme_advanced_buttons3_add_before : "tablecontrols,separator",
-		theme_advanced_buttons3_add : "iespell,flash,advhr,separator,print,separator,ltr,rtl,separator,fullscreen,filemanager",
+		theme_advanced_buttons3_add : "iespell,flash,advhr,separator,print,separator,fullscreen,filemanager",
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
@@ -43,11 +44,6 @@
 
 </script>
 
-<style type="text/css">
-#oldVersions{
-	float: left;
-}
-</style>
 {/literal}
 
 {include file='_head.tpl'}
@@ -64,7 +60,7 @@
 			{/if}
 			
 			<tr valign="top">
-			<td align="left"><a href="{$row.url_edit}">{$row.version|empty2nbsp}{if $row.timestamp} - {$row.timestamp|my_date_format:$lang_set.date_time_format}{/if}</a></td>
+			<td align="left"><a href="{$row.url_edit}" class="actionsrow">{$row.version|empty2nbsp}{if $row.timestamp} - {$row.timestamp|my_date_format:$lang_set.date_time_format}{/if}</a></td>
 			</tr>
 			{if $smarty.foreach.backup.last}
 			</table>
@@ -75,7 +71,7 @@
 		<div class="swForm">
 		<table border="0" cellspacing="0" cellpadding="0" align="center">
 		<tr><td colspan="2">{$form.dl_content}</td></tr>
-		<tr><td align="left" width="50%">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');">{$lang_str.l_toggle_wysiwyg}</a>
+		<tr><td align="left" width="50%">{if $fileinfo.html}<a href="javascript:toogleEditorMode('dl_content');" class="actionsrow">{$lang_str.l_toggle_wysiwyg}</a>
 		                     {else}&nbsp;{/if}</td>
 	        <td align="right" width="50%">{$form.okey}</td></tr>
 		</table>
@@ -84,7 +80,7 @@
 	
 	<br class="cleaner" />
 	{if $fileinfo.html}
-		<div>{$lang_str.wysiwyg_warning}</div>
+		<div class="swWarningBox">{$lang_str.wysiwyg_warning}</div>
 		<br />
 	{/if}
 	
@@ -102,7 +98,7 @@
 		
 		<tr valign="top">
 		<td align="left">{$row.desc|empty2nbsp}</td>
-		<td align="left"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
+		<td align="left"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
 		</tr>
 		{if $smarty.foreach.layout.last}
 		</table>
@@ -110,7 +106,9 @@
 	{/foreach}
 
 	<br />
- 	<a href="javascript:openFileManager();">{$lang_str.l_upload_images}</a>	
+ 	<div id="orphanlinks">
+ 	<a href="javascript:openFileManager();">{$lang_str.l_upload_images}</a>
+ 	</div>	
 	
 	<h2 class="swTitle">{$lang_str.text_files}</h2>
 	
@@ -123,7 +121,7 @@
 		<td align="left">{$row.desc|empty2nbsp}</td>
 		<td align="left">
 		{foreach from=$row.languages item='lang' name='lfe'}
-		<a href="{$row.lang.$lang.url_edit}">{$lang}</a>{if !$smarty.foreach.lfe.last}, {/if}
+		<a href="{$row.lang.$lang.url_edit}" class="actionsrow">{$lang}</a>{if !$smarty.foreach.lfe.last} {/if}
 		{/foreach}
 		&nbsp;</td>
 		</tr>

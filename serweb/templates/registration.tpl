@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.5 2006/04/14 16:41:36 kozlik Exp $ *}
+{* $Id: registration.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -8,14 +8,12 @@
 </style>	
 {/literal}
 
-<div style="background:white;">
-
 {include file='_head.tpl'}
 
 {if $action != 'finished'}
 
 	<div class="rbroundboxB" style="width: 50%; margin: 1em auto;">
-	<div class="rbtopB"><div><div><span>VoIP SerWeb</span></div></div></div>
+	<div class="rbtopB"><h1>VoIP SerWeb</h1></div>
 	<div class="rbcontentwrapB"><div class="rbcontentB">
 		<br>
 		<div align="left">{$lang_str.registration_introduction}</div>
@@ -142,7 +140,7 @@
 
 {/if}
 
+<br />
 {include file='_tail.tpl'}
 
-</div><!-- background:white -->
 

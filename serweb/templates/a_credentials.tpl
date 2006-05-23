@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_credentials.tpl,v 1.1 2006/03/22 14:00:15 kozlik Exp $ *}
+{* $Id: a_credentials.tpl,v 1.2 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -37,8 +37,12 @@
 	<td>{$form.cr_for_serweb}</td>
 	</tr>
 	<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	</tr>
+	<tr>
 	<td align="left">&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td>{$form.okey}</td>
 	</tr>
 	</table>
 {$form.finish}
@@ -65,8 +69,8 @@
 	<td align="left">{$row.password|empty2nbsp}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_ser}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_serweb}</td>
-	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_credential}')">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}"  class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_credential}')">{$lang_str.l_delete}</a></td>
 	</tr>
 
 	{if $smarty.foreach.cr.last}

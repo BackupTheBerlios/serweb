@@ -1,0 +1,95 @@
+/*
+ *      This file containing green color theme
+ */
+  
+h1 {
+	color: #FFFFFF;
+	background-color: #99CC00;
+}
+/*logout area*/
+.swHeadingUser{
+	color: #FFF
+}
+
+.swHeadingLogout a {
+	color: #FFF;
+}
+
+/*stage*/
+.swMain{
+	background-image: url(img/green_theme/stage.png);
+	background-repeat: no-repeat;
+	color : Black;
+}
+div#swContent{
+	background-image: url(img/green_theme/contentbg.png);
+}
+.swMain #swHeader {
+	background-image: url(img/green_theme/contentheader.png);
+}
+.swMain #swFooter {
+	background-image: url(img/green_theme/contentfooter.png);
+}
+
+
+
+/*navigation*/
+div.swTabsL{
+	background-image : url(img/green_theme/tab_left_border.png);
+}
+
+div.swTabsR{
+	background-image : url(img/green_theme/tab_right_border.png);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsL{
+	background-image : url(img/green_theme/tab_left_border_active.png);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsR{
+	background-image : url(img/green_theme/tab_right_border_active.png);
+}
+
+div#swTabs ul li a, div#swTabs ul li strong {
+	color : Black;
+}
+
+div#swTabs ul li a{
+	background-color: #C2E066;
+	color: #333333;
+}
+
+div#swTabs ul li strong{
+	background-color : #688B00;
+	color: #FFFFFF;
+}
+
+/*
+ *	title
+ */
+.swLPTitle h1 {
+	color: #99CC00;
+}
+
+.swTitle,
+.swForgotPassw h2 {
+	color: #99CC00;
+}
+
+/*login*/
+.swLoginForm label {
+	color: #FFFFFF;
+}
+.swLoginForm table {
+	background-color: #99CC00;
+}
+.swLoginForm td {
+	color: #FFFFFF;
+	font-size: 0.8em;
+}
+
+.swAssignedDomainList h3,
+.swUnassignedDomainList h3 {
+	font-size: 1em;
+	color: #99CC00;
+}

@@ -1,5 +1,5 @@
 /*
- * $Id: functions.js,v 1.6 2005/11/03 11:02:08 kozlik Exp $
+ * $Id: functions.js,v 1.7 2006/05/23 09:13:36 kozlik Exp $
  */
 
 /* confirm click to <a href=""> */
@@ -33,7 +33,7 @@ function stun_applet_win(script, width, height){
 var wizard_win=null;
 
 function open_wizard_win(url){
-	var width = 750; 
+	var width = 930; 
 	var height = 550;
 	var x = (screen.width - width) / 2;
 	var y = (screen.height - height) / 2;

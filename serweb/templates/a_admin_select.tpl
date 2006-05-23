@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_admin_select.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_admin_select.tpl,v 1.3 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -10,15 +10,7 @@
 	#lname,  #llname {width:100px;}
 	#email,  #lemail {width:100px;}
 
-	#link_close{
-		float: left;
-		text-align: left;
-	}
 
-	#link_skip{
-		float: right;
-		text-align: right;
-	}
 </style>	
 {/literal}
 
@@ -96,7 +88,7 @@
 <div class="swNumOfFoundRecords">{$lang_str.no_users_found}</div>
 {/foreach}
 	
-<div class="swBackToMainPage" id="link_close"><a href="javascript: window.close();">{$lang_str.l_close_window}</a></div>
+<div class="swBackToMainPage"><a href="javascript: window.close();">{$lang_str.l_close_window}</a></div>
 
 <br>
 {include file='_tail.tpl'}

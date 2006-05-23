@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_index.tpl,v 1.7 2005/12/14 16:34:36 kozlik Exp $ *}
+{* $Id: u_index.tpl,v 1.8 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -11,16 +11,16 @@
 {/literal}
 
 {if ($form_ls)}
-	<div align="right">
+	<div class="selectlanguage">
 		{$form_ls.start}
-		{$lang_str.ff_language}: {$form_ls.ls_language} {$form_ls.okey}
+		{$lang_str.ff_language}: {$form_ls.ls_language} <br /><br />{$form_ls.okey}
 		{$form_ls.finish}
 	</div>
 {/if}
 
 <div class="swLPTitle">
 <h1>{$domain} {$lang_str.userlogin}</h1>
-{$lang_str.enter_username_and_passw}:
+<p>{$lang_str.enter_username_and_passw}:</p>
 </div>
 
 <div class="swForm swLoginForm">
@@ -36,13 +36,10 @@
 <td>{$form.passw}</td>
 </tr>
 <tr>
-<td>&nbsp;</td>
-<td align=right>{$form.okey}</td>
-</tr>
-<tr>
 <td colspan="2">{$form.remember_uname}{$lang_str.remember_uname}</td>
 </tr>
 </table>
+<div class="loginButton">{$form.okey}</div>
 {$form.finish}
 </div>
 
@@ -50,6 +47,7 @@
 	<span class="swLPForgotPass"><a href="{url url='reg/get_pass.php'}">{$lang_str.l_forgot_passw}</a></span>
 	<span class="swLPSubscribe"><a href="{url url='reg/index.php'}">{$lang_str.l_register}</a></span>
 </div>
+<div style="clear:both;"></div>
 
 <br>
 {include file='_tail.tpl'}

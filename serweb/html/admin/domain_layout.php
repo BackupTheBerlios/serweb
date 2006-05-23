@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: domain_layout.php,v 1.3 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: domain_layout.php,v 1.4 2006/05/23 09:13:30 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -30,6 +30,14 @@ $layout_files[] = array('filename' => "separator.html",
 $layout_files[] = array('filename' => "epilog.html",
 						'html' => true);
 $layout_files[] = array('filename' => "styles.css",
+						'html' => false);
+$layout_files[] = array('filename' => "layout.css",
+						'html' => false);
+$layout_files[] = array('filename' => "blue.css",
+						'html' => false);
+$layout_files[] = array('filename' => "green.css",
+						'html' => false);
+$layout_files[] = array('filename' => "custom.css",
 						'html' => false);
 $layout_files[] = array('filename' => "config.ini.php",
 						'desc' => $lang_str['lf_config'],

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: confirmation.php,v 1.3 2005/12/22 12:54:34 kozlik Exp $
+ * $Id: confirmation.php,v 1.4 2006/05/23 09:13:37 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -16,12 +16,6 @@ require "prepend.php";
 
 $reg_conf=new apu_reg_confirmation();
 
-$config->html_headers = array_merge($config->html_headers, 
-		array('<style type="text/css">
-				body, .swMain{
-					background: white;
-				}
-			   </style>'));
 										
 
 $controler->add_apu($reg_conf);

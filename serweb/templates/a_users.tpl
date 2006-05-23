@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.17 2006/04/18 14:52:36 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.18 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -56,13 +56,6 @@
 	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
-	<th>&nbsp;</th>
 	</tr>
 	{/if}
 	{assign var='usr_class' value='swUserEnabled'}
@@ -72,23 +65,27 @@
 	{include file="includes/popup_credentials.tpl" credentials=$row.credentials assign="popup_cr"}
 		
 
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false} informationrow">
 	<td align="left"><span class="{$usr_class}"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_cr caption=$lang_str.l_credentials}>{$row.uid|escape|empty2nbsp}</a></span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
-	<td align="center"><a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a></td>
-	<td align="center"><a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a></td>
-	<td align="center"><a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a></td>
-	<td align="center"><a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a></td>
-	<td align="center"><a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a></td>
+	</tr>
+	
+	<tr class="{cycle values='swTrOdd,swTrEven'} actionsrow" valign="top">
+	<td colspan="5" align="left">
+		<a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a>
+		<a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a>
+		<a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a>
+		<a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a>
+		<a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a>
 	{if $row.disabled}
-	<td align="center"><a href="{$row.url_enable}">{$lang_str.l_enable}</a></td>
+		<a href="{$row.url_enable}">{$lang_str.l_enable}</a>
 	{else}
-	<td align="center"><a href="{$row.url_disable}">{$lang_str.l_disable}</a></td>
+		<a href="{$row.url_disable}">{$lang_str.l_disable}</a>
 	{/if}
-	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_user}')">{$lang_str.l_delete}</a></td>
+		<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_user}')">{$lang_str.l_delete}</a>
 	</tr>
 	{if $smarty.foreach.users.last}
 	</table>
@@ -103,7 +100,7 @@
 <div class="swNumOfFoundRecords">{$lang_str.no_users_found}</div>
 {/foreach}
 
-<a href="{url url='new_user.php' uniq=1}">{$lang_str.register_new_user}</a>
+<div id="orphanlinks"><a href="{url url='new_user.php' uniq=1}">{$lang_str.register_new_user}</a></div>
 
 <br>
 {include file='_tail.tpl'}

@@ -1,7 +1,7 @@
 {* Smarty *}
-{* $Id: _attr_form.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: _attr_form.tpl,v 1.3 2006/05/23 09:13:38 kozlik Exp $ *}
 
-{foreach from=$attributes item='row' name='attributes'}
+{foreach from=$attributes item='row' name='attributes'} 
 
  	{if $row.att_type == 'radio'}
  		<tr><td colspan=2>&nbsp;</td></tr>

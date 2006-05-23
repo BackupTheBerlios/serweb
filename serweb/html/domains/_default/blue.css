@@ -1,0 +1,107 @@
+/*
+ *      This file containing blue color theme
+ */  
+
+h1 {
+	color: #85A5C5;
+	background-color: #336699;
+}
+/*logout area*/
+.swHeadingUser{
+	color: #B5C8DB;
+}
+
+.swHeadingLogout a {
+	color: #B5C8DB;
+}
+
+/*stage*/
+.swMain{
+	background-image: url(img/blue_theme/stage.png);
+	background-repeat: no-repeat;
+	color : Black;
+}
+div#swContent{
+	background-image: url(img/blue_theme/contentbg.png);
+}
+.swMain #swHeader {
+	background-image: url(img/blue_theme/contentheader.png);
+}
+.swMain #swFooter {
+	background-image: url(img/blue_theme/contentfooter.png);
+}
+
+
+
+/*navigation*/
+div.swTabsL{
+	background-image : url(img/blue_theme/tab_left_border.png);
+}
+
+div.swTabsR{
+	background-image : url(img/blue_theme/tab_right_border.png);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsL{
+	background-image : url(img/blue_theme/tab_left_border_active.png);
+}
+
+div#swTabs ul li#swActiveTab div.swTabsR{
+	background-image : url(img/blue_theme/tab_right_border_active.png);
+}
+
+div#swTabs ul li a, div#swTabs ul li strong {
+	color : Black;
+}
+
+div#swTabs ul li a{
+	background-color: #517DA8;
+	color: #FFFFFF;
+}
+
+div#swTabs ul li strong{
+	background-color : #234568;
+	color: #FFFFFF;
+}
+
+/*contents table*/
+/*
+ * Popup links - links used for display popup window by the Overlib library
+ */
+
+.swDomainEnabled,
+.swUserEnabled,
+.swUriEnabled{
+	color: #000;
+	background: none;
+}
+/*
+ *	title
+ */
+.swLPTitle h1 {
+	color: #336699;
+}
+
+
+.swTitle,
+.swForgotPassw h2 {
+	color: #336699;
+}
+
+/*login*/
+.swLoginForm label {
+	color: #FFFFFF;
+}
+.swLoginForm table {
+	background-color: #336699;
+}
+.swLoginForm td {
+	color: #FFFFFF;
+	font-size: 0.8em;
+}
+
+.swAssignedDomainList h3,
+.swUnassignedDomainList h3 {
+	font-size: 1em;
+	color: #336699;
+}

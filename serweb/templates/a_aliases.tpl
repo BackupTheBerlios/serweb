@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.5 2006/03/09 09:17:53 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
 
@@ -95,7 +95,11 @@
 		</tr>
 		<tr>
 		<td>&nbsp;</td>
-		<td align="right">{$form.okey}</td>
+		<td>&nbsp;</td>
+		</tr>
+		<tr>
+		<td>&nbsp;</td>
+		<td>{$form.okey}</td>
 		</tr>
 		</table>
 	{$form.finish}
@@ -143,5 +147,4 @@
 
 <div class="swBackToMainPage"><a href="{url url='users.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 
-</div>
 {include file='_tail.tpl'}

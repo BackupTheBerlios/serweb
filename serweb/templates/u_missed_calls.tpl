@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_missed_calls.tpl,v 1.7 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: u_missed_calls.tpl,v 1.8 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -35,12 +35,15 @@
 	<div class="swSearchLinks">&nbsp;
 	{pager page=$pager class_text='swNavText' class_num='swNav' class_numon='swNavActual' txt_prev='&lt;&lt;&lt;' txt_next='&gt;&gt;&gt;'}
 	</div>
+
+        <div id="orphanlinks">
+        <div class="swLinkToTabExtension"><a href="{$url_delete}">{$lang_str.b_delete_calls}</a></div>
+        </div>
 	{/if}
 {foreachelse}
 <div class="swNumOfFoundRecords">{$lang_str.no_missed_calls}</div>
 {/foreach}
 
-<br><div align="center"><a href="{$url_delete}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_delete_calls.gif" width="165" height="16" border="0" alt="{$lang_str.b_delete_calls}"></a></div>
 
 <br>
 {include file='_tail.tpl'}

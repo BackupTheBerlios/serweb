@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_edit.tpl,v 1.6 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_domain_edit.tpl,v 1.7 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -26,8 +26,8 @@
 		{/if}
 		<tr>
 		<td align="left">{if $row.canon}<strong>{$row.name|escape}</strong>{else}{$row.name|escape}{/if}</td>
-		<td>{if !$row.canon}<a href="{$row.url_set_canon}">{$lang_str.l_set_canon}</a>{else}&nbsp;{/if}</td>
-		<td>{if $row.allow_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
+		<td>{if !$row.canon}<a href="{$row.url_set_canon}" class="actionsrow">{$lang_str.l_set_canon}</a>{else}&nbsp;{/if}</td>
+		<td>{if $row.allow_dele}<a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
 		</tr>
 		{if $smarty.foreach.names.last}
 		</table>
@@ -35,22 +35,26 @@
 	{/foreach}
 	</td>
 	</tr>
+	<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 	<tr>
-	<td><label for="do_new_name">{$lang_str.new_dom_name}:</label></td>
-	<td>{$form.do_new_name} {$form.do_okey_add}</td>
+		<td><label for="do_new_name">{$lang_str.new_dom_name}:</label></td>
+		<td>{$form.do_new_name} {$form.do_okey_add}</td>
 	</tr>
+	<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 	<tr>
 	<td><label for="do_customer">{$lang_str.owner}:</label></td>
 	<td>{$form.do_customer}</td>
 	</tr>
+	<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td>{$form.okey}</td>
 	</tr>
 	</table>
 {$form.finish}
 </div>
-
+<br /><br /><br />
 <h2 class="swTitle">{$lang_str.admins_of_domain}</h2>
 
 {foreach from=$admins item='row' name='admins'}
@@ -59,7 +63,7 @@
 	{/if}
 	<tr>
 	<td align="left">{$row.username|escape}@{$row.domain|escape}</td>
-	<td><a href="{$row.url_unset_admin}">{$lang_str.l_unassign_admin	}</a></td>
+	<td><a href="{$row.url_unset_admin}" class="actionsrow">{$lang_str.l_unassign_admin	}</a></td>
 	</tr>
 	{if $smarty.foreach.admins.last}
 	</table><br />

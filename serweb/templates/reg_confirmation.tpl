@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: reg_confirmation.tpl,v 1.3 2006/04/04 10:33:24 kozlik Exp $ *}
+{* $Id: reg_confirmation.tpl,v 1.4 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -30,6 +30,8 @@
 </div><!-- /rbcontentwrapB -->
 <div class="rbbotB"><div><div></div></div></div>
 </div><!-- /rbroundboxB -->
+
+<br />
 
 {include file='_tail.tpl'}
 

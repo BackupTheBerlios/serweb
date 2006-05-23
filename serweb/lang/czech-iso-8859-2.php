@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.33 2006/05/03 14:03:21 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.34 2006/05/23 09:13:38 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -434,7 +434,7 @@ $lang_str['msg_privileges_updated_s'] = 		"Oprávnìní aktualizovány";
 $lang_str['msg_privileges_updated_l'] = 		"Oprávnìní u¾ivatele byly aktualizovány";
 $lang_str['list_of_users'] = 					"Seznam u¾ivatelù";
 $lang_str['th_domain'] = 						"doména";
-$lang_str['l_change_privileges'] = 				"zmìna oprávnìní";
+$lang_str['l_change_privileges'] = 				"Privileges";	//to translate 
 $lang_str['ff_domain'] = 						"doména";
 $lang_str['ff_realm'] = 						"realm";	//to translate 
 $lang_str['th_realm'] = 						"realm";	//to translate 
@@ -592,9 +592,11 @@ $lang_str['assigned_domains'] = 				"Assigned domains";	//to translate
 $lang_str['unassigned_domains'] = 				"Unassigned domains";	//to translate 
 $lang_str['l_assign_domain'] = 					"assign domain";	//to translate 
 $lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate 
-$lang_str['l_assigned_domains'] = 				"assigned domains";	//to translate 
-$lang_str['l_change_layout'] = 					"change layout";	//to translate 
-$lang_str['l_domain_attributes'] = 				"domain attributes";	//to translate 
+$lang_str['l_assign'] =                                  "assign";	//to translate 
+$lang_str['l_unassign'] =                                "unassign";	//to translate 
+$lang_str['l_assigned_domains'] = 				"Domains";	//to translate 
+$lang_str['l_change_layout'] = 					"Layout";	//to translate 
+$lang_str['l_domain_attributes'] = 				"Attributes";	//to translate 
 $lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
 $lang_str['l_set_canon'] = 						"set canonical";	//to translate 
 

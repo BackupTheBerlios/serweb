@@ -1,0 +1,922 @@
+/*
+ *	This file containing serweb layout
+ */
+
+/*
+ *	main DIV
+*
+ */
+
+
+.swMain{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size : 0.8em;
+	width: 900px;
+	margin: 0;
+	padding: 0;
+}
+
+
+/*
+ * Popup links - links used for display popup window by the Overlib library
+ */
+.swMain a.swPopupLink {
+	cursor: default;
+}
+.swMain a.swPopupLink:hover{
+}
+
+ 
+/*
+ *	popup window
+ */
+.swPopUpWin{
+	background-color: #EEE;
+	color: black;
+}
+
+/*
+ *	heading above TABs
+ */
+
+.swHeadingUser{
+	font-size : 0.8em;
+	height: 20px;
+	padding: 0;
+	position: absolute;
+	top: 25px;
+	left: 681px;
+	text-align: right;
+	width: 200px;
+}
+
+.swHeadingLogout{
+	font-size : 0.8em;
+	height: 20px;
+	padding: 0;
+	position: absolute;
+	top: 45px;
+	width: 200px;
+	text-align: right;
+	left: 681px;
+}
+.swHeadingLogout a {
+	text-decoration:none;
+	color: #B5C8DB;
+}
+.swHeadingLogout a:hover {
+	text-decoration:underline;
+}
+/*
+ *	TABs defintions
+ */
+
+div#swTabs{
+	padding: 0;
+	text-align: left;
+	margin: 0;
+	height: 50px;
+}
+
+div#swTabs ul {
+	margin: 0px 0px 0px 30px;
+	list-style: none;
+	padding: 0;
+	padding-bottom: 10px;
+}
+
+div#swTabs ul li {
+	display: block;
+	margin-left : 0.2em;
+	margin-right : 0.2em;
+	font-size : 10px;
+	font-weight : bold;
+	text-decoration : none;
+	text-align : center;
+	vertical-align : middle;
+	float : left;
+	padding-bottom: 10px;
+	width: 100px;
+}
+
+div.swTabsL{
+	float : left;
+	width : 10px;
+	height : 36px;
+	margin: 0;
+	padding: 0;
+}
+
+div.swTabsR{
+	float : left;
+	width : 10px;
+	height : 36px;
+	margin: 0;
+	padding: 0;
+}
+
+div#swTabs ul li#swActiveTab div.swTabsL{
+}
+
+div#swTabs ul li#swActiveTab div.swTabsR{
+}
+
+div#swTabs ul li a, div#swTabs ul li strong {
+	display : block;
+	float : left;
+	text-decoration : none;
+	width: 80px;
+}
+
+div#swTabs ul li a{
+	height: 31px;
+	width: 80px;
+	padding-top: 5px;
+}
+div#swTabs ul li a:hover {
+	text-decoration:underline;
+}
+div#swTabs ul li strong{
+	height: 31px;
+	padding-top: 5px;
+}
+
+
+/*
+ *	main content
+ */
+
+div#swContent{
+	clear : both;
+	text-align : center;
+	margin: 0;
+	padding: 0;
+}
+
+/*
+ *	main content if tabs aren't displayed
+ */
+
+div#swContentNoTabs{
+	padding : 20px;
+	clear : both;
+	text-align: center;
+}
+
+.swWizard div#swContentNoTabs{
+	padding-top : 0px;
+}
+
+/*
+ *	form
+ */
+
+.swForm{
+	text-align: left;
+}
+
+.swForm label{
+	margin-right : 0.5em;
+	text-align : right;
+	padding : 0.2em;
+	display : block;
+	font-size: 0.85em;
+}
+.swForm select,
+.swForm input {
+}
+.swForm input[type="password"],
+.swForm select[name],
+.swForm input[type="text"] {	
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.85em;
+	background-color: #E7E9EB;
+	border: none;
+	padding-left:5px;
+	border: solid 1px #999;
+	margin: 2px;
+
+}
+.swForm input[type="image"] {
+	height: auto;
+	margin:0px;
+	background-color: none;
+}
+
+.swForm fieldset{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* needed to center fieldsets in IE5 */
+.swFieldset{
+	text-align: center;
+}
+
+.swForm legend{
+	font-style : italic;
+}
+
+.swHorizontalForm label{
+	text-align: left;
+	margin-right: 0.25em;
+	margin-left: 0.25em;
+}
+
+.swHorizontalForm input{
+	margin-right : 0.25em;
+	margin-left  : 0.25em;
+}
+
+.swFormElementInvisible{
+	border:0;
+	background-color:#FFFFFF;
+	font-size:12px;
+	color: black;
+}
+
+/*
+ * login
+ */
+.swLoginForm table{
+	padding : 4px;
+	margin-left : auto;
+	margin-right : auto;
+}
+.swLoginForm td{
+	padding : 4px;
+}
+.swLoginForm label {
+	font-size: 1em;
+}
+
+
+
+
+div.swRegForm{
+}
+
+.swRegForm table{
+	padding : 4px;
+	border: solid 2px red;
+}
+
+
+/*
+ *	description in registration form
+ */
+
+.swRegFormDesc{
+	width: 250px;
+}
+
+/*
+ *	tables
+ */
+
+table.swTable{
+	border: none;
+}
+
+table.swTable th{
+	color: #FFFFFF;
+	text-align: justify;
+	font-weight: bold;
+	border: none;
+	background-color: #666666;
+	font-size: 0.9em;
+	padding: 4px 4px;
+}
+
+table.swTable th a:link, table.swTable th a:visited,
+table.swTable th a:active, table.swTable th a:hover{
+	color: #FFF;
+}
+
+table.swTable td{
+	color: #000000;
+	vertical-align : top;
+	border: none;
+	background-color: #E9E5D6;
+	padding: 4px 6px;
+	font-size: 0.9em;
+}
+
+table.swTable .swValignMid{
+	vertical-align: middle;
+}
+
+table.swTable tr.swTrEven td{
+	background-color: #D7D9DB;
+}
+
+table.swTable tr.swTrOdd td{
+	background-color: #E7E9EB;
+}
+tr.flushright td{
+	text-align: right;
+	padding-bottom: 15px;
+}
+
+/*
+ *	ACK table
+ */
+.swAckTableName{
+	text-align: right;
+	padding-right: 1em;
+}
+.swAckTableValue{
+	text-align: left;
+	padding-left: 1em;
+}
+
+/*
+ *	instant message
+ */
+
+.swInstantMessage{
+	width: 500px;
+	border : 2px solid #C1D773;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 1em;
+	text-align: left;
+}
+
+.swIMtitle{
+	background-color: #B1C9DC;
+	font-weight: bold;
+}
+
+.swIMtitle a, .swIMtitle a:link, .swIMtitle a:visited, .swIMtitle a:active, .swIMtitle a:hover{
+	float: right;
+	text-align: center;
+	color: Black;
+	margin-left: 0.3em;
+	margin-right: 0.3em;
+}
+
+.swIMtime{
+	width: 11em;
+	float: right;
+	text-align: center;
+}
+
+.swIMSrcAdr{
+
+}
+
+/*
+ *	title
+ */
+
+.swTitle,
+.swForgotPassw h2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-style: normal;
+	font-weight: bold;
+	color: #336699;
+	text-decoration: none;
+	text-align: center;
+	margin-bottom : 1em;
+	margin-top : 1em;
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2px;
+}
+
+/*
+ *	this class is used for elements which should have same width as title
+ */
+
+.swWidthAsTitle{
+	width: 504px;		/* width + border */
+}
+
+/*
+ *	Number of found records
+ */
+
+.swNumOfFoundRecords{
+	text-align: center;
+	margin : 1em;
+	color: #666666;
+	font-size: 0.8em;
+}
+
+/*
+ *	Strip with links to next found records if search return too many records
+ */
+
+.swSearchLinks{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-align: center;
+	font-size:0.8em;
+}
+.swSearchLinks a{
+	color:#000;
+	text-decoration: none;
+	padding:3px;
+	background-color:#CCC;
+}
+.swSearchLinks a:hover {
+	color:#FFF;
+	background-color:#444;
+}
+
+/*
+ *	Link selector
+ */
+
+.swLinkSelector .swLsSelected{
+	font-weight: bold;
+	color: #336699;
+}
+
+.swLinkSelector .swLsNotSelected{
+	font-weight: bold;
+}
+
+/*
+ *	Link to other pages of tab like 'find user' in phonebook etc.
+ */
+
+.swLinkToTabExtension{
+	text-align: center;
+	margin : 1em;
+}
+
+/*
+ *	Link to back to main tab
+ */
+
+.swBackToMainPage,
+.skipstep {
+	text-align: left;
+	font-weight: bold;
+	padding-left: 60px;
+	background-image: url(img/back_button.png);
+	background-repeat: no-repeat;
+	background-position: 40px 0px;
+	height: 18px;
+	line-height: 16px;
+	margin-top: 30px;
+}
+.skipstep {
+	background-image: url(img/skip_button.png);
+
+}
+	background-color:red;
+	width: 240px;
+	text-align: right;
+	font-weight: bold;
+	padding-right: 30px;
+	background-image: url(img/skip_button.png);
+	background-repeat: no-repeat;
+	background-position: 280px 0px;
+	height: 18px;
+	line-height: 16px;
+	margin-top: 30px;
+}
+.swBackToMainPage a,
+.skipstep a{
+	color: #666666;
+	text-decoration:none;
+	font-size: 0.85em;
+	}
+.swBackToMainPage a:hover,
+.skipstep a:hover{
+	text-decoration:underline;
+	}
+
+
+
+/*
+ *	Name of user at user details tab in admin interface
+ */
+
+.swNameOfUser{
+	text-align: left;
+}
+
+/*
+ *	Login Page - title
+ */
+
+.swLPTitle{
+	text-align: center;
+	margin-bottom : 1em;
+}
+
+/*
+ *	Login Page - Subscribe and Forgot password links
+ */
+
+.swLPSubscLinks{
+	width: 330px;
+	margin-left : auto;
+	margin-right : auto;
+	text-align: center;
+	padding-top: 10px;
+}
+
+.swLPForgotPass{
+	padding-right: 1em;
+	font-size: 0.8em;
+}
+
+.swLPSubscribe{
+	font-size: 0.8em;
+}
+
+.swLPForgotPass a,
+.swLPSubscribe a {
+	text-decoration:none;
+	color:#666666;
+	font-weight: bold;
+}
+
+.swLPForgotPass a:hover,
+.swLPSubscribe a:hover {
+	text-decoration:underline;
+}
+
+.loginButton {
+	padding-top:10px;
+	padding-left: 260px;
+	text-align: center;
+}
+/*
+ *	Forgot password page - text at top
+ */
+.swForgotPassw{
+	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 450px;
+}
+
+.swForgotPassw h2{
+	text-align: center;
+}
+
+
+/*
+ *	MyAccount - Aliases table
+ */
+
+#swMAAliasesTable{
+	float: left;
+	width: 49%;
+	text-align: center;
+}
+
+#swMAAliasesTable table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+ *	MyAccount - ACL table
+ */
+
+#swMAACLTable{
+	width: 49%;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 20px;
+}
+
+#swMAACLTable table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+ *	floating box cleaner
+ */
+
+.swCleaner{
+	background-color:#FFFFFF;
+	clear: both;
+	height: 1px;
+	border: none;
+	margin: -1em 0 0 0;
+	overflow: hidden;
+}
+
+
+.swMarkYes, .swMarkNo{
+	width: 11px;
+	height: 11px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.swMarkYes{
+	background-image: url(img/mark_yes.gif);
+}
+
+.swMarkNo{
+	background-image: url(img/mark_no.gif);
+}
+
+.swMarkYes div,
+.swMarkNo div{
+	display: none;
+}
+
+/*
+ * warning box
+ */
+.swWarningBox{
+	background-color: #DDD;
+	padding: 1em 4em;
+	width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 2px solid #CC0000;
+}
+
+.swWarningBox h1{
+	text-align: center;
+	font-size: 1.5em;
+	margin-top: 0;
+	margin-bottom: 0.3em;
+}
+/*
+ *	errors and messages
+ */
+
+.errors{
+	font-size : 12px;
+	color : #FFFFFF;
+	text-align : center;
+	font-weight : bold;
+	background-color: #CC3300;
+	padding: 3px;
+	margin: 0px 45px;
+	height: 18px;
+	line-height: 18px;
+}
+
+.message{
+	font-size : 12px;
+	color : #FFFFFF;
+	text-align : center;
+	font-weight : bold;
+	background-color: #99CC00;
+	padding: 3px;
+	margin: 0px 45px;
+	height: 18px;
+	line-height: 18px;
+}
+
+.swWarning{
+	color: #FFFFFF;
+	background-color: #CC0000;
+	padding: 2px;
+}
+.statusonline,
+.statusoffline,
+.statusunknown,
+.statusnonlocal,
+.statusnonexists {
+	text-align:center;
+	color: #FFFFFF;
+	padding: 2px;
+	display: block;
+	width: 70px;
+	font-size: smaller;
+}
+.statusonline{
+	background-color: #009900;
+}
+
+.statusoffline{
+	background-color: #666666;
+}
+
+.statusunknown{
+	font-style : italic;
+	background-color: #CC0000;
+}
+
+.statusnonlocal{
+	font-style : italic;
+	background-color: #666666;
+}
+
+.statusnonexists{
+	font-style : italic;
+	background-color: #CC0000;
+}
+
+
+.swDomainEnabled,
+.swUserEnabled,
+.swUriEnabled{
+	color: #000;
+	white-space: nowrap;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.swDomainDisabled,
+.swUserDisabled,
+.swUriDisabled{
+	color: #888;
+	white-space: nowrap;
+}
+
+
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	letter-spacing: -0.1em;
+	width: 840px;
+	height: 50px;
+	padding: 10px 30px;
+	word-spacing: 0.2em;
+	margin: 0;s
+}
+.swWarningBox h1,
+.rbtopB h1 {
+	width: auto;
+	height: auto;
+	background-color: none;
+}
+
+body {
+	margin: 10px;
+	background-color: #CCCCCC;
+}
+hr {
+	display: none;
+}
+.swLPTitle h1 {
+	width: auto;
+	background:none;
+}
+.selectlanguage {
+	padding-right: 50px;
+	font-size: 0.85em;
+	text-align: right;
+}
+.selectlanguage select{
+	font-size: 0.9em;
+}
+.swMain #swHeader {
+	margin: 0px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	height: 20px;
+}
+.swMain #swFooter {
+	margin: 0px;
+	padding: 0px;
+	height: 30px;
+}
+.swAssignedDomainList {
+	margin-left:auto;
+	margin-right:auto;
+}
+.swAssignedDomainList table{
+	width:70%;
+}
+.swUnassignedDomainList{
+	margin-left:auto;
+	margin-right:auto;
+}
+.swUnassignedDomainList table{
+	width:70%;
+}
+.swTable .swTrOdd  a.clearlinkstyle, 
+.swTable .swTrEven  a.clearlinkstyle {
+	background: #none;
+	border:none;
+}
+#swContent p,
+.swLPTitle p,
+p {
+	font-size: 0.9em;
+	font-style: italic;
+}
+/*users table*/
+.swTable tr.actionsrow td {
+	text-align:right;
+	padding-bottom:10px;
+}
+.swTable tr.informationrow a,
+.swTable a.emailstyle {
+	color:#000;
+	font-weight: bold;
+	font-size: 0.9em;
+	text-decoration: none;
+}
+.swTable tr.informationrow a:hover,
+.swTable a:hover.emailstyle {
+	text-decoration: underline;
+}
+.swTable tr.actionsrow a, 
+.swTable a.actionsrow,
+a.actionsrow {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.8em;
+	color: #FFFFFF;
+	background-color: #999;
+	text-decoration: none;
+	border-top: solid 1px #EEE;
+	border-left: solid 1px #EEE;
+	border-right: solid 1px #000;
+	border-bottom: solid 1px #000;
+	padding: 1px 2px;
+}
+.swTable tr.actionsrow a:hover {
+	color: #FFF;
+	background-color: #666;
+}
+
+.swTable tr.informationrow a.swPopupLink,
+.swTable tr.informationrow a:hover.swPopupLink,
+.attributesTable a.swPopupLink,
+.attributesTable a:hover.swPopupLink,
+td.alternatpoplinkstyle a.swPopupLink,
+td.alternatpoplinkstyle a:hover.swPopupLink 
+{
+	font-weight:normal;
+	font-size: 1em;
+	color: #333;
+	text-decoration:none;
+	border-bottom: dotted 1px #333;
+}
+th.alternatpoplinkstyle a.swPopupLink {
+	font-weight:normal;
+	font-size: 1em;
+	text-decoration:none;
+	border-bottom: dotted 1px #FFF;
+	color: #FFF;
+	}
+
+#orphanlinks {
+	margin:20px 0px;
+}
+ #orphanlinks a {
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #333333;
+	text-decoration: none;
+}
+ #orphanlinks a:hover {
+	text-decoration: underline;
+}
+
+/*domain layout*/
+#oldVersions{
+	float: left;
+	margin-left: 40px;
+}
+#dl_content{
+	width:600px;
+}
+/*new admin wizard*/
+
+#uname, 
+#domain, 
+#sw_fname, 
+#sw_lname, 
+#sw_email, 
+#sw_phone, 
+#sw_timezone {
+	width:250px;
+	}
+
+#link_close{
+	float: left;
+	text-align: left;
+}
+
+#link_skip{
+	float: right;
+	text-align: right;
+	margin-right: 50px;
+}
+#uid,    #luid   {width:100px;}
+#usrnm,  #lusrnm {width:100px;}
+#realm,  #lrealm {width:100px;}
+#fname,  #lfname {width:100px;}
+#lname,  #llname {width:100px;}
+#email,  #lemail {width:100px;}
+
+#link_close{
+	float: left;
+	text-align: left;
+}
+
+#link_skip{
+	float: right;
+	text-align: right;
+	margin-right: 50px;
+}

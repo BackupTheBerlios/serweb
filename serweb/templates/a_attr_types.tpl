@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.3 2006/04/28 13:23:27 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.4 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -28,7 +28,7 @@
 {$form.start}
 
 
-	<table border="0" cellspacing="0" cellpadding="0" align="center">
+	<table border="0" cellspacing="0" cellpadding="0" align="center" class="attributesTable">
 	<tr>
 	<td><label for="attr_order"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.ff_order}</a>:</label></td>
 	<td>{$form.attr_order}</td>
@@ -96,8 +96,13 @@
 	
 	</td></tr>
 	<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	</tr>
+
+	<tr>
 	<td align="left">{if $form.extended_settings}{$form.extended_settings}{else}&nbsp;{/if}</td>
-	<td align="right">{$form.okey}</td>
+	<td>{$form.okey}</td>
 	</tr>
 	</table>
 {$form.finish}
@@ -106,18 +111,18 @@
 
 {foreach from=$attrs item='row' name='at'}
 	{if $smarty.foreach.at.first}
-	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
+	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable alternatpoplinkstyle">
 	<tr>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
-	<th>{$lang_str.th_att_name}</th>
-	<th>{$lang_str.th_att_type}</th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
-	<th><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
+	<th class="alternatpoplinkstyle">{$lang_str.th_att_name}</th>
+	<th class="alternatpoplinkstyle">{$lang_str.th_att_type}</th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
+	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	</tr>
@@ -133,7 +138,7 @@
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.priority.GLOBAL}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.default_flags.DB_LOAD_SER}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.default_flags.DB_FOR_SERWEB}</td>
-	<td align="left">{
+	<td align="left" class="alternatpoplinkstyle">{
 		if $row.translate_desc}{
 			if $row.translation_lack
 			     }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp fgcolor="red"}>{$row.description|escape|empty2nbsp}</a>{
@@ -141,8 +146,8 @@
 			/if}{
 		else}{$row.description|escape|empty2nbsp}{
 		/if}</td>
-	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
 	</tr>
 
 	{if $smarty.foreach.at.last}
@@ -151,7 +156,7 @@
 {/foreach}
 
 <br />
-<div class="swWarningBox"><h1>{$lang_str.warning}</h1>
+<div class="swWarningBox"><h2>{$lang_str.warning}</h2>
 {$lang_str.attr_type_warning}
 </div>
 <br>

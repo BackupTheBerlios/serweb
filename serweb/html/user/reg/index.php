@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.6 2006/04/12 13:41:19 kozlik Exp $
+ * $Id: index.php,v 1.7 2006/05/23 09:13:38 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_did_by_realm');
@@ -43,13 +43,6 @@ $register->set_opt('confirmation_script', "reg/confirmation.php");
 $register->set_opt('register_in_domain', $did);
 $register->set_opt('set_lang_attr', $_SESSION['lang']);
 
-										
-$config->html_headers = array_merge($config->html_headers, 
-		array('<style type="text/css">
-				body, .swMain{
-					background: white;
-				}
-			   </style>'));
 										
 
 $controler->add_apu($register);

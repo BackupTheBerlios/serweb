@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.10 2006/04/18 14:53:04 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.11 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -22,7 +22,15 @@
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td>&nbsp;</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+	<td>{$form.okey}</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
 	</tr>
 	</table>
 {$form.finish}
@@ -46,8 +54,8 @@
 	<td align="left">{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}{$row.sip_uri|escape}{if $config->enable_ctd}</a>{/if}</td>
 	<td align="left">{include file="includes/inline_aliases.tpl" uris=$row.uris no_flags=1}</td>
 	<td align="center">{$row.status|empty2nbsp|user_status}</td>
-	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}" class="actionsrow">{$lang_str.l_delete}</a></td>
 	</tr>
 
 	{if $smarty.foreach.phonebook.last}
@@ -64,7 +72,9 @@
 {/foreach}
 
 {if $config->enable_whitepages}
+<div id="orphanlinks">
 <div class="swLinkToTabExtension"><a href="{url url='whitepages.php'}">{$lang_str.l_find_user}</a></div>
+</div>
 {/if}
 
 <br>

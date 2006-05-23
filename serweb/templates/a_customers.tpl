@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_customers.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_customers.tpl,v 1.3 2006/05/23 09:13:38 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
@@ -25,8 +25,9 @@
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td align="right"><br />{$form.okey}</td>
 	</tr>
+	<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 	</table>
 {$form.finish}
 </div>
@@ -47,9 +48,9 @@
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left">{$row.address|escape|truncate:45:"..."|empty2nbsp}</td>
 	<td align="left">{$row.phone|escape|truncate:45:"..."|empty2nbsp}</td>
-	<td align="left">{if $row.email}<a href="mailto:{$row.email}">{$row.email|escape|truncate:45:"..."}{else}&nbsp;{/if}</td>
-	<td align="center"><a href="{$row.url_edit}">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}">{$lang_str.l_delete}</a></td>
+	<td align="left">{if $row.email}<a href="mailto:{$row.email}" class="emailstyle">{$row.email|escape|truncate:45:"..."}{else}&nbsp;{/if}</td>
+	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele}" class="actionsrow">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.customers.last}
 	</table>

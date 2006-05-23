@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_global_attributes.tpl,v 1.2 2006/03/08 15:36:27 kozlik Exp $ *}
+{* $Id: a_global_attributes.tpl,v 1.3 2006/05/23 09:13:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -14,7 +14,11 @@
 {if $attributes}
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td>&nbsp;</td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>
+	<td>{$form.okey}</td>
 	</tr>
 	</table>
 	{$form.finish}
