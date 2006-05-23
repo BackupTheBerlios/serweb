@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: config.php,v 1.4 2006/03/13 15:26:46 kozlik Exp $
+ * $Id: config.php,v 1.5 2006/05/23 09:17:21 kozlik Exp $
  */
 
 /** 
@@ -35,32 +35,32 @@ $bg_cfg['output_images_type'] 	= 'gif';
 /* Definition of type 'blue' */
 $bg_cfg['btn_type']['blue']['font']				= "arial.ttf";
 $bg_cfg['btn_type']['blue']['narrow_font'] 		= "arialn.ttf";
-$bg_cfg['btn_type']['blue']['font_size']		= 12;
-$bg_cfg['btn_type']['blue']['font_color']		= "000000";
-$bg_cfg['btn_type']['blue']['horizontal_pos']	= 13;
-$bg_cfg['btn_type']['blue']['width']			= 65;
-$bg_cfg['btn_type']['blue']['height']			= 16;
-$bg_cfg['btn_type']['blue']['image_left']		= "blue_l.gif";
-$bg_cfg['btn_type']['blue']['image_right']		= "blue_r.gif";
-$bg_cfg['btn_type']['blue']['image_center']		= "blue_c.gif";
+$bg_cfg['btn_type']['blue']['font_size']		= 10;
+$bg_cfg['btn_type']['blue']['font_color']		= "FFFFFF";
+$bg_cfg['btn_type']['blue']['horizontal_pos']	= 14;
+$bg_cfg['btn_type']['blue']['width']			= 58;
+$bg_cfg['btn_type']['blue']['height']			= 20;
+$bg_cfg['btn_type']['blue']['image_left']		= "submit_leftcorner.png";
+$bg_cfg['btn_type']['blue']['image_right']		= "submit_rightcorner.png";
+$bg_cfg['btn_type']['blue']['image_center']		= "submit_body.png";
 
 /* Definition of type 'blue_80' */
 $bg_cfg['btn_type']['blue_80']					= $bg_cfg['btn_type']['blue'];
-$bg_cfg['btn_type']['blue_80']['width']			= 80;
+$bg_cfg['btn_type']['blue_80']['width']			= 70;
 
 /* Definition of type 'blue_wide' */
 $bg_cfg['btn_type']['blue_wide']				= $bg_cfg['btn_type']['blue'];
-$bg_cfg['btn_type']['blue_wide']['width']		= 165;
+$bg_cfg['btn_type']['blue_wide']['width']		= 150;
 
 /* Definition of type 'white' */
 $bg_cfg['btn_type']['white']					= $bg_cfg['btn_type']['blue'];
-$bg_cfg['btn_type']['white']['image_left']		= "white_l.gif";
-$bg_cfg['btn_type']['white']['image_right']		= "white_r.gif";
-$bg_cfg['btn_type']['white']['image_center']	= "white_c.gif";
+//$bg_cfg['btn_type']['white']['image_left']		= "white_l.gif";
+//$bg_cfg['btn_type']['white']['image_right']		= "white_r.gif";
+//$bg_cfg['btn_type']['white']['image_center']	= "white_c.gif";
 
 /* Definition of type 'white_100' */
 $bg_cfg['btn_type']['white_100']				= $bg_cfg['btn_type']['white'];
-$bg_cfg['btn_type']['white_100']['width']		= 100;
+$bg_cfg['btn_type']['white_100']['width']		= 90;
 
 
 
