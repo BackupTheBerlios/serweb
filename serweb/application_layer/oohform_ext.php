@@ -2,7 +2,7 @@
 /*
  * Extension for phplib object oriented html form
  *
- * $Id: oohform_ext.php,v 1.2 2004/09/17 17:21:47 kozlik Exp $
+ * $Id: oohform_ext.php,v 1.3 2006/05/23 09:36:21 kozlik Exp $
  */ 
 
 class form_ext extends form{
@@ -15,9 +15,10 @@ class form_ext extends form{
 		$submit - associative array describing submit element
 		
 		Keys of $submit array:
-			['type'] - type of submit element 'hidden', 'button', 'image'
-			['text'] - text on button on alt on image
-			['src']  - source of image
+			['type']  - type of submit element 'hidden', 'button', 'image'
+			['text']  - text on button on alt on image
+			['src']   - source of image
+			['class'] - CSS class
 	 */
 
 	function add_submit($submit){
@@ -25,23 +26,28 @@ class form_ext extends form{
 	}
 	
 	function add_extra_submit($name, $submit){
+		if (! empty($submit['class'])) $class = " class = '".$submit['class']."'";
+		else $class = '';
+
 		switch ($submit['type']){
 		case "image":
 			$this->add_element(array("type"=>"submit",
 			                             "name"=>$name,
 			                             "src"=>$submit['src'],
-										 "extrahtml"=>"alt='".$submit['text']."'"));
+										 "extrahtml"=>"alt='".$submit['text']."'".$class));
 			break;
 		case "button":
 			$this->add_element(array("type"=>"submit",
 			                             "name"=>$name."_x",
-										 "value"=>$submit['text']));
+										 "value"=>$submit['text'],
+										 "extrahtml"=>$class));
 			break;
 		case "hidden":
 		default:
 			$this->add_element(array("type"=>"hidden",
 			                             "name"=>$name."_x",
-			                             "value"=>'0'));
+			                             "value"=>'0',
+										 "extrahtml"=>$class));
 			$this->hidden_submits = $name."_x";
 		}
 	}
