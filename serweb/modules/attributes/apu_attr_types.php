@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.3 2006/04/28 13:23:27 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.4 2006/05/25 13:33:20 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -134,7 +134,7 @@ class apu_attr_types extends apu_base_class{
 		$this->smarty_attrs = array();
 		foreach($at as $k => $v){
 			$this->smarty_attrs[$k]	= $at[$k]->to_table_row();
-			$this->smarty_attrs[$k]['translate_desc'] = $this->smarty_attrs[$k]['description'][0] == "@";
+			$this->smarty_attrs[$k]['translate_desc'] = (isset($this->smarty_attrs[$k]['description'][0]) and $this->smarty_attrs[$k]['description'][0] == "@");
 			$this->smarty_attrs[$k]['desc_translated'] = $this->smarty_attrs[$k]['translate_desc'] ? $at[$k]->get_description() : "";
 			$this->smarty_attrs[$k]['translation_lack'] = (isset($this->smarty_attrs[$k]['desc_translated'][0]) and ($this->smarty_attrs[$k]['desc_translated'][0] == "@"));
 			$this->smarty_attrs[$k]['url_edit'] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&edit_id=".RawURLEncode($k)."&edit=1");
