@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.4 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.5 2006/05/25 13:32:17 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -141,10 +141,14 @@
 	<td align="left" class="alternatpoplinkstyle">{
 		if $row.translate_desc}{
 			if $row.translation_lack
-			     }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp fgcolor="red"}>{$row.description|escape|empty2nbsp}</a>{
-			else }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp}>{$row.description|escape|empty2nbsp}</a>{
+			     }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp fgcolor="red"}>{$row.description|truncate:40:"...":true|escape|empty2nbsp}</a>{
+			else }<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.desc_translated|escape|escape|empty2nbsp}>{$row.description|truncate:40:"...":true|escape|empty2nbsp}</a>{
 			/if}{
-		else}{$row.description|escape|empty2nbsp}{
+		else}{
+			if $row.description|count_characters > 40
+				}<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.description|escape|escape|empty2nbsp}>{$row.description|truncate:40:"...":true|escape|empty2nbsp}</a>{
+			else }{$row.description|truncate:40|escape|empty2nbsp}{
+			/if}{
 		/if}</td>
 	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
