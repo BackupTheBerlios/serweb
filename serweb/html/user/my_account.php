@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.14 2006/01/03 15:01:20 kozlik Exp $
+ * $Id: my_account.php,v 1.15 2006/05/25 13:34:07 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -62,6 +62,15 @@ $attrs_options = array($an['lang'] => array('save_to_session' => true,
 
 $usr_pref->set_opt('attrs_options', $attrs_options);
 $usr_pref->set_opt('attrs_kind', 'user');
+
+if (!$controler->come_from_admin_interface){
+	/* Hack! allow only admin to change attribute 'asserted_id'
+	 * Have to be changed after 'admin_only' flag for attribute type will 
+	 * be introduced 
+	 */
+
+	$usr_pref->set_opt('exclude_attributes', array('asserted_id'));
+}
 
 
 $pu->set_opt('change_pass', $config->allow_change_password);
