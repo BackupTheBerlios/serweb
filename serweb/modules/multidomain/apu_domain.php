@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.17 2006/05/03 13:41:07 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.18 2006/06/23 09:17:09 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -561,11 +561,13 @@ class apu_domain extends apu_base_class{
 		}
 
 		/*
-		 *	If digest realm is not set, set it by the canonical domain name
+		 *	If digest realm is not set, (or 'sop_vm_domain' is defined and is not set) 
+		 *  set it by the canonical domain name
 		 */
-		if (!isset($this->domain_attrs[$an['digest_realm']])){
-			$digest_realm = "";
-
+		$digest_realm = "";
+		if ( !isset($this->domain_attrs[$an['digest_realm']]) or 
+		    (!empty($an['sop_vm_domain']) and !isset($this->domain_attrs[$an['sop_vm_domain']]))){
+	
 			foreach($this->dom_names as $v){
 				if ($v['canon']) {
 					$digest_realm = $v['name'];
@@ -577,6 +579,18 @@ class apu_domain extends apu_base_class{
 
 			if ($digest_realm and 
 				false === $domain_attrs->set_attribute($an['digest_realm'], $digest_realm)){
+				return false;
+			}
+		}
+
+		if ($digest_realm and !isset($this->domain_attrs[$an['digest_realm']])){
+			if (false === $domain_attrs->set_attribute($an['digest_realm'], $digest_realm)){
+				return false;
+			}
+		}
+
+		if ($digest_realm and !empty($an['sop_vm_domain']) and !isset($this->domain_attrs[$an['sop_vm_domain']])){
+			if (false === $domain_attrs->set_attribute($an['sop_vm_domain'], $digest_realm)){
 				return false;
 			}
 		}
