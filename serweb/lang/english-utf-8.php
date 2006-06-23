@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.38 2006/05/23 09:13:38 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.39 2006/06/23 09:16:10 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -447,6 +447,7 @@ $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_filled_name_of_attribute'] = 	"you must fill attribute name";
+$lang_str['fe_empty_not_allowed'] = 			"can not be empty";
 $lang_str['ff_order'] = 						"order";
 $lang_str['ff_att_name'] = 						"attribute name";
 $lang_str['ff_att_type'] = 						"attribute type";
