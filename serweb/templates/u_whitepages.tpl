@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.7 2006/07/03 09:15:16 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -52,15 +52,19 @@
 	<th>{$lang_str.th_sip_address}</th>
 	<th>{$lang_str.th_aliases}</th>
 	<th>{$lang_str.th_timezone}</th>
-	<th>&nbsp;</th>
 	</tr>
 	{/if}
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false}">
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left">{$row.sip_uri|escape|empty2nbsp}</td>
 	<td align="left">{include file="includes/inline_aliases.tpl" uris=$row.uris no_flags=1}</td>
 	<td align="left">{$row.timezone|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_add_to_pb}" class="actionsrow">{$lang_str.l_add_to_phonebook}</a></td>
+	</tr>
+	
+	<tr class="{cycle values='swTrOdd,swTrEven'} actionsrow" valign="top">
+	<td colspan="4" align="left">
+		<a href="{$row.url_add_to_pb}" class="actionsrow">{$lang_str.l_add_to_phonebook}</a>
+	</td>
 	</tr>
 	{if $smarty.foreach.users.last}
 	</table>

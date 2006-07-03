@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.5 2006/05/23 09:13:39 kozlik Exp $ *}
+{* $Id: 2_existing_admin.tpl,v 1.6 2006/07/03 09:15:16 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -49,7 +49,6 @@
 	<th>{$lang_str.th_realm}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
-	<th>&nbsp;</th>
 	</tr>
 	{/if}
 	{assign var='usr_class' value='swUserEnabled'}
@@ -57,13 +56,18 @@
 	{if $row.disabled} {assign var='usr_class' value='swUserDisabled'} {/if}
 	{if $row.domain_disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 	
-	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
+	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false}">
 	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}" class="emailstyle">{$row.email_address}</a>&nbsp;</td>
-	<td align="center"><a href="{url url=$finish_url uniq=1}&{$row.get_param}" class="actionsrow">{$lang_str.l_select}</a></td>
+	</tr>
+
+	<tr class="{cycle values='swTrOdd,swTrEven'} actionsrow" valign="top">
+	<td colspan="5" align="left">
+		<a href="{url url=$finish_url uniq=1}&{$row.get_param}" class="actionsrow">{$lang_str.l_select}</a>
+	</td>
 	</tr>
 	{if $smarty.foreach.admins.last}
 	</table>
