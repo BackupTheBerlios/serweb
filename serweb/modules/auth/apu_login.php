@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.6 2006/01/11 15:16:50 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.7 2006/07/03 10:45:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -134,6 +134,28 @@ class apu_login extends apu_base_class{
 			}
 		");
 	}
+
+	/**
+	 *	Get digest_realm attribute for given domain
+	 *
+	 *	If domain does not exists null is returned
+	 *
+	 *	@param	string	$domain		domain name
+	 *	@return	string				realm
+	 */
+	function realm_lookup($domain){
+		global $config;
+
+		$dh = &Domains::singleton();
+		if (false === $did = $dh->get_did($domain)) return false;
+		
+		if (is_null($did)) return null;
+		
+		$opt=array("did"=>$did);
+		if (false === $realm = Attributes::get_attribute($config->attr_names['digest_realm'], $opt)) return false;
+		
+		return $realm;
+	}
 	
 	function action_login(&$errors){
 		global $lang_str, $config;
@@ -260,7 +282,7 @@ class apu_login extends apu_base_class{
 		    $this->opt['xxl_redirect_after_login']){
 		    
 				$this->username = $_GET['uname'];
-				$this->realm    = $_GET['realm'];
+				$domain         = $_GET['realm'];
 				$this->password = $_GET['pass'];
 		}
 		else{
@@ -277,7 +299,7 @@ class apu_login extends apu_base_class{
 				// parse username and realm from it
 				if (ereg("^([^@]+)@(.+)", $_POST['uname'], $regs)){
 					$this->username=$regs[1];
-					$this->realm=$regs[2];
+					$domain=$regs[2];
 					
 				}
 				else {
@@ -288,8 +310,17 @@ class apu_login extends apu_base_class{
 			}
 			else{
 				$this->username=$_POST['uname'];
-				$this->realm = $config->domain;
+				$domain = $config->domain;
 			}
+		}
+
+		sw_log("User login: looking for realm of domain: ".$domain, PEAR_LOG_DEBUG);
+
+		if (false === $this->realm = $this->realm_lookup($domain)) return false;
+
+		if (is_null($this->realm)){
+			sw_log("User login: realm not found, useing domain name", PEAR_LOG_DEBUG);
+			$this->realm = $domain;
 		}
 
 		sw_log("User login: checking password of user with username: ".
