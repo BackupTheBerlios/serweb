@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.42 2006/04/18 09:30:35 kozlik Exp $
+ * $Id: config.php,v 1.43 2006/07/10 13:45:04 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -10,7 +10,7 @@
 	/* this array contain list of config parameter which can be modified
 	   by admins of particular domains */
 
-	$config->domain_depend_config=array("mail_header_from", "web_contact", 
+	$config->domain_depend_config=array("web_contact", 
 		"html_title", "html_doctype", "html_headers", "display_page_heading", 
 		"alias_generation",	"first_alias_number", "alias_prefix", 
 		"alias_postfix", "alias_lenght", "alias_generation_retries",
@@ -73,6 +73,12 @@
 	 * Probably you does not need change this value.
 	 */
 	$config->default_did = "0";
+
+
+	/* Serweb sends email messages. This is email address which appear in 'from'
+	   header if the address is not specified in domain attributes. 
+	 */
+	$config->mail_header_from="info@mydomain.org";
 	
 
 	/* set to true if should be displayed confirmation page on deleting anything.

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * $Id: missed_calls.php,v 1.1 2006/04/18 11:08:53 kozlik Exp $
+ * $Id: missed_calls.php,v 1.2 2006/07/10 13:45:05 kozlik Exp $
  */
 
 /**
@@ -11,7 +11,7 @@
  *	@param	string	$email_address	
  *	@return	bool					TRUE on success, FALSE on error
  */
-function send_mail_with_missed_calls($uid, $email_address){
+function send_mail_with_missed_calls($uid, $email_address, $mail_from){
 	global $config, $data, $lang_set;
 	/* get missed calls */
 	if (false === $missed_calls = $data->get_missed_calls_of_yesterday($uid, null)) return false;
@@ -81,7 +81,8 @@ function send_mail_with_missed_calls($uid, $email_address){
 	 *	Compose the mail message
 	 */
 	
-	$envelope["from"]=$config->infomail;
+	if ($mail_from) $envelope["from"] = $mail_from;
+	else            $envelope["from"]=$config->mail_header_from;
 	$envelope["to"]=$email_address;
 
 	$part1["type"]=TYPEMULTIPART;
@@ -126,11 +127,12 @@ function send_mail_with_missed_calls($uid, $email_address){
  *	@param	array	$uris
  *	@return	int				or FALSE on error
  */
-function get_send_mc_of_dom($uris){
+function get_send_mc_of_dom($uris, &$mail_from){
 	global $config;
 
 	$an = $config->attr_names;
 	$send = null;
+	$mail_from = null;
 
 	foreach ($uris as $uri){
 		$da = &Domain_Attrs::singleton($uri->get_did());
@@ -138,6 +140,13 @@ function get_send_mc_of_dom($uris){
 		
 		if (is_null($send)) $send = $s;
 		else $send = ($send or $s);
+
+		if ($s and !$mail_from){
+			$o = array('did' => $uri->get_did());
+			if (false === $from_header = Attributes::get_attribute($an['contact_email'], $o)) return false;
+			if ($from_header) $mail_from = $from_header;
+		}
+
 	}
 	
 	if (is_null($send)) {
@@ -172,12 +181,15 @@ function send_missed_calls(){
 			/* if email address is not filled skip this user */
 			if (!$row['email_address']) continue;
 
+			$mail_from = null;
+			if (false === $dom_send = get_send_mc_of_dom($row['uris'], $mail_from)) return false;
+
 			if (is_null($send)) {
-				if (false === $send = get_send_mc_of_dom($row['uris'])) return false;
+				$send = $dom_send;
 			}
 
 			if ($send) {
-				if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'])) return false;
+				if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'], $mail_from)) return false;
 			}
 		}
 	

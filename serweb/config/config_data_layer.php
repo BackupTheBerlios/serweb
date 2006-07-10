@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.40 2006/05/10 14:38:51 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.41 2006/07/10 13:45:04 kozlik Exp $
  */
 
 
@@ -269,6 +269,7 @@
 								'require_conf' 		=> 'sw_require_confirm',//require confirmation
 
 								'digest_realm'		=> 'digest_realm',		
+								'contact_email'		=> 'contact_email',		//email address used in mail header from when serweb sending email
 								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
 								'dom_owner'			=> 'sw_owner',			//contain id of customer owning domain
 

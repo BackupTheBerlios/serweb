@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.3 2006/04/12 13:41:19 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.4 2006/07/10 13:45:05 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -59,6 +59,7 @@ class apu_forgotten_password extends apu_base_class{
 	var $smarty_action='default';
 	
 	var $sip_user;
+	var $did = null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -108,6 +109,18 @@ class apu_forgotten_password extends apu_base_class{
 	function init(){
 		parent::init();
 	}
+
+	function set_from_header(&$headers){
+		global $config;
+		if (!is_null($this->did)){
+			$opt = array("did"=>$this->did);
+			if (false === $addr = Attributes::get_attribute($config->attr_names['contact_email'], $opt)) return false;
+			
+			if ($addr) $headers['from'] = $addr;
+		}
+
+		return true;	
+	}
 	
 	function action_send_conf(&$errors){
 		global $config, $data, $lang_str;
@@ -144,6 +157,8 @@ class apu_forgotten_password extends apu_base_class{
 			$errors[]=$lang_str['err_sending_mail']; 
 			return false;	
 		}
+
+		if (false === $this->set_from_header($mail['headers'])) return false;
 
 		if (!send_mail($email, $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
@@ -205,6 +220,22 @@ class apu_forgotten_password extends apu_base_class{
 			return false;
 		}
 
+
+		if ($config->multidomain) {
+			if (is_null($this->did)){
+				$opt = array('check_disabled_flag' => false);
+				$this->did = $data->get_did_by_realm($_GET['r'], $opt);
+				if (false === $this->did) return false;
+		
+				if (is_null($this->did)){
+					sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
+					ErrorHandler::add_error($lang_str['domain_not_found']);
+					return false;
+				}
+			}
+		}
+
+
 		$mail = read_lang_txt_file($this->opt['mail_file_pass'], "txt", $_SESSION['lang'], 
 					array(array("domain", $this->opt['domain']),
 						  array("password", $password)));
@@ -214,6 +245,8 @@ class apu_forgotten_password extends apu_base_class{
 			$errors[]=$lang_str['err_sending_mail']; 
 			return false;	
 		}
+
+		if (false === $this->set_from_header($mail['headers'])) return false;
 
 		if (!send_mail($email, $mail['body'], $mail['headers'])){
 			$errors[]=$lang_str['err_sending_mail']; 
@@ -314,25 +347,25 @@ class apu_forgotten_password extends apu_base_class{
 			/* check flags of the domain of user - only if useing multiple domains*/
 			$opt = array('check_disabled_flag' => false);
 			
-			$did = $data->get_did_by_realm($realm, $opt);
-			if (false === $did) return false;
+			$this->did = $data->get_did_by_realm($realm, $opt);
+			if (false === $this->did) return false;
 	
-			if (is_null($did)){
+			if (is_null($this->did)){
 				sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
 				ErrorHandler::add_error($lang_str['domain_not_found']);
 				return false;
 			}
 	
-			if (false === $flags = $data->get_domain_flags($did, null)) return false;
+			if (false === $flags = $data->get_domain_flags($this->did, null)) return false;
 	
 			if ($flags['disabled']){
-				sw_log("Get password: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
+				sw_log("Get password: domain with id '".$this->did."' is disabled", PEAR_LOG_INFO);
 				ErrorHandler::add_error($lang_str['account_disabled']);
 				return false;
 			}
 	
 			if ($flags['deleted']){
-				sw_log("Get password: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
+				sw_log("Get password: domain with id '".$this->did."' is deleted", PEAR_LOG_INFO);
 				ErrorHandler::add_error($lang_str['domain_not_found']);
 				return false;
 			}

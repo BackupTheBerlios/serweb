@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.33 2006/06/23 09:16:10 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.34 2006/07/10 13:45:05 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -125,6 +125,7 @@ $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	/
 $lang_str['ff_uid'] = 							"uid";	//to translate 
 $lang_str['ff_for_ser'] = 						"for SER";	//to translate 
 $lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
+$lang_str['ff_contact_email'] = 				"contact email";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -313,7 +314,8 @@ $lang_str['fe_not_filled_your_lname'] = 		"u moet uw achternaam opgeven";
 $lang_str['fe_uname_already_choosen_1'] = 		"Sorry, deze gebruikersnaam ";
 $lang_str['fe_uname_already_choosen_2'] = 		"is reeds in gebruik. Probeer opnieuw met een andere naam";
 $lang_str['err_sending_mail'] = 				"Sorry, er is een fout opgetreden tijdens het versturen van email. Probeer het later nogmaals";
-$lang_str['registration_introduction'] = 		"Om te registreren moet u onderstaande gegevens invullen en versturen. U ontvangt van ons een email om u registratie te bevestigen. Neem contact op via <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> voor vragen en opmerkingen over onze gratus trial SIP dienst.";
+$lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";	//to translate 
+$lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";	//to translate 
 $lang_str['reg_email_desc'] = 					"Het email adres waar wij de bevestiging van uw registratie naar toe sturen. Indien het email adres ongeldig is kan er GEEN registratie voor onze SIP dienst plaatsvinden.)";
 $lang_str['ff_phone'] = 						"telefoonnummer";
 $lang_str['reg_phone_desc'] = 					"Dit is uw telefoonnummer waarop u bereikbaar bent.";
@@ -338,8 +340,8 @@ $lang_str['reg_finish_thanks'] = 				"Onze hartelijke dank voor uw registratie b
 $lang_str['reg_finish_app_forwarded'] = 		"Your application was forwarded for approval.";
 $lang_str['reg_finish_confirm_msg'] = 			"U ontvangt spoedig een bevestigingsbericht van ons.";
 $lang_str['reg_finish_sip_address'] = 			"Wij hebben het onderstaande SIP adres voor u gereserveerd:";
-$lang_str['reg_finish_questions'] = 			"Voor vragen en opmerking maakt u gebruik van onderstaande link";
-$lang_str['reg_finish_infomail'] = 				"<a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+$lang_str['reg_finish_questions_1'] = 			"If you have any further questions please feel free to send";	//to translate 
+$lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      registration - confirmation                            */
@@ -348,7 +350,8 @@ $lang_str['reg_finish_infomail'] = 				"<a href=\"mailto:".$config->infomail."\"
 $lang_str['reg_conf_congratulations'] = 		"Gefeliciteerd! Uw ".$config->domain." account is aangemaakt!";
 $lang_str['reg_conf_set_up'] = 					"Uw ".$config->domain." account is aangemaakt!";
 $lang_str['reg_conf_jabber_failed'] = 			"Helaas uw ".$config->domain." Jabber Gateway registratie is mislukt.";
-$lang_str['reg_conf_contact_infomail'] = 		"Neem contact op met <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> voor verdere ondersteuning.";
+$lang_str['reg_conf_contact_infomail_1'] = 		"Please contact";	//to translate 
+$lang_str['reg_conf_contact_infomail_2'] = 		"for further assistance.";	//to translate 
 $lang_str['reg_conf_failed'] = 					"Helaas uw ".$config->domain." bevestiging is mislukt.";
 $lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. Dit nummer komt niet voor op onze server!";
@@ -652,6 +655,10 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['registration_introduction'] = 		"Om te registreren moet u onderstaande gegevens invullen en versturen. U ontvangt van ons een email om u registratie te bevestigen. Neem contact op via <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> voor vragen en opmerkingen over onze gratus trial SIP dienst.";
+$lang_str['reg_finish_questions'] = 			"Voor vragen en opmerking maakt u gebruik van onderstaande link";
+$lang_str['reg_finish_infomail'] = 				"<a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+$lang_str['reg_conf_contact_infomail'] = 		"Neem contact op met <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> voor verdere ondersteuning.";
 $lang_str['tab_caller_screening'] =	 			"caller screening";
 $lang_str['msg_caller_screening_deleted_s'] = 	"Gecontroleerde uri verwijderd";
 $lang_str['msg_caller_screening_deleted_l'] = 	"Gecontroleerde uri is verwijderd";

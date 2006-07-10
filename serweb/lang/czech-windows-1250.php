@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.35 2006/06/23 09:16:10 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.36 2006/07/10 13:45:05 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -125,6 +125,7 @@ $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	/
 $lang_str['ff_uid'] = 							"uid";	//to translate 
 $lang_str['ff_for_ser'] = 						"for SER";	//to translate 
 $lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
+$lang_str['ff_contact_email'] = 				"contact email";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -313,7 +314,8 @@ $lang_str['fe_not_filled_your_lname'] = 		"musíte vyplnit pøíjmení";
 $lang_str['fe_uname_already_choosen_1'] = 		"Promiòte, uživatelské jméno";
 $lang_str['fe_uname_already_choosen_2'] = 		"už bylo vybráno nìkým jiným. Zkuste nìjaké jiné.";
 $lang_str['err_sending_mail'] = 				"Promiòte, došlo k chybì pøi odesílání registraèního emailu.";
-$lang_str['registration_introduction'] = 		"Pro registraci prosím vyplòte formuláø níže a kliknìte na tlaèítko &quot;registrovat&quot; na spodku stránky. Bude vám zaslán email potvrzující registraci. Prosím kontaktujte <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> pokud máte nìjaké otázky ohlednì registrace nebo našich SIP služeb.";
+$lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";	//to translate 
+$lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";	//to translate 
 $lang_str['reg_email_desc'] = 					"Adresa na kterou bude odesláno potvrzení o registraci. (Pokud vyplníte neplatnou adresu, žádné potvrzení nedostanete a úèet vám nebude vytvoøen.)";
 $lang_str['ff_phone'] = 						"telefonní èíslo";
 $lang_str['reg_phone_desc'] = 					"Telefonní èíslo na kterém jste k zastižení.";
@@ -338,8 +340,8 @@ $lang_str['reg_finish_thanks'] = 				"Dìkujeme za registraci v ".$config->domain
 $lang_str['reg_finish_app_forwarded'] = 		"Vaše žádost byla odeslána ke schválení.";
 $lang_str['reg_finish_confirm_msg'] = 			"Oèekávejte potvrzující zprávu v krátké dobì..";
 $lang_str['reg_finish_sip_address'] = 			"Rezervujeme pro Vás tuto SIP adresu:";
-$lang_str['reg_finish_questions'] = 			"Pokud máte nìjaké dotazy neostýchejte se nám napsat";
-$lang_str['reg_finish_infomail'] = 				"email na adresu <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+$lang_str['reg_finish_questions_1'] = 			"If you have any further questions please feel free to send";	//to translate 
+$lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      registration - confirmation                            */
@@ -348,7 +350,8 @@ $lang_str['reg_finish_infomail'] = 				"email na adresu <a href=\"mailto:".$conf
 $lang_str['reg_conf_congratulations'] = 		"Gratulujeme! Váš ".$config->domain." úèet je pøipraven!";
 $lang_str['reg_conf_set_up'] = 					"Váš ".$config->domain." úèet je pøipraven!";
 $lang_str['reg_conf_jabber_failed'] = 			"Ale vaše registrace v Jabber bránì ".$config->domain." selhala.";
-$lang_str['reg_conf_contact_infomail'] = 		"Prosím kontaktujte <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> pro další pomoc.";
+$lang_str['reg_conf_contact_infomail_1'] = 		"Please contact";	//to translate 
+$lang_str['reg_conf_contact_infomail_2'] = 		"for further assistance.";	//to translate 
 $lang_str['reg_conf_failed'] = 					"Omlouváme se ale váš pokus o potvrzení selhal.";
 $lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Litujeme. Toto potvrzovací èíslo neexistuje";
@@ -652,6 +655,10 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
+$lang_str['registration_introduction'] = 		"Pro registraci prosím vyplòte formuláø níže a kliknìte na tlaèítko &quot;registrovat&quot; na spodku stránky. Bude vám zaslán email potvrzující registraci. Prosím kontaktujte <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> pokud máte nìjaké otázky ohlednì registrace nebo našich SIP služeb.";
+$lang_str['reg_finish_questions'] = 			"Pokud máte nìjaké dotazy neostýchejte se nám napsat";
+$lang_str['reg_finish_infomail'] = 				"email na adresu <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+$lang_str['reg_conf_contact_infomail'] = 		"Prosím kontaktujte <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> pro další pomoc.";
 $lang_str['tab_caller_screening'] =	 			"filtrování volajících";
 $lang_str['msg_caller_screening_deleted_s'] = 	"Adresa vymazána";
 $lang_str['msg_caller_screening_deleted_l'] = 	"Adresa byla vymazána ze seznamu filtrovaných adres";

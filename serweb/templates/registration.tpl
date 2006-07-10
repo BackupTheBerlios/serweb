@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: registration.tpl,v 1.7 2006/07/10 13:45:06 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -16,7 +16,11 @@
 	<div class="rbtopB"><h1>VoIP SerWeb</h1></div>
 	<div class="rbcontentwrapB"><div class="rbcontentB">
 		<br>
-		<div align="left">{$lang_str.registration_introduction}</div>
+		<div align="left">
+			{$lang_str.registration_introduction_1}
+			<a href="mailto:{$infomail}">{$infomail}</a>
+			{$lang_str.registration_introduction_2}
+		</div>
 		<br>
 		<br>
 
@@ -126,8 +130,8 @@
 		<br>
 		{$lang_str.reg_finish_sip_address} {$reg_sip_address}.<br>
 		<br>
-		{$lang_str.reg_finish_questions}<br>
-		{$lang_str.reg_finish_infomail}<br>
+		{$lang_str.reg_finish_questions_1}<br>
+		{$lang_str.reg_finish_questions_2} <a href="mailto:{$infomail}">{$infomail}</a>.<br>
 		<p>
 		<br>
 

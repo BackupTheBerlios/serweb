@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: index.php,v 1.7 2006/05/23 09:13:38 kozlik Exp $
+ * $Id: index.php,v 1.8 2006/07/10 13:45:05 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_did_by_realm');
@@ -31,6 +31,14 @@ else{
 		exit;
 	}
 }
+
+do {
+	$opt = array("did"=>$did);
+	if (false === $addr = Attributes::get_attribute($config->attr_names['contact_email'], $opt)) break;
+			
+	if (!$addr) $addr = $config->mail_header_from;
+	$smarty->assign('infomail', $addr);
+} while (false);
 
 
 $register=new apu_registration();

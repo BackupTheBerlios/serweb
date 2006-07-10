@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_domain_defaults.php,v 1.9 2006/01/23 14:10:47 kozlik Exp $
+ * $Id: config_domain_defaults.php,v 1.10 2006/07/10 13:45:04 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -18,18 +18,10 @@
 	/* ------------------------------------------------------------*/
 	/* you need to align these values to your local server settings */
 
-	/* serweb will send confirmation emails and SIP IMs -- what sender
-	   address should it claim ?
+	/* serweb will send SIP IMs -- what sender address should it claim ?
 	   should appear in them ?
 	*/
-	$config->mail_header_from="registrar@mydomain.org";
 	$config->web_contact="sip:daemon@mydomain.org";
-
-	/* info email address */
-	$config->infomail	=	"info@mydomain.org";
-
-	/* email address for questions concerning registration */
-	$config->regmail	=	"registrar@mydomain.org";
 
 	
 	/* content of html <title> tag */

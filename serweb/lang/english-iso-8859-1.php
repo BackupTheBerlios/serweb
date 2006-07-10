@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.51 2006/06/23 09:16:10 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.52 2006/07/10 13:45:05 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -125,6 +125,7 @@ $lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";
 $lang_str['ff_uid'] = 							"uid";
 $lang_str['ff_for_ser'] = 						"for SER";
 $lang_str['ff_for_serweb'] = 					"for SerWeb";
+$lang_str['ff_contact_email'] = 				"contact email";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -313,7 +314,8 @@ $lang_str['fe_not_filled_your_lname'] = 		"you must fill your last name";
 $lang_str['fe_uname_already_choosen_1'] = 		"Sorry, the user name";
 $lang_str['fe_uname_already_choosen_2'] = 		"has already been chosen. Try again";
 $lang_str['err_sending_mail'] = 				"Sorry, there was an error when sending mail. Please try again later";
-$lang_str['registration_introduction'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> if you have any questions concerning registration and our free trial SIP services.";
+$lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";
+$lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";
 $lang_str['reg_email_desc'] = 					"Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)";
 $lang_str['ff_phone'] = 						"phone";
 $lang_str['reg_phone_desc'] = 					"This is your PSTN phone number where you can be reached.";
@@ -338,8 +340,8 @@ $lang_str['reg_finish_thanks'] = 				"Thank you for registering with ".$config->
 $lang_str['reg_finish_app_forwarded'] = 		"Your application was forwarded for approval.";
 $lang_str['reg_finish_confirm_msg'] = 			"Expect a confirmation message shortly.";
 $lang_str['reg_finish_sip_address'] = 			"We are reserving the following SIP address for you:";
-$lang_str['reg_finish_questions'] = 			"If you have any further questions please feel free to send";
-$lang_str['reg_finish_infomail'] = 				"an email to <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
+$lang_str['reg_finish_questions_1'] = 			"If you have any further questions please feel free to send";
+$lang_str['reg_finish_questions_2'] = 			"an email to";
 
 /* ------------------------------------------------------------*/
 /*      registration - confirmation                            */
@@ -348,7 +350,8 @@ $lang_str['reg_finish_infomail'] = 				"an email to <a href=\"mailto:".$config->
 $lang_str['reg_conf_congratulations'] = 		"Congratulations! Your ".$config->domain." account was set up!";
 $lang_str['reg_conf_set_up'] = 					"Your ".$config->domain." account was set up!";
 $lang_str['reg_conf_jabber_failed'] = 			"But your ".$config->domain." Jabber Gateway registration failed.";
-$lang_str['reg_conf_contact_infomail'] = 		"Please contact <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> for further assistance.";
+$lang_str['reg_conf_contact_infomail_1'] = 		"Please contact";
+$lang_str['reg_conf_contact_infomail_2'] = 		"for further assistance.";
 $lang_str['reg_conf_failed'] = 					"We regret but your ".$config->domain." confirmation attempt failed.";
 $lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. No such a confirmation number exists";

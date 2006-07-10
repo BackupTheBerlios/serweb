@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.10 2006/05/05 09:31:02 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.11 2006/07/10 13:45:05 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -417,6 +417,12 @@ class apu_registration extends apu_base_class{
 			$errors[]=$lang_str['err_sending_mail']; 
 			$data->transaction_rollback();
 			return false;	
+		}
+
+		$o = array('did' => $did);
+		if (false === $from_header = Attributes::get_attribute($an['contact_email'], $o)) return false;
+		if ($from_header){
+			$mail['headers']['from'] = $from_header;
 		}
 
 
