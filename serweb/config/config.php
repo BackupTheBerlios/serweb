@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.43 2006/07/10 13:45:04 kozlik Exp $
+ * $Id: config.php,v 1.44 2006/07/11 12:42:27 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -13,8 +13,7 @@
 	$config->domain_depend_config=array("web_contact", 
 		"html_title", "html_doctype", "html_headers", "display_page_heading", 
 		"alias_generation",	"first_alias_number", "alias_prefix", 
-		"alias_postfix", "alias_lenght", "alias_generation_retries",
-		"infomail", "regmail");
+		"alias_postfix", "alias_lenght", "alias_generation_retries");
 
 
 	/* ------------------------------------------------------------*/
