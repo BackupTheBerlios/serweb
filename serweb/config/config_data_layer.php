@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.41 2006/07/10 13:45:04 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.42 2006/07/11 12:14:58 kozlik Exp $
  */
 
 
@@ -431,6 +431,7 @@
  		$config->data_sql->attr_types->cols->default_flags = 	"default_flags";
  		$config->data_sql->attr_types->cols->flags = 		"flags";
  		$config->data_sql->attr_types->cols->priority = 	"priority";
+ 		$config->data_sql->attr_types->cols->access = 		"access";
  		$config->data_sql->attr_types->cols->order = 		"ordering";
 
  		$config->data_sql->attr_types->flag_values = 		&$config->flags;

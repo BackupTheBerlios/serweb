@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.5 2006/05/25 13:32:17 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.6 2006/07/11 12:15:00 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -13,7 +13,7 @@
 		display:block;
 	}
 	
-	#attr_order, #attr_name, #attr_type, #attr_label{
+	#attr_order, #attr_name, #attr_type, #attr_label, #attr_access{
 		width:150px;
 	}
 </style>
@@ -40,6 +40,10 @@
 	<tr>
 	<td><label for="attr_type">{$lang_str.ff_att_type}:</label></td>
 	<td>{$form.attr_type}</td>
+	</tr>
+	<tr>
+	<td><label for="attr_access">{$lang_str.ff_att_access}:</label></td>
+	<td>{$form.attr_access}</td>
 	</tr>
 	<tr>
 	<td><label for="attr_label"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label}>{$lang_str.ff_label}</a>:</label></td>

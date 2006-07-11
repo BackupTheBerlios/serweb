@@ -1,8 +1,8 @@
 <?php
 
 class Attr_type_int extends Attr_type{
-	function Attr_type_int($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
-		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+	function Attr_type_int($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
+		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order);
 	}
 
 	function raw_type(){

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.40 2006/07/10 13:45:05 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.41 2006/07/11 12:14:59 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -48,6 +48,8 @@ $lang_str['no_users_found'] = 					"No users found";
 $lang_str['none'] = 							"none";
 $lang_str['warning'] = 							"Warning!";
 $lang_str['domain'] = 							"domain";
+$lang_str['yes'] = 								"YES";
+$lang_str['no'] = 								"NO";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -454,6 +456,7 @@ $lang_str['fe_empty_not_allowed'] = 			"can not be empty";
 $lang_str['ff_order'] = 						"order";
 $lang_str['ff_att_name'] = 						"attribute name";
 $lang_str['ff_att_type'] = 						"attribute type";
+$lang_str['ff_att_access'] = 					"access";
 $lang_str['ff_label'] = 						"label";
 $lang_str['ff_att_user'] = 						"user";
 $lang_str['ff_att_domain'] = 					"domain";
@@ -466,6 +469,9 @@ $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";
 $lang_str['ff_uid_format'] = 					"format of newly created UIDs";
 $lang_str['ff_did_format'] = 					"format of newly created DIDs";
 
+$lang_str['at_access_0'] = 						"full access";
+$lang_str['at_access_1'] = 						"read only for users";
+$lang_str['at_access_3'] = 						"for admins only (R/W)";
 
 
 $lang_str['th_att_name'] = 						"attribute name";

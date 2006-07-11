@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.34 2006/07/10 13:45:05 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.35 2006/07/11 12:14:59 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -48,6 +48,8 @@ $lang_str['no_users_found'] = 					"Geen gebruikers gevonden";
 $lang_str['none'] = 							"none";	//to translate 
 $lang_str['warning'] = 							"Warning!";	//to translate 
 $lang_str['domain'] = 							"domein";
+$lang_str['yes'] = 								"YES";	//to translate 
+$lang_str['no'] = 								"NO";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -454,6 +456,7 @@ $lang_str['fe_empty_not_allowed'] = 			"can not be empty";	//to translate
 $lang_str['ff_order'] = 						"order";	//to translate 
 $lang_str['ff_att_name'] = 						"attribuut naam";
 $lang_str['ff_att_type'] = 						"attribuut type";
+$lang_str['ff_att_access'] = 					"access";	//to translate 
 $lang_str['ff_label'] = 						"label";	//to translate 
 $lang_str['ff_att_user'] = 						"user";	//to translate 
 $lang_str['ff_att_domain'] = 					"domain";	//to translate 
@@ -466,6 +469,9 @@ $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translat
 $lang_str['ff_uid_format'] = 					"format of newly created UIDs";	//to translate 
 $lang_str['ff_did_format'] = 					"format of newly created DIDs";	//to translate 
 
+$lang_str['at_access_0'] = 						"full access";	//to translate 
+$lang_str['at_access_1'] = 						"read only for users";	//to translate 
+$lang_str['at_access_3'] = 						"for admins only (R/W)";	//to translate 
 
 
 $lang_str['th_att_name'] = 						"attribuut naam";

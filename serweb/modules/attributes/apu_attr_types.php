@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.4 2006/05/25 13:33:20 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.5 2006/07/11 12:14:59 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -153,6 +153,7 @@ class apu_attr_types extends apu_base_class{
 		$at->set_type($_POST['attr_type']);
 		$at->set_description($_POST['attr_label']);
 		$at->set_order($_POST['attr_order']);
+		$at->set_access($_POST['attr_access']);
 
 		if (!empty($_POST['for_ser']))      $at->set_for_ser();
 		else                                $at->reset_for_ser();
@@ -194,7 +195,7 @@ class apu_attr_types extends apu_base_class{
 		if (false === $atr = $this->attrs->get_attr_type($this->edit_id)) return false;
 
 		if (is_null($atr)){
-			$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0);
+			$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0, 0);
 		}
 		
 		/* modify the attribute by values obtained from html form */
@@ -222,7 +223,7 @@ class apu_attr_types extends apu_base_class{
 	function action_add(&$errors){
 		global $data;
 		/* create new attribute */
-		$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0);
+		$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0, 0);
 
 		/* modify the attribute by values obtained from html form */
 		$this->set_attr_type_by_post($atr);
@@ -344,7 +345,7 @@ class apu_attr_types extends apu_base_class{
 			$atr = &$at[$this->edit_id];
 		}
 		else{
-			$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0);
+			$atr = new Attr_type("", 2, "string", "", "", 0, 0, 0, 0, 0);
 		}
 		
 		
@@ -375,6 +376,12 @@ class apu_attr_types extends apu_base_class{
 									 "size"=>16,
 									 "maxlength"=>255,
 		                             "value"=>$atr->get_raw_description()));
+
+		$this->f->add_element(array("type"=>"select",
+		                             "name"=>"attr_access",
+									 "size"=>1,
+									 "options"=>$atr->get_access_options(),
+		                             "value"=>$atr->get_access()));
 		
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "name"=>"for_ser",

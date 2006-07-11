@@ -1,11 +1,11 @@
 <?php
 
-/** experimental class probabyly not working now */
+/** experimental class probably not working now */
 class Attr_type_provider extends Attr_type{
 	var $items;
 
-	function Attr_type_provider($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
-		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+	function Attr_type_provider($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
+		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order);
 
 		$this->items=Array();
 	}

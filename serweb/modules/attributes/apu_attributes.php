@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.4 2006/05/02 10:22:54 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.5 2006/07/11 12:14:59 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -114,6 +114,7 @@ class apu_attributes extends apu_base_class{
 
 		$this->opt['attrs_kind'] = 'user';	
 		$this->opt['redirect_on_update']  = "";
+		$this->opt['perm'] = 'user';	
 
 		
 		/* message on attributes update */
@@ -148,6 +149,36 @@ class apu_attributes extends apu_base_class{
 		}
 	}
 
+	function access_to_change($at_name){
+		switch($this->opt['perm']){
+		case "user":
+			return $this->attr_types[$at_name]->get_user_access_to_change();
+
+		case "admin":
+			return true;
+
+		case "hostmaster":
+			return true;
+		}
+		
+		return false;
+	}
+	
+	function access_to_read($at_name){
+		switch($this->opt['perm']){
+		case "user":
+			return $this->attr_types[$at_name]->get_user_access_to_read();
+
+		case "admin":
+			return true;
+
+		case "hostmaster":
+			return true;
+		}
+		
+		return false;
+	}
+
 	/**
 	 *	returned two dimensional array of attributes
 	 *	it is ordered array which elements contain associative array, with keys:
@@ -177,6 +208,9 @@ class apu_attributes extends apu_base_class{
 			$out[$att]['att_desc'] = $this->attr_types[$att]->get_description();
 			$out[$att]['att_name'] = $att;
 			$out[$att]['att_type'] = $this->attr_types[$att]->get_type();
+			$out[$att]['att_value'] = $this->attr_values[$att];
+			$out[$att]['att_value_f'] = $this->attr_types[$att]->format_value($this->attr_values[$att]);
+			$out[$att]['edit'] = $this->access_to_change($att);
 			
 			/* if type of attribute is radio, create list of options
 			 * ass array of asociative arrays with entries 'label' and 'value'
@@ -196,6 +230,8 @@ class apu_attributes extends apu_base_class{
 
 		//update all changed attributes
 		foreach($this->opt['attributes'] as $att){
+			//skip attributes which has not access to change
+			if (!$this->access_to_change($att)) continue;
 			//if att value is changed
 			if ($_POST[$att] != $_POST["_hidden_".$att]){
 				
@@ -303,7 +339,10 @@ class apu_attributes extends apu_base_class{
 		// if option 'atributes' is not given, that mean we will work with all attributes
 		if (empty($this->opt['attributes'])){
 			foreach($this->attr_values as $k => $v){
-				$this->opt['attributes'][] = $k;
+				// work only with attributes which have access to read
+				if ($this->access_to_read($k)){
+					$this->opt['attributes'][] = $k;
+				}
 			}
 		}
 		//else check if all opt['attributes'] is known

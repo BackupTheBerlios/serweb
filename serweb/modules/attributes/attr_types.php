@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.9 2006/04/28 13:23:27 kozlik Exp $
+ * $Id: attr_types.php,v 1.10 2006/07/11 12:14:59 kozlik Exp $
  */
 
 /**
@@ -16,10 +16,11 @@ class Attr_type{
 	var $flags;
 	var $priority;
 	var $opt = array();
+	var $access;
 	var $order;
 
 
-	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
+	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
 		$class = "Attr_type_".$rich_type;
 		$classfile = dirname(__FILE__)."/attr_type_".$rich_type.".php";
 
@@ -27,20 +28,20 @@ class Attr_type{
 			include_once $classfile;
 
 		if (class_exists($class)){
-			$obj = new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+			$obj = new $class($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order);
 			return $obj;
 		}
 
 		sw_log("Unknown type '".$rich_type."' of attribute '".$name."'", PEAR_LOG_WARNING);	
 
-		$obj = new Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order);
+		$obj = new Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order);
 		return $obj;
 	}
 
 	/**
 	 *	@access private
 	 */
-	function Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $order){
+	function Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
 		$this->name 			= $name;
 		$this->raw_type			= $raw_type;
 		$this->rich_type		= $rich_type;
@@ -49,6 +50,7 @@ class Attr_type{
 		$this->default_flags	= $def_flags;
 		$this->flags			= $flags;
 		$this->priority			= $priority;
+		$this->access			= $access;
 		$this->order			= $order;
 	}
 
@@ -246,8 +248,38 @@ class Attr_type{
 		return $this->flags;
 	}
 	
+	function get_access(){
+		return $this->access;
+	}
+	
+	function get_user_access_to_change(){
+		return !(($this->access & 0x01) == 0x01);
+	}
+	
+	function get_user_access_to_read(){
+		return !(($this->access & 0x02) == 0x02);
+	}
+	
+	/**
+	 *	Return options for form access field
+	 */
+	function get_access_options(){
+		global $lang_str;
+		return array(array("value" => 0, "label" => $lang_str['at_access_0']),
+		             array("value" => 1, "label" => $lang_str['at_access_1']),
+		             array("value" => 3, "label" => $lang_str['at_access_3']));
+	}
+	
 	function get_priority(){
 		return $this->priority;
+	}
+
+	/**
+	 *	format value to display it as string
+	 *	method should be overridden in children classes
+	 */
+	function format_value($value){
+		return $value;
 	}
 	
 	/**
@@ -336,6 +368,10 @@ class Attr_type{
 
 	function set_description($str){
 		$this->description = $str;
+	}
+
+	function set_access($n){
+		$this->access = $n;
 	}
 
 	function set_order($str){
@@ -478,6 +514,17 @@ class Attr_type_lists extends Attr_type{
 		}
 		
 		return $opt;
+	}
+
+	/**
+	 *	format value to display it as string
+	 */
+	function format_value($value){
+
+		if (!is_array($this->type_spec)) return $value;
+		if (isset($this->type_spec[$value])) return $this->type_spec[$value];
+
+		return $value;
 	}
 
 	function check_value(&$value){
