@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_lang.php,v 1.2 2005/07/21 16:23:03 kozlik Exp $
+ * $Id: config_lang.php,v 1.3 2006/07/11 12:13:01 kozlik Exp $
  */
 
 /**
@@ -39,7 +39,7 @@ global $available_languages;
 $available_languages = array(
     'cs-utf-8'     => array('cs|czech',                         'czech-utf-8', 'cs'),
     'cs-iso-8859-2'=> array('cs|czech',                         'czech-iso-8859-2', 'cs'),
-    'cs-win1250'   => array('cs|czech',                         'czech-windows-1250', 'cs'),     'en-utf-8'     => array('en([-_][[:alpha:]]{2})?|english',  'english-utf-8', 'en'),
+    'cs-win1250'   => array('cs|czech',                         'czech-windows-1250', 'cs'),
     'en-utf-8'     => array('en([-_][[:alpha:]]{2})?|english',  'english-utf-8', 'en'),
     'en-iso-8859-1'=> array('en([-_][[:alpha:]]{2})?|english',  'english-iso-8859-1', 'en'),
     'nl-utf-8'     => array('nl([-_][[:alpha:]]{2})?|dutch',    'dutch-utf-8', 'nl'),
