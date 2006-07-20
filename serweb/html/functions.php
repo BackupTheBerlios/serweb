@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.76 2006/05/03 13:41:06 kozlik Exp $
+ * @version   $Id: functions.php,v 1.77 2006/07/20 16:45:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -830,12 +830,19 @@ function read_txt_file($filename, $replacements){
  
 function sw_log($message, $priority = null){
 	global $serwebLog;
+
+	//if custom log function is defined, use it for log errors
+	if (!empty($config->custom_log_function)){
+		$db = debug_backtrace();
+
+		return call_user_func($config->custom_log_function, $priority, $message, $db[0]['file'], $db[0]['line']);	
+	}
+
 	if ($serwebLog){ 
 		return $serwebLog->log($message, $priority);
 	}
-	else {
-		return true;
-	}
+
+	return true;
 }
 
 /**
@@ -896,8 +903,16 @@ function log_errors($err_object, &$errors){
 	}
 	$errors[] = $err_message;
 
-	//if logging is enabled
-	if ($serwebLog){ 
+
+	//if custom log function is defined, use it for log errors
+	if (!empty($config->custom_log_function)){
+		$log_message= $err_object->getMessage()." - ".$err_object->getUserInfo();
+
+		call_user_func($config->custom_log_function, PEAR_LOG_ERR, $log_message, $last_frame['file'], $last_frame['line']);	
+	}
+
+	//otherwise if logging is enabled, use default log function
+	elseif ($serwebLog){ 
 	
 		$log_message= "file: ".$last_frame['file'].":".$last_frame['line'].": ".$err_object->getMessage()." - ".$err_object->getUserInfo();
 		//remove endlines from the log message

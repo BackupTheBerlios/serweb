@@ -9,8 +9,8 @@
 		$loaded_modules = getLoadedModules();
 	
 		foreach($loaded_modules as $module){
-			if (file_exists($_SERWEB["serwebdir"] . "../modules/".$module."/include.php")){ 
-				require_once ($_SERWEB["serwebdir"] . "../modules/".$module."/include.php");
+			if (file_exists($_SERWEB["modulesdir"] . $module."/include.php")){ 
+				require_once ($_SERWEB["modulesdir"] . $module."/include.php");
 			}
 		}
 		
@@ -44,8 +44,8 @@
 
 		$config->modules[$mod] = true;
 
-		if (file_exists($_SERWEB["serwebdir"] . "../modules/".$mod."/include.php")){ 
-			require_once ($_SERWEB["serwebdir"] . "../modules/".$mod."/include.php");
+		if (file_exists($_SERWEB["modulesdir"] . $mod."/include.php")){ 
+			require_once ($_SERWEB["modulesdir"] . $mod."/include.php");
 		}
 	}
 	

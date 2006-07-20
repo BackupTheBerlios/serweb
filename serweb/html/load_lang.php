@@ -3,11 +3,11 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.10 2006/02/16 15:26:36 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.11 2006/07/20 16:45:40 kozlik Exp $
  * @package   serweb
  */ 
 
-require_once($_SERWEB["serwebdir"]."../config/config_lang.php");
+require_once($_SERWEB["configdir"]."config_lang.php");
 
 /**
  * Analyzes some PHP environment variables to find the most probable language
@@ -101,11 +101,16 @@ function determine_lang(){
 
 	// try to findout user's language by checking domain or global attribute
 
-	if (is_null($did)){ // if user is not authenticated yet
-	                    // get did of domain from http request
-		$data->add_method('get_did_by_realm');
-		$did = $data->get_did_by_realm($config->domain, null);
-		if (false === $did) $did = null;
+	if (empty($config->do_not_set_lang_by_domain)){
+		if (is_null($did)){ // if user is not authenticated yet
+		                    // get did of domain from http request
+			$data->add_method('get_did_by_realm');
+			$did = $data->get_did_by_realm($config->domain, null);
+			if (false === $did) $did = null;
+		}
+	}
+	else{
+		$did = null;
 	}
 
 	$o = array();
@@ -134,7 +139,7 @@ function determine_lang(){
 function load_another_lang($ldir){
 	global $_SERWEB, $reference_language, $available_languages, $lang_str, $lang_set;
 
-	$ldir = $_SERWEB["serwebdir"]."../lang/".$ldir."/";
+	$ldir = $_SERWEB["langdir"].$ldir."/";
 
 	$primary_lang_file   = $ldir.$available_languages[$_SESSION['lang']][1].".php";
 	$secondary_lang_file = $ldir.$available_languages[$reference_language][1].".php";
@@ -168,7 +173,7 @@ setcookie('serweb_lang', $_SESSION['lang'], time()+31536000, $config->root_path)
 
 
 /** load strings of selected language */
-require_once($_SERWEB["serwebdir"]."../lang/".$available_languages[$_SESSION['lang']][1].".php");
+require_once($_SERWEB["langdir"].$available_languages[$_SESSION['lang']][1].".php");
 
 /* set value of $lang_set[ldir] by avaiable_languages array */
 $lang_set['ldir'] = $available_languages[$_SESSION['lang']][2];

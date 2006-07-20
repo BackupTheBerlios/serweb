@@ -3,7 +3,7 @@
  * Functions for output basic page layout
  * 
  * @author    Karel Kozlik
- * @version   $Id: page.php,v 1.32 2005/10/19 10:00:46 kozlik Exp $
+ * @version   $Id: page.php,v 1.33 2006/07/20 16:45:40 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -24,13 +24,14 @@ function put_headers(){
  *	flowed &lt;html&gt;&lt;head&gt;.....
  *	and ending &lt;/head&gt;
  *	
- *	@param string $title Content of html &lt;title&gt; tag
+ *	@param	array	$parameters associative array containing info about page
  */	
 
-function print_html_head($title=""){
+function print_html_head($parameters=array()){
 	global $config, $lang_set;	
 	
-	if (!$title) $title=$config->html_title;
+	if (empty($parameters['html_title'])) $title = $config->html_title;
+	else                                  $title = $parameters['html_title'];
 
 	header("Content-Type: text/html; charset=".$lang_set['charset']);
 
@@ -38,10 +39,12 @@ function print_html_head($title=""){
 		?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?	}elseif ($config->html_doctype=='transitional'){
 		?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<?	}?>
-<html>
-<head>
-<?if ($title){?><title><?echo $title;?></title><?}?>
+<?	}
+
+	echo "<html>\n<head>\n";
+
+	if ($title) echo "<title>".$title."</title>\n"; 
+?>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=<?echo $lang_set['charset'];?>">
 	<meta name="Author" content="Karel Kozlik <karel at iptel dot org>">
@@ -49,12 +52,18 @@ function print_html_head($title=""){
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Expires" content="<?echo GMDate("D, d M Y H:i:s")." GMT";?>"> 
 
-	<LINK REL="StyleSheet" HREF="<?echo multidomain_get_file("styles.css");?>" TYPE="text/css">
+<?
+	if (!empty($parameters['css_file'])){
+		echo '	<LINK REL="StyleSheet" HREF="'.$parameters['css_file'].'" TYPE="text/css">';
+	}
 
-<?	if (is_array($config->html_headers)) foreach($config->html_headers as $v) echo $v."\n"; ?>
-</head>
+	if (isset($config->html_headers) and is_array($config->html_headers)){
+		foreach($config->html_headers as $v) echo $v."\n"; 
+	} 
+	
+	echo "</head>\n";
 
-<?} //end function print_html_head()
+} //end function print_html_head()
 
 
 
@@ -84,9 +93,8 @@ function print_html_body_begin(&$parameters){
 	if (isset($parameters['separator'])) echo $parameters['separator'];
 	else virtual(multidomain_get_file($config->html_separator));
 
-?>
-<div class="swMain">
-<?  	
+	echo "\n<div class=\"swMain\">\n";
+
 	return;
 
 } //end function print_html_body_begin
@@ -101,10 +109,10 @@ function print_html_body_begin(&$parameters){
  */	
 
 function print_html_body_end(&$parameters){
-	global $config, $_page_tab;	?>
-	</div>
+	global $config, $_page_tab;	
 
-<?
+	echo "</div><!-- swMain -->\n";
+
 	if (isset($parameters['epilog'])) echo $parameters['epilog'];
 	else virtual(multidomain_get_file($config->html_epilog));
 }

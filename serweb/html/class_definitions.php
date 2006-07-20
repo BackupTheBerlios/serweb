@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.13 2006/04/12 13:41:19 kozlik Exp $
+ * $Id: class_definitions.php,v 1.14 2006/07/20 16:45:40 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -512,6 +512,28 @@ class URI{
 		return $this->flags;
 	}
 	
+	/**
+	 *	Return URI as associative array which can be used as smarty variable
+	 *	
+	 *	@return	array		sip uri or FALSE on error
+	 */
+	function to_smarty(){
+		$dom = &Domains::singleton();
+		if (false === $dn = $dom->get_domain_name($this->did)) return false;
+
+		$out = array();
+		$out['uid']      = $this->get_uid();
+		$out['username'] = $this->get_username();
+		$out['did']      = $this->get_did();
+		$out['domain']   = $dn;
+		$out['is_canon'] = $this->is_canonical();
+		$out['is_to']    = $this->is_to();
+		$out['is_from']  = $this->is_from();
+		$out['disabled'] = $this->is_disabled();
+
+		return $out;
+	}
+
 	/**
 	 *	Return URI in form 'sip:username@domain'
 	 *	

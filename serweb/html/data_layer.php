@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.23 2006/04/26 10:51:59 kozlik Exp $
+ * $Id: data_layer.php,v 1.24 2006/07/20 16:45:40 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -146,9 +146,9 @@ class CData_Layer{
 
 				$file_found = false;			
 				//require class with method definition
-				if (file_exists($_SERWEB["serwebdir"] . "../data_layer/customized/method.".$item.".php")){ 
+				if (file_exists($_SERWEB["datadir"] . "customized/method.".$item.".php")){ 
 					//if exists customized version of method, require it
-					require_once ($_SERWEB["serwebdir"] . "../data_layer/customized/method.".$item.".php");
+					require_once ($_SERWEB["datadir"] . "customized/method.".$item.".php");
 
 					$file_found = true;
 				}
@@ -156,8 +156,8 @@ class CData_Layer{
 				if (!$file_found){
 					//try found file in modules
 					foreach($loaded_modules as $module){
-						if (file_exists($_SERWEB["serwebdir"] . "../modules/".$module."/method.".$item.".php")){ 
-							require_once ($_SERWEB["serwebdir"] . "../modules/".$module."/method.".$item.".php");
+						if (file_exists($_SERWEB["modulesdir"] . $module."/method.".$item.".php")){ 
+							require_once ($_SERWEB["modulesdir"] . $module."/method.".$item.".php");
 							$file_found = true;
 							break;
 						}
@@ -166,7 +166,7 @@ class CData_Layer{
 
 				if (!$file_found){
 					//otherwise require default version
-					require_once ($_SERWEB["serwebdir"] . "../data_layer/method.".$item.".php");	
+					require_once ($_SERWEB["datadir"] . "method.".$item.".php");	
 				}
 					
 				//agregate methods of required class to this object

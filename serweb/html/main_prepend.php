@@ -1,33 +1,33 @@
 <?
 /*
- * $Id: main_prepend.php,v 1.13 2006/04/10 15:29:20 kozlik Exp $
+ * $Id: main_prepend.php,v 1.14 2006/07/20 16:45:40 kozlik Exp $
  */ 
 
 //require class defintions
-require_once ($_SERWEB["serwebdir"] . "class_definitions.php");
+require_once ($_SERWEB["functionsdir"] . "class_definitions.php");
 
 //require paths configuration
-require_once ($_SERWEB["serwebdir"] . "../config/config_paths.php");
+require_once ($_SERWEB["configdir"] . "config_paths.php");
 
 //set $config->domain
-require_once ($_SERWEB["serwebdir"] . "../config/set_domain.php");
+require_once ($_SERWEB["configdir"] . "set_domain.php");
 
 //require domain depending config
 require_once ($_SERWEB["serwebdir"] . "config_domain.php");
 $domain_config=new CDomain_config();
 
 //require sql access configuration and table names
-require_once ($_SERWEB["serwebdir"] . "../config/config_data_layer.php");
+require_once ($_SERWEB["configdir"] . "config_data_layer.php");
 
 //require default values for domain depending options
-require_once ($_SERWEB["serwebdir"] . "../config/config_domain_defaults.php");
+require_once ($_SERWEB["configdir"] . "config_domain_defaults.php");
 
 //require other configuration
-require_once ($_SERWEB["serwebdir"] . "../config/config.php");
+require_once ($_SERWEB["configdir"] . "config.php");
 
 //if config.developer is present, replace default config by developer config
-if (file_exists($_SERWEB["serwebdir"] . "../config/config.developer.php")){
-	require_once ($_SERWEB["serwebdir"] . "../config/config.developer.php");
+if (file_exists($_SERWEB["configdir"] . "config.developer.php")){
+	require_once ($_SERWEB["configdir"] . "config.developer.php");
 }
 
 //activate domain depending config
@@ -39,7 +39,7 @@ require_once 'DB.php';
 
 //require PEAR XML_RPC class
 require_once 'XML/RPC.php';
-require_once ($_SERWEB["serwebdir"] . "xml_rpc_patch.php");
+require_once ($_SERWEB["functionsdir"] . "xml_rpc_patch.php");
 
 //create log instance
 if ($config->enable_logging){
@@ -63,17 +63,17 @@ else{
 }
 
 //require functions
-require_once ($_SERWEB["serwebdir"] . "functions.php");
+require_once ($_SERWEB["functionsdir"] . "functions.php");
 
 //require Smarty and create Smarty instance
-require($_SERWEB["serwebdir"]."../smarty/smarty_serweb.php");
+require($_SERWEB["smartydir"]."smarty_serweb.php");
 $smarty = new Smarty_Serweb;
 
 //require data layer for work with data store and create instance of it
-require_once ($_SERWEB["serwebdir"] . "data_layer.php");
+require_once ($_SERWEB["functionsdir"] . "data_layer.php");
 
 //require modules
-require_once ($_SERWEB["serwebdir"] . "load_modules.php");
+require_once ($_SERWEB["functionsdir"] . "load_modules.php");
 
 
 // create instance of data_layer binded to proxy where is stored account 
@@ -83,6 +83,6 @@ $data_auth = CData_Layer::singleton("auth_user", $errors);
 $data = &$data_auth;
 
 //require page layout
-require_once ($_SERWEB["serwebdir"] . "page.php");
+require_once ($_SERWEB["functionsdir"] . "page.php");
 
 ?>
