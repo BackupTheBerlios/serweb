@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_radio.inc,v 1.5 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: of_radio.inc,v 1.6 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_radio extends of_element {
@@ -23,6 +23,25 @@ class of_radio extends of_element {
       $str .= " $this->extrahtml";
     if ($this->value==$val) 
       $str .= " checked";
+    $str .= " class=\"inpRadio";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
+	if (isset($this->options) and is_array($this->options)){
+		foreach ($this->options as $opt){
+			if ($opt['value'] == $val){
+				if (!empty($opt['extrahtml'])) $str .= " ".$opt['extrahtml'];
+				break;
+			}
+		}
+	}
+
     $str .= ">";
 
     $count = 1;

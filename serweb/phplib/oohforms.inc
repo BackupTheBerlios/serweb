@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.8 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: oohforms.inc,v 1.9 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_element {
@@ -121,6 +121,16 @@ class of_reset extends of_element {
     $str = "<input name='$this->name' type=reset value=\"".htmlspecialchars($val, ENT_QUOTES)."\"";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
+    $str .= " class=\"inpReset";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
     $str .= ">";
     
     return $str;
@@ -146,6 +156,16 @@ class of_submit extends of_element {
       $str .= " type='submit'";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
+    $str .= $this->src ? " class=\"inpImage" : " class=\"inpSubmit";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
     $str .= ">";
     
     return $str;

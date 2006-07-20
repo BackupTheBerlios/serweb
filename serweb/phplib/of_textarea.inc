@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_textarea.inc,v 1.4 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: of_textarea.inc,v 1.5 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_textarea extends of_element {
@@ -25,6 +25,15 @@ class of_textarea extends of_element {
       $str .= " wrap='$this->wrap'";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
+
+    if (!empty($this->class)){
+		$str .= " class=\"".implode(" ", (array)$this->class)."\"";
+	}
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
     $str .= ">" . htmlspecialchars($this->value) ."</textarea>";
     
     $count = 1;

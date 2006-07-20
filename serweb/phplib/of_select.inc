@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.8 2006/05/05 09:29:24 kozlik Exp $
+ * $Id: of_select.inc,v 1.9 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -37,6 +37,12 @@ class of_select extends of_element {
       $str .= " size='$this->size'";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
+    if (!empty($this->class)){
+		$str .= " class=\"".implode(" ", (array)$this->class)."\"";
+	}
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
     $str .= ">";
 
     reset($this->options);

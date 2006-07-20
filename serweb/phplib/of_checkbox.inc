@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_checkbox.inc,v 1.4 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: of_checkbox.inc,v 1.5 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_checkbox extends of_element {
@@ -38,7 +38,17 @@ class of_checkbox extends of_element {
     }
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
-    $str .= ">\n";
+    $str .= " class=\"inpCheckbox";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
+    $str .= ">";
     
     $count = 1;
     return $str;

@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_file.inc,v 1.3 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: of_file.inc,v 1.4 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_file extends of_element {
@@ -22,6 +22,16 @@ class of_file extends of_element {
     $str .= "<input type='file' name='$this->name' id='$this->name'";
     if ($this->extrahtml)
       $str .= " $this->extrahtml";
+    $str .= " class=\"inpFile";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
     $str .= ">";
     
     $count = 2;

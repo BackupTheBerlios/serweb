@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.4 2006/02/09 09:32:12 kozlik Exp $
+ * $Id: of_text.inc,v 1.5 2006/07/20 16:11:37 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -40,6 +40,17 @@ class of_text extends of_element {
       $str .= " size='$this->size'";
     if ($this->extrahtml) 
       $str .= " $this->extrahtml";
+
+    $str .= ($this->pass)? " class=\"inpPassword" : " class=\"inpText";
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\"";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
     $str .= ">";
     
     $count = 1;
