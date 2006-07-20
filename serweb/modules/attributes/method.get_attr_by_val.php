@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attr_by_val.php,v 1.3 2006/07/20 17:46:40 kozlik Exp $
+ * $Id: method.get_attr_by_val.php,v 1.4 2006/07/20 18:43:27 kozlik Exp $
  */
 
 class CData_Layer_get_attr_by_val {
@@ -67,7 +67,7 @@ class CData_Layer_get_attr_by_val {
 		 */
 		$flags_val = $f['DB_FOR_SERWEB'];
 
-		$q="select ".($id ? $id." as id, ": "")
+		$q="select ".($id ? $id." as id, ": "").
 		             ($columns ? $columns: "")." 
 		           ".$c->name." as name,
 		           ".$c->value." as value
