@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.42 2006/07/11 12:14:58 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.43 2006/07/20 17:01:01 kozlik Exp $
  */
 
 
@@ -360,6 +360,25 @@
 
 
 		/*
+		 *	Definition of table uri_attrs
+		 */
+		 
+		$config->data_sql->uri_attrs = new stdClass();
+ 		$config->data_sql->uri_attrs->cols = new stdClass();
+		
+		$config->data_sql->uri_attrs->table_name = 		"uri_attrs";
+		
+ 		$config->data_sql->uri_attrs->cols->username = 	"username";
+ 		$config->data_sql->uri_attrs->cols->did = 		"did";
+ 		$config->data_sql->uri_attrs->cols->name = 		"name";
+ 		$config->data_sql->uri_attrs->cols->value = 	"value";
+ 		$config->data_sql->uri_attrs->cols->type = 		"type";
+ 		$config->data_sql->uri_attrs->cols->flags = 	"flags";
+
+ 		$config->data_sql->uri_attrs->flag_values = &$config->flags;
+
+
+		/*
 		 *	Definition of table user_attrs
 		 */
 		 
@@ -438,6 +457,7 @@
 
 		
  		$config->data_sql->attr_types->priority_values = 	array(
+		                                                       "URI" =>    1 << 4,
 		                                                       "USER" =>   1 << 8,
 		                                                       "DOMAIN" => 1 << 16,
 		                                                       "GLOBAL" => 1 << 30 
