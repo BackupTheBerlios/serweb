@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.7 2005/04/28 14:23:36 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.8 2006/07/20 16:05:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -132,7 +132,6 @@ class apu_base_class{
 
 	/* check if form of this APU was submited */
 	function was_form_submited(){
-		global $_POST;
 	
 		/* check if is set $_POST['apu_name'] anf if it contains
 		   instance_id of this APU
@@ -141,8 +140,48 @@ class apu_base_class{
 		if (isset($_POST['apu_name']) and 
 			(is_array($_POST['apu_name'])?
 				in_array($this->opt['instance_id'], $_POST['apu_name']):
-				$_POST['apu_name']==$this->opt['instance_id']))
-			return true;
+				$_POST['apu_name']==$this->opt['instance_id'])){
+
+					/* check if form has been submited with cancel button */			
+					if (isset($_POST['form_cancels'])){
+						/* get list of cancel buttons */
+						$cancels = explode(" ", $_POST['form_cancels']);
+						/* check all cancel buttons */
+						foreach($cancels as $v){
+							if (!empty($_POST[$v."_x"])) return false;
+						}
+					}
+		
+					return true;
+		}
+		else return false;
+	
+	}
+	
+	/* check if form of this APU was submited with cancel button */
+	function was_form_canceled(){
+	
+		/* check if is set $_POST['apu_name'] anf if it contains
+		   instance_id of this APU
+		 */
+	
+		if (isset($_POST['apu_name']) and 
+			(is_array($_POST['apu_name'])?
+				in_array($this->opt['instance_id'], $_POST['apu_name']):
+				$_POST['apu_name']==$this->opt['instance_id'])){
+
+					/* check if form has been submited with cancel button */			
+					if (isset($_POST['form_cancels'])){
+						/* get list of cancel buttons */
+						$cancels = explode(" ", $_POST['form_cancels']);
+						/* check all cancel buttons */
+						foreach($cancels as $v){
+							if (!empty($_POST[$v."_x"])) return true;
+						}
+					}
+		
+					return false;
+		}
 		else return false;
 	
 	}

@@ -2,13 +2,15 @@
 /*
  * Extension for phplib object oriented html form
  *
- * $Id: oohform_ext.php,v 1.3 2006/05/23 09:36:21 kozlik Exp $
+ * $Id: oohform_ext.php,v 1.4 2006/07/20 16:05:31 kozlik Exp $
  */ 
 
 class form_ext extends form{
 	/* set to true if type of submit element is hidden -> javascript function for submit form is generated */
 	var $hidden_submits = array();
+	var $hidden_cancels = array();
 	var $form_name = '';
+	var $form_cancels = array();
 
 
 	/* add submit element to from 
@@ -18,38 +20,71 @@ class form_ext extends form{
 			['type']  - type of submit element 'hidden', 'button', 'image'
 			['text']  - text on button on alt on image
 			['src']   - source of image
+			['disabled'] - button is disabled
 			['class'] - CSS class
+			['extra_html'] - extra paramaters
 	 */
 
 	function add_submit($submit){
 		$this->add_extra_submit("okey", $submit);
 	}
 	
+	function add_cancel($submit){
+		$this->form_cancels[] = "cancel";
+		$this->add_extra_submit("cancel", $submit);
+	}
+
+	function add_extra_cancel($name, $submit){
+		$this->form_cancels[] = $name;
+		$this->add_extra_submit($name, $submit);
+	}
+	
 	function add_extra_submit($name, $submit){
-		if (! empty($submit['class'])) $class = " class = '".$submit['class']."'";
-		else $class = '';
+		if (! empty($submit['class'])) $class = $submit['class'];
+		else $class = null;
+
+		if (! empty($submit['extra_html'])) $extra_html = $submit['extra_html'];
+		else $extra_html = '';
 
 		switch ($submit['type']){
 		case "image":
-			$this->add_element(array("type"=>"submit",
-			                             "name"=>$name,
-			                             "src"=>$submit['src'],
-										 "extrahtml"=>"alt='".$submit['text']."'".$class));
+			$element = array("type"=>"submit",
+                             "name"=>$name,
+                             "src"=>$submit['src'],
+                             "disabled"=>!empty($submit['disabled']),
+                             "class"=>$class,
+							 "extra_html"=>"alt='".$submit['text']."' ".$extra_html);
+
+			/* if it is a cancel button, disable form validation */
+			if (in_array($name, $this->form_cancels)) $element['extrahtml'] .= " onclick='this.form.onsubmit=null;'";
 			break;
+
 		case "button":
-			$this->add_element(array("type"=>"submit",
-			                             "name"=>$name."_x",
-										 "value"=>$submit['text'],
-										 "extrahtml"=>$class));
+			$element = array("type"=>"submit",
+                             "name"=>$name."_x",
+							 "value"=>$submit['text'],
+                             "disabled"=>!empty($submit['disabled']),
+							 "class"=>$class,
+							 "extra_html"=>$extra_html);
+
+			/* if it is a cancel button, disable form validation */
+			if (in_array($name, $this->form_cancels)) $element['extrahtml'] = "onclick='this.form.onsubmit=null;'";
 			break;
+
 		case "hidden":
 		default:
-			$this->add_element(array("type"=>"hidden",
-			                             "name"=>$name."_x",
-			                             "value"=>'0',
-										 "extrahtml"=>$class));
-			$this->hidden_submits = $name."_x";
+			$element = array("type"=>"hidden",
+                             "name"=>$name."_x",
+                             "value"=>'0',
+							 "class"=>$class,
+							 "extra_html"=>$extra_html);
+			
+			if (in_array($name, $this->form_cancels)) $this->hidden_cancels = $name."_x";
+			else $this->hidden_submits = $name."_x";
 		}
+		
+		$this->add_element($element);
+
 	}
 	
 	
@@ -61,6 +96,12 @@ class form_ext extends form{
 	
 	
 	function get_finish($after="",$before="") {
+		$cancels = implode(" ", $this->form_cancels);
+		$this->add_element(array("type"=>"hidden",
+                                 "name"=>"form_cancels",
+                                 "value"=>$cancels));
+
+
 		$str = parent::get_finish($after, $before);
 		
 		/* if submit is hidden we must create javascript submit function which validate form */

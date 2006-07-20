@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.24 2006/04/26 10:47:51 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.25 2006/07/20 16:05:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -90,18 +90,102 @@ class page_conroler{
 	var $check_perms_to_domain = false;
 	var $errors=array();
 	var $messages=array();
+	/** list of interapu vars */
+	var $interapu_vars = array();
+	/** reference to container inside session variable */
+	var $session;
 	
 	/* constructor */
 	function page_conroler(){
-		global $sess, $perm, $config;
-		global $serweb_auth, $sess_page_controler_user_id, $sess_xxl_selected_proxy;
-		global $sess_page_controler_domain_id;
 
 		$this->reg = Creg::singleton();				// create regular expressions class
 
 		$eh = &ErrorHandler::singleton();
 		$eh -> set_errors_ref($this->errors);
 
+		$this->session_init();
+		$this->xxl_init();
+		$this->init_this_uid_and_did();
+		$this->set_interapu_vars();
+		
+		// if $data_selected_proxy was not set, reference it to $data_auth
+		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
+			$GLOBALS['data_selected_proxy'] = &$GLOBALS['data_auth'];
+	}
+
+	function session_init(){
+	
+		/* create container in session variable if does not exists */
+		if (!isset($_SESSION['page_ctl'])) $_SESSION['page_ctl'] = array();
+		
+		$this->session = &$_SESSION['page_ctl'];
+	}
+
+	/**
+	 *	Initialy set $this->user_id and $this->domain_id
+	 */
+	function init_this_uid_and_did(){
+		global $perm, $serweb_auth;
+
+		// get $user_id if admin want work with some setting of user
+		if (isset($perm) and $perm->have_perm("admin")){
+			$this->init_this_uid();
+			$this->init_this_did();
+		}
+		else $this->user_id=$serweb_auth;
+	}
+
+	/**
+	 *	Initialy set $this->user_id
+	 */
+	function init_this_uid(){
+		global $sess, $sess_page_controler_user_id, $serweb_auth;
+
+		//first try get user_id from session variable
+		if (isset($sess_page_controler_user_id)){
+			$this->user_id = $sess_page_controler_user_id;
+			$this->come_from_admin_interface=true;
+		}
+	
+		//second if userauth param is given, get user_id from it
+		if (false !== $uid = get_userauth_from_get_param('u')) {
+			$this->check_perms_to_user = true;
+		
+			//register session variable
+			if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
+	
+			$this->user_id = $sess_page_controler_user_id = $uid;
+			$this->come_from_admin_interface=true;
+		}
+		
+		//if still user_id is null, get it from $serweb_auth
+		if (is_null($this->user_id))
+			$this->user_id=$serweb_auth;
+	}
+
+	/**
+	 *	Initialy set $this->domain_id
+	 */
+	function init_this_did(){
+		global $sess_page_controler_domain_id;
+
+		/* get id of administrated domain */
+		//first try get domain id from session variable
+		if (isset($sess_page_controler_domain_id)){
+			$this->domain_id = $sess_page_controler_domain_id;
+		}
+
+		//second if domain_id param is given, get domain id from it
+		if (isset($_GET['pc_domain_id'])){
+			$this->check_perms_to_domain = true;
+
+			$this->set_domain_id($_GET['pc_domain_id']);
+		}
+	}
+
+	function xxl_init(){
+		global $sess, $sess_xxl_selected_proxy, $perm;
+	
 		// register session variable sess_xxl_selected_proxy
 		if (!$sess->is_registered('sess_xxl_selected_proxy')) $sess->register('sess_xxl_selected_proxy');
 		if (!isset($sess_xxl_selected_proxy)) $sess_xxl_selected_proxy=null;
@@ -130,49 +214,7 @@ class page_conroler{
 				}
 				$GLOBALS['data'] = &$GLOBALS['data_selected_proxy'];
 			}
-
-			//first try get user_id from session variable
-			if (isset($sess_page_controler_user_id)){
-				$this->user_id = $sess_page_controler_user_id;
-				$this->come_from_admin_interface=true;
-			}
-		
-			//second if userauth param is given, get user_id from it
-			if (false !== $uid = get_userauth_from_get_param('u')) {
-				$this->check_perms_to_user = true;
-			
-				//register session variable
-				if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
-		
-				$this->user_id = $sess_page_controler_user_id = $uid;
-				$this->come_from_admin_interface=true;
-			}
-			
-			//if still user_id is null, get it from $serweb_auth
-			if (is_null($this->user_id))
-				$this->user_id=$serweb_auth;
-
-			/* get id of administrated domain */
-			//first try get domain id from session variable
-			if (isset($sess_page_controler_domain_id)){
-				$this->domain_id = $sess_page_controler_domain_id;
-			}
-
-			//second if domain_id param is given, get domain id from it
-			if (isset($_GET['pc_domain_id'])){
-				$this->check_perms_to_domain = true;
-
-				$this->set_domain_id($_GET['pc_domain_id']);
-			}
-				
-
 		}
-		else $this->user_id=$serweb_auth;
-
-		
-		// if $data_selected_proxy was not set, reference it to $data_auth
-		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
-			$GLOBALS['data_selected_proxy'] = &$GLOBALS['data_auth'];
 	}
 
 	/**
@@ -197,6 +239,55 @@ class page_conroler{
 		if (!$sess->is_registered('sess_page_controler_domain_id')) $sess->register('sess_page_controler_domain_id');
 		
 		$this->domain_id = $sess_page_controler_domain_id = $domain_id;
+	}
+
+	/**
+	 *	set $this->user_id and session variable to given value
+	 *
+	 *	@param 	SerwebUser $user_id		
+	 */
+	function set_user_id($user_id){
+		global $sess, $sess_page_controler_user_id;
+
+		//register session variable
+		if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
+		
+		$this->user_id = $sess_page_controler_user_id = $user_id;
+	}
+
+	/**
+	 * return GET param which set interapu variable named $name to given $value
+	 * @return string
+	 */
+	function get_interapu_url_param($name, $value){
+		return "pctlia_".$name."=".RawURLEncode($value);
+	}
+
+	/**
+	 * return value of interapu variable
+	 * @return mixed
+	 */
+	function get_interapu_var($name){
+		if (isset($this->session['interapu'][$name])) return $this->session['interapu'][$name];
+		else return null;
+	}
+
+	/**
+	 * set value of interapu variable
+	 * @access private
+	 */
+	function set_interapu_var($name, $value){
+		$this->session['interapu'][$name] = $value;
+	}
+	
+	/**
+	 * set interapu variables by GET params
+	 * @access private
+	 */
+	function set_interapu_vars(){
+		foreach ($this->interapu_vars as $v){
+			if (isset($_GET['pctlia_'.$v])) $this->session['interapu'][$v] = $_GET['pctlia_'.$v];
+		}
 	}
 	
 	/**
@@ -647,43 +738,73 @@ class page_conroler{
 		}
 	}
 
+	/**
+	 *	Check if admin has permissions to manage the user
+	 *
+	 *	ID of user is stored in $this->user_id variable
+	 *	
+	 *	@return	bool
+	 */
+	function check_perms_to_user(){
+		global $perm, $sess_page_controler_user_id;
+		
+		if (!(isset($perm) and $perm->have_perm("hostmaster"))){
+			$pp=$GLOBALS['data']->check_admin_perms_to_user($_SESSION['auth'], $this->user_id, array());
+
+			if (0 > $pp or !$pp){
+				if (0 > $pp) echo "Permission check error \n";
+
+				$sess_page_controler_user_id = null;
+				return false;
+			} 
+		}
+		return true;
+	}
+	
+	/**
+	 *	Check if admin has permissions to manage the domain
+	 *
+	 *	ID of domain is stored in $this->domain_id variable
+	 *	
+	 *	@return	bool
+	 */
+	function check_perms_to_domain(){
+		global $perm, $sess_page_controler_domain_id;
+		
+		if (!(isset($perm) and $perm->have_perm("hostmaster"))){
+			$pp=$GLOBALS['data']->check_admin_perms_to_domain($_SESSION['auth'], $this->domain_id, array());
+
+			if (0 > $pp or !$pp){
+				if (0 > $pp) echo "Permission check error \n";
+
+				$sess_page_controler_domain_id = null;
+				return false;
+			} 
+		}
+		return true;
+	}
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $perm, $sess;
-		global $sess_page_controler_domain_id, $sess_page_controler_user_id;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $sess;
+		global $sess_page_controler_domain_id;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
-			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
-				$pp=$GLOBALS['data']->check_admin_perms_to_user($_SESSION['auth'], $this->user_id, array());
-	
-				if (0 > $pp or !$pp){
-					if (0 > $pp) echo "Permission check error \n";
-	
-					$sess_page_controler_user_id = null;
-					page_close();			
-					die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
-				} 
+			if (! $this->check_perms_to_user()){
+				page_close();			
+				die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
 			}
 		}
-
 
 		/* check if admin have perms to manage domain */
 		if ($this->check_perms_to_domain){
-			if (!(isset($perm) and $perm->have_perm("hostmaster"))){
-				$pp=$GLOBALS['data']->check_admin_perms_to_domain($_SESSION['auth'], $this->domain_id, array());
-
-				if (0 > $pp or !$pp){
-					if (0 > $pp) echo "Permission check error \n";
-	
-					$sess_page_controler_domain_id = null;
-					page_close();			
-					die("You haven't permissions to manage domain with id:'".$this->domain_id."'");
-				} 
-
+			if (! $this->check_perms_to_domain()){
+				page_close();			
+				die("You haven't permissions to manage domain with id:'".$this->domain_id."'");
 			}
 		}
+		
 		/* do not allow change parameters of default domain */
 		if ($this->domain_id == '0'){
 			$sess_page_controler_domain_id = null;
@@ -776,10 +897,11 @@ class page_conroler{
 		
 
 		/* ----------------------- HTML begin ---------------------- */
-		print_html_head();
+		print_html_head($page_attributes);
 		
 		foreach($this->required_javascript as $val){
-?><script language="JavaScript" src="<?echo $sess->url($config->js_src_path.$val); ?>"></script><?			 
+?><script language="JavaScript" src="<?echo $sess->url($config->js_src_path.$val); ?>"></script>
+<?			 
 		}
 		print_html_body_begin($page_attributes);
 				
