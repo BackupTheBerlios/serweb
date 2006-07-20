@@ -1,12 +1,11 @@
 <?
 /*
- * $Id: click_to_dial.js.php,v 1.5 2005/09/19 13:46:32 kozlik Exp $
+ * $Id: click_to_dial.js.php,v 1.6 2006/07/20 18:44:39 kozlik Exp $
  */
 
 Header("content-type: text/js");
 
-$_SERWEB = array();
-$_SERWEB["serwebdir"]  = "../";
+require("../set_dirs.php");
 
 require ($_SERWEB["serwebdir"] . "../config/config_paths.php");
 ?>

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.2 2005/12/14 16:21:50 kozlik Exp $
+ * $Id: page_attributes.php,v 1.3 2006/07/20 18:44:39 kozlik Exp $
  */ 
 
 function get_user_real_name($user){
@@ -24,7 +24,8 @@ $page_attributes=array(
 	'title' => $config->display_page_heading ? $config->domain." ".$lang_str['user_management'] : null,
 	'tab_collection' => $config->user_tabs,
 	'path_to_pages' => $config->user_pages_path,
-	'logout'=>true
+	'logout'=>true,
+	'css_file' => multidomain_get_file("styles.css")
 );
 
 ?>

@@ -1,15 +1,13 @@
 <?php
 /*
- * $Id: tinymce.js.php,v 1.3 2005/11/30 09:58:16 kozlik Exp $
+ * $Id: tinymce.js.php,v 1.4 2006/07/20 18:44:39 kozlik Exp $
  */
 
 Header("content-type: text/js");
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 
-$_SERWEB = array();
-$_SERWEB["serwebdir"]  = "../";
-$_PHPLIB["libdir"]  = "../../phplib/";
+require("../set_dirs.php");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require ($_SERWEB["serwebdir"] . "load_phplib.php");

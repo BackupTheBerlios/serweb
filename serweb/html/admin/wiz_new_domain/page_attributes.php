@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.1 2005/11/03 11:02:08 kozlik Exp $
+ * $Id: page_attributes.php,v 1.2 2006/07/20 18:44:39 kozlik Exp $
  */ 
 
 
@@ -10,6 +10,7 @@ $page_attributes=array(
 //	'path_to_pages' => $config->admin_pages_path,
 //	'run_at_html_body_begin' => '_disable_unneeded_tabs',
 	'logout'=>false,
+	'css_file' => multidomain_get_file("styles.css"),
 	'prolog'=>"<body class=\"swWizard\"><h1>",
 	'separator'=>"</h1><hr />",
 	'epilog'=>"</body>"

@@ -1,12 +1,11 @@
 <?
 /*
- * $Id: login_completion.js.php,v 1.3 2004/09/23 11:51:55 kozlik Exp $
+ * $Id: login_completion.js.php,v 1.4 2006/07/20 18:44:39 kozlik Exp $
  */
 
 Header("content-type: text/js");
 
-$_SERWEB = array();
-$_SERWEB["serwebdir"]  = "../";
+require("../set_dirs.php");
 
 require ($_SERWEB["serwebdir"] . "class_definitions.php");
 require ($_SERWEB["serwebdir"] . "../config/config_paths.php");

@@ -1,12 +1,9 @@
 <?
 /*
- * $Id: click_to_dial.php,v 1.4 2005/11/30 09:58:16 kozlik Exp $
+ * $Id: click_to_dial.php,v 1.5 2006/07/20 18:44:39 kozlik Exp $
  */
 
-$_SERWEB = array();
-$_PHPLIB = array();
-$_SERWEB["serwebdir"]  = "../";
-$_PHPLIB["libdir"]  = "../../phplib/";
+require("../set_dirs.php");
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 

@@ -15,13 +15,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('multidomain');
 
-$_SERWEB = array();
-$_PHPLIB = array();
-
-# Can't control your include path?
-# Point this to your PHPLIB base directory. Use a trailing "/"!
-$_SERWEB["serwebdir"]  = "../../../../../";
-$_PHPLIB["libdir"]  = "../../../../../../phplib/";
+require("../../../../../set_dirs.php");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");
