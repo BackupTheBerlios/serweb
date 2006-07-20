@@ -5,7 +5,7 @@
 * @copyright 1998,1999 NetUSE AG, Boris Erdmann, Kristian Koehntopp
 *            2000 Teodor Cimpoesu <teo@digiro.net>
 * @author    Teodor Cimpoesu <teo@digiro.net>, Ulf Wendel <uw@netuse.de>, Maxim Derkachev <kot@books.ru
-* @version   $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+* @version   $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
 * @access    public
 * @package   PHPLib
 */ 
@@ -29,7 +29,7 @@ class Session {
   
   /**
   * Depreciated! There's no need for page_close in PHP4 sessions. 
-  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
   * @var  integer
   */
   var $secure_auto_init = 1;
@@ -105,7 +105,7 @@ class Session {
   * has no effect on previous versions
   *
   * @var    string  
-  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
   */
   var $mode = "cookie";               ## We propagate session IDs with cookies
   
@@ -114,7 +114,7 @@ class Session {
   * propagation policy, which is a safer  propagation method that get mode  
   *
   * @var    string  
-  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
   */
   var $fallback_mode;                 ## if fallback_mode is also 'ccokie'
                                       ## we enforce session.use_only_cookie
@@ -171,7 +171,7 @@ class Session {
     $this->put_headers();
 
 
-    $ok = session_start();
+    @$ok = session_start();
     $this->id = session_id();
 
 	$this->set_cookie();
@@ -260,7 +260,7 @@ class Session {
   
   /**
    * @brother id()
-   * @deprec  $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+   * @deprec  $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
    * @access public  
    */  
   function get_id($sid = '') {
@@ -340,7 +340,7 @@ class Session {
    *		 doesn't seem to do (looking @ the session.c:940)
    * uw: yes we should keep it to remain the same interface, but deprec. 
    *
-   * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+   * @deprec $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
    * @access public  
    * @global $_COOKIE
    */
@@ -382,7 +382,7 @@ class Session {
   * @return string  rewritten url with session id included
   * @see    $trans_id_enabled
   * @global $_COOKIE
-  * @deprec $Id: session4.1.php,v 1.3 2005/11/28 14:06:29 kozlik Exp $
+  * @deprec $Id: session4.1.php,v 1.4 2006/07/20 16:10:59 kozlik Exp $
   * @access public  
   */
   function url($url) {
