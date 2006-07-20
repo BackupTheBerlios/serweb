@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.5 2006/07/11 12:14:59 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.6 2006/07/20 17:46:39 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -160,6 +160,9 @@ class apu_attr_types extends apu_base_class{
 		
 		if (!empty($_POST['for_serweb']))   $at->set_for_serweb();
 		else                                $at->reset_for_serweb();
+		
+		if (!empty($_POST['pr_uri']))       $at->set_for_URIs();
+		else                                $at->reset_for_URIs();
 		
 		if (!empty($_POST['pr_user']))      $at->set_for_users();
 		else                                $at->reset_for_users();
@@ -392,6 +395,11 @@ class apu_attr_types extends apu_base_class{
 		                             "name"=>"for_serweb",
 		                             "value"=>"1",
 									 "checked"=>$atr->is_for_serweb()));
+		
+		$this->f->add_element(array("type"=>"checkbox",
+		                             "name"=>"pr_uri",
+		                             "value"=>"1",
+									 "checked"=>$atr->is_for_URIs()));
 		
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "name"=>"pr_user",

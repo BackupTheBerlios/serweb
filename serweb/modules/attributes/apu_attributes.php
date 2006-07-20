@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.5 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.6 2006/07/20 17:46:39 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -139,6 +139,12 @@ class apu_attributes extends apu_base_class{
 		parent::init();
 
 		switch($this->opt['attrs_kind']){
+		case "uri":
+			$this->uri_uname = $this->controler->get_interapu_var('uri_uname');
+			$this->uri_did = $this->controler->get_interapu_var('uri_did');
+			$this->uid = $this->controler->user_id->get_uid();
+			$this->did = $this->uri_did;
+			break;
 		case "user":
 			$this->uid = $this->controler->user_id->get_uid();
 			$this->did = $this->controler->user_id->get_did();
@@ -236,6 +242,9 @@ class apu_attributes extends apu_base_class{
 			if ($_POST[$att] != $_POST["_hidden_".$att]){
 				
 				switch($this->opt['attrs_kind']){
+				case "uri":
+					if (false === $this->uri_attrs->set_attribute($att, $_POST[$att])) return false;
+				break;
 				case "user":
 					if (false === $this->user_attrs->set_attribute($att, $_POST[$att])) return false;
 				break;
@@ -280,6 +289,11 @@ class apu_attributes extends apu_base_class{
 		if (false === $this->attr_types = &$attr_types->get_attr_types()) return false;
 
 		switch($this->opt['attrs_kind']){
+		case "uri":
+			// get uri_attrs
+			$this->uri_attrs = &Uri_Attrs::singleton($this->uri_uname, $this->uri_did);
+			if (false === $uri_attrs = $this->uri_attrs->get_attributes()) return false;
+
 		case "user":
 			// get user_attrs
 			$this->user_attrs = &User_Attrs::singleton($this->uid);
@@ -298,7 +312,11 @@ class apu_attributes extends apu_base_class{
 
 		$this->attr_values = array();
 		foreach($this->attr_types as $k => $v){
-			if     ($this->opt['attrs_kind'] == 'user' and 
+			if     ($this->opt['attrs_kind'] == 'uri' and 
+			        !$this->attr_types[$k]->is_for_URIs()) 
+				    continue;
+
+			elseif ($this->opt['attrs_kind'] == 'user' and 
 			        !$this->attr_types[$k]->is_for_users()) 
 				    continue;
 
@@ -312,6 +330,11 @@ class apu_attributes extends apu_base_class{
 
 		
 			switch($this->opt['attrs_kind']){
+			case "uri":
+				if (isset($uri_attrs[$k])){
+					$this->attr_values[$k] = $uri_attrs[$k];
+					break;
+				}		
 			case "user":
 				if (isset($user_attrs[$k])){
 					$this->attr_values[$k] = $user_attrs[$k];

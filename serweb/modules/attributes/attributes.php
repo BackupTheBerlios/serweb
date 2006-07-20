@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attributes.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
+ * $Id: attributes.php,v 1.2 2006/07/20 17:46:39 kozlik Exp $
  */
 
 class Attributes{
@@ -11,6 +11,14 @@ class Attributes{
 		/* set default values for options */
 		$opt_uid = isset($opt["uid"]) ? $opt["uid"] : null;
 		$opt_did = isset($opt["did"]) ? $opt["did"] : null;
+		$opt_uri = isset($opt["uri"]) ? $opt["uri"] : null;
+
+		if (!is_null($opt_uri)){
+			$attrs = &Uri_Attrs::singleton($opt_uri['username'], $opt_uri['did']);
+			if (false === $attr = $attrs->get_attribute($name)) return false;
+			
+			if (!is_null($attr)) return $attr;
+		}
 
 		if (!is_null($opt_uid)){
 			$attrs = &User_Attrs::singleton($opt_uid);

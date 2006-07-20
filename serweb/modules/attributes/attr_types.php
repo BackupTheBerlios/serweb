@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.10 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: attr_types.php,v 1.11 2006/07/20 17:46:39 kozlik Exp $
  */
 
 /**
@@ -174,6 +174,12 @@ class Attr_type{
 		return ($this->flags & $f['DB_REQUIRED']) == $f['DB_REQUIRED'];
 	}
 	
+	function is_for_URIs(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['URI'];
+		return ($this->priority & $pr) == $pr;
+	}
+	
 	function is_for_users(){
 		global $config;
 		$pr = $config->data_sql->attr_types->priority_values['USER'];
@@ -203,6 +209,19 @@ class Attr_type{
 		$f = $config->data_sql->user_attrs->flag_values['DB_FOR_SERWEB'];
 		return ($this->default_flags & $f) == $f;
 	}
+
+	function is_to_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_TO'];
+		return ($this->default_flags & $f) == $f;
+	}
+
+	function is_from_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_FROM'];
+		return ($this->default_flags & $f) == $f;
+	}
+
 
 	function get_description(){
 		global $lang_str;
@@ -378,6 +397,18 @@ class Attr_type{
 		$this->order = $str;
 	}
 
+	function set_for_URIs(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['URI'];
+		$this->priority |= $pr;
+	}
+
+	function reset_for_URIs(){
+		global $config;
+		$pr = $config->data_sql->attr_types->priority_values['URI'];
+		$this->priority &= ~$pr;
+	}
+
 	function set_for_users(){
 		global $config;
 		$pr = $config->data_sql->attr_types->priority_values['USER'];
@@ -435,6 +466,30 @@ class Attr_type{
 	function reset_for_serweb(){
 		global $config;
 		$f = $config->data_sql->user_attrs->flag_values['DB_FOR_SERWEB'];
+		$this->default_flags &= ~$f;
+	}
+
+	function set_to_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_TO'];
+		$this->default_flags |= $f;
+	}
+
+	function reset_to_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_TO'];
+		$this->default_flags &= ~$f;
+	}
+
+	function set_from_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_FROM'];
+		$this->default_flags |= $f;
+	}
+
+	function reset_from_flag(){
+		global $config;
+		$f = $config->data_sql->user_attrs->flag_values['DB_IS_FROM'];
 		$this->default_flags &= ~$f;
 	}
 

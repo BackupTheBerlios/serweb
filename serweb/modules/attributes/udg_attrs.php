@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: udg_attrs.php,v 1.2 2006/01/03 14:59:39 kozlik Exp $
+ * $Id: udg_attrs.php,v 1.3 2006/07/20 17:46:40 kozlik Exp $
  */
 
 /**
@@ -361,6 +361,97 @@ class User_Attrs extends Attrs_Common {
 		
 		$data->add_method('del_user_attr');
 		if (false === $data->del_user_attr($this->uid, $name, $opt)) return false;
+
+		return true;	
+	}
+
+}
+
+class Uri_Attrs extends Attrs_Common {
+
+    /**
+     *
+     * @access private
+     */
+	function Uri_Attrs($username, $did){
+		parent::Attrs_Common();
+		$this->username = $username;
+		$this->did = $did;
+	}
+
+    /**
+     * Return a reference to a Uri_Attrs instance, only creating a new instance 
+	 * if no Uri_Attrs instance currently exists.
+     *
+     * You should use this if there are multiple places you might create a
+     * Uri_Attrs, you don't want to create multiple instances, and you don't 
+	 * want to check for the existance of one each time. The singleton pattern 
+	 * does all the checking work for you.
+     *
+     * <b>You MUST call this method with the $var = &Uri_Attrs::singleton($username, $did) 
+	 * syntax. Without the ampersand (&) in front of the method name, you will 
+	 * not get a reference, you will get a copy.</b>
+     *
+     * @access public
+     */
+
+    function &singleton($username, $did) {
+        static $instances = array();
+
+		$key = $username."@".$did;
+
+		if (!isset($instances[$key])) $instances[$key] = new Uri_Attrs($username, $did);
+        return $instances[$key];
+    }
+
+	/**
+	 *	
+	 *	
+	 *	@access private
+	 *	@todo: select correct data layer class in XXL envirnment
+	 */
+	function load_attrs(){
+		global $data;
+		
+		$data->add_method('get_uri_attrs');
+		if (false === $at = $data->get_uri_attrs($this->username, $this->did, null)) return false;
+		$this->attributes = &$at;
+
+		return true;	
+	}
+
+	/**
+	 *	
+	 *	
+	 *	@access private
+	 *	@todo: select correct data layer class in XXL envirnment
+	 */
+	function save_attr($name, $value){
+		global $data;
+		
+		$opt = array();
+
+		if (isset($this->attributes[$name])) {
+			$opt['old_value'] = $this->attributes[$name];
+		}
+
+		$data->add_method('update_uri_attr');
+		if (false === $data->update_uri_attr($this->username, $this->did, $name, $value, $opt)) return false;
+
+		return true;	
+	}
+
+	/**
+	 *	
+	 *	
+	 *	@access private
+	 *	@todo: select correct data layer class in XXL envirnment
+	 */
+	function del_attr($name, $opt){
+		global $data;
+		
+		$data->add_method('del_uri_attr');
+		if (false === $data->del_uri_attr($this->username, $this->did, $name, $opt)) return false;
 
 		return true;	
 	}
