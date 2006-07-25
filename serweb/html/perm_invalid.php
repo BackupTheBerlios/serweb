@@ -1,11 +1,11 @@
 <?
 /*
- * $Id: perm_invalid.php,v 1.2 2005/12/22 12:57:29 kozlik Exp $
+ * $Id: perm_invalid.php,v 1.3 2006/07/25 08:37:23 kozlik Exp $
  */ 
 
 	global $config, $page_attributes, $smarty, $lang_str, $sess;
 	
-	print_html_head();
+	print_html_head($page_attributes);
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
 
