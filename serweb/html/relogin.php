@@ -1,11 +1,11 @@
 <?
 /*
- * $Id: relogin.php,v 1.3 2005/12/22 12:57:29 kozlik Exp $
+ * $Id: relogin.php,v 1.4 2006/07/25 08:32:56 kozlik Exp $
  */
 
 	global $config, $page_attributes, $smarty, $lang_str, $_SERWEB;
 	
-	print_html_head();
+	print_html_head($page_attributes);
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
 
