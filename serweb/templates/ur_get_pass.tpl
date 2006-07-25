@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: ur_get_pass.tpl,v 1.3 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: ur_get_pass.tpl,v 1.4 2006/07/25 08:41:12 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -16,7 +16,6 @@
 	<p>{$lang_str.forgot_pass_introduction}</p>
 </div>
 
-<hr size=1>
 <br>
 <div class="swForm swHorizontalForm">
 {$form.start}
@@ -34,8 +33,6 @@
 {/if}
 
 <br>
-<hr size=1>
 <div class="swBackToMainPage"><a href="{url url='../index.php'}">{$lang_str.l_back_to_loginform}</a></div>
-<hr size=1>
 {include file='_tail.tpl'}
 

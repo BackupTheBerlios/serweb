@@ -163,6 +163,11 @@ div#swContentNoTabs{
 	text-align: center;
 }
 
+#swContent HR,
+#swContentNoTabs HR {
+	width:800px;
+}
+
 .swWizard div#swContentNoTabs{
 	padding-top : 0px;
 }
@@ -182,6 +187,11 @@ div#swContentNoTabs{
 	display : block;
 	font-size: 0.85em;
 }
+
+.swForm label.inlineLabel{
+	display: inline;
+}
+
 .swForm select,
 .swForm input {
 }
@@ -753,7 +763,7 @@ body {
 	margin: 10px;
 	background-color: #CCCCCC;
 }
-hr {
+hr.separator {
 	display: none;
 }
 .swLPTitle h1 {

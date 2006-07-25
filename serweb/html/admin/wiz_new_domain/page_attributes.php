@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.2 2006/07/20 18:44:39 kozlik Exp $
+ * $Id: page_attributes.php,v 1.3 2006/07/25 08:41:12 kozlik Exp $
  */ 
 
 
@@ -12,7 +12,7 @@ $page_attributes=array(
 	'logout'=>false,
 	'css_file' => multidomain_get_file("styles.css"),
 	'prolog'=>"<body class=\"swWizard\"><h1>",
-	'separator'=>"</h1><hr />",
+	'separator'=>"</h1><hr class='separator' />",
 	'epilog'=>"</body>"
 );
 

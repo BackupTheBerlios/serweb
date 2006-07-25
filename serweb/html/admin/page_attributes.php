@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: page_attributes.php,v 1.10 2006/07/20 18:44:39 kozlik Exp $
+ * $Id: page_attributes.php,v 1.11 2006/07/25 08:41:12 kozlik Exp $
  */ 
 
 function _disable_unneeded_tabs(&$page_attributes){
@@ -46,7 +46,7 @@ $page_attributes=array(
 	'logout'=>true,
 	'css_file' => multidomain_get_file("styles.css"),
 	'prolog'=>"<body><h1>",
-	'separator'=>"</h1><hr>",
+	'separator'=>"</h1><hr class='separator' />",
 	'epilog'=>"</body>"
 );
 
