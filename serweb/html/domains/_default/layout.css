@@ -99,7 +99,7 @@ div#swTabs ul li {
 	width: 100px;
 }
 
-div.swTabsL{
+div#swTabs div.swTabsL{
 	float : left;
 	width : 10px;
 	height : 36px;
@@ -107,7 +107,7 @@ div.swTabsL{
 	padding: 0;
 }
 
-div.swTabsR{
+div#swTabs div.swTabsR{
 	float : left;
 	width : 10px;
 	height : 36px;
@@ -139,6 +139,68 @@ div#swTabs ul li a:hover {
 div#swTabs ul li strong{
 	height: 31px;
 	padding-top: 5px;
+}
+
+
+/*
+ *	sub-navigation
+ */
+
+div.subTabs{
+	padding: 0;
+	text-align: center;
+	margin: 0 auto;
+	height: 25px;
+	width: 800px;
+}
+
+div.subTabs ul {
+	margin: 0px auto;
+	list-style: none;
+	padding: 0;
+	padding-bottom: 10px;
+}
+
+div.subTabs ul li {
+	display: block;
+	vertical-align : middle;
+	float : left;
+	width: 100px;
+	height: 25px;
+}
+
+div.subTabs div.swTabsL{
+	display: none;
+}
+
+div.subTabs div.swTabsR{
+	display: none;
+}
+
+div.subTabs ul li#swActiveTab div.swTabsL{
+}
+
+div.subTabs ul li#swActiveTab div.swTabsR{
+}
+
+div.subTabs ul li a, div.subTabs ul li strong {
+	text-decoration : none;
+	text-align : center;
+	vertical-align : middle;
+}
+
+div.subTabs ul li a{
+	font-size:0.9em;
+	font-weight: bold;
+}
+
+div.subTabs ul li a:hover {
+	text-decoration:underline;
+}
+
+div.subTabs ul li strong{
+	font-size:1em;
+	font-weight: bold;
 }
 
 
