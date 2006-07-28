@@ -19,6 +19,8 @@
  *         - selected = selected tab (optional, default actual page)
  *         - no_select = no tab is selected (optional, default false)
  *         - anchor_extra_html = extra html into <A> tags (optional , default '')
+ *         - div_id = ID attr of main div element (optional, default "swTabs")
+ *         - div_class = CLASS attr of main div element (optional, default none)
  *
  * Examples: {html_tabs tabs=$tabs}
  * @author   Karel Kozlik <kozlik@kufr.cz>
@@ -34,6 +36,7 @@ function smarty_function_html_tabs($params, &$smarty){
     $selected = NULL;
     $no_select = false;
 	$anchor_extra_html = '';
+	$div_class = '';
 
     extract($params);
 	
@@ -46,7 +49,12 @@ function smarty_function_html_tabs($params, &$smarty){
 		$selected=basename($_SERVER['SCRIPT_FILENAME']);
 	}
 
-	$out='<div id="swTabs"><ul>';
+	if (!isset($div_id)) $div_id="swTabs";
+
+	$out = '<div ';
+	if ($div_id)    $out .= 'id="'.$div_id.'" ';
+	if ($div_class) $out .= 'class="'.$div_class.'" ';
+	$out .= '><ul>';
 
 	foreach($tabs as $i => $value){
 		if ($value->is_enabled()){
@@ -54,7 +62,8 @@ function smarty_function_html_tabs($params, &$smarty){
 				$out.='<li id="swActiveTab"><div class="swTabsL"></div><strong><span>'.$value->get_name().'</span></strong><div class="swTabsR"></div></li>';
 			}
 			else{
-				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->get_page()."?kvrk=".uniqID("")).'" '.$anchor_extra_html.' class="tabl"><span>'.$value->get_name().'</span></a><div class="swTabsR"></div></li>';
+				$separator = strpos($path.$value->get_page(), "?") ? "&" : "?";
+				$out.='<li><div class="swTabsL"></div><a href="'.$sess->url($path.$value->get_page().$separator."kvrk=".uniqID("")).'" '.$anchor_extra_html.' class="tabl"><span>'.$value->get_name().'</span></a><div class="swTabsR"></div></li>';
 			}//if ($value->get_page()==$selected)
 		}// if ($value->is_enabled())
 	} //foreach		
