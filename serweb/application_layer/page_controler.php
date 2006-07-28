@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.25 2006/07/20 16:05:31 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.26 2006/07/28 10:52:44 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -572,16 +572,20 @@ class page_conroler{
 
 	/* load default values to form */
 	function _form_load_defaults(){
-		/* if is used shared html form, load defaults to it */
+		/* if is used shared html form, load defaults to forms which were submited */
 		if ($this->shared_html_form) {
 			foreach($this->f as $key=>$val){
-				$this->f[$key]['form']->load_defaults();
+				if (isset($_POST['apu_name']) and 
+				    count(array_intersect($_POST['apu_name'], $this->f[$key]['apu_names']))){
+				
+					$this->f[$key]['form']->load_defaults();
+				}
 			}
 		}
-		/* otherwise load defaults to form of each APU */
+		/* otherwise load defaults to form of APU which form has been submited*/
 		else{
 			foreach($this->apu_objects as $key=>$val){
-				$this->apu_objects[$key]->f->load_defaults();
+				if ($val->was_form_submited()) $this->apu_objects[$key]->f->load_defaults();
 			}
 		}
 		
