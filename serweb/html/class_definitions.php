@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.14 2006/07/20 16:45:40 kozlik Exp $
+ * $Id: class_definitions.php,v 1.15 2006/07/28 10:53:26 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -429,6 +429,50 @@ class Domains{
 		return $out;
 	}
 	
+	
+	/**
+	 *	Sort array of domains by single levels of domain name. 
+	 *	
+	 *	Sort by top-level (e.g. .org) then by 2nd level (e.g. iptel in 
+	 *	'iptel.org') etc.
+	 *	
+	 *	Keys of array are preserved
+	 *	
+	 *	@param	array
+	 *	@return	none
+	 */
+	function sort_domains(&$domains){
+	
+		uasort($domains, array('Domains', 'sort_cmp_funct'));
+	}
+
+	
+	/**
+	 *	Comparsion function for sort_domains()
+	 *	
+	 *	@access	private
+	 */
+	function sort_cmp_funct($a, $b){
+
+		/*	separate the domain names to top-level and the rest
+		 	top-level parts are in x_tail variable, the rests are in x_nose
+		 */
+		if (false === $dot = strrpos($a, ".")){ $a_nose=""; $a_tail=$a; }
+		else {$a_nose=substr($a, 0, $dot); $a_tail=substr($a, $dot+1);}
+
+		if (false === $dot = strrpos($b, ".")){ $b_nose=""; $b_tail=$b; }
+		else {$b_nose=substr($b, 0, $dot); $b_tail=substr($b, $dot+1);}
+
+		/* domain names are equal */
+		if ($a_tail == $b_tail and $a_tail=='') return 0;
+
+		/* top-levels are equal call this function recursively to the rests of domain names */
+		if ($a_tail == $b_tail) return Domains::sort_cmp_funct($a_nose, $b_nose);
+
+		/* compare the top levels */
+		if ($a_tail < $b_tail) return -1;
+		else return 1;
+	}
 }
 
 /**
