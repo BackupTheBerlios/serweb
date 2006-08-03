@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.6 2006/07/20 17:46:39 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.7 2006/08/03 08:36:07 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -116,6 +116,7 @@ class apu_attributes extends apu_base_class{
 		$this->opt['redirect_on_update']  = "";
 		$this->opt['perm'] = 'user';	
 
+		$this->opt['allow_edit'] = true;
 		
 		/* message on attributes update */
 		$this->opt['msg_update']['short'] =	&$lang_str['msg_changes_saved_s'];
@@ -268,7 +269,7 @@ class apu_attributes extends apu_base_class{
 			
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
-		if ($this->was_form_submited()){	// Is there data to process?
+		if ($this->was_form_submited() and $this->opt['allow_edit']){	// Is there data to process?
 			$this->action=array('action'=>"update",
 			                    'validate_form'=>true,
 								'reload'=>true);
