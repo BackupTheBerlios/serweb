@@ -2,7 +2,7 @@
 /*
  * Extension for phplib object oriented html form
  *
- * $Id: oohform_ext.php,v 1.4 2006/07/20 16:05:31 kozlik Exp $
+ * $Id: oohform_ext.php,v 1.5 2006/09/05 13:09:26 kozlik Exp $
  */ 
 
 class form_ext extends form{
@@ -137,6 +137,22 @@ class form_ext extends form{
 		return $str;
 	}
 
+	/**
+	 *	Transform associative arraty to array of options for select or radio element
+	 *	
+	 *	@param	array	$arr
+	 *	@return	array
+	 *	@static
+	 */
+	function array_to_opt($arr){
+	
+		$options = array();
+		foreach ($arr as $k=>$v){
+			$options[] = array("value"=>$k, "label"=>$v);
+		}
+		
+		return $options;
+	}
 }
 
 
