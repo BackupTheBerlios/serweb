@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.77 2006/07/20 16:45:40 kozlik Exp $
+ * @version   $Id: functions.php,v 1.78 2006/09/05 13:10:09 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -195,6 +195,15 @@ class Creg{
 
 		//remove the '@' at the end
 		return substr($uname,0,-1);
+	}
+	
+	/**
+	 * return regular expression for validate hostname
+	 *
+	 * @return string 
+	 */
+	function get_hostname_regex(){
+		return $this->host;
 	}
 	
 	/**
