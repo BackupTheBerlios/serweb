@@ -216,6 +216,14 @@ div#swContent{
 }
 
 /*
+ *  limit the width of tab content
+ */
+div#subContent{
+	width: 820px;
+	margin: 0 auto;
+}
+
+/*
  *	main content if tabs aren't displayed
  */
 
@@ -272,7 +280,7 @@ div#swContentNoTabs{
 .swForm input[type="image"] {
 	height: auto;
 	margin:0px;
-	background-color: none;
+/*	background-color: none;*/
 }
 
 .swForm fieldset{
@@ -538,19 +546,6 @@ tr.flushright td{
 }
 .skipstep {
 	background-image: url(img/skip_button.png);
-
-}
-	background-color:red;
-	width: 240px;
-	text-align: right;
-	font-weight: bold;
-	padding-right: 30px;
-	background-image: url(img/skip_button.png);
-	background-repeat: no-repeat;
-	background-position: 280px 0px;
-	height: 18px;
-	line-height: 16px;
-	margin-top: 30px;
 }
 .swBackToMainPage a,
 .skipstep a{
@@ -731,7 +726,7 @@ tr.flushright td{
 	font-weight : bold;
 	background-color: #CC3300;
 	padding: 3px;
-	margin: 0px 45px;
+	margin: 0px 5px;
 	height: 18px;
 	line-height: 18px;
 }
@@ -743,7 +738,7 @@ tr.flushright td{
 	font-weight : bold;
 	background-color: #99CC00;
 	padding: 3px;
-	margin: 0px 45px;
+	margin: 0px 5px;
 	height: 18px;
 	line-height: 18px;
 }
@@ -812,13 +807,13 @@ h1 {
 	height: 50px;
 	padding: 10px 30px;
 	word-spacing: 0.2em;
-	margin: 0;s
+	margin: 0;
 }
 .swWarningBox h1,
 .rbtopB h1 {
 	width: auto;
 	height: auto;
-	background-color: none;
+/*	background-color: none;*/
 }
 
 body {
@@ -867,7 +862,7 @@ hr.separator {
 }
 .swTable .swTrOdd  a.clearlinkstyle, 
 .swTable .swTrEven  a.clearlinkstyle {
-	background: #none;
+/*	background: #none; */
 	border:none;
 }
 #swContent p,
@@ -948,7 +943,7 @@ th.alternatpoplinkstyle a.swPopupLink {
 /*domain layout*/
 #oldVersions{
 	float: left;
-	margin-left: 40px;
+	margin-left: 5px;
 }
 #dl_content{
 	width:600px;

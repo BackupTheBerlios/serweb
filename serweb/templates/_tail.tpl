@@ -1,7 +1,8 @@
 {* Smarty *}
-{* $Id: _tail.tpl,v 1.3 2006/07/11 12:36:52 kozlik Exp $ *}
+{* $Id: _tail.tpl,v 1.4 2006/09/05 14:54:58 kozlik Exp $ *}
 
-</div>
+</div>{* end of <div id="subContent"> *}
+</div>{* end of <div id="swContent"> *}
 <div id="swFooter"></div>
 
 <!-- 

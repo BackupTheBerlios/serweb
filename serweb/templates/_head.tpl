@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.7 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.8 2006/09/05 14:54:58 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname|escape} {$parameters.user_name.lname|escape} &lt;{$parameters.user_name.uname|escape}@{$parameters.user_name.realm|escape}&gt;</div>
@@ -34,6 +34,7 @@
 
 	<div id="swHeader"></div>
 	<div id="swContent">
+	<div id="subContent">
 
 	<!-- content of div must be sufficient wide in order to tabs displays in one line -->
 	<div style="height:1px; width:{$num_of_tabs*100-50}px;">&nbsp;</div>
@@ -43,6 +44,7 @@
 	<div id="swTabs"></div>
 	<div id="swHeader"></div>
 	<div id="swContent">
+	<div id="subContent">
 		<div style="height:1px; width:550px;">&nbsp;</div>
 
 {/if}
