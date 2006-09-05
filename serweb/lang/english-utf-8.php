@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.41 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.42 2006/09/05 13:11:48 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -44,7 +44,9 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Displaying users";
+$lang_str['displaying_records'] = 				"Displaying records";
 $lang_str['no_users_found'] = 					"No users found";
+$lang_str['no_records_found'] = 				"No records found";
 $lang_str['none'] = 							"none";
 $lang_str['warning'] = 							"Warning!";
 $lang_str['domain'] = 							"domain";
