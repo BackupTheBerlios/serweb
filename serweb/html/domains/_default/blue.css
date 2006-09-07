@@ -93,6 +93,11 @@ div.subTabs ul li strong{
 
 
 /*contents table*/
+
+table.swTable tr.separator td{
+	background: rgb(233, 229, 214);
+}
+
 /*
  * Popup links - links used for display popup window by the Overlib library
  */

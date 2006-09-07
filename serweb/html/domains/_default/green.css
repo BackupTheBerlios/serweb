@@ -92,6 +92,12 @@ div.subTabs ul li strong{
 	color: rgb(51,102,153);
 }
 
+/*contents table*/
+
+table.swTable tr.separator td{
+	background: rgb(233, 229, 214);
+}
+
 /*
  *	title
  */
