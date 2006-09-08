@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains_of_admin.php,v 1.3 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_domains_of_admin.php,v 1.4 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CData_Layer_get_domains_of_admin {
@@ -13,7 +13,7 @@ class CData_Layer_get_domains_of_admin {
 	 *  Possible options:
 	 *		none
 	 *      
-	 *	@param object $user		user - instance of class Cserweb_auth
+	 *	@param string $uid		
 	 *	@param array $opt		associative array of options
 	 *	@return array			array of domain ids or FALSE on error
 	 */ 

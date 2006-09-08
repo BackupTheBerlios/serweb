@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: whitepages.php,v 1.4 2006/01/05 15:00:08 kozlik Exp $
+ * $Id: whitepages.php,v 1.5 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -29,7 +29,7 @@ $wp->set_opt('script_phonebook', 'phonebook.php');
 
 
 
-$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 $page_attributes['selected_tab']="phonebook.php";
 
 

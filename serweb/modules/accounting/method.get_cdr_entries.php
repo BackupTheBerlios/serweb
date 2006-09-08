@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_cdr_entries.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.5 2006/09/08 12:27:33 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
@@ -69,7 +69,7 @@ class CData_Layer_get_cdr_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q = "(".$this->cdr_sql['select_in'].", 'incoming' as call_type ".
 			         $this->cdr_sql['from'].
-			         " where callee_UUID = '".$user->uuid."'".
+			         " where callee_UUID = '".$user->get_uid()."'".
 				 ")";
 		} 
 		else{
@@ -91,7 +91,7 @@ class CData_Layer_get_cdr_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q[] = "select count(*) ".
 					$this->cdr_sql['from'].
-					" where callee_UUID = '".$user->uuid."'";
+					" where callee_UUID = '".$user->get_uid()."'";
 		}
 		else{
 		}
@@ -107,7 +107,7 @@ class CData_Layer_get_cdr_entries {
 	  */
 
 	function get_cdr_entries($user, $opt, &$errors){
-		global $config, $serweb_auth, $sip_status_messages_array;
+		global $config, $sip_status_messages_array;
 
 		if (!$this->connect_to_db($errors)) return false;
 

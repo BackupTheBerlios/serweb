@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.4 2005/12/22 12:47:03 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.5 2006/09/08 12:27:33 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -283,7 +283,7 @@ class apu_accounting extends apu_base_class{
 		if ($this->opt['display_incoming'] or $this->opt['display_outgoing']){
 			$opt['del_incoming'] = $this->opt['display_incoming'];
 			$opt['del_outgoing'] = $this->opt['display_outgoing'];
-			if (false === $data->delete_user_acc($this->user_id, $opt, $errors)) return false;
+			if (false === $data->delete_user_acc($this->user_id->get_uid(), $opt, $errors)) return false;
 		}
 		
 		/* if missed calls are displayed, delete its too */

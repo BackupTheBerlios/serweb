@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.26 2006/07/28 10:52:44 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.27 2006/09/08 12:27:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -46,7 +46,7 @@ class page_conroler{
 	var $come_from_admin_interface=false;
 
 	/** auth info of user with which setting we are working. 
-	 *	Usualy is same as $serweb_auth, only admin can change it 
+	 *	Usualy is same as $_SESSION['auth']->get_logged_user(), only admin can change it 
 	 */
 	var $user_id = null;		
 
@@ -125,21 +125,26 @@ class page_conroler{
 	 *	Initialy set $this->user_id and $this->domain_id
 	 */
 	function init_this_uid_and_did(){
-		global $perm, $serweb_auth;
+		global $perm;
 
 		// get $user_id if admin want work with some setting of user
 		if (isset($perm) and $perm->have_perm("admin")){
 			$this->init_this_uid();
 			$this->init_this_did();
 		}
-		else $this->user_id=$serweb_auth;
+ 		else {
+ 			if (!empty($_SESSION['auth']))
+ 				$this->user_id = $_SESSION['auth']->get_logged_user();
+ 			else
+ 				$this->user_id = null;
+ 		}
 	}
 
 	/**
 	 *	Initialy set $this->user_id
 	 */
 	function init_this_uid(){
-		global $sess, $sess_page_controler_user_id, $serweb_auth;
+		global $sess, $sess_page_controler_user_id;
 
 		//first try get user_id from session variable
 		if (isset($sess_page_controler_user_id)){
@@ -148,19 +153,23 @@ class page_conroler{
 		}
 	
 		//second if userauth param is given, get user_id from it
-		if (false !== $uid = get_userauth_from_get_param('u')) {
-			$this->check_perms_to_user = true;
+		if (!empty($_GET[$this->ch_user_param_name()])) {
+			$uid = &SerwebUser::recreate_from_get_param($_GET[$this->ch_user_param_name()]);
+
+			if (is_a($uid, 'SerwebUser')){
+				$this->check_perms_to_user = true;
+
+				//register session variable
+				if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
 		
-			//register session variable
-			if (!$sess->is_registered('sess_page_controler_user_id')) $sess->register('sess_page_controler_user_id');
-	
-			$this->user_id = $sess_page_controler_user_id = $uid;
-			$this->come_from_admin_interface=true;
+				$this->user_id = $sess_page_controler_user_id = $uid;
+				$this->come_from_admin_interface=true;
+			}
 		}
 		
-		//if still user_id is null, get it from $serweb_auth
+		//if still user_id is null, get it from $_SESSION['auth'] object
 		if (is_null($this->user_id))
-			$this->user_id=$serweb_auth;
+			$this->user_id=$_SESSION['auth']->get_logged_user();
 	}
 
 	/**
@@ -215,6 +224,15 @@ class page_conroler{
 				$GLOBALS['data'] = &$GLOBALS['data_selected_proxy'];
 			}
 		}
+	}
+
+	/**
+	 *	Return name of get param used to change user
+	 *	
+	 *	@return string
+	 */
+	function ch_user_param_name(){
+		return "ctl_user";
 	}
 
 	/**
@@ -790,14 +808,14 @@ class page_conroler{
 	
 	/*****************  start processing of page *******************/
 	function start(){
-		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $serweb_auth, $sess;
+		global $smarty, $lang_str, $lang_set, $page_attributes, $config, $sess;
 		global $sess_page_controler_domain_id;
 
 		/* check if admin have perms to manage user */
 		if ($this->check_perms_to_user){
 			if (! $this->check_perms_to_user()){
 				page_close();			
-				die("You haven't permissions to manage user '".$this->user_id->uname."@".$this->user_id->domain."'");
+ 				die("You haven't permissions to manage user '".$this->user_id->get_username()."@".$this->user_id->get_realm()."'");
 			}
 		}
 
@@ -875,8 +893,11 @@ class page_conroler{
 		$smarty->assign_by_ref('parameters', $page_attributes);
 		$smarty->assign_by_ref('lang_str', $lang_str);
 		$smarty->assign_by_ref('lang_set', $lang_set);
-		$smarty->assign_by_ref('user_auth', $this->user_id);
 		$smarty->assign_by_ref('come_from_admin_interface', $this->come_from_admin_interface);
+
+		if (is_object($this->user_id)){
+			$smarty->assign_by_ref('user_auth', $this->user_id->to_smarty());
+		}
 
 		
 		$cfg=new stdclass();

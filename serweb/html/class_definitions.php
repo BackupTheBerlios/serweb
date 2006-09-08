@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.15 2006/07/28 10:53:26 kozlik Exp $
+ * $Id: class_definitions.php,v 1.16 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CREG_list_item {
@@ -132,52 +132,144 @@ class Ccall_fw{
 class Cconfig{
 } 
  
-//class for storing authentication information
-class Cserweb_auth{
-	var $uuid, $uname, $domain;
-	var $classname='Cserweb_auth';
-	var $persistent_slots = array("uuid", "uname", "domain");
 
-	function Cserweb_auth($uuid=null, $uname=null, $domain=null){
-		$this->uuid   =	$uuid;
-		$this->uname  =	$uname;
-		$this->domain =	$domain;
-	}
-}
+class SerwebUser {
+	var $classname = "SerwebUser";
+	var $persistent_slots = array('uid', 'did', 'username', 'realm');
 
-class SerwebUser extends Cserweb_auth{
-	var $classname='SerwebUser';
+	var $uid;
+	var $username;
+	var $realm;
 	var $did = null;
+	var $domainname = null;
+	var $uri = null;
 
-	function SerwebUser($uid=null, $uname=null, $domain=null){
-		$this->uuid   =	$uid;
-		$this->uname  =	$uname;
-		$this->domain =	$domain;
+	function &instance($uid, $username, $did, $realm){
+		$obj = new SerwebUser();
+		$obj->uid = $uid;
+		$obj->username = $username;
+		$obj->did = $did;
+		$obj->realm = $realm;
+
+		return $obj;
+	}
+
+	function &instance_by_refs(&$uid, &$username, &$did, &$realm){
+		$obj = new SerwebUser();
+		$obj->uid = &$uid;
+		$obj->username = &$username;
+		$obj->did = &$did;
+		$obj->realm = &$realm;
+
+		return $obj;
+	}
+
+	function &recreate_from_get_param($val){
+
+		$val.=":"; //add stop mark to input string
+		$parts = array();
+
+		for ($i=0, $j=0; $i<strlen($val); $i++){
+			if ($val[$i] != ":") continue;
+			
+			//skip quoted ":"
+			if (isset($val[$i+1]) and $val[$i+1] == "'" and 
+			    isset($val[$i-1]) and $val[$i-1] == "'"){
+				$i++;
+				continue;
+			}
+			
+			// at $i position is single ":"
+			$parts[] = substr($val, $j, $i-$j);
+			$j = $i+1;
+			
+		}
+
+		foreach ($parts as $k=>$v) $parts[$k] = str_replace("':'", ":", $v);
+
+		if ($parts[0]=="") $parts[0] = null;	//if UID is empty, set it to null
+		if ($parts[1]=="") $parts[1] = null;	//if DID is empty, set it to null
+
+		$obj = &SerwebUser::instance($parts[0], $parts[2], $parts[1], $parts[3]);
+		return $obj;
 	}
 	
 	function get_uid(){
-		return $this->uuid;
+		return $this->uid;
 	}
 
 	function get_username(){
-		return $this->uname;
+		return $this->username;
+	}
+
+	function get_domainname(){
+
+		if (!is_null($this->domainname)) return $this->domainname;
+
+		if (false === $did = $this->get_did()) return false;
+
+		$dh = &Domains::singleton();
+		if (false === $domainname = $dh->get_domain_name($did)) return false;
+		$this->domainname = $domainname;
+
+		return $this->domainname;
 	}
 
 	function get_realm(){
-		return $this->domain;
+		return $this->realm;
+	}
+
+	function get_uri(){
+	
+		if (!is_null($this->uri)) return $this->uri->to_string();
+
+		$uh = &URIs::singleton($this->uid);
+		if (false === $uri = $uh->get_URI()) return false;
+		if (is_null($uri)) return "";
+		$this->uri = $uri;
+
+		return $this->uri->to_string();
 	}
 
 	function get_did(){
+		global $data_auth;
+		
 		if (!is_null($this->did)) return $this->did;
 
-		/* find out domain id */
-		$did = call_user_func_array(array('phplib_Auth', 'find_out_did'), 
-		                            array($this->uname, $this->domain, $this->uuid, array()));
+		$data_auth->add_method('get_did_by_realm');
+		
+		$opt = array('check_disabled_flag' => false);
+		if (false === $did = $data_auth->get_did_by_realm($this->realm, $opt)) return false;
 
-		if (false === $did) return false;
 		$this->did = $did;
 
 		return $this->did;
+	}
+
+	function to_get_param($param = null){
+	
+		if (is_null($param)){
+			if (is_a($GLOBALS['controler'], 'page_conroler')){
+				$param = $GLOBALS['controler']->ch_user_param_name();
+			}
+			else{
+				$param = "user";
+			}
+		}
+
+		/* single quote all ":" */
+		$uid = str_replace(":", "':'", $this->uid);
+		$did = str_replace(":", "':'", $this->did);
+		$realm = str_replace(":", "':'", $this->realm);
+		$username = str_replace(":", "':'", $this->username);
+	
+		return $param."=".RawURLencode($uid.":".$did.":".$username.":".$realm);
+	}
+
+	
+	function to_smarty(){
+		return array('uname' => $this->username,
+		             'realm' => $this->realm);
 	}
 }
 
@@ -750,6 +842,9 @@ class URIs{
 
 class Credential{
 	var $uid;
+	var $did;
+	var $c_did;	// did from credentials table
+	var $r_did; // did obtained from realm
 	var $uname;
 	var $realm;
 	var $flags;
@@ -757,8 +852,16 @@ class Credential{
 	var $ha1;
 	var $ha1b;
 
-	function Credential($uid, $uname, $realm, $password, $ha1, $ha1b, $flags){
+	var $did_changed = false;
+	var $uname_changed = false;
+	var $realm_changed = false;
+	var $password_changed = false;
+	var $flags_changed = false;
+	var $ha1_changed = false;
+
+	function Credential($uid, $did, $uname, $realm, $password, $ha1, $ha1b, $flags){
 		$this->uid      = $uid;
+		$this->c_did    = $did;
 		$this->uname    = $uname;
 		$this->realm    = $realm;
 		$this->password = $password;
@@ -769,6 +872,30 @@ class Credential{
 	
 	function get_uid(){
 		return $this->uid;
+	}
+
+	function get_did(){
+		global $config, $data;
+		
+		if (!is_null($this->did)) return $this->did;
+		
+		if ($config->auth['use_did']) {
+			$this->did = $this->c_did;
+		}
+		else {
+			$data->add_method('get_attr_by_val');
+
+			/* get did */
+			$o = array('name' =>  $config->attr_names['digest_realm'],
+			           'value' => $this->realm);
+			if (false === $attrs = $data->get_attr_by_val("domain", $o)) return false;
+
+			if (!empty($attrs[0]['id'])) {
+				$this->did = $attrs[0]['id'];
+			}
+		}
+
+		return $this->did;
 	}
 
 	function get_uname(){
@@ -806,48 +933,106 @@ class Credential{
 	}
 
 	function set_uname($str){
+		if ($this->uname == $str) return;
+		$this->uname_changed = true;
 		$this->uname = $str;
 	}
 
+	function set_did($str){
+		global $config;
+		
+		if ($config->auth['use_did']){
+			if ($this->c_did != $str) $this->did_changed = true;
+			$this->c_did = $this->did = $str;
+		}
+		else{
+			$this->did = $str;
+		}
+	}
+
 	function set_realm($str){
+		if ($this->realm == $str) return;
+		$this->realm_changed = true;
 		$this->realm = $str;
+		$this->recalc_ha1();
 	}
 	
 	function set_password($str){
+		if ($this->password == $str) return;
+		$this->password_changed = true;
 		$this->password = $str;
+		$this->recalc_ha1();
 	}
 
 	function set_for_ser(){
 		global $config;
+		if ($this->is_for_ser()) return;
+		$this->flags_changed = true;
 		$this->flags = ($this->flags | $config->data_sql->credentials->flag_values['DB_LOAD_SER']);
 	}
 
 	function set_for_serweb(){
 		global $config;
+		if ($this->is_for_serweb()) return;
+		$this->flags_changed = true;
 		$this->flags = ($this->flags | $config->data_sql->credentials->flag_values['DB_FOR_SERWEB']);
 	}
 	
 	function reset_for_ser(){
 		global $config;
+		if (!$this->is_for_ser()) return;
+		$this->flags_changed = true;
 		$this->flags = ($this->flags & ~$config->data_sql->credentials->flag_values['DB_LOAD_SER']);
 	}
 
 	function reset_for_serweb(){
 		global $config;
+		if (!$this->is_for_serweb()) return;
+		$this->flags_changed = true;
 		$this->flags = ($this->flags & ~$config->data_sql->credentials->flag_values['DB_FOR_SERWEB']);
 	}
-	
+
+	function did_changed(){
+		return $this->did_changed;
+	}
+
+	function uname_changed(){
+		return $this->uname_changed;
+	}
+
+	function realm_changed(){
+		return $this->realm_changed;
+	}
+
+	function password_changed(){
+		return $this->password_changed;
+	}
+
+	function ha1_changed(){
+		return $this->ha1_changed;
+	}
+
+	function flags_changed(){
+		return $this->flags_changed;
+	}
+
 	function recalc_ha1(){
 		$this->ha1  = md5($this->uname.":".$this->realm.":".$this->password);
 		$this->ha1b = md5($this->uname."@".$this->realm.":".$this->realm.":".$this->password);
+		$this->ha1_changed = true;
 	}
 	
-	function to_table_row(){
+	function to_smarty(){
 		global $config;
 		$f = &$config->data_sql->credentials->flag_values;
 
+		$dh = &Domains::singleton();
+		if (false === $domainname = $dh->get_domain_name($this->get_did())) return false;
+
 		return array("uid"        => $this->uid,
 		             "uname"      => $this->uname,
+		             "did"        => $this->get_did(),
+		             "domainname" => $domainname,
 					 "realm"      => $this->realm,
 					 "password"   => $this->password,
 		             "ha1"        => $this->ha1,

@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.18 2006/06/23 09:17:09 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.19 2006/09/08 12:27:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -134,6 +134,7 @@ class apu_domain extends apu_base_class{
 		$this->opt['redirect_on_delete']  = "";
 
 		$this->opt['preselected_customer']  = null;
+		$this->opt['prohibited_domain_names'] = array();
 
 		$this->opt['no_domain_name_e'] = $lang_str['no_domain_name_is_set'];
 		
@@ -892,6 +893,7 @@ class apu_domain extends apu_base_class{
 	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
 	 */
 	function validate_form(&$errors){
+		global $lang_str;
 		if (false === parent::validate_form($errors)) return false;
 
 		if ($this->action['action'] == "update" and 
@@ -904,6 +906,13 @@ class apu_domain extends apu_base_class{
 		    empty($_POST['do_new_name'])){
 				$errors[] = $this->opt['no_domain_name_e'];
 				return false;
+		}
+
+		if (!empty($_POST['do_new_name']) and
+		    in_array($_POST['do_new_name'], $this->opt['prohibited_domain_names'])){
+
+			$errors[] = $lang_str['prohibited_domain_name'];
+			return false;
 		}
 
 		return true;

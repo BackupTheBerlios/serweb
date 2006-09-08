@@ -3,7 +3,7 @@
  * Application unit login 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_login.php,v 1.7 2006/07/03 10:45:03 kozlik Exp $
+ * @version   $Id: apu_login.php,v 1.8 2006/09/08 12:27:33 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -135,28 +135,6 @@ class apu_login extends apu_base_class{
 		");
 	}
 
-	/**
-	 *	Get digest_realm attribute for given domain
-	 *
-	 *	If domain does not exists null is returned
-	 *
-	 *	@param	string	$domain		domain name
-	 *	@return	string				realm
-	 */
-	function realm_lookup($domain){
-		global $config;
-
-		$dh = &Domains::singleton();
-		if (false === $did = $dh->get_did($domain)) return false;
-		
-		if (is_null($did)) return null;
-		
-		$opt=array("did"=>$did);
-		if (false === $realm = Attributes::get_attribute($config->attr_names['digest_realm'], $opt)) return false;
-		
-		return $realm;
-	}
-	
 	function action_login(&$errors){
 		global $lang_str, $config;
 
@@ -180,8 +158,9 @@ class apu_login extends apu_base_class{
 		}
 
 		$_SESSION['auth'] = new $this->opt['auth_class'];
-		$_SESSION['auth'] -> authenticate_as($this->uid, $this->username, $this->realm);
-		$_SESSION['auth'] -> set_did($this->did);
+		$_SESSION['auth'] -> authenticate_as($this->uid, $this->username, $this->did, $this->realm);
+
+
 
 		if (is_array($this->perms))
 			$_SESSION['auth']->set_perms($this->perms);
@@ -273,6 +252,10 @@ class apu_login extends apu_base_class{
 	/* validate html form */
 	function validate_form(&$errors){
 		global $config, $lang_str;
+		$uid = null;
+		$did = null;
+		$realm = null;
+		$perms = null;
 
 		// don't display logout mesage in case that form was submited
 		if (isset($_GET['logout'])) unset($_GET['logout']);
@@ -314,29 +297,34 @@ class apu_login extends apu_base_class{
 			}
 		}
 
-		sw_log("User login: looking for realm of domain: ".$domain, PEAR_LOG_DEBUG);
+		sw_log("User login: looking for did of domain: ".$domain, PEAR_LOG_DEBUG);
 
-		if (false === $this->realm = $this->realm_lookup($domain)) return false;
 
-		if (is_null($this->realm)){
-			sw_log("User login: realm not found, useing domain name", PEAR_LOG_DEBUG);
-			$this->realm = $domain;
-		}
-
-		sw_log("User login: checking password of user with username: ".
-				$this->username.", realm: ".$this->realm, PEAR_LOG_DEBUG);
-
-		/* validate credentials */
-		$uid = call_user_func_array(array($this->opt['auth_class'], 'validate_credentials'), 
-		                            array($this->username, $this->realm, $this->password, array()));
-
-		if (false === $uid) return false;
-
-		/* find out domain id */
+		/* get did */
+		$opt = array();
 		$did = call_user_func_array(array($this->opt['auth_class'], 'find_out_did'), 
-		                            array($this->username, $this->realm, $uid, array()));
+		                            array($domain, &$opt));
 
 		if (false === $did) return false;
+		if (is_null($did)){
+			sw_log("User login: did not found for domain name: ".$domain, PEAR_LOG_DEBUG);
+			ErrorHandler::add_error($lang_str['domain_not_found']);
+			return false;
+		}
+
+
+		sw_log("User login: checking password of user with username: ".
+				$this->username.", did: ".$did, PEAR_LOG_DEBUG);
+
+
+		/* validate credentials */
+		$opt = array();
+		$uid = call_user_func_array(array($this->opt['auth_class'], 'validate_credentials'), 
+		                            array($this->username, $did, $this->password, &$opt));
+
+		if (false === $uid) return false;
+		if (isset($opt['realm'])) $realm = $opt['realm'];
+
 
 		/* set_permissions */
 		$perms = call_user_func_array(array($this->opt['auth_class'], 'find_out_perms'), 
@@ -354,6 +342,7 @@ class apu_login extends apu_base_class{
 
 		$this->uid = $uid;
 		$this->did = $did;
+		$this->realm = $realm;
 		$this->perms = $perms;
 
 		sw_log("User login: authentication succeeded, uid: ".$this->uid, PEAR_LOG_DEBUG);

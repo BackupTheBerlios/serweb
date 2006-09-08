@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: user_preferences.php,v 1.6 2006/01/03 15:01:20 kozlik Exp $
+ * $Id: user_preferences.php,v 1.7 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -32,7 +32,7 @@ $usr_pref->set_opt('attrs_options', $attrs_options);
 $usr_pref->set_opt('attrs_kind', 'user');
 
 
-$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 
 $controler->add_apu($usr_pref);
 $controler->set_template_name('u_user_preferences.tpl');

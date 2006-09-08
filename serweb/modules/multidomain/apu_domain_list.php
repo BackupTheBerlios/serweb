@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.9 2006/04/14 19:15:35 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.10 2006/09/08 12:27:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -177,7 +177,7 @@ class apu_domain_list extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 	function action_default(&$errors){
-		global $data, $sess, $sess_apu_dl, $serweb_auth;
+		global $data, $sess, $sess_apu_dl;
 
 		$data->set_act_row($sess_apu_dl['act_row']);
 

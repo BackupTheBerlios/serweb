@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.11 2006/07/20 17:46:39 kozlik Exp $
+ * $Id: attr_types.php,v 1.12 2006/09/08 12:27:33 kozlik Exp $
  */
 
 /**
@@ -223,16 +223,31 @@ class Attr_type{
 	}
 
 
-	function get_description(){
+	function internationalize_str($str){
 		global $lang_str;
 		
-		if (substr($this->description, 0, 1) == '@' and 
-		    isset($lang_str[substr($this->description, 1)])){
+		if (substr($str, 0, 1) == '@' and 
+		    isset($lang_str[substr($str, 1)])){
 		
-			return $lang_str[substr($this->description, 1)];
+			return $lang_str[substr($str, 1)];
 		}
 		
-		return $this->description;
+		return $str;
+	}
+
+	function get_description(){
+		$desc = $this->internationalize_str($this->description);
+		$parts = explode("|", $desc, 2);
+		return trim($parts[0]);
+	}
+	
+	function get_long_description(){
+		$desc = $this->internationalize_str($this->description);
+		$parts = explode("|", $desc, 2);
+
+		if (isset($parts[1])) return trim($parts[1]);
+		
+		return null;
 	}
 	
 	function get_name(){

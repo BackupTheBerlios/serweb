@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.44 2006/07/11 12:42:27 kozlik Exp $
+ * $Id: config.php,v 1.45 2006/09/08 12:27:31 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -276,6 +276,9 @@
 	 */
 	$config->auth_lifetime = 20;
 	
+	/* List of domain names which are prohibited 
+	 */
+	$config->prohibited_domains = array('anonymous.invalid');
 
 	/* ------------------------------------------------------------*/
 	/* applications (experimental)                                 */

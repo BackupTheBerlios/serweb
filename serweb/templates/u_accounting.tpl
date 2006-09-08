@@ -1,11 +1,11 @@
 {* Smarty *}
-{* $Id: u_accounting.tpl,v 1.10 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: u_accounting.tpl,v 1.11 2006/09/08 12:27:35 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
 
 {if $come_from_admin_interface}
-<h2 class="swTitle">{$lang_str.user}: {$user_auth->uname|escape}</h2>
+<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}</h2>
 {/if}
 
 {foreach from=$acc item='row' name='accounting'}

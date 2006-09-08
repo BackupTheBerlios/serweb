@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.53 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.54 2006/09/08 12:27:33 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -242,8 +242,8 @@ $lang_str['msg_calls_deleted_l'] = 				"Calls has been succesfully deleted";
 
 $lang_str['fe_no_im'] = 						"you didn't write message";
 $lang_str['fe_im_too_long'] = 					"instant message is too long";
-$lang_str['msg_im_send_s'] = 					"Message Sended";
-$lang_str['msg_im_send_l'] = 					"Message has been successfully sended to address";
+$lang_str['msg_im_send_s'] = 					"Message Sent";
+$lang_str['msg_im_send_l'] = 					"Message has been successfully sent to address";
 $lang_str['max_length_of_im'] = 				"Max length of instant message is";
 $lang_str['sending_message'] = 					"sending message";
 $lang_str['please_wait'] = 						"please wait!";
@@ -364,11 +364,11 @@ $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. No such a confirmation n
 
 $lang_str['forgot_pass_head'] = 				"Forgot Password?";
 $lang_str['forgot_pass_introduction'] = 		"If you have forgotten your password, please enter your username in the form below. An email containing your password will then be sent to the email-address you have registered with!";
-$lang_str['forgot_pass_sended'] = 				"New password was created and sended to email address you have registered with.";
-$lang_str['msg_pass_conf_sended_s'] = 			"Login informations sended";
-$lang_str['msg_pass_conf_sended_l'] = 			"Login informations was send to your email address";
-$lang_str['msg_password_sended_s'] = 			"New password sended";
-$lang_str['msg_password_sended_l'] = 			"New password was send to your email address";
+$lang_str['forgot_pass_sended'] = 				"New password was created and sent to email address you have registered with.";
+$lang_str['msg_pass_conf_sended_s'] = 			"Login informations sent";
+$lang_str['msg_pass_conf_sended_l'] = 			"Login informations was sent to your email address";
+$lang_str['msg_password_sended_s'] = 			"New password sent";
+$lang_str['msg_password_sended_l'] = 			"New password was sent to your email address";
 $lang_str['err_no_user'] = 						"Sorry, this is not a registered username!";
 
 /* ------------------------------------------------------------*/
@@ -523,6 +523,9 @@ $lang_str['th_password'] = 						"password";
 $lang_str['th_for_ser'] = 						"for SER";
 $lang_str['th_for_serweb'] = 					"for SerWeb";
 
+$lang_str['err_credential_changed_domain'] = 	"Domain of user has been changed. You have to also fill new password";
+$lang_str['warning_credential_changed_domain'] =		"Serweb is configured to not store clear text passwords. That mean, if you change domain of user, you have to also fill password field. Otherwise hashed password become invalid.";
+
 $lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";
 
 
@@ -590,6 +593,7 @@ $lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";
 $lang_str['l_create_new_domain'] = 				"create new domain";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
+$lang_str['prohibited_domain_name'] = 			"Sorry, this domain name is prohibited";
 $lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name";
 
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";

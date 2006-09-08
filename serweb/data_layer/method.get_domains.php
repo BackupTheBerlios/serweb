@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_domains.php,v 1.6 2006/04/10 13:03:35 kozlik Exp $
+ * $Id: method.get_domains.php,v 1.7 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CData_Layer_get_domains {
@@ -40,7 +40,7 @@ class CData_Layer_get_domains {
 	 *	@return array			array of domains or FALSE on error
 	 */ 
 	function get_domains($opt, &$errors){
-		global $config, $serweb_auth, $sess;
+		global $config, $sess;
 
 		if (!$this->connect_to_db($errors)) return false;
 

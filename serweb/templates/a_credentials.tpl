@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_credentials.tpl,v 1.2 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_credentials.tpl,v 1.3 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -21,8 +21,8 @@
 	<td>{$form.cr_uname}</td>
 	</tr>
 	<tr>
-	<td><label for="cr_realm">{$lang_str.ff_realm}:</label></td>
-	<td>{$form.cr_realm}</td>
+	<td><label for="cr_domain">{$lang_str.ff_domain}:</label></td>
+	<td>{$form.cr_domain}</td>
 	</tr>
 	<tr>
 	<td><label for="cr_passw">{$lang_str.ff_password}:</label></td>
@@ -54,7 +54,7 @@
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
 	<th>{$lang_str.th_username}</th>
-	<th>{$lang_str.th_realm}</th>
+	<th>{$lang_str.th_domain}</th>
 	<th>{$lang_str.th_password}</th>
 	<th>{$lang_str.th_for_ser}</th>
 	<th>{$lang_str.th_for_serweb}</th>
@@ -65,8 +65,8 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.uname|empty2nbsp}</td>
-	<td align="left">{$row.realm|empty2nbsp}</td>
-	<td align="left">{$row.password|empty2nbsp}</td>
+	<td align="left">{$row.domainname|empty2nbsp}</td>
+	<td align="left">{if $row.password}{$row.password}{else}------{/if}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_ser}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_serweb}</td>
 	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
@@ -77,6 +77,11 @@
 	</table>
 	{/if}
 {/foreach}
+
+{if !$clear_text_pw}
+	<br />
+	<div class="swWarningBox">{$lang_str.warning_credential_changed_domain}</div>
+{/if}
 
 <div class="swBackToMainPage"><a href="{url url='users.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.send_im.php,v 1.3 2006/03/29 14:53:12 kozlik Exp $
+ * $Id: method.send_im.php,v 1.4 2006/09/08 12:27:34 kozlik Exp $
  */
 
 class CData_Layer_send_im {
@@ -13,7 +13,7 @@ class CData_Layer_send_im {
 		    "MESSAGE\n".
 			addslashes($recipient)."\n".
 			".\n".
-			"From: sip:".$user->uname."@".$user->domain."\n".
+			"From: ".$user->get_uri()."\n".
 			"To: <".addslashes($recipient).">\n".
 		    "p-version: ".$config->psignature."\n".
 		    "Contact: <".$config->web_contact.">\n".

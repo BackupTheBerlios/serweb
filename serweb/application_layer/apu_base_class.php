@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.8 2006/07/20 16:05:31 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.9 2006/09/08 12:27:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -25,7 +25,7 @@ class apu_base_class{
 	var $action;
 	/** unified number of instance of this class */
 	var $instance;
-	/** auth info of user with which setting we are workig. Usualy is same as $serweb_auth, only admin can change it */
+	/** auth info of user with which setting we are workig. Usualy is same as $_SESSION['auth']->get_logged_user(), only admin can change it */
 	var $user_id;
 	/** html form */
 	var $f;

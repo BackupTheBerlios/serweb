@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: click_to_dial.php,v 1.5 2006/07/20 18:44:39 kozlik Exp $
+ * $Id: click_to_dial.php,v 1.6 2006/09/08 12:27:32 kozlik Exp $
  */
 
 require("../set_dirs.php");
@@ -12,15 +12,17 @@ require($_SERWEB["serwebdir"] . "load_phplib.php");
 
 phplib_load();
 
-
-if (empty($serweb_auth->uname) or empty($serweb_auth->domain)){
+if (!$_SESSION['auth']->is_authenticated()){
 	die ('not logged in');
 }
 
 if (isset($_GET['target']) and $_GET['target']) $target=$_GET['target'];
 else $target=$config->ctd_target;
 
-if (empty($_GET['default_caller'])) $uri = "sip:".$serweb_auth->uname."@".$serweb_auth->domain;
+if (empty($_GET['default_caller'])) {
+	$current_user = $_SESSION['auth']->get_logged_user();
+	$uri = $current_user->get_uri();
+}
 else $uri=$config->ctd_uri;
 
 

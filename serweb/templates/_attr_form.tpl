@@ -1,10 +1,14 @@
 {* Smarty *}
-{* $Id: _attr_form.tpl,v 1.4 2006/07/11 12:15:00 kozlik Exp $ *}
+{* $Id: _attr_form.tpl,v 1.5 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {foreach from=$attributes item='row' name='attributes'} 
 	{if !$row.edit}
  		<tr>
- 		<td><label for="{$row.att_name}">{$row.att_desc|escape}:</label></td>
+ 		{if $row.att_ldesc}
+ 	 		<td><label for="{$row.att_name}"><a href="javascript:void(0);" class="swPopupLink" {popup text=$row.att_ldesc|escape|escape|empty2nbsp}>{$row.att_desc|escape}</a>:</label></td>
+		{else}
+	 		<td><label for="{$row.att_name}">{$row.att_desc|escape}:</label></td>
+ 		{/if}
  		{if !$row.att_value_f}
 			<td><i>&lt; empty &gt;</i></td>
 		{else}
@@ -24,7 +28,11 @@
  	{else}
  		{assign var='f_element' value=$row.att_name}
  		<tr>
- 		<td><label for="{$row.att_name}">{$row.att_desc|escape}:</label></td>
+ 		{if $row.att_ldesc}
+ 	 		<td><label for="{$row.att_name}"><a href="javascript:void(0);" class="swPopupLink" {popup text=$row.att_ldesc|escape|escape|empty2nbsp}>{$row.att_desc|escape}</a>:</label></td>
+		{else}
+	 		<td><label for="{$row.att_name}">{$row.att_desc|escape}:</label></td>
+ 		{/if}
 		<td>{$form.$f_element}</td>
  		</tr>
  	{/if}

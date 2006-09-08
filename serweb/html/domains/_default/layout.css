@@ -910,6 +910,8 @@ a.actionsrow {
 .swTable tr.informationrow a:hover.swPopupLink,
 .attributesTable a.swPopupLink,
 .attributesTable a:hover.swPopupLink,
+.swForm label a.swPopupLink,
+.swForm label a:hover.swPopupLink,
 td.alternatpoplinkstyle a.swPopupLink,
 td.alternatpoplinkstyle a:hover.swPopupLink 
 {

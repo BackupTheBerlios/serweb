@@ -2,7 +2,7 @@
 /*
  * Require all files needed by phplib 
  *
- * $Id: load_phplib.php,v 1.10 2005/11/30 09:58:15 kozlik Exp $
+ * $Id: load_phplib.php,v 1.11 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 
@@ -25,14 +25,6 @@ function phplib_load($features = null){
 
 		page_open ($GLOBALS['_phplib_page_open'], $features);
 	}
-
-	/* 
-	 *	Keep $serweb_auth variable for backward compatibility.
-	 *	Useing this variable in new code is deprecated. $serweb_auth was 
-	 *	replaced by $_SESSION['auth']->auth;
-	 */
-	if (!empty($_SESSION['auth']))
-		$GLOBALS['serweb_auth'] = &$_SESSION['auth']->serweb_auth;
 
 }
 

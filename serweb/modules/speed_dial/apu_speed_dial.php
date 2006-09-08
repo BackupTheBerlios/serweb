@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_speed_dial.php,v 1.3 2005/12/22 13:28:09 kozlik Exp $
+ * $Id: apu_speed_dial.php,v 1.4 2006/09/08 12:27:34 kozlik Exp $
  */ 
 
 /** Application unit speed dial */
@@ -146,7 +146,7 @@ class apu_speed_dial extends apu_base_class{
 
 		$this->opt['numerical_target_only'] =		false;
 		$this->opt['username_in_target_only'] =		false;
-		$this->opt['domain_for_targets'] = $controler->user_id->domain;
+		$this->opt['domain_for_targets'] = $controler->user_id->get_domainname();
 
 		$this->opt['domain_for_requests'] = $controler->user_id->get_did();
 

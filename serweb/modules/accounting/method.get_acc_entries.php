@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_acc_entries.php,v 1.5 2006/04/03 13:01:56 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.6 2006/09/08 12:27:33 kozlik Exp $
  */
 
 /*
@@ -61,7 +61,7 @@ class CData_Layer_get_acc_entries {
 
 	  
 	function get_acc_entries($user, $opt, &$errors){
-		global $config, $serweb_auth, $sip_status_messages_array;
+		global $config, $sip_status_messages_array;
 
 		if (!$this->connect_to_db($errors)) return false;
 
@@ -389,12 +389,12 @@ class CData_Layer_get_acc_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q = "(".$this->acc_sql['select_in'].", 'incoming' as call_type ".
 			         $this->acc_sql['from_1'].
-			         $this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
+			         $this->acc_sql['where_1']." and t1.to_uid = '".$user->get_uid()."'".
 					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ".
 				 ") union (".	// get unpaired BYE records
 				     $this->acc_sql['select_in'].", 'incoming' as call_type ".
 			         $this->acc_sql['from_2'].
-			         $this->acc_sql['where_2']." and t2.from_uid = '".$user->uuid."'".
+			         $this->acc_sql['where_2']." and t2.from_uid = '".$user->get_uid()."'".
 					 		" and (t2.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ".
 				 ")";
 
@@ -421,13 +421,13 @@ class CData_Layer_get_acc_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_1'].
-					$this->acc_sql['where_1']." and t1.to_uid = '".$user->uuid."'".
+					$this->acc_sql['where_1']." and t1.to_uid = '".$user->get_uid()."'".
 					 		" and (t1.flags & ".$f_acc['DB_CALLEE_DELETED']." = 0) ";
 
 			// count unpaired BYE requests
 			$q[] = "select count(*) ".
 					$this->acc_sql['from_2'].
-					$this->acc_sql['where_2']." and t2.from_uid = '".$user->uuid."'".
+					$this->acc_sql['where_2']." and t2.from_uid = '".$user->get_uid()."'".
 					 		" and (t2.flags & ".$f_acc['DB_CALLER_DELETED']." = 0) ";
 		}
 		else{
@@ -448,18 +448,18 @@ class CData_Layer_get_acc_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q="(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
 				    "FROM ".$t_mc." t1 ".
-				    "WHERE t1.to_uid='".$user->uuid."' and 
+				    "WHERE t1.to_uid='".$user->get_uid()."' and 
 					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ";
 		}
 		else{
 			$q="(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
 					"FROM ".$t_mc." t1 ".
-					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."' and 
+					"WHERE t1.username='".$user->get_username()."' and t1.domain='".$user->get_domainname()."' and 
 					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ".
 				"UNION ".
 				"(".$this->acc_sql['select_missed'].", 'missed' as call_type ".
 					"FROM ".$t_mc." t1, ".$config->data_sql->table_aliases." t2 ".
-					"WHERE 'sip:".$user->uname."@".$user->domain."'".
+					"WHERE 'sip:".$user->get_username()."@".$user->get_domainname()."'".
 						"=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain and 
 					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)) ";
 		}
@@ -480,17 +480,17 @@ class CData_Layer_get_acc_entries {
 		if ($config->users_indexed_by=='uuid'){
 			$q[]="SELECT count(*) ".
 				"FROM ".$t_mc." t1 ".
-                "WHERE t1.to_uid='".$user->uuid."' and 
+                "WHERE t1.to_uid='".$user->get_uid()."' and 
 					   (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 		}
 		else{
 			$q[]="SELECT count(*)  ".
 					"FROM ".$t_mc." t1 ".
-					"WHERE t1.username='".$user->uname."' and t1.domain='".$user->domain."' and 
+					"WHERE t1.username='".$user->get_username()."' and t1.domain='".$user->get_domainname()."' and 
 					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 			$q[]="SELECT count(*) ".
 					"FROM ".$t_mc." t1, ".$config->data_sql->table_aliases." t2 ".
-					"WHERE 'sip:".$user->uname."@".$user->domain."'=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain and 
+					"WHERE 'sip:".$user->get_username()."@".$user->get_domainname()."'=t2.contact AND t2.username=t1.username AND t2.domain=t1.domain and 
 					       (t1.flags & ".$f_mc['DB_CALLEE_DELETED']." = 0)";
 		}
 		return $q;	

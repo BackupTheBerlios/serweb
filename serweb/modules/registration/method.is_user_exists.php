@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_user_exists.php,v 1.4 2006/04/12 13:41:20 kozlik Exp $
+ * $Id: method.is_user_exists.php,v 1.5 2006/09/08 12:27:34 kozlik Exp $
  */
 
 class CData_Layer_is_user_exists {
@@ -46,22 +46,18 @@ class CData_Layer_is_user_exists {
 
 			$an = &$config->attr_names;
 
-			/* get all domain names of domain with given did */
-			$dh = &Domains::singleton();
-			if (false === $d_names = $dh->get_domain_names($did)) return 0;
-
 			/* get digest realm of given domain */
-			$da = &Domain_Attrs::singleton($did);
-			if (false === $d_realm = $da->get_attribute($an['digest_realm'])) return 0;
+			$opt=array("did"=>$did);
+			if (false === $d_realm = Attributes::get_attribute($an['digest_realm'], $opt)) return false;
 
-			/* append digest realm to list of domains */
-			if (!isset($d_names)) $d_names = array();
-			if (!is_null($d_realm))	$d_names[] = $d_realm;
 
 			$q="select count(*) from ".$tc_name." 
-			    where lower(".$cc->uname.")=lower(".$this->sql_format($uname, "s").")";
-			/* get credentials only with realm from given list */
-			if (count($d_names)) $q .= " and ".$this->get_sql_in($cc->realm, $d_names);
+			    where lower(".$cc->uname.")=lower(".$this->sql_format($uname, "s").") and 
+				      ".$cc->realm." = ".$this->sql_format($d_realm, "s");
+
+			if ($config->auth['use_did']){
+				$q .= " and ".$cc->did." = ".$this->sql_format($did, "s");
+			}
 
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return 0;}

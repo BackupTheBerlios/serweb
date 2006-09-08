@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: accounting.php,v 1.5 2006/01/12 13:49:26 kozlik Exp $
+ * $Id: accounting.php,v 1.6 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -21,7 +21,7 @@ if ($controler->come_from_admin_interface){
 	$page_attributes['selected_tab']="users.php";
 }
 else{
-	$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+	$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 }
 
 $acc			= new apu_accounting();

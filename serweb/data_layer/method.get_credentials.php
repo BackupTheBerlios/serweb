@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_credentials.php,v 1.2 2006/03/22 14:00:14 kozlik Exp $
+ * $Id: method.get_credentials.php,v 1.3 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CData_Layer_get_credentials {
@@ -34,7 +34,8 @@ class CData_Layer_get_credentials {
 		$f = &$config->data_sql->credentials->flag_values;
 
 
-		$q="select ".$c->uname.", 
+		$q="select ".$c->did.", 
+		           ".$c->uname.",
 		           ".$c->realm.",
 		           ".$c->password.",
 		           ".$c->ha1.",
@@ -51,9 +52,9 @@ class CData_Layer_get_credentials {
 
 		$out=array();
 		for ($i=0; $row = $res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i] = new Credential($uid, $row[$c->uname], $row[$c->realm], 
-									$row[$c->password], $row[$c->ha1], 
-									$row[$c->ha1b], $row[$c->flags]);
+			$out[$i] = new Credential($uid, $row[$c->did], $row[$c->uname], 
+			                        $row[$c->realm], $row[$c->password], 
+									$row[$c->ha1], $row[$c->ha1b], $row[$c->flags]);
 		}
 		$res->free();
 		return $out;

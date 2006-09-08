@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: domain_admin.php,v 1.2 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: domain_admin.php,v 1.3 2006/09/08 12:27:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -22,7 +22,7 @@ $da	= new apu_domain_admin();
 
 $page_attributes['selected_tab']="list_of_admins.php";
 
-$smarty->assign('uname', $controler->user_id->uname);
+$smarty->assign('uname', $controler->user_id->get_username());
 $smarty->assign('domain',$config->domain);
 
 $da->set_opt('redirect_on_update', 'list_of_admins.php');

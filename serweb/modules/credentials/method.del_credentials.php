@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_credentials.php,v 1.1 2006/03/22 14:00:15 kozlik Exp $
+ * $Id: method.del_credentials.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
  */
 
 class CData_Layer_del_credentials {
@@ -17,7 +17,7 @@ class CData_Layer_del_credentials {
 	 *	@return bool
 	 */ 
 	 
-	function del_credentials($uid, $uname, $realm, $opt){
+	function del_credentials($uid, $did, $uname, $realm, $opt){
 		global $config;
 		
 		$errors = array();
@@ -38,6 +38,10 @@ class CData_Layer_del_credentials {
 		      where ".$c->uid."   = ".$this->sql_format($uid,   "s")." and
 		            ".$c->uname." = ".$this->sql_format($uname, "s")." and
 		            ".$c->realm." = ".$this->sql_format($realm, "s");
+
+		if ($config->auth['use_did']){
+			$q .= " and ".$c->did." = ".$this->sql_format($did, "s");
+		}
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }

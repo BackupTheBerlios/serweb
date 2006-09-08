@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_credentials.php,v 1.4 2006/03/22 14:00:13 kozlik Exp $
+ * $Id: method.add_credentials.php,v 1.5 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CData_Layer_add_credentials {
@@ -26,7 +26,7 @@ class CData_Layer_add_credentials {
 	 *	@return bool
 	 */ 
 	 
-	function add_credentials($uid, $uname, $realm, $passw, $opt){
+	function add_credentials($uid, $did, $uname, $realm, $passw, $opt){
 		global $config;
 		
 		$errors = array();
@@ -70,17 +70,30 @@ class CData_Layer_add_credentials {
 			else                 $flags = ($flags & ~$f['DB_FOR_SERWEB']);
 		}
 
+		$did_c = $did_v = "";
+		$pw_c  = $pw_v  = "";
+
+		if ($config->auth['use_did']){
+			$did_c = $c->did.", ";
+			$did_v = $this->sql_format($did,   "s").", ";
+		}
+
+		if ($config->clear_text_pw){
+			$pw_c  = $c->password.", ";
+			$pw_v  = $this->sql_format($passw, "s").", ";
+		}
 
 		$ha1  = md5($uname.":".$realm.":".$passw);
 		$ha1b = md5($uname."@".$realm.":".$realm.":".$passw);
 
 		$q = "insert into ".$t_name."(
-	             ".$c->uid.", ".$c->uname.", ".$c->realm.", ".$c->password.", 
+	             ".$c->uid.", ".$did_c.$c->uname.", ".$c->realm.", ".$pw_c." 
 				 ".$c->ha1.", ".$c->ha1b.", ".$c->flags.")
 		      values (".$this->sql_format($uid,   "s").", 
+		              ".$did_v."
 			          ".$this->sql_format($uname, "s").", 
 					  ".$this->sql_format($realm, "s").", 
-					  ".$this->sql_format($passw, "s").", 
+		              ".$pw_v."
 			          ".$this->sql_format($ha1,   "s").", 
 					  ".$this->sql_format($ha1b,  "s").", 
 					  ".$this->sql_format($flags, "n").")";

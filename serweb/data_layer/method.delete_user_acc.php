@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_acc.php,v 1.3 2005/12/14 16:36:58 kozlik Exp $
+ * $Id: method.delete_user_acc.php,v 1.4 2006/09/08 12:27:31 kozlik Exp $
  */
 
 /**
@@ -22,7 +22,7 @@
 class CData_Layer_delete_user_acc {
 	var $required_methods = array();
 
-	function delete_user_acc($user, $opt, &$errors){
+	function delete_user_acc($uid, $opt, &$errors){
 		global $config;
 
 		if (!$this->connect_to_db($errors)) return false;
@@ -39,7 +39,7 @@ class CData_Layer_delete_user_acc {
 		if ($opt_del_outgoing){
 			$q="update ".$t_acc."
 			    set flags = ( flags | ".$f_acc['DB_CALLER_DELETED']." )
-				where from_uid='".$user->uuid."'";
+				where from_uid='".$uid."'";
 
 			if (!is_null($opt_timestamp)) 
 				$q.=" and request_timestamp < '".gmdate("Y-m-d H:i:s", $opt_timestamp)."'";
@@ -51,7 +51,7 @@ class CData_Layer_delete_user_acc {
 		if ($opt_del_incoming){
 			$q="update ".$t_acc."
 			    set flags = ( flags | ".$f_acc['DB_CALLEE_DELETED']." )
-				where to_uid='".$user->uuid."'";
+				where to_uid='".$uid."'";
 
 			if (!is_null($opt_timestamp)) 
 				$q.=" and request_timestamp < '".gmdate("Y-m-d H:i:s", $opt_timestamp)."'";

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: auth4.1.php,v 1.5 2006/04/14 18:29:01 kozlik Exp $
+ * $Id: auth4.1.php,v 1.6 2006/09/08 12:27:35 kozlik Exp $
  */ 
 
 class Auth {
@@ -62,9 +62,10 @@ class Auth {
 	 *	@param	string	$realm
 	 */
 
-	function authenticate_as($uid, $uname, $realm){
+	function authenticate_as($uid, $uname, $did, $realm){
 		
 		$this->auth['uid']				= $uid;
+		$this->auth['did']				= $did;
 		$this->auth['uname']			= $uname;
 		$this->auth['realm']			= $realm;
 
@@ -88,14 +89,30 @@ class Auth {
 
 	function create_serweb_auth_references(){
 
-		if (! is_object($this->serweb_auth)){
+		$this->serweb_auth = &SerwebUser::instance_by_refs($this->auth['uid'],
+		                                                   $this->auth['uname'],
+		                                                   $this->auth['did'],
+		                                                   $this->auth['realm']);
+
+/*		if (! is_object($this->serweb_auth)){
 			$this->serweb_auth = new SerwebUser();	
 		}
 
-		$this->serweb_auth->uuid   = &$this->auth['uid'];
-		$this->serweb_auth->uname  = &$this->auth['uname'];
-		$this->serweb_auth->domain = &$this->auth['realm'];
+		$this->serweb_auth->uid       = &$this->auth['uid'];
+		$this->serweb_auth->did       = &$this->auth['did'];
+		$this->serweb_auth->username  = &$this->auth['uname'];
+		$this->serweb_auth->realm     = &$this->auth['realm'];
+*/
 	}
+
+	function &get_logged_user(){
+		if (! is_object($this->serweb_auth)){
+			$this->create_serweb_auth_references();
+		}
+		
+		return $this->serweb_auth;
+	}
+
 	
 	########################################################################
 	##
@@ -338,14 +355,15 @@ class Auth {
 	 *
 	 *	@static
 	 *	@param	string	$username	
-	 *	@param	string	$realm		
+	 *	@param	string	$did		
 	 *	@param	string	$password	
 	 *	@param	array	$opt		
 	 *	@return	string				UID if credentials are valid, false otherwise
 	 */
 	
-	function validate_credentials($username, $realm, $password, $opt){
-		return $username."@".$realm;
+	function validate_credentials($username, $did, $password, &$opt){
+		$opt['realm'] = $did;
+		return $username."@".$did;
 	}
 
 	/**
@@ -355,14 +373,12 @@ class Auth {
 	 *	function body
 	 *
 	 *	@static
-	 *	@param	string	$username	
 	 *	@param	string	$realm		
-	 *	@param	string	$uid	
 	 *	@param	array	$opt		
 	 *	@return	string				domain ID, FALSE on error
 	 */
 
-	function find_out_did($username, $realm, $uid, $opt){
+	function find_out_did($realm, $opt){
 		return $realm;
 	}
 	

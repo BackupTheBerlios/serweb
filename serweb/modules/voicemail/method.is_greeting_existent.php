@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.is_greeting_existent.php,v 1.1 2005/08/23 12:41:18 kozlik Exp $
+ * $Id: method.is_greeting_existent.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
  */
 
 class CData_Layer_is_greeting_existent {
@@ -10,10 +10,10 @@ class CData_Layer_is_greeting_existent {
 		global $config, $lang_str;
 		
 		if ($config->users_indexed_by=='uuid') {
-			$filename = $config->greetings_spool_dir.$user->uuid.".wav";
+			$filename = $config->greetings_spool_dir.$user->get_uid().".wav";
 		}
 		else{
-			$filename = $config->greetings_spool_dir.$user->domain."/".$user->uname.".wav";
+			$filename = $config->greetings_spool_dir.$user->get_domainname()."/".$user->get_username().".wav";
 		}
 
 		//is this needed?

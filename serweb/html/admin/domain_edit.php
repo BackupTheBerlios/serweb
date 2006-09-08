@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: domain_edit.php,v 1.3 2006/01/24 11:40:54 kozlik Exp $
+ * $Id: domain_edit.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -26,6 +26,8 @@ $do	= new apu_domain();
 $do->set_opt('redirect_on_update', 'list_of_domains.php');
 $do->set_opt('redirect_on_disable', 'list_of_domains.php');
 $do->set_opt('redirect_on_delete', 'list_of_domains.php');
+
+$do->set_opt('prohibited_domain_names', $config->prohibited_domains);
 
 $controler->add_apu($do);
 $controler->add_reqired_javascript('functions.js');

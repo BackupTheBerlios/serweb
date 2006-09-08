@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: acl.php,v 1.18 2005/12/22 12:54:32 kozlik Exp $
+ * $Id: acl.php,v 1.19 2006/09/08 12:27:32 kozlik Exp $
  */
 
 $_data_layer_required_methods=array();
@@ -22,7 +22,7 @@ $acl	= new apu_acl();
 
 $page_attributes['selected_tab']="users.php";
 
-$smarty->assign('uname', $controler->user_id->uname);
+$smarty->assign('uname', $controler->user_id->get_username());
 $smarty->assign('domain',$config->domain);
 
 $acl->set_opt('allow_edit', true);

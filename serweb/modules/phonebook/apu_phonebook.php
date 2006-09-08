@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_phonebook.php,v 1.1 2005/08/23 10:21:01 kozlik Exp $
+ * $Id: apu_phonebook.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
  */ 
 
 /* Application unit phonebook */
@@ -121,7 +121,7 @@ class apu_phonebook extends apu_base_class{
 		/* set default values to $this->opt */		
 		$this->opt['numerical_target_only'] =		false;
 		$this->opt['username_in_target_only'] =		false;
-		$this->opt['domain_for_targets'] = $controler->user_id->domain;
+		$this->opt['domain_for_targets'] = $controler->user_id->get_domainname();
 
 
 		/* blacklist */

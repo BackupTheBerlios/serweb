@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: missed_calls.php,v 1.4 2006/01/12 13:49:26 kozlik Exp $
+ * $Id: missed_calls.php,v 1.5 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -28,7 +28,7 @@ $acc->set_opt('get_phonebook_names', true);
 
 $acc->set_opt('smarty_result', 'missed_calls');
 
-$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 
 //create copy of some options from config in order to sensitive options will not accessible via templates
 $cfg=new stdclass();

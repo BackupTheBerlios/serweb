@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_customers.php,v 1.4 2006/03/08 15:46:27 kozlik Exp $
+ * $Id: method.get_customers.php,v 1.5 2006/09/08 12:27:34 kozlik Exp $
  */
 
 class CData_Layer_get_customers {
@@ -29,7 +29,7 @@ class CData_Layer_get_customers {
 	 *	@return array			array of customers or FALSE on error
 	 */ 
 	function get_customers($opt, &$errors){
-		global $config, $serweb_auth, $sess;
+		global $config, $sess;
 
 		if (!$this->connect_to_db($errors)) return false;
 

@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.8 2006/03/17 14:26:52 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.9 2006/09/08 12:27:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -163,7 +163,7 @@ class apu_subscribers extends apu_base_class{
 	function action_enable(&$errors){
 		global $data;
 		
-		$opt = array("uid"    => $this->controler->user_id->uuid,
+		$opt = array("uid"    => $this->controler->user_id->get_uid(),
 		             "disable" => false);
 
 		if (!$data->enable_user($opt)) return false;
@@ -175,7 +175,7 @@ class apu_subscribers extends apu_base_class{
 	function action_disable(&$errors){
 		global $data;
 		
-		$opt = array("uid"    => $this->controler->user_id->uuid,
+		$opt = array("uid"    => $this->controler->user_id->get_uid(),
 		             "disable" => true);
 	
 		if (!$data->enable_user($opt)) return false;
@@ -187,13 +187,13 @@ class apu_subscribers extends apu_base_class{
 	function action_delete(&$errors){
 		global $data;
 	
-		if (!$data->mark_user_deleted(array("uid"=>$this->controler->user_id->uuid))) return false;
+		if (!$data->mark_user_deleted(array("uid"=>$this->controler->user_id->get_uid()))) return false;
 
 		return array("m_sc_user_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	function action_default(&$errors){
-		global $data, $sess, $sess_apu_sc, $serweb_auth;
+		global $data, $sess, $sess_apu_sc;
 
 		$data->set_act_row($sess_apu_sc[$this->opt['sess_seed']]['act_row']);
 
@@ -271,7 +271,7 @@ class apu_subscribers extends apu_base_class{
 			$tmp['filter']['fname'] = '';
 			$tmp['filter']['lname'] = '';
 			$tmp['filter']['email'] = '';
-			$tmp['filter']['realm'] = '';
+			$tmp['filter']['domain'] = '';
 			$tmp['filter']['onlineonly'] = $this->opt['def_chk_onlineonly'];
 			$tmp['filter']['adminsonly'] = $this->opt['def_chk_adminsonly'];
 			$tmp['filter']['alias'] = '';
@@ -301,7 +301,7 @@ class apu_subscribers extends apu_base_class{
 		if (isset($_POST['fname'])) $filter['fname']=$_POST['fname'];
 		if (isset($_POST['lname'])) $filter['lname']=$_POST['lname'];
 		if (isset($_POST['email'])) $filter['email']=$_POST['email'];
-		if (isset($_POST['realm'])) $filter['realm']=$_POST['realm'];
+		if (isset($_POST['domain'])) $filter['domain']=$_POST['domain'];
 		if (isset($_POST['alias'])) $filter['alias']=$_POST['alias'];
 		if (isset($_POST['sipuri'])) $filter['sip_uri']=$_POST['sipuri'];
 
@@ -396,10 +396,10 @@ class apu_subscribers extends apu_base_class{
 		                             "value"=>$filter['email']));
 
 		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"realm",
+		                             "name"=>"domain",
 									 "size"=>11,
 									 "maxlength"=>128,
-	        	                     "value"=>$filter['realm']));
+	        	                     "value"=>$filter['domain']));
 
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"alias",

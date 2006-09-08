@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.16 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: my_account.php,v 1.17 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -21,7 +21,7 @@ if ($controler->come_from_admin_interface){
 	$page_attributes['selected_tab']="users.php";
 }
 else{
-	$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+	$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 }
 
 $pu			= new apu_password_update();
@@ -86,7 +86,7 @@ $cfg->allow_change_usrloc              = $config->allow_change_usrloc;
 
 $smarty->assign_by_ref("config", $cfg);
 
-$smarty->assign('url_ctd', "javascript: open_ctd_win_default('".RawURLEncode("sip:".$controler->user_id->uname."@".$controler->user_id->domain)."');");
+$smarty->assign('url_ctd', "javascript: open_ctd_win_default('".RawURLEncode("sip:".$controler->user_id->get_username()."@".$controler->user_id->get_domainname())."');");
 $smarty->assign('url_stun', "javascript:stun_applet_win('stun_applet.php', ".$config->stun_applet_width.", ".$config->stun_applet_height.");");
 $smarty->assign('url_admin', $sess->url($config->admin_pages_path."users.php?kvrk=".uniqid("")));
 

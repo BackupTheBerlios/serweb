@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.37 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.38 2006/09/08 12:27:33 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -523,6 +523,9 @@ $lang_str['th_password'] = 						"password";	//to translate
 $lang_str['th_for_ser'] = 						"for SER";	//to translate 
 $lang_str['th_for_serweb'] = 					"for SerWeb";	//to translate 
 
+$lang_str['err_credential_changed_domain'] = 	"Domain of user has been changed. You have to also fill new password";	//to translate 
+$lang_str['warning_credential_changed_domain'] =		"Serweb is configured to not store clear text passwords. That mean, if you change domain of user, you have to also fill password field. Otherwise hashed password become invalid.";	//to translate 
+
 $lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";	//to translate 
 
 
@@ -590,6 +593,7 @@ $lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";	//t
 $lang_str['l_create_new_domain'] = 				"create new domain";	//to translate 
 $lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to translate 
+$lang_str['prohibited_domain_name'] = 			"Sorry, this domain name is prohibited";	//to translate 
 $lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name";	//to translate 
 
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
@@ -661,10 +665,7 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to tran
 /* strings which are missing in reference lang file */
 /****************************************************/
 
-$lang_str['registration_introduction'] = 		"Om te registreren moet u onderstaande gegevens invullen en versturen. U ontvangt van ons een email om u registratie te bevestigen. Neem contact op via <a href=\"mailto:".$config->regmail."\">".$config->regmail."</a> voor vragen en opmerkingen over onze gratus trial SIP dienst.";
 $lang_str['reg_finish_questions'] = 			"Voor vragen en opmerking maakt u gebruik van onderstaande link";
-$lang_str['reg_finish_infomail'] = 				"<a href=\"mailto:".$config->infomail."\">".$config->infomail."</a>.";
-$lang_str['reg_conf_contact_infomail'] = 		"Neem contact op met <a href=\"mailto:".$config->infomail."\">".$config->infomail."</a> voor verdere ondersteuning.";
 $lang_str['tab_caller_screening'] =	 			"caller screening";
 $lang_str['msg_caller_screening_deleted_s'] = 	"Gecontroleerde uri verwijderd";
 $lang_str['msg_caller_screening_deleted_l'] = 	"Gecontroleerde uri is verwijderd";

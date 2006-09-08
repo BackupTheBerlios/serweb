@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.17 2006/04/18 14:51:43 kozlik Exp $
+ * $Id: method.get_users.php,v 1.18 2006/09/08 12:27:31 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -67,11 +67,15 @@ class CData_Layer_get_users {
 		$tc_name = &$config->data_sql->credentials->table_name;
 		$tu_name = &$config->data_sql->uri->table_name;
 		$tl_name = &$config->data_sql->location->table_name;
+		$td_name = &$config->data_sql->domain->table_name;
+		$tda_name = &$config->data_sql->domain_attrs->table_name;
 		/* col names */
 		$ca = &$config->data_sql->user_attrs->cols;
 		$cc = &$config->data_sql->credentials->cols;
 		$cu = &$config->data_sql->uri->cols;
 		$cl = &$config->data_sql->location->cols;
+		$cd = &$config->data_sql->domain->cols;
+		$cda = &$config->data_sql->domain_attrs->cols;
 		/* flags */
 		$fa = &$config->data_sql->user_attrs->flag_values;
 		$fc = &$config->data_sql->credentials->flag_values;
@@ -151,6 +155,23 @@ class CData_Layer_get_users {
 							".$qs_did.") ";
 		}
 
+		$q_dom_filter = "";
+		if(!empty($filter['domain'])){
+			if ($config->auth['use_did']){
+				$q_dom_filter = " join ".$td_name." dom 
+				            on (cr.".$cc->did." = dom.".$cd->did." and 
+							    dom.".$cd->name." like '%".$filter['domain']."%') ";
+			}
+			else{
+				$q_dom_filter = " join ".$tda_name." doa 
+				            on (cr.".$cc->realm." = doa.".$cda->value." and 
+				                doa.".$cda->name." = '".$an['digest_realm']."')
+				            join ".$td_name." dom 
+				            on (doa.".$cda->did." = dom.".$cd->did." and 
+							    dom.".$cd->name." like '%".$filter['domain']."%') ";
+			}
+		}
+
 		$q_domains = "";
 		if (!is_null($opt_from_domains)){
 			
@@ -176,7 +197,7 @@ class CData_Layer_get_users {
 		if (!$opt_return_all){
 			/* get num rows */		
 			$q = "select distinct cr.".$cc->uid." as uid
-				  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri.$q_suri.$q_agree."
+				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_suri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 				        left outer join ".$ta_name." aln
@@ -211,6 +232,7 @@ class CData_Layer_get_users {
 		$q = "select ".$q_dist."
 		             cr.".$cc->uid." as uid,
 			         cr.".$cc->uname." as username,
+		             cr.".$cc->did." as did,
 			         cr.".$cc->realm." as realm,
 					 afn.".$ca->value." as fname,
 					 aln.".$ca->value." as lname,
@@ -218,7 +240,7 @@ class CData_Layer_get_users {
 					 aem.".$ca->value." as email,
 					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled
 					 ".$q_tz_cols."
-			  from ".$tc_name." cr ".$q_online.$q_admins.$q_domains.$q_uri.$q_suri.$q_agree.$q_tz_from."
+			  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_suri.$q_agree.$q_tz_from."
 			        left outer join ".$ta_name." afn
 			            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 			        left outer join ".$ta_name." aln
@@ -243,14 +265,18 @@ class CData_Layer_get_users {
 			$i = $row['uid'];
 			$out[$i]['uid']            = $row['uid'];
 			$out[$i]['username']       = $row['username'];
-			$out[$i]['domain']         = $row['realm'];
-			$out[$i]['serweb_auth']    = new Cserweb_auth($row['uid'], $row['username'], $row['realm']);
+			$out[$i]['realm']          = $row['realm'];
+			$out[$i]['serweb_auth']    = &SerwebUser::instance($row['uid'],
+		                                                       $row['username'],
+		                                                       $config->auth['use_did'] ? $row['did'] : null,
+		                                                       $row['realm']);
+			$out[$i]['domain']         = $out[$i]['serweb_auth'] -> get_domainname();
 			$out[$i]['name']           = implode(' ', array($row['fname'], $row['lname']));
 			$out[$i]['fname']          = $row['fname'];
 			$out[$i]['lname']          = $row['lname'];
 			$out[$i]['phone']          = $row['phone'];
 			$out[$i]['email_address']  = $row['email'];
-			$out[$i]['get_param']      = user_to_get_param($row['uid'], $row['username'], $row['realm'], 'u');
+			$out[$i]['get_param']      = $out[$i]['serweb_auth']->to_get_param();
 			$out[$i]['disabled']       = (bool)$row['disabled'];
 
 			if ($opt_get_timezones){
@@ -281,7 +307,12 @@ class CData_Layer_get_users {
 			}
 
 			if ($opt_get_credentials){
-				if (false === $out[$i]['credentials'] = $this->get_credentials($row['uid'], null)) return false;
+				if (false === $credentials = $this->get_credentials($row['uid'], null)) return false;
+				$out[$i]['credentials'] = array();
+				
+				foreach ($credentials as $k=>$v){
+					if (false === $out[$i]['credentials'][] = $v->to_smarty()) return false;
+				}
 			}
 
 		}

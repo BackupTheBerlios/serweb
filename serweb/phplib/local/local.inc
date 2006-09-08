@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: local.inc,v 1.19 2006/04/14 18:29:01 kozlik Exp $
+ * $Id: local.inc,v 1.20 2006/09/08 12:27:35 kozlik Exp $
  */
 
 
@@ -79,7 +79,8 @@ class phplib_Auth extends Auth {
 		$password = "";
 		if (isset($_POST['password'])) $password = $_POST['password'];
 
-		if (false === $this->validate_credentials($this->auth['uname'], $this->auth['realm'], $password, array())){
+		$opt = array();
+		if (false === $this->validate_credentials($this->auth['uname'], $this->auth['did'], $password, $opt)){
 			return false;
 		}
 
@@ -97,21 +98,54 @@ class phplib_Auth extends Auth {
 	 *
 	 *	@static
 	 *	@param	string	$username	
-	 *	@param	string	$realm		
+	 *	@param	string	$did		
 	 *	@param	string	$password	
-	 *	@param	array	$opt		
+	 *	@param	array	$optionals		
 	 *	@return	string				UID if credentials are valid, false otherwise
 	 */
 
-	function validate_credentials($username, $realm, $password, $opt){
+	function validate_credentials($username, $did, $password, &$optionals){
 		global $lang_str, $data_auth, $config;
 
-		$data_auth->set_xxl_user_id('sip:'.$username.'@'.$realm);
+		$o_check_pw = isset($optionals['check_pw']) ? (bool)$optionals['check_pw'] : true;
+
+		$data_auth->set_xxl_user_id('sip:'.$username.'@'.$did);
 		$data_auth->expect_user_id_may_not_exists();
 
 		$data_auth->add_method('check_credentials');
+		$data_auth->add_method('get_domain_flags');
+
+
+		// check flags of domain
+		if (false === $flags = $data_auth->get_domain_flags($did, null)) return false;
+
+		if ($flags['disabled']){
+			sw_log("validate_credentials: authentication failed: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
+			ErrorHandler::add_error($lang_str['account_disabled']);
+			return false;
+		}
+
+		if ($flags['deleted']){
+			sw_log("validate_credentials: authentication failed: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
+			ErrorHandler::add_error($o_check_pw ? $lang_str['bad_username'] : $lang_str['err_no_user']);
+			return false;
+		}
+
+
+		// find the realm 
+		sw_log("validate_credentials: looking for realm of domain with did: ".$did, PEAR_LOG_DEBUG);
+
+		$opt=array("did"=>$did);
+		if (false === $realm = Attributes::get_attribute($config->attr_names['digest_realm'], $opt)) return false;
+
+		$optionals['realm'] = $realm;
 	
+		// chceck credentials
+		sw_log("validate_credentials: checking credentials (username:did:realm): ".$username.":".$did.":".$realm, PEAR_LOG_DEBUG);
+
 		$opt = array();
+		$opt['check_pass'] = $o_check_pw;
+
 		if ($config->clear_text_pw)	{
 			$opt['hash'] = 'clear';
 			$ha = $password;
@@ -121,76 +155,68 @@ class phplib_Auth extends Auth {
 			$ha = md5($username.":".$realm.":".$password);
 		}
 
-		$uid = $data_auth->check_credentials($username, $realm, $ha, $opt);
+		$uid = $data_auth->check_credentials($username, $did, $realm, $ha, $opt);
 
 		if (is_int($uid) and $uid == -3){
-			sw_log("User login: authentication failed: account disabled ", PEAR_LOG_INFO);
+			sw_log("validate_credentials: authentication failed: account disabled ", PEAR_LOG_INFO);
 			ErrorHandler::add_error($lang_str['account_disabled']);
 			return false;
 		}
 
 		if (is_int($uid) and $uid <= 0) {
-			sw_log("User login: authentication failed: bad username or realm or password ", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['bad_username']);
+			sw_log("validate_credentials: authentication failed: bad username, did, realm or password ", PEAR_LOG_INFO);
+			ErrorHandler::add_error($o_check_pw ? $lang_str['bad_username'] : $lang_str['err_no_user']);
 			return false;
 		}
 
 
 		if (is_null($uid)){
-			sw_log("User login: authentication failed: no user ID", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['bad_username']);
+			sw_log("validate_credentials: authentication failed: no user ID", PEAR_LOG_INFO);
+			ErrorHandler::add_error($o_check_pw ? $lang_str['bad_username'] : $lang_str['err_no_user']);
 			return false;
 		}
 
 		return $uid;	
 	}
 
+ 
 	/**
-	 *	Get domain id of domain of the user
+	 *	Get domain id of domain 
 	 *	
 	 *	@static
-	 *	@param	string	$username	
 	 *	@param	string	$realm		
-	 *	@param	string	$uid	
 	 *	@param	array	$opt		
 	 *	@return	string				domain ID, FALSE on error
 	 */
-
-	function find_out_did($username, $realm, $uid, $opt){
-		global $data_auth, $lang_str, $config;
+	
+	function find_out_did($realm, $opt){
+		global $config;
 
 		if (!$config->multidomain) return $config->default_did;
 
+		$dh = &Domains::singleton();
+		if (false === $did = $dh->get_did($realm)) return false;
+		
+		if (is_null($did)) return null;
+		
+		return $did;
+
+	/*	
+		global $data_auth, $lang_str, $config;
+
 		$data_auth->add_method('get_did_by_realm');
-		$data_auth->add_method('get_domain_flags');
 		
 		$opt = array('check_disabled_flag' => false);
-		
-		$did = $data_auth->get_did_by_realm($realm, $opt);
-		if (false === $did) return false;
-
+		if (false === $did = $data_auth->get_did_by_realm($realm, $opt)) return false;
+	
 		if (is_null($did)){
-			sw_log("User login: authentication failed: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
+			sw_log("find_out_did: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
 			ErrorHandler::add_error($lang_str['domain_not_found']);
 			return false;
 		}
-
-		if (false === $flags = $data_auth->get_domain_flags($did, null)) return false;
-
-		if ($flags['disabled']){
-			sw_log("User login: authentication failed: domain with id '".$did."' is disabled", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['account_disabled']);
-			return false;
-		}
-
-		if ($flags['deleted']){
-			sw_log("User login: authentication failed: domain with id '".$did."' is deleted", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['bad_username']);
-			return false;
-		}
-
-
+		
 		return $did;
+	*/
 	}
 
 	/**

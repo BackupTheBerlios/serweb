@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: phonebook.php,v 1.6 2006/01/12 13:49:26 kozlik Exp $
+ * $Id: phonebook.php,v 1.7 2006/09/08 12:27:32 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -21,7 +21,7 @@ $pb->set_opt('get_user_status', true);
 /* if you doesn't need this, disable it for perfonmance reasons */
 $pb->set_opt('get_user_aliases', true);
 
-$page_attributes['user_name'] = get_user_real_name($serweb_auth);
+$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
 
 
 //create copy of some options from config in order to sensitive options will not accessible via templates

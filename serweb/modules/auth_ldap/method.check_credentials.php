@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_credentials.php,v 1.1 2005/12/23 08:59:21 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.2 2006/09/08 12:27:33 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -11,7 +11,7 @@ class CData_Layer_check_credentials {
 	 * return: uuid
 	 */
 
-	function check_credentials($user, $domain, $passw, $opt){
+	function check_credentials($uname, $did, $realm, $passw, $opt){
 		global $config;
 
 		$errors = array();

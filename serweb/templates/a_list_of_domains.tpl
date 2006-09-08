@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.7 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -48,7 +48,7 @@
 	
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false} informationrow">
 	<td align="left">{$row.id|escape|empty2nbsp}</td>
-	<td align="left">
+	<td align="left" width="400">
 		{assign var='dom_class' value='swDomainEnabled'}
 		{if $row.disabled} {assign var='dom_class' value='swDomainDisabled'} {/if}
 		{foreach from=$row.names item='dom' name='one_domain'}

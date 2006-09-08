@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.11 2006/07/10 13:45:05 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.12 2006/09/08 12:27:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -268,9 +268,9 @@ class apu_registration extends apu_base_class{
 
 		
 		/* get realm */
-		$da = &Domain_Attrs::singleton($did);
-		if (false === $realm = $da->get_attribute($an['digest_realm'])) return false;
-		if (is_null($realm)) $realm = $domain_name;
+		$opt=array("did"=>$did);
+		if (false === $realm = Attributes::get_attribute($an['digest_realm'], $opt)) return false;
+//		if (is_null($realm)) $realm = $domain_name;
 		
 
 		if (false === $data->transaction_start()) return false;
@@ -279,11 +279,12 @@ class apu_registration extends apu_base_class{
 		/* generate uid */
 		if (false === $uid = $this->get_uid($_POST['uname'], $realm)) return false;
 
-		$user_param = user_to_get_param($uid, $_POST['uname'], $realm, "u");
+		$serweb_user = &SerwebUser::instance($uid, $_POST['uname'], $did, $realm);
+		$user_param  = $serweb_user->to_get_param();
 
 		/* store credentials */
 		$o = array('disabled' => $this->opt['require_confirmation']);
-		if (false === $data->add_credentials($uid, $_POST['uname'], $realm, $password, $o)) {
+		if (false === $data->add_credentials($uid, $did, $_POST['uname'], $realm, $password, $o)) {
 			$data->transaction_rollback();
 			return false;
 		}
@@ -384,7 +385,7 @@ class apu_registration extends apu_base_class{
 					 $this->opt['login_script'];
 
 		$username = $config->fully_qualified_name_on_login ? 
-		              ($_POST['uname']."@".$realm) : 
+		              ($_POST['uname']."@".$domain_name) : 
 		               $_POST['uname'];
 
 		$confirmation_url = $config->root_uri.
@@ -442,7 +443,7 @@ class apu_registration extends apu_base_class{
 		return array("m_user_registered=".RawURLEncode($this->opt['instance_id']),
 		             "reg_sip_adr=".RawURLEncode($sip_address),
 		             "require_conf=".RawURLEncode($this->opt['require_confirmation']),
-		             $user_param);
+		             $user_param); //$user_param sets the user_id holding ny controller
 	}
 
 	function action_finish(&$errors){
@@ -723,6 +724,9 @@ class apu_registration extends apu_base_class{
 			$out[$att]['att_desc'] = $this->attr_types[$att]->get_description();
 			$out[$att]['att_name'] = $att;
 			$out[$att]['att_type'] = $this->attr_types[$att]->get_type();
+			$out[$att]['att_value'] = $this->attr_values[$att];
+			$out[$att]['att_value_f'] = $this->attr_types[$att]->format_value($this->attr_values[$att]);
+			$out[$att]['edit'] = true;
 			
 			/* if type of attribute is radio, create list of options
 			 * ass array of asociative arrays with entries 'label' and 'value'

@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.7 2006/08/03 08:36:07 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.8 2006/09/08 12:27:33 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -213,6 +213,7 @@ class apu_attributes extends apu_base_class{
 //				$out[$name_of_attribute]['att_desc'] = $name_of_attribute;
 
 			$out[$att]['att_desc'] = $this->attr_types[$att]->get_description();
+			$out[$att]['att_ldesc'] = $this->attr_types[$att]->get_long_description();
 			$out[$att]['att_name'] = $att;
 			$out[$att]['att_type'] = $this->attr_types[$att]->get_type();
 			$out[$att]['att_value'] = $this->attr_values[$att];

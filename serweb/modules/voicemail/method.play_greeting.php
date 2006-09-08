@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.play_greeting.php,v 1.1 2005/08/23 12:54:58 kozlik Exp $
+ * $Id: method.play_greeting.php,v 1.2 2006/09/08 12:27:35 kozlik Exp $
  */
 
 class CData_Layer_play_greeting {
@@ -10,10 +10,10 @@ class CData_Layer_play_greeting {
 		global $config, $lang_str;
 		
 		if ($config->users_indexed_by=='uuid') {
-			@$fp=fopen($config->greetings_spool_dir.$user->uuid.".wav", 'rb');
+			@$fp=fopen($config->greetings_spool_dir.$user->get_uid().".wav", 'rb');
 		}
 		else{
-			@$fp=fopen($config->greetings_spool_dir.$user->domain."/".$user->uname.".wav", 'rb');
+			@$fp=fopen($config->greetings_spool_dir.$user->get_domainname()."/".$user->get_username().".wav", 'rb');
 		}
 
 		if (!$fp){

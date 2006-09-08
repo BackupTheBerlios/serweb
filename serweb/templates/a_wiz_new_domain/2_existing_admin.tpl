@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.6 2006/07/03 09:15:16 kozlik Exp $ *}
+{* $Id: 2_existing_admin.tpl,v 1.7 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -16,7 +16,7 @@
 <tr valign="bottom">
 <td><label for="uid" id="luid">{$lang_str.ff_uid}</label></td>
 <td><label for="usrnm"  id="lusrnm" >{$lang_str.ff_username}</label></td>
-<td><label for="realm"  id="lrealm">{$lang_str.ff_realm}</label></td>
+<td><label for="domain"  id="ldomain">{$lang_str.ff_domain}</label></td>
 <td><label for="fname"  id="lfname" >{$lang_str.ff_first_name}</label></td>
 <td><label for="lname"  id="llname" >{$lang_str.ff_last_name}</label></td>
 <td><label for="email"  id="lemail" >{$lang_str.ff_email}</label></td>
@@ -25,7 +25,7 @@
 <tr>
 <td>{$form.uid}</td>
 <td>{$form.usrnm}</td>
-<td>{$form.realm}</td>
+<td>{$form.domain}</td>
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
@@ -46,7 +46,7 @@
 	<tr>
 	<th>{$lang_str.th_uid}</th>
 	<th>{$lang_str.th_username}</th>
-	<th>{$lang_str.th_realm}</th>
+	<th>{$lang_str.th_domain}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
 	</tr>

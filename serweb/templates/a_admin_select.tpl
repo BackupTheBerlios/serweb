@@ -1,11 +1,11 @@
 {* Smarty *}
-{* $Id: a_admin_select.tpl,v 1.4 2006/07/03 09:15:16 kozlik Exp $ *}
+{* $Id: a_admin_select.tpl,v 1.5 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
 	#uid,    #luid   {width:100px;}
 	#usrnm,  #lusrnm {width:100px;}
-	#realm,  #lrealm {width:100px;}
+	#domain,  #ldomain {width:100px;}
 	#fname,  #lfname {width:100px;}
 	#lname,  #llname {width:100px;}
 	#email,  #lemail {width:100px;}
@@ -26,7 +26,7 @@
 <tr valign="bottom">
 <td><label for="uid" id="luid">{$lang_str.ff_uid}</label></td>
 <td><label for="usrnm"  id="lusrnm" >{$lang_str.ff_username}</label></td>
-<td><label for="realm"  id="lrealm">{$lang_str.ff_realm}</label></td>
+<td><label for="domain"  id="ldomain">{$lang_str.ff_domain}</label></td>
 <td><label for="fname"  id="lfname" >{$lang_str.ff_first_name}</label></td>
 <td><label for="lname"  id="llname" >{$lang_str.ff_last_name}</label></td>
 <td><label for="email"  id="lemail" >{$lang_str.ff_email}</label></td>
@@ -35,7 +35,7 @@
 <tr>
 <td>{$form.uid}</td>
 <td>{$form.usrnm}</td>
-<td>{$form.realm}</td>
+<td>{$form.domain}</td>
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
 <td>{$form.email}</td>
@@ -56,7 +56,7 @@
 	<tr>
 	<th>{$lang_str.th_uid}</th>
 	<th>{$lang_str.th_username}</th>
-	<th>{$lang_str.th_realm}</th>
+	<th>{$lang_str.th_domain}</th>
 	<th>{$lang_str.th_name}</th>
 	<th>{$lang_str.th_email}</th>
 	</tr>

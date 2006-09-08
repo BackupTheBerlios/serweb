@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.24 2006/07/20 16:45:40 kozlik Exp $
+ * $Id: data_layer.php,v 1.25 2006/09/08 12:27:31 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -254,7 +254,7 @@ class CData_Layer{
 	 *	@access private
 	 */
 	function get_home_proxy(&$errors){
-		global $sess, $sess_data_conn, $serweb_auth, $config;
+		global $sess, $sess_data_conn, $config;
 
 		// if $this->xxl_user_id is set, force calling get_proxy
 		if ($this->xxl_user_id){
@@ -274,13 +274,14 @@ class CData_Layer{
 			return $sess_data_conn[$this->name]['proxy'];
 		}
 
-		// if $serweb_auth exists use it for obtain uri of sip proxy
-		if (isset($serweb_auth->uuid) and $serweb_auth->uuid){
+		// if user is logget in, use his uid for obtain uri of sip proxy
+		if ($_SESSION['auth']->is_authenticated()){
+			$current_user = $_SESSION['auth']->get_logged_user();
 
 			if ($config->users_indexed_by=='uuid'){
-				$user_id = 'urn:uuid:'.$serweb_auth->uuid;
+				$user_id = 'urn:uuid:'.$current_user->get_uid();
 			} else {
-				$user_id = 'sip:'.$serweb_auth->uname."@".$serweb_auth->domain;
+				$user_id = 'sip:'.$current_user->get_username()."@".$current_user->get_realm();
 			}
 
 			if (false === $proxy = $this->get_proxy($user_id, $errors)){
@@ -820,9 +821,9 @@ class CData_Layer{
 	function get_indexing_sql_where_phrase($user, $uuid_col='uid', $uname_col='username', $domain_col='domain'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
-			return $uuid_col."='".addslashes($user->uuid)."'";
+			return $uuid_col."='".addslashes($user->get_uid())."'";
 		else 
-			return "(".$uname_col."='".addslashes($user->uname)."' and ".$domain_col."='".addslashes($user->domain)."')";
+			return "(".$uname_col."='".addslashes($user->get_username())."' and ".$domain_col."='".addslashes($user->get_domainname())."')";
 	}
 
 	/* return where phrase for sql commands depending on how are user's indexed - tables where users are indexed by sip uri */
@@ -830,9 +831,9 @@ class CData_Layer{
 	function get_indexing_sql_where_phrase_uri($user, $uuid_col='uid', $r_uri_col='r_uri'){
 		global $config;
 		if ($config->users_indexed_by=='uuid') 
-			return $uuid_col."='".addslashes($user->uuid)."'";
+			return $uuid_col."='".addslashes($user->get_uid())."'";
 		else 
-			return $r_uri_col." like 'sip:".addslashes($user->uname)."@".addslashes($user->domain)."%'";
+			return $r_uri_col." like 'sip:".addslashes($user->get_username())."@".addslashes($user->get_domainname())."%'";
 	}
 	
 
@@ -843,11 +844,11 @@ class CData_Layer{
 
 		if ($config->users_indexed_by=='uuid') {
 			$attributes=$uuid_col;
-			$values="'".addslashes($user->uuid)."'";
+			$values="'".addslashes($user->get_uid())."'";
 		}
 		else{
 			$attributes=$uname_col.", ".$domain_col;
-			$values="'".addslashes($user->uname)."', '".addslashes($user->domain)."'";
+			$values="'".addslashes($user->get_username())."', '".addslashes($user->get_domainname())."'";
 		}
 
 		return array('attributes'=>$attributes, 'values'=>$values);
@@ -1059,9 +1060,9 @@ class CData_Layer{
 	
 	function get_indexing_ldap_filter($user, $uuid_col='uuid', $uname_col='username', $domain_col='domain'){
 		global $config;
-		if ($config->users_indexed_by=='uuid') return "(".$uuid_col."=".$user->uuid.")";
-		else return "(&(".$uname_col."=".$user->uname.") ".
-			          "(".$domain_col."=".$user->domain."))";
+		if ($config->users_indexed_by=='uuid') return "(".$uuid_col."=".$user->get_uid().")";
+		else return "(&(".$uname_col."=".$user->get_username().") ".
+			          "(".$domain_col."=".$user->get_domainname()."))";
 	
 	}
 

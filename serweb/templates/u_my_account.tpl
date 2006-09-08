@@ -1,12 +1,12 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.18 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.19 2006/09/08 12:27:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 {popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {if $come_from_admin_interface}
-<h2 class="swTitle">{$lang_str.user}: {$user_auth->uname|escape}</h2>
+<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}</h2>
 {/if}
 
 <div class="swForm">

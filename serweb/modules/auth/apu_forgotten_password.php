@@ -3,7 +3,7 @@
  * Application unit forgotten_password
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_forgotten_password.php,v 1.4 2006/07/10 13:45:05 kozlik Exp $
+ * @version   $Id: apu_forgotten_password.php,v 1.5 2006/09/08 12:27:33 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -14,6 +14,9 @@
  *	Configuration:
  *	--------------
  *
+ *	'auth_class'				(string) default: "Auth"
+ *	 Name of class auth class which is used for validate credentials.
+ *	
  *	'domain'					(string) default: $config->domain
  *	 domain to which users will be registered
  *	 
@@ -85,6 +88,8 @@ class apu_forgotten_password extends apu_base_class{
 
 		$this->opt['fully_qualified_name'] = $config->fully_qualified_name_on_login;
 
+		$this->opt['auth_class'] = 'Auth';
+
 		/* message on attributes update */
 		$this->opt['msg_conf_send']['short'] =	&$lang_str['msg_pass_conf_sended_s'];
 		$this->opt['msg_conf_send']['long']  =	&$lang_str['msg_pass_conf_sended_l'];
@@ -138,12 +143,15 @@ class apu_forgotten_password extends apu_base_class{
 
 		if (false === $email = $user_attrs->get_attribute($an['email'])) return false;
 
+		$serwebuser = &SerwebUser::instance($this->sip_user['uid'],
+		                                    $this->sip_user['uname'],
+											$this->sip_user['did'],
+											$this->sip_user['realm']);
 
 		$confirmation_url = $config->root_uri.
 		                    $_SERVER['PHP_SELF'].
-							"?u=".RawURLEncode($this->sip_user['uname']).
-							"&r=".RawURLEncode($this->sip_user['realm']).
-							"&nr=".$confirm.
+							"?nr=".$confirm.
+							"&".$serwebuser->to_get_param("u").
 							(isModuleLoaded('xxl') ? 
 								"&pr=".RawURLEncode(base64_encode($proxy)):
 								"");
@@ -187,7 +195,7 @@ class apu_forgotten_password extends apu_base_class{
 			return false;
 		}
 
-		if (empty($_GET['u']) or empty($_GET['r'])){
+		if (empty($_GET['u'])){
 			$errors[] = $lang_str['err_reg_conf_not_exists_conf_num'];
 			return false;
 		}
@@ -206,6 +214,15 @@ class apu_forgotten_password extends apu_base_class{
 
 		$uid = $attrs[0]['id'];
 
+		/* recreate instance of SerwebUser class from get param */
+		$serweb_user = &SerwebUser::recreate_from_get_param($_GET['u']);
+
+		/* and compare if uid obtained from user_attrs match to uid inside $serweb_user object */
+		if ($uid != $serweb_user->get_uid()){
+			ErrorHandler::add_error($lang_str['err_reg_conf_not_exists_conf_num']);
+			return false;
+		}
+
 		/* get email address of user */
 		$user_attrs = &User_Attrs::singleton($uid);
 		if (false === $email = $user_attrs->get_attribute($an['email'])) return false;
@@ -214,25 +231,10 @@ class apu_forgotten_password extends apu_base_class{
 		$password = substr(md5(uniqid('')), 0, 5);
 
 		if (false === $data->set_password_to_user(
-						new SerwebUser($uid, $_GET['u'], $_GET['r']),
+						$serweb_user,
 						$password,  
 						$errors)){ 
 			return false;
-		}
-
-
-		if ($config->multidomain) {
-			if (is_null($this->did)){
-				$opt = array('check_disabled_flag' => false);
-				$this->did = $data->get_did_by_realm($_GET['r'], $opt);
-				if (false === $this->did) return false;
-		
-				if (is_null($this->did)){
-					sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
-					ErrorHandler::add_error($lang_str['domain_not_found']);
-					return false;
-				}
-			}
 		}
 
 
@@ -307,7 +309,7 @@ class apu_forgotten_password extends apu_base_class{
 			// parse username and domain from it
 			if (ereg("^([^@]+)@(.+)", $_POST['fp_uname'], $regs)){
 				$username=$regs[1];
-				$realm=$regs[2];
+				$domain=$regs[2];
 				
 			}
 			else {
@@ -318,58 +320,40 @@ class apu_forgotten_password extends apu_base_class{
 		}
 		else{
 			$username=$_POST['fp_uname'];
-			$realm=$this->opt['domain'];
+			$domain=$this->opt['domain'];
 		}
 
-		$data->set_xxl_user_id('sip:'.$username.'@'.$realm);
+		$data->set_xxl_user_id('sip:'.$username.'@'.$domain);
 		$data->expect_user_id_may_not_exists();
 
-		$o = array('check_pass' => false );
-		$uid = $data->check_credentials($username, $realm, null, $o);
+		/* get did */
+		$opt = array();
+		$did = call_user_func_array(array($this->opt['auth_class'], 'find_out_did'), 
+		                            array($domain, &$opt));
 
-		if (is_int($uid) and $uid == -3){
-			sw_log("Get password: account disabled ", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['account_disabled']);
+		if (false === $did) return false;
+		if (is_null($did)){
+			sw_log("Forgotten password: did not found for domain name: ".$domain, PEAR_LOG_DEBUG);
+			ErrorHandler::add_error($lang_str['domain_not_found']);
 			return false;
 		}
 
-		if ((is_int($uid) and $uid <= 0) or is_null($uid)) {
-			sw_log("Get password: bad username or realm ", PEAR_LOG_INFO);
-			ErrorHandler::add_error($lang_str['err_no_user']);
-			return false;
-		}
+		$o = array("did"=>$did);
+		if (false === $realm = Attributes::get_attribute($config->attr_names['digest_realm'], $o)) return false;
+
+		/* validate credentials */
+		$o = array('check_pw' => false);
+		$uid = call_user_func_array(array($this->opt['auth_class'], 'validate_credentials'), 
+		                            array($username, $did, null, &$o));
+
+		if (false === $uid) return false;
 
 		$this->sip_user['uname'] = $username;
-		$this->sip_user['realm'] = $realm;
+		$this->sip_user['realm'] = isset($o['realm']) ? $o['realm'] : "";
 		$this->sip_user['uid']   = $uid;
+		$this->sip_user['did']   = $did;
 
-		if ($config->multidomain) {
-			/* check flags of the domain of user - only if useing multiple domains*/
-			$opt = array('check_disabled_flag' => false);
-			
-			$this->did = $data->get_did_by_realm($realm, $opt);
-			if (false === $this->did) return false;
-	
-			if (is_null($this->did)){
-				sw_log("Get password: domain id for realm '".$realm."' not found", PEAR_LOG_INFO);
-				ErrorHandler::add_error($lang_str['domain_not_found']);
-				return false;
-			}
-	
-			if (false === $flags = $data->get_domain_flags($this->did, null)) return false;
-	
-			if ($flags['disabled']){
-				sw_log("Get password: domain with id '".$this->did."' is disabled", PEAR_LOG_INFO);
-				ErrorHandler::add_error($lang_str['account_disabled']);
-				return false;
-			}
-	
-			if ($flags['deleted']){
-				sw_log("Get password: domain with id '".$this->did."' is deleted", PEAR_LOG_INFO);
-				ErrorHandler::add_error($lang_str['domain_not_found']);
-				return false;
-			}
-		}
+		$this->did = $did;
 
 		return true;
 	}

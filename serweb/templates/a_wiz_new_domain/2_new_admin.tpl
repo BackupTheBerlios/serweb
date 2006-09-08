@@ -1,8 +1,10 @@
 {* Smarty *}
-{* $Id: 2_new_admin.tpl,v 1.3 2006/05/23 09:13:39 kozlik Exp $ *}
+{* $Id: 2_new_admin.tpl,v 1.4 2006/09/08 12:27:35 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <h2 class="swTitle">{$lang_str.register_new_admin}</h2>
 

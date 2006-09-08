@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.check_credentials.php,v 1.6 2006/03/08 15:46:26 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.7 2006/09/08 12:27:33 kozlik Exp $
  */
 
 class CData_Layer_check_credentials {
@@ -28,13 +28,14 @@ class CData_Layer_check_credentials {
 	 *
 	 *
 	 *	@param string $uname	username
+	 *	@param string $did	    did
 	 *	@param string $realm	realm
 	 *	@param string $passw	password
 	 *	@param array $opt		associative array of options
 	 *	@return mixed			uid or error code
 	 */ 
-	function check_credentials($uname, $realm, $passw, $opt){
-		global $config, $serweb_auth, $sess;
+	function check_credentials($uname, $did, $realm, $passw, $opt){
+		global $config, $sess;
 
 		$errors = array();
 
@@ -54,12 +55,15 @@ class CData_Layer_check_credentials {
 		$opt_hash = isset($opt["hash"]) ? $opt["hash"] : "clear";
 		$opt_check_pass = isset($opt["check_pass"]) ? (bool)$opt["check_pass"] : true;
 		
-		
 		/* prepare SQL query */
 		$q="select c.".$c->uid.", c.".$c->flags.
 		    " from ". $t_name." c ".
 			" where c.".$c->uname."=".$this->sql_format($uname, "s")." and 
 			        c.".$c->realm."=".$this->sql_format($realm, "s");
+
+		if ($config->auth['use_did']){
+			$q .= " and c.".$c->did."=".$this->sql_format($did, "s");
+		}
 
 		if ($opt_check_pass){			
 			if     ($opt_hash == "clear") $q .= " and c.".$c->password."=".$this->sql_format($passw, "s");
@@ -70,6 +74,7 @@ class CData_Layer_check_credentials {
 				return 0;
 			}
 		}
+
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) { 

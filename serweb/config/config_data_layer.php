@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.43 2006/07/20 17:01:01 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.44 2006/09/08 12:27:31 kozlik Exp $
  */
 
 
@@ -210,6 +210,17 @@
 		 *	Otherwise set this option to false
 		 */
 		$config->ser_domain_cache = true;
+
+
+		/**
+		 *	Set to false if SER useing did column of credentials table
+		 *
+		 *	modparam("auth_db", "use_did", 0) is set in ser.cfg
+		 *	
+		 *	Otherwise set this option to true
+		 */
+		$config->auth['use_did'] = true;
+
 		
 		/* these are setting required by ldap, you need to change it only if you are using ldap to 
 		   store some data. If you are using ldap, you need to instal PEAR package db_ldap2 by command:
@@ -334,6 +345,7 @@
 		$config->data_sql->credentials->table_name = 		"credentials";
 		
  		$config->data_sql->credentials->cols->uname = 		"auth_username";
+ 		$config->data_sql->credentials->cols->did = 		"did";
  		$config->data_sql->credentials->cols->realm = 		"realm";
  		$config->data_sql->credentials->cols->password = 	"password";
  		$config->data_sql->credentials->cols->flags = 		"flags";

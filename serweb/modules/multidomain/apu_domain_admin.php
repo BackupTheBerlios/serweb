@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.6 2006/04/14 19:15:35 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.7 2006/09/08 12:27:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -134,7 +134,7 @@ class apu_domain_admin extends apu_base_class{
 		global $data, $sess, $sess_apu_da;
 		
 		$opt = array();
-		if (false === $this->assigned_ids = $data->get_domains_of_admin($this->controler->user_id->uuid, $opt)) return false;
+		if (false === $this->assigned_ids = $data->get_domains_of_admin($this->controler->user_id->get_uid(), $opt)) return false;
 
 		$opt = array("filter" => $sess_apu_da['filter'],
 		             "return_all" => true,

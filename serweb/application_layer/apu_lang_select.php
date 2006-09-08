@@ -3,7 +3,7 @@
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.7 2006/01/03 15:00:34 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.8 2006/09/08 12:27:31 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -106,7 +106,7 @@ class apu_lang_select extends apu_base_class{
 		if ($this->opt['save_to_user_attr']){
 			$an = &$config->attr_names;
 		
-			$attrs = &User_Attrs::singleton($this->controler->user_id->uuid);
+			$attrs = &User_Attrs::singleton($this->controler->user_id->get_uid());
 			if (false === $attrs->set_attribute($an['lang'], 
 			                                    $available_languages[$_SESSION['lang']][2])) 
 				return false;

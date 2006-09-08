@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_credentials.php,v 1.2 2006/04/03 14:56:05 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.3 2006/09/08 12:27:34 kozlik Exp $
  */
 
 require_once 'Auth/RADIUS.php';
@@ -105,12 +105,13 @@ class CData_Layer_check_credentials {
 	 *		none
 	 *
 	 *	@param string $uname	username
+	 *	@param string $did	    did
 	 *	@param string $realm	realm
 	 *	@param string $passw	password
 	 *	@param array $opt		associative array of options
 	 *	@return mixed			uid or error code
 	 */ 
-	function check_credentials($uname, $realm, $passw, $opt){
+	function check_credentials($uname, $did, $realm, $passw, $opt){
 		global $config, $lang_str;
 
 		if ($config->clear_text_pw){

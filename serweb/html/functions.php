@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.78 2006/09/05 13:10:09 kozlik Exp $
+ * @version   $Id: functions.php,v 1.79 2006/09/08 12:27:32 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -933,95 +933,6 @@ function log_errors($err_object, &$errors){
 
 }
 
-/**
- *	sets varibale getted by $_POST or by $_GET to global
- */
- 
-function set_global($var){
-	global $_POST, $_GET, $GLOBALS;
-	
-	if (isset($_POST[$var])) $GLOBALS[$var]=$_POST[$var];
-	elseif (isset($_GET[$var])) $GLOBALS[$var]=$_GET[$var];
-	else $GLOBALS[$var]=null;
-}
-
-/**
- *	convert Cserweb_auth to string which may be used in get params
- * 
- *	@param object $user Cserweb_auth object
- *	@param string $prefix name of get params
- *	@return string
- */
- 
-function userauth_to_get_param($user, $prefix){
-	return $prefix."_id=".RawURLencode($user->uuid)."&".
-	       $prefix."_n=".RawURLencode($user->uname)."&".
-		   $prefix."_d=".RawURLencode($user->domain);
-}
-
-/**
- *	convert Cserweb_auth to form hidden fields
- * 
- *	@param object $user Cserweb_auth object
- *	@param string $prefix name of form fields
- *	@param object $form phplib form object
- */
-
-function userauth_to_form($user, $prefix, &$form){
-	$form->add_element(array("type"=>"hidden",
-	                         "name"=>$prefix."_id",
-	                         "value"=>$user->uuid));
-
-	$form->add_element(array("type"=>"hidden",
-	                         "name"=>$prefix."_n",
-	                         "value"=>$user->uname));
-							 
-	$form->add_element(array("type"=>"hidden",
-	                         "name"=>$prefix."_d",
-	                         "value"=>$user->domain));
-}
-
-/**
- *	convert user info to string which may be used in get params
- *
- *	function is similiar to function {@link userauth_to_get_param}
- * 
- *	@param string $uuid uuid of user
- *	@param string $uname username of user
- *	@param string $domain domain fo user
- *	@param string $prefix name of get params
- *	@return string
- */
-
-function user_to_get_param($uuid, $uname, $domain, $prefix){
-	return $prefix."_id=".RawURLencode($uuid)."&".
-	       $prefix."_n=".RawURLencode($uname)."&".
-		   $prefix."_d=".RawURLencode($domain);
-}
-
-
-/**
- *	Obtain user identification from GET or POST params
- *
- *	@param string $prefix name of GET or POST params
- *	@return object Cserweb_auth object on success FALSE on error
- */
-
-function get_userauth_from_get_param($prefix){
-	global $_GET, $_POST;
-	
-	if ( isset($_GET[$prefix."_id"]) and
-	     isset($_GET[$prefix."_n"]) and
-		 isset($_GET[$prefix."_d"])) 
-		return new SerwebUser($_GET[$prefix."_id"], $_GET[$prefix."_n"], $_GET[$prefix."_d"]);
-		
-	if ( isset($_POST[$prefix."_id"]) and
-	     isset($_POST[$prefix."_n"]) and
-		 isset($_POST[$prefix."_d"])) 
-		return new SerwebUser($_POST[$prefix."_id"], $_POST[$prefix."_n"], $_POST[$prefix."_d"]);
-	
-	return false;
-}
 
 /**
  *	Convert string to CSV format
