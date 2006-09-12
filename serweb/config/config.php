@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.45 2006/09/08 12:27:31 kozlik Exp $
+ * $Id: config.php,v 1.46 2006/09/12 12:05:44 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -145,6 +145,14 @@
 	$config->admin_tabs[]=new Ctab (true, "@tab_customers", "customers.php");					// $lang_str['tab_customers']
 	$config->admin_tabs[]=new Ctab (true, "@tab_global_attributes", "global_attributes.php");	// $lang_str['tab_global_attributes']
 	$config->admin_tabs[]=new Ctab (true, "@tab_attr_types", "attr_types.php");	// $lang_str['tab_global_attributes']
+
+	/* this is list of tabs which are accessible only for hostmaster
+	 */
+	$config->hostmaster_only_tabs=array();
+	$config->hostmaster_only_tabs[] = "list_of_admins.php";
+	$config->hostmaster_only_tabs[] = "global_attributes.php";
+	$config->hostmaster_only_tabs[] = "attr_types.php";
+
 
 	$config->num_of_showed_items=20; 	/* num of showed items in the list of users */
 	$config->max_showed_rows=50;		/* maximum of showed items in "user find" */
