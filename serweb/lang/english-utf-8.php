@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.43 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.44 2006/09/12 08:47:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -52,6 +52,7 @@ $lang_str['warning'] = 							"Warning!";
 $lang_str['domain'] = 							"domain";
 $lang_str['yes'] = 								"YES";
 $lang_str['no'] = 								"NO";
+$lang_str['not_exists'] = 						"does not exists";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
