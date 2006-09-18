@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.54 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.55 2006/09/18 13:12:19 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -44,12 +44,15 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Displaying users";
+$lang_str['displaying_records'] = 				"Displaying records";
 $lang_str['no_users_found'] = 					"No users found";
+$lang_str['no_records_found'] = 				"No records found";
 $lang_str['none'] = 							"none";
 $lang_str['warning'] = 							"Warning!";
 $lang_str['domain'] = 							"domain";
 $lang_str['yes'] = 								"YES";
 $lang_str['no'] = 								"NO";
+$lang_str['not_exists'] = 						"does not exists";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -84,6 +87,7 @@ $lang_str['b_next'] =		 					"Next";
 $lang_str['b_register'] = 						"Register";
 $lang_str['b_send'] =		 					"Send";
 $lang_str['b_submit'] =		 					"Save";
+$lang_str['b_cancel'] =		 					"Cancel";
 $lang_str['b_select'] =		 					"Select";
 $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload greeting";

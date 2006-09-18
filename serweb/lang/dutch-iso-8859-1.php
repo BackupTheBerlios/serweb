@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.38 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.39 2006/09/18 13:12:19 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -44,12 +44,15 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Overzicht gebruikers";
+$lang_str['displaying_records'] = 				"Displaying records";	//to translate 
 $lang_str['no_users_found'] = 					"Geen gebruikers gevonden";
+$lang_str['no_records_found'] = 				"No records found";	//to translate 
 $lang_str['none'] = 							"none";	//to translate 
 $lang_str['warning'] = 							"Warning!";	//to translate 
 $lang_str['domain'] = 							"domein";
 $lang_str['yes'] = 								"YES";	//to translate 
 $lang_str['no'] = 								"NO";	//to translate 
+$lang_str['not_exists'] = 						"does not exists";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -84,6 +87,7 @@ $lang_str['b_next'] =		 					"Volgende";
 $lang_str['b_register'] = 						"Registreer";
 $lang_str['b_send'] =		 					"Verstuur";
 $lang_str['b_submit'] =		 					"Bewaar";
+$lang_str['b_cancel'] =		 					"Cancel";	//to translate 
 $lang_str['b_select'] =		 					"Select";	//to translate 
 $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload welkomsbericht";

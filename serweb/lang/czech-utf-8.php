@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.36 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.37 2006/09/18 13:12:19 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -44,12 +44,15 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filtr";
 $lang_str['showed_users'] = 					"Zobrazení uživatelé";
+$lang_str['displaying_records'] = 				"Displaying records";	//to translate 
 $lang_str['no_users_found'] = 					"Žádní uživatelé nenalezeni";
+$lang_str['no_records_found'] = 				"No records found";	//to translate 
 $lang_str['none'] = 							"none";	//to translate 
 $lang_str['warning'] = 							"Warning!";	//to translate 
 $lang_str['domain'] = 							"tabulka";
 $lang_str['yes'] = 								"YES";	//to translate 
 $lang_str['no'] = 								"NO";	//to translate 
+$lang_str['not_exists'] = 						"does not exists";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
@@ -84,6 +87,7 @@ $lang_str['b_next'] =		 					"Další";
 $lang_str['b_register'] = 						"Registrovat se";
 $lang_str['b_send'] =		 					"Odeslat";
 $lang_str['b_submit'] =		 					"Uložit";
+$lang_str['b_cancel'] =		 					"Cancel";	//to translate 
 $lang_str['b_select'] =		 					"Vyber";
 $lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
