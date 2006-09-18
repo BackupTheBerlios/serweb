@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.9 2006/09/08 12:27:31 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.10 2006/09/18 13:09:15 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -46,6 +46,9 @@ class apu_base_class{
 										'text' => $lang_str['b_submit'],
 										'src'  => get_path_to_buttons("btn_submit.gif", $sess_lang));
 	
+		$this->opt['form_cancel']=array('type' => 'image',
+										'text' => $lang_str['b_cancel'],
+										'src'  => get_path_to_buttons("btn_cancel.gif", $sess_lang));
 	}
 	
 	/* static method - generate instance number */
@@ -109,8 +112,9 @@ class apu_base_class{
 			$this->f->add_element(array("type"=>"hidden",
 			                             "name"=>"apu_name",
 			                             "value"=>$this->opt['instance_id']));
-		/* and also add submit element */
+		/* and also add submit and cancel element */
 			$this->f->add_submit($this->opt['form_submit']);
+			$this->f->add_cancel($this->opt['form_cancel']);
 		}
 	}
 	

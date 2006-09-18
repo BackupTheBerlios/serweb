@@ -2,7 +2,7 @@
 /*
  * Extension for phplib object oriented html form
  *
- * $Id: oohform_ext.php,v 1.5 2006/09/05 13:09:26 kozlik Exp $
+ * $Id: oohform_ext.php,v 1.6 2006/09/18 13:09:15 kozlik Exp $
  */ 
 
 class form_ext extends form{
@@ -53,7 +53,7 @@ class form_ext extends form{
                              "src"=>$submit['src'],
                              "disabled"=>!empty($submit['disabled']),
                              "class"=>$class,
-							 "extra_html"=>"alt='".$submit['text']."' ".$extra_html);
+							 "extrahtml"=>"alt='".$submit['text']."' ".$extra_html);
 
 			/* if it is a cancel button, disable form validation */
 			if (in_array($name, $this->form_cancels)) $element['extrahtml'] .= " onclick='this.form.onsubmit=null;'";
@@ -65,7 +65,7 @@ class form_ext extends form{
 							 "value"=>$submit['text'],
                              "disabled"=>!empty($submit['disabled']),
 							 "class"=>$class,
-							 "extra_html"=>$extra_html);
+							 "extrahtml"=>$extra_html);
 
 			/* if it is a cancel button, disable form validation */
 			if (in_array($name, $this->form_cancels)) $element['extrahtml'] = "onclick='this.form.onsubmit=null;'";
@@ -77,7 +77,7 @@ class form_ext extends form{
                              "name"=>$name."_x",
                              "value"=>'0',
 							 "class"=>$class,
-							 "extra_html"=>$extra_html);
+							 "extrahtml"=>$extra_html);
 			
 			if (in_array($name, $this->form_cancels)) $this->hidden_cancels = $name."_x";
 			else $this->hidden_submits = $name."_x";
