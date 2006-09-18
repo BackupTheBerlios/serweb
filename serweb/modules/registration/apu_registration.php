@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.12 2006/09/08 12:27:34 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.13 2006/09/18 13:07:26 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -119,9 +119,7 @@ class apu_registration extends apu_base_class{
 	function get_required_data_layer_methods(){
 		global $config;
 
-		return array('is_user_exists', 'add_credentials', 'add_uri',
-		             'get_new_alias_number', 'get_new_user_id', 
-					 'does_uid_exists');
+		return array('is_user_exists', 'add_uri', 'get_new_alias_number');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -183,54 +181,6 @@ class apu_registration extends apu_base_class{
 		parent::init();
 	}
 
-	/**
-	 *	Generate UID for new subscriber
-	 */
-	function get_uid($username, $realm){
-		global $config, $data;
-		
-		$an = &$config->attr_names;
-
-		$ga = &Global_attrs::singleton();
-		if (false === $format = $ga->get_attribute($an['uid_format'])) return false;
-		
-		
-		switch ($format){
-		/* numeric UID */
-		case 1:
-			if (false === $uid = $data->get_new_user_id(null)) return false;
-			break;
-			
-		/* UUID by rfc4122 */
-		case 2:
-			$uid = rfc4122_uuid();
-			/* check if uid doesn't exists */
-			if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
-			
-			while ($exists){
-				$uid = rfc4122_uuid();
-				if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
-			}
-			break;
-
-		/* UID in format 'username@realm' */
-		case 0:
-		default:  /* if format of UIDs is not set, assume the first choice */
-			$uid = $username."@".$realm;
-			/* check if uid doesn't exists */
-			if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
-			
-			$i = 0;
-			while ($exists){
-				$uid = $username."@".$realm."_".$i++;
-				if (0 > ($exists = $data->does_uid_exists($uid, null))) return false;
-			}
-			
-			break;
-		}
-		
-		return $uid;
-	}
 
 	function action_register(&$errors){
 		global $config, $data, $lang_str;
@@ -266,45 +216,25 @@ class apu_registration extends apu_base_class{
 		$domains = &Domains::singleton();
 		if (false === $domain_name = $domains->get_domain_name($did)) return false;
 
-		
-		/* get realm */
-		$opt=array("did"=>$did);
-		if (false === $realm = Attributes::get_attribute($an['digest_realm'], $opt)) return false;
-//		if (is_null($realm)) $realm = $domain_name;
-		
 
 		if (false === $data->transaction_start()) return false;
 
+		/* prepare array of attributes */
+		$attrs = array();
+		foreach($this->attributes as $att)	$attrs[$att] = $_POST[$att];
 
-		/* generate uid */
-		if (false === $uid = $this->get_uid($_POST['uname'], $realm)) return false;
+		/* add subscriber */
+		$opts = array("disabled" => $this->opt['require_confirmation']);
+		if (false === Registration::add_subscriber($_POST['uname'], $did, $password, $attrs, $opts)) {
+			$data->transaction_rollback();
+			return false;
+		}
+		
+		$uid = $opts['uid'];
+		$realm = $opts['realm'];
 
 		$serweb_user = &SerwebUser::instance($uid, $_POST['uname'], $did, $realm);
 		$user_param  = $serweb_user->to_get_param();
-
-		/* store credentials */
-		$o = array('disabled' => $this->opt['require_confirmation']);
-		if (false === $data->add_credentials($uid, $did, $_POST['uname'], $realm, $password, $o)) {
-			$data->transaction_rollback();
-			return false;
-		}
-
-		/* store uri */
-		$o = array('disabled' => $this->opt['require_confirmation'],
-		           'canon' => true);
-		if (false === $data->add_uri($uid, $_POST['uname'], $did, $o)) {
-			$data->transaction_rollback();
-			return false;
-		}
-
-		/* store attributes */
-		$ua = &User_Attrs::singleton($uid);
-		foreach($this->attributes as $att){
-			if (false === $ua->set_attribute($att, $_POST[$att])) {
-				$data->transaction_rollback();
-				return false;
-			}
-		}
 
 		if (!is_null($this->opt['set_lang_attr'])){
 			$u_lang = $this->opt['set_lang_attr'];
