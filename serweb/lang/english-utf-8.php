@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.44 2006/09/12 08:47:35 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.45 2006/09/18 13:10:24 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -87,6 +87,7 @@ $lang_str['b_next'] =		 					"Next";
 $lang_str['b_register'] = 						"Register";
 $lang_str['b_send'] =		 					"Send";
 $lang_str['b_submit'] =		 					"Save";
+$lang_str['b_cancel'] =		 					"Cancel";
 $lang_str['b_select'] =		 					"Select";
 $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload greeting";
