@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_user_missed_calls.php,v 1.4 2006/04/20 07:20:43 kozlik Exp $
+ * $Id: method.delete_user_missed_calls.php,v 1.5 2006/09/21 18:23:48 kozlik Exp $
  */
 
 class CData_Layer_delete_user_missed_calls {
@@ -30,7 +30,10 @@ class CData_Layer_delete_user_missed_calls {
 			$q.=" and request_timestamp < '".gmdate("Y-m-d H:i:s", $timestamp)."'";
 		
 		$res=$this->db->query($q);
-		if (DB::isError($res)) {ErrorHandler::log_errors($res);  return false;}
+		if (DB::isError($res)) {
+			if ($res->getCode()==DB_ERROR_NOSUCHTABLE) return true;  //expected, table mayn't exist in installed version
+			else {ErrorHandler::log_errors($res); return false;}
+		}
 
 		return true;
 	}
