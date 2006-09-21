@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: classes.php,v 1.1 2006/09/18 13:07:26 kozlik Exp $
+ * $Id: classes.php,v 1.2 2006/09/21 12:52:12 kozlik Exp $
  */
 
 class Registration{
@@ -123,7 +123,12 @@ class Registration{
 				return false;
 			}
 		}
-	
+
+		if (false === $ua->set_attribute($an['datetime_created'], gmdate("Y-m-d H:i:s"))) {
+			$data->transaction_rollback();
+			return false;
+		}
+
 		if (false === $data->transaction_commit()) return false;
 
 		return true;	
