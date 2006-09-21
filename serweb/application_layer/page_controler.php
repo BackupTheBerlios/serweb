@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.27 2006/09/08 12:27:31 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.28 2006/09/21 18:26:58 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -168,7 +168,7 @@ class page_conroler{
 		}
 		
 		//if still user_id is null, get it from $_SESSION['auth'] object
-		if (is_null($this->user_id))
+		if (is_null($this->user_id) and is_a($_SESSION['auth'], "Auth"))
 			$this->user_id=$_SESSION['auth']->get_logged_user();
 	}
 
