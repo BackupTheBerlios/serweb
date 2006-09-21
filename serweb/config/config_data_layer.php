@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.44 2006/09/08 12:27:31 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.45 2006/09/21 12:52:56 kozlik Exp $
  */
 
 
@@ -277,6 +277,7 @@
 								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
 								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
 								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
+								'datetime_created'  => 'datetime_created',  //time of user creation
 								'require_conf' 		=> 'sw_require_confirm',//require confirmation
 
 								'digest_realm'		=> 'digest_realm',		
