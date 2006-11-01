@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.9 2006/11/01 13:38:48 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.10 2006/11/01 13:46:51 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -88,6 +88,7 @@ class apu_attributes extends apu_base_class{
 	var $global_attrs;	
 	var $smarty_action = 'default';
 	var $js_on_subm = ""; //javascript which is called on form submit
+	var $js_on_subm_2 = ""; //javascript which is called on form submit
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -405,7 +406,7 @@ class apu_attributes extends apu_base_class{
 			                                      $opt);
 		}
 
-		if (!empty($this->opt['validate_js_funct'])) $this->js_on_subm .= $this->opt['validate_js_funct'];
+		if (!empty($this->opt['validate_js_funct'])) $this->js_on_subm_2 .= $this->opt['validate_js_funct'];
 	}
 
 	/* validate html form */
@@ -464,7 +465,8 @@ class apu_attributes extends apu_base_class{
 	function pass_form_to_html(){
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
-		             'before'      => $this->js_on_subm
+		             'before'      => $this->js_on_subm,
+		             'after'       => $this->js_on_subm_2
 		            );
 	}
 
