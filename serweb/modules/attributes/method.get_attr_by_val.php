@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attr_by_val.php,v 1.4 2006/07/20 18:43:27 kozlik Exp $
+ * $Id: method.get_attr_by_val.php,v 1.5 2006/11/01 13:47:49 kozlik Exp $
  */
 
 class CData_Layer_get_attr_by_val {
@@ -17,6 +17,8 @@ class CData_Layer_get_attr_by_val {
 	 *
 	 *	  value
 	 *		value of atribute	
+	 *
+	 *	  count_only
 	 *
 	 *	@return array
 	 */ 
@@ -67,12 +69,19 @@ class CData_Layer_get_attr_by_val {
 		 */
 		$flags_val = $f['DB_FOR_SERWEB'];
 
-		$q="select ".($id ? $id." as id, ": "").
-		             ($columns ? $columns: "")." 
-		           ".$c->name." as name,
-		           ".$c->value." as value
-		    from ".$t_name."
-			where (".$c->flags." & ".$flags_val.") = ".$flags_val.$qw;
+		if (!empty($opt['count_only'])){
+			$q="select count(*)
+			    from ".$t_name."
+				where (".$c->flags." & ".$flags_val.") = ".$flags_val.$qw;
+		}
+		else{
+			$q="select ".($id ? $id." as id, ": "").
+			             ($columns ? $columns: "")." 
+			           ".$c->name." as name,
+			           ".$c->value." as value
+			    from ".$t_name."
+				where (".$c->flags." & ".$flags_val.") = ".$flags_val.$qw;
+		}
 		
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -81,10 +90,15 @@ class CData_Layer_get_attr_by_val {
 			return false;
 		}
 
-		$out = array();
-
-		for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
-			$out[$i] = $row;
+		if (!empty($opt['count_only'])){
+			$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+			$out = $row[0];
+		}
+		else{
+			$out = array();
+			for ($i=0; $row=$res->fetchRow(DB_FETCHMODE_ASSOC); $i++){
+				$out[$i] = $row;
+			}
 		}
 
 		$res->free();
