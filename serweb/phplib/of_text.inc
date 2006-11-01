@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.5 2006/07/20 16:11:37 kozlik Exp $
+ * $Id: of_text.inc,v 1.6 2006/11/01 13:53:51 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -100,7 +100,7 @@ class of_text extends of_element {
 */    
       if ($this->length_e) {
         $str .= "if (f.elements['".$this->name."'].value.length < $this->minlength) {\n";
-        $str .= "  alert(\"$this->length_e\");\n";
+        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->length_e))."\");\n";
         $str .= "  f.elements['".$this->name."'].focus();\n";
         $str .= "  return(false);\n}\n";
       }
@@ -110,7 +110,7 @@ class of_text extends of_element {
         $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
 //        $str .= "  var reg = /$this->valid_regex/$flags;\n";
         $str .= "  if (!reg.test(f.elements['".$this->name."'].value)) {\n";
-        $str .= "    alert(\"$this->valid_e\");\n";
+        $str .= "    alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
         $str .= "    f.elements['".$this->name."'].focus();\n";
         $str .= "    return(false);\n";
         $str .= "  }\n}\n";

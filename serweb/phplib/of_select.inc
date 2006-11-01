@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_select.inc,v 1.9 2006/07/20 16:11:37 kozlik Exp $
+ * $Id: of_select.inc,v 1.10 2006/11/01 13:53:51 kozlik Exp $
  */
 
 class of_select extends of_element {
@@ -104,7 +104,7 @@ class of_select extends of_element {
     
     if (!$this->multiple && $this->valid_e) {
       $str .= "if (f.$this->name.selectedIndex == 0) {\n";
-      $str .= "  alert(\"$this->valid_e\");\n";
+      $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
       $str .= "  f.$this->name.focus();\n";
       $str .= "  return(false);\n";
       $str .= "}\n";

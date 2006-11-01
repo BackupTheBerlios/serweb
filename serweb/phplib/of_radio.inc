@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_radio.inc,v 1.6 2006/07/20 16:11:37 kozlik Exp $
+ * $Id: of_radio.inc,v 1.7 2006/11/01 13:53:51 kozlik Exp $
  */
 
 class of_radio extends of_element {
@@ -78,7 +78,7 @@ class of_radio extends of_element {
       $str .= "    break;\n";
       $str .= "  }\n";
       $str .= "if (!radioOK) {\n";
-      $str .= "  alert(\"$this->valid_e\");\n";
+      $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
       $str .= "  return(false);\n";
       $str .= "}\n";
     }
