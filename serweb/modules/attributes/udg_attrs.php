@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: udg_attrs.php,v 1.3 2006/07/20 17:46:40 kozlik Exp $
+ * $Id: udg_attrs.php,v 1.4 2006/11/01 13:38:48 kozlik Exp $
  */
 
 /**
@@ -87,7 +87,7 @@ class Attrs_Common{
 		/* call on_update method of attribute */
 		$attr_types = &Attr_types::singleton();
 		if (false === $att = &$attr_types->get_attr_type($name)) return false;
-		if (false === $att->on_update($value)) return false;
+		if (is_object($att) and false === $att->on_update($value)) return false;
 
 		return true;
 	}

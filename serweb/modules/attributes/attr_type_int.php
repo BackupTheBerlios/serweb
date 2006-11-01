@@ -12,7 +12,7 @@ class Attr_type_int extends Attr_type{
 	function check_value(&$value){
 
 		if (ereg("([0-9]+)", $value, $regs)) {
-			$value=$regs[1];
+			$value=(int)$regs[1];
 			return true;
 		}
 		/* if empty value is allowed */

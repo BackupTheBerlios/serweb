@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.8 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.9 2006/11/01 13:38:48 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -111,6 +111,7 @@ class apu_attributes extends apu_base_class{
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
 		$this->opt['attrs_options'] = array();	
+		$this->opt['validate_js_funct'] = null;	
 
 		$this->opt['attrs_kind'] = 'user';	
 		$this->opt['redirect_on_update']  = "";
@@ -404,6 +405,7 @@ class apu_attributes extends apu_base_class{
 			                                      $opt);
 		}
 
+		if (!empty($this->opt['validate_js_funct'])) $this->js_on_subm .= $this->opt['validate_js_funct'];
 	}
 
 	/* validate html form */
