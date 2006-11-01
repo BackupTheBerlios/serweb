@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.6 2006/05/05 09:46:41 kozlik Exp $
+$Id: INSTALL,v 1.7 2006/11/01 16:33:25 kozlik Exp $
 
 Installation of cron jobs used by seweb 
 =======================================
@@ -10,7 +10,7 @@ Type command 'crontab -e' at command line which open your crontab file and
 insert lines mentioned below.
 
 There are currently these cronjobs. You needn't install all of them. Install
-only that features which you whish.
+only that features which you wish.
 
 
 
@@ -36,7 +36,7 @@ Domain sync
 -----------
 Short description:
 	Synchronize files in directories with domain specific config on all servers.
-	You need to run this script only if you useing serweb on more servers after 
+	You need to run this script only if you useing serweb on more servers with 
 	load balancer.
 	
 	This script has to run under same user as your web server!

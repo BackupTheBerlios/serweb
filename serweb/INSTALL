@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.27 2006/01/20 14:56:54 kozlik Exp $
+$Id: INSTALL,v 1.28 2006/11/01 16:33:25 kozlik Exp $
 
 serweb - Installation
 
@@ -6,7 +6,8 @@ serweb - Installation
   -------------
 
   - Apache web server
-  - php 4.3 and later
+  - php 4.3 or php 5.0 (with Classkit PECL package), Classkit 
+    unfortunately do not work well with php 5.1
   - mysql support for php (php-mysql package)
   - imap support for php (php-imap package)
   - PEAR package DB (should be included in PHP release 4.3 and later)
@@ -25,7 +26,7 @@ serweb - Installation
   	and it is on your own risc. This version is developer and may be unstable and buggy.
   	For get latest stable version use this command:
   	
-  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_0_9_2 serweb
+  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_0_10_0 serweb
 
 
   Quick Install:
@@ -63,35 +64,25 @@ serweb - Installation
 		Otherwise if you will use serweb only for a single domain change these
 		options in file html/domains/_default/config.ini.php
 	    
-        Don't forget change at least email addresses (mail_header_from, 
-		infomail, regmail) and contact address of instant messages (web_contact)
-
     [7] make sure your php.ini includes the following values:
             - short_open_tag = on
+
+	[8] create initial admin account - see README file for details
             
-    [8] Open the file http://<your-host>/<your-install-dir>/admin/index.php
+    [9] Open the file http://<your-host>/<your-install-dir>/admin/index.php
         or http://<your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
-        The initial username is 'admin' with password 'heslo'. Its strongly
-        recomended to change this password after first login.
+        The initial username is 'admin@_default_' with password 'heslo'. Its 
+		strongly recomended to change this password after first login.
         
         Notice: Do not replace '<your-host>' in url mentioned above by
         'localhost'. Use real name of the server instead of 'localhost'!!
 		It is because serweb obtail domainname from this url and the domainname
 		is also used for user authentication.
         
-    [9] If everything work, is now time to create cronjobs. Follow instructions 
+    [10] If everything work, is now time to create cronjobs. Follow instructions 
 	    in file scripts/cron_job/INSTALL
 	    
-
-  User preferences (AVP)
-  ----------------------
-    If you need some function working with user preferences (i.e. variables
-	status_vibility, usr_pref_forward_to_voicemail in config 
-	file) you must fill db table usr_preferences_types by script 
-		scripts/sql/usr_preferences.sql
-	By command:
-		mysql -u ser -pheslo ser < scripts/sql/usr_preferences.sql
 
   Config files notes:
   -------------------
@@ -111,57 +102,3 @@ serweb - Installation
   http request, you can change it in file set_domain.php.
 
 
-  Frequently Asked Installation Questions:
-  ----------------------------------------
-
-  Q: What is the zone.tab file and where is it located.
-  A: zone.tab describes timezones -- information needed to
-     interpret time information correctly. Where it is stored
-     depends on your OS, many distributions store it at
-     /usr/share/zoneinfo/zone.tab. The file contains line-by-line
-     country code, coordinates, names and optional comments, e.g.
-     CZ  +5005+01426   Europe/Prague
-     (You may want to get the file from other places like
-     http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab
-     or ftp://elsie.nci.nih.gov/pub/)
-
-  Q: I get this error: "call to undefined function :mysql-pconnect()"
-  A: Do install php-mysql. Really.
-
-  Q: I can't login into serweb by default username and password
-  A: Please make sure your username, password and domain values are exactly 
-     matched the values of your subscriber table.
-       Probably your domain do not match. Serweb obtain domain 
-     from http request by default. So the host in http request should
-     be same as you are useing in SER. For details see file
-     config/set_domain.php. You can also disable automatic obtaining
-     domain and set it by hand here.
-
-  Q: Still can't login into serweb by default username and password
-  A: Enable loging in serweb ($config->enable_loging = true) and
-     see log file. For more verbosity set log level to PEAR_LOG_DEBUG
-
-  Q: When new user is subscribing throught serweb, still same alias is assigned
-     to him.
-  A: Make sure that usrloc module in ser is useing domain. Look up for this 
-     option in your ser.cfg:
-     
-	 modparam("usrloc|registrar", "use_domain", 1)
- 
-  Q: How can I install PECL package Classkit?
-  A: Type this command on command line:
-       
-	   pear install -f classkit
-       
-     If you get an error mentioning "phpize" you also might need to install 
-	 some dev package, like php4-dev on Debian systems.
- 
-  Q: Package Classkit is installed, but serweb still reporting:
-     Function aggregate_methods() doesn't exists. Try install Classkit extension. 
-  A: Check if module is loaded in PHP. Check your php.ini for something like 
-     this:
-       extension=classkit.so
-  
-  Q: Serweb show error "DB Error: syntax error" on 'missed call' and 
-     'accounting' tab.
-  A: Check version of your mysql. Serweb need mysql >= 4.0

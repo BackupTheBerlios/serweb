@@ -1,11 +1,49 @@
 This software, serweb, is a web interface for self-provisioning
 of users of SER SIP Server (http://www.iptel.org/ser/). It is
-provided as is without any warranty under terms of GPL. To install
-it, unpack the distibution on your webserver so that the directory
-html is in document root and phplib is not accessible via web.
-Then, change config.php to reflect your local configuration.
+provided as is without any warranty under terms of GPL. 
 
-Thats it. Sorry, we do not currently provide more info. If you
-are interested in helping us with doc writing, write an email
-to info@iptel.org.
 
+For install instructions please read the INSTALL file.
+
+
+Create an initial admin account
+-------------------------------
+
+For create initial admin account first run mysql client. Command:
+
+	mysql ser
+
+	(or mysql -u <username> -p<password> ser)
+	
+And then run these sql commands:
+
+	insert into domain (did, domain, flags) values (0, '_default_', 32);
+	insert into domain_attrs (did, name, type, value, flags) values (0, 'digest_realm', 2, '_default_', 32);
+	insert into credentials (uid, auth_username, did, realm, password, flags) values (0, 'admin', 0, '_default_', 'heslo', 32);
+	insert into user_attrs (uid, name, type, value, flags) values (0, 'sw_is_admin', 0, 1, 32);
+	insert into user_attrs (uid, name, type, value, flags) values (0, 'sw_is_hostmaster', 0, 1, 32);
+	
+
+Direct access to SER
+--------------------
+
+Some functions of SerWeb require direct access to SER. There are two methods for 
+it: XML-RPC and FIFO. In previous versions of serweb only FIFO has been used. 
+Now is the default method XML-RPC. It's benefit is that can be used remotely. 
+SerWeb does not need to run on same host as SER any more. Disadvantage is that 
+some functions is not accessible with XML-RPC. For example: click-to-dial or 
+send instant message. These functions are now disabled by default. If you want 
+to have these functions back, you have to disable XML-RPC. 
+In file config_data_layer.php set:
+
+	$config->use_rpc = false;
+
+And in file config.php enable click-to-dial:
+	
+	$config->enable_ctd = true;
+
+and enable sending instant messages:
+
+	$config->user_tabs[]=new Ctab (true, "@tab_send_im", "send_im.php");
+
+	

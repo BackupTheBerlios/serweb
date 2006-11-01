@@ -1,0 +1,54 @@
+  Frequently Asked Installation Questions:
+  ----------------------------------------
+
+  Q: What is the zone.tab file and where is it located.
+  A: zone.tab describes timezones -- information needed to
+     interpret time information correctly. Where it is stored
+     depends on your OS, many distributions store it at
+     /usr/share/zoneinfo/zone.tab. The file contains line-by-line
+     country code, coordinates, names and optional comments, e.g.
+     CZ  +5005+01426   Europe/Prague
+     (You may want to get the file from other places like
+     http://rpmfind.net/linux/lorax/i386/RedHat/instimage/usr/share/zoneinfo/zone.tab
+     or ftp://elsie.nci.nih.gov/pub/)
+
+  Q: I get this error: "call to undefined function :mysql-pconnect()"
+  A: Do install php-mysql. Really.
+
+  Q: I can't login into serweb by default username and password
+  A: Please make sure your username, password and domain values are exactly 
+     matched the values of your credentials table.
+       Probably your domain do not match. Serweb obtain domain 
+     from http request by default. So the host in http request should
+     be same as you are useing in SER. For details see file
+     config/set_domain.php. You can also disable automatic obtaining
+     domain and set it by hand here.
+
+  Q: Still can't login into serweb by default username and password
+  A: Enable logging in serweb ($config->enable_logging = true) and
+     see log file. For more verbosity set log level to PEAR_LOG_DEBUG
+
+  Q: When new user is subscribing throught serweb, still same alias is assigned
+     to him.
+  A: Make sure that usrloc module in ser is useing domain. Look up for this 
+     option in your ser.cfg:
+     
+	 modparam("usrloc|registrar", "use_domain", 1)
+ 
+  Q: How can I install PECL package Classkit?
+  A: Type this command on command line:
+       
+	   pear install -f classkit
+       
+     If you get an error mentioning "phpize" you also might need to install 
+	 some dev package, like php4-dev on Debian systems.
+ 
+  Q: Package Classkit is installed, but serweb still reporting:
+     Function aggregate_methods() doesn't exists. Try install Classkit extension. 
+  A: Check if module is loaded in PHP. Check your php.ini for something like 
+     this:
+       extension=classkit.so
+  
+  Q: Serweb show error "DB Error: syntax error" on 'missed call' and 
+     'accounting' tab.
+  A: Check version of your mysql. Serweb need mysql >= 4.0

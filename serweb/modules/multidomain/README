@@ -1,4 +1,4 @@
-$Id: README,v 1.2 2006/04/14 10:58:05 kozlik Exp $
+$Id: README,v 1.3 2006/11/01 16:33:25 kozlik Exp $
 
 Multidomain module
 ------------------
@@ -18,7 +18,7 @@ Instalation and configuration
 
  2. Add write privilege for apache to directory serweb/html/domains
 
-	    chown apache:apache <....../serweb/html/domains>
+	    chown apache:apache <.../serweb/html/domains>
     
  3. Change config variable $config->apache_vhosts_dir in file config_paths.php
     if needed. This variable has to point to directory where will be created
