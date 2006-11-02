@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.16 2006/09/08 12:27:31 kozlik Exp $
+ * $Id: class_definitions.php,v 1.17 2006/11/02 14:21:23 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -1090,6 +1090,40 @@ class Shm_Semaphore{
 		}
 		return true;
     }
+}
+
+class Filter {
+	var $name;
+	var $value="";
+	var $op="like";
+	var $asterisks=true;
+
+	function Filter($name, $value=null, $op="like", $asterisks=true){
+		$this->name = $name;
+		$this->value = $value;
+		$this->op = $op;
+		$this->asterisks = $asterisks;
+	}
+	
+	function to_sql($var=null, $int=false){
+
+		if (is_null($var)) $var = $this->name;
+		
+		
+		if ($this->op == "is_null")		return $var." is null";
+
+		$val = $this->value;
+		
+		if ($this->op == "like"){
+			$val = str_replace('*', '%', $val);
+			if ($this->asterisks) $val = "%".$val."%";
+		}
+		
+		
+		if ($int)	return $var." ".$this->op." ".(int)$val;
+		else		return $var." ".$this->op." '".$val."'";
+	
+	}
 }
 
 ?>
