@@ -1,9 +1,9 @@
 <?
 /*
- * $Id: config_paths.php,v 1.8 2006/04/14 10:58:04 kozlik Exp $
+ * $Id: config_paths.php,v 1.9 2006/11/02 10:06:23 kozlik Exp $
  */
 
-		/* the web path bellow which serweb's "admin" and "user_interface" 
+		/* the web path bellow which serweb's "admin" and "user" 
 		   directories begin to spread; Don't forget trailing slash.
 		   This setting depends on your apache configuration.
 		   

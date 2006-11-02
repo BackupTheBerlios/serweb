@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.php,v 1.3 2005/08/25 07:50:29 kozlik Exp $
+// $Id: mail.php,v 1.4 2006/11/02 10:02:26 kozlik Exp $
 
 	$to      = "root@localhost";
 	$subject = "php	testing mail";
@@ -7,7 +7,7 @@
 	
 	
 	if (mail($to, $subject, $body))
-		echo "Mail sended succesfully\n";
+		echo "Mail sent succesfully\n";
 	else
 		echo "Error sending mail. Check your PHP and sendmail configuration.\n";
 ?>
