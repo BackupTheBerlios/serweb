@@ -46,4 +46,15 @@ and enable sending instant messages:
 
 	$config->user_tabs[]=new Ctab (true, "@tab_send_im", "send_im.php");
 
-	
+
+Have you troubles with serweb?
+------------------------------
+
+- consult the FAQ file if your problem is described here 	
+
+- search mailing list archive http://lists.iptel.org/pipermail/serweb-users/
+
+- Subscribe to mailing list and ask here. Address of mailing list is: 
+  http://lists.iptel.org/mailman/listinfo/serweb-users
+  
+  
