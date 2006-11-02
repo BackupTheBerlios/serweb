@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.28 2006/11/01 16:33:25 kozlik Exp $
+$Id: INSTALL,v 1.29 2006/11/02 10:09:13 kozlik Exp $
 
 serweb - Installation
 
@@ -33,6 +33,7 @@ serweb - Installation
   --------------
 
     [1] Untar the distribution (be sure to untar the subdirectories)
+        and copy the Overlib library into directory /your/serweb/dir/html/js/overlib
 
     [2] It is recommended to be only 'html' directory accessible throught the 
 	    HTML tree on your server. And leave other directories unaccessible
