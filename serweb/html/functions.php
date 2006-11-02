@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.79 2006/09/08 12:27:32 kozlik Exp $
+ * @version   $Id: functions.php,v 1.80 2006/11/02 14:22:12 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -147,6 +147,12 @@ class Creg{
 
 		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
 		$this->sip_address="[sS][iI][pP]:".$this->address;
+
+		/** reg.exp. validating sip header name */
+		$this->sip_header="([^][ ()<>@,;:\\\\=\"/?{}]+)";
+		/** same regex, but for use in javascript */
+		$this->sip_header_js="([^\\]\\[ ()<>@,;:\\\\=\"/?{}]+)";
+
 		
 		/** regex for phonenumber which could contain some characters as: - / <space> this characters should be removed */		
 		$this->phonenumber = $config->phonenumber_regex;		// "\\+?[-/ 1-9]+"
