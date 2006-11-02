@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.39 2006/09/18 13:12:19 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.40 2006/11/02 13:50:51 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,11 +32,11 @@ $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
-$lang_str['l_back'] = 							"back";	//to translate 
-$lang_str['l_disable'] = 						"disable";	//to translate 
-$lang_str['l_enable'] = 						"enable";	//to translate 
-$lang_str['l_disable_all'] = 					"disable all";	//to translate 
-$lang_str['l_enable_all'] = 					"enable all";	//to translate 
+$lang_str['l_back'] = 							"zpìt";
+$lang_str['l_disable'] = 						"znepøístupnit";
+$lang_str['l_enable'] = 						"zpøístupnit";
+$lang_str['l_disable_all'] = 					"znepøístupnit vše";
+$lang_str['l_enable_all'] = 					"zpøístupnit vše";
 $lang_str['status_unknown'] = 					"neznámý";
 $lang_str['status_nonlocal'] = 					"nelokální";
 $lang_str['status_nonexists'] = 				"neexistující";
@@ -44,22 +44,22 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filtr";
 $lang_str['showed_users'] = 					"Zobrazení uživatelé";
-$lang_str['displaying_records'] = 				"Displaying records";	//to translate 
+$lang_str['displaying_records'] = 				"Zobrazené záznamy";
 $lang_str['no_users_found'] = 					"Žádní uživatelé nenalezeni";
-$lang_str['no_records_found'] = 				"No records found";	//to translate 
-$lang_str['none'] = 							"none";	//to translate 
-$lang_str['warning'] = 							"Warning!";	//to translate 
+$lang_str['no_records_found'] = 				"Žádné záznamy nebyly nalezeny";
+$lang_str['none'] = 							"žádný";	
+$lang_str['warning'] = 							"Varování!";
 $lang_str['domain'] = 							"tabulka";
-$lang_str['yes'] = 								"YES";	//to translate 
-$lang_str['no'] = 								"NO";	//to translate 
-$lang_str['not_exists'] = 						"does not exists";	//to translate 
+$lang_str['yes'] = 								"ANO";	
+$lang_str['no'] = 								"NE";	
+$lang_str['not_exists'] = 						"neexistuje";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_valid_email'] =	 			"neplatná emailová adresa";
-$lang_str['fe_is_not_valid_email'] =	 		"is not valid email address";	//to translate 
+$lang_str['fe_is_not_valid_email'] =	 		"není platná emailová adresa";
 $lang_str['fe_not_valid_sip'] = 				"neplatná SIP adresa";
 $lang_str['fe_not_valid_phonenumber'] = 		"neplatné telefonní èíslo";
 $lang_str['fe_not_filled_sip'] = 				"SIP adresu musíte vyplnit";
@@ -67,8 +67,8 @@ $lang_str['fe_passwords_not_match'] =			"hesla si neodpovídají";
 $lang_str['fe_not_filled_username'] = 			"uživatelské jméno musíte vyplnit";
 $lang_str['fe_not_allowed_uri'] = 				"Nepovolená SIP adresa";
 $lang_str['fe_max_entries_reached'] = 			"Dosažen maximální povolený poèet položek";
-$lang_str['fe_not_valid_username'] = 			"not valid username";	//to translate 
-$lang_str['fe_not_valid_domainname'] = 			"not valid domainname";	//to translate 
+$lang_str['fe_not_valid_username'] = 			"neplatné uživatelské jméno";
+$lang_str['fe_not_valid_domainname'] = 			"neplatné doménové jméno";
 
 /* ------------------------------------------------------------*/
 /*      buttons                                                */
@@ -87,11 +87,12 @@ $lang_str['b_next'] =		 					"Další";
 $lang_str['b_register'] = 						"Registrovat se";
 $lang_str['b_send'] =		 					"Odeslat";
 $lang_str['b_submit'] =		 					"Uložit";
-$lang_str['b_cancel'] =		 					"Cancel";	//to translate 
+$lang_str['b_cancel'] =		 					"Zrušit";
 $lang_str['b_select'] =		 					"Vyber";
 $lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
 $lang_str['b_extended_settings'] =		 		"Rozšíøené nastavení";
+$lang_str['b_search'] =		 					"Hledej";
 
 
 /* ------------------------------------------------------------*/
@@ -110,10 +111,10 @@ $lang_str['tab_speed_dial'] =	 				"rychlá volba";
 
 $lang_str['tab_users'] =	 					"uživatelé";
 $lang_str['tab_admin_privileges'] =	 			"oprávnìní správcù";
-$lang_str['tab_domains'] =	 					"domains";	//to translate 
-$lang_str['tab_customers'] =	 				"customers";	//to translate 
-$lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
-$lang_str['tab_attr_types'] =	 				"types of attributes";	//to translate 
+$lang_str['tab_domains'] =	 					"domény";
+$lang_str['tab_customers'] =	 				"zákazníci";
+$lang_str['tab_global_attributes'] =	 		"globální atributy";
+$lang_str['tab_attr_types'] =	 				"typy atributù";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -126,12 +127,12 @@ $lang_str['ff_your_timezone'] = 				"èasová zóna";
 $lang_str['ff_username'] = 						"uživatelské jméno";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"zobraz jenom on-line uživatele";
-$lang_str['ff_language'] = 						"language";	//to translate 
-$lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
-$lang_str['ff_uid'] = 							"uid";	//to translate 
-$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
-$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
-$lang_str['ff_contact_email'] = 				"contact email";	//to translate 
+$lang_str['ff_language'] = 						"jazyk";
+$lang_str['ff_reg_confirmation'] = 				"vyžadovat potvrzení registrace";
+$lang_str['ff_uid'] = 							"uid";
+$lang_str['ff_for_ser'] = 						"pro SER";
+$lang_str['ff_for_serweb'] = 					"pro SerWeb";
+$lang_str['ff_contact_email'] = 				"kontaktní email";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -146,15 +147,15 @@ $lang_str['th_calling_subscriber'] = 			"volající";
 $lang_str['th_time'] = 							"èas";
 $lang_str['th_username'] = 						"uživatelské jméno";
 $lang_str['th_email'] = 						"email";
-$lang_str['th_uid'] = 							"uid";	//to translate 
+$lang_str['th_uid'] = 							"uid";
 
 /* ------------------------------------------------------------*/
 /*      login messages                                         */
 /* ------------------------------------------------------------*/
 
 $lang_str['bad_username'] = 					"Chybné uživatelské jméno nebo heslo";
-$lang_str['account_disabled'] = 				"Your account was disabled";	//to translate 
-$lang_str['domain_not_found'] = 				"Your domain not found";	//to translate 
+$lang_str['account_disabled'] = 				"Váš úèet byl znepøístupnìn";
+$lang_str['domain_not_found'] = 				"Vaše doména nebyla nalezena";
 $lang_str['msg_logout_s'] = 					"Odhlášen";
 $lang_str['msg_logout_l'] = 					"Byl jste odhlášen. Pro nové pøihlášení vyplòte uživatelské jméno a heslo";
 $lang_str['userlogin'] = 						"pøihlášení uživatele";
@@ -164,8 +165,8 @@ $lang_str['ff_password'] = 						"heslo";
 $lang_str['l_forgot_passw'] = 					"Zapomìli jste heslo?";
 $lang_str['l_register'] = 						"Registrace!";
 $lang_str['remember_uname'] = 					"Zapamatuj si mé uživatelské jméno na tomto poèítaèi";
-$lang_str['session_expired'] = 					"Session expired";	//to translate 
-$lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";	//to translate 
+$lang_str['session_expired'] = 					"Relace vypršela";
+$lang_str['session_expired_relogin'] = 			"Vaše relace vypršela, prosím pøihlašte se znovu.";
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */
@@ -290,9 +291,9 @@ $lang_str['no_attributes_defined'] = 			"Žádné nastavení není povoleno administr
 
 $lang_str['ff_send_daily_missed_calls'] =		"posílejte mi dennì seznam zmeškaných hovorù na email";
 
-$lang_str['ff_uri_def_f'] =						"default flags for uri";	//to translate 
-$lang_str['ff_credential_def_f'] =				"default flags for credentials";	//to translate 
-$lang_str['ff_domain_def_f'] =					"default flags for domain";	//to translate 
+$lang_str['ff_uri_def_f'] =						"defaultní flagy pro uri";
+$lang_str['ff_credential_def_f'] =				"defaultní flagy pro kredenciály";
+$lang_str['ff_domain_def_f'] =					"defaultní flagy pro domény";
 
 
 /* ------------------------------------------------------------*/
@@ -311,7 +312,7 @@ $lang_str['th_new_uri'] = 						"nová SIP adresa";
 
 $lang_str['fe_not_accepted_terms'] = 			"Nepøijal jste naše podmínky a požadavky";
 $lang_str['choose_timezone'] = 					"--- prosím vyberte vaši èasovou zónu ---";
-$lang_str['choose_timezone_of_user'] = 			"--- please select timezone of user ---";	//to translate 
+$lang_str['choose_timezone_of_user'] = 			"--- prosím vyberte èasovou zónu uživatele ---";
 $lang_str['fe_not_choosed_timezone'] = 			"vyberte vaši èasovou zónu";
 $lang_str['fe_uname_not_follow_conventions'] = 	"uživatelské jméno neodpovídá doporuèovaným konvencím";
 $lang_str['fe_not_filled_password'] = 			"musíte vyplnit heslo";
@@ -320,8 +321,8 @@ $lang_str['fe_not_filled_your_lname'] = 		"musíte vyplnit pøíjmení";
 $lang_str['fe_uname_already_choosen_1'] = 		"Promiòte, uživatelské jméno";
 $lang_str['fe_uname_already_choosen_2'] = 		"už bylo vybráno nìkým jiným. Zkuste nìjaké jiné.";
 $lang_str['err_sending_mail'] = 				"Promiòte, došlo k chybì pøi odesílání registraèního emailu.";
-$lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";	//to translate 
-$lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";	//to translate 
+$lang_str['registration_introduction_1'] = 		"Prosím vyplòte formuláø pro registraci a kliknìte na tlaèítko 'Registrovat se'. Bude vám zaslán email potvrzující vaší registraci. Prosím napište nám na adresu";
+$lang_str['registration_introduction_2'] = 		"pokud máte nìjaké dotazy ohlednì registrace nebo našich služeb.";
 $lang_str['reg_email_desc'] = 					"Adresa na kterou bude odesláno potvrzení o registraci. (Pokud vyplníte neplatnou adresu, žádné potvrzení nedostanete a úèet vám nebude vytvoøen.)";
 $lang_str['ff_phone'] = 						"telefonní èíslo";
 $lang_str['reg_phone_desc'] = 					"Telefonní èíslo na kterém jste k zastižení.";
@@ -332,11 +333,11 @@ $lang_str['reg_password_desc'] = 				"Nezapmeòte vaše heslo -- budete ho potøebo
 $lang_str['ff_confirm_password'] = 				"heslo znovu pro potvrzení";
 $lang_str['ff_terms_and_conditions'] = 			"podmínky a požadavky";
 $lang_str['ff_i_accept'] = 						"souhlasím";
-$lang_str['ff_timezone'] = 						"timezone";	//to translate 
+$lang_str['ff_timezone'] = 						"èasová zóna";
 $lang_str['l_back_to_loginform'] = 				"Zpìt na pøihlašovací stránku";
-$lang_str['msg_user_registered_s'] = 			"User registered";	//to translate 
-$lang_str['msg_user_registered_l'] = 			"New user has been successfully registered";	//to translate 
-$lang_str['register_new_user'] = 				"register new user";	//to translate 
+$lang_str['msg_user_registered_s'] = 			"Uživatel zaregistrován";
+$lang_str['msg_user_registered_l'] = 			"Nový uživatel byl úspìšnì zaregistrován";
+$lang_str['register_new_user'] = 				"zaregistrovat nového uživatele";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -346,8 +347,8 @@ $lang_str['reg_finish_thanks'] = 				"Dìkujeme za registraci v ".$config->domain
 $lang_str['reg_finish_app_forwarded'] = 		"Vaše žádost byla odeslána ke schválení.";
 $lang_str['reg_finish_confirm_msg'] = 			"Oèekávejte potvrzující zprávu v krátké dobì..";
 $lang_str['reg_finish_sip_address'] = 			"Rezervujeme pro Vás tuto SIP adresu:";
-$lang_str['reg_finish_questions_1'] = 			"If you have any further questions please feel free to send";	//to translate 
-$lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate 
+$lang_str['reg_finish_questions_1'] = 			"Pokud máte nìjaké další dotazy, pošlete nám";
+$lang_str['reg_finish_questions_2'] = 			"email na adresu";
 
 /* ------------------------------------------------------------*/
 /*      registration - confirmation                            */
@@ -356,11 +357,12 @@ $lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate
 $lang_str['reg_conf_congratulations'] = 		"Gratulujeme! Váš ".$config->domain." úèet je pøipraven!";
 $lang_str['reg_conf_set_up'] = 					"Váš ".$config->domain." úèet je pøipraven!";
 $lang_str['reg_conf_jabber_failed'] = 			"Ale vaše registrace v Jabber bránì ".$config->domain." selhala.";
-$lang_str['reg_conf_contact_infomail_1'] = 		"Please contact";	//to translate 
-$lang_str['reg_conf_contact_infomail_2'] = 		"for further assistance.";	//to translate 
+$lang_str['reg_conf_contact_infomail_1'] = 		"Prosím kontaktujte";
+$lang_str['reg_conf_contact_infomail_2'] = 		"pro další podporu.";
 $lang_str['reg_conf_failed'] = 					"Omlouváme se ale váš pokus o potvrzení selhal.";
-$lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
+$lang_str['reg_conf_nr_not_exists'] = 			"Buï je špatné potvrzovací èíslo nebo již vaše konto bylo vytvoøeno!";	
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Litujeme. Toto potvrzovací èíslo neexistuje";
+
 
 /* ------------------------------------------------------------*/
 /*      registration - forgot password                         */
@@ -390,9 +392,9 @@ $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"aliasy";
 $lang_str['l_account'] = 						"úèet";
 $lang_str['l_accounting'] = 					"pøehled volání";
-$lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";	//to translate 
-$lang_str['l_credentials'] = 					"credentials";	//to translate 
-$lang_str['user_has_no_credentials'] = 			"User has no credentials";	//to translate 
+$lang_str['realy_you_want_delete_this_user'] =	"Opravdu chcete smazat tohoto uživatele?";
+$lang_str['l_credentials'] = 					"kredenciály";
+$lang_str['user_has_no_credentials'] = 			"Uživatel nemá žádné kredenciály";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -413,21 +415,21 @@ $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Opravdu chcete smazat tento alias?";
 $lang_str['user_have_not_any_aliases'] = 		"Uživatel nemá žádné aliasy";
-$lang_str['ff_is_canon'] = 						"is canonical";	//to translate 
-$lang_str['ff_is_enabled'] = 					"is enabled";	//to translate 
-$lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";	//to translate 
-$lang_str['ff_uri_is_from'] = 					"can be used as 'from' uri";	//to translate 
-$lang_str['th_is_canon'] = 						"canonical";	//to translate 
-$lang_str['th_uri_is_to'] = 					"to";	//to translate 
-$lang_str['th_uri_is_from'] = 					"from";	//to translate 
-$lang_str['l_ack'] = 							"acknowledge";	//to translate 
-$lang_str['l_deny'] = 							"deny";	//to translate 
-$lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";	//to translate 
-$lang_str['ack_values'] = 						"Acknowledge values";	//to translate 
-$lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please acknowledge the values.";	//to translate 
-$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";	//to translate 
-$lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";	//to translate 
-$lang_str['uid_with_alias'] = 					"List of UID with alias";	//to translate 
+$lang_str['ff_is_canon'] = 						"je kanonický"; 
+$lang_str['ff_is_enabled'] = 					"je zpøístupnìný"; 
+$lang_str['ff_uri_is_to'] = 					"mùže být použito jako 'to' uri";
+$lang_str['ff_uri_is_from'] = 					"mùže být použito jako 'from' uri";
+$lang_str['th_is_canon'] = 						"kanonický";
+$lang_str['th_uri_is_to'] = 					"to";
+$lang_str['th_uri_is_from'] = 					"from";
+$lang_str['l_ack'] = 							"potvrdit";
+$lang_str['l_deny'] = 							"zamítnout";
+$lang_str['uris_with_same_uname_did'] = 		"existuje URI které má stejné uživatelské jméno a doménu";
+$lang_str['ack_values'] = 						"Potvrïte hodnoty";
+$lang_str['uri_already_exists'] = 				"URI s vybraným uživatelským jménem a doménou již existuje. Prosím potvrïte zadané hodnoty.";
+$lang_str['is_to_warning'] = 					"VAROVÁNÍ: flag 'IS TO' je nastaven pro jiné URI. Pokud budete pokraèovat, tento flag bude smazán ve zmínìném URI";
+$lang_str['err_canon_uri_exists'] = 			"Nelze nastavit URI jako kanonické protože existuje jiné kanonické URI které nemùžete mìnit";
+$lang_str['uid_with_alias'] = 					"Seznam UID s aliasem";	
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */
@@ -437,18 +439,18 @@ $lang_str['admin_privileges_of'] = 				"Oprávnìní administrátora ";
 $lang_str['admin_competence'] = 				"pùsobnost administrátora";
 $lang_str['ff_is_admin'] = 						"je administrátor";
 $lang_str['ff_change_privileges'] = 			"zmìna oprávnìní jiných administrátorù";
-$lang_str['ff_is_hostmaster'] = 				"is hostmaster";	//to translate 
+$lang_str['ff_is_hostmaster'] = 				"je hostmaster"; 
 $lang_str['acl_control'] = 						"zmìny ACL";
 $lang_str['msg_privileges_updated_s'] = 		"Oprávnìní aktualizovány";
 $lang_str['msg_privileges_updated_l'] = 		"Oprávnìní uživatele byly aktualizovány";
 $lang_str['list_of_users'] = 					"Seznam uživatelù";
 $lang_str['th_domain'] = 						"doména";
-$lang_str['l_change_privileges'] = 				"Privileges";	//to translate 
+$lang_str['l_change_privileges'] = 				"Oprávnìní";
 $lang_str['ff_domain'] = 						"doména";
-$lang_str['ff_realm'] = 						"realm";	//to translate 
-$lang_str['th_realm'] = 						"realm";	//to translate 
+$lang_str['ff_realm'] = 						"realm";
+$lang_str['th_realm'] = 						"realm";
 $lang_str['ff_show_admins_only'] = 				"zobrazit jenom administrátory";
-$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
+$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"Tento uživatel je hostmaster. Nemùžete mìnit oprávnìní hostmastra protože vy sám nejste hostmaster!";
 
 
 /* ------------------------------------------------------------*/
@@ -456,33 +458,33 @@ $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_filled_name_of_attribute'] = 	"musíte vyplnit jméno atributu";
-$lang_str['fe_empty_not_allowed'] = 			"can not be empty";	//to translate 
-$lang_str['ff_order'] = 						"order";	//to translate 
+$lang_str['fe_empty_not_allowed'] = 			"nemùže být prázdný"; 
+$lang_str['ff_order'] = 						"poøadí";
 $lang_str['ff_att_name'] = 						"jméno atributu";
 $lang_str['ff_att_type'] = 						"typ atributu";
-$lang_str['ff_att_access'] = 					"access";	//to translate 
-$lang_str['ff_label'] = 						"label";	//to translate 
-$lang_str['ff_att_user'] = 						"user";	//to translate 
-$lang_str['ff_att_domain'] = 					"domain";	//to translate 
-$lang_str['ff_att_global'] = 					"global";	//to translate 
-$lang_str['ff_multivalue'] = 					"multivalue";	//to translate 
-$lang_str['ff_att_reg'] = 						"required on registration";	//to translate 
-$lang_str['ff_att_req'] = 						"required (not empty)";	//to translate 
+$lang_str['ff_att_access'] = 					"pøístup";
+$lang_str['ff_label'] = 						"popisek";
+$lang_str['ff_att_user'] = 						"uživatelský";
+$lang_str['ff_att_domain'] = 					"doménový";
+$lang_str['ff_att_global'] = 					"globální";
+$lang_str['ff_multivalue'] = 					"vícehodnotový";
+$lang_str['ff_att_reg'] = 						"vyžadovaný pøi registraci";
+$lang_str['ff_att_req'] = 						"vyžadovaný (nesmí být prázdný)";
 $lang_str['ff_fr_timer'] = 						"final response timer";	//to translate 
 $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translate 
-$lang_str['ff_uid_format'] = 					"format of newly created UIDs";	//to translate 
-$lang_str['ff_did_format'] = 					"format of newly created DIDs";	//to translate 
+$lang_str['ff_uid_format'] = 					"formát novì vytváøených UID";
+$lang_str['ff_did_format'] = 					"formát novì vytváøených DID";
 
-$lang_str['at_access_0'] = 						"full access";	//to translate 
-$lang_str['at_access_1'] = 						"read only for users";	//to translate 
-$lang_str['at_access_3'] = 						"for admins only (R/W)";	//to translate 
+$lang_str['at_access_0'] = 						"plný pøístup";
+$lang_str['at_access_1'] = 						"pro uživatele je pouze pro ètení";
+$lang_str['at_access_3'] = 						"pouze pro administrátory (R/W)";
 
 
 $lang_str['th_att_name'] = 						"jméno atributu";
 $lang_str['th_att_type'] = 						"typ atributu";
-$lang_str['th_order'] = 						"order";	//to translate 
-$lang_str['th_label'] = 						"label";	//to translate 
-$lang_str['fe_order_is_not_number'] = 			"'order' is not valid number";	//to translate 
+$lang_str['th_order'] = 						"poøadí";
+$lang_str['th_label'] = 						"popisek";
+$lang_str['fe_order_is_not_number'] = 			"V poli 'poøadí' musí být èíslo";
 
 $lang_str['fe_not_filled_item_label'] = 		"musíte vyplnit jméno položky";
 $lang_str['fe_not_filled_item_value'] = 		"musíte vyplnit hodnotu položky";
@@ -491,21 +493,21 @@ $lang_str['ff_item_value'] = 					"hodnota položky";
 $lang_str['th_item_label'] = 					"jméno položky";
 $lang_str['th_item_value'] = 					"hodnota položky";
 $lang_str['l_back_to_editing_attributes'] = 	"zpìt k editaci atributù";
-$lang_str['realy_want_you_delete_this_attr'] = 	"Realy want you delete this attribute?";	//to translate 
-$lang_str['realy_want_you_delete_this_item'] = 	"Realy want you delete this item?";	//to translate 
+$lang_str['realy_want_you_delete_this_attr'] = 	"Opravdu chcete smazat tento atribut?";
+$lang_str['realy_want_you_delete_this_item'] = 	"Opravdu chcete smazat tuto položku?";
 
 
-$lang_str['attr_type_warning'] = 				"On this page you may define new attributes and change types of them, their flags, etc. Preddefined attributes are mostly used internaly by SerWeb or by SER. Do not change them if you do not know what are you doing!!!";	//to translate 
-$lang_str['at_hint_order'] = 					"Attributes are arranged in this order in SerWeb";	//to translate 
-$lang_str['at_hint_label'] = 					"Label of attribute displayed in SerWeb. If starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";	//to translate 
-$lang_str['at_hint_for_ser'] = 					"Attribute is loaded by SER. Only newly created attributes are affected by change of this.";	//to translate 
-$lang_str['at_hint_for_serweb'] = 				"Attribute is loaded by SerWeb. Only newly created attributes are affected by change of this.";	//to translate 
-$lang_str['at_hint_user'] = 					"Attribute is displayed on user preferences page";	//to translate 
-$lang_str['at_hint_domain'] = 					"Attribute is displayed on domain preferences page";	//to translate 
-$lang_str['at_hint_global'] = 					"Attribute is displayed on global preferences page";	//to translate 
-$lang_str['at_hint_multivalue'] = 				"Attribute may have multiple values";	//to translate 
-$lang_str['at_hint_registration'] = 			"Attribute is displayed on user registration form";	//to translate 
-$lang_str['at_hint_required'] = 				"Attribute has to have any not empty value. Not used for all types. Used for types: int, email_adr, sip_adr, etc.";	//to translate 
+$lang_str['attr_type_warning'] = 				"Na této stránce mùžete definovat nové atributy a zmìnit jejich typy, jejich flagy, atd. Pøeddefinované atributy jsou hojnì užívané uvnitø SerWebu nebo SERu. Nemìòte je, pokud si nejste jistí tím co dìláte!!!";	
+$lang_str['at_hint_order'] = 					"Atributy jsou v SerWebu uspoøádány v tomto poøadí";
+$lang_str['at_hint_label'] = 					"Popisek atributu zobrazovaný v SerWebu. Pokud zaèíná znakem '@', SerWeb se jej pokusí pøeložit do jazyka daného uživatele pomocí souborù v adresáøi 'lang'. Je na vaší zodpovìdnosti aby byly pøíslišné fráze pøítomné v souborech pro všechny jazyky.";
+$lang_str['at_hint_for_ser'] = 					"Atribut je nahrávaný SERem. Pouze novì vytvoøené atributy budou ovlivnìné zmìnou tohoto pole.";
+$lang_str['at_hint_for_serweb'] = 				"Atribut je nahrávaný SerWebem. Pouze novì vytvoøené atributy budou ovlivnìné zmìnou tohoto pole.";
+$lang_str['at_hint_user'] = 					"Atribut je zobrazovaný na stránce uživatelských nastavení";
+$lang_str['at_hint_domain'] = 					"Atribut je zobrazovaný na stránce doménových nastavení";
+$lang_str['at_hint_global'] = 					"Atribut je zobrazovaný na stránce globálních nastavení";
+$lang_str['at_hint_multivalue'] = 				"Atribut mùže obsahovat více hodnot";
+$lang_str['at_hint_registration'] = 			"Atribut je zobrazovaný na stránce registrace nového uživatele";
+$lang_str['at_hint_required'] = 				"Atribut musí mít nìjakou neprázdnou hodnotu. Toto nastavení není zohlednìno u všech typù atributù. Je používáno napø. u tìchto typù: int, email_adr, sip_adr, atd.";
 
 
 $lang_str['ff_att_default_value'] = 			"defaultní hodnota";
@@ -513,7 +515,7 @@ $lang_str['th_att_default_value'] = 			"defaultní hodnota";
 $lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
 $lang_str['edit_items_of_the_list'] = 			"zmìnit seznam položek";
 
-$lang_str['o_lang_not_selected'] = 				"not selected";	//to translate 
+$lang_str['o_lang_not_selected'] = 				"není vybraný";
 
 
 /* ------------------------------------------------------------*/
@@ -521,16 +523,16 @@ $lang_str['o_lang_not_selected'] = 				"not selected";	//to translate
 /* ------------------------------------------------------------*/
 
 
-$lang_str['change_credentials_of_user'] = 		"Change credentials of user";	//to translate 
+$lang_str['change_credentials_of_user'] = 		"Zmìna kredenciálù uživatele";
 
-$lang_str['th_password'] = 						"password";	//to translate 
-$lang_str['th_for_ser'] = 						"for SER";	//to translate 
-$lang_str['th_for_serweb'] = 					"for SerWeb";	//to translate 
+$lang_str['th_password'] = 						"heslo";
+$lang_str['th_for_ser'] = 						"pro SER";
+$lang_str['th_for_serweb'] = 					"pro SerWeb";
 
-$lang_str['err_credential_changed_domain'] = 	"Domain of user has been changed. You have to also fill new password";	//to translate 
-$lang_str['warning_credential_changed_domain'] =		"Serweb is configured to not store clear text passwords. That mean, if you change domain of user, you have to also fill password field. Otherwise hashed password become invalid.";	//to translate 
+$lang_str['err_credential_changed_domain'] = 	"Doména uživatele byla zmìnìna. Musíte také vyplnit nové heslo";
+$lang_str['warning_credential_changed_domain'] =		"Serweb je nakonfigurován aby neukládal hesla v èistém textu. To znamená že v pøípadì že zmìníte doménu uživatele, musíte také vyplnit nové heslo. V opaèném pøípadì by zašifrované heslo pøestalo platit.";
 
-$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";	//to translate 
+$lang_str['realy_want_you_delete_this_credential'] = 	"Opravdu chcete smazat tyto kredenciály?";
 
 
 /* ------------------------------------------------------------*/
@@ -572,95 +574,95 @@ $lang_str['err_whitelist_already_exists'] = 	"Položka již existuje";
 /*      multidomain                                            */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_not_customer_name'] = 			"You must fill name of customer";	//to translate 
-$lang_str['ff_customer_name'] = 				"name of customer";	//to translate 
-$lang_str['no_customers'] = 					"No customer";	//to translate 
-$lang_str['customer'] = 						"Customer";	//to translate 
+$lang_str['fe_not_customer_name'] = 			"Musíte vyplnit jméno zákazníka"; 
+$lang_str['ff_customer_name'] = 				"jméno zákazníka"; 
+$lang_str['no_customers'] = 					"Žádní zákazníci";
+$lang_str['customer'] = 						"Zákazník";
 
-$lang_str['msg_customer_updated_s'] = 			"Customer updated";	//to translate 
-$lang_str['msg_customer_updated_l'] = 			"Customer name has been updated";	//to translate 
-$lang_str['msg_customer_deleted_s'] = 			"Customer deleted";	//to translate 
-$lang_str['msg_customer_deleted_l'] = 			"Customer has been deleted";	//to translate 
-$lang_str['msg_customer_added_s'] = 			"Customer created";	//to translate 
-$lang_str['msg_customer_added_l'] = 			"New customer has been created";	//to translate 
-$lang_str['err_customer_own_domains'] = 		"Customer is owning some domains, can't delete him";	//to translate 
+$lang_str['msg_customer_updated_s'] = 			"Zákazník aktualizován";
+$lang_str['msg_customer_updated_l'] = 			"Jméno zákazníka bylo aktualizováno";
+$lang_str['msg_customer_deleted_s'] = 			"Zákazník vymazán";
+$lang_str['msg_customer_deleted_l'] = 			"Zákazník byl vymazán";
+$lang_str['msg_customer_added_s'] = 			"Zákazník založen";
+$lang_str['msg_customer_added_l'] = 			"Nový zákazník byl založen";
+$lang_str['err_customer_own_domains'] = 		"Zákazník vlastní nìjaké domény, nemùžete jej smazat";
 
-$lang_str['d_id'] = 							"Domain ID";	//to translate 
-$lang_str['d_name'] = 							"Domain name";	//to translate 
-$lang_str['list_of_domains'] = 					"List of domains";	//to translate 
-$lang_str['showed_domains'] = 					"Showed domains";	//to translate 
-$lang_str['no_domains_found'] = 				"No domains found";	//to translate 
-$lang_str['new_dom_name'] = 					"Add new domain name";	//to translate 
-$lang_str['owner'] = 							"Owner";	//to translate 
+$lang_str['d_id'] = 							"ID domény";
+$lang_str['d_name'] = 							"jméno domény";
+$lang_str['list_of_domains'] = 					"Seznam domén";
+$lang_str['showed_domains'] = 					"Zobrazené domény";
+$lang_str['no_domains_found'] = 				"Žádné domény nebyly nalezeny";
+$lang_str['new_dom_name'] = 					"Pøidat nové doménové jméno";
+$lang_str['owner'] = 							"Vlastník";
 
-$lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";	//to translate 
-$lang_str['l_create_new_domain'] = 				"create new domain";	//to translate 
+$lang_str['realy_delete_domain'] = 				"Opravdu chcete smazat tuto doménu?";
+$lang_str['l_create_new_domain'] = 				"vytvoøit novou doménu";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
-$lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to translate 
-$lang_str['prohibited_domain_name'] = 			"Sorry, this domain name is prohibited";	//to translate 
-$lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name";	//to translate 
+$lang_str['no_domain_name_is_set'] = 			"Vložte nejménì jedno jméno domény";
+$lang_str['prohibited_domain_name'] = 			"Toto doménové jméno není povoleno";
+$lang_str['can_not_del_last_dom_name'] = 		"Nelze smazat jediné doménové jméno";
 
-$lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
-$lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";	//to translate 
+$lang_str['msg_domain_reload_s'] = 				"Konfigurace znovu naètena";
+$lang_str['msg_domain_reload_l'] = 				"Konfigurace SERu a webového serveru byla znovu naètena";
 
-$lang_str['msg_domain_deleted_s'] = 			"Domain deleted";	//to translate 
-$lang_str['msg_domain_deleted_l'] = 			"This domain is no longer served and all associated records including subscriber data will be deleted soon. Make sure that DNS records no longer refer to this server";	//to translate 
+$lang_str['msg_domain_deleted_s'] = 			"Doména smazána";
+$lang_str['msg_domain_deleted_l'] = 			"Tato doména není nadále obsluhována a všechny asociované záznamy vèetnì uživatelských dat budou smazány. Ujistìte se že DNS záznamy nadále neukazují na tento server";
 
-$lang_str['assigned_domains'] = 				"Assigned domains";	//to translate 
-$lang_str['unassigned_domains'] = 				"Unassigned domains";	//to translate 
-$lang_str['l_assign_domain'] = 					"assign domain";	//to translate 
-$lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate 
-$lang_str['l_assign'] =                                  "assign";	//to translate 
-$lang_str['l_unassign'] =                                "unassign";	//to translate 
-$lang_str['l_assigned_domains'] = 				"Domains";	//to translate 
-$lang_str['l_change_layout'] = 					"Layout";	//to translate 
-$lang_str['l_domain_attributes'] = 				"Attributes";	//to translate 
-$lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
-$lang_str['l_set_canon'] = 						"set canonical";	//to translate 
+$lang_str['assigned_domains'] = 				"Pøiøazené domény";
+$lang_str['unassigned_domains'] = 				"Nepøiøazené domény";
+$lang_str['l_assign_domain'] = 					"pøiøadit doménu";
+$lang_str['l_unassign_domain'] = 				"odebrat doménu";
+$lang_str['l_assign'] = 						"pøiøadit";
+$lang_str['l_unassign'] = 						"odebrat";
+$lang_str['l_assigned_domains'] = 				"Domény";
+$lang_str['l_change_layout'] = 					"Rozvržení";
+$lang_str['l_domain_attributes'] = 				"Atributy";
+$lang_str['l_unassign_admin'] = 				"odebrat administrátora";
+$lang_str['l_set_canon'] = 						"nastavit jako kanonické";
 
-$lang_str['admins_of_domain'] = 				"Admins of this domain";	//to translate 
-$lang_str['no_admins'] = 						"No admins";	//to translate 
+$lang_str['admins_of_domain'] = 				"Administrátoøi pro tuto doménu";
+$lang_str['no_admins'] = 						"Žádní adminsitrátoøi";
 
-$lang_str['ff_address'] = 						"address";	//to translate 
+$lang_str['ff_address'] = 						"adresa";
 
-$lang_str['lf_terms_and_conditions'] =			"terms and conditions";	//to translate 
-$lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";	//to translate 
-$lang_str['lf_mail_register'] = 				"mail confirmation registration";	//to translate 
-$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";	//to translate 
-$lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";	//to translate 
-$lang_str['lf_config'] = 						"domain configuration";	//to translate 
+$lang_str['lf_terms_and_conditions'] =			"podmínky a požadavky";
+$lang_str['lf_mail_register_by_admin'] = 		"text emailu zasílaného uživateli pokud je novì zaregistrován administrátorem";
+$lang_str['lf_mail_register'] = 				"text emailu potvrzujícího registraci";
+$lang_str['lf_mail_fp_conf'] = 					"text emailu pro potvrzení znovu nastevení hesla poté co jej užvatel zapomnìl";
+$lang_str['lf_mail_fp_pass'] = 					"text emailu obsahující novì vygenerované heslo";
+$lang_str['lf_config'] = 						"konfiguraèní soubor domény";
 
-$lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";	//to translate 
-$lang_str['l_upload_images'] = 					"upload images";	//to translate 
-$lang_str['l_back_to_default'] = 				"restore default content";	//to translate 
+$lang_str['l_toggle_wysiwyg'] = 				"pøepnout WYSIWYG";	
+$lang_str['l_upload_images'] = 					"nahrát obrázky";
+$lang_str['l_back_to_default'] = 				"obnovit pùvodní obsah";
 
-$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";	//to translate 
+$lang_str['wysiwyg_warning'] = 					"Prosím buïte opatrní pøi používání WYSIWYG editoru. Soubor prolog.html musí zaèínat elementem &lt;body&gt; a soubor epilog.html musí konèit elementem &lt;/body&gt;. Ale WYSIWYG editor tyto elementy odstraòuje!";
 
-$lang_str['choose_one'] = 						"choose one";	//to translate 
+$lang_str['choose_one'] = 						"vyberte";
 
-$lang_str['layout_files'] = 					"Layout files";	//to translate 
-$lang_str['text_files'] = 						"Text files";	//to translate 
+$lang_str['layout_files'] = 					"Soubory rozvžení";
+$lang_str['text_files'] = 						"Textové soubory";
 
-$lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";	//to translate 
+$lang_str['fe_domain_not_selected']	= 			"Doména uživatele není vybrána";
 
-$lang_str['th_old_versions'] = 					"Old versions of this file";	//to translate 
-$lang_str['initial_ver'] = 						"initial";	//to translate 
+$lang_str['th_old_versions'] = 					"Pøedchozí verze tohoto souboru";
+$lang_str['initial_ver'] = 						"poèáteèní";
 
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */
 /* ------------------------------------------------------------*/
 
-$lang_str['register_new_admin'] = 				"Register new admin for domain";	//to translate 
-$lang_str['assign_existing_admin'] = 			"Assign an existing admin to domain";	//to translate 
-$lang_str['assign_admin_to_domain'] = 			"Assign admin to domain";	//to translate 
-$lang_str['create_new_domain'] = 				"Create new domain";	//to translate 
-$lang_str['l_create_new_customer'] = 			"create new customer";	//to translate 
-$lang_str['create_new_customer'] = 				"Create new customer";	//to translate 
-$lang_str['l_close_window'] = 					"close window";	//to translate 
-$lang_str['step'] = 							"step";	//to translate 
-$lang_str['l_select'] = 						"select";	//to translate 
-$lang_str['domain_setup_success'] = 			"New domain has been set up successfully!";	//to translate 
-$lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to translate 
+$lang_str['register_new_admin'] = 				"Registrace nového administrátora pro doménu";
+$lang_str['assign_existing_admin'] = 			"Pøiøazení existujícího administrátora k doménì";
+$lang_str['assign_admin_to_domain'] = 			"Pøiøazení administrátora k doménì";
+$lang_str['create_new_domain'] = 				"Vytvoøení nové domény";
+$lang_str['l_create_new_customer'] = 			"vytvoøení nového zákazníka";
+$lang_str['create_new_customer'] = 				"Vytvoøení nového zákazníka";
+$lang_str['l_close_window'] = 					"zavøít toto okno";
+$lang_str['step'] = 							"krok";
+$lang_str['l_select'] = 						"vybrat";
+$lang_str['domain_setup_success'] = 			"Nová doména byla úspìšnì založena!";
+$lang_str['l_skip_asignment_of_admin'] = 		"pøeskoèit pøiøazení administrátora";
 
 
 
@@ -709,5 +711,5 @@ $lang_str['ser_moni_transaction_statistics'] = 	"Transakèní statistiky";
 $lang_str['ser_moni_completion_status'] = 		"Stav dokonèení";
 $lang_str['ser_moni_stateless_server_statis'] = "Statistiky bezestavového serveru";
 $lang_str['ser_moni_usrLoc_stats'] = 			"Statistiky UsrLoc";
-$lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
+$lang_str['l_domain_preferences'] = 			"doménové nastavení";
 ?>
