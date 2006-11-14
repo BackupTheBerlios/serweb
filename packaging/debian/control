@@ -1,0 +1,12 @@
+Source: serweb
+Section: web
+Priority: optional
+Maintainer: Jan Halla <hallik@roztoky.net>
+Build-Depends: debhelper (>= 4.0.0), unzip
+Standards-Version: 3.6.1
+
+Package: serweb
+Architecture: any
+Depends:  apache2, php5-mysql | php4-mysql, php-net-imap, php-db, php-log, mysql-server
+Description: Users web interface for SER
+ Serweb, is a web interface for self-provisioning of users of SER SIP Server.
