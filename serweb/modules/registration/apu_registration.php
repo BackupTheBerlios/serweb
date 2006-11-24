@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.14 2006/11/24 13:33:02 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.15 2006/11/24 14:36:59 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -235,6 +235,9 @@ class apu_registration extends apu_base_class{
 
 		$serweb_user = &SerwebUser::instance($uid, $_POST['uname'], $did, $realm);
 		$user_param  = $serweb_user->to_get_param();
+
+		/* get handler of user attrs */
+		$ua = &User_Attrs::singleton($uid);
 
 		if (!is_null($this->opt['set_lang_attr'])){
 			$u_lang = $this->opt['set_lang_attr'];
