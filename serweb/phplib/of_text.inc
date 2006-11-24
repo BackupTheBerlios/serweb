@@ -3,7 +3,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  *
- * $Id: of_text.inc,v 1.6 2006/11/01 13:53:51 kozlik Exp $
+ * $Id: of_text.inc,v 1.7 2006/11/24 13:43:20 kozlik Exp $
  */
 
 class of_text extends of_element {
@@ -105,7 +105,7 @@ class of_text extends of_element {
         $str .= "  return(false);\n}\n";
       }
       if ($this->valid_e) {
-        $flags = ((isset($this->icase) and $this->icase) ? "gi" : "g");
+        $flags = ((isset($this->icase) and $this->icase) ? "i" : "");
         $str .= "if (window.RegExp) {\n";
         $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
 //        $str .= "  var reg = /$this->valid_regex/$flags;\n";
