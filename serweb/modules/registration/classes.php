@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: classes.php,v 1.2 2006/09/21 12:52:12 kozlik Exp $
+ * $Id: classes.php,v 1.3 2006/11/24 14:37:42 kozlik Exp $
  */
 
 class Registration{
@@ -110,7 +110,7 @@ class Registration{
 		/* store uri */
 		$o = array('disabled' => $o_disabled,
 		           'canon' => true);
-		if (false === $data->add_uri($uid, $username, $did, $o)) {
+		if (false === $data->add_uri($uid, 'sip', $username, $did, $o)) {
 			$data->transaction_rollback();
 			return false;
 		}
