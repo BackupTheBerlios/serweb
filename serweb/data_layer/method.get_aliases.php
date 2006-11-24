@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_aliases.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.get_aliases.php,v 1.7 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_get_aliases {
@@ -48,8 +48,9 @@ class CData_Layer_get_aliases {
 
 		$qw .= $this->get_sql_bool(true);
 
-		$q="select ".$c->uid." as uid, 
-		           ".$c->username." as username, 
+		$q="select ".$c->scheme." as scheme, 
+		           ".$c->uid." as uid, 
+				   ".$c->username." as username, 
 				   ".$c->did." as did,
 				   ".$c->flags." as flags
 		    from ".$t_name." 
@@ -63,6 +64,7 @@ class CData_Layer_get_aliases {
 		$out=array();
 		for ($i=0; $row = $res->fetchRow(DB_FETCHMODE_OBJECT); $i++){
 			$out[$i] = new URI($row->uid, $row->did, $row->username, $row->flags);
+			$out[$i]->set_scheme($row->scheme);
 		}
 		$res->free();
 		return $out;

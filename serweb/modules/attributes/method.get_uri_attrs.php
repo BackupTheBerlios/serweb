@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_uri_attrs.php,v 1.1 2006/07/20 17:46:40 kozlik Exp $
+ * $Id: method.get_uri_attrs.php,v 1.2 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_get_uri_attrs {
@@ -17,7 +17,7 @@ class CData_Layer_get_uri_attrs {
 	 *	@return array
 	 */ 
 	 
-	function get_uri_attrs($username, $did, $opt){
+	function get_uri_attrs($scheme, $username, $did, $opt){
 		global $config;
 		
 		$errors = array();
@@ -43,7 +43,8 @@ class CData_Layer_get_uri_attrs {
 		$q="select ".$c->name." as name,
 		           ".$c->value." as value 
 		    from ".$t_name."
-			where ".$c->username." = ".$this->sql_format($username, "s")." and 
+			where ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
+				  ".$c->username." = ".$this->sql_format($username, "s")." and 
 				  ".$c->did."      = ".$this->sql_format($did,      "s")." and 
 			      (".$c->flags." & ".$flags_val.") = ".$flags_val;
 		

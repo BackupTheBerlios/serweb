@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: udg_attrs.php,v 1.4 2006/11/01 13:38:48 kozlik Exp $
+ * $Id: udg_attrs.php,v 1.5 2006/11/24 13:33:02 kozlik Exp $
  */
 
 /**
@@ -373,8 +373,9 @@ class Uri_Attrs extends Attrs_Common {
      *
      * @access private
      */
-	function Uri_Attrs($username, $did){
+	function Uri_Attrs($scheme, $username, $did){
 		parent::Attrs_Common();
+		$this->scheme = $scheme;
 		$this->username = $username;
 		$this->did = $did;
 	}
@@ -388,19 +389,19 @@ class Uri_Attrs extends Attrs_Common {
 	 * want to check for the existance of one each time. The singleton pattern 
 	 * does all the checking work for you.
      *
-     * <b>You MUST call this method with the $var = &Uri_Attrs::singleton($username, $did) 
+     * <b>You MUST call this method with the $var = &Uri_Attrs::singleton($scheme, $username, $did) 
 	 * syntax. Without the ampersand (&) in front of the method name, you will 
 	 * not get a reference, you will get a copy.</b>
      *
      * @access public
      */
 
-    function &singleton($username, $did) {
+    function &singleton($scheme, $username, $did) {
         static $instances = array();
 
-		$key = $username."@".$did;
+		$key = $scheme.":".$username."@".$did;
 
-		if (!isset($instances[$key])) $instances[$key] = new Uri_Attrs($username, $did);
+		if (!isset($instances[$key])) $instances[$key] = new Uri_Attrs($scheme, $username, $did);
         return $instances[$key];
     }
 
@@ -414,7 +415,7 @@ class Uri_Attrs extends Attrs_Common {
 		global $data;
 		
 		$data->add_method('get_uri_attrs');
-		if (false === $at = $data->get_uri_attrs($this->username, $this->did, null)) return false;
+		if (false === $at = $data->get_uri_attrs($this->scheme, $this->username, $this->did, null)) return false;
 		$this->attributes = &$at;
 
 		return true;	
@@ -436,7 +437,7 @@ class Uri_Attrs extends Attrs_Common {
 		}
 
 		$data->add_method('update_uri_attr');
-		if (false === $data->update_uri_attr($this->username, $this->did, $name, $value, $opt)) return false;
+		if (false === $data->update_uri_attr($this->scheme, $this->username, $this->did, $name, $value, $opt)) return false;
 
 		return true;	
 	}
@@ -451,7 +452,7 @@ class Uri_Attrs extends Attrs_Common {
 		global $data;
 		
 		$data->add_method('del_uri_attr');
-		if (false === $data->del_uri_attr($this->username, $this->did, $name, $opt)) return false;
+		if (false === $data->del_uri_attr($this->scheme, $this->username, $this->did, $name, $opt)) return false;
 
 		return true;	
 	}

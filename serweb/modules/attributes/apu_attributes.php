@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.10 2006/11/01 13:46:51 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.11 2006/11/24 13:33:02 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -143,6 +143,7 @@ class apu_attributes extends apu_base_class{
 
 		switch($this->opt['attrs_kind']){
 		case "uri":
+			$this->uri_scheme = $this->controler->get_interapu_var('uri_scheme');
 			$this->uri_uname = $this->controler->get_interapu_var('uri_uname');
 			$this->uri_did = $this->controler->get_interapu_var('uri_did');
 			$this->uid = $this->controler->user_id->get_uid();
@@ -295,7 +296,7 @@ class apu_attributes extends apu_base_class{
 		switch($this->opt['attrs_kind']){
 		case "uri":
 			// get uri_attrs
-			$this->uri_attrs = &Uri_Attrs::singleton($this->uri_uname, $this->uri_did);
+			$this->uri_attrs = &Uri_Attrs::singleton($this->uri_scheme, $this->uri_uname, $this->uri_did);
 			if (false === $uri_attrs = $this->uri_attrs->get_attributes()) return false;
 
 		case "user":

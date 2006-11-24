@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_uri_attr.php,v 1.1 2006/07/20 17:46:40 kozlik Exp $
+ * $Id: method.update_uri_attr.php,v 1.2 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_update_uri_attr {
@@ -17,7 +17,7 @@ class CData_Layer_update_uri_attr {
 	 *	@return bool
 	 */ 
 	 
-	function update_uri_attr($username, $did, $name, $value, $opt){
+	function update_uri_attr($scheme, $username, $did, $name, $value, $opt){
 		global $config;
 		
 		$errors = array();
@@ -53,9 +53,10 @@ class CData_Layer_update_uri_attr {
 
 			foreach($insert as $v){
 				$q = "insert into ".$t_name."(
-				             ".$c->username.", ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
-				      values (".$this->sql_format($username, "s").", 
-					          ".$this->sql_format($did,      "s").", 
+				             ".$c->scheme.", ".$c->username.", ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
+				      values (".$this->sql_format($scheme,   "s").", 
+					          ".$this->sql_format($username, "s").", 
+							  ".$this->sql_format($did,      "s").", 
 					          ".$this->sql_format($name,     "s").", 
 							  ".$this->sql_format($v,        "s").", 
 							  ".$this->sql_format($type,     "n").", 
@@ -66,8 +67,9 @@ class CData_Layer_update_uri_attr {
 
 			foreach($delete as $v){
 				$q = "delete from ".$t_name." 
-				      where ".$c->name."     = ".$this->sql_format($name,     "s")." and 
-					        ".$c->value."    = ".$this->sql_format($v,        "s")." and 
+				      where ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
+					        ".$c->name."     = ".$this->sql_format($name,     "s")." and 
+							".$c->value."    = ".$this->sql_format($v,        "s")." and 
 					        ".$c->username." = ".$this->sql_format($username, "s")." and 
 							".$c->did."      = ".$this->sql_format($did,      "s");
 				$res=$this->db->query($q);
@@ -80,9 +82,10 @@ class CData_Layer_update_uri_attr {
 			if (!isset($opt['old_value'])){
 				
 				$q = "insert into ".$t_name."(
-				             ".$c->username.", ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
-				      values (".$this->sql_format($username, "s").", 
-					          ".$this->sql_format($did,      "s").", 
+				             ".$c->scheme.", ".$c->username.", ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
+				      values (".$this->sql_format($scheme,   "s").", 
+					          ".$this->sql_format($username, "s").", 
+							  ".$this->sql_format($did,      "s").", 
 					          ".$this->sql_format($name,     "s").", 
 							  ".$this->sql_format($value,    "s").", 
 							  ".$this->sql_format($type,     "n").", 
@@ -95,15 +98,17 @@ class CData_Layer_update_uri_attr {
 			else{
 				if ($value === ""){
 					$q = "delete from ".$t_name." 
-					      where ".$c->name."     = ".$this->sql_format($name,     "s")." and 
-					            ".$c->username." = ".$this->sql_format($username, "s")." and 
+					      where ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
+					            ".$c->name."     = ".$this->sql_format($name,     "s")." and 
+								".$c->username." = ".$this->sql_format($username, "s")." and 
 							    ".$c->did."      = ".$this->sql_format($did,      "s");
 				}
 				else{
 					$q = "update ".$t_name." 
 					      set ".$c->value."      = ".$this->sql_format($value,    "s")."
-					      where ".$c->name."     = ".$this->sql_format($name,     "s")." and 
-					            ".$c->username." = ".$this->sql_format($username, "s")." and 
+					      where ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
+					            ".$c->name."     = ".$this->sql_format($name,     "s")." and 
+								".$c->username." = ".$this->sql_format($username, "s")." and 
 						        ".$c->did."      = ".$this->sql_format($did,      "s");
 				}
 			}

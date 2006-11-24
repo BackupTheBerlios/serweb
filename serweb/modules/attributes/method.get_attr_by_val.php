@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attr_by_val.php,v 1.5 2006/11/01 13:47:49 kozlik Exp $
+ * $Id: method.get_attr_by_val.php,v 1.6 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_get_attr_by_val {
@@ -37,7 +37,7 @@ class CData_Layer_get_attr_by_val {
 			$t_name = &$config->data_sql->uri_attrs->table_name;	/* table's name */
 			$c = &$config->data_sql->uri_attrs->cols;				/* col names */
 			$f = &$config->data_sql->uri_attrs->flag_values;		/* flags */
-			$columns = $c->username." as username, ".$c->did." as did, ";
+			$columns = $c->scheme." as scheme, ".$c->username." as username, ".$c->did." as did, ";
 		}
 		elseif ($type == 'user'){
 			$t_name = &$config->data_sql->user_attrs->table_name;	/* table's name */

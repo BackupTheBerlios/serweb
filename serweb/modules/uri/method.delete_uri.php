@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.delete_uri.php,v 1.3 2006/03/08 15:46:28 kozlik Exp $
+ * $Id: method.delete_uri.php,v 1.4 2006/11/24 13:33:03 kozlik Exp $
  */
 
 class CData_Layer_delete_uri {
@@ -24,7 +24,7 @@ class CData_Layer_delete_uri {
 	 *	@return bool				TRUE on success, FALSE on failure
 	 */
 
-	function delete_uri($uid, $username, $did, $flags, $opt){
+	function delete_uri($uid, $scheme, $username, $did, $flags, $opt){
 	 	global $config;
 
 		$errors = array();
@@ -42,6 +42,7 @@ class CData_Layer_delete_uri {
 
 		$q = "delete from ".$t_name."
 		      where ".$c->uid."      = ".$this->sql_format($uid,      "s")." and 
+		            ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
 		            ".$c->username." = ".$this->sql_format($username, "s")." and 
 		            ".$c->did."      = ".$this->sql_format($did,      "s")." and 
 		            ".$c->flags."    = ".$this->sql_format($flags,    "n");

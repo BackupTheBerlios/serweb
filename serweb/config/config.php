@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.46 2006/09/12 12:05:44 kozlik Exp $
+ * $Id: config.php,v 1.47 2006/11/24 13:33:02 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -71,7 +71,10 @@
 	/* Default id of domains in single domain setups 
 	 * Probably you does not need change this value.
 	 */
-	$config->default_did = "0";
+ 	$config->default_did = "_default";
+  	
+ 	/* DID used for global tel uri */
+ 	$config->global_tel_uri_did = $config->default_did; 
 
 
 	/* Serweb sends email messages. This is email address which appear in 'from'
@@ -105,8 +108,8 @@
 	   after form submition)
 	*/
 	
-	$config->phonenumber_regex = "\\+?[-/ ()1-9]+";
-	$config->strict_phonenumber_regex = "\\+?[1-9]+";
+ 	$config->phonenumber_regex = "\\+?[-/ ()0-9]+";
+ 	$config->strict_phonenumber_regex = "\\+?[0-9]+"; 
 	
 	/* which tabs should show in user's profile ? those set to false
 	   by default are experimental features which have not been tested

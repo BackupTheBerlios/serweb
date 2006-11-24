@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attributes.php,v 1.2 2006/07/20 17:46:39 kozlik Exp $
+ * $Id: attributes.php,v 1.3 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class Attributes{
@@ -14,7 +14,7 @@ class Attributes{
 		$opt_uri = isset($opt["uri"]) ? $opt["uri"] : null;
 
 		if (!is_null($opt_uri)){
-			$attrs = &Uri_Attrs::singleton($opt_uri['username'], $opt_uri['did']);
+			$attrs = &Uri_Attrs::singleton($opt_uri['scheme'], $opt_uri['username'], $opt_uri['did']);
 			if (false === $attr = $attrs->get_attribute($name)) return false;
 			
 			if (!is_null($attr)) return $attr;

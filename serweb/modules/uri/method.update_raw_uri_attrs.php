@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_raw_uri_attrs.php,v 1.1 2006/07/20 17:52:50 kozlik Exp $
+ * $Id: method.update_raw_uri_attrs.php,v 1.2 2006/11/24 13:33:03 kozlik Exp $
  */
 
 class CData_Layer_update_raw_uri_attrs {
@@ -37,6 +37,7 @@ class CData_Layer_update_raw_uri_attrs {
 		$f = &$config->data_sql->uri_attrs->flag_values;
 
 		$qw = "";
+		if (isset($filter['scheme']))   $qw .= $c->scheme."   = ".$this->sql_format($filter['scheme'],   "s")." and ";
 		if (isset($filter['did']))      $qw .= $c->did."      = ".$this->sql_format($filter['did'],      "s")." and ";
 		if (isset($filter['username'])) $qw .= $c->username." = ".$this->sql_format($filter['username'], "s")." and ";
 		if (isset($filter['name']))     $qw .= $c->name."     = ".$this->sql_format($filter['name'],     "s")." and ";
@@ -45,6 +46,7 @@ class CData_Layer_update_raw_uri_attrs {
 		$qw .= $this->get_sql_bool(true);
 
 		$qs = array();
+		if (isset($values['scheme']))   $qs[] = $c->scheme."   = ".$this->sql_format($values['scheme'],   "s");
 		if (isset($values['name']))     $qs[] = $c->name."     = ".$this->sql_format($values['name'],     "s");
 		if (isset($values['value']))    $qs[] = $c->value."    = ".$this->sql_format($values['value'],    "s");
 		if (isset($values['did']))      $qs[] = $c->did."      = ".$this->sql_format($values['did'],      "s");

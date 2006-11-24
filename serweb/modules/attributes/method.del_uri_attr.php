@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.del_uri_attr.php,v 1.1 2006/07/20 17:46:40 kozlik Exp $
+ * $Id: method.del_uri_attr.php,v 1.2 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_del_uri_attr {
@@ -17,7 +17,7 @@ class CData_Layer_del_uri_attr {
 	 *	@return bool
 	 */ 
 	 
-	function del_uri_attr($username, $did, $name, $opt){
+	function del_uri_attr($scheme, $username, $did, $name, $opt){
 		global $config;
 		
 		$errors = array();
@@ -35,7 +35,8 @@ class CData_Layer_del_uri_attr {
 
 
 		$q = "delete from ".$t_name." 
-		      where ".$c->name."     = ".$this->sql_format($name,     "s")." and 
+		      where ".$c->scheme."   = ".$this->sql_format($scheme,   "s")." and 
+					".$c->name."     = ".$this->sql_format($name,     "s")." and 
 					".$c->username." = ".$this->sql_format($username, "s")." and 
 					".$c->did."      = ".$this->sql_format($did,      "s");
 		

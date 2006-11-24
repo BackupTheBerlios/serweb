@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.delete_uri_attrs.php,v 1.1 2006/07/20 17:52:50 kozlik Exp $
+ * $Id: method.delete_uri_attrs.php,v 1.2 2006/11/24 13:33:03 kozlik Exp $
  */
 
 class CData_Layer_delete_uri_attrs {
@@ -17,7 +17,7 @@ class CData_Layer_delete_uri_attrs {
 	 *	@param array $opt		associative array of options
 	 *	@return bool			TRUE on success, FALSE on failure
 	 */ 
-	function delete_uri_attrs($username, $did, $opt){
+	function delete_uri_attrs($scheme, $username, $did, $opt){
 		global $config;
 		
 		$errors = array();
@@ -32,8 +32,9 @@ class CData_Layer_delete_uri_attrs {
 		$ca = &$config->data_sql->uri_attrs->cols;
 
 		$q="delete from ".$ta_name." 
-			where ".$ca->username."=".$this->sql_format($username, "s"). "and
-			      ".$ca->did."=".$this->sql_format($did, "s");
+			where ".$ca->scheme."=".$this->sql_format($scheme, "s"). "and
+			      ".$ca->username."=".$this->sql_format($username, "s"). "and
+				  ".$ca->did."=".$this->sql_format($did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

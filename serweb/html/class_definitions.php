@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.17 2006/11/02 14:21:23 kozlik Exp $ 
+ * $Id: class_definitions.php,v 1.18 2006/11/24 13:33:02 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -575,6 +575,7 @@ class URI{
 	var $uid;
 	var $did;
 	var $username;
+	var $scheme = "sip";
 
 	function URI($uid, $did, $username, $flags){
 		$this->uid		= $uid;
@@ -611,6 +612,23 @@ class URI{
 		return (bool)($this->flags & $f['DB_DISABLED']);
 	}
 
+	
+	/**
+	 *	Return scheme of the uri
+	 *	
+	 *	@return	string
+	 */
+	function get_scheme(){
+		return $this->scheme;
+	}
+
+	/**
+	 *	Set scheme of the uri
+	 */
+	function set_scheme($val){
+		$this->scheme = $val;
+	}
+	
 	
 	/**
 	 *	Return uid of the uri
@@ -658,6 +676,7 @@ class URI{
 		if (false === $dn = $dom->get_domain_name($this->did)) return false;
 
 		$out = array();
+		$out['scheme']   = $this->get_scheme();
 		$out['uid']      = $this->get_uid();
 		$out['username'] = $this->get_username();
 		$out['did']      = $this->get_did();
@@ -666,6 +685,7 @@ class URI{
 		$out['is_to']    = $this->is_to();
 		$out['is_from']  = $this->is_from();
 		$out['disabled'] = $this->is_disabled();
+		if (false === $out['as_string'] = $this->to_string()) return false;
 
 		return $out;
 	}
@@ -676,10 +696,22 @@ class URI{
 	 *	@return	string		sip uri or FALSE on error
 	 */
 	function to_string(){
+		global $config;
+
+		/* global tel uri */
+		if ($this->scheme == "tel" and $this->did == $config->global_tel_uri_did){
+			return "tel:".$this->username;
+		}
+
 		$dom = &Domains::singleton();
-		
 		if (false === $dn = $dom->get_domain_name($this->did)) return false;
+
+		/* tel uri with context */
+		if ($this->scheme == "tel"){
+			return "tel:".$this->username.";phone-context=".$dn;
+		}
 		
+		/* sip uri */
 		return "sip:".$this->username."@".$dn;
 	}
 }

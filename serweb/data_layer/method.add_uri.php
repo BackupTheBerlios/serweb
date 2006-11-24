@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.add_uri.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
+ * $Id: method.add_uri.php,v 1.6 2006/11/24 13:33:02 kozlik Exp $
  */
 
 class CData_Layer_add_uri {
@@ -25,7 +25,7 @@ class CData_Layer_add_uri {
 	 *	@return bool
 	 */ 
 	 
-	function add_uri($uid, $uname, $did, $opt){
+	function add_uri($uid, $scheme, $uname, $did, $opt){
 		global $config;
 		
 		$errors = array();
@@ -66,8 +66,9 @@ class CData_Layer_add_uri {
 		}
 
 		$q = "insert into ".$t_name."(
-	             ".$c->uid.", ".$c->username.", ".$c->did.", ".$c->flags.")
+	             ".$c->uid.", ".$c->scheme.", ".$c->username.", ".$c->did.", ".$c->flags.")
 		      values (".$this->sql_format($uid,   "s").", 
+			          ".$this->sql_format($scheme,"s").", 
 			          ".$this->sql_format($uname, "s").", 
 					  ".$this->sql_format($did,   "s").", 
 					  ".$this->sql_format($flags, "n").")";

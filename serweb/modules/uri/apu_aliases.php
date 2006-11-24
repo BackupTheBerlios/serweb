@@ -3,7 +3,7 @@
  * Application unit aliases
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.6 2006/04/13 10:01:14 kozlik Exp $
+ * @version   $Id: apu_aliases.php,v 1.7 2006/11/24 13:33:03 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -472,7 +472,7 @@ class apu_aliases extends apu_base_class{
 		}
 
 		$opt = array('flags' => $flags);
-		if (false === $data->add_uri($uid, $username, $did, $opt)) {
+		if (false === $data->add_uri($uid, 'sip', $username, $did, $opt)) {
 			$data->transaction_rollback();
 			return false;
 		}
@@ -569,7 +569,7 @@ class apu_aliases extends apu_base_class{
 			return false;
 		}
 
-		if (false === $data->delete_uri($this->user_id->get_uid(), $this->act_alias['username'], $this->act_alias['did'], $this->act_alias['flags'], null)) return false;
+		if (false === $data->delete_uri($this->user_id->get_uid(), 'sip', $this->act_alias['username'], $this->act_alias['did'], $this->act_alias['flags'], null)) return false;
 		return array("m_al_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 

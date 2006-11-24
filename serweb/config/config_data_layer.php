@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.45 2006/09/21 12:52:56 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.46 2006/11/24 13:33:02 kozlik Exp $
  */
 
 
@@ -381,6 +381,7 @@
 		
 		$config->data_sql->uri_attrs->table_name = 		"uri_attrs";
 		
+ 		$config->data_sql->uri_attrs->cols->scheme = 	"scheme";
  		$config->data_sql->uri_attrs->cols->username = 	"username";
  		$config->data_sql->uri_attrs->cols->did = 		"did";
  		$config->data_sql->uri_attrs->cols->name = 		"name";
@@ -534,6 +535,7 @@
  		$config->data_sql->uri->cols = new stdClass();
 		
 		$config->data_sql->uri->table_name = 		"uri";
+ 		$config->data_sql->uri->cols->scheme = 		"scheme";
  		$config->data_sql->uri->cols->uid = 		"uid";
  		$config->data_sql->uri->cols->did = 		"did";
  		$config->data_sql->uri->cols->username = 	"username";

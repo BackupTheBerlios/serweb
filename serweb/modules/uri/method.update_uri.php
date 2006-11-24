@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.update_uri.php,v 1.2 2006/03/08 15:46:33 kozlik Exp $
+ * $Id: method.update_uri.php,v 1.3 2006/11/24 13:33:03 kozlik Exp $
  */
 
 class CData_Layer_update_uri {
@@ -39,6 +39,7 @@ class CData_Layer_update_uri {
 		$an = &$config->attr_names;
 
 		$qw = "";
+		if (isset($filter['scheme']))   $qw .= $c->scheme."   = ".$this->sql_format($filter['scheme'],   "s")." and ";
 		if (isset($filter['uid']))      $qw .= $c->uid."      = ".$this->sql_format($filter['uid'],      "s")." and ";
 		if (isset($filter['did']))      $qw .= $c->did."      = ".$this->sql_format($filter['did'],      "s")." and ";
 		if (isset($filter['username'])) $qw .= $c->username." = ".$this->sql_format($filter['username'], "s")." and ";
@@ -46,6 +47,7 @@ class CData_Layer_update_uri {
 		$qw .= $this->get_sql_bool(true);
 
 		$qs = array();
+		if (isset($values['scheme']))   $qs[] = $c->scheme."   = ".$this->sql_format($values['scheme'],   "s");
 		if (isset($values['uid']))      $qs[] = $c->uid."      = ".$this->sql_format($values['uid'],      "s");
 		if (isset($values['did']))      $qs[] = $c->did."      = ".$this->sql_format($values['did'],      "s");
 		if (isset($values['username'])) $qs[] = $c->username." = ".$this->sql_format($values['username'], "s");

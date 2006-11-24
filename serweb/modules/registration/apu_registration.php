@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.13 2006/09/18 13:07:26 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.14 2006/11/24 13:33:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -294,7 +294,7 @@ class apu_registration extends apu_base_class{
 			/* store alias to URI table */
 			$o = array('disabled' => $this->opt['require_confirmation'],
 			           'canon' => false);
-			if (false === $data->add_uri($uid, $alias, $did, $o)) {
+			if (false === $data->add_uri($uid, 'sip', $alias, $did, $o)) {
 				$data->transaction_rollback();
 				$sem->release();
 				return false;
