@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: data_layer.php,v 1.25 2006/09/08 12:27:31 kozlik Exp $
+ * $Id: data_layer.php,v 1.26 2006/11/24 13:42:19 kozlik Exp $
  */
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
@@ -763,6 +763,11 @@ class CData_Layer{
 	 *	Start a transaction on the current connection
 	 */
 	function transaction_start(){
+		if (!$this->connect_to_db($errors)) {
+			ErrorHandler::add_error($errors);
+			return false;
+		}
+
 		/* initialize variables after rollback */
 		if ($this->transaction_rollback){
 			$this->transaction_rollback = false;
