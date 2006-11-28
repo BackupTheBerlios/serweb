@@ -1,0 +1,19 @@
+# This file contain text of email with missed calls of user 
+# 
+# 
+# replacements in allowed this file: 
+# 	none
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: Your missed calls
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+
+Hallo,
+
+overzicht gemiste gesprekken van gisteren.
+
+
+-- Dit bericht is automatisch gemaakt door SerWeb.

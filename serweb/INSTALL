@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.29 2006/11/02 10:09:13 kozlik Exp $
+$Id: INSTALL,v 1.30 2006/11/28 14:48:53 kozlik Exp $
 
 serweb - Installation
 
@@ -6,17 +6,17 @@ serweb - Installation
   -------------
 
   - Apache web server
-  - php 4.3 or php 5.0 (with Classkit PECL package), Classkit 
-    unfortunately do not work well with php 5.1
+  - php 4.3 or later
   - mysql support for php (php-mysql package)
   - imap support for php (php-imap package)
   - PEAR package DB (should be included in PHP release 4.3 and later)
+  - PEAR package XML_RPC (optional - should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
 		see http://pear.php.net/manual/en/installation.getting.php for details
-  - PECL package Classkit (only PHP5 users)
-  		see http://www.php.net/manual/en/ref.classkit.php
+  - PECL package Runkit or Classkit (only PHP5 users)
+  		see PHP 5 note bellow
   - overlib (http://www.bosrup.com/web/overlib/)
-  - MySQL 4.0 (we use UNIONs)
+  - MySQL 4.0 or later
   - running SER with MySQL support
 
   Important:
@@ -27,6 +27,19 @@ serweb - Installation
   	For get latest stable version use this command:
   	
   	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_0_10_0 serweb
+
+
+  PHP 5 note
+  ----------
+    PHP 5 users have to install Runkit or Classkit extension from PECL repository.
+    See http://www.php.net/manual/en/ref.classkit.php 
+	or  http://www.php.net/manual/en/ref.runkit.php
+	for installation instructions.
+	
+	Unfortunately both classkit and runkit extensions are in beta state and 
+	it seems there is no heavy development effort on them. Useing classkit
+	is safe with PHP 5.0 but cause core dump in PHP >= 5.1. Use of runkit
+	seems to be working in PHP 5.0, 5.1 and 5.2. But it is more experimental.
 
 
   Quick Install:

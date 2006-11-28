@@ -1,6 +1,9 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.38 2006/11/02 13:50:51 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.39 2006/11/28 14:48:55 kozlik Exp $
+ *
+ * Dutch translation by Marcel Bosman, November 2006
+ * mrbosman@hetnet.nl
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,11 +35,11 @@ $lang_str['l_edit'] = 							"toevoegen";
 $lang_str['l_change'] = 						"wijzigen";
 $lang_str['l_delete'] = 						"verwijderen";
 $lang_str['l_back_to_main'] = 					"terug";
-$lang_str['l_back'] = 							"back";	//to translate 
-$lang_str['l_disable'] = 						"disable";	//to translate 
-$lang_str['l_enable'] = 						"enable";	//to translate 
-$lang_str['l_disable_all'] = 					"disable all";	//to translate 
-$lang_str['l_enable_all'] = 					"enable all";	//to translate 
+$lang_str['l_back'] = 							"terug";
+$lang_str['l_disable'] = 						"uit";
+$lang_str['l_enable'] = 						"aan";
+$lang_str['l_disable_all'] = 					"alles uit";
+$lang_str['l_enable_all'] = 					"alles aan";
 $lang_str['status_unknown'] = 					"onbekend";
 $lang_str['status_nonlocal'] = 					"niet lokaal";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -44,22 +47,22 @@ $lang_str['status_online'] = 					"on line";
 $lang_str['status_offline'] = 					"off line";
 $lang_str['search_filter'] = 					"filter";
 $lang_str['showed_users'] = 					"Overzicht gebruikers";
-$lang_str['displaying_records'] = 				"Displaying records";	//to translate 
+$lang_str['displaying_records'] = 				"Overzicht records";
 $lang_str['no_users_found'] = 					"Geen gebruikers gevonden";
-$lang_str['no_records_found'] = 				"No records found";	//to translate 
-$lang_str['none'] = 							"none";	//to translate 
-$lang_str['warning'] = 							"Warning!";	//to translate 
+$lang_str['no_records_found'] = 				"Geen records aanwezig";
+$lang_str['none'] = 							"geen";
+$lang_str['warning'] = 							"Waarschuwing!";
 $lang_str['domain'] = 							"domein";
-$lang_str['yes'] = 								"YES";	//to translate 
-$lang_str['no'] = 								"NO";	//to translate 
-$lang_str['not_exists'] = 						"does not exists";	//to translate 
+$lang_str['yes'] = 								"Ja";
+$lang_str['no'] = 								"Nee";
+$lang_str['not_exists'] = 						"niet aanwezig";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_valid_email'] =	 			"ongeldig email adres";
-$lang_str['fe_is_not_valid_email'] =	 		"is not valid email address";	//to translate 
+$lang_str['fe_is_not_valid_email'] =	 		"ongeldig email adres";
 $lang_str['fe_not_valid_sip'] = 				"ongeldig sip adres";
 $lang_str['fe_not_valid_phonenumber'] = 		"ongeldig telefoonnummer";
 $lang_str['fe_not_filled_sip'] = 				"u moet een SIP adres invullen";
@@ -67,8 +70,8 @@ $lang_str['fe_passwords_not_match'] =			"wachtwoord niet gelijk";
 $lang_str['fe_not_filled_username'] = 			"U moet een gebruikersnaam invullen";
 $lang_str['fe_not_allowed_uri'] = 				"ongeldig SIP adres";
 $lang_str['fe_max_entries_reached'] = 			"Maximum aantal pogingen";
-$lang_str['fe_not_valid_username'] = 			"not valid username";	//to translate 
-$lang_str['fe_not_valid_domainname'] = 			"not valid domainname";	//to translate 
+$lang_str['fe_not_valid_username'] = 			"gebruikersnaam ongeldig";
+$lang_str['fe_not_valid_domainname'] = 			"domeinnaam ongeldig";
 
 /* ------------------------------------------------------------*/
 /*      buttons                                                */
@@ -87,12 +90,12 @@ $lang_str['b_next'] =		 					"Volgende";
 $lang_str['b_register'] = 						"Registreer";
 $lang_str['b_send'] =		 					"Verstuur";
 $lang_str['b_submit'] =		 					"Bewaar";
-$lang_str['b_cancel'] =		 					"Cancel";	//to translate 
-$lang_str['b_select'] =		 					"Select";	//to translate 
+$lang_str['b_cancel'] =		 					"Stop";
+$lang_str['b_select'] =		 					"Selecteer";
 $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload welkomsbericht";
-$lang_str['b_extended_settings'] =		 		"Extended settings";	//to translate 
-$lang_str['b_search'] =		 					"Search";	//to translate 
+$lang_str['b_extended_settings'] =		 		"Extra settings";
+$lang_str['b_search'] =		 					"Zoeken";
 
 
 /* ------------------------------------------------------------*/
@@ -111,10 +114,10 @@ $lang_str['tab_speed_dial'] =	 				"direct bellen";
 
 $lang_str['tab_users'] =	 					"gebruikers";
 $lang_str['tab_admin_privileges'] =	 			"admin rechten";
-$lang_str['tab_domains'] =	 					"domains";	//to translate 
-$lang_str['tab_customers'] =	 				"customers";	//to translate 
-$lang_str['tab_global_attributes'] =	 		"global attributes";	//to translate 
-$lang_str['tab_attr_types'] =	 				"types of attributes";	//to translate 
+$lang_str['tab_domains'] =	 					"domein";
+$lang_str['tab_customers'] =	 				"klanten";
+$lang_str['tab_global_attributes'] =	 		"globale parameters";
+$lang_str['tab_attr_types'] =	 				"soort parameters";
 
 /* ------------------------------------------------------------*/
 /*      form fields                                            */
@@ -127,12 +130,12 @@ $lang_str['ff_your_timezone'] = 				"timezone";
 $lang_str['ff_username'] = 						"gebruikersnaam";
 $lang_str['ff_email'] = 						"email";
 $lang_str['ff_show_online_only'] = 				"alleen on-line gebruikers";
-$lang_str['ff_language'] = 						"language";	//to translate 
-$lang_str['ff_reg_confirmation'] = 				"require confirmation of registration";	//to translate 
-$lang_str['ff_uid'] = 							"uid";	//to translate 
-$lang_str['ff_for_ser'] = 						"for SER";	//to translate 
-$lang_str['ff_for_serweb'] = 					"for SerWeb";	//to translate 
-$lang_str['ff_contact_email'] = 				"contact email";	//to translate 
+$lang_str['ff_language'] = 						"taal";
+$lang_str['ff_reg_confirmation'] = 				"bevestiging voor juiste registratie";
+$lang_str['ff_uid'] = 							"uid";
+$lang_str['ff_for_ser'] = 						"voor SER";
+$lang_str['ff_for_serweb'] = 					"voor SerWeb";
+$lang_str['ff_contact_email'] = 				"contact email";
 
 /* ------------------------------------------------------------*/
 /*      table heading                                          */
@@ -147,15 +150,15 @@ $lang_str['th_calling_subscriber'] = 			"calling subscriber";
 $lang_str['th_time'] = 							"tijd";
 $lang_str['th_username'] = 						"gebruiker";
 $lang_str['th_email'] = 						"email";
-$lang_str['th_uid'] = 							"uid";	//to translate 
+$lang_str['th_uid'] = 							"uid";
 
 /* ------------------------------------------------------------*/
 /*      login messages                                         */
 /* ------------------------------------------------------------*/
 
 $lang_str['bad_username'] = 					"Ongeldige gebruikersnaam of wachtwoord";
-$lang_str['account_disabled'] = 				"Your account was disabled";	//to translate 
-$lang_str['domain_not_found'] = 				"Your domain not found";	//to translate 
+$lang_str['account_disabled'] = 				"Uw account is uitgeschakeld";
+$lang_str['domain_not_found'] = 				"Uw doemian is niet gevonden";
 $lang_str['msg_logout_s'] = 					"U bent uitgelogd";
 $lang_str['msg_logout_l'] = 					"U bent uitgelogd, om opnieuw in te loggen, toets hieronder uw gebruikersnaam en wachtwood in";
 $lang_str['userlogin'] = 						"Gebruikers login";
@@ -165,8 +168,8 @@ $lang_str['ff_password'] = 						"Wachtwoord";
 $lang_str['l_forgot_passw'] = 					"Wachtwoord vergeten?";
 $lang_str['l_register'] = 						"Inschrijven!";
 $lang_str['remember_uname'] = 					"Login gegevens onthouden op de computer?";
-$lang_str['session_expired'] = 					"Session expired";	//to translate 
-$lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";	//to translate 
+$lang_str['session_expired'] = 					"Sessie verlopen";
+$lang_str['session_expired_relogin'] = 			"Uw sessie is verlopen, opnieuw inloggen.";
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */
@@ -195,8 +198,8 @@ $lang_str['ff_expires'] = 						"verloopt";
 $lang_str['contact_expire_hour'] = 				"over een uur";
 $lang_str['contact_expire_day'] = 				"over een dag";
 $lang_str['contact_will_not_expire'] = 			"permanent";
-$lang_str['acl_err_local_forward'] = 			"local forwarding prohibited";
-$lang_str['acl_err_gateway_forward'] = 			"gateway contacts prohibited";
+$lang_str['acl_err_local_forward'] = 			"doorsturen verboden";
+$lang_str['acl_err_gateway_forward'] = 			"gateway contacten verboden";
 
 /* ------------------------------------------------------------*/
 /*      phonebook                                              */
@@ -291,9 +294,9 @@ $lang_str['no_attributes_defined'] = 			"Geen rechten gegeven door de beheerder"
 
 $lang_str['ff_send_daily_missed_calls'] =		"verstuur dagelijks mijn gemiste berichten naar mijn emailadres";
 
-$lang_str['ff_uri_def_f'] =						"default flags for uri";	//to translate 
-$lang_str['ff_credential_def_f'] =				"default flags for credentials";	//to translate 
-$lang_str['ff_domain_def_f'] =					"default flags for domain";	//to translate 
+$lang_str['ff_uri_def_f'] =						"standaard waarden voor uri";
+$lang_str['ff_credential_def_f'] =				"standaard gegevns";
+$lang_str['ff_domain_def_f'] =					"standaard waarden voor domein";
 
 
 /* ------------------------------------------------------------*/
@@ -312,7 +315,7 @@ $lang_str['th_new_uri'] = 						"Nieuwe uri";
 
 $lang_str['fe_not_accepted_terms'] = 			"Uw moet de algemene voorwaarden accepteren";
 $lang_str['choose_timezone'] = 					"--- selecteer uw tijdzone ---";
-$lang_str['choose_timezone_of_user'] = 			"--- please select timezone of user ---";	//to translate 
+$lang_str['choose_timezone_of_user'] = 			"--- selecteer uw tijdzone voor deze gebruiker ---";
 $lang_str['fe_not_choosed_timezone'] = 			"selecteer uw tijdzone SVP";
 $lang_str['fe_uname_not_follow_conventions'] = 	"gebruikersnaam voldoet niet aan de regels";
 $lang_str['fe_not_filled_password'] = 			"u moet een wachtwoord invullen";
@@ -321,8 +324,8 @@ $lang_str['fe_not_filled_your_lname'] = 		"u moet uw achternaam opgeven";
 $lang_str['fe_uname_already_choosen_1'] = 		"Sorry, deze gebruikersnaam ";
 $lang_str['fe_uname_already_choosen_2'] = 		"is reeds in gebruik. Probeer opnieuw met een andere naam";
 $lang_str['err_sending_mail'] = 				"Sorry, er is een fout opgetreden tijdens het versturen van email. Probeer het later nogmaals";
-$lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";	//to translate 
-$lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";	//to translate 
+$lang_str['registration_introduction_1'] = 		"Voor registratie, vul het formulier in. U ontvangt een email om uw registratie te bevestigen.";
+$lang_str['registration_introduction_2'] = 		"heeft u vragen over uw gratis trial SIP services.";
 $lang_str['reg_email_desc'] = 					"Het email adres waar wij de bevestiging van uw registratie naar toe sturen. Indien het email adres ongeldig is kan er GEEN registratie voor onze SIP dienst plaatsvinden.)";
 $lang_str['ff_phone'] = 						"telefoonnummer";
 $lang_str['reg_phone_desc'] = 					"Dit is uw telefoonnummer waarop u bereikbaar bent.";
@@ -333,11 +336,11 @@ $lang_str['reg_password_desc'] = 				"Vergeet uw wachtwoord niet, dit heeft u no
 $lang_str['ff_confirm_password'] = 				"bevestig uw wachtwoord";
 $lang_str['ff_terms_and_conditions'] = 			"leveringsvoorwaarden";
 $lang_str['ff_i_accept'] = 						"accepteren";
-$lang_str['ff_timezone'] = 						"timezone";	//to translate 
+$lang_str['ff_timezone'] = 						"tijdzone";
 $lang_str['l_back_to_loginform'] = 				"terug naar login";
-$lang_str['msg_user_registered_s'] = 			"User registered";	//to translate 
-$lang_str['msg_user_registered_l'] = 			"New user has been successfully registered";	//to translate 
-$lang_str['register_new_user'] = 				"register new user";	//to translate 
+$lang_str['msg_user_registered_s'] = 			"Gebruiker geregistreerd";
+$lang_str['msg_user_registered_l'] = 			"Nieuwe gebruiker is geregistreerd";
+$lang_str['register_new_user'] = 				"registreer nieuwe gebruiker";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -347,8 +350,8 @@ $lang_str['reg_finish_thanks'] = 				"Onze hartelijke dank voor uw registratie b
 $lang_str['reg_finish_app_forwarded'] = 		"Your application was forwarded for approval.";
 $lang_str['reg_finish_confirm_msg'] = 			"U ontvangt spoedig een bevestigingsbericht van ons.";
 $lang_str['reg_finish_sip_address'] = 			"Wij hebben het onderstaande SIP adres voor u gereserveerd:";
-$lang_str['reg_finish_questions_1'] = 			"If you have any further questions please feel free to send";	//to translate 
-$lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate 
+$lang_str['reg_finish_questions_1'] = 			"Heeft u aanvullende vragen stuur";	//to translate 
+$lang_str['reg_finish_questions_2'] = 			"een email aan";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      registration - confirmation                            */
@@ -357,10 +360,10 @@ $lang_str['reg_finish_questions_2'] = 			"an email to";	//to translate
 $lang_str['reg_conf_congratulations'] = 		"Gefeliciteerd! Uw ".$config->domain." account is aangemaakt!";
 $lang_str['reg_conf_set_up'] = 					"Uw ".$config->domain." account is aangemaakt!";
 $lang_str['reg_conf_jabber_failed'] = 			"Helaas uw ".$config->domain." Jabber Gateway registratie is mislukt.";
-$lang_str['reg_conf_contact_infomail_1'] = 		"Please contact";	//to translate 
-$lang_str['reg_conf_contact_infomail_2'] = 		"for further assistance.";	//to translate 
+$lang_str['reg_conf_contact_infomail_1'] = 		"Neem contact op";
+$lang_str['reg_conf_contact_infomail_2'] = 		"voor ondersteuning.";
 $lang_str['reg_conf_failed'] = 					"Helaas uw ".$config->domain." bevestiging is mislukt.";
-$lang_str['reg_conf_nr_not_exists'] = 			"Either your confirmation number is wrong or your account has been already created!";	//to translate 
+$lang_str['reg_conf_nr_not_exists'] = 			"Uw bevestiging is onjuiste of deze account is reeds aanwezig!";
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Sorry. Dit nummer komt niet voor op onze server!";
 
 /* ------------------------------------------------------------*/
@@ -391,9 +394,9 @@ $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"alias";
 $lang_str['l_account'] = 						"gebruiker";
 $lang_str['l_accounting'] = 					"rekening";
-$lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";	//to translate 
-$lang_str['l_credentials'] = 					"credentials";	//to translate 
-$lang_str['user_has_no_credentials'] = 			"User has no credentials";	//to translate 
+$lang_str['realy_you_want_delete_this_user'] =	"Deze gebruiker verwijderen?";
+$lang_str['l_credentials'] = 					"gegevens";
+$lang_str['user_has_no_credentials'] = 			"Gebruiker heeft geen gegevens";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -415,41 +418,41 @@ $lang_str['th_alias'] = 						"alias";
 $lang_str['realy_you_want_delete_this_alias'] = "Alias verwijderen, weet u het zeker?";
 $lang_str['user_have_not_any_aliases'] = 		"Gebruiker heeft geen alias";
 $lang_str['ff_is_canon'] = 						"is canonical";	//to translate 
-$lang_str['ff_is_enabled'] = 					"is enabled";	//to translate 
-$lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";	//to translate 
-$lang_str['ff_uri_is_from'] = 					"can be used as 'from' uri";	//to translate 
+$lang_str['ff_is_enabled'] = 					"staat aan";
+$lang_str['ff_uri_is_to'] = 					"gebruik 'aan' uri";
+$lang_str['ff_uri_is_from'] = 					"gebruik 'van' uri";
 $lang_str['th_is_canon'] = 						"canonical";	//to translate 
-$lang_str['th_uri_is_to'] = 					"to";	//to translate 
-$lang_str['th_uri_is_from'] = 					"from";	//to translate 
-$lang_str['l_ack'] = 							"acknowledge";	//to translate 
+$lang_str['th_uri_is_to'] = 					"aan";
+$lang_str['th_uri_is_from'] = 					"van";
+$lang_str['l_ack'] = 							"bevestig";
 $lang_str['l_deny'] = 							"deny";	//to translate 
-$lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";	//to translate 
-$lang_str['ack_values'] = 						"Acknowledge values";	//to translate 
-$lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please acknowledge the values.";	//to translate 
-$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";	//to translate 
-$lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";	//to translate 
-$lang_str['uid_with_alias'] = 					"List of UID with alias";	//to translate 
+$lang_str['uris_with_same_uname_did'] = 		"bestaande URIs met dezelfde gebruikersnaam en domein";
+$lang_str['ack_values'] = 						"Bevestig waarden";
+$lang_str['uri_already_exists'] = 				"URI met deze gebruikersnaam en domein zijn al aanwezig. Bevestig deze waarden.";
+$lang_str['is_to_warning'] = 					"LET OP: waarde 'AAN' is in gebruik voor een andere URI. Doorgaan, verwijderd de waarde in URI";
+$lang_str['err_canon_uri_exists'] = 			"Kan deze waarde voor URI niet wijzigen";
+$lang_str['uid_with_alias'] = 					"Overzicht UID met alias";
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */
 /* ------------------------------------------------------------*/
 
 $lang_str['admin_privileges_of'] = 				"Admininistrator rechten staan uit";
-$lang_str['admin_competence'] = 				"admin competence";
+$lang_str['admin_competence'] = 				"admin rechten";
 $lang_str['ff_is_admin'] = 						"is admin";
 $lang_str['ff_change_privileges'] = 			"wijzig rechten van administrators";
-$lang_str['ff_is_hostmaster'] = 				"is hostmaster";	//to translate 
+$lang_str['ff_is_hostmaster'] = 				"is hostmaster";
 $lang_str['acl_control'] = 						"ACL controle";
 $lang_str['msg_privileges_updated_s'] = 		"Rechten gewijzigd";
 $lang_str['msg_privileges_updated_l'] = 		"De rechten van de gebruiker zijn gewijzigd";
 $lang_str['list_of_users'] = 					"Gebruikersoverzicht";
 $lang_str['th_domain'] = 						"domein";
-$lang_str['l_change_privileges'] = 				"Privileges";	//to translate 
+$lang_str['l_change_privileges'] = 				"rechten";
 $lang_str['ff_domain'] = 						"domein";
-$lang_str['ff_realm'] = 						"realm";	//to translate 
-$lang_str['th_realm'] = 						"realm";	//to translate 
+$lang_str['ff_realm'] = 						"realm";
+$lang_str['th_realm'] = 						"realm";
 $lang_str['ff_show_admins_only'] = 				"alleen administrators";
-$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can't change privileges of hostmaster because you are not hostmaster!";	//to translate 
+$lang_str['err_cant_ch_priv_of_hostmaster'] = 	"Deze gebruiker is hostmaster. U mag de rechten van de hostmaster niet wijzigen omdat u geen hostmaster rechten heeft!";
 
 
 /* ------------------------------------------------------------*/
@@ -457,33 +460,33 @@ $lang_str['err_cant_ch_priv_of_hostmaster'] = 	"This user is hostmaster. You can
 /* ------------------------------------------------------------*/
 
 $lang_str['fe_not_filled_name_of_attribute'] = 	"geef attribuutnaam op";
-$lang_str['fe_empty_not_allowed'] = 			"can not be empty";	//to translate 
-$lang_str['ff_order'] = 						"order";	//to translate 
+$lang_str['fe_empty_not_allowed'] = 			"mag niet leeg zijn";
+$lang_str['ff_order'] = 						"volgorde";
 $lang_str['ff_att_name'] = 						"attribuut naam";
 $lang_str['ff_att_type'] = 						"attribuut type";
-$lang_str['ff_att_access'] = 					"access";	//to translate 
-$lang_str['ff_label'] = 						"label";	//to translate 
-$lang_str['ff_att_user'] = 						"user";	//to translate 
-$lang_str['ff_att_domain'] = 					"domain";	//to translate 
-$lang_str['ff_att_global'] = 					"global";	//to translate 
-$lang_str['ff_multivalue'] = 					"multivalue";	//to translate 
-$lang_str['ff_att_reg'] = 						"required on registration";	//to translate 
-$lang_str['ff_att_req'] = 						"required (not empty)";	//to translate 
-$lang_str['ff_fr_timer'] = 						"final response timer";	//to translate 
-$lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translate 
-$lang_str['ff_uid_format'] = 					"format of newly created UIDs";	//to translate 
-$lang_str['ff_did_format'] = 					"format of newly created DIDs";	//to translate 
+$lang_str['ff_att_access'] = 					"toegang";
+$lang_str['ff_label'] = 						"label";
+$lang_str['ff_att_user'] = 						"gebruiker";
+$lang_str['ff_att_domain'] = 					"domein";
+$lang_str['ff_att_global'] = 					"global";
+$lang_str['ff_multivalue'] = 					"meerdere waarden";
+$lang_str['ff_att_reg'] = 						"verplicht bij registratie";
+$lang_str['ff_att_req'] = 						"verplicht (niet leeg)";
+$lang_str['ff_fr_timer'] = 						"timer";
+$lang_str['ff_fr_inv_timer'] = 					"uitnodiging timer";
+$lang_str['ff_uid_format'] = 					"formaat voor nieuwe UIDs";
+$lang_str['ff_did_format'] = 					"formaat voor nieuwe DIDs";
 
-$lang_str['at_access_0'] = 						"full access";	//to translate 
-$lang_str['at_access_1'] = 						"read only for users";	//to translate 
-$lang_str['at_access_3'] = 						"for admins only (R/W)";	//to translate 
+$lang_str['at_access_0'] = 						"volledige toegang";
+$lang_str['at_access_1'] = 						"alleen lezen voor gebruikers";
+$lang_str['at_access_3'] = 						"alleen voor administrators (R/W)";
 
 
 $lang_str['th_att_name'] = 						"attribuut naam";
 $lang_str['th_att_type'] = 						"attribuut type";
-$lang_str['th_order'] = 						"order";	//to translate 
-$lang_str['th_label'] = 						"label";	//to translate 
-$lang_str['fe_order_is_not_number'] = 			"'order' is not valid number";	//to translate 
+$lang_str['th_order'] = 						"volgorde";
+$lang_str['th_label'] = 						"label";
+$lang_str['fe_order_is_not_number'] = 			"'volgorde' ongeldig nummer";
 
 $lang_str['fe_not_filled_item_label'] = 		"geeft item label op";
 $lang_str['fe_not_filled_item_value'] = 		"geeft item waarde op";
@@ -492,21 +495,21 @@ $lang_str['ff_item_value'] = 					"item waarde";
 $lang_str['th_item_label'] = 					"item label";
 $lang_str['th_item_value'] = 					"item waarde";
 $lang_str['l_back_to_editing_attributes'] = 	"terug naar wijzigen attributen";
-$lang_str['realy_want_you_delete_this_attr'] = 	"Realy want you delete this attribute?";	//to translate 
-$lang_str['realy_want_you_delete_this_item'] = 	"Realy want you delete this item?";	//to translate 
+$lang_str['realy_want_you_delete_this_attr'] = 	"verwijder dit attribuut?";
+$lang_str['realy_want_you_delete_this_item'] = 	"Verwijder dit onderdeel?";
 
 
-$lang_str['attr_type_warning'] = 				"On this page you may define new attributes and change types of them, their flags, etc. Preddefined attributes are mostly used internaly by SerWeb or by SER. Do not change them if you do not know what are you doing!!!";	//to translate 
-$lang_str['at_hint_order'] = 					"Attributes are arranged in this order in SerWeb";	//to translate 
-$lang_str['at_hint_label'] = 					"Label of attribute displayed in SerWeb. If starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";	//to translate 
-$lang_str['at_hint_for_ser'] = 					"Attribute is loaded by SER. Only newly created attributes are affected by change of this.";	//to translate 
-$lang_str['at_hint_for_serweb'] = 				"Attribute is loaded by SerWeb. Only newly created attributes are affected by change of this.";	//to translate 
-$lang_str['at_hint_user'] = 					"Attribute is displayed on user preferences page";	//to translate 
-$lang_str['at_hint_domain'] = 					"Attribute is displayed on domain preferences page";	//to translate 
-$lang_str['at_hint_global'] = 					"Attribute is displayed on global preferences page";	//to translate 
-$lang_str['at_hint_multivalue'] = 				"Attribute may have multiple values";	//to translate 
-$lang_str['at_hint_registration'] = 			"Attribute is displayed on user registration form";	//to translate 
-$lang_str['at_hint_required'] = 				"Attribute has to have any not empty value. Not used for all types. Used for types: int, email_adr, sip_adr, etc.";	//to translate 
+$lang_str['attr_type_warning'] = 				"Op deze pagina kunt u attributen, types en parameters wijzigen. Deze worden intern gebruikt door SerWeb en SER. NIET WIJZIGEN als u niet weet hoe dit werkt!!!";
+$lang_str['at_hint_order'] = 					"Attributen staan op volgorde van SerWeb";
+$lang_str['at_hint_label'] = 					"Label en attributen staan in volgorde van SerWeb. Als deze start met een '@', de waarde wordt vertaald in de taal in de directory 'lang'. Het is uw verantwoording dat deze waarden aanwezig zijn voor uw eigen taal.";
+$lang_str['at_hint_for_ser'] = 					"Attribute wordt geladen door SER. Alleen nieuwe attributen hebben hier enig effect.";
+$lang_str['at_hint_for_serweb'] = 				"Attribute wordt geladen door SerWeb. Alleen nieuwe attributen hebben hier enig effect.";
+$lang_str['at_hint_user'] = 					"Attribute is zichtbaar op gebruikers pagina";
+$lang_str['at_hint_domain'] = 					"Attribute is zichtbaar op domein parameter pagina";
+$lang_str['at_hint_global'] = 					"Attribute is zichtbaar op global parameter pagina";
+$lang_str['at_hint_multivalue'] = 				"Attribute mag meerdere waarden hebben";
+$lang_str['at_hint_registration'] = 			"Attribute is zichtbaar op gebruikersregistratie pagina";
+$lang_str['at_hint_required'] = 				"Attribute mag geen lege velden bevatten. Geld niet voor types: int, email_adr, sip_adr, etc.";
 
 
 $lang_str['ff_att_default_value'] = 			"standaard waarde";
@@ -514,7 +517,7 @@ $lang_str['th_att_default_value'] = 			"standaard waarde";
 $lang_str['ff_set_as_default'] = 				"zet als standaard waarde";
 $lang_str['edit_items_of_the_list'] = 			"wijzig item uit de lijst";
 
-$lang_str['o_lang_not_selected'] = 				"not selected";	//to translate 
+$lang_str['o_lang_not_selected'] = 				"niet geselecteerd";
 
 
 /* ------------------------------------------------------------*/
@@ -522,16 +525,16 @@ $lang_str['o_lang_not_selected'] = 				"not selected";	//to translate
 /* ------------------------------------------------------------*/
 
 
-$lang_str['change_credentials_of_user'] = 		"Change credentials of user";	//to translate 
+$lang_str['change_credentials_of_user'] = 		"Wijzig gebruiker parameters";
 
-$lang_str['th_password'] = 						"password";	//to translate 
-$lang_str['th_for_ser'] = 						"for SER";	//to translate 
-$lang_str['th_for_serweb'] = 					"for SerWeb";	//to translate 
+$lang_str['th_password'] = 						"wachtwoord";
+$lang_str['th_for_ser'] = 						"voor SER";
+$lang_str['th_for_serweb'] = 					"voor SerWeb";
 
-$lang_str['err_credential_changed_domain'] = 	"Domain of user has been changed. You have to also fill new password";	//to translate 
-$lang_str['warning_credential_changed_domain'] =		"Serweb is configured to not store clear text passwords. That mean, if you change domain of user, you have to also fill password field. Otherwise hashed password become invalid.";	//to translate 
+$lang_str['err_credential_changed_domain'] = 	"Domein van gebruiker is gewijzigd. Vul een nieuw wachtwoord in";
+$lang_str['warning_credential_changed_domain'] =		"Serweb is streng in wachtwoorden. Dit betekend, als u het domein van een gebruiker wil wijzigen u ook het wachtwoord moet wijzigen. Anders is het wachtwoord niet geldig.";
 
-$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";	//to translate 
+$lang_str['realy_want_you_delete_this_credential'] = 	"Verwijder deze gegevens?";
 
 
 /* ------------------------------------------------------------*/
@@ -573,142 +576,94 @@ $lang_str['err_whitelist_already_exists'] = 	"Dit item is reeds aanwezig";
 /*      multidomain                                            */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_not_customer_name'] = 			"You must fill name of customer";	//to translate 
-$lang_str['ff_customer_name'] = 				"name of customer";	//to translate 
-$lang_str['no_customers'] = 					"No customer";	//to translate 
-$lang_str['customer'] = 						"Customer";	//to translate 
+$lang_str['fe_not_customer_name'] = 			"U moet de naam van de klant invoeren";
+$lang_str['ff_customer_name'] = 				"naam van de klant";
+$lang_str['no_customers'] = 					"Geen klant";
+$lang_str['customer'] = 						"Klant";
 
-$lang_str['msg_customer_updated_s'] = 			"Customer updated";	//to translate 
-$lang_str['msg_customer_updated_l'] = 			"Customer name has been updated";	//to translate 
-$lang_str['msg_customer_deleted_s'] = 			"Customer deleted";	//to translate 
-$lang_str['msg_customer_deleted_l'] = 			"Customer has been deleted";	//to translate 
-$lang_str['msg_customer_added_s'] = 			"Customer created";	//to translate 
-$lang_str['msg_customer_added_l'] = 			"New customer has been created";	//to translate 
-$lang_str['err_customer_own_domains'] = 		"Customer is owning some domains, can't delete him";	//to translate 
+$lang_str['msg_customer_updated_s'] = 			"Klant gewijzigd";
+$lang_str['msg_customer_updated_l'] = 			"Klant naam gewijzigd";
+$lang_str['msg_customer_deleted_s'] = 			"Klant verwijderd";
+$lang_str['msg_customer_deleted_l'] = 			"Klant is verwijderd";
+$lang_str['msg_customer_added_s'] = 			"Klant aangemaakt";
+$lang_str['msg_customer_added_l'] = 			"Nieuwe klant is aangemaakt";
+$lang_str['err_customer_own_domains'] = 		"Klant heeft een domein, verwijderen kan niet";
 
-$lang_str['d_id'] = 							"Domain ID";	//to translate 
-$lang_str['d_name'] = 							"Domain name";	//to translate 
-$lang_str['list_of_domains'] = 					"List of domains";	//to translate 
-$lang_str['showed_domains'] = 					"Showed domains";	//to translate 
-$lang_str['no_domains_found'] = 				"No domains found";	//to translate 
-$lang_str['new_dom_name'] = 					"Add new domain name";	//to translate 
-$lang_str['owner'] = 							"Owner";	//to translate 
+$lang_str['d_id'] = 							"Domein ID";
+$lang_str['d_name'] = 							"Domein naam";
+$lang_str['list_of_domains'] = 					"Overzicht van domeinen";
+$lang_str['showed_domains'] = 					"Lijst domeinen";
+$lang_str['no_domains_found'] = 				"Geen domeinen aanwezig";
+$lang_str['new_dom_name'] = 					"Nieuwe domeinnaam toevoegen";
+$lang_str['owner'] = 							"Eigenaar";
 
-$lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";	//to translate 
-$lang_str['l_create_new_domain'] = 				"create new domain";	//to translate 
-$lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
-$lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";	//to translate 
-$lang_str['prohibited_domain_name'] = 			"Sorry, this domain name is prohibited";	//to translate 
-$lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name";	//to translate 
+$lang_str['realy_delete_domain'] = 				"Verwijder dit domein?";
+$lang_str['l_create_new_domain'] = 				"domein toevoegen";
+$lang_str['l_reload_ser'] = 					"opnieuw laden, SER en webserver";
+$lang_str['no_domain_name_is_set'] = 			"minimaal 1 domeinnaam toevoegen";
+$lang_str['prohibited_domain_name'] = 			"Sorry, deze domeinnaam is niet toegestaan";
+$lang_str['can_not_del_last_dom_name'] = 		"Alleen domeinnaam verwijderen mag niet";
 
-$lang_str['msg_domain_reload_s'] = 				"Config reloaded";	//to translate 
-$lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";	//to translate 
+$lang_str['msg_domain_reload_s'] = 				"Configuratie is opnieuw geladen";
+$lang_str['msg_domain_reload_l'] = 				"Configuratie van SER en webserwer is opnieuw geladen";
 
-$lang_str['msg_domain_deleted_s'] = 			"Domain deleted";	//to translate 
-$lang_str['msg_domain_deleted_l'] = 			"This domain is no longer served and all associated records including subscriber data will be deleted soon. Make sure that DNS records no longer refer to this server";	//to translate 
+$lang_str['msg_domain_deleted_s'] = 			"Domein verwijderd";
+$lang_str['msg_domain_deleted_l'] = 			"Dit domein wordt niet langer ondersteund en de aanwezige records worden verwijderd. Zorg er voor dat uw DNS records niet langer naar deze server verwijzen.";
 
-$lang_str['assigned_domains'] = 				"Assigned domains";	//to translate 
-$lang_str['unassigned_domains'] = 				"Unassigned domains";	//to translate 
-$lang_str['l_assign_domain'] = 					"assign domain";	//to translate 
-$lang_str['l_unassign_domain'] = 				"unassign domain";	//to translate 
-$lang_str['l_assign'] =                                  "assign";	//to translate 
-$lang_str['l_unassign'] =                                "unassign";	//to translate 
-$lang_str['l_assigned_domains'] = 				"Domains";	//to translate 
-$lang_str['l_change_layout'] = 					"Layout";	//to translate 
-$lang_str['l_domain_attributes'] = 				"Attributes";	//to translate 
-$lang_str['l_unassign_admin'] = 				"unassign admin";	//to translate 
+$lang_str['assigned_domains'] = 				"Toegewezen domeinen";
+$lang_str['unassigned_domains'] = 				"Niet toegewezen domeinen";
+$lang_str['l_assign_domain'] = 					"toegewezen domein";
+$lang_str['l_unassign_domain'] = 				"niet toegewezen domein";
+$lang_str['l_assign'] =                                  "toegewezen";
+$lang_str['l_unassign'] =                                "niet toegewezen";
+$lang_str['l_assigned_domains'] = 				"Domeinen";
+$lang_str['l_change_layout'] = 					"Layout";
+$lang_str['l_domain_attributes'] = 				"Attributen";
+$lang_str['l_unassign_admin'] = 				"niet toegewezen admin";
 $lang_str['l_set_canon'] = 						"set canonical";	//to translate 
 
-$lang_str['admins_of_domain'] = 				"Admins of this domain";	//to translate 
-$lang_str['no_admins'] = 						"No admins";	//to translate 
+$lang_str['admins_of_domain'] = 				"Admin van dit domein";
+$lang_str['no_admins'] = 						"Geen admin";
 
-$lang_str['ff_address'] = 						"address";	//to translate 
+$lang_str['ff_address'] = 						"adres";
 
-$lang_str['lf_terms_and_conditions'] =			"terms and conditions";	//to translate 
-$lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";	//to translate 
-$lang_str['lf_mail_register'] = 				"mail confirmation registration";	//to translate 
-$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";	//to translate 
-$lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";	//to translate 
-$lang_str['lf_config'] = 						"domain configuration";	//to translate 
+$lang_str['lf_terms_and_conditions'] =			"voorwaarden";
+$lang_str['lf_mail_register_by_admin'] = 		"mail naar gebruiker gemaakt door admin";
+$lang_str['lf_mail_register'] = 				"mail bevestig registratie";
+$lang_str['lf_mail_fp_conf'] = 					"mail bevestiging voor nieuw wachtwoord";
+$lang_str['lf_mail_fp_pass'] = 					"mail bevestiging voor nieuw wachtwoord (wachwoord vergeten)";
+$lang_str['lf_config'] = 						"domein configuratie";
 
-$lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";	//to translate 
-$lang_str['l_upload_images'] = 					"upload images";	//to translate 
-$lang_str['l_back_to_default'] = 				"restore default content";	//to translate 
+$lang_str['l_toggle_wysiwyg'] = 				"gebruik WYSIWYG";
+$lang_str['l_upload_images'] = 					"upload afbeelding";
+$lang_str['l_back_to_default'] = 				"zet standaard inhoud terug";
 
-$lang_str['wysiwyg_warning'] = 					"Please be careful when useing WYSIWYG editor. Prolog.html must start by &lt;body&gt; element and epilog.html must end by &lt;/body&gt; element. WYSIWYG editor may strip them!";	//to translate 
+$lang_str['wysiwyg_warning'] = 					"Voorzichtig met WYSIWYG editor. Prolog.html moet beginnen met &lt;body&gt; element en epilog.html moet eindigen op &lt;/body&gt; element. WYSIWYG editor verwijderd deze waarden!";
 
-$lang_str['choose_one'] = 						"choose one";	//to translate 
+$lang_str['choose_one'] = 						"selecteer";
 
-$lang_str['layout_files'] = 					"Layout files";	//to translate 
-$lang_str['text_files'] = 						"Text files";	//to translate 
+$lang_str['layout_files'] = 					"Layout bestanden";
+$lang_str['text_files'] = 						"Tekst bestanden";
 
-$lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";	//to translate 
+$lang_str['fe_domain_not_selected']	= 			"Domein voor gebruiker is niet geselecteerd";
 
-$lang_str['th_old_versions'] = 					"Old versions of this file";	//to translate 
-$lang_str['initial_ver'] = 						"initial";	//to translate 
+$lang_str['th_old_versions'] = 					"Oude versies van dit bestand";
+$lang_str['initial_ver'] = 						"begin";
 
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */
 /* ------------------------------------------------------------*/
 
-$lang_str['register_new_admin'] = 				"Register new admin for domain";	//to translate 
-$lang_str['assign_existing_admin'] = 			"Assign an existing admin to domain";	//to translate 
-$lang_str['assign_admin_to_domain'] = 			"Assign admin to domain";	//to translate 
-$lang_str['create_new_domain'] = 				"Create new domain";	//to translate 
-$lang_str['l_create_new_customer'] = 			"create new customer";	//to translate 
-$lang_str['create_new_customer'] = 				"Create new customer";	//to translate 
-$lang_str['l_close_window'] = 					"close window";	//to translate 
-$lang_str['step'] = 							"step";	//to translate 
-$lang_str['l_select'] = 						"select";	//to translate 
-$lang_str['domain_setup_success'] = 			"New domain has been set up successfully!";	//to translate 
-$lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";	//to translate 
+$lang_str['register_new_admin'] = 				"Registeer nieuwe admin voor domein";
+$lang_str['assign_existing_admin'] = 			"Toewijzen bestaande admin aan domein";
+$lang_str['assign_admin_to_domain'] = 			"Toewijzen admin aan domein";
+$lang_str['create_new_domain'] = 				"Nieuw domein toevoegen";
+$lang_str['l_create_new_customer'] = 			"Nieuwe klant toevoegen"; 
+$lang_str['create_new_customer'] = 				"Nieuwe klant toevoegen"; 
+$lang_str['l_close_window'] = 					"sluit window";
+$lang_str['step'] = 							"stap";
+$lang_str['l_select'] = 						"selecteer";
+$lang_str['domain_setup_success'] = 			"Nieuwe domein setup gewijzigd!";
+$lang_str['l_skip_asignment_of_admin'] = 		"toewijzen admin overslaan";
 
-
-
-
-/****************************************************/
-/* strings which are missing in reference lang file */
-/****************************************************/
-
-$lang_str['reg_finish_questions'] = 			"Voor vragen en opmerking maakt u gebruik van onderstaande link";
-$lang_str['tab_caller_screening'] =	 			"caller screening";
-$lang_str['msg_caller_screening_deleted_s'] = 	"Gecontroleerde uri verwijderd";
-$lang_str['msg_caller_screening_deleted_l'] = 	"Gecontroleerde uri is verwijderd";
-$lang_str['msg_caller_screening_updated_s'] = 	"Gecontroleerde uri gewijzigd";
-$lang_str['msg_caller_screening_updated_l'] = 	"Gecontroleerde uri is gewijzigd";
-$lang_str['msg_caller_screening_added_s'] = 	"Gecontroleerde uri toegevoegd";
-$lang_str['msg_caller_screening_added_l'] = 	"Gecontroleerde uri is toegevoegd";
-$lang_str['fe_not_caller_uri'] = 				"u moet een beller uri opgeven";
-$lang_str['ff_screening_caller_uri'] = 			"beller uri (standaard weergave)";
-$lang_str['ff_action'] = 						"actie";
-$lang_str['th_caller_uri'] = 					"beller uri";
-$lang_str['th_action'] = 						"actie";
-$lang_str['no_caller_screenings_defined'] = 	"Geen beller controles gedefinieerd";
-$lang_str['err_screening_already_exists'] = 	"Dit beller uri is reeds aanwezig";
-$lang_str['cs_decline'] = 						"decline";
-$lang_str['cs_reply_busy'] = 					"antwoorden in gesprek";
-$lang_str['cs_fw_to_voicemail'] = 				"doorsturen naa voicemail";
-$lang_str['tab_ser_moni'] =	 					"server status";
-$lang_str['err_reg_conf_already_created'] = 	"Uw account was al aangemakt";
-$lang_str['ser_moni_current'] = 				"huidig";
-$lang_str['ser_moni_average'] = 				"gemiddeld";
-$lang_str['ser_moni_waiting_cur'] = 			"onderweg huidig";
-$lang_str['ser_moni_waiting_avg'] = 			"onderweg gemiddeld";
-$lang_str['ser_moni_total_cur'] = 				"totaal huidig";
-$lang_str['ser_moni_total_avg'] = 				"totaal gemiddeld";
-$lang_str['ser_moni_local_cur'] = 				"lokaal huidig";
-$lang_str['ser_moni_local_avg'] = 				"lokaal gemiddeld";
-$lang_str['ser_moni_replies_cur'] = 			"replied localy huidig";
-$lang_str['ser_moni_replies_avg'] = 			"replied localy gemiddeld";
-$lang_str['ser_moni_registered_cur'] = 			"geregistreerd huidig";
-$lang_str['ser_moni_registered_avg'] = 			"geregistreerd gemiddeld";
-$lang_str['ser_moni_expired_cur'] = 			"verlopen huidig";
-$lang_str['ser_moni_expired_avg'] = 			"verlopen gemiddeld";
-$lang_str['ser_moni_general_values'] = 			"totaalwaarde";
-$lang_str['ser_moni_diferencial_values'] = 		"verschilwaarde";
-$lang_str['ser_moni_transaction_statistics'] = 	"Transactiestatistiek";
-$lang_str['ser_moni_completion_status'] = 		"Compleet status";
-$lang_str['ser_moni_stateless_server_statis'] = "Serverstatistiek";
-$lang_str['ser_moni_usrLoc_stats'] = 			"Gebruikers (Loc) Statistiek";
-$lang_str['l_domain_preferences'] = 			"domain preferences";	//to translate 
 ?>

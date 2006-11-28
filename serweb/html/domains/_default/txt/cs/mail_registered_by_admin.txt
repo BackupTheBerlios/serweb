@@ -1,5 +1,4 @@
-# This file contain text of confirmation email sent during account registration
-# when confirmation of registration is required
+# This file contain text of email sent after register new user by admin
 # 
 # replacements in allowed this file: 
 # 	- #@#domain#@# - is replaced by domain name
@@ -14,21 +13,19 @@
 #
 # notice: line ends of non empty lines are stripped
 #
-subject: #@#domain#@# Vaše registrace
+subject: Account created
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-Děkujeme Vám za registraci u #@#domain#@#.
+Dobrý den #@#first_name#@# #@#last_name#@#,
+
+byl vám zřízen přístup do systému SerWeb na adrese:
+
+   #@#login_url#@#
 
 
-Rezervujeme pro Vás následující SIP adresu: #@#sip_address#@#
-
-
-Pro dokončení registrace prosím navštivte následující adresu během 24 hodin:
-#@#confirmation_url#@#
-
-(Pokud ji navštívíte později, budete se muset zaregistrovat znovu.)
+Doporučujeme Vám si po prvním přihlášení změnit Vaše heslo.
 
 
 Zde jsou detaily vašeho účtu:
@@ -46,7 +43,6 @@ Uživatelské jméno: #@#username#@#
        Sip adresa: #@#sip_address#@# 
 
 (Toto také můžete zjistit pomocí odkazu "Zapoměli jste heslo?" na přihlašovací stránce)
-
 
 
 -- Tato zpráva byla vygenerována automaticky.

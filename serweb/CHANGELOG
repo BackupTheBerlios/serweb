@@ -83,3 +83,10 @@
 	* "server monitoring" removed
 	* "caller screening" removed
 	* rewrited ACL module to use user_attrs instead of group table
+	
+	
+	* added per-domain customization
+	* support for XML-RPC Ser interface
+	
+2006-11-28
+	* serweb now should work with PHP 5.x and Runkit extension

@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.80 2006/11/02 14:22:12 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.81 2006/11/28 14:48:54 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -998,15 +998,22 @@ function my_aggregate_methods(&$object, $class_name){
 		return aggregate_methods($object, $class_name);
 	}
 
-	if (function_exists('classkit_aggregate_methods')){
-		return @classkit_aggregate_methods(get_class($object), $class_name);
-	}
-
 	if (function_exists('runkit_class_adopt')){
 		return @runkit_class_adopt(get_class($object), $class_name);
 	}
 
-	die("Function aggregate_methods() doesn't exists. Try install Classkit extension. http://pecl.php.net/package/classkit");
+	if (function_exists('classkit_aggregate_methods')){
+		return @classkit_aggregate_methods(get_class($object), $class_name);
+	}
+
+	die("Function aggregate_methods() doesn't exists. This is probably because ".
+		"PHP 5 or later is running on this server. Try install Runkit or ".
+		"Classkit extension from PECL repository (http://pecl.php.net). ".
+		"Useing classkit is safe with ".
+		"PHP 5.0, but does not work with later versions of PHP. Useing runkit ".
+		"is experimental. Type 'pecl install -f runkit' on your command line ".
+		"for install the extension. And do not forget enable the extension in ".
+		"your php.ini file.");
 
 }
 

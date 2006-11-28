@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_location.php,v 1.1 2005/08/24 13:02:43 kozlik Exp $
+ * $Id: method.get_location.php,v 1.2 2006/11/28 14:48:55 kozlik Exp $
  */
 
 class CData_Layer_get_location {
@@ -12,9 +12,8 @@ class CData_Layer_get_location {
 
 	function get_location($sip_adr, &$errors){
 		global $config;
-		static $reg;
 
-		$reg = new Creg();
+		$reg = &Creg::singleton();
 		$domainname=$reg->get_domainname($sip_adr);
 
 		if (!$this->connect_to_db($errors)) return false;

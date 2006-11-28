@@ -46,9 +46,5 @@ Uživatelské jméno: #@#username#@#
 
 
 
-Uživatelé Windows Messengeru mohou navštívit následující adresu pro rady
-a tipy ohledně konfigurace:
-http://www.iptel.org/phpBB/viewtopic.php?topic=11&forum=1&0
-
 
 -- Tato zpráva byla vygenerována automaticky.

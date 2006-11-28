@@ -1,0 +1,50 @@
+# This file contain text of email sent after register new user by admin
+# 
+# replacements in allowed this file: 
+# 	- #@#domain#@# - is replaced by domain name
+#	- #@#sip_address#@#	- replaced by SIP address reserved for user
+#	- #@#login_url#@# - URL of serweb login page
+#	- #@#confirmation_url#@# - URL of confirmation script
+#	- #@#username#@# - username of user
+#	- #@#password#@# - password of user
+#	- #@#email#@#    - email of user
+#	- #@#first_name#@# - first name of user
+#	- #@#last_name#@# - last name of user
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: Account created
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+
+Hallo #@#first_name#@# #@#last_name#@#,
+
+Uw SerWeb account is aangemaakt op:
+
+   #@#login_url#@#
+
+
+De administrator heeft uw account aangemaakt.
+U wachtwoord wijzigen kan altijd na inloggen op.
+
+
+Hieronder de details van uw account:
+
+---------------------------------------------------------------------
+
+   Gebruikersnaam: #@#username#@#
+
+       Wachtwoord: #@#password#@#
+
+            Email: #@#email#@#
+
+   Volledige naam: #@#first_name#@# #@#last_name#@#
+
+        Sip adres: #@#sip_address#@# 
+
+(Gegevens opnieuw opvragen kan op de "wachtwoord vergeten" link op de registratie pagina)
+
+
+-- Dit bericht is automatisch aangemaakt door SerWeb.
+

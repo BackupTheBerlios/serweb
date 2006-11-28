@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: admin_select.php,v 1.1 2006/01/24 11:40:54 kozlik Exp $
+ * $Id: admin_select.php,v 1.2 2006/11/28 14:48:54 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -26,7 +26,7 @@ $smarty->assign('finish_url', 'admin_assign.php?da_assign=1&pr_set_admin_privile
 $page_attributes['tab_collection'] = array();
 $page_attributes['logout']	 = false;
 $page_attributes['prolog']	 ="<body class=\"swWizard\"><h1>";
-$page_attributes['separator']="</h1><hr />";
+$page_attributes['separator']="</h1><hr class='separator' />";
 $page_attributes['epilog']	 ="</body>";
 
 
