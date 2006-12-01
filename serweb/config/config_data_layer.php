@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.46 2006/11/24 13:33:02 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.47 2006/12/01 16:41:20 kozlik Exp $
  */
 
 
@@ -355,6 +355,7 @@
  		$config->data_sql->credentials->cols->uid = 		"uid";
 
  		$config->data_sql->credentials->flag_values = &$config->flags;
+		$config->data_sql->credentials->version = 			7;
 
 
 
@@ -370,6 +371,7 @@
  		$config->data_sql->domain->cols->flags = 		"flags";
 
  		$config->data_sql->domain->flag_values = 		&$config->flags;
+		$config->data_sql->domain->version = 			2;
 
 
 		/*
@@ -390,6 +392,7 @@
  		$config->data_sql->uri_attrs->cols->flags = 	"flags";
 
  		$config->data_sql->uri_attrs->flag_values = &$config->flags;
+		$config->data_sql->uri_attrs->version = 		2;
 
 
 		/*
@@ -408,6 +411,7 @@
  		$config->data_sql->user_attrs->cols->flags = 		"flags";
 
  		$config->data_sql->user_attrs->flag_values = &$config->flags;
+		$config->data_sql->user_attrs->version = 			3;
 
 
 
@@ -427,6 +431,7 @@
  		$config->data_sql->domain_attrs->cols->flags = 		"flags";
 
  		$config->data_sql->domain_attrs->flag_values = &$config->flags;
+		$config->data_sql->domain_attrs->version = 			1;
 
 
 
@@ -445,6 +450,7 @@
  		$config->data_sql->global_attrs->cols->flags = 		"flags";
 
  		$config->data_sql->global_attrs->flag_values = &$config->flags;
+		$config->data_sql->global_attrs->version = 			1;
 
 
 		/*
@@ -468,6 +474,7 @@
  		$config->data_sql->attr_types->cols->order = 		"ordering";
 
  		$config->data_sql->attr_types->flag_values = 		&$config->flags;
+		$config->data_sql->attr_types->version = 			3;
 
 		
  		$config->data_sql->attr_types->priority_values = 	array(
@@ -488,6 +495,8 @@
  		$config->data_sql->acc->cols->request_timestamp = 	"request_timestamp";
  		$config->data_sql->acc->cols->response_timestamp =	"response_timestamp";
  		$config->data_sql->acc->flag_values = 				&$config->flags;
+
+		$config->data_sql->acc->version = 					3;
 		
 		/*
 		 *	Definition of table missed_calls
@@ -497,6 +506,8 @@
 		
 		$config->data_sql->missed_calls->table_name = 	"missed_calls";
  		$config->data_sql->missed_calls->flag_values = 	&$config->flags;
+
+		$config->data_sql->missed_calls->version = 		3;
 
 
 		/*
@@ -512,6 +523,8 @@
  		$config->data_sql->speed_dial->cols->dial_did = 	"dial_did";
  		$config->data_sql->speed_dial->cols->new_uri = 		"new_uri";
 
+		$config->data_sql->speed_dial->version = 			2;
+
 		/*
 		 *	Definition of table sd_attrs
 		 */															
@@ -526,6 +539,7 @@
  		$config->data_sql->sd_attrs->cols->flags = 		"flags";
 
  		$config->data_sql->sd_attrs->flag_values = 		&$config->flags;
+		$config->data_sql->sd_attrs->version = 			1;
 
 
 		/*
@@ -542,6 +556,7 @@
  		$config->data_sql->uri->cols->flags = 		"flags";
 
  		$config->data_sql->uri->flag_values = 		&$config->flags;
+		$config->data_sql->uri->version = 			3;
 
 
 		/*
@@ -556,6 +571,7 @@
  		$config->data_sql->location->cols->flags = 		"flags";
 
  		$config->data_sql->location->flag_values = 		&$config->flags;
+		$config->data_sql->location->version = 			9;
 
 
 		/*
@@ -575,6 +591,8 @@
  		$config->data_sql->msg_silo->cols->ctype = 		"ctype";
  		$config->data_sql->msg_silo->cols->body = 		"body";
 
+		$config->data_sql->msg_silo->version = 			4;
+
 
 		/*
 		 *  names of columns in table customer
@@ -588,6 +606,8 @@
  		$config->data_sql->customers->cols->address = 	"address";
  		$config->data_sql->customers->cols->phone = 	"phone";
  		$config->data_sql->customers->cols->email = 	"email";
+
+		$config->data_sql->customers->version = 		1;
 
 
 		/*
@@ -605,6 +625,7 @@
  		$config->data_sql->domain_settings->cols->flags = 		"flags";
 
  		$config->data_sql->domain_settings->flag_values = 	&$config->flags;
+		$config->data_sql->domain_settings->version = 			1;
 
 
 

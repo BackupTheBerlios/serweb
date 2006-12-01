@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.47 2006/11/24 13:33:02 kozlik Exp $
+ * $Id: config.php,v 1.48 2006/12/01 16:41:20 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -15,6 +15,12 @@
 		"alias_generation",	"first_alias_number", "alias_prefix", 
 		"alias_postfix", "alias_lenght", "alias_generation_retries");
 
+
+	/* This setting enables testing facility which may help you witch configuration
+	   of serweb and PHP interpreter. It is recommended to disable it after you finish 
+	   configuration.
+	*/
+	$config->testing_facility = true;
 
 	/* ------------------------------------------------------------*/
 	/* serweb modules                                              */
