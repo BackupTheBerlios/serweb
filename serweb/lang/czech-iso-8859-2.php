@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.40 2006/11/02 13:50:51 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.41 2006/12/07 13:47:27 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -29,6 +29,7 @@ $lang_str['from'] = 							"z";
 $lang_str['no_records'] = 						"®ádné záznamy";
 $lang_str['l_logout'] = 						"Odhlá¹ení";
 $lang_str['l_edit'] = 							"zmìnit";
+$lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
@@ -363,7 +364,6 @@ $lang_str['reg_conf_failed'] = 					"Omlouváme se ale vá¹ pokus o potvrzení selh
 $lang_str['reg_conf_nr_not_exists'] = 			"Buï je ¹patné potvrzovací èíslo nebo ji¾ va¹e konto bylo vytvoøeno!";	
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Litujeme. Toto potvrzovací èíslo neexistuje";
 
-
 /* ------------------------------------------------------------*/
 /*      registration - forgot password                         */
 /* ------------------------------------------------------------*/
@@ -516,6 +516,19 @@ $lang_str['ff_set_as_default'] = 				"nastavit jako defaultní";
 $lang_str['edit_items_of_the_list'] = 			"zmìnit seznam polo¾ek";
 
 $lang_str['o_lang_not_selected'] = 				"není vybraný";
+
+$lang_str['at_int_title'] = 					"Change extended settings of int attribute";	//to translate 
+$lang_str['ff_at_int_min'] = 					"min value";	//to translate 
+$lang_str['ff_at_int_max'] = 					"max value";	//to translate 
+$lang_str['ff_at_int_err'] = 					"error message";	//to translate 
+
+$lang_str['ff_at_int_min_hint'] = 				"Minimum allowed value. Leave this field empty to disable check.";	//to translate 
+$lang_str['ff_at_int_max_hint'] = 				"Maximum allowed value. Leave this field empty to disable check.";	//to translate 
+$lang_str['ff_at_int_err_hint'] = 				"Customize error message displayed when value is not in specified range. Leave this field empty for default error message. If message starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";	//to translate 
+
+$lang_str['err_at_int_range'] = 				"must be in interval %d and %d";	//to translate 
+$lang_str['err_at_int_range_min'] = 			"must be great then %d";	//to translate 
+$lang_str['err_at_int_range_max'] = 			"must be less then %d";	//to translate 
 
 
 /* ------------------------------------------------------------*/

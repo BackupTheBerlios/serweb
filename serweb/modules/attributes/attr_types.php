@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.12 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: attr_types.php,v 1.13 2006/12/07 13:47:27 kozlik Exp $
  */
 
 /**
@@ -18,6 +18,7 @@ class Attr_type{
 	var $opt = array();
 	var $access;
 	var $order;
+	var $error_msg = null;
 
 
 	function &factory($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
@@ -307,6 +308,10 @@ class Attr_type{
 	function get_priority(){
 		return $this->priority;
 	}
+	
+	function get_err_msg(){
+		return $this->error_msg;
+	}
 
 	/**
 	 *	format value to display it as string
@@ -354,6 +359,21 @@ class Attr_type{
 	function check_value(&$value){
 		return true;
 	}
+
+	/**
+	 *	
+	 */
+	function validation_js_before(){
+		return "";
+	}
+	
+	/**
+	 *	
+	 */
+	function validation_js_after(){
+		return "";
+	}
+	
 
 	/**
 	 *	Method called after attribute update

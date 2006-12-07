@@ -1,9 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.39 2006/11/28 14:48:55 kozlik Exp $
- *
- * Dutch translation by Marcel Bosman, November 2006
- * mrbosman@hetnet.nl
+ * $Id: dutch-utf-8.php,v 1.40 2006/12/07 13:47:27 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +29,7 @@ $lang_str['from'] = 							"van";
 $lang_str['no_records'] = 						"Geen gegevens";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"toevoegen";
+$lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_change'] = 						"wijzigen";
 $lang_str['l_delete'] = 						"verwijderen";
 $lang_str['l_back_to_main'] = 					"terug";
@@ -519,6 +517,19 @@ $lang_str['edit_items_of_the_list'] = 			"wijzig item uit de lijst";
 
 $lang_str['o_lang_not_selected'] = 				"niet geselecteerd";
 
+$lang_str['at_int_title'] = 					"Change extended settings of int attribute";	//to translate 
+$lang_str['ff_at_int_min'] = 					"min value";	//to translate 
+$lang_str['ff_at_int_max'] = 					"max value";	//to translate 
+$lang_str['ff_at_int_err'] = 					"error message";	//to translate 
+
+$lang_str['ff_at_int_min_hint'] = 				"Minimum allowed value. Leave this field empty to disable check.";	//to translate 
+$lang_str['ff_at_int_max_hint'] = 				"Maximum allowed value. Leave this field empty to disable check.";	//to translate 
+$lang_str['ff_at_int_err_hint'] = 				"Customize error message displayed when value is not in specified range. Leave this field empty for default error message. If message starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";	//to translate 
+
+$lang_str['err_at_int_range'] = 				"must be in interval %d and %d";	//to translate 
+$lang_str['err_at_int_range_min'] = 			"must be great then %d";	//to translate 
+$lang_str['err_at_int_range_max'] = 			"must be less then %d";	//to translate 
+
 
 /* ------------------------------------------------------------*/
 /*      credentials                                            */
@@ -665,5 +676,6 @@ $lang_str['step'] = 							"stap";
 $lang_str['l_select'] = 						"selecteer";
 $lang_str['domain_setup_success'] = 			"Nieuwe domein setup gewijzigd!";
 $lang_str['l_skip_asignment_of_admin'] = 		"toewijzen admin overslaan";
+
 
 ?>

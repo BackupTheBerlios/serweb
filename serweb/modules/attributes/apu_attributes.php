@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.11 2006/11/24 13:33:02 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.12 2006/12/07 13:47:27 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -405,6 +405,9 @@ class apu_attributes extends apu_base_class{
 			$this->attr_types[$att]->form_element($this->f, 
 			                                      $this->attr_values[$att],
 			                                      $opt);
+			                                      
+			$this->js_on_subm   .= $this->attr_types[$att]->validation_js_before();
+			$this->js_on_subm_2 .= $this->attr_types[$att]->validation_js_after();
 		}
 
 		if (!empty($this->opt['validate_js_funct'])) $this->js_on_subm_2 .= $this->opt['validate_js_funct'];
@@ -425,6 +428,9 @@ class apu_attributes extends apu_base_class{
 				
 				if (isset($this->opt['error_messages'][$att]))
 					$errors[]=$this->opt['error_messages'][$att];
+				elseif (!is_null($this->attr_types[$att]->get_err_msg())){
+					$errors[]=$this->attr_types[$att]->get_err_msg(); 
+				}
 				else
 					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attr_types[$att]->get_description(); 
 

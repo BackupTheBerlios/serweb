@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.15 2006/11/24 14:36:59 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.16 2006/12/07 13:47:27 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -112,6 +112,7 @@ class apu_registration extends apu_base_class{
 	var $domain_names;
 	var $attr_types;
 	var $js_after="";
+	var $js_before="";
 	/** semaphore */
 	var $sem_id;
 
@@ -553,6 +554,9 @@ class apu_registration extends apu_base_class{
 			$this->attr_types[$v]->form_element($this->f, 
 			                                    $this->attr_values[$v],
 			                                    $opt);
+
+			$this->js_before .= $this->attr_types[$v]->validation_js_before();
+			$this->js_after  .= $this->attr_types[$v]->validation_js_after();
 		}
 		
 		return true;	
@@ -605,7 +609,13 @@ class apu_registration extends apu_base_class{
 		//check values of attributes
 		foreach($this->attributes as $att){
 			if (!$this->attr_types[$att]->check_value($_POST[$att])){
-				$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attr_types[$att]->get_description(); 
+
+				if (!is_null($this->attr_types[$att]->get_err_msg())){
+					$errors[]=$this->attr_types[$att]->get_err_msg(); 
+				}
+				else{
+					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attr_types[$att]->get_description(); 
+				}
 				return false;
 			}
 		}
@@ -695,7 +705,7 @@ class apu_registration extends apu_base_class{
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
 		             'after'       => $this->js_after,
-					 'before'      => '');
+					 'before'      => $this->js_before);
 	}
 }
 

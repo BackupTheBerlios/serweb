@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.6 2006/07/11 12:15:00 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.7 2006/12/07 13:47:27 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -129,6 +129,7 @@
 	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
+	<th>&nbsp;</th>
 	</tr>
 	{/if}
 
@@ -153,6 +154,10 @@
 				}<a href="javascript:void(0);" class="swPopupLink" {popup text=$row.description|escape|escape|empty2nbsp}>{$row.description|truncate:40:"...":true|escape|empty2nbsp}</a>{
 			else }{$row.description|truncate:40|escape|empty2nbsp}{
 			/if}{
+		/if}</td>
+	<td align="center">{
+		if $row.url_ext}<a href="{$row.url_ext}" class="actionsrow">{$lang_str.l_extended}</a>{
+		else}&nbsp;{
 		/if}</td>
 	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>

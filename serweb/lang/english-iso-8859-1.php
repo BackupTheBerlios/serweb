@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.56 2006/11/02 13:50:51 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.57 2006/12/07 13:47:27 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -29,6 +29,7 @@ $lang_str['from'] = 							"from";
 $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"edit";
+$lang_str['l_extended'] = 						"extended";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_back_to_main'] = 					"back to main page";
@@ -515,6 +516,19 @@ $lang_str['ff_set_as_default'] = 				"set as default";
 $lang_str['edit_items_of_the_list'] = 			"edit items of the list";
 
 $lang_str['o_lang_not_selected'] = 				"not selected";
+
+$lang_str['at_int_title'] = 					"Change extended settings of int attribute";
+$lang_str['ff_at_int_min'] = 					"min value";
+$lang_str['ff_at_int_max'] = 					"max value";
+$lang_str['ff_at_int_err'] = 					"error message";
+
+$lang_str['ff_at_int_min_hint'] = 				"Minimum allowed value. Leave this field empty to disable check.";
+$lang_str['ff_at_int_max_hint'] = 				"Maximum allowed value. Leave this field empty to disable check.";
+$lang_str['ff_at_int_err_hint'] = 				"Customize error message displayed when value is not in specified range. Leave this field empty for default error message. If message starts with '@', the string is translated into user language with files in directory 'lang'. It is your responsibility that all used phrases are present in files for all languages.";
+
+$lang_str['err_at_int_range'] = 				"must be in interval %d and %d";
+$lang_str['err_at_int_range_min'] = 			"must be great then %d";
+$lang_str['err_at_int_range_max'] = 			"must be less then %d";
 
 
 /* ------------------------------------------------------------*/
