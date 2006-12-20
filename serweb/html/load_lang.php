@@ -3,11 +3,27 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.11 2006/07/20 16:45:40 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.12 2006/12/20 16:31:57 kozlik Exp $
  * @package   serweb
  */ 
 
 require_once($_SERWEB["configdir"]."config_lang.php");
+
+
+class Lang {
+
+	function internationalize($str){
+		global $lang_str;
+		
+		if (substr($str, 0, 1) == '@' and 
+		    isset($lang_str[substr($str, 1)])){
+		
+			return $lang_str[substr($str, 1)];
+		}
+		
+		return $str;
+	}
+}
 
 /**
  * Analyzes some PHP environment variables to find the most probable language

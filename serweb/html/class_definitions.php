@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.18 2006/11/24 13:33:02 kozlik Exp $ 
+ * $Id: class_definitions.php,v 1.19 2006/12/20 16:31:57 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -46,12 +46,7 @@ class Ctab{
 	 *	@return	string
 	 */
 	function get_name(){
-		global $lang_str;
-		
-		if ($this->name[0] == "@" and isset($lang_str[substr($this->name, 1)]))
-			return $lang_str[substr($this->name, 1)];
-		else
-			return $this->name;	
+		return Lang::internationalize($this->name);
 	}
 	
 	/**
