@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.42 2006/12/07 13:47:27 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.43 2006/12/20 16:40:45 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -464,6 +464,7 @@ $lang_str['ff_att_name'] = 						"attribuut naam";
 $lang_str['ff_att_type'] = 						"attribuut type";
 $lang_str['ff_att_access'] = 					"toegang";
 $lang_str['ff_label'] = 						"label";
+$lang_str['ff_att_group'] = 					"group";	//to translate 
 $lang_str['ff_att_user'] = 						"gebruiker";
 $lang_str['ff_att_domain'] = 					"domein";
 $lang_str['ff_att_global'] = 					"global";
@@ -484,6 +485,7 @@ $lang_str['th_att_name'] = 						"attribuut naam";
 $lang_str['th_att_type'] = 						"attribuut type";
 $lang_str['th_order'] = 						"volgorde";
 $lang_str['th_label'] = 						"label";
+$lang_str['th_att_group'] = 					"group";	//to translate 
 $lang_str['fe_order_is_not_number'] = 			"'volgorde' ongeldig nummer";
 
 $lang_str['fe_not_filled_item_label'] = 		"geeft item label op";
@@ -529,6 +531,12 @@ $lang_str['ff_at_int_err_hint'] = 				"Customize error message displayed when va
 $lang_str['err_at_int_range'] = 				"must be in interval %d and %d";	//to translate 
 $lang_str['err_at_int_range_min'] = 			"must be great then %d";	//to translate 
 $lang_str['err_at_int_range_max'] = 			"must be less then %d";	//to translate 
+
+$lang_str['attr_grp_general'] = 				"general";	//to translate 
+$lang_str['attr_grp_privacy'] = 				"privacy";	//to translate 
+$lang_str['attr_grp_other'] = 					"other";	//to translate 
+$lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";	//to translate 
+$lang_str['attr_grp_create_new'] = 				"create new group";	//to translate 
 
 
 /* ------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.57 2006/12/07 13:47:27 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.58 2006/12/20 16:40:45 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -464,6 +464,7 @@ $lang_str['ff_att_name'] = 						"attribute name";
 $lang_str['ff_att_type'] = 						"attribute type";
 $lang_str['ff_att_access'] = 					"access";
 $lang_str['ff_label'] = 						"label";
+$lang_str['ff_att_group'] = 					"group";
 $lang_str['ff_att_user'] = 						"user";
 $lang_str['ff_att_domain'] = 					"domain";
 $lang_str['ff_att_global'] = 					"global";
@@ -484,6 +485,7 @@ $lang_str['th_att_name'] = 						"attribute name";
 $lang_str['th_att_type'] = 						"attribute type";
 $lang_str['th_order'] = 						"order";
 $lang_str['th_label'] = 						"label";
+$lang_str['th_att_group'] = 					"group";
 $lang_str['fe_order_is_not_number'] = 			"'order' is not valid number";
 
 $lang_str['fe_not_filled_item_label'] = 		"you must fill item label";
@@ -529,6 +531,12 @@ $lang_str['ff_at_int_err_hint'] = 				"Customize error message displayed when va
 $lang_str['err_at_int_range'] = 				"must be in interval %d and %d";
 $lang_str['err_at_int_range_min'] = 			"must be great then %d";
 $lang_str['err_at_int_range_max'] = 			"must be less then %d";
+
+$lang_str['attr_grp_general'] = 				"general";
+$lang_str['attr_grp_privacy'] = 				"privacy";
+$lang_str['attr_grp_other'] = 					"other";
+$lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";
+$lang_str['attr_grp_create_new'] = 				"create new group";
 
 
 /* ------------------------------------------------------------*/
