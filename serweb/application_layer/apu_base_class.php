@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.10 2006/09/18 13:09:15 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.11 2006/12/20 16:21:17 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -56,6 +56,11 @@ class apu_base_class{
 	    static $instance_counter = 0;
 		$instance_counter++;
 	    return $instance_counter;
+	}
+
+	/* return instance ID */
+	function get_instance_id(){
+		return $this->opt['instance_id'];
 	}
 
 	/* return required data layer methods - static class */

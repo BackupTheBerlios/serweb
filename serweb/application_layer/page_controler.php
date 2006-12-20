@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.29 2006/09/22 09:26:52 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.30 2006/12/20 16:21:17 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -94,6 +94,8 @@ class page_conroler{
 	var $interapu_vars = array();
 	/** reference to container inside session variable */
 	var $session;
+	/** post init function */
+	var $post_init = null;
 	
 	/* constructor */
 	function page_conroler(){
@@ -318,7 +320,23 @@ class page_conroler{
 
 	/* add application unit to $apu_objects array*/
 	function add_apu(&$class){
+		if (!is_a($class, "apu_base_class")) 
+			die(__FILE__.":".__LINE__." - given class is not instance of apu_base_class");
+
 		$this->apu_objects[] = &$class;
+	}
+	
+	/* remove application unit from $apu_objects array*/
+	function del_apu(&$class){
+		if (!is_a($class, "apu_base_class")) 
+			die(__FILE__.":".__LINE__." - given class is not instance of apu_base_class");
+		
+		foreach($this->apu_objects as $k=>$v){
+			if ($this->apu_objects[$k]->get_instance_id() == $class->get_instance_id()) {
+				unset($this->apu_objects[$k]);
+				return;
+			}
+		}
 	}
 	
 	/* set nam1e of template */
@@ -329,6 +347,11 @@ class page_conroler{
 	/* set option $opt_name to value $val */
 	function set_opt($opt_name, $val){
 		$this->opt[$opt_name]=$val;
+	}
+
+	/* set function called after all apu are initialized */
+	function set_post_init_func($func_name){
+		$this->post_init = $func_name;
 	}
 
 	/**
@@ -863,6 +886,8 @@ class page_conroler{
 		foreach($this->apu_objects as $key=>$val){
 			$this->apu_objects[$key]->init();
 		}
+
+		if (!empty($this->post_init)) call_user_func_array($this->post_init, array(&$this));
 
 		/* determine actions of all application units 
 		   and check if some APU needs validate form or send header 'location'
