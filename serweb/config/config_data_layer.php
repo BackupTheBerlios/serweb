@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.47 2006/12/01 16:41:20 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.48 2006/12/20 16:36:44 kozlik Exp $
  */
 
 
@@ -472,9 +472,10 @@
  		$config->data_sql->attr_types->cols->priority = 	"priority";
  		$config->data_sql->attr_types->cols->access = 		"access";
  		$config->data_sql->attr_types->cols->order = 		"ordering";
+ 		$config->data_sql->attr_types->cols->group = 		"grp";
 
  		$config->data_sql->attr_types->flag_values = 		&$config->flags;
-		$config->data_sql->attr_types->version = 			3;
+		$config->data_sql->attr_types->version = 			4;
 
 		
  		$config->data_sql->attr_types->priority_values = 	array(
@@ -483,6 +484,12 @@
 		                                                       "DOMAIN" => 1 << 16,
 		                                                       "GLOBAL" => 1 << 30 
 		                                                    );
+
+ 		$config->data_sql->attr_types->groups = 	array(
+               "general" => array("order" => 1,  "label" => "@attr_grp_general"),
+               "privacy" => array("order" => 5,  "label" => "@attr_grp_privacy"),
+               "other" =>   array("order" => 80, "label" => "@attr_grp_other") 
+                                                    );
 
 		/*
 		 *	Definition of table acc

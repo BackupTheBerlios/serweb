@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: apu_attributes.php,v 1.12 2006/12/07 13:47:27 kozlik Exp $
+ * $Id: apu_attributes.php,v 1.13 2006/12/20 16:36:44 kozlik Exp $
  */ 
 
 /*	Application unit user preferences */
@@ -15,6 +15,9 @@
  *
  *	'exclude_attributes'			(array) default: array()
  *	 array containing attributes which shouldn't be displayed
+ *
+ *	'attrs_group'				(string) default: null
+ *	 if is set, work only with attributes from specified group
  *
  *	'error_messages'			(assoc) default: array()
  *	 keys are names of attributes, values are custom error messages
@@ -89,6 +92,8 @@ class apu_attributes extends apu_base_class{
 	var $smarty_action = 'default';
 	var $js_on_subm = ""; //javascript which is called on form submit
 	var $js_on_subm_2 = ""; //javascript which is called on form submit
+	/** list of all avaiable attributes before they are filtered by group */
+	var $all_avaiable_attrs = array();
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -108,6 +113,7 @@ class apu_attributes extends apu_base_class{
 		/* with which attributes we will work, if this array is ampty we will work with all defined attributes */		
 		$this->opt['attributes'] = array();	
 		$this->opt['exclude_attributes'] = array();	
+		$this->opt['attrs_group'] = null;
 
 		$this->opt['error_messages'] = array();	
 		$this->opt['validate_funct'] = null;	
@@ -157,6 +163,15 @@ class apu_attributes extends apu_base_class{
 			$this->did = $this->controler->domain_id;
 			break;
 		}
+	}
+	
+	/*
+	 *	Return list of attributes used by this APU (not filtered by group)
+	 *	
+	 *	Notice: Attributes are avaiable after method create_html_form is called
+	 */
+	function get_all_avaiable_attributes(){
+		return $this->all_avaiable_attrs;
 	}
 
 	function access_to_change($at_name){
@@ -221,6 +236,7 @@ class apu_attributes extends apu_base_class{
 			$out[$att]['att_type'] = $this->attr_types[$att]->get_type();
 			$out[$att]['att_value'] = $this->attr_values[$att];
 			$out[$att]['att_value_f'] = $this->attr_types[$att]->format_value($this->attr_values[$att]);
+			$out[$att]['att_grp'] = $this->attr_types[$att]->get_group();
 			$out[$att]['edit'] = $this->access_to_change($att);
 			
 			/* if type of attribute is radio, create list of options
@@ -385,6 +401,18 @@ class apu_attributes extends apu_base_class{
 
 		//except unwanted arguments
 		$this->opt['attributes'] = array_diff($this->opt['attributes'], $this->opt['exclude_attributes']);
+
+		//save avaiable attrs before are filtered by group
+		$this->all_avaiable_attrs = $this->opt['attributes'];
+
+		if (!empty($this->opt['attrs_group'])){
+			foreach($this->opt['attributes'] as $k=>$v){
+				// work only with attributes from specified group
+				if ($this->attr_types[$v]->get_group() != $this->opt['attrs_group']){
+					unset($this->opt['attributes'][$k]);
+				}
+			}
+		}
 
 		//set options to attributes
 		foreach($this->opt['attributes'] as $att){

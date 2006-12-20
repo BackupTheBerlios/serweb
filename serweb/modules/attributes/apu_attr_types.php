@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.7 2006/12/07 13:47:27 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.8 2006/12/20 16:36:44 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -62,6 +62,8 @@ class apu_attr_types extends apu_base_class{
 	var $attrs;
 	/** should be user redirected to extended settings page? */
 	var $ext_settings = false;
+	/** List of groups of attributes */
+	var $attr_groups;
 
 	/** 
 	 *	return required data layer methods - static class 
@@ -112,6 +114,7 @@ class apu_attr_types extends apu_base_class{
 		$this->opt['form_name'] =			'';
 		
 		$this->opt['smarty_attrs'] =			'attrs';
+		$this->opt['smarty_groups'] =			'groups';
 		
 	}
 
@@ -160,6 +163,9 @@ class apu_attr_types extends apu_base_class{
 		$at->set_order($_POST['attr_order']);
 		$at->set_access($_POST['attr_access']);
 
+		if (!empty($_POST['attr_new_group']))  $at->set_group($_POST['attr_new_group']);
+		else                                   $at->set_group($_POST['attr_group']);
+		
 		if (!empty($_POST['for_ser']))      $at->set_for_ser();
 		else                                $at->reset_for_ser();
 		
@@ -347,6 +353,12 @@ class apu_attr_types extends apu_base_class{
 		/* get list of attributes */
 		$this->attrs = &Attr_types::singleton();
 		if (false === $at = $this->attrs->get_attr_types()) return false;
+		if (false === $grp = $this->attrs->get_attr_groups()) return false;
+		
+		$this->attr_groups = $grp;
+		
+		$grp[] = array("label" => "< ".$lang_str['attr_grp_create_new']." >", "value" => "__new__");
+		$grp_cnt = count($grp)-1;
 		
 		/* default values for form elements */
 		if ($this->edit_id and isset($at[$this->edit_id])){
@@ -390,6 +402,19 @@ class apu_attr_types extends apu_base_class{
 									 "size"=>1,
 									 "options"=>$atr->get_access_options(),
 		                             "value"=>$atr->get_access()));
+		
+		$this->f->add_element(array("type"=>"select",
+		                             "name"=>"attr_group",
+									 "size"=>1,
+									 "options"=>$grp,
+		                             "value"=>$atr->get_group(),
+									 "extrahtml"=>"onchange='if (this.selectedIndex==".$grp_cnt."){this.form.attr_new_group.disabled=false; this.form.attr_new_group.focus();}else{this.form.attr_new_group.disabled=true;}'"));
+		
+		$this->f->add_element(array("type"=>"text",
+		                             "name"=>"attr_new_group",
+									 "size"=>16,
+		                             "value"=>"",
+									 "disabled"=>true));
 		
 		$this->f->add_element(array("type"=>"checkbox",
 		                             "name"=>"for_ser",
@@ -453,7 +478,19 @@ class apu_attr_types extends apu_base_class{
 	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
 	 */
 	function validate_form(&$errors){
+		global $lang_str;
 		if (false === parent::validate_form($errors)) return false;
+		
+		if ($_POST['attr_group'] == '__new__'){
+			if (empty($_POST['attr_new_group'])){
+				$errors[] = $lang_str['err_at_grp_empty'];
+				return false;
+			}
+		}
+		else{
+			$_POST['attr_new_group'] = null;
+		}
+		
 		return true;
 	}
 	
@@ -480,6 +517,8 @@ class apu_attr_types extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 
 		$smarty->assign_by_ref($this->opt['smarty_attrs'], $this->smarty_attrs);
+		$smarty->assign_by_ref($this->opt['smarty_groups'], $this->attr_groups);
+
 	}
 	
 	/**

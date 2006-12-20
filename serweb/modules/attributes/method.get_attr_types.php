@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_attr_types.php,v 1.3 2006/07/11 12:14:59 kozlik Exp $
+ * $Id: method.get_attr_types.php,v 1.4 2006/12/20 16:36:44 kozlik Exp $
  */
 
 class CData_Layer_get_attr_types{
@@ -27,7 +27,7 @@ class CData_Layer_get_attr_types{
 
 		$q="select ".$c->name.", ".$c->raw_type.", ".$c->rich_type.", ".$c->type_spec.", 
 		           ".$c->desc.", ".$c->default_flags.", ".$c->flags.", ".$c->priority.", 
-		           ".$c->access.", ".$c->order."
+		           ".$c->access.", ".$c->order.", ".$c->group."
 		    from ".$t_at." 
 			order by ".$c->order;
 			
@@ -46,6 +46,7 @@ class CData_Layer_get_attr_types{
 													   $row[$c->priority],
 													   $row[$c->access],
 													   $row[$c->order]);
+			$out[$row[$c->name]]->set_group($row[$c->group]);
 		}
 		$res->free();
 		return $out;

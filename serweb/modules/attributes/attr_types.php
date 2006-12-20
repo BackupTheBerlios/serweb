@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.13 2006/12/07 13:47:27 kozlik Exp $
+ * $Id: attr_types.php,v 1.14 2006/12/20 16:36:44 kozlik Exp $
  */
 
 /**
@@ -18,6 +18,7 @@ class Attr_type{
 	var $opt = array();
 	var $access;
 	var $order;
+	var $group;
 	var $error_msg = null;
 
 
@@ -225,15 +226,7 @@ class Attr_type{
 
 
 	function internationalize_str($str){
-		global $lang_str;
-		
-		if (substr($str, 0, 1) == '@' and 
-		    isset($lang_str[substr($str, 1)])){
-		
-			return $lang_str[substr($str, 1)];
-		}
-		
-		return $str;
+		return Lang::internationalize($str);
 	}
 
 	function get_description(){
@@ -257,6 +250,10 @@ class Attr_type{
 
 	function get_order(){
 		return $this->order;
+	}
+
+	function get_group(){
+		return $this->group;
 	}
 
 	function get_raw_description(){
@@ -335,6 +332,7 @@ class Attr_type{
 		
 		$out = array("name" => $this->name,
 		             "type" => $this->rich_type,
+		             "group" => $this->group,
 		             "order" => $this->order,
 					 "description" => $this->description);
 
@@ -430,6 +428,10 @@ class Attr_type{
 
 	function set_order($str){
 		$this->order = $str;
+	}
+
+	function set_group($str){
+		$this->group = $str;
 	}
 
 	function set_for_URIs(){
@@ -649,6 +651,7 @@ class Attr_type_lists extends Attr_type{
 class Attr_types{
   
 	var $attr_types = null;
+	var $attr_groups = null;
 
     /**
      * Return a reference to a Attr_types instance, only creating a new instance 
@@ -728,5 +731,40 @@ class Attr_types{
 		
 		return $this->attr_types[$name];
 	}
+
+	/**
+	 *	Return array of attribute groups
+	 *
+	 *	@return	array 				array of attribute groups or FALSE on error
+	 */
+	function &get_attr_groups(){
+		global $data, $config;
+		
+		if (is_null($this->attr_groups)){
+			$data->add_method('get_attr_type_groups');
+			if (false === $grps = $data->get_attr_type_groups(null)) return false;
+
+			$grp_order = array();
+			foreach ($grps as $v){
+				if (isset($config->data_sql->attr_types->groups[$v]['order'])) $grp_order[$v] = $config->data_sql->attr_types->groups[$v]['order'];
+				else $grp_order[$v] = 50;
+			}
+	
+			asort($grp_order);
+			$this->attr_groups = array_keys($grp_order);
+		}
+		
+		return $this->attr_groups;
+	}
+
+	function get_attr_group_label($grp){
+		global $config;
+
+		if (isset($config->data_sql->attr_types->groups[$grp]['label'])) 
+			return Lang::internationalize($config->data_sql->attr_types->groups[$grp]['label']);
+
+		return $grp;
+	}
+
 }
 ?>

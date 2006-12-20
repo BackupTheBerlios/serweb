@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.7 2006/12/07 13:47:27 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.8 2006/12/20 16:36:43 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -13,7 +13,7 @@
 		display:block;
 	}
 	
-	#attr_order, #attr_name, #attr_type, #attr_label, #attr_access{
+	#attr_order, #attr_name, #attr_type, #attr_label, #attr_access, #attr_group{
 		width:150px;
 	}
 </style>
@@ -44,6 +44,10 @@
 	<tr>
 	<td><label for="attr_access">{$lang_str.ff_att_access}:</label></td>
 	<td>{$form.attr_access}</td>
+	</tr>
+	<tr>
+	<td><label for="attr_group">{$lang_str.ff_att_group}:</label></td>
+	<td>{$form.attr_group}{$form.attr_new_group}</td>
 	</tr>
 	<tr>
 	<td><label for="attr_label"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label}>{$lang_str.ff_label}</a>:</label></td>
@@ -113,8 +117,8 @@
 </div>
 <br />
 
-{foreach from=$attrs item='row' name='at'}
-	{if $smarty.foreach.at.first}
+{foreach from=$groups item='grp' name='grp'}
+	{if $smarty.foreach.grp.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable alternatpoplinkstyle">
 	<tr>
 	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
@@ -133,6 +137,14 @@
 	</tr>
 	{/if}
 
+{foreach from=$attrs item='row' name='at'}
+	{if $smarty.foreach.at.first}
+	<tr>
+	<td colspan="13">{$lang_str.th_att_group}: {$grp}</td>
+	</tr>
+	{/if}
+
+{if $row.group==$grp}
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.order|empty2nbsp}</td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
@@ -162,8 +174,10 @@
 	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
 	</tr>
+{/if}
 
-	{if $smarty.foreach.at.last}
+{/foreach}
+	{if $smarty.foreach.grp.last}
 	</table>
 	{/if}
 {/foreach}
