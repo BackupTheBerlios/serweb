@@ -91,5 +91,57 @@ notice: if one shared html form is used, you should call $controler->assign_form
 
 
 
+How the page controler process the page
+=======================================
+
+Page processing starts by execution of method 'start' of page controller. This
+method could first check if logged user have permission to see current page. If
+not, it terminate the execution.
+
+After that all APUs are initialized calling their 'init' methods.
+
+The methods 'determine_action' of all APUs are called next. In this stage will 
+be determined what each the APU will do. The action could be just display the 
+table of values or uodate data in database, etc. Each action have several flags.
+The most interesting flag is 'reload' flag, which says that the APU want just
+do some action (usualy update data in DB) and than perform reload of page 
+(without any HTML output).
+
+The methods 'create_html_form' of all APUs are called next. In this stage each
+APU could create its own object holding html form. One html form object could 
+be also shared by more APUs (see "Shared HTML forms" section). You could find
+detailed description of html forms in documentation to PHPlib.
+
+The method 'validate_form' is called for each APu their action have flag 
+'validate_form' set. This method should be called always there are data submited
+from form. This method should validate them. 
+
+If there is an invalid value in the form, methods 'form_invalid' of all APUs
+are called. Otherwise proper action methods of the APUs are called. If the 'reload'
+flag is set for some APU, others APU (without having this flag set) are omited in 
+this stage and execution of script ending here.
+
+The methods 'return_messages' of all APUs are called next. If APU wants display 
+an info message for user (like 'values saved successfuly', etc.), it should 
+return it now.
+
+The methods 'pass_values_to_html' and 'pass_form_to_html' of all APUs are called 
+at last. In these methods are all data which should be displayed to user assigned
+to smarty variables. These variables are later accesible from smarty engine.
+
+Generation of HTML output starting now. The function print_html_head() is called
+first. It generate the "<header>....</header>" part of page. Call of function 
+print_html_body_begin() follow. This function could generate an page heading, same
+for all pages. This is following by calling of smarty engine which generate whole
+page by the appropriate template. Function print_html_body_end() is called on the 
+end. It could print an footer (same for all pages).
+
+More information about smarty engine find of its web page: http://smarty.php.net
+
+
+
+
+
+
 To update:
 * where everywhere are stored APU
