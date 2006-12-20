@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.19 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.20 2006/12/20 16:37:58 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -9,9 +9,17 @@
 <h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}</h2>
 {/if}
 
+{html_tabs tabs=$attr_groups 
+		   selected=$attr_selected_group.tab
+		   div_id=''
+		   div_class='subTabs'}
+
+
 <div class="swForm">
 {$form_pd.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
+
+{if $attr_selected_group.grp == "general"}
 	<tr>
 	<td><label for="pu_passwd">{$lang_str.ff_your_password}:</label></td>
 	<td>{$form_pd.pu_passwd}</td>
@@ -20,7 +28,8 @@
 	<td><label for="pu_passwd_r">{$lang_str.ff_retype_password}:</label></td>
 	<td>{$form_pd.pu_passwd_r}</td>
 	</tr>
-	
+{/if}	
+
 	{include file="_attr_form.tpl" attributes=$attributes form=$form_pd}
 
 {* If you need display only one specific user preference, see the examples 

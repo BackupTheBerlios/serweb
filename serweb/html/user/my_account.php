@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: my_account.php,v 1.17 2006/09/08 12:27:32 kozlik Exp $
+ * $Id: my_account.php,v 1.18 2006/12/20 16:37:58 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -11,7 +11,8 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('auth', 'attributes', 'usrloc', 'acl', 'uri');
 
-$_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 'apu_acl', 'apu_usrloc'); 
+$_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 
+                       'apu_acl', 'apu_usrloc', 'apu_attr_sel_grp'); 
 
 require "prepend.php";
 
@@ -28,6 +29,9 @@ $pu			= new apu_password_update();
 $usr_pref	= new apu_attributes();
 $aliases	= new apu_aliases();
 $acl		= new apu_acl();
+$at_sel     = new apu_attr_sel_grp();
+
+$at_sel->set_apu_attrs($usr_pref);
 
 
 if ($config->allow_change_usrloc){
@@ -48,13 +52,6 @@ $up_attributes[] = "sw_user_status_visible";
 $usr_pref->set_opt('attributes', $up_attributes);
 */
 
-
-
-/* set descriptions of user preferences */
-$att_desc['fw_voicemail'] = $lang_str['ff_fwd_to_voicemail'];
-$att_desc['sw_user_status_visible'] = $lang_str['ff_status_visibility'];
-$att_desc['send_daily_missed_calls'] = $lang_str['ff_send_daily_missed_calls'];
-$usr_pref->set_opt('att_description', $att_desc);
 
 $an = &$config->attr_names;
 $attrs_options = array($an['lang'] => array('save_to_session' => true,
@@ -98,9 +95,10 @@ $controler->add_apu($pu);
 $controler->add_apu($aliases);
 $controler->add_apu($acl);
 $controler->add_apu($usr_pref);
+$controler->add_apu($at_sel);
 
-$controler->assign_form_name("pd", $pu);
 $controler->assign_form_name("pd", $usr_pref);
+$controler->assign_form_name("pd", $pu);
 
 if ($config->allow_change_usrloc){
 	$controler->add_apu($ul);
@@ -112,9 +110,14 @@ if ($config->allow_change_usrloc){
 			  'src'  => get_path_to_buttons("btn_add.gif", $sess_lang)));
 }
 
-
-
+$controler->set_post_init_func("my_account_post_init");
 $controler->set_template_name('u_my_account.tpl');
 $controler->start();
+
+function my_account_post_init(&$p_ctl){
+	if ($GLOBALS['at_sel']->get_selected_grp() != "general"){
+		$p_ctl->del_apu($GLOBALS['pu']);
+	}
+}
 
 ?>
