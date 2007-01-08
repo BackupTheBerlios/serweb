@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.19 2006/12/20 16:31:57 kozlik Exp $ 
+ * $Id: class_definitions.php,v 1.20 2007/01/08 15:53:51 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -694,7 +694,7 @@ class URI{
 		global $config;
 
 		/* global tel uri */
-		if ($this->scheme == "tel" and $this->did == $config->global_tel_uri_did){
+		if (strtolower($this->scheme) == "tel" and $this->did == $config->global_tel_uri_did){
 			return "tel:".$this->username;
 		}
 
@@ -702,7 +702,7 @@ class URI{
 		if (false === $dn = $dom->get_domain_name($this->did)) return false;
 
 		/* tel uri with context */
-		if ($this->scheme == "tel"){
+		if (strtolower($this->scheme) == "tel"){
 			return "tel:".$this->username.";phone-context=".$dn;
 		}
 		
