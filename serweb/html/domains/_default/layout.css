@@ -18,6 +18,19 @@
 
 
 /*
+ * Links
+ */
+.swMain a{
+	font-weight:normal;
+	font-size: 0.85em;
+	color: #000000;
+	text-decoration:none;
+}
+.swMain a:hover{
+	text-decoration:underline;
+}
+
+/*
  * Popup links - links used for display popup window by the Overlib library
  */
 .swMain a.swPopupLink {
@@ -994,4 +1007,29 @@ th.alternatpoplinkstyle a.swPopupLink {
 	float: right;
 	text-align: right;
 	margin-right: 50px;
+}
+
+/* Stretcher */
+.toggler{
+	witdth:100%;
+	border: 1px solid black;
+	margin-bottom: 10px;
+}
+
+.toggler H2{
+	background: #efe7d6;
+	width: 798px;
+	text-align: left;
+	padding: 3px 10px;
+	margin: 0px;
+	font-size: 1.2em;
+}
+
+.toggler a:hover H2{
+	text-decoration: underline;
+}
+
+.toggler .stretcher{
+	display: none;
+	margin: 5px 0px;
 }

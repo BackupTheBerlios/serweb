@@ -1,5 +1,5 @@
 /*
- * $Id: functions.js,v 1.7 2006/05/23 09:13:36 kozlik Exp $
+ * $Id: functions.js,v 1.8 2007/01/18 14:49:49 kozlik Exp $
  */
 
 /* confirm click to <a href=""> */
@@ -44,6 +44,16 @@ function open_wizard_win(url){
 		return;
 }
 
+/* toggle visibility of an element */
+
+function toggle_visibility(el){
+	if (el.style.display=="none"){
+		el.style.display = "block";
+	}
+	else{
+		el.style.display = "none";
+	}
+}
 
 /***********************************************************
  * Functions for display varning message if form is changed
