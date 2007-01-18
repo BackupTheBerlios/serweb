@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attr_types.php,v 1.14 2006/12/20 16:36:44 kozlik Exp $
+ * $Id: attr_types.php,v 1.15 2007/01/18 14:51:31 kozlik Exp $
  */
 
 /**
@@ -719,7 +719,10 @@ class Attr_types{
 		
 		if (is_null($this->attr_types)){
 			$data->add_method('get_attr_types');
-			if (false === $at = $data->get_attr_types(null)) return false;
+			if (false === $at = $data->get_attr_types(null)) {
+				$false = false; //have to return reference
+				return $false;
+			}
 		
 			$this->attr_types = &$at;
 		}
