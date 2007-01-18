@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.40 2006/12/20 16:40:45 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.41 2007/01/18 14:56:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -465,6 +465,7 @@ $lang_str['ff_att_type'] = 						"typ atributu";
 $lang_str['ff_att_access'] = 					"přístup";
 $lang_str['ff_label'] = 						"popisek";
 $lang_str['ff_att_group'] = 					"group";	//to translate 
+$lang_str['ff_att_uri'] = 						"uri";	//to translate 
 $lang_str['ff_att_user'] = 						"uživatelský";
 $lang_str['ff_att_domain'] = 					"doménový";
 $lang_str['ff_att_global'] = 					"globální";
@@ -537,6 +538,8 @@ $lang_str['attr_grp_privacy'] = 				"privacy";	//to translate
 $lang_str['attr_grp_other'] = 					"other";	//to translate 
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";	//to translate 
 $lang_str['attr_grp_create_new'] = 				"create new group";	//to translate 
+
+$lang_str['l_attr_grp_toggle'] = 				"toggle displaying of attribute groups";	//to translate 
 
 
 /* ------------------------------------------------------------*/

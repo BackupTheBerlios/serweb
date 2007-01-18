@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.43 2006/12/20 16:40:45 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.44 2007/01/18 14:56:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -465,6 +465,7 @@ $lang_str['ff_att_type'] = 						"attribuut type";
 $lang_str['ff_att_access'] = 					"toegang";
 $lang_str['ff_label'] = 						"label";
 $lang_str['ff_att_group'] = 					"group";	//to translate 
+$lang_str['ff_att_uri'] = 						"uri";	//to translate 
 $lang_str['ff_att_user'] = 						"gebruiker";
 $lang_str['ff_att_domain'] = 					"domein";
 $lang_str['ff_att_global'] = 					"global";
@@ -537,6 +538,8 @@ $lang_str['attr_grp_privacy'] = 				"privacy";	//to translate
 $lang_str['attr_grp_other'] = 					"other";	//to translate 
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";	//to translate 
 $lang_str['attr_grp_create_new'] = 				"create new group";	//to translate 
+
+$lang_str['l_attr_grp_toggle'] = 				"toggle displaying of attribute groups";	//to translate 
 
 
 /* ------------------------------------------------------------*/

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.48 2006/12/20 16:40:45 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.49 2007/01/18 14:56:58 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -465,6 +465,7 @@ $lang_str['ff_att_type'] = 						"attribute type";
 $lang_str['ff_att_access'] = 					"access";
 $lang_str['ff_label'] = 						"label";
 $lang_str['ff_att_group'] = 					"group";
+$lang_str['ff_att_uri'] = 						"uri";
 $lang_str['ff_att_user'] = 						"user";
 $lang_str['ff_att_domain'] = 					"domain";
 $lang_str['ff_att_global'] = 					"global";
@@ -537,6 +538,8 @@ $lang_str['attr_grp_privacy'] = 				"privacy";
 $lang_str['attr_grp_other'] = 					"other";
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";
 $lang_str['attr_grp_create_new'] = 				"create new group";
+
+$lang_str['l_attr_grp_toggle'] = 				"toggle displaying of attribute groups";
 
 
 /* ------------------------------------------------------------*/

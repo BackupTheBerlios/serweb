@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.8 2006/12/20 16:36:44 kozlik Exp $
+ * @version   $Id: apu_attr_types.php,v 1.9 2007/01/18 14:56:59 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -50,6 +50,9 @@
  *	opt['smarty_attrs']			(attrs)
  *	  array of all attributes
  *	
+ *	opt['smarty_pager']				(pager)
+ *	 associative array containing size of result and which page is returned
+ *	
  */
 
 class apu_attr_types extends apu_base_class{
@@ -64,6 +67,9 @@ class apu_attr_types extends apu_base_class{
 	var $ext_settings = false;
 	/** List of groups of attributes */
 	var $attr_groups;
+
+	var $sorter=null;
+	var $filter=null;
 
 	/** 
 	 *	return required data layer methods - static class 
@@ -112,10 +118,22 @@ class apu_attr_types extends apu_base_class{
 		$this->opt['smarty_action'] =		'action';
 		/* name of html form */
 		$this->opt['form_name'] =			'';
+		/* pager */
+		$this->opt['smarty_pager'] =		'pager';
 		
 		$this->opt['smarty_attrs'] =			'attrs';
 		$this->opt['smarty_groups'] =			'groups';
+		$this->opt['smarty_url_toggle_groups'] = 'url_toggle_groups';
+		$this->opt['smarty_show_groups'] = 		'show_groups';
 		
+	}
+
+	function set_filter(&$filter){
+		$this->filter = &$filter;
+	}
+
+	function set_sorter(&$sorter){
+		$this->sorter = &$sorter;
 	}
 
 	/**
@@ -123,16 +141,156 @@ class apu_attr_types extends apu_base_class{
 	 */
 	function init(){
 		parent::init();
+
+		$session_name = empty($this->opt['filter_name'])?
+		                $this->opt['instance_id']:
+		                $this->opt['filter_name'];
+
+		if (!isset($_SESSION['apu_filter'][$session_name])){
+			$_SESSION['apu_filter'][$session_name] = array();
+		}
+		
+		$this->session = &$_SESSION['apu_filter'][$session_name];
+
+		if (is_a($this->sorter, "apu_base_class")){
+			/* register callback called on sorter change */
+			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
+			$this->sorter->set_base_apu($this);
+		}
+
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_base_apu($this);
+		}
 	}
+
+	/**
+	 *	callback function called when sorter is changed
+	 */
+	function sorter_changed(){
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_act_row(0);
+		}
+	}
+
+	function get_sorter_columns(){
+		return array('order', 'name', 'rich_type', 'desc', 'default_flags', 
+		             'flags', 'priority', 'access', 'group', 
+					 'priority_r', 'priority_u', 'priority_d', 'priority_g', 
+					 'd_flags_s', 'd_flags_sw',
+					 'flags_r', 'flags_m', 'flags_e');
+	}
+	
+	function get_filter_form(){
+		global $lang_str;
+		
+		$f = array();
+
+		$f[] = array("type"=>"text",
+		             "name"=>"order",
+					 "label"=>$lang_str['ff_order']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"name",
+					 "label"=>$lang_str['ff_att_name']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"rich_type",
+					 "label"=>$lang_str['ff_att_type']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"desc",
+					 "label"=>$lang_str['ff_label']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"group",
+					 "label"=>$lang_str['ff_att_group']);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"priority_r",
+					 "label"=>$lang_str['ff_att_uri'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"priority_u",
+					 "label"=>$lang_str['ff_att_user'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"priority_d",
+					 "label"=>$lang_str['ff_att_domain'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"priority_g",
+					 "label"=>$lang_str['ff_att_global'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"d_flags_s",
+					 "label"=>$lang_str['ff_for_ser'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"d_flags_sw",
+					 "label"=>$lang_str['ff_for_serweb'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"flags_m",
+					 "label"=>$lang_str['ff_multivalue'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"flags_r",
+					 "label"=>$lang_str['ff_att_reg'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"flags_e",
+					 "label"=>$lang_str['ff_att_req'],
+					 "initial"=>1,
+					 "3state"=>true);
+
+		return $f;
+	}
+	
 
 	/**
 	 *	Format attributes for smarty
 	 *	and store them to $this->smarty_attrs array
 	 */
 	function format_attrs(){
-		global $sess, $lang;
+		global $sess, $lang, $data;
 	
-		if (false === $at = $this->attrs->get_attr_types()) return false;
+		$opt = array('use_pager' => true,
+		             'group_by_groups' => empty($this->session['hide_groups']));
+	                 
+		if (is_a($this->filter, "apu_base_class")){
+			$opt['filter'] = $this->filter->get_filter();
+		}
+		if (is_a($this->sorter, "apu_base_class")){
+			$opt['order_by']   = $this->sorter->get_sort_col();
+			$opt['order_desc'] = $this->sorter->get_sort_dir();
+		}
+
+		$data->set_act_row($this->filter->get_act_row());
+
+		if (false === $at = $data->get_attr_types($opt)) return false;
+
+		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
+		$this->pager['pos']=$data->get_act_row();
+		$this->pager['items']=$data->get_num_rows();
+		$this->pager['limit']=$data->get_showed_rows();
+		$this->pager['from']=$data->get_res_from();
+		$this->pager['to']=$data->get_res_to();
 
 		$this->smarty_attrs = array();
 		foreach($at as $k => $v){
@@ -194,7 +352,27 @@ class apu_attr_types extends apu_base_class{
 		else                                $at->reset_required();
 		
 	}	
+
 	
+	/**
+	 *	Method perform action toggle_grp
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_toggle_grp(&$errors){
+
+		if (empty($this->session['hide_groups'])){
+			$this->session['hide_groups'] = true;
+		}
+		else{
+			$this->session['hide_groups'] = false;
+		}
+
+		return true;
+	}
+
 	/**
 	 *	Method perform action update
 	 *
@@ -328,6 +506,12 @@ class apu_attr_types extends apu_base_class{
 		elseif (isset($_GET['dele'])){
 			$this->edit_id = $_GET['edit_id'];
 			$this->action=array('action'=>"delete",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+		elseif (isset($_GET['toggle_grp'])){
+			$this->action=array('action'=>"toggle_grp",
 			                    'validate_form'=>false,
 								'reload'=>true);
 			return;
@@ -513,11 +697,15 @@ class apu_attr_types extends apu_base_class{
 	 *	assign variables to smarty 
 	 */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 
 		$smarty->assign_by_ref($this->opt['smarty_attrs'], $this->smarty_attrs);
 		$smarty->assign_by_ref($this->opt['smarty_groups'], $this->attr_groups);
+		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
+
+		$smarty->assign($this->opt['smarty_show_groups'], empty($this->session['hide_groups']));
+		$smarty->assign_by_ref($this->opt['smarty_url_toggle_groups'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&toggle_grp=1"));
 
 	}
 	

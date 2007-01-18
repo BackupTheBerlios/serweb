@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.8 2006/12/20 16:36:43 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.9 2007/01/18 14:56:59 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -23,6 +23,91 @@
 
 {popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
+<div class="toggler">
+	<a href="javascript: toggle_visibility(document.getElementById('stretcher_f'));"><h2 class="swTitle">{$lang_str.search_filter}:</h2></a>
+	
+	<div class="stretcher" id="stretcher_f">
+		<div class="swForm swHorizontalForm">
+		
+		{$filter_form.start}
+		<table border="0" cellspacing="0" cellpadding="0" align="center">
+		<tr valign="bottom">
+		<td><label for="name" id="luid">{$filter_label.name}</label></td>
+		<td><label for="rich_type" id="lusrnm">{$filter_label.rich_type}</label></td>
+		<td><label for="group" id="ldomain">{$filter_label.group}</label></td>
+		<td><label for="desc" id="lfname">{$filter_label.desc}</label></td>
+		</tr>
+		
+		<tr>
+		<td>{$filter_form.name}</td>
+		<td>{$filter_form.rich_type}</td>
+		<td>{$filter_form.group}</td>
+		<td>{$filter_form.desc}</td>
+		</tr>
+		
+		<tr><td colspan="4">
+		
+			<div class="flagForm">
+			<table border="0" cellspacing="0" cellpadding="0" align="center">
+			<tr>
+			<td><label for="d_flags_s"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_ser}>{$filter_label.d_flags_s}</a>:</label></td>
+			<td>{$filter_form.d_flags_s_en}{$filter_form.d_flags_s}</td>
+			</tr>
+			<tr>
+			<td><label for="d_flags_sw"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb}>{$filter_label.d_flags_sw}</a>:</label></td>
+			<td>{$filter_form.d_flags_sw_en}{$filter_form.d_flags_sw}</td>
+			</tr>
+			</table>
+			</div>
+		
+			<div class="flagForm">
+			<table border="0" cellspacing="0" cellpadding="0" align="center">
+			<tr>
+			<td><label for="priority_u"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_user}>{$filter_label.priority_u}</a>:</label></td>
+			<td>{$filter_form.priority_u_en}{$filter_form.priority_u}</td>
+			</tr>
+			<tr>
+			<td><label for="priority_d"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_domain}>{$filter_label.priority_d}</a>:</label></td>
+			<td>{$filter_form.priority_d_en}{$filter_form.priority_d}</td>
+			</tr>
+			<tr>
+			<td><label for="priority_g"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_global}>{$filter_label.priority_g}</a>:</label></td>
+			<td>{$filter_form.priority_g_en}{$filter_form.priority_g}</td>
+			</tr>
+			</table>
+			</div>
+			
+			<div class="flagForm">
+			<table border="0" cellspacing="0" cellpadding="0" align="center">
+			<tr>
+			<td><label for="flags_m"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_multivalue}>{$filter_label.flags_m}</a>:</label></td>
+			<td>{$filter_form.flags_m_en}{$filter_form.flags_m}</td>
+			</tr>
+			<tr>
+			<td><label for="flags_r"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_registration}>{$filter_label.flags_r}</a>:</label></td>
+			<td>{$filter_form.flags_r_en}{$filter_form.flags_r}</td>
+			</tr>
+			<tr>
+			<td><label for="flags_e"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_required}>{$filter_label.flags_e}</a>:</label></td>
+			<td>{$filter_form.flags_e_en}{$filter_form.flags_e}</td>
+			</tr>
+			</table>
+			</div>
+		
+			<div class="flagForm">
+				<div style="width:110px;">
+					<a href={$url_toggle_groups}>{$lang_str.l_attr_grp_toggle}</a>
+				</div>
+			</div>
+		</td></tr>
+						
+		<tr><td colspan="4" align="right">{$filter_form.okey}</td></tr>
+		</table>
+		{$filter_form.finish}
+		</div>
+		
+	</div><!-- stretcher -->
+</div><!-- toggler -->
 
 <div class="swForm">
 {$form.start}
@@ -117,34 +202,42 @@
 </div>
 <br />
 
-{foreach from=$groups item='grp' name='grp'}
-	{if $smarty.foreach.grp.first}
+{setvar grp=""}
+{foreach from=$attrs item='row' name='at'}
+{*foreach from=$groups item='grp' name='grp'}
+	{if $smarty.foreach.grp.first*}
+	{if $smarty.foreach.at.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable alternatpoplinkstyle">
 	<tr>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
-	<th class="alternatpoplinkstyle">{$lang_str.th_att_name}</th>
-	<th class="alternatpoplinkstyle">{$lang_str.th_att_type}</th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
-	<th class="alternatpoplinkstyle"><a href="javascript:void(0);" class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_order}"      class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_name}"      >{$lang_str.th_att_name}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_rich_type}" >{$lang_str.th_att_type}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_flags_r}"    class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_u}" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_d}" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_g}" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_s}"  class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_sw}" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_desc}"       class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	</tr>
 	{/if}
 
-{foreach from=$attrs item='row' name='at'}
+	{if $show_groups and $grp != $row.group}{setvar grp=$row.group}
+		<tr>
+		<td colspan="13">{$lang_str.th_att_group}: {$row.group}</td>
+		</tr>
+	{/if}
+{*foreach from=$attrs item='row' name='at'}
 	{if $smarty.foreach.at.first}
 	<tr>
 	<td colspan="13">{$lang_str.th_att_group}: {$grp}</td>
 	</tr>
 	{/if}
 
-{if $row.group==$grp}
+{if $row.group==$grp*}
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.order|empty2nbsp}</td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
@@ -174,12 +267,21 @@
 	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
 	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
 	</tr>
-{/if}
+{*/if}
 
 {/foreach}
-	{if $smarty.foreach.grp.last}
+	{if $smarty.foreach.grp.last*}
+	{if $smarty.foreach.at.last}
 	</table>
+
+	<div class="swNumOfFoundRecords">{$lang_str.displaying_records} {$pager.from} - {$pager.to} {$lang_str.from} {$pager.items}</div>
+
+	<div class="swSearchLinks">&nbsp;
+	{pager page=$pager class_text='swNavText' class_num='swNav' class_numon='swNavActual' txt_prev='&lt;&lt;&lt;' txt_next='&gt;&gt;&gt;'}
+	</div>
 	{/if}
+{foreachelse}
+<div class="swNumOfFoundRecords">{$lang_str.no_records_found}</div>
 {/foreach}
 
 <br />
