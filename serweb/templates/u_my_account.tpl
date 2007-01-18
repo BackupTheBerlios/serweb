@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.20 2006/12/20 16:37:58 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.21 2007/01/18 14:06:04 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -14,7 +14,7 @@
 		   div_id=''
 		   div_class='subTabs'}
 
-
+<br />
 <div class="swForm">
 {$form_pd.start}
 	<table border="0" cellspacing="0" cellpadding="0" align="center">
