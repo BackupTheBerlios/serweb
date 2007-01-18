@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.20 2007/01/08 15:53:51 kozlik Exp $ 
+ * $Id: class_definitions.php,v 1.21 2007/01/18 14:08:50 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -1149,6 +1149,23 @@ class Filter {
 		
 		if ($int)	return $var." ".$this->op." ".(int)$val;
 		else		return $var." ".$this->op." '".$val."'";
+	
+	}
+
+	function to_sql_bool($var=null){
+
+		if (is_null($var)) $var = $this->name;
+		
+		if ($this->op == "is_null")		return $var." is null";
+
+		$val = $this->value;
+		
+		if ($val){
+			return "(".$var.")";
+		}
+		else{
+			return "!(".$var.")";
+		}
 	
 	}
 }
