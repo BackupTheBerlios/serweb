@@ -3,7 +3,7 @@
  * Application unit filter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_filter.php,v 1.1 2006/07/20 16:06:15 kozlik Exp $
+ * @version   $Id: apu_filter.php,v 1.2 2007/01/18 14:17:30 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -35,6 +35,7 @@
 
 class apu_filter extends apu_base_class{
 	var $form_elements;
+	var $labels = array();
 	
 
 	/** 
@@ -76,6 +77,9 @@ class apu_filter extends apu_base_class{
 		/* name of html form */
 		$this->opt['form_name'] =			'';
 
+		$this->opt['smarty_form_label'] =	'filter_label';
+
+
 		$this->opt['form_submit']=array('type' => 'button',
 										'text' => $lang_str['b_search']);
 		
@@ -115,6 +119,12 @@ class apu_filter extends apu_base_class{
 		}
 
 	}
+
+	function get_form_elements(){
+		if (!isset($this->form_elements)){
+			$this->form_elements = $this->base_apu->get_filter_form();
+		}
+	}
 	
 	/**
 	 *	Method perform action update
@@ -126,7 +136,10 @@ class apu_filter extends apu_base_class{
 	function action_update(&$errors){
 		foreach ($this->form_elements as $k=>$v){
 			if ($v['type'] == "checkbox"){
-				$this->session['f_values'][$v['name']] = !empty($_POST[$v['name']]);
+				$this->session['f_values'][$v['name']] = !empty($_POST[$v['name']."_hidden"]);
+				if (!empty($v['3state'])){
+					$this->session['f_spec'][$v['name']]['enabled'] = !empty($_POST[$v['name']."_en"]);
+				}
 			}
 			else{
 				if (isset($_POST[$v['name']])){
@@ -171,13 +184,16 @@ class apu_filter extends apu_base_class{
 	function create_html_form(&$errors){
 		parent::create_html_form($errors);
 		
-		$this->form_elements = $this->base_apu->get_filter_form();
+		$this->get_form_elements();
+
 		
 		foreach ($this->form_elements as $k => $v){
 			if (!isset($this->session['f_values'][$v['name']])){
-				$this->session['f_values'][$v['name']] = null;
+				if (isset($v['initial'])) $this->session['f_values'][$v['name']] = $v['initial'];
+				else                      $this->session['f_values'][$v['name']] = null;
 			}
 
+			/* pre set the value */
 			if ($v['type'] == "checkbox"){
 				$v['checked'] = $this->session['f_values'][$v['name']];
 				if (empty($v['value'])) $v['value'] = 1;	//if value is not set
@@ -186,16 +202,62 @@ class apu_filter extends apu_base_class{
 				$v['value'] = $this->session['f_values'][$v['name']];
 			}
 
-			if ($v['type'] == "text" and !isset($v['maxlength'])){
-				$v['maxlength'] = 32;
+			/* do specific actions for each type */
+			switch ($v['type']){
+			case "text":
+				if (!isset($v['maxlength'])){
+					$v['maxlength'] = 32;
+				}
+				break;
+			case "checkbox":
+				/* add the hidden element in order to it not depend 
+				   if checkbox is displayed by the template or not */
+				$this->f->add_element(array(
+						"name" => $v['name']."_hidden",
+						"type" => "hidden" ,
+						"value" => $v['checked'] ? 1 : 0
+					));
+
+				$onclick = "if (this.checked) this.form.".$v['name']."_hidden".".value=1; else this.form.".$v['name']."_hidden".".value=0;";
+				
+				if (!empty($v['3state'])){
+					$v['disabled'] = empty($this->session['f_spec'][$v['name']]['enabled']);
+				
+					/* add the chcekbox element enabling or disabling the first one */
+					$this->f->add_element(array(
+							"name" => $v['name']."_en",
+							"type" => "checkbox",
+							"value" => 1,
+							"checked" => !$v['disabled'],
+							"extrahtml" => "title='enable filtering by this flag' onclick='if (this.checked) this.form.".$v['name'].".disabled=false; else this.form.".$v['name'].".disabled=true;'"
+						));
+
+//					$onchange .= "if (this.checked) this.form.".$v['name'].".disable=false; else this.form.".$v['name'].".disable=true;";
+				}
+
+				if (empty($v['extrahtml'])) $v['extrahtml'] = "";
+				$v['extrahtml'] .= " onclick='".$onclick."'";
+				
+				break;
 			}
+
 
 			$this->f->add_element($v);
 			$this->form_elements[$k] = $v;
+
+			if (isset($v['label'])) $this->labels[$v['name']] = $v['label'];
 		}
 	}
 
 		
+	/**
+	 *	assign variables to smarty 
+	 */
+	function pass_values_to_html(){
+		global $smarty;
+		$smarty->assign_by_ref($this->opt['smarty_form_label'], $this->labels);
+	}
+	
 	/**
 	 *	return info need to assign html form to smarty 
 	 */
@@ -210,10 +272,44 @@ class apu_filter extends apu_base_class{
 		return $this->session['act_row'];
 	}
 	
+	function set_act_row($v){
+		$this->session['act_row'] = $v;
+	}
+	
+	/**
+	 *	@deprec
+	 */
 	function get_filter_values(){
 		return $this->session['f_values'];
 	}
 
+	function get_filter(){
+		$this->get_form_elements();
+
+		/* shortcut to form_elemetns */
+		$fv = &$this->session['f_values'];
+
+		$f_ops = array();
+
+		foreach($this->form_elements as $v){
+			/* skip unset values */
+			if (!isset($fv[$v['name']])) continue;
+
+			/* do not add disabled chcekboxes to filter */
+			if ($v['type'] == 'checkbox' and
+			    !empty($v['3state']) and
+			    empty($this->session['f_spec'][$v['name']]['enabled'])) continue;
+
+			/* do not include empty values to filter*/
+			if ($fv[$v['name']] === "") continue;
+		
+			$f_ops[$v['name']] = new Filter($v['name'], $fv[$v['name']], "like", true); 	
+		}
+
+
+		return $f_ops;
+	}
+	
 	function set_get_param_for_redirect($str){
 		$this->session['get_param']=$str;
 	}
