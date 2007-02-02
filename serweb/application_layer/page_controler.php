@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.30 2006/12/20 16:21:17 kozlik Exp $
+ * @version   $Id: page_controler.php,v 1.31 2007/02/02 10:09:20 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -73,6 +73,13 @@ class page_conroler{
 	var $js_after_document = array();
 	/** url to which header location will redirect - default is self */
 	var $url_for_reload = null;
+	/** flag determining if standard html output will be generated. 
+	 *	Sometimes an APU need generate other output than HTML. In this case it 
+	 *	should call method disable_html_output() and the smarty template will 
+	 *	not be generated. 
+	 *	It is recomended use this only if 'alone' flag of executed action is set.
+	 */
+	var $standard_html_output = true;
 
 	/** for backward compatibility - Hack protect will be removed - by setting this var to true may be enabled for single page*/
 	var $perform_hack_protect = false;
@@ -414,6 +421,18 @@ class page_conroler{
 		$this->url_for_reload = $url;
 	}
 
+	/** 
+	 *	Disabling generation of HTML output
+	 *
+	 *	Sometimes an APU need generate other output than HTML. In this case it 
+	 *	should call this method and the smarty template will not be generated.
+	 *	 
+	 *	It is recomended use this only if 'alone' flag of executed action is set.
+	 */
+	function disable_html_output(){
+		$this->standard_html_output = false;
+	}
+	
 	/**
 	 *	Add file to set of required javascript files
 	 *	
@@ -670,6 +689,13 @@ class page_conroler{
 								($send_get_param ? 
 									'&'.$send_get_param : 
 									'')));
+			/* break the script execution */
+			page_close();
+			exit;
+		}
+
+		/* if standard html output should not be generated */
+		if (!$this->standard_html_output){
 			/* break the script execution */
 			page_close();
 			exit;
