@@ -5,7 +5,7 @@
  *
  * Copyright (c) 1998 by Jay Bloodworth
  * 
- * $Id: oohforms.inc,v 1.9 2006/07/20 16:11:37 kozlik Exp $
+ * $Id: oohforms.inc,v 1.10 2007/02/02 10:10:45 kozlik Exp $
  */
 
 class of_element {
@@ -373,8 +373,11 @@ class form {
     }
     while ($elrec) {
       $el = $elrec["ob"];
-      $el->marshal_dispatch(isset($this->method)?$this->method:"", "self_load_defaults");
-      $this->elements[$el->name]["ob"] = $el;  // no refs -> must copy back
+      //if default value of this element should be loaded
+      if (empty($el->skip_load_default)) {
+	      $el->marshal_dispatch(isset($this->method)?$this->method:"", "self_load_defaults");
+    	  $this->elements[$el->name]["ob"] = $el;  // no refs -> must copy back
+	  }
       if ($deflist) {
         next($deflist);
         $elrec = $this->elements[current($deflist)];
