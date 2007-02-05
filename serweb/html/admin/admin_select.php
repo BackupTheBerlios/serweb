@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: admin_select.php,v 1.2 2006/11/28 14:48:54 kozlik Exp $
+ * $Id: admin_select.php,v 1.3 2007/02/05 15:10:37 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -10,7 +10,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('subscribers');
 
-$_required_apu = array('apu_subscribers'); 
+$_required_apu = array('apu_subscribers', 'apu_sorter'); 
 
 
 require "prepend.php";
@@ -18,6 +18,9 @@ require "prepend.php";
 $perm->check("admin,hostmaster");
 
 $sc	= new apu_subscribers();
+$sr = new apu_sorter();
+
+$sc->set_sorter($sr);
 
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
 $smarty->assign('finish_url', 'admin_assign.php?da_assign=1&pr_set_admin_privilege=1');
@@ -36,6 +39,7 @@ $sc->set_opt('sess_seed', 1);
 
 
 $controler->add_apu($sc);
+$controler->add_apu($sr);
 $controler->set_template_name('a_admin_select.tpl');
 $controler->start();
 

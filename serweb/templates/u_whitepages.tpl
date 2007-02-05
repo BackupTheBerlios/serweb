@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.7 2006/07/03 09:15:16 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.8 2007/02/05 15:10:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -48,8 +48,8 @@
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>{$lang_str.th_name}</th>
-	<th>{$lang_str.th_sip_address}</th>
+	<th><a href="{$url_sort_name}">{$lang_str.th_name}</a></th>
+	<th><a href="{$url_sort_username}">{$lang_str.th_sip_address}</a></th>
 	<th>{$lang_str.th_aliases}</th>
 	<th>{$lang_str.th_timezone}</th>
 	</tr>

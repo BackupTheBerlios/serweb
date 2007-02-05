@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: 2_existing_admin.tpl,v 1.7 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: 2_existing_admin.tpl,v 1.8 2007/02/05 15:10:38 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -44,11 +44,11 @@
 	{if $smarty.foreach.admins.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>{$lang_str.th_uid}</th>
-	<th>{$lang_str.th_username}</th>
+	<th><a href="{$url_sort_uid}"      >{$lang_str.th_uid}</a></th>
+	<th><a href="{$url_sort_username}" >{$lang_str.th_username}</a></th>
 	<th>{$lang_str.th_domain}</th>
-	<th>{$lang_str.th_name}</th>
-	<th>{$lang_str.th_email}</th>
+	<th><a href="{$url_sort_name}"     >{$lang_str.th_name}</a></th>
+	<th><a href="{$url_sort_email}"    >{$lang_str.th_email}</a></th>
 	</tr>
 	{/if}
 	{assign var='usr_class' value='swUserEnabled'}

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: list_of_admins.php,v 1.16 2006/04/14 19:14:44 kozlik Exp $
+ * $Id: list_of_admins.php,v 1.17 2007/02/05 15:10:37 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -10,7 +10,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('subscribers');
 
-$_required_apu = array('apu_subscribers'); 
+$_required_apu = array('apu_subscribers', 'apu_sorter'); 
 
 
 require "prepend.php";
@@ -26,6 +26,9 @@ if (isset($_GET['m_pr_updated'])){
 
 
 $sc	= new apu_subscribers();
+$sr = new apu_sorter();
+
+$sc->set_sorter($sr);
 
 $smarty->assign('domain',$config->domain);
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
@@ -37,6 +40,7 @@ $sc->set_opt('sess_seed', 1);
 if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 
 $controler->add_apu($sc);
+$controler->add_apu($sr);
 $controler->set_template_name('a_list_of_admins.tpl');
 $controler->start();
 

@@ -3,7 +3,7 @@
  * Application unit subscribers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.9 2006/09/08 12:27:34 kozlik Exp $
+ * @version   $Id: apu_subscribers.php,v 1.10 2007/02/05 15:10:38 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -100,6 +100,8 @@ class apu_subscribers extends apu_base_class{
 	var $smarty_action='default';
 	var $js_before='';
 
+	var $sorter=null;
+
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
 		return array('get_users', 'mark_user_deleted', 
@@ -160,6 +162,24 @@ class apu_subscribers extends apu_base_class{
 		
 	}
 
+	function set_sorter(&$sorter){
+		$this->sorter = &$sorter;
+	}
+
+	/**
+	 *	callback function called when sorter is changed
+	 */
+	function sorter_changed(){
+		global $sess_apu_sc;
+
+		$sess_apu_sc[$this->opt['sess_seed']]['act_row'] = 0;
+	}
+
+	function get_sorter_columns(){
+		return array('username', 'realm', 'fname', 'lname', 'name', 
+		             'phone', 'email', 'uid');
+	}
+
 	function action_enable(&$errors){
 		global $data;
 		
@@ -210,6 +230,10 @@ class apu_subscribers extends apu_base_class{
 			$opt['from_domains'] = $domains_perm;
 		}
 		
+		if (is_a($this->sorter, "apu_base_class")){
+			$opt['order_by']   = $this->sorter->get_sort_col();
+			$opt['order_desc'] = $this->sorter->get_sort_dir();
+		}
 		
 		if (false === $this->subscribers = 
 				$data->get_users(
@@ -285,6 +309,11 @@ class apu_subscribers extends apu_base_class{
 		if (isset($_GET['act_row'])) 
 			$sess_apu_sc[$this->opt['sess_seed']]['act_row'] = $_GET['act_row'];
 
+		if (is_a($this->sorter, "apu_base_class")){
+			/* register callback called on sorter change */
+			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
+			$this->sorter->set_base_apu($this);
+		}
 	}
 
 	function set_filter_by_posts(){

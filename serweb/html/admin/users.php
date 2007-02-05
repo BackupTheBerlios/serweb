@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: users.php,v 1.29 2006/03/17 14:26:52 kozlik Exp $
+ * $Id: users.php,v 1.30 2007/02/05 15:10:37 kozlik Exp $
  */ 
 
 $_data_layer_required_methods=array();
@@ -10,7 +10,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('subscribers');
 
-$_required_apu = array('apu_subscribers'); 
+$_required_apu = array('apu_subscribers', 'apu_sorter'); 
 
 
 require "prepend.php";
@@ -32,6 +32,9 @@ if (isset($_GET['m_user_registered'])){
 
 
 $sc	= new apu_subscribers();
+$sr = new apu_sorter();
+
+$sc->set_sorter($sr);
 
 $smarty->assign('domain',$config->domain);
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
@@ -44,6 +47,7 @@ $sc->set_opt('allow_edit', 1);
 if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 
 $controler->add_apu($sc);
+$controler->add_apu($sr);
 $controler->add_reqired_javascript('functions.js');
 $controler->set_template_name('a_users.tpl');
 $controler->start();

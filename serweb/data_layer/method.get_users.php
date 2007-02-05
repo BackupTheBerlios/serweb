@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_users.php,v 1.18 2006/09/08 12:27:31 kozlik Exp $
+ * $Id: method.get_users.php,v 1.19 2007/02/05 15:10:37 kozlik Exp $
  */
 
 class CData_Layer_get_users {
@@ -93,6 +93,9 @@ class CData_Layer_get_users {
 	    $opt_get_disabled = (isset($opt['get_disabled'])) ? (bool)$opt['get_disabled'] : true;
 	    $opt_get_credentials = (isset($opt['get_credentials'])) ? (bool)$opt['get_credentials'] : false;
 
+
+	    $o_order_by = (isset($opt['order_by'])) ? $opt['order_by'] : "";
+	    $o_order_desc = (!empty($opt['order_desc'])) ? "desc" : "";
 
 
 		/* get users */
@@ -238,7 +241,8 @@ class CData_Layer_get_users {
 					 aln.".$ca->value." as lname,
 					 aph.".$ca->value." as phone,
 					 aem.".$ca->value." as email,
-					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled
+					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled,
+					 trim(concat(afn.".$ca->value.", ' ', aln.".$ca->value.")) as name
 					 ".$q_tz_cols."
 			  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_suri.$q_agree.$q_tz_from."
 			        left outer join ".$ta_name." afn
@@ -252,6 +256,10 @@ class CData_Layer_get_users {
 			  where ".$query_c.$q_uid_filter." 
 			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0".
 			  $q_grp;
+
+		if ($o_order_by) {
+			$q .= " order by ".$o_order_by." ".$o_order_desc;
+		}
 
 		$q.=($opt_return_all ? "" : $this->get_sql_limit_phrase());
 
@@ -271,7 +279,7 @@ class CData_Layer_get_users {
 		                                                       $config->auth['use_did'] ? $row['did'] : null,
 		                                                       $row['realm']);
 			$out[$i]['domain']         = $out[$i]['serweb_auth'] -> get_domainname();
-			$out[$i]['name']           = implode(' ', array($row['fname'], $row['lname']));
+			$out[$i]['name']           = $row['name'];
 			$out[$i]['fname']          = $row['fname'];
 			$out[$i]['lname']          = $row['lname'];
 			$out[$i]['phone']          = $row['phone'];
