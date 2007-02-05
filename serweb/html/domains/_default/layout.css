@@ -385,7 +385,12 @@ table.swTable th{
 
 table.swTable th a:link, table.swTable th a:visited,
 table.swTable th a:active, table.swTable th a:hover{
-	color: #FFF;
+	color: #FFFFFF;
+	font-size: 1.05em;  
+	/* Font-size should be same as for table.swTable th. But in this case 
+	   rule font-size: 0.85em has been applied befor, so we heve to use value 
+	   1.05 in order to have same font size. */
+	font-weight: bold;
 }
 
 table.swTable td{
