@@ -3,7 +3,7 @@
  * Application unit sorter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_sorter.php,v 1.1 2007/01/18 14:05:11 kozlik Exp $
+ * @version   $Id: apu_sorter.php,v 1.2 2007/02/05 15:07:35 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -15,6 +15,13 @@
  *	   
  *	Configuration:
  *	--------------
+ *	
+ *	'default_sort_col'			(string) default: none
+ *	 Name of column, the result is initialy sorted by. If is not specified,
+ *	 the first column from column list is used.
+ *	
+ *	'desc_order_by_default'		(bool) default: false
+ *	 If true, the result is initialy sorted in descending order
  *	
  *	'form_name'					(string) default: ''
  *	 name of html form
@@ -68,6 +75,9 @@ class apu_sorter extends apu_base_class{
 		/* set default values to $this->opt */		
 		$this->opt['sorter_name'] =			'';
 
+		$this->opt['default_sort_col'] =	'';
+		$this->opt['desc_order_by_default'] =	false;
+
 		$this->opt['on_change_callback'] =			'';
 
 		
@@ -104,7 +114,7 @@ class apu_sorter extends apu_base_class{
 		$this->session = &$_SESSION['apu_sorter'][$session_name];
 
 		if (!isset($this->session['reverse_order'])){
-			$this->session['reverse_order'] = false;
+			$this->session['reverse_order'] = $this->opt['desc_order_by_default'];
 		}
 	}
 	
@@ -143,7 +153,10 @@ class apu_sorter extends apu_base_class{
 
 		$this->sort_columns = $this->base_apu->get_sorter_columns();
 		if (!isset($this->session['sort_col'])){
-			$this->session['sort_col'] = reset($this->sort_columns);
+			if ($this->opt['default_sort_col'])
+				$this->session['sort_col'] = $this->opt['default_sort_col'];
+			else
+				$this->session['sort_col'] = reset($this->sort_columns);
 		}
 
 		foreach($this->sort_columns as $v){
