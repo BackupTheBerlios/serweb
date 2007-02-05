@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.16 2006/12/07 13:47:27 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.17 2007/02/05 15:06:23 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -662,7 +662,7 @@ class apu_registration extends apu_base_class{
 		foreach($this->attributes as $att){
 
 			if ($this->attr_types[$att]->get_type() == "sip_adr")		
-					$this->js_on_subm.="sip_address_completion(f.".$att.");";
+					$this->js_before.="sip_address_completion(f.".$att.");";
 
 			$out[$att]['att_desc'] = $this->attr_types[$att]->get_description();
 			$out[$att]['att_name'] = $att;
