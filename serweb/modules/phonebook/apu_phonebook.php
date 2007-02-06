@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: apu_phonebook.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
+ * $Id: apu_phonebook.php,v 1.3 2007/02/06 10:36:10 kozlik Exp $
  */ 
 
 /* Application unit phonebook */
@@ -103,6 +103,8 @@ class apu_phonebook extends apu_base_class{
 	var $js_before = "";
 	var $js_after = "";
 
+	var $sorter=null;
+
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
 		return array('del_phonebook_entry', 'get_phonebook_entry', 'get_phonebook_entries', 'update_phonebook_entry');
@@ -165,6 +167,42 @@ class apu_phonebook extends apu_base_class{
 		
 	}
 
+	/* this metod is called always at begining */
+	function init(){
+		global $sess, $sess_pb_act_row;
+		parent::init();
+
+		if (!$sess->is_registered('sess_pb_act_row')) $sess->register('sess_pb_act_row');
+		if (!isset($sess_pb_act_row)) $sess_pb_act_row=0;
+		
+		if (isset($_GET['act_row'])) $sess_pb_act_row=$_GET['act_row'];
+
+		$this->reg = new Creg;				// create regular expressions class
+
+		if (is_a($this->sorter, "apu_base_class")){
+			/* register callback called on sorter change */
+			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
+			$this->sorter->set_base_apu($this);
+		}
+	}
+	
+	function set_sorter(&$sorter){
+		$this->sorter = &$sorter;
+	}
+
+	function get_sorter_columns(){
+		return array('name', 'fname', 'lname', 'sip_uri', 'id');
+	}
+
+	/**
+	 *	callback function called when sorter is changed
+	 */
+	function sorter_changed(){
+		global $sess_pb_act_row;
+
+		$sess_pb_act_row = 0;
+	}
+
 	function get_phonebook(&$errors){
 		global $data, $sess_pb_act_row, $sess;
 		
@@ -176,6 +214,11 @@ class apu_phonebook extends apu_base_class{
 		if ($this->action['action'] == 'edit')
 			$opt['pbid'] = $this->act_pb_id;
 		
+		if (is_a($this->sorter, "apu_base_class")){
+			$opt['order_by']   = $this->sorter->get_sort_col();
+			$opt['order_desc'] = $this->sorter->get_sort_dir();
+		}
+
 		if (false === $this->phonebook = $data->get_phonebook_entries($this->user_id, $opt, $errors)) return false;
 
 		$this->pager['url']=$_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
@@ -253,19 +296,6 @@ class apu_phonebook extends apu_base_class{
 		$this->smarty_action="delete_ack";
 	}
 	
-	
-	/* this metod is called always at begining */
-	function init(){
-		global $sess, $sess_pb_act_row;
-		parent::init();
-
-		if (!$sess->is_registered('sess_pb_act_row')) $sess->register('sess_pb_act_row');
-		if (!isset($sess_pb_act_row)) $sess_pb_act_row=0;
-		
-		if (isset($_GET['act_row'])) $sess_pb_act_row=$_GET['act_row'];
-
-		$this->reg = new Creg;				// create regular expressions class
-	}
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){

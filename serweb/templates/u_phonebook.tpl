@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.11 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.12 2007/02/06 10:36:10 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -40,8 +40,8 @@
 	{if $smarty.foreach.phonebook.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
 	<tr>
-	<th>{$lang_str.th_name}</th>
-	<th>{$lang_str.th_sip_address}</th>
+	<th><a href="{$url_sort_name}">{$lang_str.th_name}</a></th>
+	<th><a href="{$url_sort_sip_uri}">{$lang_str.th_sip_address}</a></th>
 	<th>{$lang_str.th_aliases}</th>
 	<th>{$lang_str.th_status}</th>
 	<th>&nbsp;</th>

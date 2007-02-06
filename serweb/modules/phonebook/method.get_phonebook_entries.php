@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.get_phonebook_entries.php,v 1.7 2006/09/08 12:27:34 kozlik Exp $
+ * $Id: method.get_phonebook_entries.php,v 1.8 2007/02/06 10:36:10 kozlik Exp $
  */
 
 /*
@@ -44,12 +44,17 @@ class CData_Layer_get_phonebook_entries {
 			 $pbid = $opt;
 			 $opt_get_user_status = true;
 			 $opt_get_aliases = true;
+			 
+			 $o_order_by = "";
+			 $o_order_desc = "";
 		}
 		else{
 		    $pbid = (isset($opt['pbid'])) ? $opt['pbid'] : null;
 		    $opt_get_user_status = (isset($opt['get_user_status'])) ? (bool)$opt['get_user_status'] : true;
 		    $opt_get_aliases = (isset($opt['get_user_aliases'])) ? (bool)$opt['get_user_aliases'] : true;
 					
+		    $o_order_by = (isset($opt['order_by'])) ? $opt['order_by'] : "";
+		    $o_order_desc = (!empty($opt['order_desc'])) ? "desc" : "";
 		}
 		
 		if (!is_null($pbid)) $qw=" and id!=".$this->sql_format($pbid, "n")." "; 
@@ -68,11 +73,16 @@ class CData_Layer_get_phonebook_entries {
 		/* if act_row is bigger then num_rows, correct it */
 		$this->correct_act_row();
 	
-		$q="select id, fname, lname, sip_uri 
+		$q="select id, fname, lname, sip_uri,
+		           trim(concat(lname, ' ', fname)) as name
 		    from ".$config->data_sql->table_phonebook." 
-			where ".$this->get_indexing_sql_where_phrase($user).$qw." 
-			order by lname".
-			$this->get_sql_limit_phrase();
+			where ".$this->get_indexing_sql_where_phrase($user).$qw;
+
+		if ($o_order_by) {
+			$q .= " order by ".$o_order_by." ".$o_order_desc;
+		}
+
+		$q .= $this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}
@@ -83,7 +93,7 @@ class CData_Layer_get_phonebook_entries {
 			$out[$row->id]['id'] = $row->id;
 			$out[$row->id]['l_name'] = $row->lname;
 			$out[$row->id]['f_name'] = $row->fname;
-			$out[$row->id]['name'] = implode(' ', array($name=$row->lname, $row->fname));
+			$out[$row->id]['name']   = $row->name;
 			$out[$row->id]['sip_uri'] = $row->sip_uri;
 			$out[$row->id]['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($row->sip_uri)."');";
 			$out[$row->id]['url_dele'] = $sess->url("phonebook.php?kvrk=".uniqID("")."&dele_id=".$row->id);
