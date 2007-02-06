@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.19 2006/09/08 12:27:34 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.20 2007/02/06 12:22:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -105,7 +105,7 @@ class apu_domain extends apu_base_class{
 	 */
 	function get_required_data_layer_methods(){
 		return array('get_domain', 'get_customers', 
-			'get_new_domain_id', 'enable_domain', 'del_domain_alias', 
+			'enable_domain', 'del_domain_alias', 
 			'add_domain_alias', 'reload_domains', 'mark_domain_deleted',
 			'get_users', 'set_domain_canon');
 	}
@@ -211,49 +211,7 @@ class apu_domain extends apu_base_class{
 		/* if domain id is already set, return */
 		if (!is_null($this->id)) return true;
 
-		$an = &$config->attr_names;
-
-		/* get format of did to generate */
-		$ga = &Global_attrs::singleton();
-		if (false === $format = $ga->get_attribute($an['did_format'])) return false;
-
-
-		switch ($format){
-		/* numeric DID */
-		case 1:
-			if (false === $did = $data->get_new_domain_id(null, $errors)) return false;
-			break;
-			
-		/* UUID by rfc4122 */
-		case 2:
-			$did = rfc4122_uuid();
-
-			/* check if did doesn't exists */
-			$dh = &Domains::singleton();
-			if (false === $dids = $dh->get_all_dids()) return false; 
-			
-			while (in_array($did, $dids, true)){
-				$did = rfc4122_uuid();
-			}
-			break;
-
-		/* DID as 'domainname' */
-		case 0:
-		default:  /* if format of UIDs is not set, assume the first choice */
-
-			if (!$domainname) $domainname = "default";	// if domain name is not provided
-			$did = $domainname;
-			
-			/* check if did doesn't exists */
-			$dh = &Domains::singleton();
-			if (false === $dids = $dh->get_all_dids()) return false; 
-
-			$i = 0;
-			while (in_array($did, $dids, true)){
- 				$did = $domainname."_".$i++;
-			}
-			break;
-		}
+		if (false === $did = Domains::generate_new_did($domainname)) return false;
 
 		$this->id = $did;
 		$this->revert_domain_id = true;

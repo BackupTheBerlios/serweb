@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: class_definitions.php,v 1.21 2007/01/18 14:08:50 kozlik Exp $ 
+ * $Id: class_definitions.php,v 1.22 2007/02/06 12:22:34 kozlik Exp $ 
  */
 
 class CREG_list_item {
@@ -559,6 +559,69 @@ class Domains{
 		/* compare the top levels */
 		if ($a_tail < $b_tail) return -1;
 		else return 1;
+	}
+	
+	
+	/**
+	 *	Generate DID for new domain
+	 *
+	 *	@static
+	 *	@param	string	domainname	new name of domain
+	 *	@return	string				did or FALSE on error
+	 */
+	function generate_new_did($domainname){
+		global $data, $config;
+
+		$an = &$config->attr_names;
+		$errors = array();
+
+		/* get format of did to generate */
+		$ga = &Global_attrs::singleton();
+		if (false === $format = $ga->get_attribute($an['did_format'])) return false;
+
+
+		switch ($format){
+		/* numeric DID */
+		case 1:
+			$data->add_method('get_new_domain_id');
+			if (false === $did = $data->get_new_domain_id(null, $errors)) {
+				ErrorHandler::add_error($errors);
+				return false;
+			}
+			break;
+			
+		/* UUID by rfc4122 */
+		case 2:
+			$did = rfc4122_uuid();
+
+			/* check if did doesn't exists */
+			$dh = &Domains::singleton();
+			if (false === $dids = $dh->get_all_dids()) return false; 
+			
+			while (in_array($did, $dids, true)){
+				$did = rfc4122_uuid();
+			}
+			break;
+
+		/* DID as 'domainname' */
+		case 0:
+		default:  /* if format of UIDs is not set, assume the first choice */
+
+			if (!$domainname) $domainname = "default_domain";	// if domain name is not provided
+			$did = $domainname;
+			
+			/* check if did doesn't exists */
+			$dh = &Domains::singleton();
+			if (false === $dids = $dh->get_all_dids()) return false; 
+
+			$i = 0;
+			while (in_array($did, $dids, true)){
+ 				$did = $domainname."_".$i++;
+			}
+			break;
+		}
+
+		return $did;
 	}
 }
 
