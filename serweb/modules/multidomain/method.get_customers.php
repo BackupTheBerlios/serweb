@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.get_customers.php,v 1.5 2006/09/08 12:27:34 kozlik Exp $
+ * $Id: method.get_customers.php,v 1.6 2007/02/06 10:15:34 kozlik Exp $
  */
 
 class CData_Layer_get_customers {
@@ -41,6 +41,9 @@ class CData_Layer_get_customers {
 	    $o_exclude = (isset($opt['exclude'])) ? $opt['exclude'] : null;
 	    $o_single  = (isset($opt['single']))  ? $opt['single']  : null;
 
+	    $o_order_by = (isset($opt['order_by']) and isset($cc->$opt['order_by'])) ? $cc->$opt['order_by'] : "";
+	    $o_order_desc = (!empty($opt['order_desc'])) ? "desc" : "";
+
 		if (!is_null($o_single))      $qw=" where ".$cc->cid."  = ".$this->sql_format($o_single,  "n")." "; 
 		elseif (!is_null($o_exclude)) $qw=" where ".$cc->cid." != ".$this->sql_format($o_exclude, "n")." "; 
 		else $qw="";
@@ -64,9 +67,13 @@ class CData_Layer_get_customers {
 	
 		$q="select ".$cc->cid.", ".$cc->name.", ".$cc->phone.", ".$cc->address.", ".$cc->email." 
 		    from ".$tc_name.
-			$qw." 
-			order by ".$cc->name.
-			$this->get_sql_limit_phrase();
+			$qw;
+
+		if ($o_order_by) {
+			$q .= " order by ".$o_order_by." ".$o_order_desc;
+		}
+
+		$q .= $this->get_sql_limit_phrase();
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {log_errors($res, $errors); return false;}

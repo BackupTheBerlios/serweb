@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.7 2006/04/10 13:01:57 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.8 2007/02/06 10:15:34 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -76,6 +76,8 @@ class apu_customers extends apu_base_class{
 	/** customer which is currently editing */
 	var $customer;
 
+	var $sorter=null;
+
 	/** 
 	 *	return required data layer methods - static class 
 	 *
@@ -144,8 +146,31 @@ class apu_customers extends apu_base_class{
 		if (!isset($sess_cu_act_row)) $sess_cu_act_row=0;
 		
 		if (isset($_GET['act_row'])) $sess_cu_act_row=$_GET['act_row'];
+
+		if (is_a($this->sorter, "apu_base_class")){
+			/* register callback called on sorter change */
+			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
+			$this->sorter->set_base_apu($this);
+		}
 	}
 	
+	function set_sorter(&$sorter){
+		$this->sorter = &$sorter;
+	}
+
+	function get_sorter_columns(){
+		return array('name', 'phone', 'address', 'email', 'cid');
+	}
+
+	/**
+	 *	callback function called when sorter is changed
+	 */
+	function sorter_changed(){
+		global $sess_cu_act_row;
+
+		$sess_cu_act_row = 0;
+	}
+
 	/**
 	 *	Method obtain a list of customers and store it into variable $this->customers
 	 *
@@ -161,6 +186,11 @@ class apu_customers extends apu_base_class{
 					 
 		if ($this->action['action'] == 'edit')
 			$opt['exclude'] = $this->act_id;
+
+		if (is_a($this->sorter, "apu_base_class")){
+			$opt['order_by']   = $this->sorter->get_sort_col();
+			$opt['order_desc'] = $this->sorter->get_sort_dir();
+		}
 
 		if (false === $this->customers = $data->get_customers($opt, $errors)) return false;
 
