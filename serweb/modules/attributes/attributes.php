@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: attributes.php,v 1.4 2007/02/08 15:24:16 kozlik Exp $
+ * $Id: attributes.php,v 1.5 2007/02/08 15:37:07 kozlik Exp $
  */
 
 class Attributes{
@@ -107,6 +107,12 @@ class Attributes{
 		foreach($attributes as $attr){
 			$f_opt = array();
 
+			if (!isset($attr_types[$attr])){
+				$msg = __FILE__.":".__LINE__." - Attribute named '".$attr."' do not exists - exiting";
+				sw_log($msg, PEAR_LOG_CRIT);
+				die($msg);
+			}
+
 			$attr_types[$attr]->form_element($f, 
 			                                 $attr_values[$attr],
 			                                 $f_opt);
@@ -141,6 +147,12 @@ class Attributes{
 		if (false === $attr_types = &$at_h->get_attr_types()) return false;
 		
 		foreach($attributes as $att){
+			if (!isset($attr_types[$att])){
+				$msg = __FILE__.":".__LINE__." - Attribute named '".$att."' do not exists - exiting";
+				sw_log($msg, PEAR_LOG_CRIT);
+				die($msg);
+			}
+
 			if (!isset($_POST[$att])) $_POST[$att] = null;
 			
 			if (!$attr_types[$att]->check_value($_POST[$att])){
