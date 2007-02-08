@@ -3,7 +3,7 @@
  * Application unit registration by administrator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.17 2007/02/05 15:06:23 kozlik Exp $
+ * @version   $Id: apu_registration.php,v 1.18 2007/02/08 15:25:53 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -125,7 +125,7 @@ class apu_registration extends apu_base_class{
 
 	/* return array of strings - requred javascript files */
 	function get_required_javascript(){
-		return array();
+		return array('sip_address_completion.js.php');
 	}
 	
 	/* constructor */
@@ -221,8 +221,8 @@ class apu_registration extends apu_base_class{
 		if (false === $data->transaction_start()) return false;
 
 		/* prepare array of attributes */
-		$attrs = array();
-		foreach($this->attributes as $att)	$attrs[$att] = $_POST[$att];
+		$opt = array();
+		$attrs = Attributes::post_attrs_to_array($this->attributes, $opt);
 
 		/* add subscriber */
 		$opts = array("disabled" => $this->opt['require_confirmation']);
@@ -511,59 +511,33 @@ class apu_registration extends apu_base_class{
 
 	function add_attrs_to_form(){
 
+		//get attribute types
 		$attr_types = &Attr_types::singleton();
-	
-		//get list of attributes
 		if (false === $this->attr_types = &$attr_types->get_attr_types()) return false;
 
+		//get list of attributes
 		$this->attributes = array();
 		foreach($this->attr_types as $k => $v){
 			if ($v->fill_on_register()) $this->attributes[] = $k;
 		}
 
+		$opt = array();
+		$opt['get_values'] = true;
+		
 		if (!is_null($this->opt['register_in_domain'])){
-			// get domain_attrs
-			$da = &Domain_Attrs::singleton($this->opt['register_in_domain']);
-			if (false === $domain_attrs = $da->get_attributes()) return false;
+			$opt['did'] = $this->opt['register_in_domain'];
 		}
-		
-		// get global_attrs
-		$ga = &Global_Attrs::singleton();
-		if (false === $global_attrs = $ga->get_attributes()) return false;
-		
-		
-		$this->attr_values = array();
-		foreach($this->attributes as $v){
-			if (isset($domain_attrs[$v])){
-				$this->attr_values[$v] = $domain_attrs[$v];
-			}		
-			elseif (isset($global_attrs[$v])){
-				$this->attr_values[$v] = $global_attrs[$v];
-			}
-			else {
-				// If the value of attribute is not found, set it as null
-				$this->attr_values[$v] = null;
-			}
-		}
-		
 
-		// add elements to form object
-		foreach($this->attributes as $v){
-			$opt = array();
-
-			$this->attr_types[$v]->form_element($this->f, 
-			                                    $this->attr_values[$v],
-			                                    $opt);
-
-			$this->js_before .= $this->attr_types[$v]->validation_js_before();
-			$this->js_after  .= $this->attr_types[$v]->validation_js_after();
-		}
+		if (false === Attributes::attrs_to_form($this->attributes, 
+		                                        $this->f, 
+									            $this->js_before, 
+									            $this->js_after, 
+									            $opt)) return false;
 		
+		$this->attr_values = $opt['attr_values'];
+				
 		return true;	
 	}
-
-
-
 
 
 	/* validate html form */
@@ -607,18 +581,10 @@ class apu_registration extends apu_base_class{
 		}
 
 		//check values of attributes
-		foreach($this->attributes as $att){
-			if (!$this->attr_types[$att]->check_value($_POST[$att])){
-
-				if (!is_null($this->attr_types[$att]->get_err_msg())){
-					$errors[]=$this->attr_types[$att]->get_err_msg(); 
-				}
-				else{
-					$errors[]=$lang_str['fe_invalid_value_of_attribute']." ".$this->attr_types[$att]->get_description(); 
-				}
-				return false;
-			}
-		}
+		$opt = array();
+		if (false === Attributes::validate_form_attrs($this->attributes,
+		                                              $opt,
+													  $errors)) return false;
 
 		/* Check email for the case somebody makes the attribute optional.
 		 * We need it.
