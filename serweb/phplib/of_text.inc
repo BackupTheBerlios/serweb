@@ -1,9 +1,15 @@
 <?php
-/* OOHForms: text
+/** 
+ *	OOHForms: text
  *
- * Copyright (c) 1998 by Jay Bloodworth
- *
- * $Id: of_text.inc,v 1.7 2006/11/24 13:43:20 kozlik Exp $
+ *	@author   Copyright (c) 1998 by Jay Bloodworth
+ *	@author   Karel Kozlik
+ *	@version  $Id: of_text.inc,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
+ */
+
+/**
+ *	@package  PHPLib
  */
 
 class of_text extends of_element {

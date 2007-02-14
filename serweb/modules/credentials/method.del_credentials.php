@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.del_credentials.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.del_credentials.php,v 1.3 2007/02/14 16:46:30 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 
+/**
+ *	Data layer container holding the method for delete credentials
+ * 
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 class CData_Layer_del_credentials {
 	var $required_methods = array();
 	
@@ -12,7 +21,8 @@ class CData_Layer_del_credentials {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
+	 *	
 	 *
 	 *	@return bool
 	 */ 

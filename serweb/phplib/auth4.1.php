@@ -1,8 +1,13 @@
 <?php
-/*
- * $Id: auth4.1.php,v 1.6 2006/09/08 12:27:35 kozlik Exp $
+/**
+ * @author    Karel Kozlik
+ * @version   $Id: auth4.1.php,v 1.7 2007/02/14 16:46:31 kozlik Exp $
+ * @package   PHPLib
  */ 
 
+/**
+ * @package   PHPLib
+ */
 class Auth {
 	
 	var $lifetime = 15;           ## Max allowed idle time before

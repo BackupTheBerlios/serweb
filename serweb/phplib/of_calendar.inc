@@ -1,10 +1,18 @@
 <?php
-/* OOHForms: Date 29-09-2000
+/** 
+ *	OOHForms: calendar
  *
- * Vinay Kumar - vinay@sanisoft.com
- * Girish Nair - girish@sanisoft.com
- * Copyright (c) 2000 by SANIsoft
+ *	@author   Vinay Kumar - vinay@sanisoft.com
+ *	@author   Girish Nair - girish@sanisoft.com
+ *	@author   Karel Kozlik
+ *	@version  $Id: of_calendar.inc,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
+ */
+
+/**
+ *	OOHForms: calendar
  *
+ * <pre>
  * Date fromat - dd-mm-YYYY
  *
  * validate() must be called!!!
@@ -19,11 +27,14 @@
  * Added format attribute - d/m/y
  * where alphabet has the same meaning as that of PHP date function
  * Month format allowed:
-     F - long month names,
-     M - Short (3-char) month names
-     m - Numeric months preceeded by zero
-     n - Numeric months
+ *    F - long month names,
+ *    M - Short (3-char) month names
+ *    m - Numeric months preceeded by zero
+ *    n - Numeric months
  * The position of select boxes can also be swapped.
+ * </pre>
+ *
+ *	@package  PHPLib
  */
 
 class of_calendar extends of_element {

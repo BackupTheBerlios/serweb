@@ -1,41 +1,50 @@
 <?
-/*
- * $Id: apu_reg_confirmation.php,v 1.3 2006/04/04 10:33:24 kozlik Exp $
+/**
+ * Application unit reg_confirmation
+ * 
+ * @author     Karel Kozlik
+ * @version    $Id: apu_reg_confirmation.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_registration
  */ 
 
-/* Application unit reg_confirmation */
-
-/*
-   This application unit is used for confirmation of user registration
-   
-   Configuration:
-   --------------
-   
-   'setup_jabber_account'		(bool) default: $config->setup_jabber_account
-     If true, jabber account is setupped for users
-
-	'create_numeric_alias'		(bool) default: $config->create_numeric_alias_to_new_users
-	 If true, create numeric alias for new subscriber
-	
-	 
-   'smarty_action'				name of smarty variable - see below
-   'smarty_status'				name of smarty variable - see below
-   
-   Exported smarty variables:
-   --------------------------
-	 
-   opt['smarty_action']			(action)
-	  tells what should smarty display. Values:
-   	  'default' - 
-	  'successfull' - when user registration was confirmed
-
-   opt['smarty_status']
-	  tells aditional info about creating account. Value:
-      'already_done'  -  if account was already created
-	  'jabber_failed' -  if serweb account was created but jabber account not
-	  'ok'
-   
-*/
+/**
+ *	Application unit reg_confirmation
+ * 
+ *	This application unit is used for confirmation of user registration
+ *	
+ *	<pre>
+ *	Configuration:
+ *	--------------
+ *	
+ *	'setup_jabber_account'		(bool) default: $config->setup_jabber_account
+ *	  If true, jabber account is setupped for users
+ *	
+ *	'create_numeric_alias'		(bool) default: $config->create_numeric_alias_to_new_users
+ *	 If true, create numeric alias for new subscriber
+ *	
+ *	 
+ *	'smarty_action'				name of smarty variable - see below
+ *	'smarty_status'				name of smarty variable - see below
+ *	
+ *	Exported smarty variables:
+ *	--------------------------
+ *	 
+ *	opt['smarty_action']			(action)
+ *	  tells what should smarty display. Values:
+ *	  'default' - 
+ *	  'successfull' - when user registration was confirmed
+ *	
+ *	opt['smarty_status']
+ *	  tells aditional info about creating account. Value:
+ *	  'already_done'  -  if account was already created
+ *	  'jabber_failed' -  if serweb account was created but jabber account not
+ *	  'ok'
+ *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */
 
 class apu_reg_confirmation extends apu_base_class{
 	var $smarty_action='default';

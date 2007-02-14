@@ -1,8 +1,17 @@
 <?
-/*
- * $Id: method.delete_uri.php,v 1.4 2006/11/24 13:33:03 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_uri.php,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for delete uri
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_delete_uri {
 	
 	function _get_required_methods(){

@@ -1,7 +1,12 @@
 <?php
-/*
- * $Id: include.php,v 1.1 2006/09/18 13:07:26 kozlik Exp $
- */
+/**
+ *	File automaticaly included by the framework when module is loaded
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: include.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
 /**
  *	module init function

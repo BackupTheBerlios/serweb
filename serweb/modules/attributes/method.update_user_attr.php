@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.update_user_attr.php,v 1.3 2006/04/18 10:36:09 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.update_user_attr.php,v 1.4 2007/02/14 16:46:30 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for update user attribute
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_update_user_attr {
 	var $required_methods = array();
 	
@@ -12,7 +21,8 @@ class CData_Layer_update_user_attr {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		old_value
+	 *	 - old_value - old value of attribute. If not is set the attribute is 
+	 *	   inserted instead of updated.
 	 *
 	 *	@return bool
 	 */ 

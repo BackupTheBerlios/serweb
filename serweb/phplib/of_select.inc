@@ -1,9 +1,15 @@
 <?php
-/* OOHForms: select
+/** 
+ *	OOHForms: select
  *
- * Copyright (c) 1998 by Jay Bloodworth
- *
- * $Id: of_select.inc,v 1.10 2006/11/01 13:53:51 kozlik Exp $
+ *	@author   Copyright (c) 1998 by Jay Bloodworth
+ *	@author   Karel Kozlik
+ *	@version  $Id: of_select.inc,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
+ */
+
+/**
+ *	@package  PHPLib
  */
 
 class of_select extends of_element {

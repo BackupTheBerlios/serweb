@@ -1,19 +1,21 @@
 <?
 /**
- * Application unit registration by administrator
+ *	Application unit registration
  * 
- * @author    Karel Kozlik
- * @version   $Id: apu_registration.php,v 1.18 2007/02/08 15:25:53 kozlik Exp $
- * @package   serweb
+ *	@author     Karel Kozlik
+ *	@version    $Id: apu_registration.php,v 1.19 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
  */ 
 
 
 /** 
- *	Application unit registration by administrator
+ *	Application unit registration
  *
  *
  *	This application unit is used for registration new users
  *	
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -104,7 +106,9 @@
  *	  Contain true if confirmation of registration is required.
  *	  (avaiable only if smarty_action == finished)
  *
- *	@package   serweb
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_registration
  */
 
 class apu_registration extends apu_base_class{

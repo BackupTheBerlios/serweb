@@ -2,7 +2,7 @@
 /**
  * Smarty plugin
  * @package Smarty
- * @subpackage plugins
+ * @subpackage customized_plugins
  */
 
 /**
@@ -19,6 +19,8 @@ require_once $smarty->_get_plugin_filepath('shared','make_timestamp');
  *         - string: input date string
  *         - format: strftime format for output
  *         - default_date: default date if $string is empty
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version 1.0
  * @param string
  * @param string
  * @param string

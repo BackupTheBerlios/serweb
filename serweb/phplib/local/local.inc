@@ -1,11 +1,15 @@
 <?php
-/*
- * $Id: local.inc,v 1.20 2006/09/08 12:27:35 kozlik Exp $
+/**
+ *	@author    Karel Kozlik
+ *	@version   $Id: local.inc,v 1.21 2007/02/14 16:46:32 kozlik Exp $
+ *	@package   PHPLib
  */
 
 
 /**
  *	main session class
+ *	
+ *	@package   PHPLib
  */
  
 class phplib_Session extends Session {
@@ -22,6 +26,8 @@ class phplib_Session extends Session {
 
 /**
  *	default auth class
+ *	
+ *	@package   PHPLib
  */
 
 class phplib_Auth extends Auth {
@@ -269,6 +275,7 @@ class phplib_Auth extends Auth {
 }
 
 /**
+ *	@package   PHPLib
  *	@deprec  
  */
 class phplib_Pre_Auth extends phplib_Auth {
@@ -277,6 +284,8 @@ class phplib_Pre_Auth extends phplib_Auth {
 
 /**
  *	default perm class
+ *	
+ *	@package   PHPLib
  */
 
 class phplib_Perm extends Perm {

@@ -7,10 +7,16 @@
 * @copyright 1998,1999 NetUSE AG, Boris Erdmann, Kristian Koehntopp
 *            2000 Teodor Cimpoesu <teo@digiro.net>
 * @author    Teodor Cimpoesu <teo@digiro.net>, Ulf Wendel <uw@netuse.de>, Maxim Derkachev <kot@books.ru
-* @version   $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+* @version   $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
 * @access    public
 * @package   PHPLib
+* @ignore
 */ 
+
+/**
+ * @package   PHPLib
+ * @ignore
+ */
 class Session {
 
 
@@ -31,7 +37,7 @@ class Session {
   
   /**
   * Depreciated! There's no need for page_close in PHP4 sessions. 
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @deprec $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   * @var  integer
   */
   var $secure_auto_init = 1;
@@ -39,7 +45,7 @@ class Session {
   
   /**
   * Don't work. Use something better than this class' property to set the marker.
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @deprec $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   * Marker: Did we already include the autoinit file? 
   *
   * @var  boolean
@@ -103,7 +109,7 @@ class Session {
   * has no effect on previous versions
   *
   * @var    string  
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @deprec $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   */
   var $mode = "cookie";               ## We propagate session IDs with cookies
   
@@ -112,7 +118,7 @@ class Session {
   * propagation policy, which is a safer  propagation method that get mode  
   *
   * @var    string  
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @deprec $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   */
   var $fallback_mode;                 ## if fallback_mode is also 'ccokie'
                                       ## we enforce session.use_only_cookie
@@ -239,8 +245,8 @@ class Session {
   
   
   /**
-  * @brother id()
-  * @deprec  $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @see id()
+  * @deprec  $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   * @access public  
   */  
   function get_id($sid = '') {
@@ -328,9 +334,9 @@ class Session {
   *		 doesn't seem to do (looking @ the session.c:940)
   * uw: yes we should keep it to remain the same interface, but deprec. 
   *
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+  * @deprec $Id: session4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
   * @access public  
-  * @global $_COOKIE
+  * @global array $_COOKIE
   */
   function put_id() {
     global $_COOKIE;
@@ -369,8 +375,6 @@ class Session {
   * @param	$url	  URL to which the session id will be appended
   * @return string  rewritten url with session id included
   * @see    $trans_id_enabled
-  * @global $_COOKIE
-  * @deprec $Id: session4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
   * @access public  
   */
   function url($url) {
@@ -397,7 +401,7 @@ class Session {
 
 
   /**
-  * @brother url()
+  * @see url()
   */  
   function purl($url) {
     print $this->url($url);
@@ -413,7 +417,6 @@ class Session {
   * the Apache world.
   * 
   * @return string
-  * @global $REQUEST_URI
   * @access public  
   */
   function self_url() {
@@ -455,7 +458,7 @@ class Session {
 
 
   /**
-  * @brother  get_hidden_session
+  * @see  get_hidden_session
   * @return   void
   */
   function hidden_session() {
@@ -464,7 +467,7 @@ class Session {
 
 
   /**
-  * @brother get_hidden_session
+  * @see get_hidden_session
   */
   function get_hidden_id() {
     return $this->get_hidden_session();
@@ -472,7 +475,7 @@ class Session {
 
 
   /**
-  * @brother hidden_session
+  * @see hidden_session
   */
   function hidden_id() {
     print $this->get_hidden_session();
@@ -501,7 +504,7 @@ class Session {
 
   
   /**
-  * @brother  add_query()
+  * @see  add_query()
   */
   function padd_query ($qarray, $query_string = '') {
     print $this->add_query($qarray, $query_string);

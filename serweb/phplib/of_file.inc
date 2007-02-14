@@ -1,9 +1,15 @@
 <?php
-/* OOHForms: file
+/** 
+ *	OOHForms: file
  *
- * Copyright (c) 1998 by Jay Bloodworth
- *
- * $Id: of_file.inc,v 1.4 2006/07/20 16:11:37 kozlik Exp $
+ *	@author   Copyright (c) 1998 by Jay Bloodworth
+ *	@author   Karel Kozlik
+ *	@version  $Id: of_file.inc,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
+ */
+
+/**
+ *	@package  PHPLib
  */
 
 class of_file extends of_element {

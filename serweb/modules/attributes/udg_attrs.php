@@ -1,10 +1,19 @@
 <?php
-/*
- * $Id: udg_attrs.php,v 1.5 2006/11/24 13:33:02 kozlik Exp $
- */
+/**
+ *	Classes holding user, domain, global and uri attributes
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: udg_attrs.php,v 1.6 2007/02/14 16:46:30 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
 /**
- *	Abstract class
+ *	The ascendant of all classes holding the attributes
+ *	
+ *	@abstract
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 class Attrs_Common{
 
@@ -16,6 +25,7 @@ class Attrs_Common{
 	/**
 	 *	
 	 *	
+	 *	@abstract
 	 *	@access private
 	 */
 	function load_attrs(){
@@ -25,6 +35,7 @@ class Attrs_Common{
 	/**
 	 *	
 	 *	
+	 *	@abstract
 	 *	@access private
 	 */
 	function save_attr($name, $opt){
@@ -34,6 +45,7 @@ class Attrs_Common{
 	/**
 	 *	
 	 *	
+	 *	@abstract
 	 *	@access private
 	 */
 	function del_attr($name, $opt){
@@ -104,6 +116,12 @@ class Attrs_Common{
 }
 
 
+/**
+ *	Class providing access to global attributes
+ *	
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */
 class Global_Attrs extends Attrs_Common {
 
     /**
@@ -141,7 +159,6 @@ class Global_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function load_attrs(){
 		global $data;
@@ -157,7 +174,6 @@ class Global_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function save_attr($name, $value){
 		global $data;
@@ -178,7 +194,6 @@ class Global_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function del_attr($name, $opt){
 		global $data;
@@ -191,6 +206,12 @@ class Global_Attrs extends Attrs_Common {
 
 }
 
+/**
+ *	Class providing access to domain attributes
+ *	
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */
 class Domain_Attrs extends Attrs_Common {
 
     /**
@@ -229,7 +250,6 @@ class Domain_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function load_attrs(){
 		global $data;
@@ -245,7 +265,6 @@ class Domain_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function save_attr($name, $value){
 		global $data;
@@ -266,7 +285,6 @@ class Domain_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function del_attr($name, $opt){
 		global $data;
@@ -279,6 +297,12 @@ class Domain_Attrs extends Attrs_Common {
 
 }
 
+/**
+ *	Class providing access to user attributes
+ *	
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */
 class User_Attrs extends Attrs_Common {
 
     /**
@@ -317,7 +341,6 @@ class User_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function load_attrs(){
 		global $data;
@@ -333,7 +356,6 @@ class User_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function save_attr($name, $value){
 		global $data;
@@ -354,7 +376,6 @@ class User_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function del_attr($name, $opt){
 		global $data;
@@ -367,6 +388,12 @@ class User_Attrs extends Attrs_Common {
 
 }
 
+/**
+ *	Class providing access to uri attributes
+ *	
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */
 class Uri_Attrs extends Attrs_Common {
 
     /**
@@ -409,7 +436,6 @@ class Uri_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function load_attrs(){
 		global $data;
@@ -425,7 +451,6 @@ class Uri_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function save_attr($name, $value){
 		global $data;
@@ -446,7 +471,6 @@ class Uri_Attrs extends Attrs_Common {
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function del_attr($name, $opt){
 		global $data;

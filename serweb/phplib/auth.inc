@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Session Management for PHP3
  *
  * Copyright (c) 1998-2000 NetUSE AG
@@ -7,10 +7,16 @@
  * Copyright (c) 1999-2000 Internet Images srl
  *                    Massimiliano Masserelli
  *
- * $Id: auth.inc,v 1.2 2004/08/09 12:59:35 kozlik Exp $
+ * $Id: auth.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
  *
+ * @package   PHPLib
+ * @ignore
  */ 
 
+/**
+ * @package   PHPLib
+ * @ignore
+ */
 class Auth {
   var $classname = "Auth";
   var $persistent_slots = array("auth");

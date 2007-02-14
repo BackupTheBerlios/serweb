@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: classes.php,v 1.3 2006/11/24 14:37:42 kozlik Exp $
- */
+/**
+ *	Classes used in registration module
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: classes.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
+/**
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 class Registration{
 
 	/**
@@ -67,7 +76,7 @@ class Registration{
 	 *	Create credentials, uris and user_attrs
 	 *
 	 *	Options:
-	 *		- 'disabled' - create the subscriber disabled
+	 *	 - 'disabled' - create the subscriber disabled
 	 *	
 	 *	
 	 *	@param	string	$username

@@ -1,40 +1,49 @@
 <?
-  /*
-  * Smarty plugin
-  * -------------------------------------------------------------
-  * Type:     function
-  * Name:     pager
-  * Purpose:  create a paging output to be able to browse long lists 
-  * Version:  1.0
-  * Date:     jun 4, 2004
-  * Last Modified:    Jun 4, 2004
-  * Install:  Drop into the plugin direadasctory
-  * Author:   Karel Kozlik <kozlik@kufr.cz>
-  * -------------------------------------------------------------
-  *
-  * example:
-  * <{pager rowcount=$LISTDATA.rowcount limit=$LISTDATA.limit txt_first=$L_MORE class_num="fl" class_numon="fl" class_text="fl"}>
-  *
-  *
-  */
+/**
+ * Smarty plugin
+ * @package Smarty
+ * @subpackage customized_plugins
+ */
+
+/**
+ * Smarty {pager} function plugin
+ *
+ * displays paging links to be able to browse in bit set of records
+ *
+ * Type:     function<br>
+ * Name:     pager<br>
+ * Date:     Jun 6, 2004<br>
+ * Purpose:  create a paging output to be able to browse long lists<br>
+ * Input:<br>
+ *         - page = associative array containing pageing info (keys: 'pos', 'items', 'limit', 'url') (required)
+ *         - link_limit = number of links to other pages (optional, default 10)
+ *         - txt_prev = label of link to go to previous page (optional, default "previous")
+ *         - txt_next = label of link to go to next page (optional, default "next")
+ *         - class_num = CSS class assigned to page numbers (<A> tags) (optional, default "nav")
+ *         - class_numon = CSS class assigned to number of active page (optional, default "navActual")
+ *         - class_text = CSS class assigned to text labels (previous, next, etc.) (optional, default "nav")
+ *         - separator = string to put between the page numbers (optional, default &nbsp;)
+ *         - display = if is 'always', the pager even if there is too few items - nothing to pageing (optional , default '')
+ *         - link_special_html = special html attribs for <a href=""> (optional, default "")
+ *
+ * Examples: {pager rowcount=$LISTDATA.rowcount limit=$LISTDATA.limit txt_first=$L_MORE class_num="fl" class_numon="fl" class_text="fl"}
+ * Install:  Drop into the plugin directory
+ *
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version  1.0
+ * @param array
+ * @param Smarty
+ * @return string
+ */
+
   function smarty_function_pager($params, &$smarty){
-      /* displays paging links to be able to browse in bit set of records
+      /* 
       @param    array     $page            - associative array containing next four items:
                 int       'pos'            - number of first item on a page 
                 int       'items'          - number of all items
                 int       'limit'          - number of items on a page 
                 string    'url'            - url of pages - number of first item is appended
-				
-      @param    int       $link_limit      - number of links to other pages
-      @param    string    $txt_prev        - script to go to the prev page
-      @param    string    $txt_next        - script to go to the next page
-      @param    string    $class_num       - class for the page numbers <A> tag!
-      @param    string    $class_numon     - class for the aktive page!
-      @param    string    $class_text      - class for the texts
-      @param    string    $separator       - string to put between the 1 2 3 pages (1 separator 2 separator);
-      @param    string    $display         - if is 'always', the pager even if the items are too few
-      @param    string    $link_special_html   - special html attribs for <a href="">
-      */
+     */
 
 	global $sess;
 

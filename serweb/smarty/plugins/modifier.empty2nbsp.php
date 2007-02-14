@@ -2,7 +2,7 @@
 /**
  * Smarty plugin
  * @package Smarty
- * @subpackage plugins
+ * @subpackage customized_plugins
  */
 
 
@@ -11,7 +11,9 @@
  *
  * Type:     modifier<br>
  * Name:     empty2nbsp<br>
- * Purpose:  substitue empty string by &amp;nbsp;
+ * Purpose:  substitue empty string by &nbsp;
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version 1.0
  * @param string
  * @return string
  */

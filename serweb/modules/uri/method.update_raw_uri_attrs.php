@@ -1,18 +1,25 @@
 <?php
-/*
- * $Id: method.update_raw_uri_attrs.php,v 1.2 2006/11/24 13:33:03 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.update_raw_uri_attrs.php,v 1.3 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for update any field in uri_attrs table
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_update_raw_uri_attrs {
 	var $required_methods = array();
 	
 	/**
 	 *  Update uri_attrs table
 	 *
-	 *	
-	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *	
 	 *	@param	array	$values
 	 *	@param	array	$filter

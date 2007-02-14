@@ -1,23 +1,28 @@
 <?php
-/*
- * $Id: method.mark_user_deleted.php,v 1.4 2006/03/08 15:46:28 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.mark_user_deleted.php,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 
+/**
+ *	Data layer container holding the method for mark users as deleted
+ * 
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 class CData_Layer_mark_user_deleted {
 	var $required_methods = array();
 	
 	/**
 	 *  Mark user account as deleted
 	 *
-	 *  Possible options:
-	 *
-	 *    uid			(string)	default: null
-	 *      uid of user which should be enabled/disabled
-	 *		this option is required
-	 *      
-	 *	  delete_asap 	(bool)			defult: false
-	 *      if is true, user will be deleted as soon as possible (on next
-	 *		cleaning of database)
+	 *	Possible options:
+	 *	  - uid	(string) - uid of user which should be enabled/disabled
+	 *	    this option is required (default: null)
+	 *	  - delete_asap (bool) - if is true, user will be deleted as soon 
+	 *	    as possible (on next cleaning of database) (default: false)
 	 *      
 	 *	@param array $opt		associative array of options
 	 *	@return bool			TRUE on success, FALSE on failure

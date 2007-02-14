@@ -1,8 +1,26 @@
-<?
+<?php
+/**
+ * Smarty template engine customized for serweb
+ * 
+ * @author     Karel Kozlik
+ * @version    $Id: smarty_serweb.php,v 1.9 2007/02/14 16:46:32 kozlik Exp $
+ * @package    serweb
+ * @subpackage framework
+ */ 
+
+/**
+ *	include the smarty engine
+ */
 define ('SMARTY_DIR', dirname(__FILE__).'/');
 require(SMARTY_DIR.'Smarty.class.php');
 
 
+/**
+ * Smarty template engine customized for serweb
+ * 
+ * @package    serweb
+ * @subpackage framework
+ */ 
 class Smarty_Serweb extends Smarty {
 
 	function Smarty_Serweb() {
@@ -30,10 +48,14 @@ class Smarty_Serweb extends Smarty {
 	}
 
 
-	/* function assign phplib form $form to smarty under name $name
-	   $start_arg is associative array of arguments of method $form->start
-	   $finish_arg is associative array of arguments of method $form->finish
-	*/
+	/**
+	 *	Assign PHPLib form to smarty variable
+	 *	
+	 *	@param	string	$name			name of smarty variable
+	 *	@param	object	$form			phplib form
+	 *	@param	array	$start_arg		associative array of arguments of method {@link form::start() $form->start}
+	 *	@param	array	$finish_arg		associative array of arguments of method {@link form::finish() $form->finish}
+	 */
 	
 	function assign_phplib_form($name, $form, $start_arg = array(), $finish_arg = array()){
 		global $sess;

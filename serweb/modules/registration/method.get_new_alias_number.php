@@ -1,12 +1,21 @@
 <?
-/*
- * $Id: method.get_new_alias_number.php,v 1.3 2006/04/10 13:03:36 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_new_alias_number.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
+/**
+ *	Data layer container holding the method for generate new (numerical) alias
+ * 
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 class CData_Layer_get_new_alias_number {
 	var $required_methods = array();
 	
-	 /*
+	 /**
 	  *	generate new alias number
 	  */
 

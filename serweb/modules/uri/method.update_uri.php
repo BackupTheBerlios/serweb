@@ -1,18 +1,25 @@
 <?php
-/*
- * $Id: method.update_uri.php,v 1.3 2006/11/24 13:33:03 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.update_uri.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for update uri table
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_update_uri {
 	var $required_methods = array();
 	
 	/**
 	 *  Update URI table
 	 *
-	 *	
-	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *	
 	 *	@param	array	$values
 	 *	@param	array	$filter

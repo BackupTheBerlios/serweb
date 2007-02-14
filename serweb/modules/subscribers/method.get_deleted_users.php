@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_deleted_users.php,v 1.1 2005/12/22 13:47:28 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_deleted_users.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 
+/**
+ *	Data layer container holding the method for return list of users marked as deleted
+ * 
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 class CData_Layer_get_deleted_users {
 	var $required_methods = array('get_attr_by_val');
 	
@@ -12,9 +21,8 @@ class CData_Layer_get_deleted_users {
 	 *
 	 *
 	 *  Possible options parameters:
-	 *
-	 *	  deleted_before (int)	default:null
-	 *		if is set, only users marked as deleted before given timestamp are returned
+	 *	  - deleted_before (int) - if is set, only users marked as deleted 
+	 *	    before given timestamp are returned (default: null)
 	 *  
 	 *	@return array	array of users or FALSE on error
 	 */ 

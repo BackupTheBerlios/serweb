@@ -2,7 +2,7 @@
 /**
  * Smarty plugin
  * @package Smarty
- * @subpackage plugins
+ * @subpackage customized_plugins
  */
 
 
@@ -12,6 +12,8 @@
  * Type:     modifier<br>
  * Name:     toCSV<br>
  * Purpose:  modify string to that can be used in CSV output
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version 1.0
  * @param string
  * @return string
  */

@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.delete_uri_attrs.php,v 1.2 2006/11/24 13:33:03 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_uri_attrs.php,v 1.3 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for delete uri attributes
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_delete_uri_attrs {
 	var $required_methods = array();
 
@@ -10,7 +19,7 @@ class CData_Layer_delete_uri_attrs {
 	 *  Delete all uri attributes
 	 *
 	 *  Possible options parameters:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param string $username
 	 *	@param string $did		

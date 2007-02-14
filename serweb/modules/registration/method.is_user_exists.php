@@ -1,12 +1,21 @@
 <?
-/*
- * $Id: method.is_user_exists.php,v 1.5 2006/09/08 12:27:34 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.is_user_exists.php,v 1.6 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
+/**
+ *	Data layer container holding the method checking if user exists
+ * 
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 class CData_Layer_is_user_exists {
 	var $required_methods = array('get_did_by_realm');
 	
-	/*
+	/**
 	 *	check if user exists
 	 */
 

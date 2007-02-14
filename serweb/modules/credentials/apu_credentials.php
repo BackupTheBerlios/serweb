@@ -1,19 +1,20 @@
 <?php
-
 /**
- * Application unit apu_credentials
- * 
- * @author    Karel Kozlik
- * @version   $Id: apu_credentials.php,v 1.3 2006/09/08 12:27:34 kozlik Exp $
- * @package   serweb
+ *	Application unit credentials
+ *	
+ *	@author     Karel Kozlik
+ *	@version    $Id: apu_credentials.php,v 1.4 2007/02/14 16:46:30 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_credentials
  */ 
 
 /**
- *	Application unit apu_credentials
+ *	Application unit credentials
  *
  *
  *	This application unit is used for editing credentials of users
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -40,6 +41,9 @@
  *	  'default' - 
  *	  'was_updated' - when user submited form and data was succefully stored
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_credentials
  */
 
 class apu_credentials extends apu_base_class{

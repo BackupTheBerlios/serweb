@@ -1,8 +1,13 @@
 <?php
-/*
- * $Id: page4.1.php,v 1.2 2005/11/30 09:58:16 kozlik Exp $
- */ 
+/**
+ * @author    Karel Kozlik
+ * @version   $Id: page4.1.php,v 1.3 2007/02/14 16:46:31 kozlik Exp $
+ * @package   PHPLib
+ */
 
+/**
+ *	@return none
+ */
 function page_open($feature, $what=null) {
 	global $_PHPLIB;
 	static $loaded_features = array();
@@ -66,6 +71,9 @@ function page_open($feature, $what=null) {
 
 
 
+/**
+ *	@return none
+ */
 function page_close() {
 	global $sess;
 	if (is_object($sess)) {

@@ -1,9 +1,15 @@
 <?php
-/* OOHForms: radio
- * 
- * Copyright (c) 1998 by Jay Bloodworth
+/** 
+ *	OOHForms: radio
  *
- * $Id: of_radio.inc,v 1.7 2006/11/01 13:53:51 kozlik Exp $
+ *	@author   Copyright (c) 1998 by Jay Bloodworth
+ *	@author   Karel Kozlik
+ *	@version  $Id: of_radio.inc,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
+ */
+
+/**
+ *	@package  PHPLib
  */
 
 class of_radio extends of_element {

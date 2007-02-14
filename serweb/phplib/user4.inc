@@ -4,10 +4,16 @@
 *
 * @copyright  1998,1999 NetUSE GmbH Boris Erdmann, Kristian Koehntopp
 *             2001, Maxim Derkachev <kot@books.ru>
-* @version    $Id: user4.inc,v 1.2 2005/04/21 15:09:46 kozlik Exp $
+* @version    $Id: user4.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
 * @package    PHPLib
 * @access     public
+* @ignore
 */ 
+
+/**
+ * @package   PHPLib
+ * @ignore
+ */
 class User {
 
   /**

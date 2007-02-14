@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.update_credentials.php,v 1.2 2006/09/08 12:27:34 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.update_credentials.php,v 1.3 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 
+/**
+ *	Data layer container holding the method for update credentials
+ * 
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 class CData_Layer_update_credentials {
 	var $required_methods = array();
 	
@@ -12,7 +21,7 @@ class CData_Layer_update_credentials {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param	string		$uid
 	 *	@param	string		$did

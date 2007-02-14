@@ -2,10 +2,10 @@
 /**
  * Smarty plugin
  * @package Smarty
- * @subpackage plugins
+ * @subpackage customized_plugins
  */
 
-/* $Id: modifier.user_status.php,v 1.1 2005/12/28 09:39:49 kozlik Exp $ */
+/* $Id: modifier.user_status.php,v 1.2 2007/02/14 16:46:32 kozlik Exp $ */
 
 
 /**
@@ -15,6 +15,8 @@
  * Name:     user_status<br>
  * Purpose:  format status of user to span and internationalize it
  * 
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version 1.0
  * @param string	$status			status of user, one from: 'unknown', 'nonlocal', 'notexists', 'offline', 'online'
  * @param array		$lang_strings	array of internationalized messages
  * @param array		$css_classes	array of css classes

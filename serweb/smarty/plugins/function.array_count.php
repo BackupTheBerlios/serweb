@@ -2,7 +2,7 @@
 /**
  * Smarty plugin
  * @package Smarty
- * @subpackage plugins
+ * @subpackage customized_plugins
  */
 
 
@@ -12,6 +12,12 @@
  * Type:     function<br>
  * Name:     array_count<br>
  * Purpose:  count the length of array
+ * Input:<br>
+ *         - array = name of smarty variable (required)
+ *         - assign = if is set, assign result to another smarty variable
+ *         - print = boolean - print result or not. default is true
+ * @author   Karel Kozlik <kozlik@kufr.cz>
+ * @version  1.0
  * @param array parameters
  * @param Smarty
  * @return string|null

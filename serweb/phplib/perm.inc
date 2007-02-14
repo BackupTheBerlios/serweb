@@ -1,14 +1,20 @@
 <?php
-/*
+/**
  * Session Management for PHP3
  *
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: perm.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: perm.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
  *
+ * @package   PHPLib
+ * @ignore
  */ 
 
+/**
+ * @package   PHPLib
+ * @ignore
+ */
 class Perm {
   var $classname = "Perm";
   

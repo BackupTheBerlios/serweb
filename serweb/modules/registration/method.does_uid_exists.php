@@ -1,19 +1,30 @@
 <?php
-/*
- * $Id: method.does_uid_exists.php,v 1.1 2006/05/03 13:41:07 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.does_uid_exists.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
+/**
+ *	Data layer container holding the method for check if the UID already exists
+ * 
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 class CData_Layer_does_uid_exists {
 	var $required_methods = array();
 	
 	/**
+	 *	
 	 *  return:
-	 *	 	 0 - uid doesn't exists
-	 *		 1 - uid exists
-	 *		-1 - on error
+	 *	 o  0 - uid doesn't exists
+	 *	 o  1 - uid exists
+	 *	 o -1 - on error
 	 *
 	 *  Possible options:
-	 *	 none
+	 *	 - none
+	 *	
 	 *      
 	 *	@param string $uid		
 	 *	@param array $opt		associative array of options

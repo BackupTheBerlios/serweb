@@ -1,17 +1,19 @@
 <?php
-/*
- * Application unit subscribers
- * 
- * @author    Karel Kozlik
- * @version   $Id: apu_subscribers.php,v 1.10 2007/02/05 15:10:38 kozlik Exp $
- * @package   serweb
+/**
+ *	Application unit subscribers
+ *	
+ *	@author     Karel Kozlik
+ *	@version    $Id: apu_subscribers.php,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_subscribers
  */ 
 
-/* Application unit subscribers 
- *
+/** 
+ *	Application unit subscribers 
  *
  *	This application unit is used for get list of subscribers and looking for subscribers
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -93,7 +95,9 @@
  *	 associative array containing subscribers
  *	 The array have same keys as function get_users (from data layer) returned. 
  *	
- *	 
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_subscribers
  */
 
 class apu_subscribers extends apu_base_class{

@@ -1,14 +1,19 @@
 <?php
-/*
+/**
  * Session Management for PHP3
  *
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: page.inc,v 1.2 2004/08/09 12:59:36 kozlik Exp $
+ * $Id: page.inc,v 1.3 2007/02/14 16:46:31 kozlik Exp $
  *
+ * @package   PHPLib
+ * @ignore
  */ 
 
+/**
+ * @ignore
+ */
 function page_open($feature) {
   global $_PHPLIB;
 
@@ -59,6 +64,9 @@ function page_open($feature) {
   }
 }
 
+/**
+ * @ignore
+ */
 function page_close() {
   global $sess, $user;
 
@@ -70,6 +78,9 @@ function page_close() {
   }
 }
 
+/**
+ * @ignore
+ */
 function sess_load($session) {
   reset($session);
   while (list($k,$v) = each($session)) {
@@ -78,6 +89,9 @@ function sess_load($session) {
   }
 }
 
+/**
+ * @ignore
+ */
 function sess_save($session) {
   reset($session);
   while (list(,$v) = each($session)) {

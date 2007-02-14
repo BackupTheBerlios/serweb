@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_new_user_id.php,v 1.1 2006/05/03 13:41:07 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_new_user_id.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 
+/**
+ *	Data layer container holding the method for generate new (numerical) UID
+ * 
+ *	@package    serweb
+ *	@subpackage mod_registration
+ */ 
 class CData_Layer_get_new_user_id {
 	var $required_methods = array();
 	
@@ -10,7 +19,7 @@ class CData_Layer_get_new_user_id {
 	 *  return new id for a user
 	 *
 	 *  Possible options:
-	 *	 none
+	 *	 - none
 	 *      
 	 *	@param array $opt		associative array of options
 	 *	@return int				new id or FALSE on error

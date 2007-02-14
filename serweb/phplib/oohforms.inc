@@ -1,13 +1,16 @@
 <?php
-/* OOH! Forms!
- * 
- * Object Oriented HTML Forms
+/** 
+ *	Object Oriented HTML Forms
  *
- * Copyright (c) 1998 by Jay Bloodworth
- * 
- * $Id: oohforms.inc,v 1.10 2007/02/02 10:10:45 kozlik Exp $
+ *	@author   Copyright (c) 1998 by Jay Bloodworth
+ *	@author   Karel Kozlik
+ *	@version  $Id: oohforms.inc,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@package  PHPLib
  */
 
+/**
+ *	@package  PHPLib
+ */
 class of_element {
 
   var $name;
@@ -84,6 +87,9 @@ class of_element {
 
 } // end ELEMENT
 
+/**
+ *	@package  PHPLib
+ */
 class of_hidden extends of_element {
 
   var $hidden=1;
@@ -109,6 +115,9 @@ class of_hidden extends of_element {
   }
 } // end HIDDEN
 
+/**
+ *	@package  PHPLib
+ */
 class of_reset extends of_element {
 
   var $src;
@@ -137,6 +146,9 @@ class of_reset extends of_element {
   }
 } // end RESET
 
+/**
+ *	@package  PHPLib
+ */
 class of_submit extends of_element {
 
   var $src;
@@ -176,6 +188,9 @@ class of_submit extends of_element {
   }
 } // end SUBMIT
 
+/**
+ *	@package  PHPLib
+ */
 class form {
   var $elements;
   var $hidden;

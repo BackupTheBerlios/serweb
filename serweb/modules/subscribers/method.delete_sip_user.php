@@ -1,8 +1,17 @@
 <?
-/*
- * $Id: method.delete_sip_user.php,v 1.5 2006/04/20 07:42:37 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_sip_user.php,v 1.6 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 
+/**
+ *	Data layer container holding the method for delete SIP user from all tables
+ * 
+ *	@package    serweb
+ *	@subpackage mod_subscribers
+ */ 
 class CData_Layer_delete_sip_user {
 	var $required_methods = array('delete_user_speed_dial', 
 		'delete_user_msilo', 'delete_user_vsilo', 'delete_user_phonebook', 'delete_user_attrs', 

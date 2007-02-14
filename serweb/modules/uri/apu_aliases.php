@@ -1,18 +1,21 @@
 <?php
 /**
- * Application unit aliases
- * 
- * @author    Karel Kozlik
- * @version   $Id: apu_aliases.php,v 1.7 2006/11/24 13:33:03 kozlik Exp $
- * @package   serweb
+ *	Application unit aliases
+ *	
+ *	@author     Karel Kozlik
+ *	@version    $Id: apu_aliases.php,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
  */ 
 
-/** Application unit aliases
+/** 
+ *	Application unit aliases
  *
  *
  *	This application unit is used for manipulation with aliases
  *	notice: manipulation still not dome. only get list of aliases may be used
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	'allow_edit'				(bool) default: false
@@ -70,6 +73,9 @@
  *	  'edit'        - when user is editing alias
  *	  'ack'         - when user should acknowledge values
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_uri
  */
 
 class apu_aliases extends apu_base_class{

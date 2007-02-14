@@ -1,8 +1,13 @@
 <?php
-/*
- * $Id: perm4.1.php,v 1.1 2005/11/23 09:59:27 kozlik Exp $
+/**
+ * @author    Karel Kozlik
+ * @version   $Id: perm4.1.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ * @package   PHPLib
  */ 
 
+/**
+ * @package   PHPLib
+ */
 class Perm {
 	var $classname = "Perm";
 	

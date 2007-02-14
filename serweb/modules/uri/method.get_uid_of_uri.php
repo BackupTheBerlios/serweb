@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_uid_of_uri.php,v 1.1 2006/09/19 06:50:30 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_uid_of_uri.php,v 1.2 2007/02/14 16:46:31 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for lookup UID for the uri
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_get_uid_of_uri {
 	var $required_methods = array('get_did_by_realm');
 	
@@ -10,7 +19,7 @@ class CData_Layer_get_uid_of_uri {
 	 *  Get array of uids asociated with given uri
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param	string	$sip_uri	URI of user
 	 *	@param	array	$opt		array of options

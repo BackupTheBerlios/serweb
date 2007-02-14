@@ -1,14 +1,20 @@
 <?php
-/*
+/**
  * Session Management for PHP3
  *
  * Copyright (c) 1998-2000 NetUSE AG
  *                    Boris Erdmann, Kristian Koehntopp
  *
- * $Id: session.inc,v 1.4 2005/05/24 09:35:23 kozlik Exp $
+ * $Id: session.inc,v 1.5 2007/02/14 16:46:31 kozlik Exp $
  *
+ * @package   PHPLib
+ * @ignore
  */
 
+/**
+ * @package   PHPLib
+ * @ignore
+ */
 class Session {
   var $classname = "Session";         ## Needed for object serialization.
 
