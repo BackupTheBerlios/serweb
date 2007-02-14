@@ -1,8 +1,21 @@
 <?
-/*
- * $Id: load_apu.php,v 1.5 2006/07/20 16:45:40 kozlik Exp $
+/**
+ *	Functions for loading APUs
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: load_apu.php,v 1.6 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
  */ 
 
+/**
+ *	Include files with APUs and load required data layer methods
+ *
+ *	@param	array	$_required_apu		list of APU names
+ *	@param	bool	$add_controler_dl	load also data layer methods required by page controler?
+ *	@return	none
+ *	@access private
+ */ 
 function _apu_require($_required_apu, $add_controler_dl = true){
 	global $data, $_SERWEB;
 	static $_loaded_apu = array();

@@ -1,8 +1,13 @@
-<?
-/*
- * $Id: click_to_dial.php,v 1.6 2006/09/08 12:27:32 kozlik Exp $
- */
+<?php
+/**
+ *	popup window performing click-to-dial
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: click_to_dial.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**  */
 require("../set_dirs.php");
 
 $_phplib_page_open = array("sess" => "phplib_Session");

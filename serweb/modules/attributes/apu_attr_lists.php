@@ -3,9 +3,10 @@
 /**
  * Application unit apu_attr_lists 
  * 
- * @author    Karel Kozlik
- * @version   $Id: apu_attr_lists.php,v 1.2 2006/05/03 08:33:56 kozlik Exp $
- * @package   serweb
+ * @author     Karel Kozlik
+ * @version    $Id: apu_attr_lists.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_attributes
  */ 
 
 /**
@@ -14,6 +15,7 @@
  *
  *	This application unit is used for edit 'type_spec' field of 'list' or 'radio' attributes
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -55,6 +57,9 @@
  *	opt['smarty_url_back']			(url_back)
  *	  containing URL of script for edit attributes
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 
 class apu_attr_lists extends apu_base_class{

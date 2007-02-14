@@ -1,10 +1,16 @@
-<?
-/*
- * $Id: logout.php,v 1.2 2006/09/08 12:27:32 kozlik Exp $
- */
+<?php
+/**
+ *	Logout
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: logout.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
+ */ 
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 
+/** include all others necessary files */
 require "prepend.php";
 
 $_SESSION['auth']->logout();

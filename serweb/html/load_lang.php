@@ -3,13 +3,22 @@
  * Functions for corect pick language file and load it
  * 
  * @author    Karel Kozlik
- * @version   $Id: load_lang.php,v 1.12 2006/12/20 16:31:57 kozlik Exp $
+ * @version   $Id: load_lang.php,v 1.13 2007/02/14 16:36:39 kozlik Exp $
  * @package   serweb
+ * @subpackage framework
  */ 
 
+/**
+ *	Include configuration
+ */
 require_once($_SERWEB["configdir"]."config_lang.php");
 
-
+/**
+ * Class holding various methods for internationalization
+ *
+ * @package    serweb
+ * @subpackage framework
+ */ 
 class Lang {
 
 	function internationalize($str){

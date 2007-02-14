@@ -1,6 +1,11 @@
 <?
-/*
- * $Id: user_preferences.php,v 1.7 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Edit user attributes
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: user_preferences.php,v 1.8 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -11,6 +16,8 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 $_required_modules = array('attributes');
 
 $_required_apu = array('apu_attributes');						   
+
+/** include all others necessary files */
 require "prepend.php";
 
 

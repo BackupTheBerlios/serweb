@@ -1,8 +1,17 @@
 <?php
+/**
+ *	Attribute type lang
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_type_lang.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
 /**
- *	Attr type language
- *
+ *	Attribute type lang
+ * 
+ *	<pre>
  *	Configuration:
  *	--------------
  *	'use_charset_only'			(string) default: 'utf-8'
@@ -15,6 +24,9 @@
  *	'save_to_cookie'			(bool) default: false
  *	 If true, selected language is saved into cookie on submit
  *
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 class Attr_type_lang extends Attr_type{
 	var $timezones = array();

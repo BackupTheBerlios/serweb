@@ -1,12 +1,19 @@
 <?php
-/*
- * $Id: method.set_db_collation.php,v 1.1 2005/05/24 12:22:37 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.set_db_collation.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for ser DB collation
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_set_db_collation {
 	var $required_methods = array();
 	
-	/*
+	/**
 	 * set collation - for MySQL >= 4.1
 	 */
 

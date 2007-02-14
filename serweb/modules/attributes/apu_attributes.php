@@ -1,13 +1,17 @@
 <?php
-/*
- * $Id: apu_attributes.php,v 1.13 2006/12/20 16:36:44 kozlik Exp $
+/**
+ * Application unit attributes
+ * 
+ * @author     Karel Kozlik
+ * @version    $Id: apu_attributes.php,v 1.14 2007/02/14 16:36:40 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_attributes
  */ 
 
-/*	Application unit user preferences */
-
 /**
- *	This application unit is used for view and change values in table user preferences
+ *	This application unit is used for view and change values of attributes
  *	
+ *	<pre>
  *	Configuration:
  *	--------------
  *	'attributes'					(array) default: array containing all atributes 
@@ -80,6 +84,10 @@
  *	opt['smarty_action']		(action)		tells what should smarty display. Values:
  *												'default' - 
  *												'was_updated' - when user submited form and data was succefully stored
+ *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
  
 class apu_attributes extends apu_base_class{

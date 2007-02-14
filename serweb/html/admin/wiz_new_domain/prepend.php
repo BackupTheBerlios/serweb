@@ -1,8 +1,14 @@
 <?php
-/*
- * $Id: prepend.php,v 1.4 2006/07/20 18:44:39 kozlik Exp $
+/**
+ *	New domain wizard - include all required files
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: prepend.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
+/**  */
 require("../../set_dirs.php");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");

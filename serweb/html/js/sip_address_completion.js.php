@@ -1,10 +1,16 @@
-<?
-/*
- * $Id: sip_address_completion.js.php,v 1.5 2006/07/20 18:44:39 kozlik Exp $
- */
+<?php
+/**
+ *	Javascript function for SIP URIs completion
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: sip_address_completion.js.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage js
+ */ 
 
 Header("content-type: text/js");
 
+/**  */
 require("../set_dirs.php");
 
 require ($_SERWEB["serwebdir"] . "class_definitions.php");

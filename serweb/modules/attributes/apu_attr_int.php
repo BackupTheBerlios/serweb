@@ -3,10 +3,12 @@
 /**
  * Application unit apu_attr_int 
  * 
- * @author    Karel Kozlik
- * @version   $Id: apu_attr_int.php,v 1.1 2006/12/07 13:47:27 kozlik Exp $
- * @package   serweb
+ * @author     Karel Kozlik
+ * @version    $Id: apu_attr_int.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_attributes
  */ 
+
 
 /**
  *	Application unit apu_attr_int 
@@ -14,6 +16,7 @@
  *
  *	This application unit is used for edit 'type_spec' field of 'int' attributes
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -51,6 +54,9 @@
  *	opt['smarty_url_back']			(url_back)
  *	  containing URL of script for edit attributes
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 
 class apu_attr_int extends apu_base_class{

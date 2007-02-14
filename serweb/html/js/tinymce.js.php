@@ -1,12 +1,18 @@
 <?php
-/*
- * $Id: tinymce.js.php,v 1.4 2006/07/20 18:44:39 kozlik Exp $
- */
+/**
+ *	Javascript functions for TinyMCE
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: tinymce.js.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage js
+ */ 
 
 Header("content-type: text/js");
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 
+/**  */
 require("../set_dirs.php");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");

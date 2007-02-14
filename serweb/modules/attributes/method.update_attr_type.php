@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.update_attr_type.php,v 1.3 2006/12/20 16:36:44 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.update_attr_type.php,v 1.4 2007/02/14 16:36:41 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for update attribute type
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_update_attr_type {
 	var $required_methods = array();
 	
@@ -12,7 +21,7 @@ class CData_Layer_update_attr_type {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *	
 	 *	@param	Attr_type	$at
 	 *	@param	string		$old_name	Old name of attribute. If is set, attr. type is updated otherwise is created new

@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: page_attributes.php,v 1.3 2006/07/25 08:41:12 kozlik Exp $
+<?php
+/**
+ *	New domain wizard - page attributes
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: page_attributes.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 

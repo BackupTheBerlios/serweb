@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.enable_user.php,v 1.3 2006/03/09 09:17:22 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.enable_user.php,v 1.4 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for mark user enabled
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_enable_user {
 	var $required_methods = array();
 	
@@ -10,13 +17,10 @@ class CData_Layer_enable_user {
 	 *  Enable or disable user account
 	 *
 	 *  Possible options:
-	 *
-	 *    uid		(string)   	default: null
-	 *      uid of user which should be enabled/disabled
-	 *		this option is required
-	 *      
-	 *    disable	(bool)  	default: false
-	 *      if true user will be disabled, otherwise wil be enabled
+	 *    - uid	  (string) - uid of user which should be enabled/disabled
+	 *                       this option is required (default: null)
+	 *    - disable (bool) - if true user will be disabled, otherwise will 
+	 *                       be enabled (default: false)
 	 *      
 	 *	@param array $opt		associative array of options
 	 *	@return bool			TRUE on success, FALSE on failure

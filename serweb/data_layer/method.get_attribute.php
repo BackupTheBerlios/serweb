@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_attribute.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_attribute.php,v 1.6 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get attribute
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_attribute {
 	var $required_methods = array();
 
@@ -13,18 +20,18 @@ class CData_Layer_get_attribute {
 	 *	 - user_attrs   (if option uid is specified)
 	 *	 - domain_attrs (if option uid is specified)
 	 *	 - global_attrs 
-	 *	and return its value as associative array. The aray has two fields
+	 *	
+	 *	and return its value as associative array. The aray has two fields:
 	 *	 - value
 	 *	 - origin - may contain 'user' or 'domain' or 'global' and specifying 
 	 *	            where the attribute has been found
+	 *
 	 *	If the attribute is not found in any table, NULL is returned. On error
 	 *	this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *    uid	(string)     default: null
-	 *		user id
-	 *    did	(string)     default: null
-	 *		domain id
+	 *   - uid	(string) - user id (default: null)
+	 *   - did	(string) - domain id (default: null)
 	 *
 	 *	@param	string	$name		name of attribute
 	 *	@param	array	$opt		associative array of options

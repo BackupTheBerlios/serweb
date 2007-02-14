@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: index.php,v 1.8 2006/07/10 13:45:05 kozlik Exp $
- */
+<?php
+/**
+ *	Registration page
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: index.php,v 1.9 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
+ */ 
 
 $_data_layer_required_methods=array('get_did_by_realm');
 $_phplib_page_open = array("sess" => "phplib_Session");
@@ -10,6 +15,7 @@ $_required_modules = array('registration');
 
 $_required_apu = array('apu_registration');						   
 
+/** include all others necessary files */
 require "prepend.php";
 
 $form_submit=array('type' => 'image',

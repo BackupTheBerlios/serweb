@@ -3,19 +3,24 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.11 2006/12/20 16:21:17 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.12 2007/02/14 16:36:38 kozlik Exp $
  * @package   serweb
+ * @subpackage framework
  */ 
 
 /** 
  *	The main parent of all application units 
  *	
+ *	<pre>
  *	Configuration:
  *	--------------
  *	instance_id			unique identificator of instance of application unit
  *	form_submit			assotiative array describe submit element of form. 
  *						for details see description of method add_submit in class form_ext
+ *	</pre>
  *
+ *	@package   serweb
+ *	@subpackage framework
  */							
 
 class apu_base_class{

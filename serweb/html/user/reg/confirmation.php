@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: confirmation.php,v 1.5 2006/07/10 13:45:05 kozlik Exp $
- */
+<?php
+/**
+ *	Confirm registration
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: confirmation.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
+ */ 
 
 $_data_layer_required_methods=array('get_did_by_realm');
 $_phplib_page_open = array("sess" => "phplib_Session");
@@ -10,7 +15,9 @@ $_required_modules = array('registration');
 
 $_required_apu = array('apu_reg_confirmation');						   
 
+/** include function for registration in jabber */
 include "reg_jab.php";
+/** include all others necessary files */
 require "prepend.php";
 
 

@@ -1,27 +1,28 @@
 <?
-/*
- * $Id: method.delete_user_acc.php,v 1.4 2006/09/08 12:27:31 kozlik Exp $
- */
-
 /**
- *  Function mark all acc records of $user as deleted
- *
- *  Possible options parameters:
- *
- *	timestamp			(int) default: none
- *		if timestamp is set, is deleted only records older than timestamp
- *
- *	del_incoming		(bool) default: true
- *		delete incoming calls
- *
- *	del_outgoing		(bool) default: true
- *		delete outgoing calls
- *
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_acc.php,v 1.5 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
  */ 
 
+/**
+ *	Data layer container holding the method for delete all acc records of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_acc {
 	var $required_methods = array();
 
+	/**
+	 *  Function mark all acc records of $user as deleted
+	 *
+	 *  Possible options parameters:
+	 *	 - timestamp (int) - if timestamp is set, is deleted only records 
+	 *	                     older than timestamp (default: none)
+	 *	 - del_incoming	 (bool) - delete incoming calls (default: true)
+	 *	 - del_outgoing	 (bool) - delete outgoing calls (default: true)
+	 *
+	 */ 
 	function delete_user_acc($uid, $opt, &$errors){
 		global $config;
 

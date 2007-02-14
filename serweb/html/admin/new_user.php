@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: new_user.php,v 1.2 2005/12/22 12:54:32 kozlik Exp $
+/**
+ *	Register new user
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: new_user.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('registration');
 $_required_apu = array('apu_registration'); 
 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

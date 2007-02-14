@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: admin_assign.php,v 1.1 2006/01/24 11:40:54 kozlik Exp $
+/**
+ *	Assign admin to domain
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: admin_assign.php,v 1.2 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('multidomain', 'privileges');
 
 $_required_apu = array('apu_domain_admin', 'apu_privileges'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

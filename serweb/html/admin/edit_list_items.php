@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: edit_list_items.php,v 1.17 2005/12/22 12:54:32 kozlik Exp $
- */
+<?php
+/**
+ *	Extended settings for attribute type 'list of items'
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: edit_list_items.php,v 1.18 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('user_preferences');
 
 $_required_apu = array('apu_user_preferences_li'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

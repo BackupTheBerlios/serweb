@@ -1,12 +1,19 @@
 <?
-/*
- * $Id: method.delete_user_vsilo.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_vsilo.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all voice messages for user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_vsilo {
 	var $required_methods = array();
 	
-	/*
+	/**
 	 * delete all messages of user from message silo
 	 */
 	//!!!!!!!!!!!!!!!!!! doplnit mazani souboru

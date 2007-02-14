@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: accounting.php,v 1.6 2006/09/08 12:27:32 kozlik Exp $
+<?php
+/**
+ *	Display incoming and outgoing calls
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: accounting.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('accounting');
 
 $_required_apu = array('apu_accounting'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 if ($controler->come_from_admin_interface){

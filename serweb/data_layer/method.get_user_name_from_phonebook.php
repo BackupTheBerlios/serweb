@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.get_user_name_from_phonebook.php,v 1.2 2006/03/09 09:17:23 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_user_name_from_phonebook.php,v 1.3 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get name of user from phonebook
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_user_name_from_phonebook {
 	var $required_methods = array();
 	

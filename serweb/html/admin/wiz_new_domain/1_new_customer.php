@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: 1_new_customer.php,v 1.2 2005/12/22 12:54:33 kozlik Exp $
- */
+<?php
+/**
+ *	New domain wizard - create new customer
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: 1_new_customer.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('multidomain');
 
 $_required_apu = array('apu_customers'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $page_attributes['title'] .= " - ".$lang_str['step']." 1/3";

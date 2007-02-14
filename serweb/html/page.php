@@ -1,10 +1,11 @@
 <?
 /**
- * Functions for output basic page layout
+ *	Functions for output basic page layout
  * 
- * @author    Karel Kozlik
- * @version   $Id: page.php,v 1.33 2006/07/20 16:45:40 kozlik Exp $
- * @package   serweb
+ *	@author     Karel Kozlik
+ *	@version    $Id: page.php,v 1.34 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
  */ 
 
 /**
@@ -20,9 +21,9 @@ function put_headers(){
 /**
  *	Print begin of html document
  *	
- *	Started by &lt;!DOCTYPE....&gt; <br>
- *	flowed &lt;html&gt;&lt;head&gt;.....
- *	and ending &lt;/head&gt;
+ *	Started by <!DOCTYPE....>
+ *	flowed <html><head>.....
+ *	and ending </head>
  *	
  *	@param	array	$parameters associative array containing info about page
  */	

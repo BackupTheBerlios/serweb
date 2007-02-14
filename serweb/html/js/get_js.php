@@ -1,10 +1,16 @@
 <?php
-/*
- * $Id: get_js.php,v 1.1 2005/08/22 14:35:12 kozlik Exp $
- */
+/**
+ *	This file providing access to the javascript files specifing for an module
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: get_js.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 
 Header("content-type: text/js");
 
+/** Include the javascript file */
 require("../../modules/".$_GET['mod']."/".$_GET['js'])
 
 ?>

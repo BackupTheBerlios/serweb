@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: admin_privileges.php,v 1.15 2006/09/08 12:27:32 kozlik Exp $
- */
+<?php
+/**
+ *	Edit privileges of admins
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: admin_privileges.php,v 1.16 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('privileges');
 
 $_required_apu = array('apu_privileges'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

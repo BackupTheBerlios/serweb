@@ -1,8 +1,19 @@
 <?php
-/*
- * $Id: attributes.php,v 1.5 2007/02/08 15:37:07 kozlik Exp $
- */
+/**
+ *	
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attributes.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attributes{
 
 	/**
@@ -131,7 +142,7 @@ class Attributes{
 	 *	Validate new values of attributes received from html form
 	 *	
 	 *	Alowed options:
-	 *		none for now
+	 *	 - none for now
 	 *	
 	 *	@param	array	$attributes		list of attributes
 	 *	@param	array	$opt			options
@@ -174,7 +185,7 @@ class Attributes{
 	 *	Convert new values of attributes received from html form to associative array
 	 *	
 	 *	Alowed options:
-	 *		none for now
+	 *	 - none for now
 	 *	
 	 *	@param	array	$attributes		list of attributes
 	 *	@param	array	$opt			options
@@ -197,7 +208,7 @@ class Attributes{
 	 *	Save bunch of attributes stored in associative array to DB
 	 *	
 	 *	Alowed options:
-	 *		none for now
+	 *	 - none for now
 	 *	
 	 *	@param	array	$attributes		asociative array of attributes
 	 *	@param	object	$at_h			attribute handler - it could be uri, user, domain or global

@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: message_store.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Display incoming instant messages
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: message_store.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('msilo');
 
 $_required_apu = array('apu_msilo'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $ms			= new apu_msilo();

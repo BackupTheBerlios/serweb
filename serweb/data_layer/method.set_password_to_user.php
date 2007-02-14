@@ -1,12 +1,19 @@
 <?
-/*
- * $Id: method.set_password_to_user.php,v 1.5 2006/09/08 12:27:31 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.set_password_to_user.php,v 1.6 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for set password of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_set_password_to_user {
 	var $required_methods = array();
 	
-	/*
+	/**
 	 *	set password for user
 	 */
 

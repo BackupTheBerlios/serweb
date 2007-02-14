@@ -1,10 +1,16 @@
-<?
-/*
- * $Id: click_to_dial.js.php,v 1.6 2006/07/20 18:44:39 kozlik Exp $
- */
+<?php
+/**
+ *	Javascript functions invoking click-to-dial
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: click_to_dial.js.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage js
+ */ 
 
 Header("content-type: text/js");
 
+/**  */
 require("../set_dirs.php");
 
 require ($_SERWEB["serwebdir"] . "../config/config_paths.php");

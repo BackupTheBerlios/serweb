@@ -1,10 +1,19 @@
 <?
-/*
- * Extension for phplib object oriented html form
+/**
+ *	Extension for phplib object oriented html form
+ * 
+ *	@author    Karel Kozlik
+ *	@version   $Id: oohform_ext.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@package   serweb
+ *	@subpackage framework
+ */
+  
+/**
+ *	Extension for phplib object oriented html form
  *
- * $Id: oohform_ext.php,v 1.6 2006/09/18 13:09:15 kozlik Exp $
+ *	@package   serweb
+ *	@subpackage framework
  */ 
-
 class form_ext extends form{
 	/* set to true if type of submit element is hidden -> javascript function for submit form is generated */
 	var $hidden_submits = array();

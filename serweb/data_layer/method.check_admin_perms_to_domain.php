@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.check_admin_perms_to_domain.php,v 1.3 2005/12/22 13:17:46 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.check_admin_perms_to_domain.php,v 1.4 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get admin permissions to given domain
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_check_admin_perms_to_domain {
 	var $required_methods = array();
 	
@@ -10,7 +17,7 @@ class CData_Layer_check_admin_perms_to_domain {
 	 *  check if admin have permissions to change domain setting
 	 *
 	 *  Possible options parameters:
-	 *	 none
+	 *	 - none
 	 *
 	 *	@param object $admin		admin - instance of class Auth
 	 *	@param string $domain_id	id of domain

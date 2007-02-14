@@ -1,7 +1,12 @@
 <?
-/*
- * $Id: aliases.php,v 1.7 2006/09/08 12:27:32 kozlik Exp $
- */
+/**
+ *	Edit URIs of users
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: aliases.php,v 1.8 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('uri');
 
 $_required_apu = array('apu_aliases'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

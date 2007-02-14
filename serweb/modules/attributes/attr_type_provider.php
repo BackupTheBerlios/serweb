@@ -1,6 +1,21 @@
 <?php
+/**
+ *	Attribute type provider
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_type_provider.php,v 1.4 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
-/** experimental class probably not working now */
+/**
+ *	Attribute type provider
+ * 
+ *	<b>This class is experimental and probably not working now!</b>
+ *
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_type_provider extends Attr_type{
 	var $items;
 

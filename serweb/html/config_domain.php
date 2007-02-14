@@ -1,19 +1,24 @@
 <?
-/*
- * $Id: config_domain.php,v 1.3 2005/12/22 12:58:28 kozlik Exp $
- */
+/**
+ *	Class for loading domain configuration
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: config_domain.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ */ 
 
 /**
  *	Loads config parameters depending on domain
+ *
+ *	@package    serweb
  */
-
 class CDomain_config{
 	var $cfg = array();
 
 	/**
 	 * Loads config parameters depending on domain
 	 *
-	 * @todo: syntax errors in INI files are not reported
+	 * @todo	syntax errors in INI files are not reported
 	 */
 	function CDomain_config(){
 		global $config;

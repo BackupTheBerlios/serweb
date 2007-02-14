@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_did_by_realm.php,v 1.6 2006/04/12 13:51:42 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_did_by_realm.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for lookup domain ID by realm
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_did_by_realm {
 	var $required_methods = array();
 	
@@ -12,9 +19,9 @@ class CData_Layer_get_did_by_realm {
 	 *	On error this method returning FALSE. I domian is not found return NULL
 	 *
 	 *  Possible options:
-	 *
-	 *	  check_disabled_flag	(bool)	default: true
-	 *		If true, flag 'disabled' is checked and records with this flag set are ignored
+	 *	 - check_disabled_flag (bool) - If true, flag 'disabled' is checked 
+	 *	                                and records with this flag set 
+	 *	                                are ignored (default: true)
 	 *
 	 *	@return string		domain id
 	 */ 

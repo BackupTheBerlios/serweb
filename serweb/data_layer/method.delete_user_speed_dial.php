@@ -1,13 +1,20 @@
 <?
-/*
- * $Id: method.delete_user_speed_dial.php,v 1.3 2006/04/20 07:38:29 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_speed_dial.php,v 1.4 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all speed dials of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_speed_dial {
 	var $required_methods = array();
 	
-	/*
-	 * delete all records of user from speed_dial table
+	/**
+	 *	delete all records of user from speed_dial table
 	 */
 	
 	function delete_user_speed_dial($uid){

@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: 3_finish.php,v 1.2 2005/12/22 12:54:33 kozlik Exp $
+/**
+ *	New domain wizard - finish
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: 3_finish.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('multidomain', 'privileges');
 
 $_required_apu = array('apu_domain_admin', 'apu_privileges'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: speed_dial.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Edit speed dials
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: speed_dial.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('speed_dial');
 
 $_required_apu = array('apu_speed_dial');
 
+/** include all others necessary files */
 require "prepend.php";
 
 $sd=new apu_speed_dial();

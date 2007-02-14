@@ -1,13 +1,20 @@
 <?php
-/*
- * $Id: method.set_db_charset.php,v 1.4 2006/11/28 14:48:54 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.set_db_charset.php,v 1.5 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for set DB charset
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_set_db_charset {
 	var $required_methods = array();
 	
-	/*
-	 * set charset for comunication with DB
+	/**
+	 *	set charset for comunication with DB
 	 */
 
 	function set_db_charset($charset, $opt, &$errors){

@@ -1,17 +1,20 @@
 <?php
-/*
+/**
  * Application unit lang selector
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_lang_select.php,v 1.8 2006/09/08 12:27:31 kozlik Exp $
+ * @version   $Id: apu_lang_select.php,v 1.9 2007/02/14 16:36:38 kozlik Exp $
  * @package   serweb
+ * @subpackage framework
  */ 
 
-/* Application unit lang selector
+/**
+ *	Application unit lang selector
  *
  *
  *	This application unit is used for select language of serweb
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	'use_charset_only'			(string) default: 'utf-8'
@@ -48,6 +51,10 @@
  *	  'default' - 
  *	  'was_updated' - when user submited form and data was succefully stored
  *	
+ *	</pre>
+ *
+ *	@package   serweb
+ *	@subpackage framework
  */
 
 class apu_lang_select extends apu_base_class{

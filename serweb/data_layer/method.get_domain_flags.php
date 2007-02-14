@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_domain_flags.php,v 1.2 2006/03/08 15:46:25 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_domain_flags.php,v 1.3 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get domain flags
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_domain_flags {
 	var $required_methods = array();
 	
@@ -10,11 +17,11 @@ class CData_Layer_get_domain_flags {
 	 *  return flags of domain with given domain ID as associative array
 	 *
 	 *  Keys of associative arrays:
-	 *    disabled
-	 *    deleted
+	 *   - disabled
+	 *   - deleted
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param string $did		domain ID
 	 *	@param array $opt		associative array of options

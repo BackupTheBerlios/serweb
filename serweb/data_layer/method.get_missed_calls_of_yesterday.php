@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.get_missed_calls_of_yesterday.php,v 1.3 2006/04/10 13:03:35 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_missed_calls_of_yesterday.php,v 1.4 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get missed calls of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_missed_calls_of_yesterday {
 	var $required_methods = array();
 	

@@ -1,12 +1,19 @@
 <?
-/*
- * $Id: method.delete_user_missed_calls.php,v 1.5 2006/09/21 18:23:48 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_missed_calls.php,v 1.6 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all missed calls of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_missed_calls {
 	var $required_methods = array();
 
-	/*
+	/**
 	 * delete all missed calls of user
 	 * if $timestamp is not null delete only calls older than $timestamp
 	 */

@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_domains_of_admin.php,v 1.4 2006/09/08 12:27:31 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_domains_of_admin.php,v 1.5 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method get domains managed by specified admin
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_domains_of_admin {
 	var $required_methods = array();
 	
@@ -11,7 +18,7 @@ class CData_Layer_get_domains_of_admin {
 	 *
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *      
 	 *	@param string $uid		
 	 *	@param array $opt		associative array of options

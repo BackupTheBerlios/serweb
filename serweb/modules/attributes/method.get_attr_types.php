@@ -1,14 +1,35 @@
 <?php
-/*
- * $Id: method.get_attr_types.php,v 1.5 2007/01/18 14:56:59 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_attr_types.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for get attribute types
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_get_attr_types{
 	var $required_methods = array();
 	
-	/* 
-	 * return list of all attributes without atribute named as $att_edit
-	 * $att_edit may be null
+	/**
+	 * return list of all attribute types
+	 * 
+	 *
+	 *  Possible options:
+	 *	- order_by (string)      name of column the result is sorted by
+	 *	- order_desc (bool)      sort the result in descending order
+	 *	- filter (array)         filter criteria
+	 *	- group_by_groups (bool) if true, the result entries are grouped by 
+	 *	  attribute type groups
+	 *	- use_pager (bool)       if true, the number of entries is limited by
+	 *	  the paging feature
+	 *
+	 *	@param	array	$opt	options
+	 *	@return bool
 	 */
 	 
 	function get_attr_types($opt){

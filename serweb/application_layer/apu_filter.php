@@ -3,16 +3,17 @@
  * Application unit filter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_filter.php,v 1.2 2007/01/18 14:17:30 kozlik Exp $
+ * @version   $Id: apu_filter.php,v 1.3 2007/02/14 16:36:38 kozlik Exp $
  * @package   serweb
+ * @subpackage framework
  */ 
 
 /**
  *	Application unit filter 
  *
- *
  *	This application unit is used for display filter form
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -30,7 +31,10 @@
  *	opt['smarty_form'] 			(form)			
  *	 phplib html form
  *	 
+ *	</pre>
  *	
+ *	@package   serweb
+ *	@subpackage framework
  */
 
 class apu_filter extends apu_base_class{

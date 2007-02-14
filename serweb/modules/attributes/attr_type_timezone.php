@@ -1,5 +1,19 @@
 <?php
+/**
+ *	Attribute type timezone
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_type_timezone.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Attribute type timezone
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_type_timezone extends Attr_type{
 	var $timezones = array();
 

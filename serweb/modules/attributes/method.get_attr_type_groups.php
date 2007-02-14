@@ -1,12 +1,21 @@
 <?php
-/*
- * $Id: method.get_attr_type_groups.php,v 1.1 2006/12/20 16:36:44 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_attr_type_groups.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for get groups of attribute types
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_get_attr_type_groups{
 	var $required_methods = array();
 	
-	/* 
+	/**
 	 * return list of all attributes without atribute named as $att_edit
 	 * $att_edit may be null
 	 */

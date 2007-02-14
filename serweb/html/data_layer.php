@@ -1,11 +1,24 @@
 <?
-/*
- * $Id: data_layer.php,v 1.26 2006/11/24 13:42:19 kozlik Exp $
- */
+/**
+ *	Data layer
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: data_layer.php,v 1.27 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 
 // variable $_data_layer_required_methods should be defined at beginning of each php script
 // $_data_layer_required_methods=array();
  
+/**
+ *	Data layer
+ *
+ *	class providing data access to database and other storages
+ * 
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 class CData_Layer{
 
 	var $db=null;						//PEAR DB object

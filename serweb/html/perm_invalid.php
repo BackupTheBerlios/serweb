@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: perm_invalid.php,v 1.3 2006/07/25 08:37:23 kozlik Exp $
+<?php
+/**
+ *	File displayed when permissions are invalid
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: perm_invalid.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
  */ 
 
 	global $config, $page_attributes, $smarty, $lang_str, $sess;

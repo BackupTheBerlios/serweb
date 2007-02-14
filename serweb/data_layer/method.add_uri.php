@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.add_uri.php,v 1.6 2006/11/24 13:33:02 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.add_uri.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 
+/**
+ *	Data layer container holding the method for add new uri
+ * 
+ *	@package    serweb
+ *	@subpackage mod_uri
+ */ 
 class CData_Layer_add_uri {
 	var $required_methods = array();
 	
@@ -12,15 +21,10 @@ class CData_Layer_add_uri {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *	  disabled	(bool)	default: false
-	 *    	set flag disabled
-	 *
-	 *	  canon	(bool)	default: false
-	 *    	set flag canonical
-	 *
-	 *	  flags	(int)	default: null
-	 *    	Set value of flags directly. If is set, options 'canon' and 
-	 *		'disabled' are ignored.
+	 *	 - disabled	(bool) - set flag disabled (default: false)
+	 *	 - canon	(bool) - set flag canonical (default: false)
+	 *	 - flags	(int)  - Set value of flags directly. If is set, options 
+	 *	                     'canon' and 'disabled' are ignored. (default: null)
 	 *
 	 *	@return bool
 	 */ 

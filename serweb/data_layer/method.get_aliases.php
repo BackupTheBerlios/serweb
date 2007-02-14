@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.get_aliases.php,v 1.7 2006/11/24 13:33:02 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_aliases.php,v 1.8 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get URIs of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_aliases {
 	var $required_methods = array();
 	
@@ -12,8 +19,7 @@ class CData_Layer_get_aliases {
 	 *	return array of instances of class URI
 	 *
 	 *  Possible options:
-	 *	  filter	(array)	default: null
-	 *    	filter URI by 'did' or by 'username'
+	 *	 - filter (array) - filter URI by 'did' or by 'username' (default: null)
 	 *
 	 *	@param	string	$uid	uid of user - if is null return all URIs
 	 *	@param	array	$opt	array of options

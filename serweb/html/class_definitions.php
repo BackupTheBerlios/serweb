@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: class_definitions.php,v 1.22 2007/02/06 12:22:34 kozlik Exp $ 
- */
+/**
+ *	Definitions of common classes
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: class_definitions.php,v 1.23 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	@package    serweb
+ */ 
 class CREG_list_item {
 	var $reg, $label;
 	function CREG_list_item($reg, $label){
@@ -11,6 +18,9 @@ class CREG_list_item {
 	}
 }
 
+/**
+ *	@package    serweb
+ */ 
 class Capplet_params {
 	var $name, $value;
 	function Capplet_params($name, $value){
@@ -21,6 +31,8 @@ class Capplet_params {
 
 /**
  *	Class representating tabs on html page
+ *
+ *	@package    serweb
  */
 class Ctab{
 	var $name, $page, $enabled;
@@ -83,6 +95,9 @@ class Ctab{
 }
 
 
+/**
+ *	@package    serweb
+ */ 
 class Ccall_fw{
 	var $action, $param1, $param2, $label;
 	function Ccall_fw($action, $param1, $param2, $label){
@@ -124,10 +139,16 @@ class Ccall_fw{
 
 }
 
+/**
+ *	@package    serweb
+ */ 
 class Cconfig{
 } 
  
 
+/**
+ *	@package    serweb
+ */ 
 class SerwebUser {
 	var $classname = "SerwebUser";
 	var $persistent_slots = array('uid', 'did', 'username', 'realm');
@@ -268,6 +289,9 @@ class SerwebUser {
 	}
 }
 
+/**
+ *	@package    serweb
+ */ 
 class ErrorHandler{
 	var $errors = array();
 
@@ -362,7 +386,9 @@ class ErrorHandler{
 
 /**
  *	Class handling domains
- */
+ *
+ *	@package    serweb
+ */ 
 class Domains{
 
 	var $domains = null;
@@ -627,6 +653,8 @@ class Domains{
 
 /**
  *	Class representating one sip uri
+ *
+ *	@package    serweb
  */
 class URI{
 	var $flags;
@@ -777,7 +805,9 @@ class URI{
 
 /**
  *	Class handling URIs of user
- */
+ *
+ *	@package    serweb
+ */ 
 class URIs{
 	var $uid;
 	/** filter URI by username */
@@ -856,7 +886,6 @@ class URIs{
 	 *	
 	 *	
 	 *	@access private
-	 *	@todo: select correct data layer class in XXL envirnment
 	 */
 	function load_URIs(){
 		global $data;
@@ -930,6 +959,9 @@ class URIs{
 	}
 }
 
+/**
+ *	@package    serweb
+ */ 
 class Credential{
 	var $uid;
 	var $did;
@@ -1134,6 +1166,8 @@ class Credential{
 
 /**
  *	OO extension for IPC semaphores
+ *
+ *	@package    serweb
  */
 class Shm_Semaphore{
 	var $max_acquire;
@@ -1182,6 +1216,9 @@ class Shm_Semaphore{
     }
 }
 
+/**
+ *	@package    serweb
+ */ 
 class Filter {
 	var $name;
 	var $value="";

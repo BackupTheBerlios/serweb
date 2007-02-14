@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: acl.php,v 1.19 2006/09/08 12:27:32 kozlik Exp $
- */
+<?php
+/**
+ *	Edit access control lists of users
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: acl.php,v 1.20 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('acl');
 
 $_required_apu = array('apu_acl'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

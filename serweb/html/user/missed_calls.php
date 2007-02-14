@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: missed_calls.php,v 1.5 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Display missed calls
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: missed_calls.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('accounting');
 
 $_required_apu = array('apu_accounting'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $acc			= new apu_accounting();

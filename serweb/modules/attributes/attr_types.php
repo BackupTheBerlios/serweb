@@ -1,11 +1,20 @@
 <?php
-/*
- * $Id: attr_types.php,v 1.15 2007/01/18 14:51:31 kozlik Exp $
- */
+/**
+ *	Classes for working with attribute types
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_types.php,v 1.16 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
 /**
  *	Class representing type of one attribute
- */
+ * 
+ *	@abstract
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_type{
 	var $name;
 	var $raw_type;
@@ -138,7 +147,6 @@ class Attr_type{
 	 *	Return true if attribute is multivalue
 	 *
 	 *	@return bool	
-	 *	@todo   implement	
 	 */
 	 
 	function is_multivalue(){
@@ -152,7 +160,6 @@ class Attr_type{
 	 *	Return true if attribute should be present on registration form
 	 *
 	 *	@return bool	
-	 *	@todo   implement	
 	 */
 	 
 	function fill_on_register(){
@@ -166,7 +173,6 @@ class Attr_type{
 	 *	Return true if attribute has to been set (has to have any not empty value)
 	 *
 	 *	@return bool	
-	 *	@todo   implement	
 	 */
 	 
 	function is_required(){
@@ -577,6 +583,15 @@ class Attr_type{
 
 
 
+/**
+ *	Extending class {@link Attr_type}
+ * 
+ *	Providing some methods for work with lists of values
+ *
+ *	@abstract
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_type_lists extends Attr_type{
 
 
@@ -648,6 +663,14 @@ class Attr_type_lists extends Attr_type{
 
 
   
+/**
+ *	Handler for attribute types
+ * 	
+ * 	This class providing basic functions for work with attribute types
+ * 	
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_types{
   
 	var $attr_types = null;

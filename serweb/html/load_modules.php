@@ -1,4 +1,12 @@
 <?php
+/**
+ *	Functions needed for load module
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: load_modules.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 
 	/**
 	 * Include file "include.php" from each loaded module

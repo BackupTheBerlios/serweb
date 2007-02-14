@@ -1,4 +1,11 @@
-<?
+<?php
+/**
+ *	XML-RPC client - improved RPC client based on PEAR package XML-RPC
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: xml_rpc_patch.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    XML_RPC
+ */ 
 
 /**
  * The methods and properties for submitting XML RPC requests
@@ -385,6 +392,8 @@ class XML_RPC_Client_curl extends XML_RPC_Client
  *	The diference is that this class parse content-length header and read only
  *	number of bytes specified by this header from server. This method do not 
  *	wait to closing the TCP connection by the server.
+ *
+ *	@package    XML_RPC
  */
 class XML_RPC_Message_patched extends XML_RPC_Message{
 

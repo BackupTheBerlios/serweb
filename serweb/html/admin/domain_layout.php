@@ -1,7 +1,12 @@
 <?php
-/*
- * $Id: domain_layout.php,v 1.4 2006/05/23 09:13:30 kozlik Exp $
- */
+/**
+ *	Edit domain layout
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: domain_layout.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('multidomain');
 
 $_required_apu = array('apu_domain_layout'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

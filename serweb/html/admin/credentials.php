@@ -1,7 +1,12 @@
 <?
-/*
- * $Id: credentials.php,v 1.1 2006/03/22 14:00:14 kozlik Exp $
- */
+/**
+ *	Edit credentials of users
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: credentials.php,v 1.2 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 $_data_layer_required_methods=array();
 
@@ -13,6 +18,7 @@ $_required_modules = array('credentials');
 
 $_required_apu = array('apu_credentials'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

@@ -1,9 +1,9 @@
-<?
+<?php
 /**
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.81 2006/11/28 14:48:54 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.82 2007/02/14 16:36:39 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -75,6 +75,11 @@ $sip_status_messages_array[604]="604 Does Not Exist Anywhere";
 $sip_status_messages_array[606]="606 Not Acceptable";
 
 
+/**
+ *	Defining regular expressions
+ * 
+ *	@package    serweb
+ */ 
 class Creg{
 
 	var $alphanum;
@@ -385,9 +390,9 @@ function write2fifo($fifo_cmd, &$errors, &$status){
 /**
  *	Filter result of calling fifo command t_uac_dlg. Is used by function {@link click_to_dial}
  *
- * 	@param string $in
- *	@result string
- *	@access private
+ * 	@param	string $in
+ *	@return	string
+ *	@access	private
  */
 function filter_fl($in){
 	$line=0;

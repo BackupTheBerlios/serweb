@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.del_attr_type.php,v 1.1 2006/03/13 15:34:06 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.del_attr_type.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for delete attribute type
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_del_attr_type {
 	var $required_methods = array();
 	
@@ -12,7 +21,7 @@ class CData_Layer_del_attr_type {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param	string		$name	Name of attribute to delete
 	 *	@param	array		$opt	Array of options

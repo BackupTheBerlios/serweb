@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_domain.php,v 1.6 2006/03/08 15:46:25 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_domain.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for lookup domain
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_domain {
 	var $required_methods = array();
 	
@@ -10,22 +17,17 @@ class CData_Layer_get_domain {
 	 *  return array of associtive arrays containig domain names
 	 *
 	 *  Keys of associative arrays:
-	 *    id
-	 *    name
+	 *   - id
+	 *   - name
 	 *
 	 *  Possible options:
-	 *
-	 *	  order_by	(string)	default: 'name'
-	 *		name of column for sorting. If false or empty, result is not sorted
-	 *
-	 *	  order_desc	(bool)	default: false
-	 *		order descending
-	 *
-	 *    filter	(array)     default: array()
-	 *      associative array of pairs (column, value) which should be returned
-	 *      
-	 *	  check_deleted_flag	(bool)	default:true
-	 *		If true, domains marked as deleted are not returned
+	 *	 - order_by	(string) - name of column for sorting. If false or empty, 
+	 *	                       result is not sorted (default: 'name')
+	 *	 - order_desc (bool) - order descending (default: false)
+	 *	 - filter    (array) - associative array of pairs (column, value) which 
+	 *	                       should be returned (default: array)
+	 *	 - check_deleted_flag (bool) - If true, domains marked as deleted 
+	 *	                               are not returned (default:true)
 	 *
 	 *	@param array $opt		associative array of options
 	 *	@return array			array of domain names or FALSE on error

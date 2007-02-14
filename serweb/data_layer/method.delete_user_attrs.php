@@ -1,13 +1,20 @@
 <?
-/*
- * $Id: method.delete_user_attrs.php,v 1.1 2005/12/22 13:44:41 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_attrs.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all attributes of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_attrs {
 	var $required_methods = array();
 	
-	/*
-	 * delete all user's records from usr_preferences
+	/**
+	 *	delete all user's records from user_attrs
 	 */
 
 	function delete_user_attrs($uid){

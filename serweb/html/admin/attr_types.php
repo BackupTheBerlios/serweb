@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: attr_types.php,v 1.2 2007/01/18 14:56:58 kozlik Exp $
+/**
+ *	Edit attribute types
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_types.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,7 +17,7 @@ $_required_modules = array('attributes');
 
 $_required_apu = array('apu_attr_types', 'apu_sorter', 'apu_filter'); 
 
-
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

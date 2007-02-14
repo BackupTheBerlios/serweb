@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: send_im.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Send instant message
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: send_im.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('send_im');
 
 $_required_apu = array('apu_send_im'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $im			= new apu_send_im();

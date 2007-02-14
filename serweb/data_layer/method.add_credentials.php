@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.add_credentials.php,v 1.6 2007/01/08 15:51:29 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.add_credentials.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 
+/**
+ *	Data layer container holding the method for add new credentials
+ * 
+ *	@package    serweb
+ *	@subpackage mod_credentials
+ */ 
 class CData_Layer_add_credentials {
 	var $required_methods = array();
 	
@@ -12,16 +21,13 @@ class CData_Layer_add_credentials {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *	  disabled	(bool)	default: false
-	 *    	set flag disabled
-	 *
-	 *	  for_ser	(bool)	default: null
-	 *    	set flag DB_LOAD_SER
-	 *		by default value of this flag depends on global attribute 'credential_default_flags'
-	 *
-	 *	  for_serweb	(bool)	default: null
-	 *    	set flag DB_FOR_SERWEB
-	 *		by default value of this flag depends on global attribute 'credential_default_flags'
+	 *	 - disabled	(bool) - set flag disabled	(default: false)
+	 *	 - for_ser	(bool) - set flag DB_LOAD_SER. By default value of 
+	 *	                     this flag depends on global attribute 
+	 *	                     'credential_default_flags' (default: null)
+	 *	 - for_serweb (bool) - set flag DB_FOR_SERWEB. By default value of 
+	 *	                       this flag depends on global attribute 
+	 *	                       'credential_default_flags' (default: null)
 	 *
 	 *	@return bool
 	 */ 

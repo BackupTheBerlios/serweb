@@ -1,12 +1,19 @@
 <?
-/*
- * $Id: method.delete_user_msilo.php,v 1.3 2005/12/27 16:13:47 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_msilo.php,v 1.4 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all messages for user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_msilo {
 	var $required_methods = array();
 	
-	/*
+	/**
 	 * delete all messages of user from message silo
 	 */
 	

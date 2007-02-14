@@ -2,9 +2,10 @@
 /**
  * Application unit attribute types
  * 
- * @author    Karel Kozlik
- * @version   $Id: apu_attr_types.php,v 1.9 2007/01/18 14:56:59 kozlik Exp $
- * @package   serweb
+ * @author     Karel Kozlik
+ * @version    $Id: apu_attr_types.php,v 1.10 2007/02/14 16:36:40 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_attributes
  */ 
 
 /**
@@ -13,6 +14,7 @@
  *
  *	This application unit is used for editing attribute types
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	'type_spec_script'			(string)	default: 'edit_type_spec.php'
@@ -53,6 +55,9 @@
  *	opt['smarty_pager']				(pager)
  *	 associative array containing size of result and which page is returned
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 
 class apu_attr_types extends apu_base_class{

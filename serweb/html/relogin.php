@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: relogin.php,v 1.4 2006/07/25 08:32:56 kozlik Exp $
- */
+<?php
+/**
+ *	File displayed when login session expire and user have to relogin
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: relogin.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 
 	global $config, $page_attributes, $smarty, $lang_str, $_SERWEB;
 	

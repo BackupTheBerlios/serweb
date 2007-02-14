@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: phonebook.php,v 1.8 2007/02/06 10:36:09 kozlik Exp $
+/**
+ *	Display phonebook
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: phonebook.php,v 1.9 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('phonebook');
 
 $_required_apu = array('apu_phonebook', 'apu_sorter'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $pb	= new apu_phonebook();

@@ -1,7 +1,12 @@
 <?php
-/*
- * $Id: set_dirs.php,v 1.1 2006/07/20 18:44:38 kozlik Exp $
- */
+/**
+ *	File describing directory structure (where the others files could be found)
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: set_dirs.php,v 1.2 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage framework
+ */ 
 
 
 $_SERWEB = array();

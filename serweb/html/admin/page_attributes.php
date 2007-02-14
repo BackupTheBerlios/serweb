@@ -1,8 +1,16 @@
-<?
-/*
- * $Id: page_attributes.php,v 1.12 2006/09/12 12:05:44 kozlik Exp $
+<?php
+/**
+ *	Set attributes for all pages in admin interface
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: page_attributes.php,v 1.13 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
+/**
+ *	Disable tabs that aro not accessible to admin due to not enought privileges
+ */
 function _disable_unneeded_tabs(&$page_attributes){
 	global $perm, $config;
 

@@ -1,5 +1,19 @@
 <?php
+/**
+ *	Attribute type email_adr
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: attr_type_email_adr.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Attribute type email_adr
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class Attr_type_email_adr extends Attr_type{
 	function Attr_type_email_adr($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order){
 		parent::Attr_type($name, $raw_type, $rich_type, $type_spec, $desc, $def_flags, $flags, $priority, $access, $order);

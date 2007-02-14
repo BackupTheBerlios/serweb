@@ -1,12 +1,18 @@
 <?php
-/*
- * $Id: index.php,v 1.3 2005/11/30 09:58:16 kozlik Exp $
+/**
+ *	Login screen
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: index.php,v 1.4 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 
 $_required_apu = array('apu_login', 'apu_lang_select'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $login	= new apu_login();

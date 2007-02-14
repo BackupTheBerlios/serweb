@@ -1,12 +1,17 @@
 <?php
-/*
- * $Id: index.php,v 1.1 2006/12/01 16:41:20 kozlik Exp $
- */
+/**
+ *	Test serweb configuration
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: index.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ */ 
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 $serwebLog  = NULL;
 $ok = true;
 
+/**  */
 require_once("../set_dirs.php");
 
 require_once ($_SERWEB["functionsdir"] . "class_definitions.php");

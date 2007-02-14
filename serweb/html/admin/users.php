@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: users.php,v 1.30 2007/02/05 15:10:37 kozlik Exp $
+<?php
+/**
+ *	Display list of users
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: users.php,v 1.31 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('subscribers');
 $_required_apu = array('apu_subscribers', 'apu_sorter'); 
 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin");

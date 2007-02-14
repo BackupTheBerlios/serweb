@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_global_attrs.php,v 1.1 2005/12/22 13:51:23 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_global_attrs.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for get global attributes
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_get_global_attrs {
 	var $required_methods = array();
 	
@@ -12,7 +21,7 @@ class CData_Layer_get_global_attrs {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@return array
 	 */ 

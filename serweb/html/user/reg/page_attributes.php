@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: page_attributes.php,v 1.2 2006/07/20 18:44:40 kozlik Exp $
+<?php
+/**
+ *	Set attributes for all pages in registration interface
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: page_attributes.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $page_attributes=array(

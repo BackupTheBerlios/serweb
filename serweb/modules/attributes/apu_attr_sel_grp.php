@@ -2,9 +2,10 @@
 /**
  * Application unit attr select group
  * 
- * @author    Karel Kozlik
- * @version   $Id: apu_attr_sel_grp.php,v 1.1 2006/12/20 16:36:44 kozlik Exp $
- * @package   serweb
+ * @author     Karel Kozlik
+ * @version    $Id: apu_attr_sel_grp.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ * @package    serweb
+ * @subpackage mod_attributes
  */ 
 
 /**
@@ -13,6 +14,7 @@
  *
  *	This application unit is used for select group of attributes
  *	   
+ *	<pre>
  *	Configuration:
  *	--------------
  *	
@@ -39,6 +41,9 @@
  *	  'default' - 
  *	  'was_updated' - when user submited form and data was succefully stored
  *	
+ *	</pre>
+ *	@package    serweb
+ *	@subpackage mod_attributes
  */
 
 class apu_attr_sel_grp extends apu_base_class{

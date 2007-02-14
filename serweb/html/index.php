@@ -1,11 +1,15 @@
-<?
-/*
- * $Id: index.php,v 1.5 2006/12/01 16:41:20 kozlik Exp $
+<?php
+/**
+ *	First access point to apllication
+ * 
+ *	Page which redirecting user either to testing interface or to user interface
  *
- * Redirect to user interface
- *
- */
+ *	@author    Karel Kozlik
+ *	@version   $Id: index.php,v 1.6 2007/02/14 16:36:39 kozlik Exp $ 
+ *	@package   serweb
+ */ 
 
+/** include paths to directories */
 require("./set_dirs.php");
 
 require_once ($_SERWEB["functionsdir"] . "class_definitions.php");

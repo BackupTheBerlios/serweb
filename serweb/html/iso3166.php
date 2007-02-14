@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: iso3166.php,v 1.1 2006/09/05 13:18:10 kozlik Exp $
- */
+/**
+ *	Classes holding country codes by the ISO3166
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: iso3166.php,v 1.2 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Classes holding country codes by the ISO3166
+ * 
+ *	@package    serweb
+ */ 
 class ISO3166{
 	function get_country_codes(){
 		return array(

@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.check_admin_perms_to_user.php,v 1.5 2006/03/08 15:46:25 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.check_admin_perms_to_user.php,v 1.6 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get admin permissions to given user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_check_admin_perms_to_user {
 
 	function _get_required_methods(){
@@ -13,7 +20,7 @@ class CData_Layer_check_admin_perms_to_user {
 	 *  check if admin have permissions to change user's setting
 	 *
 	 *  Possible options parameters:
-	 *	 none
+	 *	 - none
 	 *
 	 *	@param object $admin		admin - instance of class Auth
 	 *	@param object $user			admin - instance of class SerwebUser

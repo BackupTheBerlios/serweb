@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: my_account.php,v 1.18 2006/12/20 16:37:58 kozlik Exp $
+/**
+ *	Display user's settings
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: my_account.php,v 1.19 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -14,6 +19,7 @@ $_required_modules = array('auth', 'attributes', 'usrloc', 'acl', 'uri');
 $_required_apu = array('apu_password_update', 'apu_attributes', 'apu_aliases', 
                        'apu_acl', 'apu_usrloc', 'apu_attr_sel_grp'); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 if ($controler->come_from_admin_interface){

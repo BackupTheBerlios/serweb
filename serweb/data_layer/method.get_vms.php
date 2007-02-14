@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.get_vms.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_vms.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get voice messages of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_vms {
 	var $required_methods = array();
 	

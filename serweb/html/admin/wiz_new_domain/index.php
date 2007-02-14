@@ -1,12 +1,12 @@
-<?
-/*
- * $Id: index.php,v 1.2 2006/05/23 09:13:35 kozlik Exp $
- *
- * Redirect to login screen
- *
- * todo: after login the screen should go back to page from which was redirected
- *
- */
+<?php
+/**
+ *	New domain wizard - Redirect to login screen
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: index.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
+ */ 
 
 Header("Location: ../index.php");
 

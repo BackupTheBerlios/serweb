@@ -1,8 +1,15 @@
 <?
-/*
- * $Id: method.del_vm.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.del_vm.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete voice message
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_del_vm {
 	var $required_methods = array();
 	

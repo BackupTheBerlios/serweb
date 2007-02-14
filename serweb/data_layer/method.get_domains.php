@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_domains.php,v 1.7 2006/09/08 12:27:31 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_domains.php,v 1.8 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get domains
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_domains {
 	var $required_methods = array('get_domain', 'get_domain_flags');
 	
@@ -10,30 +17,27 @@ class CData_Layer_get_domains {
 	 *  return array of associtive arrays containig domains
 	 *
 	 *  Keys of associative arrays:
-	 *    id
-	 *    names - array returned by method get_domain
-	 *    customer
+	 *   - id
+	 *   - names - array returned by method get_domain
+	 *   - customer
 	 *
 	 *  Possible options:
-	 *
-	 *    filter	(array)     default: array()
-	 *      associative array of pairs (column, value) which should be returned
-	 *     
-	 *	  get_domain_names (bool) default: false
-	 *		if true, function return aliases of domain in 'names' keys of returned array.
-	 *		Otherwise the keys 'names' are empty
-	 *
-	 *	  get_domain_flags	(bool)	default: false
-	 *		if true, function return flags of domain in 'deleted' and 'disabled' keys of returned array.
-	 *
-	 *	  return_all		(bool)	default: false
-	 *		if true, the result isn't limited by LIMIT sql phrase
-	 *
-	 *	  only_domains		(array)	default:null
-	 *		Array of domain IDs. if is set, only domains from this array are returned
-	 *
-	 *	  check_deleted_flag	(bool)	default:true
-	 *		If true, domains marked as deleted are not returned
+	 *   - filter          (array) - associative array of pairs (column, value) 
+	 *	                             which should be returned (default: array)
+	 *	 - get_domain_names (bool) - if true, function return aliases of domain 
+	 *	                             in 'names' keys of returned array.
+	 *	                             Otherwise the keys 'names' are empty 
+	 *	                             (default: false)
+	 *	 - get_domain_flags	(bool) - if true, function return flags of domain 
+	 *	                             in 'deleted' and 'disabled' keys of returned 
+	 *	                             array. (default: false)
+	 *	 - return_all       (bool) - if true, the result isn't limited by LIMIT 
+	 *	                             sql phrase (default: false)
+	 *	 - only_domains    (array) - Array of domain IDs. if is set, only 
+	 *	                             domains from this array are returned 
+	 *	                             (default:null)
+	 *	 - check_deleted_flag (bool) - If true, domains marked as deleted are 
+	 *	                               not returned (default:true)
 	 *
 	 *	@param array $opt		associative array of options
 	 *	@param array $errors	error messages

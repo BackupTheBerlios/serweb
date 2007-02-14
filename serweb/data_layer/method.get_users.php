@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_users.php,v 1.19 2007/02/05 15:10:37 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_users.php,v 1.20 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get users
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_users {
 	var $required_methods = array('get_credentials');
 	
@@ -11,44 +18,34 @@ class CData_Layer_get_users {
 	 *  Function return array of associtive arrays containig subscribers
 	 *
 	 *  Keys of associative arrays:
-	 *    username
-	 *    domain
-	 *	  name
-	 *    fname
-	 *    lname
-	 *    phone
-	 *    email_address
-	 *    get_param
-	 *    aliases
-	 *	  disabled
+	 *   - username
+	 *   - domain
+	 *   - name
+	 *   - fname
+	 *   - lname
+	 *   - phone
+	 *   - email_address
+	 *   - get_param
+	 *   - aliases
+	 *   - disabled
 	 *
 	 *  Possible options parameters:
-	 *
-	 *    from_domains			(array) default:null
-	 *  	array of domain IDs from which are returned subscribers. By default are 
-	 *		returned all subscribers. 
-	 *  
-	 *    get_user_aliases	  	(bool) default: true
-	 *      should return aliases of users?
-	 *      Could be disabled from performance reasons.
-	 *  
-	 *    get_sip_uri			(bool) default: false
-	 *  	return sip address of user
-	 *  
-	 *	  get_timezones
-	 *  	return timezone of users
-	 *	
-	 *	  only_users			(array)	default:null
-	 *		Array of user IDs. if is set, only users from this array are returned
-	 *
-	 *	  return_all			(bool)	default: false
- 	 *		if true, the result isn't limited by LIMIT sql phrase
- 	 *	
-	 *    only_agreeing			(bool)	default: false
- 	 *		if true, only subscribers agreeing to look up for them are returned
- 	 *	
-	 *    get_credentials		(bool) 	default: false
- 	 *		return credentials of users in output array
+	 *    - from_domains    (array) - array of domain IDs from which are 
+	 *                                returned subscribers. By default are 
+	 *                                returned all subscribers. (default:null)
+	 *    - get_user_aliases (bool) - should return aliases of users? Could be 
+	 *                                disabled from performance reasons. 
+	 *                                (default: true)
+	 *    - get_sip_uri      (bool) - return sip address of user (default: false)
+	 *    - get_timezones    (bool) - return timezone of users
+	 *    - only_users      (array)	- Array of user IDs. if is set, only users 
+	 *                                from this array are returned (default:null)
+	 *    - return_all       (bool)	- if true, the result isn't limited by LIMIT
+	 *                                sql phrase (default: false)
+	 *    - only_agreeing    (bool)	- if true, only subscribers agreeing to look
+	 *                                up for them are returned (default: false)
+	 *    - get_credentials  (bool) - return credentials of users in output 
+	 *                                array (default: false)
  	 *	
 	 *	@return array	array of users or FALSE on error
 	 */ 

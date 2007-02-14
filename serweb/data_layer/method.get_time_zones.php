@@ -1,12 +1,19 @@
 <?
-/*
- * $Id: method.get_time_zones.php,v 1.1 2004/08/25 10:45:58 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_time_zones.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get list of timezones
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_time_zones {
 	var $required_methods = array();
 	
-	/*
+	/**
 	 * get list of timezones from zone.tab
 	 */
 

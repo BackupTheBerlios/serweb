@@ -1,13 +1,20 @@
 <?
-/*
- * $Id: method.delete_user_credentials.php,v 1.1 2005/12/22 13:44:42 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.delete_user_credentials.php,v 1.2 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for delete all credentials of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_delete_user_credentials {
 	var $required_methods = array();
 	
-	/*
-	 * delete user record from subscriber
+	/**
+	 * delete user records from credentials
 	 */
 
 	function delete_user_credentials($uid){

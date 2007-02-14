@@ -1,6 +1,11 @@
-<?
-/*
- * $Id: 2_existing_admin.php,v 1.3 2007/02/05 15:10:37 kozlik Exp $
+<?php
+/**
+ *	New domain wizard - choose admin
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: 2_existing_admin.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('subscribers');
 $_required_apu = array('apu_subscribers', 'apu_sorter'); 
 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

@@ -1,40 +1,51 @@
-<?
+<?php
 /**
  * Page controler
  * 
- * @author    Karel Kozlik
- * @version   $Id: page_controler.php,v 1.31 2007/02/02 10:09:20 kozlik Exp $
- * @package   serweb
+ * @author     Karel Kozlik
+ * @version    $Id: page_controler.php,v 1.32 2007/02/14 16:36:38 kozlik Exp $
+ * @package    serweb
+ * @subpackage framework
  */ 
 
 /**
  *	Page controler
  *	
- *	Configuration:
- *	--------------
- *	currently none   
+ *	Page controler process input data, execute all registeret APU objects for
+ *	an page a create the HTML output.
  *	
- *	 
- *	Exported smarty variables:
- *	--------------------------
- *	parameters 	assigned to $page_attributes
- *	lang_str 	assigned to $lang_str
- *	lang_set 	assigned to $lang_set
- *	user_auth	assigned to $this->user_id - associative array containing username, domain and uuid
- *	                     of user loged in or of user which datails admin is examining
- *	come_from_admin_interface    assigned to $come_from_admin_interface
- *	cfg			assigned to $config (contain only these properties:
- *					img_src_path
- *					js_src_path
- *					style_src_path
- *					user_pages_path
- *					admin_pages_path
- *					domains_path
- *				)
+ *	<b>Configuration:</b>
  *	
- *	Smarty variables containing html forms. For details see methods 
- *	assign_form_name() and set_name_of_smarty_var_for_form().
+ *	This class currently not do not use any options
  *	
+ *	
+ *	<b>Exported smarty variables:</b>
+ *	
+ *	- <i>parameters</i>
+ *	  assigned to global variable $page_attributes
+ *	- <i>lang_str</i>
+ *	  assigned to global variable $lang_str
+ *	- <i>lang_set</i>
+ *	  assigned to global variable $lang_set
+ *	- <i>come_from_admin_interface</i>
+ *	  assigned to {@link $come_from_admin_interface}
+ *	- <i>cfg</i>		
+ *	  assigned to variable $config holding configuration.
+ *	  Contain only following properties: img_src_path, js_src_path, 
+ *	  style_src_path, user_pages_path, admin_pages_path, domains_path
+ *	- <i>user_auth</i>
+ *	  assigned to variable {@link $user_id}
+ *	  which is associative array containing username, domain and uid
+ *	  of user loged in or of user which datails admin is examining
+ *	- <i>form</i> 
+ *	  contain elements of HTML form. Name of this variable could be changed. 
+ *	  There also could be more variables containing HTML forms. Form more 
+ *	  details see: {@link assign_form_name()} 
+ *	  and {@link set_name_of_smarty_var_for_form()}
+ *	
+ *	
+ * @package    serweb
+ * @subpackage framework
  */
  
 class page_conroler{
@@ -529,8 +540,11 @@ class page_conroler{
 	}
 
 
-	/* determine actions of all application units 
-	   and check if some APU needs validate form or send header 'location'
+	/**
+	 *	determine actions of all application units 
+	 *	and check if some APU needs validate form or send header 'location'
+	 *	
+	 *	@access private
 	 */
 	function _determine_actions(){
 		$this->send_header_location=false;
@@ -575,7 +589,11 @@ class page_conroler{
 		}
 	}
 	
-	/* create html form by all application units */
+	/**
+	 *	create html form by all application units 
+	 *	
+	 *	@access private
+	 */
 	function _create_html_form(){
 		foreach($this->apu_objects as $key=>$val){
 			$this->apu_objects[$key]->create_html_form($this->errors);
@@ -593,7 +611,11 @@ class page_conroler{
 		}
 	}
 	
-	/* validate html form */
+	/** 
+	 *	validate html form
+	 *	
+	 *	@access private
+	 */
 	function _validate_html_form(){
 
 		if ($this->validate_html_form){
@@ -623,14 +645,22 @@ class page_conroler{
 		return true;
 	}
 
-	/* call form_invalid method of each apu */
+	/**
+	 *	call form_invalid method of each apu
+	 *	
+	 *	@access private
+	 */
 	function _form_invalid(){
 		foreach($this->apu_objects as $key=>$val){
 			$this->apu_objects[$key]->form_invalid();
 		}
 	}
 
-	/* load default values to form */
+	/** 
+	 *	load default values to form
+ 	 *	
+	 *	@access private
+	 */
 	function _form_load_defaults(){
 		/* if is used shared html form, load defaults to forms which were submited */
 		if ($this->shared_html_form) {
@@ -651,7 +681,11 @@ class page_conroler{
 		
 	}
 	
-	/** execute actions of all application units **/
+	/** 
+	 *	execute actions of all application units
+	 *	
+	 *	@access private
+	 */
 	function _execute_actions(){
 		global $_SERVER, $sess;
 	
@@ -704,7 +738,11 @@ class page_conroler{
 		return true;
 	}
 	
-	/** assign values and form(s) to smarty **/
+	/**
+	 *	assign values and form(s) to smarty
+	 *	
+	 *	@access private
+	 */
 	function _smarty_assign(){
 		global $smarty;
 		

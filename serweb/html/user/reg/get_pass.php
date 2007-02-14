@@ -1,7 +1,12 @@
-<?
-/*
- * $Id: get_pass.php,v 1.6 2006/09/08 12:27:33 kozlik Exp $
- */
+<?php
+/**
+ *	Get forgot password
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: get_pass.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
+ */ 
 
 $_data_layer_required_methods=array();
 $_phplib_page_open = array("sess" => "phplib_Session");
@@ -10,6 +15,7 @@ $_required_modules = array('auth');
 
 $_required_apu = array('apu_forgotten_password');						   
 
+/** include all others necessary files */
 require "prepend.php";
 
 $fp=new apu_forgotten_password();

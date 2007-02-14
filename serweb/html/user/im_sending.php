@@ -1,7 +1,16 @@
 <?php
+/**
+ *	Display window informing that serweb sending instant message
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: im_sending.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
+ */ 
 
 $_phplib_page_open = array("sess" => "phplib_Session");
 
+/** include all others necessary files */
 require "prepend.php";
 
 $cfg=new stdclass();

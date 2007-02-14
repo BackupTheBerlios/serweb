@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: domain_edit.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
+/**
+ *	Edit domain aliases, customer and admins
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: domain_edit.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -13,6 +18,7 @@ $_required_modules = array('multidomain');
 $_required_apu = array('apu_domain'); 
 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

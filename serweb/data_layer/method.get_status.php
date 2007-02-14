@@ -1,8 +1,15 @@
 <?php
-/*
- * $Id: method.get_status.php,v 1.7 2006/04/12 13:41:19 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_status.php,v 1.8 2007/02/14 16:36:38 kozlik Exp $
+ *	@package    serweb
+ */ 
 
+/**
+ *	Data layer container holding the method for get status of user
+ * 
+ *	@package    serweb
+ */ 
 class CData_Layer_get_status {
 	var $required_methods = array('get_did_by_realm');
 	
@@ -12,7 +19,7 @@ class CData_Layer_get_status {
 	 *	Return status: 'unknown', 'nonlocal', 'notexists', 'offline', 'online'
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@param	string	$sip_uri	URI of user
 	 *	@param	array	$opt		array of options

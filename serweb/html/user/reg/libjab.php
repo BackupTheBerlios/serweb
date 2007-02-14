@@ -1,5 +1,12 @@
 <?php
+/**
+ *	Jabber library
+ * 
+ *	@version    $Id: libjab.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    libjab
+ */ 
 
+/**  */
 function jab_connect($server, $port)
 {
 	global $errfile;

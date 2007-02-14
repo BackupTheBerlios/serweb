@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_attr_by_val.php,v 1.6 2006/11/24 13:33:02 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_attr_by_val.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for search attribute by its value
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_get_attr_by_val {
 	var $required_methods = array();
 	
@@ -12,13 +21,10 @@ class CData_Layer_get_attr_by_val {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *	  name
-	 *		name of atribute	
-	 *
-	 *	  value
-	 *		value of atribute	
-	 *
-	 *	  count_only
+	 *	 - name (string) -     name of atribute	
+	 *	 - value (string) -    value of atribute	
+	 *	 - count_only (bool) - just count attributes with given name and value. 
+	 *		If this option is true, integere is returned instead of array
 	 *
 	 *	@return array
 	 */ 

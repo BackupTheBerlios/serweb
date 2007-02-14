@@ -1,9 +1,17 @@
 <?php
+/**
+ *	IM Gateway subscription
+ * 
+ *	@version    $Id: reg_jab.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ */ 
+
 # *** ---------------------------------------- ***
 # IM Gateway subscription
 # contact daniel for anything related to it
 # *** ---------------------------------------- ***
 #
+/**  */
 include ("libjab.php");
 function reg_jab($sipname)
 {

@@ -1,6 +1,11 @@
 <?php
-/*
- * $Id: edit_type_spec.php,v 1.1 2006/03/13 15:34:05 kozlik Exp $
+/**
+ *	Edit extended settings for attribute
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: edit_type_spec.php,v 1.2 2007/02/14 16:36:39 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage admin_pages
  */ 
 
 $_data_layer_required_methods=array();
@@ -12,6 +17,7 @@ $_required_modules = array('attributes');
 
 $_required_apu = array(); 
 
+/** include all others necessary files */
 require "prepend.php";
 
 $perm->check("admin,hostmaster");

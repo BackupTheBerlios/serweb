@@ -1,8 +1,16 @@
-<?
-/*
- * $Id: page_attributes.php,v 1.4 2006/09/08 12:27:32 kozlik Exp $
+<?php
+/**
+ *	Set attributes for all pages in user interface
+ * 
+ *	@author     Karel Kozlik
+ *	@version    $Id: page_attributes.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage user_pages
  */ 
 
+/**
+ *	Get real name of the user
+ */
 function get_user_real_name($user){
 	global $config;
 

@@ -1,8 +1,17 @@
 <?php
-/*
- * $Id: method.get_domain_attrs.php,v 1.2 2006/03/08 15:46:26 kozlik Exp $
- */
+/**
+ *	@author     Karel Kozlik
+ *	@version    $Id: method.get_domain_attrs.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 
+/**
+ *	Data layer container holding the method for get domain attributes
+ * 
+ *	@package    serweb
+ *	@subpackage mod_attributes
+ */ 
 class CData_Layer_get_domain_attrs {
 	var $required_methods = array();
 	
@@ -12,7 +21,7 @@ class CData_Layer_get_domain_attrs {
 	 *	On error this method returning FALSE.
 	 *
 	 *  Possible options:
-	 *		none
+	 *	 - none
 	 *
 	 *	@return array
 	 */ 
