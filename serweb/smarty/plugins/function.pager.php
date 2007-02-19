@@ -19,6 +19,8 @@
  *         - link_limit = number of links to other pages (optional, default 10)
  *         - txt_prev = label of link to go to previous page (optional, default "previous")
  *         - txt_next = label of link to go to next page (optional, default "next")
+ *         - txt_first = label of link to go to first page. If empty, link is not displayed. (optional, default "")
+ *         - txt_last = label of link to go to last page. If empty, link is not displayed. (optional, default "")
  *         - class_num = CSS class assigned to page numbers (<A> tags) (optional, default "nav")
  *         - class_numon = CSS class assigned to number of active page (optional, default "navActual")
  *         - class_text = CSS class assigned to text labels (previous, next, etc.) (optional, default "nav")
@@ -55,6 +57,8 @@
 	$class_numon  = 'navActual';
 	$txt_prev     = 'previous';            // previous
 	$txt_next     = 'next';                // next
+	$txt_first    = '';
+	$txt_last     = '';
 	$display      = '';
 	$link_special_html = '';
 	
@@ -89,6 +93,11 @@
 	$lfrom=$pos-($link_limit*$limit); if ($lfrom<0) $lfrom=0;
 	$lto=$pos+(($link_limit+1)*$limit); if ($lto>$items) $lto=$items;
 
+	if ($txt_first){
+		if ($pos>0) $out.='<a href="'.$sess->url($url.'0').'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_first.'</a>'.$separator;
+		elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_first.'</span>'.$separator;
+	}
+
 	if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
 	elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
 
@@ -104,7 +113,14 @@
 	
  	if (($pos+$limit)<$items) 
 		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_next.'</a>';
-	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>'.$separator;
+	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>';
+
+	if ($txt_last){
+	 	if (($pos+$limit)<$items) 
+			$out.=$separator.'<a href="'.$sess->url($url.(floor($items/$limit)*$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_last.'</a>';
+		elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_last.'</span>';
+	}
+
 	
 	return $out;  
 }
