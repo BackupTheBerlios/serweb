@@ -3,7 +3,7 @@
  *	New domain wizard - page attributes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: page_attributes.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: page_attributes.php,v 1.5 2007/02/19 09:36:06 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -18,7 +18,8 @@ $page_attributes=array(
 	'css_file' => multidomain_get_file("styles.css"),
 	'prolog'=>"<body class=\"swWizard\"><h1>",
 	'separator'=>"</h1><hr class='separator' />",
-	'epilog'=>"</body>"
+	'epilog'=>"</body>",
+	'author_meta_tag'=>"Karel Kozlik <karel at iptel dot org>"
 );
 
 ?>

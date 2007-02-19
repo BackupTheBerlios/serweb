@@ -3,7 +3,7 @@
  *	Set attributes for all pages in user interface
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: page_attributes.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: page_attributes.php,v 1.6 2007/02/19 09:36:07 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -33,7 +33,8 @@ $page_attributes=array(
 	'tab_collection' => $config->user_tabs,
 	'path_to_pages' => $config->user_pages_path,
 	'logout'=>true,
-	'css_file' => multidomain_get_file("styles.css")
+	'css_file' => multidomain_get_file("styles.css"),
+	'author_meta_tag'=>"Karel Kozlik <karel at iptel dot org>"
 );
 
 ?>

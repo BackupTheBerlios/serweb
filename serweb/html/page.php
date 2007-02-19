@@ -3,7 +3,7 @@
  *	Functions for output basic page layout
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: page.php,v 1.34 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: page.php,v 1.35 2007/02/19 09:36:06 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -48,7 +48,9 @@ function print_html_head($parameters=array()){
 ?>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=<?echo $lang_set['charset'];?>">
-	<meta name="Author" content="Karel Kozlik <karel at iptel dot org>">
+<? if (!empty($parameters['author_meta_tag'])) { 
+	echo "	<meta name=\"Author\" content=\"".$parameters['author_meta_tag']."\">";
+	} ?>
 	<meta http-equiv="PRAGMA" content="no-cache"> 
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Expires" content="<?echo GMDate("D, d M Y H:i:s")." GMT";?>"> 
