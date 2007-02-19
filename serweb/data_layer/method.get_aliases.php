@@ -1,7 +1,7 @@
-<?
+<?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_aliases.php,v 1.8 2007/02/14 16:36:38 kozlik Exp $
+ *	@version    $Id: method.get_aliases.php,v 1.9 2007/02/19 09:34:14 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -51,6 +51,9 @@ class CData_Layer_get_aliases {
 
 		if (!empty($opt['filter']['username'])) 
 			$qw .= $c->username." = ".$this->sql_format($opt['filter']['username'], "s")." and ";
+
+		if (!empty($opt['filter']['scheme']))
+			$qw .= $c->scheme." = ".$this->sql_format($opt['filter']['scheme'], "s")." and ";
 
 		$qw .= $this->get_sql_bool(true);
 
