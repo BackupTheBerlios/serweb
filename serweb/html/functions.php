@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.82 2007/02/14 16:36:39 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.83 2007/02/27 10:23:11 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1141,6 +1141,117 @@ function rm($fileglob)
        return false;
    }
    return true;
+}
+
+/**
+ * encodes an arbitrary variable into JSON format
+ *
+ * @param    mixed   $var    any number, boolean, string, array, or object to be encoded.
+ *                           if var is a strng, note that JSON_encode() always expects it
+ *                           to be in ASCII or UTF-8 format!
+ *
+ * @return   mixed   JSON string representation of input var or FALSE if a problem occurs
+ * @access   public
+ */
+function JSON_encode($var){
+
+    switch (gettype($var)) {
+        case 'boolean':
+            return $var ? 'true' : 'false';
+
+        case 'NULL':
+            return 'null';
+
+        case 'integer':
+            return (int) $var;
+
+        case 'double':
+        case 'float':
+            return (float) $var;
+
+        case 'string':
+            // STRINGS ARE EXPECTED TO BE IN ASCII OR UTF-8 FORMAT
+
+            return '"'.addslashes($var).'"';
+
+        case 'array':
+           /*
+            * As per JSON spec if any array key is not an integer
+            * we must treat the the whole array as an object. We
+            * also try to catch a sparsely populated associative
+            * array with numeric keys here because some JS engines
+            * will create an array with empty indexes up to
+            * max_index which can cause memory issues and because
+            * the keys, which may be relevant, will be remapped
+            * otherwise.
+            *
+            * As per the ECMA and JSON specification an object may
+            * have any string as a property. Unfortunately due to
+            * a hole in the ECMA specification if the key is a
+            * ECMA reserved word or starts with a digit the
+            * parameter is only accessible using ECMAScript's
+            * bracket notation.
+            */
+
+            // treat as a JSON object
+            if (is_array($var) && count($var) && (array_keys($var) !== range(0, sizeof($var) - 1))) {
+				$properties  = array();
+				foreach($var as $k => $v){
+					$en_val = JSON_encode($v);
+					if (false === $en_val) return false;
+					$properties[] = JSON_encode(strval($k)).':'.$en_val;
+				}
+
+                return '{' . implode(',', $properties) . '}';
+            }
+
+            // treat it like a regular array
+            $elements = array_map('JSON_encode', $var);
+
+			foreach($elements as $k => $v){
+				if (false === $v) return false;
+			}
+
+            return '[' . implode(',', $elements) . ']';
+
+        case 'object':
+            $vars = get_object_vars($var);
+
+			$properties  = array();
+			foreach($vars as $k => $v){
+				$en_val = JSON_encode($v);
+				if (false === $en_val) return false;
+				$properties[] = JSON_encode(strval($k)).':'.$en_val;
+			}
+
+            return '{' . implode(',', $properties) . '}';
+        
+        default:
+        	return false;
+    }
+} 
+
+/**
+ *	Redirect client to secure connection and stop executing of the script
+ */
+function redirect_to_HTTPS(){
+	/* if useing secure connection return true */
+	if (!empty($_SERVER['HTTPS']) and $_SERVER['HTTPS']!='off') return true;
+
+	/* there is something wrong, we already tryed do redirect but it seems 
+	   non secure connection is still used */
+	if (isset($_GET['redirected_to_https'])) return false;
+
+
+	/* do redirect to secure connection */
+	$server_name = isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : $_SERVER["SERVER_NAME"];
+	$separator = (false === strstr($_SERVER['REQUEST_URI'], '?')) ? '?' : '&';
+
+	/* for developer purpose - if need to use diferent port for redirect */
+	if (isset($_COOKIE['_server_port'])) $server_name .= ":".$_COOKIE['_server_port'];
+
+	Header("Location: https://".$server_name.$_SERVER['REQUEST_URI'].$separator."redirected_to_https=1");
+	exit (0);
 }
 
 ?>
