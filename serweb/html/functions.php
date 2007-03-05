@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.83 2007/02/27 10:23:11 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.84 2007/03/05 10:28:04 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -151,7 +151,13 @@ class Creg{
 		$this->uri_parameters="((;".$this->uri_parameter.")*)";
 
 		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
+
+		/** regex matching sip uri */
 		$this->sip_address="[sS][iI][pP]:".$this->address;
+		/** regex matching sips uri */
+		$this->sips_address="[sS][iI][pP][sS]:".$this->address;
+		/** regex matching sip or sips uri */
+		$this->sip_s_address="[sS][iI][pP][sS]?:".$this->address;
 
 		/** reg.exp. validating sip header name */
 		$this->sip_header="([^][ ()<>@,;:\\\\=\"/?{}]+)";
@@ -1252,6 +1258,16 @@ function redirect_to_HTTPS(){
 
 	Header("Location: https://".$server_name.$_SERVER['REQUEST_URI'].$separator."redirected_to_https=1");
 	exit (0);
+}
+
+/**
+ *	Add escape characters into string to it could be directly used in javascript
+ *	
+ *	@param	string	$str
+ *	@return	string
+ */
+function js_escape($str){
+	return str_replace("\n", '\n', addslashes($str));
 }
 
 ?>
