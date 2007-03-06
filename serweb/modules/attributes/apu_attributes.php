@@ -3,7 +3,7 @@
  * Application unit attributes
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attributes.php,v 1.14 2007/02/14 16:36:40 kozlik Exp $
+ * @version    $Id: apu_attributes.php,v 1.15 2007/03/06 14:58:51 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -59,6 +59,12 @@
  *	 name of script to which is browser redirected after succesfull update
  *	 if empty, browser isn't redirected
  *
+ *	'on_update_callback'		(string) default: null
+ *	 name of function called when action 'update' is invoked
+ *	
+ *	'on_default_callback'		(string) default: null
+ *	 name of function called when action 'default' is invoked
+ *	
  *	'msg_update'					default: $lang_str['msg_changes_saved_s'] and $lang_str['msg_changes_saved_l']
  *	 message which should be showed on attributes update - assoc array with keys 'short' and 'long'
  *
@@ -131,6 +137,9 @@ class apu_attributes extends apu_base_class{
 		$this->opt['attrs_kind'] = 'user';	
 		$this->opt['redirect_on_update']  = "";
 		$this->opt['perm'] = 'user';	
+
+		$this->opt['on_default_callback'] = null;
+		$this->opt['on_update_callback'] = null;
 
 		$this->opt['allow_edit'] = true;
 		
@@ -287,13 +296,25 @@ class apu_attributes extends apu_base_class{
 			}
 		}
 
+		if ($this->opt['on_update_callback']){
+			call_user_func_array($this->opt['on_update_callback'], array(&$this));
+		}
+
 		if ($this->opt['redirect_on_update']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);
 		}
 
 		return array("m_attrs_updated=".RawURLEncode($this->opt['instance_id']));
 	}
-	
+
+
+	function action_default(&$errors){
+
+		if ($this->opt['on_default_callback']){
+			call_user_func_array($this->opt['on_default_callback'], array(&$this));
+		}
+
+	}	
 			
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
