@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.84 2007/03/05 10:28:04 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.85 2007/04/17 08:35:16 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1150,16 +1150,37 @@ function rm($fileglob)
 }
 
 /**
- * encodes an arbitrary variable into JSON format
+ * wrapper for function JSON_encode
+ *
+ * If function JSON_encode call it. In other case call function sw_JSON_encode
  *
  * @param    mixed   $var    any number, boolean, string, array, or object to be encoded.
- *                           if var is a strng, note that JSON_encode() always expects it
+ *                           if var is a strng, note that sw_JSON_encode() always expects it
  *                           to be in ASCII or UTF-8 format!
  *
  * @return   mixed   JSON string representation of input var or FALSE if a problem occurs
  * @access   public
  */
-function JSON_encode($var){
+function my_JSON_encode($var){
+	if (function_exists("JSON_encode")){
+		return JSON_encode($var);
+	}
+	else {
+		return sw_JSON_encode($var);
+	}
+}
+
+/**
+ * encodes an arbitrary variable into JSON format
+ *
+ * @param    mixed   $var    any number, boolean, string, array, or object to be encoded.
+ *                           if var is a strng, note that sw_JSON_encode() always expects it
+ *                           to be in ASCII or UTF-8 format!
+ *
+ * @return   mixed   JSON string representation of input var or FALSE if a problem occurs
+ * @access   public
+ */
+function sw_JSON_encode($var){
 
     switch (gettype($var)) {
         case 'boolean':
@@ -1203,16 +1224,16 @@ function JSON_encode($var){
             if (is_array($var) && count($var) && (array_keys($var) !== range(0, sizeof($var) - 1))) {
 				$properties  = array();
 				foreach($var as $k => $v){
-					$en_val = JSON_encode($v);
+					$en_val = sw_JSON_encode($v);
 					if (false === $en_val) return false;
-					$properties[] = JSON_encode(strval($k)).':'.$en_val;
+					$properties[] = sw_JSON_encode(strval($k)).':'.$en_val;
 				}
 
                 return '{' . implode(',', $properties) . '}';
             }
 
             // treat it like a regular array
-            $elements = array_map('JSON_encode', $var);
+            $elements = array_map('sw_JSON_encode', $var);
 
 			foreach($elements as $k => $v){
 				if (false === $v) return false;
@@ -1225,9 +1246,9 @@ function JSON_encode($var){
 
 			$properties  = array();
 			foreach($vars as $k => $v){
-				$en_val = JSON_encode($v);
+				$en_val = sw_JSON_encode($v);
 				if (false === $en_val) return false;
-				$properties[] = JSON_encode(strval($k)).':'.$en_val;
+				$properties[] = sw_JSON_encode(strval($k)).':'.$en_val;
 			}
 
             return '{' . implode(',', $properties) . '}';
