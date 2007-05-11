@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.23 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.24 2007/05/11 07:40:49 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -870,6 +870,8 @@ class URIs{
 
     function &singleton_2($username, $did) {
         static $instances = array();
+
+		$username = strtolower($username);
 
 		$key = $username."@".$did;
 

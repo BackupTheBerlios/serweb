@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_aliases.php,v 1.9 2007/02/19 09:34:14 kozlik Exp $
+ *	@version    $Id: method.get_aliases.php,v 1.10 2007/05/11 07:40:48 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -50,7 +50,7 @@ class CData_Layer_get_aliases {
 			$qw .= $c->did." = ".$this->sql_format($opt['filter']['did'], "s")." and ";
 
 		if (!empty($opt['filter']['username'])) 
-			$qw .= $c->username." = ".$this->sql_format($opt['filter']['username'], "s")." and ";
+			$qw .= "lower(".$c->username.") = lower(".$this->sql_format($opt['filter']['username'], "s").") and ";
 
 		if (!empty($opt['filter']['scheme']))
 			$qw .= $c->scheme." = ".$this->sql_format($opt['filter']['scheme'], "s")." and ";
