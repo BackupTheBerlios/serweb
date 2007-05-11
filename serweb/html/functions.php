@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.85 2007/04/17 08:35:16 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.86 2007/05/11 07:38:15 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -139,7 +139,7 @@ class Creg{
 		*/
 		$this->toplabel="([a-zA-Z]|([a-zA-Z](~|".$this->alphanum.")*".$this->alphanum."))";
 		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."([~-]|".$this->alphanum.")*".$this->alphanum."))";
-		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel."(\\.)?)";
+		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel.")";
 		$this->host="(".$this->hostname."|".$this->ipv4address."|".$this->ipv6reference.")";
 
 		$this->token="(([-.!%*_+`'~]|".$this->alphanum.")+)";
@@ -197,7 +197,7 @@ class Creg{
 	 * @return string domain name
 	 */
 	function get_domainname($sip){
-		return ereg_replace($this->sip_address,"\\5", $sip);
+		return ereg_replace($this->sip_s_address,"\\5", $sip);
 	}
 
 	/**
@@ -208,10 +208,27 @@ class Creg{
 	 */
 	function get_username($sip){
 
-		$uname=ereg_replace($this->sip_address,"\\1", $sip);
+		$uname=ereg_replace($this->sip_s_address,"\\1", $sip);
 
 		//remove the '@' at the end
 		return substr($uname,0,-1);
+	}
+	
+	/**
+	 * parse port number from sip address
+	 *
+	 * @param string $sip sip address
+	 * @return string port
+	 */
+	function get_port($sip){
+		ereg($this->sip_s_address, $sip, $regs);
+		
+		if (!empty($regs[38])){
+			//remove the ':' at the begining
+			return substr($regs[38], 1);
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -263,6 +280,156 @@ class Creg{
 	function convert_phonenumber_to_strict_js($in_var, $out_var){
 		return $out_var." = ".$in_var.".replace(/[-\\/ ()]/g, '')";
 	}
+	
+	/**
+	 *	check if given string is in format of IPv4 address
+	 *	
+	 *	@param	string	$adr	IPv4 address
+	 *	@return	bool
+	 */
+	function is_ipv4address($adr){
+		if (ereg("^".$this->ipv4address."$", $adr)) return true;
+		else return false;
+	}
+	
+	/**
+	 *	check if all parts of given IPv4 address are in range 0-255
+	 *	
+	 *	@param	string	$adr	IPv4 address
+	 *	@return	bool
+	 */
+	function ipv4address_check_part_range($adr){
+		// check if given string is IPv4 address
+		if (!$this->is_ipv4address($adr)) return false;
+		
+		$parts = explode(".", $adr);
+		
+		foreach ($parts as $v){
+			if (!is_numeric($v)) return false;		// part is not numeric
+		
+			$v = (int)$v;
+			if ($v<0 or $v>255) return false;		// wrong range
+		}
+		
+		return true;
+	}
+
+
+	/**
+	 *	Return javascript function checking range of parts of IPV4 address in SIP URI
+	 *	
+	 *	@param	string	$name	name of javascript function which will be generated
+	 *	@return	string
+	 */
+	function ipv4address_check_part_range_js_fn($name){
+		$js = "
+			function ".$name."(adr){
+
+				// parse host part from SIP uri			
+				var re = /".str_replace('/','\/',$this->sip_s_address)."/;
+				var hostname = adr.replace(re, '\$5');
+
+				//check if host part is in format of IPv4 address				
+				var re = /".str_replace('/','\/',"^".$this->ipv4address."$")."/;
+				if (re.test(hostname)){
+				
+					// split address to parts
+					var ipv4_parts = hostname.split('.');
+					
+					for (var i=0; i < ipv4_parts.length; i++){
+						var int_part = Number(ipv4_parts[i]);
+						if (int_part == Number.NaN){
+							return false;			// part is not numeric
+						}
+					
+						if (int_part < 0 || int_part > 255){
+							return false;			// wrong range
+						}
+					}
+				}
+				return true;
+			}
+		";
+		return $js;
+	}
+
+	/**
+	 *	Check range of TCP/UDP port
+	 *	
+	 *	@param	string	$port
+	 *	@return	bool
+	 */
+	function port_check_range($port){
+		if (!is_numeric($port)) return false;
+		
+		$port = (int)$port;
+		if ($port < 1 or $port > 65535) return false;
+		
+		return true;
+	}
+
+	/**
+	 *	Return javascript function checking range of TCP/UDP port inside SIP uri
+	 *	
+	 *	@param	string	$name	name of javascript function which will be generated
+	 *	@return	string
+	 */
+	function port_check_range_js_fn($name){
+		$js = "
+			function ".$name."(adr){
+
+				/* parse port from sip uri */
+
+				if      (adr.substr(0,4).toLowerCase() == 'sip:')  adr = adr.substr(4); //strip initial 'sip:'
+				else if (adr.substr(0,5).toLowerCase() == 'sips:') adr = adr.substr(5); //strip initial 'sips:'
+				else    return false; //not valid uri
+				
+
+				var ipv6 = 0;
+				var portpos = null;
+				var ch;
+			
+				for (var i=0; (i < adr.length) && (portpos == null); i++){
+					ch = adr.substr(i, 1);
+
+					switch (ch){
+					case '[':  ipv6++; break;
+					case ']':  ipv6--; break;
+					case ':':
+					           if (!ipv6){ //semicolon is not part of ipv6 address
+									portpos = i;  //position of port inside address string
+									break;
+							   } 
+					}
+				}
+
+				if (portpos == null) return true;	//no port in the uri
+
+				portpos++; //move after the semicolon
+				var portlen = 0;
+
+				for (var i=portpos; i < adr.length; i++){
+					ch = adr.substr(i, 1);
+
+					if (ch<'0' || ch>'9') break;
+					portlen++;
+				}
+
+				if (portlen == 0) return false;	//no port in uri, but it contains semicolon
+
+				var port = Number(adr.substr(portpos, portlen));
+				if (port == Number.NaN)		return false; //should never happen, but to be sure...
+					
+				if (port < 1 || port > 65535){
+							return false;	//invalid port range
+				}
+				
+				return true;
+			}
+		";
+		return $js;
+	}
+
 }
 
 
@@ -1275,7 +1442,15 @@ function redirect_to_HTTPS(){
 	$separator = (false === strstr($_SERVER['REQUEST_URI'], '?')) ? '?' : '&';
 
 	/* for developer purpose - if need to use diferent port for redirect */
-	if (isset($_COOKIE['_server_port'])) $server_name .= ":".$_COOKIE['_server_port'];
+	if (isset($_COOKIE['_server_port'])) {
+		/* if server name conatin port number */
+		if (strpos($server_name, ":")) {
+			/* strip the port from server name */
+			$server_name = substr($server_name, 0, strpos($server_name, ":"));
+		}
+		/* and add port for https */
+		$server_name .= ":".$_COOKIE['_server_port'];
+	}
 
 	Header("Location: https://".$server_name.$_SERVER['REQUEST_URI'].$separator."redirected_to_https=1");
 	exit (0);
