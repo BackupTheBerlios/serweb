@@ -107,6 +107,11 @@ The most interesting flag is 'reload' flag, which says that the APU want just
 do some action (usualy update data in DB) and than perform reload of page 
 (without any HTML output).
 
+The methods 'post_determine_action' of all APUs are called next. In this stage
+some user functions checking permisions to selected action could be called. 
+There could be also some actions that need to be called for each action but 
+do not logicaly fit into 'create_html_form' method.
+
 The methods 'create_html_form' of all APUs are called next. In this stage each
 APU could create its own object holding html form. One html form object could 
 be also shared by more APUs (see "Shared HTML forms" section). You could find

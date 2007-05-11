@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.32 2007/02/14 16:36:38 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.33 2007/05/11 07:46:54 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -541,6 +541,34 @@ class page_conroler{
 
 
 	/**
+	 *	Do a reload of current page
+	 *	
+	 *	This function send header "Location" and finish execution of script
+	 *	
+	 *	@param	array	$get_param		array of GET parameters send in the URL
+	 *	@return	none					this function finish execution of script
+	 */
+	function reload($get_param){
+		global $sess;
+		
+		/* collect all get params to one string */
+		$get_param = implode('&', $get_param);
+		
+		/* send header */
+		if (!$this->url_for_reload) $this->url_for_reload = $_SERVER['PHP_SELF'];
+
+		$param_separator = strpos($this->url_for_reload, "?") !== false ?  "&" : "?";
+		
+        Header("Location: ".$sess->url($this->url_for_reload.$param_separator."kvrk=".uniqID("").
+							($get_param ? 
+								'&'.$get_param : 
+								'')));
+		/* break the script execution */
+		page_close();
+		exit;
+	}
+
+	/**
 	 *	determine actions of all application units 
 	 *	and check if some APU needs validate form or send header 'location'
 	 *	
@@ -586,6 +614,17 @@ class page_conroler{
 				
 				break;
 			}
+		}
+	}
+	
+	/**
+	 *	call post_determine_action method for each APU
+	 *	
+	 *	@access private
+	 */
+	function _post_determine_actions(){
+		foreach($this->apu_objects as $key=>$val){
+			$this->apu_objects[$key]->post_determine_action();
 		}
 	}
 	
@@ -687,7 +726,6 @@ class page_conroler{
 	 *	@access private
 	 */
 	function _execute_actions(){
-		global $_SERVER, $sess;
 	
 		$send_get_param = array();
 		foreach($this->apu_objects as $key=>$val){
@@ -711,21 +749,8 @@ class page_conroler{
 		
 		/* if header location should be send */
 		if ($this->send_header_location){
-			/* collect all get params to one string */
-			$send_get_param = implode('&', $send_get_param);
-			
-			/* send header */
-			if (!$this->url_for_reload) $this->url_for_reload = $_SERVER['PHP_SELF'];
-
-			$param_separator = strpos($this->url_for_reload, "?") !== false ?  "&" : "?";
-			
-	        Header("Location: ".$sess->url($this->url_for_reload.$param_separator."kvrk=".uniqID("").
-								($send_get_param ? 
-									'&'.$send_get_param : 
-									'')));
-			/* break the script execution */
-			page_close();
-			exit;
+			/* send header and break the script execution */
+			$this->reload($send_get_param);
 		}
 
 		/* if standard html output should not be generated */
@@ -957,6 +982,9 @@ class page_conroler{
 		   and check if some APU needs validate form or send header 'location'
 		 */
 		$this->_determine_actions();
+
+		/* call post_determine_action methods for each APU */
+		$this->_post_determine_actions();
 	
 		/* create html form by all application units */
 		$this->_create_html_form();

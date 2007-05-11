@@ -1,4 +1,4 @@
-$Id: application_layer_cz,v 1.8 2005/09/21 12:25:08 kozlik Exp $
+$Id: application_layer_cz,v 1.9 2007/05/11 07:46:54 kozlik Exp $
 
 *******************************************************************************
 *                            Application layer                                *
@@ -249,7 +249,7 @@ Prubeh zpracovani APU page_controlerem
  * Application unit my_apu 
  * 
  * @author    Karel Kozlik
- * @version   $Id: application_layer_cz,v 1.8 2005/09/21 12:25:08 kozlik Exp $
+ * @version   $Id: application_layer_cz,v 1.9 2007/05/11 07:46:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -366,6 +366,15 @@ class apu_my_apu extends apu_base_class{
 								 'reload'=>false);
 	}
 	
+	/**
+	 *	this method is called always after determine_action method
+	 *
+	 *	@return none
+	 */
+	function determine_action(){
+		parent::determine_action();
+	}
+
 	/**
 	 *	create html form 
 	 *

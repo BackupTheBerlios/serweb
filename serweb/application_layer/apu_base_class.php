@@ -3,7 +3,7 @@
  * The main parent of all application units
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_base_class.php,v 1.12 2007/02/14 16:36:38 kozlik Exp $
+ * @version   $Id: apu_base_class.php,v 1.13 2007/05/11 07:46:54 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -38,7 +38,8 @@ class apu_base_class{
 	var $form_name = null;
 	/** reference to page_controler */
 	var $controler;
-	
+	/** custom function called after determine action */
+	var $custom_post_determine_action;
 
 	/* constructor */
 	function apu_base_class(){
@@ -82,6 +83,10 @@ class apu_base_class{
 	function set_opt($opt_name, $val){
 		$this->opt[$opt_name]=$val;
 	}
+
+	function set_custom_post_determine_action($fn){
+		$this->custom_post_determine_action = $fn;
+	}
 	
 	/* this metod is called always at begining */
 	function init(){
@@ -110,6 +115,13 @@ class apu_base_class{
 		$this->action=array('action'=>"default",
 		                    'validate_form'=>false,
 							'reload'=>false);
+	}
+	
+	/* check _get and _post arrays and determine what we will do */
+	function post_determine_action(){
+		if (!is_null($this->custom_post_determine_action)){
+			call_user_func_array($this->custom_post_determine_action, array(&$this));
+		}
 	}
 	
 	/* create html form */
