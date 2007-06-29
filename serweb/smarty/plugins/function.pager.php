@@ -36,6 +36,7 @@
  * @param array
  * @param Smarty
  * @return string
+ *
  */
 
   function smarty_function_pager($params, &$smarty){
@@ -62,6 +63,9 @@
 	$display      = '';
 	$link_special_html = '';
 	
+    // Optional parameter to verify if page links are to be displayed or not
+    $skip_page_links = '';
+
 	foreach($params as $key=>$value) {
 		if ($key == 'page') continue;
 		$tmps[strtolower($key)] = $value;
@@ -98,19 +102,31 @@
 		elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_first.'</span>'.$separator;
 	}
 
-	if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
-	elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
+    // If page links are not the displayed
+    if(true == $skip_page_links)
+    {
+        if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>';
+        elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>';
 
-	for ($i=$lfrom; $i<$lto; $i+=$limit){
-		/* do not add separateor before first number */
-		if ($i != $lfrom) $out .= $separator;
+    }
+    else
+    {
+        if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
+        elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
 
-		if ($i<=$pos and $pos<($i+$limit)) 
-			$out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>';
-		else 
-			$out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'" '.$link_special_html.'>'.(floor($i/$limit)+1).'</a>';
-	}
-	
+        // skip printing page links
+        for ($i=$lfrom; $i<$lto; $i+=$limit){
+            /* do not add separateor before first number */
+
+            if ($i != $lfrom) $out .= $separator;
+
+            if ($i<=$pos and $pos<($i+$limit))
+                $out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>';
+            else
+                $out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'" '.$link_special_html.'>'.(floor($i/$limit)+1).'</a>';
+        }
+    }
+
  	if (($pos+$limit)<$items) 
 		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_next.'</a>';
 	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>';

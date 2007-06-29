@@ -3,7 +3,7 @@
  * Application unit sorter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_sorter.php,v 1.3 2007/02/14 16:36:38 kozlik Exp $
+ * @version   $Id: apu_sorter.php,v 1.4 2007/06/29 08:41:31 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -90,6 +90,9 @@ class apu_sorter extends apu_base_class{
 		$this->opt['smarty_form'] =			'form';
 		/* name of html form */
 		$this->opt['form_name'] =			'';
+
+		$this->opt['smarty_vars'] =			'url_sort';
+
 
 		$this->opt['form_submit']=array('type' => 'button',
 										'text' => $lang_str['b_search']);
@@ -185,9 +188,14 @@ class apu_sorter extends apu_base_class{
 	function pass_values_to_html(){
 		global $smarty, $sess;
 
+		$sort_urls = array();
+
 		foreach($this->sort_columns as $v){
-			$smarty->assign("url_sort_".$v, $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&u_sort_".$v."=1"));
+			$sort_urls[$v] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&u_sort_".$v."=1");
+			$smarty->assign_by_ref($this->opt['smarty_vars']."_".$v, $sort_urls[$v]);
 		}
+
+		$smarty->assign_by_ref($this->opt['smarty_vars'], $sort_urls);
 	}
 		
 	

@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.86 2007/05/11 07:38:15 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.87 2007/06/29 08:41:31 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1022,7 +1022,7 @@ function read_txt_file($filename, $replacements){
  */
  
 function sw_log($message, $priority = null){
-	global $serwebLog;
+	global $serwebLog, $config;
 
 	//if custom log function is defined, use it for log errors
 	if (!empty($config->custom_log_function)){
@@ -1036,6 +1036,28 @@ function sw_log($message, $priority = null){
 	}
 
 	return true;
+}
+
+/**
+ *	Log action of user
+ *
+ *	@param string $screen_name	Name of screen where the action has been performed.
+ *	@param string $action      	Action which has been performed.
+ *	@param bool $success      	Has been action preformed successfully?
+ *	@param mixed $errors      	String or array of errors which occurs during action
+ *	@param array $opt        	Optional parrameters - reserved for future use
+ *	@return none 			
+ */
+ 
+function action_log($screen_name, $action, $success = true, $errors = "", $opt = array()){
+	global $config;
+
+	if (!empty($config->custom_act_log_function)){
+		call_user_func($config->custom_act_log_function, $screen_name, $action, $success, $errors, $opt);	
+	}
+	else{
+        sw_log($screen_name." - ".$action." ".($success ? "successfull" : "failed"), PEAR_LOG_INFO);
+    }
 }
 
 /**
