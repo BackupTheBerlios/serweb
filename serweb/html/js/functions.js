@@ -1,6 +1,19 @@
-/*
- * $Id: functions.js,v 1.8 2007/01/18 14:49:49 kozlik Exp $
+/**
+ *  Various javascript functions used on most of pages
+ * 
+ *  $Id: functions.js,v 1.9 2007/07/26 16:06:07 kozlik Exp $
  */
+
+
+/**
+ *	Execute function in diferent scope
+ */ 
+Function.prototype.bindObj = function(object) {
+	var __method = this;
+	return function() {
+		return __method.apply(object, arguments);
+	}
+} 
 
 /* confirm click to <a href=""> */
 
@@ -42,6 +55,104 @@ function open_wizard_win(url){
 		wizard_win=window.open(url, "wizard_win", "toolbar=no,location=no,directories=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,top="+ x +",left="+ y +",width=" + width + ",height=" + height);
 		wizard_win.window.focus();
 		return;
+}
+
+/**
+ *	Send a synchronic http request 
+ *	
+ *	Send http request with method POST and 'post_data' in its body.
+ *	If param 'post_data' is not present, method GET is used instead POST 
+ *
+ *  @param	string	url			URL of the request
+ *  @param	string	post_data 	data sent in the request
+ *  @return http_request		result of the requst
+ */  
+ 
+function ajax_sync_request(url, post_data){
+	var http_request;
+
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+		http_request = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+		http_request = new ActiveXObject('Microsoft.XMLHTTP');
+	} else return null;
+	
+
+	if (post_data){
+		http_request.open('POST', url, false);
+		http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		http_request.send(post_data);
+	}
+	else{
+		http_request.open('GET', url, false);
+		http_request.send(null);
+	}
+
+	return http_request;
+}
+
+/**
+ *	Send a asynchronic http request 
+ *	
+ *	Send http request with method POST and 'post_data' in its body.
+ *	If param 'post_data' is not present, method GET is used instead POST 
+ *
+ *  @param	string		url			URL of the request
+ *  @param	string		post_data 	data sent in the request
+ *  @param	function	callback 	function called when httP request state change
+ *  @return http_request			result of the requst
+ */  
+ 
+function ajax_async_request(url, post_data, callback){
+	var http_request;
+
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+		http_request = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+		http_request = new ActiveXObject('Microsoft.XMLHTTP');
+	} else return null;
+	
+
+	if (post_data){
+		http_request.open('POST', url, true);
+		http_request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		http_request.onreadystatechange = function() { callback(http_request); };
+ 		http_request.send(post_data);
+	}
+	else{
+		http_request.open('GET', url, true);
+		http_request.onreadystatechange = function() { callback(http_request); };
+		http_request.send(null);
+	}
+
+	return http_request;
+}
+
+/**
+ *	Add new css class to html element
+ * 
+ *	@param	object	el  
+ *	@param	string	className
+ */
+function addClassNameToEl(el, className){
+	el.className += " " + className;
+}
+
+/**
+ *	Remove the css class to html element
+ * 
+ *	@param	object	el  
+ *	@param	string	className
+ */
+function remClassNameFromEl(el, className){
+	var newClassName = "";
+	var classNames = el.className.split(' ');
+		
+	for (var i=0; i<classNames.length; i++){
+		if (classNames[i] != className) newClassName += " "+classNames[i];
+	}
+
+	el.className = newClassName;
 }
 
 /* toggle visibility of an element */
