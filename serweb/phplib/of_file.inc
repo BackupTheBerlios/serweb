@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_file.inc,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_file.inc,v 1.6 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -24,7 +24,7 @@ class of_file extends of_element {
   function self_get($val,$which, &$count) {
     $str = "";
     
-    $str .= "<input type='hidden' name='MAX_FILE_SIZE' value=$this->size>\n";
+    $str .= "<input type='hidden' name='MAX_FILE_SIZE' value=$this->size />\n";
     $str .= "<input type='file' name='$this->name' id='$this->name'";
     if ($this->extrahtml)
       $str .= " $this->extrahtml";
@@ -38,7 +38,7 @@ class of_file extends of_element {
 	    $str .= " disabled";
     }
 
-    $str .= ">";
+    $str .= " />";
     
     $count = 2;
     return $str;

@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_textarea.inc,v 1.6 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_textarea.inc,v 1.7 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -51,7 +51,7 @@ class of_textarea extends of_element {
     $str .= "<input type='hidden' name='$this->name'";
     $str .= " value=\"";
     $str .= htmlspecialchars($this->value);
-    $str .= "\">\n";
+    $str .= "\" />\n";
     $str .= "<table border=1><tr><td>\n";
     $str .=  nl2br($this->value);
     $str .= "\n</td></tr></table>\n";

@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_radio.inc,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_radio.inc,v 1.9 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -48,7 +48,7 @@ class of_radio extends of_element {
 		}
 	}
 
-    $str .= ">";
+    $str .= " />";
 
     $count = 1;
     return $str;
@@ -60,7 +60,7 @@ class of_radio extends of_element {
     $x = 0;
     if ($this->value==$val) {
       $x = 1;
-      $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($val, ENT_QUOTES)."\">\n";
+      $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($val, ENT_QUOTES)."\" />\n";
       $str .= "<table border=1 bgcolor=#333333>";
     } else {
       $str .= "<table border=1>";

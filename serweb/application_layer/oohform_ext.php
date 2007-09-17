@@ -3,7 +3,7 @@
  *	Extension for phplib object oriented html form
  * 
  *	@author    Karel Kozlik
- *	@version   $Id: oohform_ext.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@version   $Id: oohform_ext.php,v 1.8 2007/09/17 18:56:31 kozlik Exp $
  *	@package   serweb
  *	@subpackage framework
  */
@@ -95,6 +95,32 @@ class form_ext extends form{
 		$this->add_element($element);
 
 	}
+	
+    /**
+     *  Retrun names of all hidden elements in the form
+     *
+     *  @return array
+     */
+    function get_hidden_el_names(){
+        return (array)$this->hidden;
+    }
+    
+    /**
+     *  Retrun all hidden elements in the form as string
+     *
+     *  @return string
+     */
+    function get_hidden_els_as_string(){
+    
+        $str = "";
+        $els = $this->get_hidden_el_names();
+        
+        foreach($els as $v){
+            $str .= $this->get_element($v);
+        }
+
+        return $str;        
+    }
 	
 	
 	function get_start($jvs_name="",$method="",$action="",$target="",$form_name="") {

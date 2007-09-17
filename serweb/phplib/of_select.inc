@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_select.inc,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_select.inc,v 1.12 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -71,7 +71,7 @@ class of_select extends of_element {
           }
         }
       }
-      $str .= ">" . htmlspecialchars((is_array($o) ? $o["label"] : $o), ENT_QUOTES) . "\n";
+      $str .= ">" . htmlspecialchars((is_array($o) ? $o["label"] : $o), ENT_QUOTES) . "</option>\n";
     }
     $str .= "</select>";
     
@@ -94,7 +94,7 @@ class of_select extends of_element {
            (($tmp=$v["value"])==$tv || $v["label"]==$tv))
          || ($tmp=$v)==$tv) {
           $x++;
-          $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($tmp, ENT_QUOTES)."\">\n";
+          $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($tmp, ENT_QUOTES)."\" />\n";
           $str .= "<tr><td>" . (is_array($v) ? $v["label"] : $v) . "</td></tr>\n";
         }
       }

@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_checkbox.inc,v 1.6 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_checkbox.inc,v 1.7 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -54,7 +54,7 @@ class of_checkbox extends of_element {
 	    $str .= " disabled";
     }
 
-    $str .= ">";
+    $str .= " />";
     
     $count = 1;
     return $str;
@@ -72,7 +72,7 @@ class of_checkbox extends of_element {
         while (list($k,$v) = each($this->value)) {
           if ($v==$val) {
 	          $x = 1;
-            $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($v, ENT_QUOTES)."\">\n";
+            $str .= "<input type='hidden' name='$this->name' value=\"".htmlspecialchars($v, ENT_QUOTES)."\" />\n";
             $t =" bgcolor=#333333";
             break;
           }
@@ -83,7 +83,7 @@ class of_checkbox extends of_element {
         $x = 1;
         $t = " bgcolor=#333333";
         $str .= "<input type='hidden' name='$this->name'";
-        $str .= " value=\"".htmlspecialchars($this->value, ENT_QUOTES)."\">";
+        $str .= " value=\"".htmlspecialchars($this->value, ENT_QUOTES)."\" />";
       }
     }
     $str .= "<table$t border=1><tr><td>&nbsp</td></tr></table>\n";

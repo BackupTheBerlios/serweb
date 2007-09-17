@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: oohforms.inc,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: oohforms.inc,v 1.12 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -17,6 +17,8 @@ class of_element {
   var $value;
   var $multiple;
   var $extrahtml;
+  var $js_validate = true;
+  var $php_validate = true;
   
   function marshal_dispatch($m,$func) {   
     $vname = $this->name;
@@ -108,7 +110,7 @@ class of_hidden extends of_element {
       $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($tv, ENT_QUOTES)."\"";
       if ($this->extrahtml)
         $str .=" $this->extrahtml";
-      $str .= ">";
+      $str .= " />";
     }
     
     return $str;
@@ -140,7 +142,7 @@ class of_reset extends of_element {
 	    $str .= " disabled";
     }
 
-    $str .= ">";
+    $str .= " />";
     
     return $str;
   }
@@ -163,7 +165,7 @@ class of_submit extends of_element {
     $sv = empty($val) ? $this->value : $val;
     $str .= "<input name='$this->name' value=\"".htmlspecialchars($sv, ENT_QUOTES)."\"";
     if ($this->src) 
-      $str .= " type='image' src='$this->src' border='0'";
+      $str .= " type='image' src='$this->src'";
     else 
       $str .= " type='submit'";
     if ($this->extrahtml) 
@@ -178,7 +180,7 @@ class of_submit extends of_element {
 	    $str .= " disabled";
     }
 
-    $str .= ">";
+    $str .= " />";
     
     return $str;
   }
@@ -206,6 +208,11 @@ class form {
     global $PHP_SELF;
     
     $str = "";
+
+    /* if form name is not set and jvs_name is, use it for form name*/    
+    if ($jvs_name and !$form_name) $form_name = $jvs_name;
+    /* form name still is not set - use some value for it  */
+    if (!$form_name) $form_name = "oohform";
     
     $this->jvs_name = "";
     $this->n = 0;
@@ -213,12 +220,12 @@ class form {
     if (!$action) $action = $PHP_SELF;
     if (!$target) $target = "_self";
 
-    $str .= "<form name='$form_name' ";
+    $str .= "<form name='$form_name' id='$form_name' ";
     if ($this->isfile) {
       $str .= " enctype='multipart/form-data'";
       $method = "POST";
     }
-    $str .= " method='$method'";
+    $str .= " method='".strtolower($method)."'";
     $str .= " action='$action'";
     $str .= " target='$target'";
     if ($jvs_name) {
@@ -245,13 +252,13 @@ class form {
         $str .= $this->get_element($elname);
     }
     if (is_object($sess) && ($sess->mode == "get")) {
-      $str .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\">\n", $sess->name, $sess->id);
+      $str .= sprintf("<input type=\"hidden\" name=\"%s\" value=\"%s\" />\n", $sess->name, $sess->id);
     }
     $str .= "</form>";
 
     if ($this->jvs_name) {
       $jvs_name = $this->jvs_name;
-      $str .= "<script language='javascript'>\n<!--\n";
+      $str .= "<script type='text/javascript' language='javascript'>\n<!--\n";
       $str .= "function ${jvs_name}_Validator(f) {\n";
 
       if (strlen($before))
@@ -259,7 +266,8 @@ class form {
       reset($this->elements);
       while (list($k,$elrec) = each($this->elements)) {
         $el = $elrec["ob"];
-        $str .= $el->self_get_js($elrec["ndx_array"]);
+        if ($el->js_validate)
+            $str .= $el->self_get_js($elrec["ndx_array"]);
       }
       if (strlen($after))
         $str .= "$after\n";
@@ -365,8 +373,11 @@ class form {
     }
     while ($elrec) {
       $el = $elrec["ob"];
-      if ($res = $el->marshal_dispatch(isset($this->method)?$this->method:"","self_validate"))
-        $err[]=$res;
+      if ($el->php_validate){
+        if ($res = $el->marshal_dispatch(isset($this->method)?$this->method:"","self_validate")){
+          $err[]=$res;
+        }
+      }
       if ($vallist) {
         next($vallist);
         $elrec = $this->elements[current($vallist)];

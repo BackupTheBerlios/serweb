@@ -5,7 +5,7 @@
  *	@author   Vinay Kumar - vinay@sanisoft.com
  *	@author   Girish Nair - girish@sanisoft.com
  *	@author   Karel Kozlik
- *	@version  $Id: of_calendar.inc,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_calendar.inc,v 1.6 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -284,7 +284,7 @@ class of_calendar extends of_element {
         $str .= " value='" .  $o["value"] . "'";
       if (!$this->multiple && ($nvalue==$o["value"] || $nvalue==$o))
         $str .= " selected";
-      $str .= ">" . (is_array($o) ? $o["label"] : $o) . "\n";
+      $str .= ">" . (is_array($o) ? $o["label"] : $o) . "</option>\n";
     }
     $ii++;
     $str .= "</select>";
@@ -307,9 +307,9 @@ class of_calendar extends of_element {
         $tmp_year=$val_arr[2];
     }
 
-    $str.="<input type='hidden' name='".$n."_day' value='$tmp_day'>";
-    $str.="<input type='hidden' name='".$n."_month' value='$tmp_month'>";
-    $str.="<input type='hidden' name='".$n."_year' value='$tmp_year'>";
+    $str.="<input type='hidden' name='".$n."_day' value='$tmp_day' />";
+    $str.="<input type='hidden' name='".$n."_month' value='$tmp_month' />";
+    $str.="<input type='hidden' name='".$n."_year' value='$tmp_year' />";
     $str.="<tr><td>$tmp_day-".$this->month_larr[($tmp_month-1)]."-$tmp_year</td></tr>";
     $str.= "</table>\n";
     $count = $x;

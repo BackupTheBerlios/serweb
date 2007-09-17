@@ -3,13 +3,14 @@
  *	Load all required files
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: prepend.php,v 1.11 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: prepend.php,v 1.12 2007/09/17 18:56:31 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
 
 /** */
-require("../set_dirs.php");
+$_dir = dirname(__FILE__);
+require($_dir."/../set_dirs.php");
 
 require($_SERWEB["serwebdir"] . "main_prepend.php");
 require($_SERWEB["serwebdir"] . "load_phplib.php");

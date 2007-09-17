@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_text.inc,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@version  $Id: of_text.inc,v 1.9 2007/09/17 18:56:32 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -57,7 +57,7 @@ class of_text extends of_element {
 	    $str .= " disabled";
     }
 
-    $str .= ">";
+    $str .= " />";
     
     $count = 1;
     return $str;
@@ -71,7 +71,7 @@ class of_text extends of_element {
     else 
       $v = $this->value;
     $n = $this->name . ($this->multiple ? "[]" : "");
-    $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($v, ENT_QUOTES)."\">\n";
+    $str .= "<input type='hidden' name='$n' value=\"".htmlspecialchars($v, ENT_QUOTES)."\" />\n";
     $str .= "<table border=1><tr><td>$v</td></tr></table>\n";
     
     $count = 1;

@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.33 2007/05/11 07:46:54 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.34 2007/09/17 18:56:31 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -1039,12 +1039,17 @@ class page_conroler{
 		
 
 		/* ----------------------- HTML begin ---------------------- */
+
+        if (!isset($page_attributes['required_javascript']) or
+            !is_array($page_attributes['required_javascript']))
+            $page_attributes['required_javascript'] = array();
+            
+		$page_attributes['required_javascript'] = 
+                        array_merge($page_attributes['required_javascript'],
+                                    $this->required_javascript);
+
 		print_html_head($page_attributes);
 		
-		foreach($this->required_javascript as $val){
-?><script language="JavaScript" src="<?echo $sess->url($config->js_src_path.$val); ?>"></script>
-<?			 
-		}
 		print_html_body_begin($page_attributes);
 				
 		$smarty->display($this->template_name);
@@ -1053,7 +1058,7 @@ class page_conroler{
 		
 		
 		if (count($this->js_after_document)){
-			echo "\n<script language=\"JavaScript\">\n<!--\n";
+			echo "\n<script type=\"text/javascript\" language=\"JavaScript\">\n<!--\n";
 			foreach($this->js_after_document as $v){
 				echo $v;
 			}

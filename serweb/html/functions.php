@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.87 2007/06/29 08:41:31 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.88 2007/09/17 18:56:31 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -159,9 +159,19 @@ class Creg{
 		/** regex matching sip or sips uri */
 		$this->sip_s_address="[sS][iI][pP][sS]?:".$this->address;
 
+
 		/** reg.exp. validating sip header name */
+		$this->sip_header_name  = "(\\[|]|\\\\|[-\"'!@#$%^&*()?*+,./;<>=_{}|~A-Za-z0-9])+";
+		/** reg.exp. validating value of sip header */
+		$this->sip_header_value = "(\\[|]|\\\\|[-\"'!@#$%^&*()?*+,./;<>=_{}|~A-Za-z0-9:])+";
+
+		/** reg.exp. validating sip header name 
+		 *  @deprec  this is some old not correct defintion replaced by $this->sip_header_name
+         */
 		$this->sip_header="([^][ ()<>@,;:\\\\=\"/?{}]+)";
-		/** same regex, but for use in javascript */
+		/** same regex, but for use in javascript 
+		 *  @deprec  this is some old not correct defintion replaced by $this->sip_header_name
+         */
 		$this->sip_header_js="([^\\]\\[ ()<>@,;:\\\\=\"/?{}]+)";
 
 		
