@@ -3,7 +3,7 @@
  *	Register new user
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: new_user.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: new_user.php,v 1.4 2007/09/21 14:21:19 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -31,6 +31,7 @@ $re	= new apu_registration();
 $re->set_opt('redirect_on_register', 'users.php');
 $re->set_opt('choose_passw', false);
 $re->set_opt('require_confirmation', false);
+$re->set_opt('admin_priv', true);
 
 if (!$perm->have_perm('hostmaster')){
 	$allowed_domains = $_SESSION['auth']->get_administrated_domains();

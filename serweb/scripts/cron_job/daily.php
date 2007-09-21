@@ -2,7 +2,7 @@
 /**
  * Cron job maintenances database - should be run after midnight
  *
- * $Id: daily.php,v 1.3 2006/04/18 11:08:53 kozlik Exp $
+ * $Id: daily.php,v 1.4 2007/09/21 14:21:21 kozlik Exp $
  */
 
 $_data_layer_required_methods=array('get_deleted_domains', 'get_deleted_users',  
@@ -116,6 +116,32 @@ function purge_pending_users(){
 
 
 /**
+ *	Purge non-confirmed domain registrations
+ *
+ *	@return bool			TRUE on success, FALSE on failure
+ */
+function purge_pending_domains(){
+	global $config, $data;
+
+	$an = &$config->attr_names;
+	$pending_ts = $GLOBALS['now'] - ($config->keep_pending_interval * 3600);
+
+	/* get IDs of pending users */
+	$o = array("name" => $an['pending_ts']);
+	if (false === $attrs = $data->get_attr_by_val('domain', $o)) return false;
+
+
+	foreach ($attrs as $v){
+		if ((int)$v['value'] < (int)$pending_ts) {
+			if (false === $data->delete_domain($v['id'], null)) return false;
+		}
+	}
+
+	return true;
+}
+
+
+/**
  *	Purge old acc record
  *
  *	@return bool			TRUE on success, FALSE on failure
@@ -133,6 +159,7 @@ function main(&$errors){
 	if (false === clean_domain_config($errors)) return false;
 	if (false === purge_deleted_domains()) return false;
 	if (false === purge_pending_users()) return false;
+	if (false === purge_pending_domains()) return false;
 	if (false === purge_acc()) return false;
 	if (false === send_missed_calls()) return false;
 

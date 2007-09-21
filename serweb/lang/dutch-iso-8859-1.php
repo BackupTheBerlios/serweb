@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.44 2007/01/18 14:56:58 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.45 2007/09/21 14:21:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -165,6 +165,7 @@ $lang_str['enter_username_and_passw'] = 		"Login met gebruikersnaam en wachtwoor
 $lang_str['ff_password'] = 						"Wachtwoord";
 $lang_str['l_forgot_passw'] = 					"Wachtwoord vergeten?";
 $lang_str['l_register'] = 						"Inschrijven!";
+$lang_str['l_have_my_domain'] = 				"Have-my-domain!";	//to translate 
 $lang_str['remember_uname'] = 					"Login gegevens onthouden op de computer?";
 $lang_str['session_expired'] = 					"Sessie verlopen";
 $lang_str['session_expired_relogin'] = 			"Uw sessie is verlopen, opnieuw inloggen.";
@@ -325,6 +326,7 @@ $lang_str['err_sending_mail'] = 				"Sorry, er is een fout opgetreden tijdens he
 $lang_str['registration_introduction_1'] = 		"Voor registratie, vul het formulier in. U ontvangt een email om uw registratie te bevestigen.";
 $lang_str['registration_introduction_2'] = 		"heeft u vragen over uw gratis trial SIP services.";
 $lang_str['reg_email_desc'] = 					"Het email adres waar wij de bevestiging van uw registratie naar toe sturen. Indien het email adres ongeldig is kan er GEEN registratie voor onze SIP dienst plaatsvinden.)";
+$lang_str['reg_email_uname_desc'] = 			"Your SIP address will be same as your email address. Subscription confirmation request will be sent to this address. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.) Your email address have to be from domain ".$config->domain.".";	//to translate 
 $lang_str['ff_phone'] = 						"telefoonnummer";
 $lang_str['reg_phone_desc'] = 					"Dit is uw telefoonnummer waarop u bereikbaar bent.";
 $lang_str['ff_pick_username'] = 				"kies uw gebruikersnaam";
@@ -335,10 +337,12 @@ $lang_str['ff_confirm_password'] = 				"bevestig uw wachtwoord";
 $lang_str['ff_terms_and_conditions'] = 			"leveringsvoorwaarden";
 $lang_str['ff_i_accept'] = 						"accepteren";
 $lang_str['ff_timezone'] = 						"tijdzone";
+$lang_str['ff_uname_assign_mode'] =             "Username assignment mode";	//to translate 
 $lang_str['l_back_to_loginform'] = 				"terug naar login";
 $lang_str['msg_user_registered_s'] = 			"Gebruiker geregistreerd";
 $lang_str['msg_user_registered_l'] = 			"Nieuwe gebruiker is geregistreerd";
 $lang_str['register_new_user'] = 				"registreer nieuwe gebruiker";
+$lang_str["err_domain_of_email_not_match"] =    "Your email address is not from same domain as into which you are registering";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -672,6 +676,14 @@ $lang_str['fe_domain_not_selected']	= 			"Domein voor gebruiker is niet geselect
 $lang_str['th_old_versions'] = 					"Oude versies van dit bestand";
 $lang_str['initial_ver'] = 						"begin";
 
+
+$lang_str['err_cant_run_host_command'] =        "Error when executing 'host' command. Can not check the DNS setting";	//to translate 
+$lang_str['err_no_output_of_host_command'] =    "Error when executing 'host' command. There is no output. Can not check the DNS setting";	//to translate 
+$lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";	//to translate 
+$lang_str['err_unrecognized_output_of_host'] =  "DNS is not set in correct way. Here is output of 'host' comamnd: ";	//to translate 
+$lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";	//to translate 
+
+
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */
 /* ------------------------------------------------------------*/
@@ -687,6 +699,20 @@ $lang_str['step'] = 							"stap";
 $lang_str['l_select'] = 						"selecteer";
 $lang_str['domain_setup_success'] = 			"Nieuwe domein setup gewijzigd!";
 $lang_str['l_skip_asignment_of_admin'] = 		"toewijzen admin overslaan";
+
+/* ------------------------------------------------------------*/
+/*      wizard - have a domain                                 */
+/* ------------------------------------------------------------*/
+
+$lang_str['have_a_domain_head'] = 				"Have-my-domain!";	//to translate 
+$lang_str['have_a_domain_introduction'] = 		"On this page you could register your own domain to be hosted on ".$config->domain." server. If you would like to have your domain hosted on ".$config->domain." server you have to set DNS for your domain in proper way first. There have to be a SRV record for service 'SIP' and protocol 'UDP' pointing to host <srv_host> and port <srv_port>.";	//to translate 
+$lang_str['have_a_domain_introduction2'] = 		"Register your domain in two steps:";	//to translate 
+$lang_str['have_a_domain_step1'] = 				"Check DNS record for your domain";	//to translate 
+$lang_str['have_a_domain_step2'] = 				"Create account for administrator of the domain";	//to translate 
+$lang_str['have_a_domain_introduction3'] = 		"Check DNS record of your domain by filling the form below.";	//to translate 
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
 
 
 ?>

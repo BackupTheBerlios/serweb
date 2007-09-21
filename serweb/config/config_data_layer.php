@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.48 2006/12/20 16:36:44 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.49 2007/09/21 14:21:19 kozlik Exp $
  */
 
 
@@ -275,6 +275,7 @@
 								'acl_control'		=> 'sw_acl_control',	//have to be declared as multivalue, contain list of ACL entries which admin may change
 
 								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
+								'uname_asign_mode'  => 'sw_uname_assign_mode', //mode of username assignment on registration
 								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
 								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
 								'datetime_created'  => 'datetime_created',  //time of user creation

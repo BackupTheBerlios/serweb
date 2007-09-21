@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.41 2007/01/18 14:56:58 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.42 2007/09/21 14:21:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -165,6 +165,7 @@ $lang_str['enter_username_and_passw'] = 		"Prosím vyplňte vaše uživatelské 
 $lang_str['ff_password'] = 						"heslo";
 $lang_str['l_forgot_passw'] = 					"Zapoměli jste heslo?";
 $lang_str['l_register'] = 						"Registrace!";
+$lang_str['l_have_my_domain'] = 				"Have-my-domain!";	//to translate 
 $lang_str['remember_uname'] = 					"Zapamatuj si mé uživatelské jméno na tomto počítači";
 $lang_str['session_expired'] = 					"Relace vypršela";
 $lang_str['session_expired_relogin'] = 			"Vaše relace vypršela, prosím přihlašte se znovu.";
@@ -325,6 +326,7 @@ $lang_str['err_sending_mail'] = 				"Promiňte, došlo k chybě při odesílán�
 $lang_str['registration_introduction_1'] = 		"Prosím vyplňte formulář pro registraci a klikněte na tlačítko 'Registrovat se'. Bude vám zaslán email potvrzující vaší registraci. Prosím napište nám na adresu";
 $lang_str['registration_introduction_2'] = 		"pokud máte nějaké dotazy ohledně registrace nebo našich služeb.";
 $lang_str['reg_email_desc'] = 					"Adresa na kterou bude odesláno potvrzení o registraci. (Pokud vyplníte neplatnou adresu, žádné potvrzení nedostanete a účet vám nebude vytvořen.)";
+$lang_str['reg_email_uname_desc'] = 			"Your SIP address will be same as your email address. Subscription confirmation request will be sent to this address. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.) Your email address have to be from domain ".$config->domain.".";	//to translate 
 $lang_str['ff_phone'] = 						"telefonní číslo";
 $lang_str['reg_phone_desc'] = 					"Telefonní číslo na kterém jste k zastižení.";
 $lang_str['ff_pick_username'] = 				"zvolte si uživatelské jméno";
@@ -335,10 +337,12 @@ $lang_str['ff_confirm_password'] = 				"heslo znovu pro potvrzení";
 $lang_str['ff_terms_and_conditions'] = 			"podmínky a požadavky";
 $lang_str['ff_i_accept'] = 						"souhlasím";
 $lang_str['ff_timezone'] = 						"časová zóna";
+$lang_str['ff_uname_assign_mode'] =             "Username assignment mode";	//to translate 
 $lang_str['l_back_to_loginform'] = 				"Zpět na přihlašovací stránku";
 $lang_str['msg_user_registered_s'] = 			"Uživatel zaregistrován";
 $lang_str['msg_user_registered_l'] = 			"Nový uživatel byl úspěšně zaregistrován";
 $lang_str['register_new_user'] = 				"zaregistrovat nového uživatele";
+$lang_str["err_domain_of_email_not_match"] =    "Your email address is not from same domain as into which you are registering";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -672,6 +676,14 @@ $lang_str['fe_domain_not_selected']	= 			"Doména uživatele není vybrána";
 $lang_str['th_old_versions'] = 					"Předchozí verze tohoto souboru";
 $lang_str['initial_ver'] = 						"počáteční";
 
+
+$lang_str['err_cant_run_host_command'] =        "Error when executing 'host' command. Can not check the DNS setting";	//to translate 
+$lang_str['err_no_output_of_host_command'] =    "Error when executing 'host' command. There is no output. Can not check the DNS setting";	//to translate 
+$lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";	//to translate 
+$lang_str['err_unrecognized_output_of_host'] =  "DNS is not set in correct way. Here is output of 'host' comamnd: ";	//to translate 
+$lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";	//to translate 
+
+
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */
 /* ------------------------------------------------------------*/
@@ -687,6 +699,20 @@ $lang_str['step'] = 							"krok";
 $lang_str['l_select'] = 						"vybrat";
 $lang_str['domain_setup_success'] = 			"Nová doména byla úspěšně založena!";
 $lang_str['l_skip_asignment_of_admin'] = 		"přeskočit přiřazení administrátora";
+
+/* ------------------------------------------------------------*/
+/*      wizard - have a domain                                 */
+/* ------------------------------------------------------------*/
+
+$lang_str['have_a_domain_head'] = 				"Have-my-domain!";	//to translate 
+$lang_str['have_a_domain_introduction'] = 		"On this page you could register your own domain to be hosted on ".$config->domain." server. If you would like to have your domain hosted on ".$config->domain." server you have to set DNS for your domain in proper way first. There have to be a SRV record for service 'SIP' and protocol 'UDP' pointing to host <srv_host> and port <srv_port>.";	//to translate 
+$lang_str['have_a_domain_introduction2'] = 		"Register your domain in two steps:";	//to translate 
+$lang_str['have_a_domain_step1'] = 				"Check DNS record for your domain";	//to translate 
+$lang_str['have_a_domain_step2'] = 				"Create account for administrator of the domain";	//to translate 
+$lang_str['have_a_domain_introduction3'] = 		"Check DNS record of your domain by filling the form below.";	//to translate 
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
 
 
 

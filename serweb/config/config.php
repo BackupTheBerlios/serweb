@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.48 2006/12/01 16:41:20 kozlik Exp $
+ * $Id: config.php,v 1.49 2007/09/21 14:21:19 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -193,6 +193,21 @@
 	$config->jab_db_usr="ser";              # database user
 	$config->jab_db_pas="heslo";            # database user's password
 	$config->jab_db_db="sip_jab";           # database name
+
+
+	/* ------------------------------------------------------------*/
+	/* Multidomain support                                         */
+	/* ------------------------------------------------------------*/
+
+    /* Hostname of sip proxy which is used when validating domain 
+       DNS SRV records
+    */
+    $config->srv_sip_proxy_hostname = $config->domain;
+
+    /* Port of sip proxy which is used when validating domain 
+       DNS SRV records
+    */
+    $config->srv_sip_proxy_port = 5060;
 
 
 	/* ------------------------------------------------------------*/

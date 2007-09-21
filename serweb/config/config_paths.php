@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.9 2006/11/02 10:06:23 kozlik Exp $
+ * $Id: config_paths.php,v 1.10 2007/09/21 14:21:19 kozlik Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user" 
@@ -42,6 +42,9 @@
 		$config->user_pages_path = 	$config->root_path."user/";
 		$config->admin_pages_path =	$config->root_path."admin/";
 		$config->domains_path =		$config->root_path."domains/";
+
+        /* Location of 'host' comand on your system */
+		$config->cmd_host = "/usr/bin/host";
 
 		/* Directory where smarty stores compiled templates */
 		$config->smarty_compile_dir = "/tmp/serweb/";

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: registration.tpl,v 1.8 2007/09/21 14:21:21 kozlik Exp $ *}
+{* $Id: reg_domain_2.tpl,v 1.1 2007/09/21 14:21:21 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -12,27 +12,23 @@
 
 {if $action != 'finished'}
 
-    {if $uname_assign_mode == 'admin'}
-        Only admins could register users in this domain
-    {else}
-
 	<div class="rbroundboxB" style="width: 50%; margin: 1em auto;">
-	<div class="rbtopB"><h1>VoIP SerWeb</h1></div>
+	<div class="rbtopB"><h1>{$lang_str.have_a_domain_head}</h1></div>
 	<div class="rbcontentwrapB"><div class="rbcontentB">
-		<br>
+		<br />
 		<div align="left">
-			{$lang_str.registration_introduction_1}
-			<a href="mailto:{$infomail}">{$infomail}</a>
-			{$lang_str.registration_introduction_2}
+		    Congrats! Your DNS is properly configured! Now please fill out the 
+            form below and click the submit button at the bottom of the page 
+            for create an admin account.
 		</div>
-		<br>
-		<br>
+		<br />
+		<br />
 
 		<div class="swForm swRegForm">
 		{$form.start}
 
 		<div class="rbroundbox">
-		<div class="rbtop"><div><div></div></div></div>
+		<div class="rbtop"><div><div>&nbsp;</div></div></div>
 		<div class="rbcontentwrap"><div class="rbcontent">
 				<table border="0" cellspacing="0" cellpadding="0" align="center">
 				<tr>
@@ -47,17 +43,10 @@
 				<td><label for="email">{$lang_str.ff_email}:</label></td>
 				<td>{$form.email}</td>
 				</tr>
-			{if $uname_assign_mode == 'email'}
-				<tr>
-				<td>&nbsp;</td>
-				<td><div class="swRegFormDesc">{$lang_str.reg_email_uname_desc}</div></td>
-				</tr>
-			{else}
 				<tr>
 				<td>&nbsp;</td>
 				<td><div class="swRegFormDesc">{$lang_str.reg_email_desc}</div></td>
 				</tr>
-			{/if}
 				<tr>
 				<td><label for="phone">{$lang_str.ff_phone}:</label></td>
 				<td>{$form.phone}</td>
@@ -70,7 +59,6 @@
 				<td><label for="timezone">{$lang_str.ff_your_timezone}:</label></td>
 				<td>{$form.timezone}</td>
 				</tr>
-			{if $uname_assign_mode != 'email'}
 				<tr>
 				<td><label for="uname">{$lang_str.ff_pick_username}:</label></td>
 				<td>{$form.uname}</td>
@@ -79,7 +67,6 @@
 				<td>&nbsp;</td>
 				<td><div class="swRegFormDesc">{$lang_str.reg_username_desc}</div></td>
 				</tr>
-			{/if}
 				<tr>
 				<td><label for="passwd">{$lang_str.ff_pick_password}:</label></td>
 				<td>{$form.passwd}</td>
@@ -101,8 +88,8 @@
 				<tr><td colspan="2">
 					<div style="text-align:center;">
 						<div style="float: left; width:48%;">{$form.okey}</div>
-						<div style="float: left; width:48%;"><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}"></a></div>
-					</div><br>&nbsp;
+						<div style="float: left; width:48%;"><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}" /></a></div>
+					</div><br />&nbsp;
 				</td></tr>
 				</table>
 
@@ -110,50 +97,49 @@
 
 		</div><!-- /rbcontent -->
 		</div><!-- /rbcontentwrap -->
-		<div class="rbbot"><div><div></div></div></div>
+		<div class="rbbot"><div><div>&nbsp;</div></div></div>
 		</div><!-- /rbroundbox -->
 
-		<br class="swCleaner">&nbsp;
+		<br class="swCleaner" />&nbsp;
 
 		{$form.finish}
 		</div>
 
 	</div><!-- /rbcontentB -->
 	</div><!-- /rbcontentwrapB -->
-	<div class="rbbotB"><div><div></div></div></div>
+	<div class="rbbotB"><div><div>&nbsp;</div></div></div>
 	</div><!-- /rbroundboxB -->
-	{/if} {*if $uname_assign_mode == 'admin'*}
 {else}
 
 	<div class="rbroundboxB" style="width: 50%; margin: 1em auto;">
 	<div class="rbtopB"><div><div><span>VoIP SerWeb</span></div></div></div>
 	<div class="rbcontentwrapB"><div class="rbcontentB">
 
-		<br>
+		<br />
 
 	{if $require_confirmation}
-		<p>{$lang_str.reg_finish_thanks}.<br>
+		<p>{$lang_str.reg_finish_thanks}.<br />
 
-		<br>
-		{$lang_str.reg_finish_app_forwarded}<br>
-		{$lang_str.reg_finish_confirm_msg}<br>
+		<br />
+		{$lang_str.reg_finish_app_forwarded}<br />
+		{$lang_str.reg_finish_confirm_msg}<br />
 	{else}
 		<p>{$lang_str.reg_conf_congratulations}</p>
-		<p>{$lang_str.reg_finish_thanks}.<br>
+		<p>{$lang_str.reg_finish_thanks}.<br />
 	{/if}
-		<br>
-		{$lang_str.reg_finish_sip_address} {$reg_sip_address}.<br>
-		<br>
-		{$lang_str.reg_finish_questions_1}<br>
-		{$lang_str.reg_finish_questions_2} <a href="mailto:{$infomail}">{$infomail}</a>.<br>
+		<br />
+		{$lang_str.reg_finish_sip_address} {$reg_sip_address}.<br />
+		<br />
+		{$lang_str.reg_finish_questions_1}<br />
+		{$lang_str.reg_finish_questions_2} <a href="mailto:{$infomail}">{$infomail}</a>.<br />
 		<p>
-		<br>
+		<br />
 
-		<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}"></a></div>
+		<div><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}" /></a></div>
 
 	</div><!-- /rbcontentB -->
 	</div><!-- /rbcontentwrapB -->
-	<div class="rbbotB"><div><div></div></div></div>
+	<div class="rbbotB"><div><div>&nbsp;</div></div></div>
 	</div><!-- /rbroundboxB -->
 
 {/if}

@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.20 2007/02/06 12:22:34 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.21 2007/09/21 14:21:20 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -320,34 +320,9 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
-		FileJournal::clear();
+        $dm_h = &DomainManipulator::singleton($this->id);
+		if (false === $dm_h->enable_domain(isset($_GET['enable']))) return false;
 
-		if (isset($_GET['enable'])){
-			$opt['did'] = $this->id;
-			$opt['disable'] = false;
-
-			if (false === $this->create_or_remove_all_symlinks(true, $errors)) {
-				FileJournal::rollback();
-				return false;
-			}
-		}
-		else {
-			$opt['did'] = $this->id;
-			$opt['disable'] = true;
-
-			if (false === $this->create_or_remove_all_symlinks(false, $errors)) {
-				FileJournal::rollback();
-				return false;
-			}
-		}
-
-		if (false === $data->enable_domain($opt)) {
-			FileJournal::rollback();
-			return false;
-		}
-
-		/* notify SER to reload domains */
-		if (false === $data->reload_domains(null, $errors)) return false;
 
 		if ($this->opt['redirect_on_disable']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
@@ -373,14 +348,10 @@ class apu_domain extends apu_base_class{
 			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
 			return false;
 		}
+        
+        $dm_h = &DomainManipulator::singleton($this->id);
+		if (false === $dm_h->delete_domain()) return false;
 
-		$opt['did'] = $this->id;
-		if (false === $this->create_or_remove_all_symlinks(false, $errors)) return false;
-
-		if (false === $data->mark_domain_deleted($opt)) return false;
-
-		/* notify SER to reload domains */
-		if (false === $data->reload_domains(null, $errors)) return false;
 
 		if ($this->opt['redirect_on_delete']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_delete']);
@@ -404,20 +375,8 @@ class apu_domain extends apu_base_class{
 			return false;
 		}
 
-		if (count($this->dom_names) <= 1){
-			$errors[] = $lang_str['can_not_del_last_dom_name'];
-			return false;			
-		}
-
-		$opt['id'] = $this->id;
-		$opt['name'] = $_GET['dele_name'];
-
-		if (false === domain_remove_symlinks($opt['name'], $errors)) return false;
-
-		if (false === $data->del_domain_alias($opt, $errors)) return false;
-
-		/* notify SER to reload domains */
-		if (false === $data->reload_domains(null, $errors)) return false;
+        $dm_h = &DomainManipulator::singleton($this->id);
+		if (false === $dm_h->delete_domain_alias($_GET['dele_name'])) return false;
 
 		return array("m_do_alias_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -448,6 +407,50 @@ class apu_domain extends apu_base_class{
 		return array("m_do_set_canon=".RawURLEncode($this->opt['instance_id']));
 	}
 
+	function update_domain($domainname, $customer, &$errors){
+		global $data;
+
+		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+
+		if (false === $data->transaction_start()) return false;
+		FileJournal::clear();
+
+		/* set semaphore to be sure there will not be generated same domain id for two domains */
+		if (!$sem->acquire()){
+			$data->transaction_rollback();
+			return false;
+		}
+
+		if (false === $this->generate_domain_id($domainname, $errors)) return false;
+
+		if (!empty($domainname)){
+			if (false === DomainManipulator::add_alias($this->id, $domainname, null)) {
+				FileJournal::rollback();
+				$data->transaction_rollback();
+				$this->revert_domain_id();
+				$sem->release();
+				return false;
+			}
+		}
+
+		
+        $a_vals = array("owner_id" => $customer,
+                        "alias" =>    $domainname);
+        	
+		if (false === DomainManipulator::update_domain_attrs($this->id, $a_vals)) {
+			FileJournal::rollback();
+			$data->transaction_rollback();
+			$this->revert_domain_id();
+			$sem->release();
+			return false;
+		}
+
+		if (false === $data->transaction_commit()) return false;
+
+		$sem->release();
+		return true;
+    }
+    
 	/**
 	 *	Method create new alias of the domain. 
 	 *
@@ -455,7 +458,7 @@ class apu_domain extends apu_base_class{
 	 *	@param array $errors	array with error messages
 	 *	@return bool			TRUE on success, FALSE on error
 	 */
-	function add_alias($alias, &$errors){
+	function _add_alias($alias, &$errors){
 		global $data;
 
 		$values['id'] = $this->id;
@@ -499,7 +502,7 @@ class apu_domain extends apu_base_class{
 	 *	@param array $errors	array with error messages
 	 *	@return bool			TRUE on success, FALSE on error
 	 */
-	function update_domain_attrs($id, $alias, &$errors){
+	function _update_domain_attrs($id, $alias, &$errors){
 		global $config;
 		
 		$an = &$config->attr_names;
@@ -566,46 +569,11 @@ class apu_domain extends apu_base_class{
 	 */
 
 	function action_add_alias(&$errors){
-		global $data;
 
-		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+		if (!isset($_POST['do_customer'])) $_POST['do_customer'] = null;
+		if (!isset($_POST['do_new_name'])) $_POST['do_new_name'] = null;
 
-		if (false === $data->transaction_start()) return false;
-		FileJournal::clear();
-
-		/* set semaphore to be sure there will not be generated same domain id for two domains */
-		if (!$sem->acquire()){
-			$data->transaction_rollback();
-			return false;
-		}
-
-		if (false === $this->generate_domain_id($_POST['do_new_name'], $errors)) return false;
-
-		if (!empty($_POST['do_new_name'])){
-			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
-				FileJournal::rollback();
-				$data->transaction_rollback();
-				$this->revert_domain_id();
-				$sem->release();
-				return false;
-			}
-		}
-
-		$owner_id = $alias = null;
-		if (isset($_POST['do_customer'])) $owner_id = $_POST['do_customer'];
-		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
-			
-		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
-			FileJournal::rollback();
-			$data->transaction_rollback();
-			$this->revert_domain_id();
-			$sem->release();
-			return false;
-		}
-
-		if (false === $data->transaction_commit()) return false;
-
-		$sem->release();
+        if (false === $this->update_domain($_POST['do_new_name'], $_POST['do_customer'], $errors)) return false;
 		
 		return array("m_do_alias_created=".RawURLEncode($this->opt['instance_id']));
 	}
@@ -618,47 +586,11 @@ class apu_domain extends apu_base_class{
 	 */
 
 	function action_update(&$errors){
-		global $data, $config;
 
-		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+		if (!isset($_POST['do_customer'])) $_POST['do_customer'] = null;
+		if (!isset($_POST['do_new_name'])) $_POST['do_new_name'] = null;
 
-		if (false === $data->transaction_start()) return false;
-		FileJournal::clear();
-
-		/* set semaphore to be sure there will not be generated same domain id for two domains */
-		if (!$sem->acquire()){
-			$data->transaction_rollback();
-			return false;
-		}
-
-		if (false === $this->generate_domain_id($_POST['do_new_name'], $errors)) return false;
-
-		if (!empty($_POST['do_new_name'])){
-			if (false === $this->add_alias($_POST['do_new_name'], $errors)) {
-				FileJournal::rollback();
-				$data->transaction_rollback();
-				$this->revert_domain_id();
-				$sem->release();
-				return false;
-			}
-		}
-
-		$owner_id = $alias = null;
-		if (isset($_POST['do_customer'])) $owner_id = $_POST['do_customer'];
-		if (isset($_POST['do_new_name'])) $alias = $_POST['do_new_name'];
-			
-		if (false === $this->update_domain_attrs($owner_id, $alias, $errors)) {
-			FileJournal::rollback();
-			$data->transaction_rollback();
-			$this->revert_domain_id();
-			$sem->release();
-			return false;
-		}
-
-
-		if (false === $data->transaction_commit()) return false;
-
-		$sem->release();
+        if (false === $this->update_domain($_POST['do_new_name'], $_POST['do_customer'], $errors)) return false;
 
 		if ($this->opt['redirect_on_update']){
 			$this->controler->change_url_for_reload($this->opt['redirect_on_update']);

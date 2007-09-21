@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.24 2007/05/11 07:40:49 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.25 2007/09/21 14:21:19 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -265,7 +265,8 @@ class SerwebUser {
 	function to_get_param($param = null){
 	
 		if (is_null($param)){
-			if (is_a($GLOBALS['controler'], 'page_conroler')){
+			if (isset($GLOBALS['controler']) and 
+                is_a($GLOBALS['controler'], 'page_conroler')){
 				$param = $GLOBALS['controler']->ch_user_param_name();
 			}
 			else{

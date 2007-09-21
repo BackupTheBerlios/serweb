@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.59 2007/01/18 14:56:58 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.60 2007/09/21 14:21:20 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -165,6 +165,7 @@ $lang_str['enter_username_and_passw'] = 		"Please enter your username and passwo
 $lang_str['ff_password'] = 						"password";
 $lang_str['l_forgot_passw'] = 					"Forgot Password?";
 $lang_str['l_register'] = 						"Subscribe!";
+$lang_str['l_have_my_domain'] = 				"Have-my-domain!";
 $lang_str['remember_uname'] = 					"Remember my username on this computer";
 $lang_str['session_expired'] = 					"Session expired";
 $lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";
@@ -320,11 +321,12 @@ $lang_str['fe_not_filled_password'] = 			"you must fill password";
 $lang_str['fe_not_filled_your_fname'] = 		"you must fill your first name";
 $lang_str['fe_not_filled_your_lname'] = 		"you must fill your last name";
 $lang_str['fe_uname_already_choosen_1'] = 		"Sorry, the user name";
-$lang_str['fe_uname_already_choosen_2'] = 		"has already been chosen. Try again";
+$lang_str['fe_uname_already_choosen_2'] = 		"has already been chosen.";
 $lang_str['err_sending_mail'] = 				"Sorry, there was an error when sending mail. Please try again later";
 $lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";
 $lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";
 $lang_str['reg_email_desc'] = 					"Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)";
+$lang_str['reg_email_uname_desc'] = 			"Your SIP address will be same as your email address. Subscription confirmation request will be sent to this address. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.) Your email address have to be from domain ".$config->domain.".";
 $lang_str['ff_phone'] = 						"phone";
 $lang_str['reg_phone_desc'] = 					"This is your PSTN phone number where you can be reached.";
 $lang_str['ff_pick_username'] = 				"pick your user name";
@@ -335,10 +337,12 @@ $lang_str['ff_confirm_password'] = 				"confirmation password";
 $lang_str['ff_terms_and_conditions'] = 			"terms and conditions";
 $lang_str['ff_i_accept'] = 						"I accept";
 $lang_str['ff_timezone'] = 						"timezone";
+$lang_str['ff_uname_assign_mode'] =             "Username assignment mode";
 $lang_str['l_back_to_loginform'] = 				"Back to login form";
 $lang_str['msg_user_registered_s'] = 			"User registered";
 $lang_str['msg_user_registered_l'] = 			"New user has been successfully registered";
 $lang_str['register_new_user'] = 				"register new user";
+$lang_str["err_domain_of_email_not_match"] =    "Your email address is not from same domain as into which you are registering";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -619,7 +623,7 @@ $lang_str['no_domains_found'] = 				"No domains found";
 $lang_str['new_dom_name'] = 					"Add new domain name";
 $lang_str['owner'] = 							"Owner";
 
-$lang_str['realy_delete_domain'] = 				"Realy you want delete this domain?";
+$lang_str['realy_delete_domain'] = 				"Do you Realy want to delete this domain?";
 $lang_str['l_create_new_domain'] = 				"create new domain";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
@@ -672,6 +676,14 @@ $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";
 $lang_str['th_old_versions'] = 					"Old versions of this file";
 $lang_str['initial_ver'] = 						"initial";
 
+
+$lang_str['err_cant_run_host_command'] =        "Error when executing 'host' command. Can not check the DNS setting";
+$lang_str['err_no_output_of_host_command'] =    "Error when executing 'host' command. There is no output. Can not check the DNS setting";
+$lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";
+$lang_str['err_unrecognized_output_of_host'] =  "DNS is not set in correct way. Here is output of 'host' comamnd: ";
+$lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";
+
+
 /* ------------------------------------------------------------*/
 /*      wizard - create new domain                             */
 /* ------------------------------------------------------------*/
@@ -687,6 +699,20 @@ $lang_str['step'] = 							"step";
 $lang_str['l_select'] = 						"select";
 $lang_str['domain_setup_success'] = 			"New domain has been set up successfully!";
 $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";
+
+/* ------------------------------------------------------------*/
+/*      wizard - have a domain                                 */
+/* ------------------------------------------------------------*/
+
+$lang_str['have_a_domain_head'] = 				"Have-my-domain!";
+$lang_str['have_a_domain_introduction'] = 		"On this page you could register your own domain to be hosted on ".$config->domain." server. If you would like to have your domain hosted on ".$config->domain." server you have to set DNS for your domain in proper way first. There have to be a SRV record for service 'SIP' and protocol 'UDP' pointing to host <srv_host> and port <srv_port>.";
+$lang_str['have_a_domain_introduction2'] = 		"Register your domain in two steps:";
+$lang_str['have_a_domain_step1'] = 				"Check DNS record for your domain";
+$lang_str['have_a_domain_step2'] = 				"Create account for administrator of the domain";
+$lang_str['have_a_domain_introduction3'] = 		"Check DNS record of your domain by filling the form below.";
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
+$lang_str[''] = 							"";
 
 
 ?>

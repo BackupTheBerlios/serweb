@@ -610,11 +610,14 @@ tr.flushright td{
 }
 
 .swLPForgotPass{
-	padding-right: 1em;
+	padding-left: 1em;
+    padding-right: 1em;
 	font-size: 0.8em;
 }
 
 .swLPSubscribe{
+	padding-left: 1em;
+	padding-right: 1em;
 	font-size: 0.8em;
 }
 
@@ -747,7 +750,6 @@ tr.flushright td{
 	background-color: #CC3300;
 	padding: 3px;
 	margin: 0px 5px;
-	height: 18px;
 	line-height: 18px;
 }
 
@@ -759,7 +761,6 @@ tr.flushright td{
 	background-color: #99CC00;
 	padding: 3px;
 	margin: 0px 5px;
-	height: 18px;
 	line-height: 18px;
 }
 
@@ -834,6 +835,10 @@ h1 {
 	width: auto;
 	height: auto;
 /*	background-color: none;*/
+}
+
+.rbcontentB {
+    text-align:justify;
 }
 
 body {

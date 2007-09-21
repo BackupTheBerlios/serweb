@@ -3,7 +3,7 @@
  *	Application unit registration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: apu_registration.php,v 1.19 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: apu_registration.php,v 1.20 2007/09/21 14:21:20 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
@@ -119,6 +119,9 @@ class apu_registration extends apu_base_class{
 	var $js_before="";
 	/** semaphore */
 	var $sem_id;
+	/** ID of domain to register in. This variable is set during form validation */
+	var $did;
+	var $uname_assign_mode;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -139,6 +142,8 @@ class apu_registration extends apu_base_class{
 
 		/* set default values to $this->opt */		
 		$this->opt['register_in_domain'] = null;
+		$this->opt['create_new_domain'] = null;
+		
 		
 		$this->opt['allowed_domains'] = null;
 		$this->opt['pre_selected_domain'] = null;
@@ -146,11 +151,14 @@ class apu_registration extends apu_base_class{
 		$this->opt['require_confirmation'] = null;
 		$this->opt['choose_passw'] = true;
 
-		$this->opt['terms_file'] =	null;
+		$this->opt['admin_priv'] =	false;
 
+		$this->opt['terms_file'] =	null;
 		
 		$this->opt['mail_file'] =	'mail_registered_by_admin.txt';
 		$this->opt['mail_file_conf'] =	null;
+		$this->opt['mail_file_domain'] =	  'mail_register_domain.txt';
+		$this->opt['mail_file_domain_conf'] = 'mail_register_domain_conf.txt';
 		$this->opt['login_script'] =	'';
 		$this->opt['redirect_on_register'] = "";
 		$this->opt['confirmation_script'] =	"";
@@ -178,13 +186,45 @@ class apu_registration extends apu_base_class{
 		/* registered sip address */
 		$this->opt['smarty_reg_adress'] = 	'reg_sip_address';
 
-		$this->opt['smarty_req_conf'] = 	'require_confirmation';			
+		$this->opt['smarty_req_conf'] = 	'require_confirmation';
+        $this->opt['smarty_uname_assign_mode'] = 'uname_assign_mode';			
 	}
 
 	/* this metod is called always at begining */
 	function init(){
 		parent::init();
+
+		if (!is_null($this->opt['register_in_domain']) and 
+            !is_null($this->opt['create_new_domain'])){
+            
+            die("Both options 'register_in_domain' and 'create_new_domain' of apu_registration can not be set");
+        }
+
 	}
+
+    function get_uname_assign_mode($did){
+        global $config;
+
+        /* for admin use 'first-come-first-serve' mode everytime */
+        if ($this->opt['admin_priv']){
+            return "fcfs";
+        }
+
+		$an = &$config->attr_names;
+
+		$o = array();
+        if (!is_null($did)) {
+            $o['did'] = $did;
+        }
+			
+		if (false === $uname_asign_mode = 
+				Attributes::get_attribute($an['uname_asign_mode'], $o)) {
+
+            return false;
+        }
+
+        return $uname_asign_mode;
+    }
 
 
 	function action_register(&$errors){
@@ -204,25 +244,70 @@ class apu_registration extends apu_base_class{
 			$password = substr(md5(uniqid('')), 0, 5);
 		}
 
-		/* obtain did */
-		$did = is_null($this->opt['register_in_domain']) ? 
-		           $_POST['domain'] :
-		           $this->opt['register_in_domain'];
+
+        if (!$this->opt['create_new_domain']){
+    		/* get domain name */
+    		$domains = &Domains::singleton();
+    		if (false === $domain_name = $domains->get_domain_name($this->did)) {
+    			$data->transaction_rollback();
+                return false;
+            }
+        }
+        else{
+            $domain_name = $this->opt['create_new_domain'];
+        }
 
 		/* set value of option 'require_confirmation' */
 		if (is_null($this->opt['require_confirmation'])){
-			$o = array('did' => $did);
+			$o = array();
+			
+			/* if creating new domain we does not know the DID */
+			if (!$this->opt['create_new_domain']){
+                $o['did'] = $this->did;
+            }
+			
 			if (false === $this->opt['require_confirmation'] = 
-					Attributes::get_attribute($an['require_conf'], $o)) return false;
+					Attributes::get_attribute($an['require_conf'], $o)) {
+
+                return false;
+            }
 		}
 
-
-		/* get domain name */
-		$domains = &Domains::singleton();
-		if (false === $domain_name = $domains->get_domain_name($did)) return false;
-
-
 		if (false === $data->transaction_start()) return false;
+
+        if ($this->opt['create_new_domain']){
+    		$sem = new Shm_Semaphore(__FILE__, "s", 1, 0600);
+
+    		/* set semaphore to be sure there will not be generated same 
+               domain id for two domains */
+    		if (!$sem->acquire()){
+    			$data->transaction_rollback();
+    			return false;
+    		}
+    		
+    		if (false === $this->did = Domains::generate_new_did($this->opt['create_new_domain'])) {
+				$data->transaction_rollback();
+				$sem->release();
+				return false;
+			}
+			$opt = array("enabled" => !$this->opt['require_confirmation']);
+			if (false === DomainManipulator::add_alias($this->did, $this->opt['create_new_domain'], $opt)) {
+				$data->transaction_rollback();
+				$sem->release();
+				return false;
+			}
+
+            $a_vals = array("alias" =>    $this->opt['create_new_domain']);
+    		if (false === DomainManipulator::update_domain_attrs($this->did, $a_vals)) {
+    			$data->transaction_rollback();
+    			$sem->release();
+    			return false;
+    		}
+			$sem->release();
+        }
+    
+
+
 
 		/* prepare array of attributes */
 		$opt = array();
@@ -230,7 +315,7 @@ class apu_registration extends apu_base_class{
 
 		/* add subscriber */
 		$opts = array("disabled" => $this->opt['require_confirmation']);
-		if (false === Registration::add_subscriber($_POST['uname'], $did, $password, $attrs, $opts)) {
+		if (false === Registration::add_subscriber($_POST['uname'], $this->did, $password, $attrs, $opts)) {
 			$data->transaction_rollback();
 			return false;
 		}
@@ -238,11 +323,13 @@ class apu_registration extends apu_base_class{
 		$uid = $opts['uid'];
 		$realm = $opts['realm'];
 
-		$serweb_user = &SerwebUser::instance($uid, $_POST['uname'], $did, $realm);
+		$serweb_user = &SerwebUser::instance($uid, $_POST['uname'], $this->did, $realm);
 		$user_param  = $serweb_user->to_get_param();
 
 		/* get handler of user attrs */
 		$ua = &User_Attrs::singleton($uid);
+		/* get handler of domain attrs */
+		$da = &Domain_Attrs::singleton($this->did);
 
 		if (!is_null($this->opt['set_lang_attr'])){
 			$u_lang = $this->opt['set_lang_attr'];
@@ -270,6 +357,20 @@ class apu_registration extends apu_base_class{
 			
 		}
 
+        if ($this->opt['create_new_domain']){
+            /* when creating new domain, set admin privilege for the user */
+			if (false === $ua->set_attribute($an['is_admin'], "1")) {
+				$data->transaction_rollback();
+				return false;
+			}
+			
+			/* and assign user as admin of the domain */
+			if (false === $da->set_attribute($an['admin'], array($uid))) {
+				$data->transaction_rollback();
+				return false;
+			}
+    	}
+
 		if ($this->opt['require_confirmation']){
 			if (false === $ua->set_attribute($an['confirmation'], $confirm)) {
 				$data->transaction_rollback();
@@ -280,6 +381,19 @@ class apu_registration extends apu_base_class{
 				$data->transaction_rollback();
 				return false;
 			}
+			
+	        if ($this->opt['create_new_domain']){
+
+    			if (false === $da->set_attribute($an['confirmation'], $confirm)) {
+    				$data->transaction_rollback();
+    				return false;
+    			}
+    
+    			if (false === $da->set_attribute($an['pending_ts'], time())) {
+    				$data->transaction_rollback();
+    				return false;
+    			}
+            }
 		}
 
 		if ($this->opt['create_numeric_alias']){
@@ -293,7 +407,7 @@ class apu_registration extends apu_base_class{
 			}
 
 			// generate alias number 
-			if (false === $alias=$data->get_new_alias_number($did, null)) {
+			if (false === $alias=$data->get_new_alias_number($this->did, null)) {
 				$data->transaction_rollback();
 				$sem->release();
 				return false;
@@ -302,7 +416,7 @@ class apu_registration extends apu_base_class{
 			/* store alias to URI table */
 			$o = array('disabled' => $this->opt['require_confirmation'],
 			           'canon' => false);
-			if (false === $data->add_uri($uid, 'sip', $alias, $did, $o)) {
+			if (false === $data->add_uri($uid, 'sip', $alias, $this->did, $o)) {
 				$data->transaction_rollback();
 				$sem->release();
 				return false;
@@ -321,6 +435,8 @@ class apu_registration extends apu_base_class{
 		$login_url = $config->root_uri.
 					 ($this->opt['admin_login'] ? $config->admin_pages_path : $config->user_pages_path).
 					 $this->opt['login_script'];
+		$admin_url = $config->root_uri.$config->admin_pages_path.
+					 $this->opt['login_script'];
 
 		$username = $config->fully_qualified_name_on_login ? 
 		              ($_POST['uname']."@".$domain_name) : 
@@ -337,13 +453,20 @@ class apu_registration extends apu_base_class{
 		if (is_null($this->opt['mail_file_conf'])) 
 			$this->opt['mail_file_conf'] = $this->opt['mail_file'];
 
-		if ($this->opt['require_confirmation'])	$mail_file = $this->opt['mail_file_conf'];
-		else $mail_file = $this->opt['mail_file'];
+        if ($this->opt['create_new_domain']){
+    		if ($this->opt['require_confirmation'])	$mail_file = $this->opt['mail_file_domain_conf'];
+    		else $mail_file = $this->opt['mail_file_domain'];
+        }
+        else{
+    		if ($this->opt['require_confirmation'])	$mail_file = $this->opt['mail_file_conf'];
+    		else $mail_file = $this->opt['mail_file'];
+        }
 
 		$mail = read_lang_txt_file($mail_file, "txt", $_SESSION['lang'], 
 					array(array("domain", $domain_name),
 					      array("sip_address", $sip_address),
 						  array("login_url", $login_url),
+						  array("admin_url", $admin_url),
 						  array("confirmation_url", $confirmation_url),
 						  array("username", $username),
 						  array("password", $password),
@@ -358,7 +481,7 @@ class apu_registration extends apu_base_class{
 			return false;	
 		}
 
-		$o = array('did' => $did);
+		$o = array('did' => $this->did);
 		if (false === $from_header = Attributes::get_attribute($an['contact_email'], $o)) return false;
 		if ($from_header){
 			$mail['headers']['from'] = $from_header;
@@ -387,6 +510,11 @@ class apu_registration extends apu_base_class{
 	function action_finish(&$errors){
 		$this->smarty_action="finished";
 	}
+
+
+    function action_default(&$errors){
+    }
+
 
 	
 	/* check _get and _post arrays and determine what we will do */
@@ -445,17 +573,27 @@ class apu_registration extends apu_base_class{
 		}
 
 
-		                             
+        $did = null;
+        if(!is_null($this->opt['register_in_domain'])){
+            $did = $this->opt['register_in_domain'];
+        }
+        elseif (isset($_POST['domain'])){
+            $did = $_POST['domain'];
+        }
+        
+        if (false === $this->uname_assign_mode = $this->get_uname_assign_mode($did)) return false;
+
+
 		$this->f->add_element(array("type"=>"text",
 		                             "name"=>"uname",
 									 "size"=>23,
 									 "maxlength"=>50,
 		                             "value"=>"",
-									 "minlength"=>1,
+									 "minlength"=>$this->uname_assign_mode == "email" ? 0 : 1,
 									 "length_e"=>$lang_str['fe_not_filled_username'],
-		                             "valid_regex"=>$config->username_regex,
+		                             "valid_regex"=>$this->uname_assign_mode == "email" ? ".*" : $config->username_regex,
 		                             "valid_e"=>$lang_str['fe_uname_not_follow_conventions'],
-									 "extrahtml"=>"autocomplete'off'"));
+									 "extrahtml"=>"autocomplete='off'"));
 
 		if ($this->opt['choose_passw']){
 			$this->f->add_element(array("type"=>"text",
@@ -551,30 +689,81 @@ class apu_registration extends apu_base_class{
 
 		$an = &$config->attr_names;
 
+		$d_h = &Domains::singleton();
 
-		if (is_null($this->opt['register_in_domain'])){
+		if (is_null($this->opt['register_in_domain']) and 
+            is_null($this->opt['create_new_domain'])){
+            
 			if (!isset($_POST['domain']) or $_POST['domain']===""){
 				$errors[]=$lang_str['fe_domain_not_selected']; 
 				return false;
 			}
 
-			$did = $_POST['domain'];
-			if (!isset($this->domain_names[$did])){
-				$d = &Domains::singleton();
-				$errors[] = "You haven't access to domain which you selected: ".$d->get_domain_name($did); 
+			$this->did = $_POST['domain'];
+			if (!isset($this->domain_names[$this->did])){
+				$errors[] = "You haven't access to domain which you selected: ".$d_h->get_domain_name($this->did); 
 				return false;
 			}
 		}
+		elseif(!is_null($this->opt['register_in_domain'])){
+			$this->did = $this->opt['register_in_domain'];
+		}
 		else{
-			$did = $this->opt['register_in_domain'];
-		}
+            $this->did = null;
+        }
 
-		if (0 === $user_exists = $data->is_user_exists($_POST['uname'], $did)) return false;
+        /* vhen user do not have admin privilege, check username assignment mode */
+        if (!$this->opt['admin_priv']){
+            if (false === $this->uname_assign_mode = $this->get_uname_assign_mode($this->did)) return false;
 
-		if ($user_exists < 0) {
-			$errors[]=$lang_str['fe_uname_already_choosen_1']." '".$_POST['uname']."' ".$lang_str['fe_uname_already_choosen_2']; 
-			return false;
-		}
+            switch($this->uname_assign_mode){
+            case "adminonly":
+                $errors[] = "Only admins could register users in this domain";
+                return false;
+                break;
+            case "email": //email verification
+                $email_parts = explode("@", $_POST['email'], 2);
+                $email_username = $email_parts[0];
+                $email_domain = $email_parts[1];
+                
+                //set username by the email username
+                $_POST['uname'] = $email_username;
+
+                if ($this->opt['create_new_domain'] and 
+                    $email_domain != $this->opt['create_new_domain']){
+                
+                    $errors[] = $lang_str["err_domain_of_email_not_match"];
+                    return false;
+                }
+                else{
+                    if (false === $domain_names = $d_h->get_domain_names($this->did)) return false;
+                    
+                    if (!in_array($email_domain, $domain_names)){
+                    
+                        $errors[] = $lang_str["err_domain_of_email_not_match"];
+                        return false;
+                    }
+                }
+                
+                /* confirmation of registration is always required in this case */
+                $this->opt['require_confirmation'] = true;
+                
+                break;
+            case "fcfs": //first come first served
+                break;
+            default:
+                die ("Unknown value of username assignment mode: '".$this->uname_assign_mode."'");
+            }
+        }
+
+        if (is_null($this->opt['create_new_domain'])){
+    		if (0 === $user_exists = $data->is_user_exists($_POST['uname'], $this->did)) return false;
+
+    		if ($user_exists < 0) {
+    			$errors[]=$lang_str['fe_uname_already_choosen_1']." '".$_POST['uname']."' ".$lang_str['fe_uname_already_choosen_2']; 
+    			return false;
+    		}
+        }
 
 		if ($this->opt['choose_passw'] and ($_POST['passwd'] != $_POST['passwd_r'])){
 			$errors[]=$lang_str['fe_passwords_not_match']; return false;
@@ -660,6 +849,8 @@ class apu_registration extends apu_base_class{
 		                $this->format_attributes_for_output());
 
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+		
+		$smarty->assign($this->opt['smarty_uname_assign_mode'], $this->uname_assign_mode);
 
 		if ($this->smarty_action == "finished"){
 			$smarty->assign_by_ref($this->opt['smarty_reg_adress'], $_GET['reg_sip_adr']);

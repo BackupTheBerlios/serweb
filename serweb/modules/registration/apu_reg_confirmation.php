@@ -3,7 +3,7 @@
  * Application unit reg_confirmation
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_reg_confirmation.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ * @version    $Id: apu_reg_confirmation.php,v 1.5 2007/09/21 14:21:20 kozlik Exp $
  * @package    serweb
  * @subpackage mod_registration
  */ 
@@ -115,7 +115,34 @@ class apu_reg_confirmation extends apu_base_class{
 
 		$uid = $attrs[0]['id'];
 
+
+		/* get did - for the case that domain has been created during registration */
+		$o = array('name' =>  $an['confirmation'],
+		           'value' => $this->nr);
+		if (false === $attrs = $data->get_attr_by_val("domain", $o)) return false;
+
+        $did = null;
+		if (!empty($attrs[0]['id'])) {
+            $did = $attrs[0]['id'];
+        }
+
 		if (false === $data->transaction_start()) return false;
+
+        // first enable domain
+        if (!is_null($did)){
+            $dm_h = &DomainManipulator::singleton($did);
+	       	if (false === $dm_h->enable_domain(true)) return false;
+
+    		$domain_attrs = &Domain_Attrs::singleton($did);
+    		if (false === $domain_attrs->unset_attribute($an['confirmation'])) {
+    			$data->transaction_rollback();
+    			return false;
+    		}
+    		if (false === $domain_attrs->unset_attribute($an['pending_ts'])) {
+    			$data->transaction_rollback();
+    			return false;
+    		}
+        }
 
 
 		$o = array("uid" => $uid,
