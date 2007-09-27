@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.50 2007/09/27 12:22:24 kozlik Exp $
+ * $Id: config.php,v 1.51 2007/09/27 15:46:23 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -199,13 +199,17 @@
 	/* Multidomain support                                         */
 	/* ------------------------------------------------------------*/
 
+    /* Allow public people to register their domains to be hosted on my server
+     */
+    $config->allow_self_domain_register = true;
+    
     /* Hostname of sip proxy which is used when validating domain 
-       DNS SRV records
+       DNS SRV records when 'allow_self_domain_register' is true
     */
     $config->srv_sip_proxy_hostname = $config->domain;
 
     /* Port of sip proxy which is used when validating domain 
-       DNS SRV records
+       DNS SRV records when 'allow_self_domain_register' is true
     */
     $config->srv_sip_proxy_port = 5060;
 

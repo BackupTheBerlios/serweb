@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.44 2007/09/27 12:14:47 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.45 2007/09/27 15:46:23 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -681,11 +681,11 @@ $lang_str['th_old_versions'] = 					"Oude versies van dit bestand";
 $lang_str['initial_ver'] = 						"begin";
 
 
-$lang_str['err_cant_run_host_command'] =        "Error when executing 'host' command. Can not check the DNS setting";	//to translate 
-$lang_str['err_no_output_of_host_command'] =    "Error when executing 'host' command. There is no output. Can not check the DNS setting";	//to translate 
+$lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can not check the DNS setting";	//to translate 
+$lang_str['err_no_srv_record'] =                "There is no SRV record for hostname <hostname>";	//to translate 
 $lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";	//to translate 
-$lang_str['err_unrecognized_output_of_host'] =  "DNS is not set in correct way. Here is output of 'host' comamnd: ";	//to translate 
 $lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";	//to translate 
+
 
 
 /* ------------------------------------------------------------*/
@@ -719,4 +719,13 @@ $lang_str[''] = 							"";
 $lang_str[''] = 							"";
 
 
+
+
+/****************************************************/
+/* strings which are missing in reference lang file */
+/****************************************************/
+
+$lang_str['err_cant_run_host_command'] =        "Error when executing 'host' command. Can not check the DNS setting";	//to translate 
+$lang_str['err_no_output_of_host_command'] =    "Error when executing 'host' command. There is no output. Can not check the DNS setting";	//to translate 
+$lang_str['err_unrecognized_output_of_host'] =  "DNS is not set in correct way. Here is output of 'host' comamnd: ";	//to translate 
 ?>

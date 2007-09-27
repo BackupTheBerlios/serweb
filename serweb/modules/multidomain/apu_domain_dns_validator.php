@@ -3,9 +3,12 @@
  * Application unit domain_dns_validator
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_dns_validator.php,v 1.1 2007/09/21 14:21:20 kozlik Exp $
+ * @version   $Id: apu_domain_dns_validator.php,v 1.2 2007/09/27 15:46:23 kozlik Exp $
  * @package   serweb
  */ 
+
+/** */
+require_once "Net/DNS.php";
 
 /**
  *  Application unit domain_dns_validator
@@ -195,61 +198,48 @@ class apu_domain_dns_validator extends apu_base_class{
         }
 
 
-        /* execute 'host' command */
-        $cmd = $config->cmd_host." -t srv ".escapeshellarg("_sip._udp.".$_POST['domainname']);
-        exec($cmd, $output, $retval);
-        if ($retval != 0){
-            ErrorHandler::log_errors(PEAR::raiseError($lang_str['err_cant_run_host_command'], null, null, null,
-                                     "Can not execute command: '".$cmd."' return code: ".$retval));
+        // create DNS resolver object
+        $ndr = new Net_DNS_Resolver();
+        
+        // query for SRV record
+        $dns_lookup = "_sip._udp.".$_POST['domainname'];
+        $dns_answer = $ndr->rawQuery($dns_lookup, "SRV");
+
+        if (!$dns_answer){
+            ErrorHandler::log_errors(PEAR::raiseError($lang_str['err_dns_lookup'], null, null, null,
+                                     $ndr->errorstring));
             return false;
         }
 
-        /* Parse output of 'host' command */
-        $unrecognized_output = array();
+        if (!$dns_answer->answer){
+            $errors[] = str_replace("<hostname>", $dns_lookup, $lang_str['err_no_srv_record']);
+            return false;
+        }
+
         $srv_ok = false;
         $srv_false_rec = array();
-        foreach($output as $v){
-            if (!ereg('([0-9]+) ([0-9]+) ([0-9]+) ([-~_.a-zA-Z0-9]+)\\.$', $v, $regs)){
-                $unrecognized_output[] = $v;
-                continue;
-            }
+        foreach($dns_answer->answer as $v){
         
-            if ($regs[3] == $config->srv_sip_proxy_port and
-                $regs[4] == $config->srv_sip_proxy_hostname){
+            if ($v->port   == $config->srv_sip_proxy_port and
+                $v->target == $config->srv_sip_proxy_hostname){
             
                 $srv_ok = true;
                 break;
             }
             
-            $srv_false_rec[] = array("host" => $regs[4],
-                                     "port" => $regs[3]);
+            $srv_false_rec[] = array("host" => $v->target,
+                                     "port" => $v->port);
         }
 
         if ($srv_ok) return true;
 
-        if ($srv_false_rec){
-            $err = $lang_str['err_wrong_srv_record']."\n";
+        $err = $lang_str['err_wrong_srv_record']."\n";
 
-            foreach($srv_false_rec as $v){
-                $err .= "host: ".$v['host'].", port: ".$v['port']."\n";
-            }
-            
-            $errors[] = $err;
-            return false;
-        }
-
-        if ($unrecognized_output){
-            $err = $lang_str['err_unrecognized_output_of_host']."\n";
-
-            foreach($unrecognized_output as $v){
-                $err .= $v."\n";
-            }
-            
-            $errors[] = $err;
-            return false;
+        foreach($srv_false_rec as $v){
+            $err .= "host: ".$v['host'].", port: ".$v['port']."\n";
         }
         
-        ErrorHandler::log_errors(PEAR::raiseError($lang_str['err_no_output_of_host_command']));
+        $errors[] = $err;
         return false;
     }
     

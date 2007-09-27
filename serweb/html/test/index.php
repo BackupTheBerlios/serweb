@@ -3,7 +3,7 @@
  *	Test serweb configuration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.2 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: index.php,v 1.3 2007/09/27 15:46:23 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -152,6 +152,20 @@ function test_pear_xml_rpc(){
 
 	$out = "Can't check version of your PEAR XML_RPC package.";
 	
+	return array(3, $out);
+}
+
+
+function test_pear_net_dns(){
+	if (check_include("Net/DNS.php")) require_once ("Net/DNS.php");
+
+	if (class_exists('Net_DNS_Resolver')) return array(1, 'OK');
+	
+
+	$out = "PEAR Net_DNS package is not installed. It is not strictly required but ".
+	       "you can't use domain self registration facility without it. ".
+		   "To install it type \"pear install Net_DNS\" on your command line.";
+
 	return array(3, $out);
 }
 
@@ -459,6 +473,7 @@ function check($label, $check_function){
 		if (!check("Checking PEAR DB extendion:", "test_pear_db")) break;
 		if (!check("Checking PEAR Log extension:", "test_pear_log")) break;
 		if (!check("Checking PEAR XML_RPC extension:", "test_pear_xml_rpc")) break;
+		if (!check("Checking PEAR Net_DNS extension:", "test_pear_net_dns")) break;
 		if (!check("Checking PHP IMAP extension:", "test_imap")) break;
 		if (!check("Checking PHP CURL extension:", "test_curl")) break;
 		if (!check("Checking PHP database extension:", "test_db_ext")) break;

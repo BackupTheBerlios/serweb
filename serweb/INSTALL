@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.30 2006/11/28 14:48:53 kozlik Exp $
+$Id: INSTALL,v 1.31 2007/09/27 15:46:23 kozlik Exp $
 
 serweb - Installation
 
@@ -12,6 +12,8 @@ serweb - Installation
   - PEAR package DB (should be included in PHP release 4.3 and later)
   - PEAR package XML_RPC (optional - should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
+		see http://pear.php.net/manual/en/installation.getting.php for details
+  - PEAR package Net_DNS (optional - required by domain self-registration feature)
 		see http://pear.php.net/manual/en/installation.getting.php for details
   - PECL package Runkit or Classkit (only PHP5 users)
   		see PHP 5 note bellow

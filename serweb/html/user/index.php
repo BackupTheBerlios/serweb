@@ -3,7 +3,7 @@
  *	Login screen
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.5 2007/09/21 14:21:20 kozlik Exp $
+ *	@version    $Id: index.php,v 1.6 2007/09/27 15:46:23 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -39,6 +39,7 @@ do {
 	$smarty->assign('allow_register', $uname_assign_mode != 'adminonly');
 } while (false);
 
+$smarty->assign('allow_domain_reg', $config->allow_self_domain_register);
 
 
 $login	= new apu_login();

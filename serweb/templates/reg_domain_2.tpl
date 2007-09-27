@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: reg_domain_2.tpl,v 1.1 2007/09/21 14:21:21 kozlik Exp $ *}
+{* $Id: reg_domain_2.tpl,v 1.2 2007/09/27 15:46:24 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -88,7 +88,7 @@
 				<tr><td colspan="2">
 					<div style="text-align:center;">
 						<div style="float: left; width:48%;">{$form.okey}</div>
-						<div style="float: left; width:48%;"><a href="{url url='../index.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}" /></a></div>
+						<div style="float: left; width:48%;"><a href="{url url='reg_domain_1.php'}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_back.gif" border="0" alt="{$lang_str.b_back}" /></a></div>
 					</div><br />&nbsp;
 				</td></tr>
 				</table>

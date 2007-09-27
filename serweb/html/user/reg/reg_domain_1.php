@@ -3,7 +3,7 @@
  *	Self domain registration - step 1
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: reg_domain_1.php,v 1.1 2007/09/21 14:21:20 kozlik Exp $
+ *	@version    $Id: reg_domain_1.php,v 1.2 2007/09/27 15:46:23 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -17,6 +17,10 @@ $_required_apu = array('apu_domain_dns_validator');
 
 /** include all others necessary files */
 require "prepend.php";
+
+
+if (!$config->allow_self_domain_register) 
+    die('Self domain registration is not allowed');
 
 $form_submit=array('type' => 'image',
 				   'text' => $lang_str['b_next'],
