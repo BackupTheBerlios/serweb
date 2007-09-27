@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.49 2007/09/21 14:21:19 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.50 2007/09/27 12:22:24 kozlik Exp $
  */
 
 
@@ -211,6 +211,25 @@
 		 */
 		$config->ser_domain_cache = true;
 
+        /**
+         *  When data in domain table are changed, all sip proxies should be notified 
+         *  about it to reload the data. There are two methods how to do it:
+         *   
+         *   - serweb could notify ser itself, by it's management interface.
+         *     It have the disadvantage that serweb have to know about all sip 
+         *     proxies in the setup. When a proxy is not accessible during the notify
+         *     it is not notified and still useing the old data.
+         *     
+         *     List od sip proxies shold be set by config variable:
+         *     $config->sip_proxies
+         *     
+         *   - all sip proxies periodically checkig value of global AVP 
+         *     'domain_data_version' and if the value is changed, they reload the 
+         *     domain data
+         *
+         *   Set following option to true to enable notifing of sip proxies by serweb
+         */
+        $config->domain_reload_ser_notify = false;
 
 		/**
 		 *	Set to false if SER useing did column of credentials table
@@ -294,7 +313,9 @@
 
 								'domain_default_flags'		=> 'sw_domain_default_flags',		//default flags for domains
 								'credential_default_flags'	=> 'sw_credential_default_flags',	//default flags for credentials
-								'uri_default_flags'			=> 'sw_uri_default_flags'			//default flags for URIs
+								'uri_default_flags'			=> 'sw_uri_default_flags',			//default flags for URIs
+
+								'domain_data_version'		=> 'domain_data_version'			//version of data in domain table
 		                      );
 
 

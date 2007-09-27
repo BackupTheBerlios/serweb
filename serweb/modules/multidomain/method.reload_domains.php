@@ -1,10 +1,10 @@
 <?php
 /*
- * $Id: method.reload_domains.php,v 1.3 2006/03/29 14:49:33 kozlik Exp $
+ * $Id: method.reload_domains.php,v 1.4 2007/09/27 12:22:25 kozlik Exp $
  */
 
 class CData_Layer_reload_domains {
-	var $required_methods = array();
+	var $required_methods = array('get_DB_time');
 	
 	/**
 	 *  reload domains table of SER from DB
@@ -18,6 +18,17 @@ class CData_Layer_reload_domains {
 	 */ 
 	function reload_domains($opt, &$errors){
 		global $config;
+
+        $ga_h = &Global_Attrs::singleton();
+        /* get current timestamp on DB server */
+        if (false === $now = $this->get_DB_time(null)) return false;
+        /* update attribute holding timestamp of last data change */
+        if (false === $ga_h->set_attribute($config->attr_names['domain_data_version'], $now)) return false;
+
+        /* If notifing of sip proxies to reload the data is disabled, 
+         * finish here
+         */
+        if (empty($config->domain_reload_ser_notify)) return true;
 
 		/* If SER does not caches domain table, the reload is not needed
 		 * (and also is not possible) */
