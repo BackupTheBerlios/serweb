@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.60 2007/09/21 14:21:20 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.61 2007/09/27 12:14:47 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -296,6 +296,10 @@ $lang_str['ff_send_daily_missed_calls'] =		"send me daily my missed calls to my 
 $lang_str['ff_uri_def_f'] =						"default flags for uri";
 $lang_str['ff_credential_def_f'] =				"default flags for credentials";
 $lang_str['ff_domain_def_f'] =					"default flags for domain";
+
+$lang_str['attr_fwd_busy_target'] =				"destination for on-busy forwarding";
+$lang_str['attr_fwd_noanswer_target'] =			"destination for on-no-answer forwarding";
+$lang_str['attr_fwd_always_target'] =			"unconditional call forwarding target";
 
 
 /* ------------------------------------------------------------*/

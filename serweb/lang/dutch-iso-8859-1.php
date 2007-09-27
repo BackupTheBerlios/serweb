@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.45 2007/09/21 14:21:20 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.46 2007/09/27 12:14:47 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -296,6 +296,10 @@ $lang_str['ff_send_daily_missed_calls'] =		"verstuur dagelijks mijn gemiste beri
 $lang_str['ff_uri_def_f'] =						"standaard waarden voor uri";
 $lang_str['ff_credential_def_f'] =				"standaard gegevns";
 $lang_str['ff_domain_def_f'] =					"standaard waarden voor domein";
+
+$lang_str['attr_fwd_busy_target'] =				"destination for on-busy forwarding";	//to translate 
+$lang_str['attr_fwd_noanswer_target'] =			"destination for on-no-answer forwarding";	//to translate 
+$lang_str['attr_fwd_always_target'] =			"unconditional call forwarding target";	//to translate 
 
 
 /* ------------------------------------------------------------*/

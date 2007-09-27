@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.44 2007/09/21 14:21:20 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.45 2007/09/27 12:14:47 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -296,6 +296,10 @@ $lang_str['ff_send_daily_missed_calls'] =		"posílejte mi dennì seznam zme¹kaných
 $lang_str['ff_uri_def_f'] =						"defaultní flagy pro uri";
 $lang_str['ff_credential_def_f'] =				"defaultní flagy pro kredenciály";
 $lang_str['ff_domain_def_f'] =					"defaultní flagy pro domény";
+
+$lang_str['attr_fwd_busy_target'] =				"destination for on-busy forwarding";	//to translate 
+$lang_str['attr_fwd_noanswer_target'] =			"destination for on-no-answer forwarding";	//to translate 
+$lang_str['attr_fwd_always_target'] =			"unconditional call forwarding target";	//to translate 
 
 
 /* ------------------------------------------------------------*/
