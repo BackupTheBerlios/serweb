@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attr_types.php,v 1.10 2007/02/14 16:36:40 kozlik Exp $
+ * @version    $Id: apu_attr_types.php,v 1.11 2007/10/02 13:22:24 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -147,15 +147,11 @@ class apu_attr_types extends apu_base_class{
 	function init(){
 		parent::init();
 
-		$session_name = empty($this->opt['filter_name'])?
-		                $this->opt['instance_id']:
-		                $this->opt['filter_name'];
-
-		if (!isset($_SESSION['apu_filter'][$session_name])){
-			$_SESSION['apu_filter'][$session_name] = array();
+		if (!isset($_SESSION['apu_attr_types'][$this->opt['instance_id']])){
+			$_SESSION['apu_attr_types'][$this->opt['instance_id']] = array();
 		}
 		
-		$this->session = &$_SESSION['apu_filter'][$session_name];
+		$this->session = &$_SESSION['apu_attr_types'][$this->opt['instance_id']];
 
 		if (is_a($this->sorter, "apu_base_class")){
 			/* register callback called on sorter change */
