@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.25 2007/09/21 14:21:19 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.26 2007/10/02 13:20:34 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -1245,13 +1245,20 @@ class Filter {
 		$val = $this->value;
 		
 		if ($this->op == "like"){
+		    /* escape '%' and '_' characters - these are not wildcards */
+			$val = str_replace('%', '\%', $val);
+			$val = str_replace('_', '\_', $val);
+			
+			/* replace '*' and '?' with their wildcard equivalent  */
 			$val = str_replace('*', '%', $val);
+			$val = str_replace('?', '_', $val);
+			
 			if ($this->asterisks) $val = "%".$val."%";
 		}
 		
 		
 		if ($int)	return $var." ".$this->op." ".(int)$val;
-		else		return $var." ".$this->op." '".$val."'";
+		else		return $var." ".$this->op." '".addslashes($val)."'";
 	
 	}
 
