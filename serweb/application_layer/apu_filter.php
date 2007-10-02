@@ -3,7 +3,7 @@
  * Application unit filter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_filter.php,v 1.3 2007/02/14 16:36:38 kozlik Exp $
+ * @version   $Id: apu_filter.php,v 1.4 2007/10/02 13:18:18 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -74,6 +74,8 @@ class apu_filter extends apu_base_class{
 
 		$this->opt['on_change_callback'] =			'';
 
+        /* match any value containing the filter value */
+		$this->opt['partial_match'] =			true;
 		
 		/*** names of variables assigned to smarty ***/
 		/* form */
@@ -307,7 +309,7 @@ class apu_filter extends apu_base_class{
 			/* do not include empty values to filter*/
 			if ($fv[$v['name']] === "") continue;
 		
-			$f_ops[$v['name']] = new Filter($v['name'], $fv[$v['name']], "like", true); 	
+			$f_ops[$v['name']] = new Filter($v['name'], $fv[$v['name']], "like", $this->opt['partial_match']); 	
 		}
 
 
