@@ -764,6 +764,14 @@ tr.flushright td{
 	line-height: 18px;
 }
 
+
+.note{
+    font-size:0.85em;
+    font-style:italic;
+	text-align : center;
+	color: #666666;
+}
+
 .swWarning{
 	color: #FFFFFF;
 	background-color: #CC0000;

@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.20 2007/02/14 16:36:38 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.21 2007/10/02 13:44:34 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -97,23 +97,35 @@ class CData_Layer_get_users {
 
 		/* get users */
 
-		$query_c="";
-		if (!empty($filter['usrnm']))  $query_c .= "cr.".$cc->uname."  like ".$this->sql_format("%".$filter['usrnm']."%", "s")." and ";
-		if (!empty($filter['realm']))  $query_c .= "cr.".$cc->realm."  like ".$this->sql_format("%".$filter['realm']."%", "s")." and ";
-		if (!empty($filter['fname']))  $query_c .= "afn.".$ca->value." like ".$this->sql_format("%".$filter['fname']."%", "s")." and ";
-		if (!empty($filter['lname']))  $query_c .= "aln.".$ca->value." like ".$this->sql_format("%".$filter['lname']."%", "s")." and ";
-		if (!empty($filter['email']))  $query_c .= "aem.".$ca->value." like ".$this->sql_format("%".$filter['email']."%", "s")." and ";
-		if (!empty($filter['uid']))    $query_c .= "cr.".$cc->uid."    like ".$this->sql_format("%".$filter['uid']."%",   "s")." and ";
+        $qw = array();
+        if (!empty($filter['username']))  $qw[] = $filter['username']->to_sql("cr.".$cc->uname);
+        if (!empty($filter['realm']))     $qw[] = $filter['realm']->to_sql("cr.".$cc->realm);
+        if (!empty($filter['fname']))     $qw[] = $filter['fname']->to_sql("afn.".$ca->value);
+        if (!empty($filter['lname']))     $qw[] = $filter['lname']->to_sql("aln.".$ca->value);
+        if (!empty($filter['email']))     $qw[] = $filter['email']->to_sql("aem.".$ca->value);
+        if (!empty($filter['uid']))       $qw[] = $filter['uid']->to_sql("cr.".$cc->uid);
 
-		if (!$opt_get_disabled) $query_c .= "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0 and ";
+        if (!$opt_get_disabled)           $qw[] = "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0";
+
+		if(!empty($filter['sipuri'])){
+            $q_uri = "select ".$cu->uid." 
+                      from ".$tu_name." u join ".$td_name." d
+                            on u.".$cu->did." = d.".$cd->did."
+                      where ".$filter['sipuri']->to_sql("concat('sip:', ".$cu->username.", '@', ".$cd->name.")");
+
+            $qw[] = "(cr.".$cc->uid." IN (".$q_uri."))";
+		}
+
+		$query_c="";
+		if ($qw) $query_c = implode(" and ", $qw)." and ";
 
 		$q_online = "";
-		if (!empty($filter['onlineonly'])){
-			$q_online  = " join ".$tl_name." loc on (cr.".$cc->uid." = loc.".$cl->uid.") ";
+		if (!empty($filter['onlineonly']) and $filter['onlineonly']->value){
+    		$q_online  = " join ".$tl_name." loc on (cr.".$cc->uid." = loc.".$cl->uid.") ";
 		}
 
 		$q_admins = "";
-		if(!empty($filter['adminsonly'])){
+		if(!empty($filter['adminsonly']) and $filter['adminsonly']->value){
 			$q_admins = " join ".$ta_name." adm 
 			            on (cr.".$cc->uid." = adm.".$ca->uid." and 
 						    adm.".$ca->name."='".$an['is_admin']."' and
@@ -131,44 +143,24 @@ class CData_Layer_get_users {
 		$q_uri = "";
 		if(!empty($filter['alias'])){
 			$q_uri = " join ".$tu_name." uri 
-			            on (cr.".$cc->uid." = uri.".$cu->uid." and 
-						    uri.".$cu->username." like ".$this->sql_format("%".$filter['alias']."%", "s").") ";
-		}
-
-		$q_suri = "";
-		if(!empty($filter['sip_uri'])){
-		
-			$reg = &CReg::singleton();
-
-			$s_uname = $reg->get_username($filter['sip_uri']);
-			$s_dname = $reg->get_domainname($filter['sip_uri']);
-
-			$dom_handler = &Domains::singleton();
-			if (false === $s_did = $dom_handler->get_did($s_dname)) return false;
-			
-			if (is_null($s_did)) $qs_did = $this->get_sql_bool(false);	//domain don't exist return nothing
-			else $qs_did = "suri.".$cu->did." = '".$s_did."'";
-		
-			$q_suri = " join ".$tu_name." suri 
-			            on (cr.".$cc->uid." = suri.".$cu->uid." and 
-						    suri.".$cu->username." = ".$this->sql_format($s_uname, "s")." and
-							".$qs_did.") ";
+			            on (cr.".$cc->uid." = uri.".$cu->uid." and ".
+                            $filter['alias']->to_sql("uri.".$cu->username).") ";
 		}
 
 		$q_dom_filter = "";
 		if(!empty($filter['domain'])){
 			if ($config->auth['use_did']){
 				$q_dom_filter = " join ".$td_name." dom 
-				            on (cr.".$cc->did." = dom.".$cd->did." and 
-							    dom.".$cd->name." like '%".$filter['domain']."%') ";
+				            on (cr.".$cc->did." = dom.".$cd->did." and ".
+                                $filter['domain']->to_sql("dom.".$cd->name)." ) ";
 			}
 			else{
 				$q_dom_filter = " join ".$tda_name." doa 
 				            on (cr.".$cc->realm." = doa.".$cda->value." and 
 				                doa.".$cda->name." = '".$an['digest_realm']."')
 				            join ".$td_name." dom 
-				            on (doa.".$cda->did." = dom.".$cd->did." and 
-							    dom.".$cd->name." like '%".$filter['domain']."%') ";
+				            on (doa.".$cda->did." = dom.".$cd->did." and ".
+                                $filter['domain']->to_sql("dom.".$cd->name)." ) ";
 			}
 		}
 
@@ -197,7 +189,7 @@ class CData_Layer_get_users {
 		if (!$opt_return_all){
 			/* get num rows */		
 			$q = "select distinct cr.".$cc->uid." as uid
-				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_suri.$q_agree."
+				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 				        left outer join ".$ta_name." aln
@@ -241,7 +233,7 @@ class CData_Layer_get_users {
 					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled,
 					 trim(concat(afn.".$ca->value.", ' ', aln.".$ca->value.")) as name
 					 ".$q_tz_cols."
-			  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_suri.$q_agree.$q_tz_from."
+			  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree.$q_tz_from."
 			        left outer join ".$ta_name." afn
 			            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
 			        left outer join ".$ta_name." aln

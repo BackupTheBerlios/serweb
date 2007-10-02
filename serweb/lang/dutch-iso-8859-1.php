@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.47 2007/09/27 15:46:23 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.48 2007/10/02 13:44:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -54,6 +54,7 @@ $lang_str['domain'] = 							"domein";
 $lang_str['yes'] = 								"Ja";
 $lang_str['no'] = 								"Nee";
 $lang_str['not_exists'] = 						"niet aanwezig";
+$lang_str['filter_wildcard_note'] =             "You could use '*' and '?' wildcards in the filter fields";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */

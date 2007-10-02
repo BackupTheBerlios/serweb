@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.11 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.12 2007/10/02 13:44:35 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -105,6 +105,7 @@ class apu_subscribers extends apu_base_class{
 	var $js_before='';
 
 	var $sorter=null;
+	var $filter=null;
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
@@ -128,7 +129,7 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['use_chk_onlineonly'] =			false;
 		$this->opt['def_chk_onlineonly'] =			false;
 
-		$this->opt['sess_seed'] =	0;
+		$this->opt['sess_seed'] =	null;
 
 		$this->opt['only_from_administrated_domains'] = false;
 
@@ -166,22 +167,108 @@ class apu_subscribers extends apu_base_class{
 		
 	}
 
+	function set_filter(&$filter){
+		$this->filter = &$filter;
+	}
+
 	function set_sorter(&$sorter){
 		$this->sorter = &$sorter;
+	}
+
+	/**
+	 *	this metod is called always at begining - initialize variables
+	 */
+	function init(){
+		global $sess;
+		parent::init();
+
+        $session_name = !is_null($this->opt['sess_seed']) ? 
+                        $this->opt['sess_seed'] :
+                        $this->opt['instance_id'];
+
+		if (!isset($_SESSION['apu_subscribers'][$session_name])){
+			$_SESSION['apu_subscribers'][$session_name] = array();
+		}
+		
+		$this->session = &$_SESSION['apu_subscribers'][$session_name];
+
+		if (is_a($this->sorter, "apu_base_class")){
+			/* register callback called on sorter change */
+			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
+			$this->sorter->set_base_apu($this);
+		}
+
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_base_apu($this);
+		}
 	}
 
 	/**
 	 *	callback function called when sorter is changed
 	 */
 	function sorter_changed(){
-		global $sess_apu_sc;
-
-		$sess_apu_sc[$this->opt['sess_seed']]['act_row'] = 0;
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_act_row(0);
+		}
 	}
 
 	function get_sorter_columns(){
 		return array('username', 'realm', 'fname', 'lname', 'name', 
 		             'phone', 'email', 'uid');
+	}
+
+	function get_filter_form(){
+		global $lang_str;
+		
+		$f = array();
+
+		$f[] = array("type"=>"text",
+		             "name"=>"uid",
+					 "label"=>$lang_str['ff_uid']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"username",
+					 "label"=>$lang_str['ff_username']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"fname",
+					 "label"=>$lang_str['ff_first_name']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"lname",
+					 "label"=>$lang_str['ff_last_name']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"email",
+					 "label"=>$lang_str['ff_email']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"domain",
+					 "label"=>$lang_str['ff_domain']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"alias",
+					 "label"=>$lang_str['ff_alias']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"sipuri",
+					 "label"=>$lang_str['ff_sip_address']);
+
+		if ($this->opt['use_chk_onlineonly']){
+    		$f[] = array("type"=>"checkbox",
+    		             "name"=>"onlineonly",
+    					 "label"=>$lang_str['ff_show_online_only'],
+    					 "initial"=>$this->opt['def_chk_onlineonly']);
+    	}
+
+		if ($this->opt['use_chk_adminsonly']){
+    		$f[] = array("type"=>"checkbox",
+    		             "name"=>"adminsonly",
+    					 "label"=>$lang_str['ff_show_admins_only'],
+    					 "initial"=>$this->opt['def_chk_adminsonly']);
+    	}
+
+		return $f;
 	}
 
 	function action_enable(&$errors){
@@ -217,9 +304,7 @@ class apu_subscribers extends apu_base_class{
 	}
 
 	function action_default(&$errors){
-		global $data, $sess, $sess_apu_sc;
-
-		$data->set_act_row($sess_apu_sc[$this->opt['sess_seed']]['act_row']);
+		global $data, $sess;
 
 		
 		$opt = array('get_user_aliases' => $this->opt['get_user_aliases'],
@@ -238,10 +323,18 @@ class apu_subscribers extends apu_base_class{
 			$opt['order_by']   = $this->sorter->get_sort_col();
 			$opt['order_desc'] = $this->sorter->get_sort_dir();
 		}
+
+        $filter = array();
+		if (is_a($this->filter, "apu_base_class")){
+			$filter = $this->filter->get_filter();
+
+    		$data->set_act_row($this->filter->get_act_row());
+		}
+
 		
 		if (false === $this->subscribers = 
 				$data->get_users(
-					$sess_apu_sc[$this->opt['sess_seed']]['filter'], 
+					$filter, 
 					$opt, 
 					$errors)) 
 			return false;
@@ -283,76 +376,6 @@ class apu_subscribers extends apu_base_class{
 	}
 
 	
-	/* this metod is called always at begining */
-	function init(){
-		global $sess, $sess_apu_sc;
-		parent::init();
-
-		/* registger session variable if still isn't registered */
-		if (!$sess->is_registered('sess_apu_sc')) $sess->register('sess_apu_sc');
-		
-		/* set default value for session variable */
-		if (!isset($sess_apu_sc[$this->opt['sess_seed']])){ 
-			$tmp = array();
-			$tmp['filter']['uid'] = '';
-			$tmp['filter']['usrnm'] = '';
-			$tmp['filter']['fname'] = '';
-			$tmp['filter']['lname'] = '';
-			$tmp['filter']['email'] = '';
-			$tmp['filter']['domain'] = '';
-			$tmp['filter']['onlineonly'] = $this->opt['def_chk_onlineonly'];
-			$tmp['filter']['adminsonly'] = $this->opt['def_chk_adminsonly'];
-			$tmp['filter']['alias'] = '';
-			$tmp['filter']['sip_uri'] = '';
-
-			$tmp['act_row'] = 0;
-
-			$sess_apu_sc[$this->opt['sess_seed']] = &$tmp;
-		}
-
-		if (isset($_GET['act_row'])) 
-			$sess_apu_sc[$this->opt['sess_seed']]['act_row'] = $_GET['act_row'];
-
-		if (is_a($this->sorter, "apu_base_class")){
-			/* register callback called on sorter change */
-			$this->sorter->set_opt('on_change_callback', array(&$this, 'sorter_changed'));
-			$this->sorter->set_base_apu($this);
-		}
-	}
-
-	function set_filter_by_posts(){
-		global $sess_apu_sc;
-
-		/* show results from first row after form submit */
-		$sess_apu_sc[$this->opt['sess_seed']]['act_row'] = 0;
-		
-		/* set search filter by values submited by form */
-		$filter = &$sess_apu_sc[$this->opt['sess_seed']]['filter'];
-	
-		if (isset($_POST['uid']))   $filter['uid']=$_POST['uid'];
-		if (isset($_POST['usrnm'])) $filter['usrnm']=$_POST['usrnm'];
-		if (isset($_POST['fname'])) $filter['fname']=$_POST['fname'];
-		if (isset($_POST['lname'])) $filter['lname']=$_POST['lname'];
-		if (isset($_POST['email'])) $filter['email']=$_POST['email'];
-		if (isset($_POST['domain'])) $filter['domain']=$_POST['domain'];
-		if (isset($_POST['alias'])) $filter['alias']=$_POST['alias'];
-		if (isset($_POST['sipuri'])) $filter['sip_uri']=$_POST['sipuri'];
-
-		if ($this->opt['use_chk_onlineonly']){
-			if (isset($_POST['onlineonly'])) 
-				$filter['onlineonly']=$_POST['onlineonly'];
-			else $filter['onlineonly']=0;
-		}
-
-		if ($this->opt['use_chk_adminsonly']){
-			if (isset($_POST['adminsonly'])) 
-				$filter['adminsonly']=$_POST['adminsonly'];
-			else $filter['adminsonly']=0;
-		}
-
-		$this->f->load_defaults();
-	}
-	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
 
@@ -379,99 +402,10 @@ class apu_subscribers extends apu_base_class{
 			}
 		}		
 
-		if ($this->was_form_submited()){	// Is there data to process?
-			$this->action=array('action'=>"default",
-			                    'validate_form'=>true,
-								'reload'=>false);
-		}
-		else $this->action=array('action'=>"default",
-			                     'validate_form'=>false,
-								 'reload'=>false);
+		$this->action=array('action'=>"default",
+		                     'validate_form'=>false,
+							 'reload'=>false);
 	}
-	
-	/* create html form */
-	function create_html_form(&$errors){
-		global $sess_apu_sc, $lang_str;
-		parent::create_html_form($errors);
-
-		$filter = &$sess_apu_sc[$this->opt['sess_seed']]['filter'];
-
-		$reg = &CReg::singleton();
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"uid",
-									 "size"=>11,
-									 "maxlength"=>50,
-		                             "value"=>$filter['uid']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"usrnm",
-									 "size"=>11,
-									 "maxlength"=>50,
-		                             "value"=>$filter['usrnm']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"fname",
-									 "size"=>11,
-									 "maxlength"=>25,
-		                             "value"=>$filter['fname']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"lname",
-									 "size"=>11,
-									 "maxlength"=>45,
-		                             "value"=>$filter['lname']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"email",
-									 "size"=>11,
-									 "maxlength"=>50,
-		                             "value"=>$filter['email']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"domain",
-									 "size"=>11,
-									 "maxlength"=>128,
-	        	                     "value"=>$filter['domain']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"alias",
-									 "size"=>11,
-									 "maxlength"=>64,
-	        	                     "value"=>$filter['alias']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"sipuri",
-									 "size"=>11,
-									 "maxlength"=>255,
-									 "value" => $filter['sip_uri'],
-									 "valid_regex" => "^(".$reg->sip_address.")?$",
-									 "valid_e" => $lang_str['fe_not_valid_sip'],
-									 "extrahtml" => "onBlur='sip_address_completion(this)'"));
-	
-		$this->js_before .= 'sip_address_completion(f.sip_uri);';
-
-		$this->f->add_element(array("type"=>"checkbox",
-		                             "value"=>1,
-									 "checked"=>$filter['onlineonly'],
-	    	                         "name"=>"onlineonly"));
-
-		$this->f->add_element(array("type"=>"checkbox",
-		                             "value"=>1,
-									 "checked"=>$filter['adminsonly'],
-	    	                         "name"=>"adminsonly"));
-
-
-	}
-
-	/* validate html form */
-	function validate_form(&$errors){
-		if (false === parent::validate_form($errors)) return false;
-
-		$this->set_filter_by_posts();
-		return true;
-	}
-	
 	
 	/* add messages to given array */
 	function return_messages(&$msgs){

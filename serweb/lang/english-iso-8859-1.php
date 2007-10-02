@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.62 2007/09/27 15:46:23 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.63 2007/10/02 13:44:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -54,6 +54,7 @@ $lang_str['domain'] = 							"domain";
 $lang_str['yes'] = 								"YES";
 $lang_str['no'] = 								"NO";
 $lang_str['not_exists'] = 						"does not exists";
+$lang_str['filter_wildcard_note'] =             "You could use '*' and '?' wildcards in the filter fields";
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */

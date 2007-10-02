@@ -3,7 +3,7 @@
  *	Select admin
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: admin_select.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: admin_select.php,v 1.5 2007/10/02 13:44:35 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -15,7 +15,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('subscribers');
 
-$_required_apu = array('apu_subscribers', 'apu_sorter'); 
+$_required_apu = array('apu_subscribers', 'apu_sorter', 'apu_filter'); 
 
 
 /** include all others necessary files */
@@ -25,7 +25,12 @@ $perm->check("admin,hostmaster");
 
 $sc	= new apu_subscribers();
 $sr = new apu_sorter();
+$filter	= new apu_filter();
 
+$filter->set_opt('partial_match', false);
+$filter->set_opt('filter_name', 'admin_select');
+
+$sc->set_filter($filter);
 $sc->set_sorter($sr);
 
 $smarty->assign('xxl_support', isModuleLoaded('xxl'));
@@ -41,11 +46,11 @@ $page_attributes['epilog']	 ="</body>";
 
 $sc->set_opt('use_chk_adminsonly', true);
 $sc->set_opt('def_chk_adminsonly', true);
-$sc->set_opt('sess_seed', 1);
 
 
 $controler->add_apu($sc);
 $controler->add_apu($sr);
+$controler->add_apu($filter);
 $controler->set_template_name('a_admin_select.tpl');
 $controler->start();
 

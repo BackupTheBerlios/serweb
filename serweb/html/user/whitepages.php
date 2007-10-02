@@ -3,7 +3,7 @@
  *	Search for other users
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: whitepages.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: whitepages.php,v 1.8 2007/10/02 13:44:35 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -15,7 +15,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('subscribers');
 
-$_required_apu = array('apu_subscribers', 'apu_sorter'); 
+$_required_apu = array('apu_subscribers', 'apu_sorter', 'apu_filter'); 
 
 /** include all others necessary files */
 require "prepend.php";
@@ -24,7 +24,12 @@ if (!$config->enable_whitepages) die("Whitepages are disabled in config");
 
 $wp			= new apu_subscribers();
 $sr         = new apu_sorter();
+$filter     = new apu_filter();
 
+$filter->set_opt('partial_match', false);
+$filter->set_opt('filter_name', 'white_pages');
+
+$wp->set_filter($filter);
 $wp->set_sorter($sr);
 
 $wp->set_opt('get_user_sip_uri', true);
@@ -33,7 +38,6 @@ $wp->set_opt('get_timezones', true);
 $wp->set_opt('get_only_agreeing', true);
 $wp->set_opt('get_disabled', false);
 $wp->set_opt('use_chk_onlineonly', true);
-$wp->set_opt('sess_seed', 'wp');
 $wp->set_opt('script_phonebook', 'phonebook.php');
 
 $sr->set_opt('default_sort_col', 'name');
@@ -45,6 +49,7 @@ $page_attributes['selected_tab']="phonebook.php";
 
 $controler->add_apu($wp);
 $controler->add_apu($sr);
+$controler->add_apu($filter);
 $controler->set_template_name('u_whitepages.tpl');
 $controler->start();
 

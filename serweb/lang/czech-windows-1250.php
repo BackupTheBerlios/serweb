@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.46 2007/09/27 15:46:23 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.47 2007/10/02 13:44:35 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -54,6 +54,7 @@ $lang_str['domain'] = 							"tabulka";
 $lang_str['yes'] = 								"ANO";	
 $lang_str['no'] = 								"NE";	
 $lang_str['not_exists'] = 						"neexistuje";
+$lang_str['filter_wildcard_note'] =             "You could use '*' and '?' wildcards in the filter fields";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      error messages                                         */

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.13 2007/02/05 15:10:38 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.14 2007/10/02 13:44:35 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -8,7 +8,7 @@
 {literal}
 <style type="text/css">
 	#uid,    #luid   {width:120px;}
-	#usrnm,  #lusrnm {width:120px;}
+	#username,  #lusrnm {width:120px;}
 	#domain,  #ldomain {width:120px;}
 	#fname,  #lfname {width:120px;}
 	#lname,  #llname {width:120px;}
@@ -21,7 +21,7 @@
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
 <td><label for="uid" id="luid">{$lang_str.ff_uid}</label></td>
-<td><label for="usrnm"  id="lusrnm" >{$lang_str.ff_username}</label></td>
+<td><label for="username"  id="lusrnm" >{$lang_str.ff_username}</label></td>
 <td><label for="domain"  id="ldomain">{$lang_str.ff_domain}</label></td>
 <td><label for="fname"  id="lfname" >{$lang_str.ff_first_name}</label></td>
 <td><label for="lname"  id="llname" >{$lang_str.ff_last_name}</label></td>
@@ -30,7 +30,7 @@
 
 <tr>
 <td>{$form.uid}</td>
-<td>{$form.usrnm}</td>
+<td>{$form.username}</td>
 <td>{$form.domain}</td>
 <td>{$form.fname}</td>
 <td>{$form.lname}</td>
@@ -38,6 +38,8 @@
 </tr>
 
 <tr><td colspan="6"><label for="adminsonly" style="display: inline;">{$lang_str.ff_show_admins_only}:</label>{$form.adminsonly}</td></tr>
+
+<tr><td colspan="6" class="note">{$lang_str.filter_wildcard_note}</td></tr>
 				
 <tr><td colspan="6" align="right">{$form.okey}</td></tr>
 </table>
