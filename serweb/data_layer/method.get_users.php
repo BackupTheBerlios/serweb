@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.22 2007/10/03 15:21:10 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.23 2007/10/03 16:18:16 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -188,7 +188,7 @@ class CData_Layer_get_users {
 
 		if (!$opt_return_all){
 			/* get num rows */		
-			$q = "select cr.".$cc->uid." as uid
+			$q = "select count(*) 
 				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
@@ -203,7 +203,9 @@ class CData_Layer_get_users {
 	
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
-			$this->set_num_rows($res->numRows());
+			$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+			$this->set_num_rows($row[0]);
+
 			$res->free();
 	
 			/* if act_row is bigger then num_rows, correct it */
