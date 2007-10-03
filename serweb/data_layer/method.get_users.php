@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.21 2007/10/02 13:44:34 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.22 2007/10/03 15:21:10 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -188,7 +188,7 @@ class CData_Layer_get_users {
 
 		if (!$opt_return_all){
 			/* get num rows */		
-			$q = "select distinct cr.".$cc->uid." as uid
+			$q = "select cr.".$cc->uid." as uid
 				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree."
 				        left outer join ".$ta_name." afn
 				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
@@ -211,18 +211,7 @@ class CData_Layer_get_users {
 		}
 
 
-		if ($this->db_host['parsed']['phptype'] == 'mysql') {
-			$q_dist = "";
-			$q_grp = " group by cr.".$cc->uid;
-		}
-		else {
-			$q_dist = " distinct on (cr.".$cc->uid.") ";
-			$q_grp = "";
-		}
-
-
-		$q = "select ".$q_dist."
-		             cr.".$cc->uid." as uid,
+		$q = "select cr.".$cc->uid." as uid,
 			         cr.".$cc->uname." as username,
 		             cr.".$cc->did." as did,
 			         cr.".$cc->realm." as realm,
@@ -243,8 +232,7 @@ class CData_Layer_get_users {
 			        left outer join ".$ta_name." aem
 			            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')
 			  where ".$query_c.$q_uid_filter." 
-			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0".
-			  $q_grp;
+			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
 
 		if ($o_order_by) {
 			$q .= " order by ".$o_order_by." ".$o_order_desc;

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.22 2007/10/02 13:44:35 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.23 2007/10/03 15:21:10 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -92,7 +92,7 @@
 		<a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a>
 		<a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a>
 		<a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a>
-		<a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a>
+{*		<a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a>*}
 	{if $row.disabled}
 		<a href="{$row.url_enable}">{$lang_str.l_enable}</a>
 	{else}
