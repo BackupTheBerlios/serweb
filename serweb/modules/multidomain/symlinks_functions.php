@@ -3,7 +3,7 @@
  * Functions for creating and deleting domains
  * 
  * @author    Karel Kozlik
- * @version   $Id: symlinks_functions.php,v 1.4 2006/04/26 10:58:22 kozlik Exp $
+ * @version   $Id: symlinks_functions.php,v 1.5 2007/10/03 08:16:54 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -185,8 +185,20 @@ function create_vhost_symlink($domain_name){
 		$file = $config->apache_vhosts_dir.$domain_name;
 
 		FileJournal::add_created_file($file);
-	
-		if (false === symlink($target, $file)){
+
+        /* if the file already exists, remove it first */
+		if(file_exists($file)) {
+            $success = @unlink($file);
+
+    		if (false === $success) {
+    			ErrorHandler::log_errors(PEAR::raiseError("Can't delete file", NULL, NULL, 
+    			           NULL, "Filename:".$file));
+    			return false;
+    		}
+        }
+
+        $success = @symlink($target, $file);
+		if (false === $success){
 			ErrorHandler::log_errors(PEAR::raiseError("Can't create virtual server", NULL, NULL, 
 			           NULL, "Can't create symlink. Link:".$file." target:".$target));
 			return false;
