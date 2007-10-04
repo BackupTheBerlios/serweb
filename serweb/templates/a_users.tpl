@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.24 2007/10/04 10:58:53 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.25 2007/10/04 11:02:05 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -59,7 +59,7 @@
 </table>
 {$form.finish}
 </div>
-{debug}
+
 {foreach from=$users item='row' name='users'}
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
