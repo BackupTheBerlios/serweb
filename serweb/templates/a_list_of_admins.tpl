@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_admins.tpl,v 1.14 2007/10/02 13:44:35 kozlik Exp $ *}
+{* $Id: a_list_of_admins.tpl,v 1.15 2007/10/04 10:58:53 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -67,7 +67,7 @@
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false}">
 	<td align="left"><span class="{$usr_class}">{$row.uid|escape|empty2nbsp}</span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
-	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$dom_class}">{if $row.domain}{$row.domain|escape|empty2nbsp}{else}<i>&lt;no domain&gt;</i>{/if}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}" class="emailstyle">{$row.email_address}</a>&nbsp;</td>
 	</tr>

@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.23 2007/10/03 15:21:10 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.24 2007/10/04 10:58:53 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -59,7 +59,7 @@
 </table>
 {$form.finish}
 </div>
-
+{debug}
 {foreach from=$users item='row' name='users'}
 	{if $smarty.foreach.users.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -81,7 +81,7 @@
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven' advance=false} informationrow">
 	<td align="left"><span class="{$usr_class}"><a href="javascript:void(0);" class="swPopupLink" {popup text=$popup_cr caption=$lang_str.l_credentials}>{$row.uid|escape|empty2nbsp}</a></span></td>
 	<td align="left"><span class="{$usr_class}">{$row.username|escape|empty2nbsp}</span></td>
-	<td align="left"><span class="{$dom_class}">{$row.domain|escape|empty2nbsp}</span></td>
+	<td align="left"><span class="{$dom_class}">{if $row.domain}{$row.domain|escape|empty2nbsp}{else}<i>&lt;no domain&gt;</i>{/if}</span></td>
 	<td align="left">{$row.name|escape|empty2nbsp}</td>
 	<td align="left"><a href="mailto:{$row.email_address}">{$row.email_address}</a>&nbsp;</td>
 	</tr>

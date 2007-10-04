@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_credentials.tpl,v 1.3 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: a_credentials.tpl,v 1.4 2007/10/04 10:58:53 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -65,7 +65,7 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">{$row.uname|empty2nbsp}</td>
-	<td align="left">{$row.domainname|empty2nbsp}</td>
+	<td align="left">{if $row.domainname}{$row.domainname|empty2nbsp}{else}<i>no domain</i>{/if}</td>
 	<td align="left">{if $row.password}{$row.password}{else}------{/if}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_ser}</td>
 	<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.for_serweb}</td>
