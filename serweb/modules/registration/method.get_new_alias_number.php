@@ -1,7 +1,7 @@
 <?
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_new_alias_number.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: method.get_new_alias_number.php,v 1.5 2007/10/04 19:59:22 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
@@ -70,18 +70,36 @@ class CData_Layer_get_new_alias_number {
 		}
 		else{ //incremental alias generation
 
-			$q="select max(".$this->get_sql_cast_to_int_funct($c->username).") 
-			    from ".$t_name." 
-				where ".$c->did." = ".$this->sql_format($did, "s")." and 
-				      ".$this->get_sql_regex_match('^[0-9]+$', $c->username);
+            // get value for new alias
+            $o = array('did' => $did);
+            if (false === $alias = Attributes::get_Attribute($config->attr_names['highest_alias_number'], $o)) return false;
+
+            $alias = (int)$alias;
+
+            // if value is not set, use the config value
+            if (!$alias or $alias < $config->first_alias_number) $alias = $config->first_alias_number;
 
 
-			$res=$this->db->query($q);
-			if (DB::isError($res)) {ErrorHandler::log_errors($res);return false;}
-			$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
-			$res->free();
-			$alias=is_null($row[0])?$config->first_alias_number:($row[0]+1);
-			$alias=($alias<$config->first_alias_number)?$config->first_alias_number:$alias;
+            do{
+                // check if the username is aready used
+                $q="select count(*) 
+                    from ".$t_name." 
+                    where ".$c->did." = ".$this->sql_format($did, "s")." and 
+                        ".$c->username." = ".$this->sql_format($alias, "n");
+                
+                $res=$this->db->query($q);
+                if (DB::isError($res)) {ErrorHandler::log_errors($res);return false;}
+                $row=$res->fetchRow(DB_FETCHMODE_ORDERED);
+                $res->free();
+            
+                // if is used, increment it and try again
+                if ($row[0]) $alias++;
+            
+            }while($row[0]);
+
+            $da_h = &Domain_Attrs::singleton($did);
+            if (false === $da_h->set_attribute($config->attr_names['highest_alias_number'], $alias+1)) return false;
+
 			return $alias;
 		}
 	}
