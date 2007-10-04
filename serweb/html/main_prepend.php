@@ -3,7 +3,7 @@
  *	File loading configs, functions, class definitions etc.
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: main_prepend.php,v 1.15 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: main_prepend.php,v 1.16 2007/10/04 21:34:16 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -17,9 +17,8 @@ require_once ($_SERWEB["configdir"] . "config_paths.php");
 /** set $config->domain */
 require_once ($_SERWEB["configdir"] . "set_domain.php");
 
-/** require domain depending config */
+/** require domain depending config - default values */
 require_once ($_SERWEB["serwebdir"] . "config_domain.php");
-$domain_config=new CDomain_config();
 
 /** require sql access configuration and table names */
 require_once ($_SERWEB["configdir"] . "config_data_layer.php");
@@ -34,10 +33,6 @@ require_once ($_SERWEB["configdir"] . "config.php");
 if (file_exists($_SERWEB["configdir"] . "config.developer.php")){
 	require_once ($_SERWEB["configdir"] . "config.developer.php");
 }
-
-/* activate domain depending config */
-$domain_config->activate_domain_config();
-unset($domain_config);
 
 /** require PEAR DB */
 require_once 'DB.php';
@@ -97,6 +92,13 @@ require_once ($_SERWEB["functionsdir"] . "load_modules.php");
 $data_auth = CData_Layer::singleton("auth_user", $errors);
 /*  reference $data to $data_auth */
 $data = &$data_auth;
+
+
+/* include domain depending config and activate it */
+$domain_config=new CDomain_config();
+$domain_config->activate_domain_config();
+unset($domain_config);
+
 
 /** require page layout */
 require_once ($_SERWEB["functionsdir"] . "page.php");

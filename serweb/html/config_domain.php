@@ -3,7 +3,7 @@
  *	Class for loading domain configuration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: config_domain.php,v 1.4 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: config_domain.php,v 1.5 2007/10/04 21:34:16 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -22,15 +22,13 @@ class CDomain_config{
 	 */
 	function CDomain_config(){
 		global $config;
-		
-		$dir=dirname(__FILE__)."/domains/";
 
-		if (file_exists($dir.$config->domain."/config.php")){
-			@$this->cfg = parse_ini_file($dir.$config->domain."/config.ini.php");
-		}
-		else {
-			$this->cfg = parse_ini_file($dir."_default/config.ini.php");
-		}
+        $config_file = multidomain_get_file("config.ini.php", false);
+
+        if ($config_file){
+			@$this->cfg = parse_ini_file($config_file);
+        }
+
 	} //end constructor
 
 	/**
