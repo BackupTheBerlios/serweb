@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.9 2007/07/26 16:06:07 kozlik Exp $
+ *  $Id: functions.js,v 1.10 2007/10/04 19:55:11 kozlik Exp $
  */
 
 
@@ -158,7 +158,7 @@ function remClassNameFromEl(el, className){
 /* toggle visibility of an element */
 
 function toggle_visibility(el){
-	if (el.style.display=="none"){
+	if (el.style.display=="none" || el.style.display==""){
 		el.style.display = "block";
 	}
 	else{
