@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.23 2007/10/03 16:18:16 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.24 2007/10/09 16:28:01 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -94,16 +94,30 @@ class CData_Layer_get_users {
 	    $o_order_by = (isset($opt['order_by'])) ? $opt['order_by'] : "";
 	    $o_order_desc = (!empty($opt['order_desc'])) ? "desc" : "";
 
-
-		/* get users */
+        
+        $filter_join_fn = $filter_join_ln = $filter_join_ph = $filter_join_em = false;
 
         $qw = array();
         if (!empty($filter['username']))  $qw[] = $filter['username']->to_sql("cr.".$cc->uname);
         if (!empty($filter['realm']))     $qw[] = $filter['realm']->to_sql("cr.".$cc->realm);
-        if (!empty($filter['fname']))     $qw[] = $filter['fname']->to_sql("afn.".$ca->value);
-        if (!empty($filter['lname']))     $qw[] = $filter['lname']->to_sql("aln.".$ca->value);
-        if (!empty($filter['email']))     $qw[] = $filter['email']->to_sql("aem.".$ca->value);
         if (!empty($filter['uid']))       $qw[] = $filter['uid']->to_sql("cr.".$cc->uid);
+
+        if (!empty($filter['fname'])){    
+            $qw[] = $filter['fname']->to_sql("afn.".$ca->value);
+            $filter_join_fn = true;
+        }
+        if (!empty($filter['lname'])){    
+            $qw[] = $filter['lname']->to_sql("aln.".$ca->value);
+            $filter_join_ln = true;
+        }
+        if (!empty($filter['email'])){    
+            $qw[] = $filter['email']->to_sql("aem.".$ca->value);
+            $filter_join_em = true;
+        }
+        if (!empty($filter['phone'])){    
+            $qw[] = $filter['phone']->to_sql("aph.".$ca->value);
+            $filter_join_ph = true;
+        }
 
         if (!$opt_get_disabled)           $qw[] = "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0";
 
@@ -142,35 +156,43 @@ class CData_Layer_get_users {
 
 		$q_uri = "";
 		if(!empty($filter['alias'])){
-			$q_uri = " join ".$tu_name." uri 
-			            on (cr.".$cc->uid." = uri.".$cu->uid." and ".
-                            $filter['alias']->to_sql("uri.".$cu->username).") ";
+
+			$q_uri = " join (select distinct ".$cu->uid." 
+                             from ".$tu_name." 
+                             where ".$filter['alias']->to_sql($cu->username).") auri 
+                       on cr.".$cc->uid." = auri.".$cu->uid." ";
 		}
 
 		$q_dom_filter = "";
 		if(!empty($filter['domain'])){
 			if ($config->auth['use_did']){
-				$q_dom_filter = " join ".$td_name." dom 
-				            on (cr.".$cc->did." = dom.".$cd->did." and ".
-                                $filter['domain']->to_sql("dom.".$cd->name)." ) ";
+
+				$q_dom_filter = " join (select distinct ".$cd->did." 
+                                        from ".$td_name." 
+                                        where ".$filter['domain']->to_sql($cd->name).") dom 
+                                  on cr.".$cc->did."=dom.".$cd->did." ";
 			}
 			else{
-				$q_dom_filter = " join ".$tda_name." doa 
-				            on (cr.".$cc->realm." = doa.".$cda->value." and 
-				                doa.".$cda->name." = '".$an['digest_realm']."')
-				            join ".$td_name." dom 
-				            on (doa.".$cda->did." = dom.".$cd->did." and ".
-                                $filter['domain']->to_sql("dom.".$cd->name)." ) ";
+
+				$q_dom_filter = " join (select distinct doa.".$cda->value." as realm 
+                                        from ".$tda_name." doa 
+                                            join ".$td_name." dom 
+                                                on (doa.".$cda->did." = dom.".$cd->did." and 
+                                                    ".$filter['domain']->to_sql("dom.".$cd->name)." )
+                                        where doa.".$cda->name." = '".$an['digest_realm']."') idom 
+                                  on idom.realm = cr.".$cc->realm." ";
 			}
 		}
 
 		$q_domains = "";
 		if (!is_null($opt_from_domains)){
-			
-			$q_domains = " join ".$tu_name." uri 
-			                 on (cr.".$cc->uid." = uri.".$cu->uid." and
-			                    ".$this->get_sql_in("uri.".$cu->did, $opt_from_domains, true)." and 
-								 uri.".$cu->flags." & ".$fu['DB_DELETED']." = 0) ";
+
+
+            $q_domains = " join (select distinct ".$cu->uid." 
+                                from ".$tu_name." 
+                                where  ".$this->get_sql_in($cu->did, $opt_from_domains, true)." and 
+                                    ".$cu->flags." & ".$fu['DB_DELETED']." = 0) iuri 
+                                on cr.".$cc->uid." = iuri.".$cu->uid." ";
 		}
 
 		$q_uid_filter = "";
@@ -189,18 +211,27 @@ class CData_Layer_get_users {
 		if (!$opt_return_all){
 			/* get num rows */		
 			$q = "select count(*) 
-				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree."
-				        left outer join ".$ta_name." afn
-				            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')
-				        left outer join ".$ta_name." aln
-				            on (cr.".$cc->uid." = aln.".$ca->uid." and aln.".$ca->name."='".$an['lname']."')
-				        left outer join ".$ta_name." aph
-				            on (cr.".$cc->uid." = aph.".$ca->uid." and aph.".$ca->name."='".$an['phone']."')
-				        left outer join ".$ta_name." aem
-				            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')
-				  where ".$query_c.$q_uid_filter." 
+				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree;
+
+            if ($filter_join_fn)
+                $q .= " left outer join ".$ta_name." afn
+                            on (cr.".$cc->uid." = afn.".$ca->uid." and afn.".$ca->name."='".$an['fname']."')";
+			 
+            if ($filter_join_ln)
+                $q .= "left outer join ".$ta_name." aln
+                            on (cr.".$cc->uid." = aln.".$ca->uid." and aln.".$ca->name."='".$an['lname']."')";
+            
+            if ($filter_join_ph)
+                $q .= "left outer join ".$ta_name." aph
+                            on (cr.".$cc->uid." = aph.".$ca->uid." and aph.".$ca->name."='".$an['phone']."')";
+
+            if ($filter_join_em)
+                $q .= "left outer join ".$ta_name." aem
+                            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')";
+
+            $q .= " where ".$query_c.$q_uid_filter." 
 				       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
-	
+
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
 			$row=$res->fetchRow(DB_FETCHMODE_ORDERED);
