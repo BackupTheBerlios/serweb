@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.26 2007/10/02 13:20:34 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.27 2007/10/11 14:13:25 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -395,11 +395,41 @@ class Domains{
 	var $domains = null;
 	var $domain_names = null;
 
-    function &singleton() {
-        static $instance = null;
+    /**
+     * Return a reference to a Domains instance, only creating a new instance 
+     * if no Domains instance currently exists.
+     *
+     * You should use this if there are multiple places you might create a
+     * Domains, you don't want to create multiple instances, and you don't 
+     * want to check for the existance of one each time. The singleton pattern 
+     * does all the checking work for you.
+     *
+     * <b>You MUST call this method with the $var = &Domains::singleton() 
+     * syntax. Without the ampersand (&) in front of the method name, you will 
+     * not get a reference, you will get a copy.</b>
+     *
+     * @access public
+     */
 
-		if (is_null($instance)) $instance = new Domains();
-        return $instance;
+    function &singleton() {
+        $obj =  &StaticVarHandler::getvar("Domains", 0, false);
+
+        if (is_null($obj)) {
+            $obj = new Domains();
+        }
+
+        return $obj;
+    }
+
+    /**
+     *  Free memory ocupied by instance of Domains class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free() {
+        StaticVarHandler::getvar("Domains", 0, true);
     }
 
 	/*
@@ -842,14 +872,31 @@ class URIs{
 	 * not get a reference, you will get a copy.</b>
      *
      * @access public
+     * @static
      */
 
     function &singleton($uid) {
-        static $instances = array();
+        $obj =  &StaticVarHandler::getvar("URIs", $uid, false);
 
-		if (!isset($instances[$uid])) $instances[$uid] = new URIs($uid);
-        return $instances[$uid];
+        if (is_null($obj)) {
+            $obj = new URIs($uid);
+        }
+
+        return $obj;
     }
+
+
+    /**
+     *  Free memory ocupied by instance of URIs class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free($uid) {
+        StaticVarHandler::getvar("URIs", $uid, true);
+    }
+
 	
     /**
      * Return a reference to a URIs instance, only creating a new instance 
@@ -1278,6 +1325,34 @@ class Filter {
 		}
 	
 	}
+}
+
+/**
+ *  Helper class used to store static class variables
+ */
+class StaticVarHandler{
+
+    /**
+     *  Get or clear the class variable
+     *
+     *  @param  string $class   name of class requesting the variable
+     *  @param  string $key     name of variable or another index - for use by the class
+     *  @param  bool   $free    if true, free memory ocupied by the variable
+     *  @return mixed
+     */
+    function &getvar($class, $key, $free){
+        static $vars;
+        $dummy = null;
+    
+        if ($free) {
+            if (isset($vars[$class][$key])) unset($vars[$class][$key]);
+            return $dummy;
+        }
+        else{
+            if (!isset($vars[$class][$key])) $vars[$class][$key]=null;
+            return $vars[$class][$key];
+        }
+    }
 }
 
 ?>

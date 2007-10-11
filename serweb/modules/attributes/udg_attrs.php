@@ -3,7 +3,7 @@
  *	Classes holding user, domain, global and uri attributes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: udg_attrs.php,v 1.6 2007/02/14 16:46:30 kozlik Exp $
+ *	@version    $Id: udg_attrs.php,v 1.7 2007/10/11 14:13:30 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_attributes
  */ 
@@ -149,10 +149,24 @@ class Global_Attrs extends Attrs_Common {
      */
 
     function &singleton() {
-        static $instance = null;
+        $obj =  &StaticVarHandler::getvar("Global_Attrs", 0, false);
 
-		if (is_null($instance)) $instance = new Global_Attrs();
-        return $instance;
+        if (is_null($obj)) {
+            $obj = new Global_Attrs();
+        }
+
+        return $obj;
+    }
+
+    /**
+     *  Free memory ocupied by instance of Global_Attrs class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free() {
+        StaticVarHandler::getvar("Global_Attrs", 0, true);
     }
 
 	/**
@@ -240,10 +254,24 @@ class Domain_Attrs extends Attrs_Common {
      */
 
     function &singleton($did) {
-        static $instances = array();
+        $obj =  &StaticVarHandler::getvar("Domain_Attrs", $did, false);
 
-		if (!isset($instances[$did])) $instances[$did] = new Domain_Attrs($did);
-        return $instances[$did];
+        if (is_null($obj)) {
+            $obj = new Domain_Attrs($did);
+        }
+
+        return $obj;
+    }
+
+    /**
+     *  Free memory ocupied by instance of Domain_Attrs class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free($did) {
+        StaticVarHandler::getvar("Domain_Attrs", $did, true);
     }
 
 	/**
@@ -331,10 +359,24 @@ class User_Attrs extends Attrs_Common {
      */
 
     function &singleton($uid) {
-        static $instances = array();
+        $obj =  &StaticVarHandler::getvar("User_Attrs", $uid, false);
 
-		if (!isset($instances[$uid])) $instances[$uid] = new User_Attrs($uid);
-        return $instances[$uid];
+        if (is_null($obj)) {
+            $obj = new User_Attrs($uid);
+        }
+
+        return $obj;
+    }
+
+    /**
+     *  Free memory ocupied by instance of User_Attrs class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free($uid) {
+        StaticVarHandler::getvar("User_Attrs", $uid, true);
     }
 
 	/**
@@ -424,12 +466,28 @@ class Uri_Attrs extends Attrs_Common {
      */
 
     function &singleton($scheme, $username, $did) {
-        static $instances = array();
-
 		$key = $scheme.":".$username."@".$did;
 
-		if (!isset($instances[$key])) $instances[$key] = new Uri_Attrs($scheme, $username, $did);
-        return $instances[$key];
+        $obj =  &StaticVarHandler::getvar("Uri_Attrs", $key, false);
+
+        if (is_null($obj)) {
+            $obj = new Uri_Attrs($scheme, $username, $did);
+        }
+
+        return $obj;
+    }
+
+    /**
+     *  Free memory ocupied by instance of Uri_Attrs class
+     *
+     *  @access public
+     *  @static
+     */
+
+    function free($scheme, $username, $did) {
+		$key = $scheme.":".$username."@".$did;
+
+        StaticVarHandler::getvar("Uri_Attrs", $key, true);
     }
 
 	/**
