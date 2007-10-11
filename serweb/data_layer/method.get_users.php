@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.24 2007/10/09 16:28:01 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.25 2007/10/11 10:09:47 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -46,7 +46,10 @@ class CData_Layer_get_users {
 	 *                                up for them are returned (default: false)
 	 *    - get_credentials  (bool) - return credentials of users in output 
 	 *                                array (default: false)
- 	 *	
+	 *    - count_only       (bool) - just count users matching the filter. 
+	 *                                If this option is true, integer is 
+	 *                                returned instead of array
+	 *	
 	 *	@return array	array of users or FALSE on error
 	 */ 
 	 
@@ -86,6 +89,7 @@ class CData_Layer_get_users {
 	    $opt_get_timezones = (isset($opt['get_timezones'])) ? (bool)$opt['get_timezones'] : false;
 	    $opt_uid_filter =  (isset($opt['only_users'])) ? $opt['only_users'] : null;
 	    $opt_return_all = (isset($opt['return_all'])) ? (bool)$opt['return_all'] : false;
+	    $opt_count_only = (isset($opt['count_only'])) ? (bool)$opt['count_only'] : false;
 	    $opt_agreeing = (isset($opt['only_agreeing'])) ? (bool)$opt['only_agreeing'] : false;
 	    $opt_get_disabled = (isset($opt['get_disabled'])) ? (bool)$opt['get_disabled'] : true;
 	    $opt_get_credentials = (isset($opt['get_credentials'])) ? (bool)$opt['get_credentials'] : false;
@@ -208,7 +212,7 @@ class CData_Layer_get_users {
 			$q_tz_cols = ", atz.".$ca->value." as timezone ";
 		}
 
-		if (!$opt_return_all){
+		if (!$opt_return_all or $opt_count_only){
 			/* get num rows */		
 			$q = "select count(*) 
 				  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree;
@@ -241,6 +245,8 @@ class CData_Layer_get_users {
 	
 			/* if act_row is bigger then num_rows, correct it */
 			$this->correct_act_row();
+			
+			if ($opt_count_only) return $row[0];
 		}
 
 
