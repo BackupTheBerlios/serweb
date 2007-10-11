@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.51 2007/10/04 19:59:22 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.52 2007/10/11 15:13:49 kozlik Exp $
  */
 
 
@@ -524,7 +524,20 @@
 		$config->data_sql->acc->table_name = 				"acc";
  		$config->data_sql->acc->cols->request_timestamp = 	"request_timestamp";
  		$config->data_sql->acc->cols->response_timestamp =	"response_timestamp";
- 		$config->data_sql->acc->flag_values = 				&$config->flags;
+ 		$config->data_sql->acc->flag_values = 				
+                array(
+                    "FLAG_ACC"            => 1 << 1,  // this request will be recorded by ACC
+                    "FLAG_FAILUREROUTE"   => 1 << 2,  // we are operating from the failure route
+                    "FLAG_NAT"            => 1 << 3,  // the UAC is behind a NAT
+                    "FLAG_PEER_REPLICATE" => 1 << 4,  // the request came from a replication peer node
+                    "FLAG_TOTAG"          => 1 << 5,
+                    "FLAG_PSTN_ALLOWED"   => 1 << 6,  // the user is allowed to use the PSTN
+                    "FLAG_DONT_RM_CRED"   => 1 << 7,  // do not remove the credentials
+                    "FLAG_AUTH_OK"        => 1 << 8,
+                    "DB_CALLER_DELETED"   => 1 << 9,  // row is marked as deleted
+                    "DB_CALLEE_DELETED"   => 1 << 10  // row is marked as deleted
+                );
+
 
 		$config->data_sql->acc->version = 					3;
 		
