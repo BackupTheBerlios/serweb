@@ -1,7 +1,7 @@
 <?php
 
 /*
- * $Id: missed_calls.php,v 1.4 2007/10/11 14:14:44 kozlik Exp $
+ * $Id: missed_calls.php,v 1.5 2007/10/11 15:14:40 kozlik Exp $
  */
 
 /**
@@ -171,7 +171,7 @@ function send_missed_calls(){
     /* count users */		
     if (false === ($users_cnt = $data->get_users(array(), $opt))) return false;
 
-    $step = 100;
+    $step = 500;
     $data->set_showed_rows($step);
 
     for ($i=0; $i < $users_cnt; $i += $step){
