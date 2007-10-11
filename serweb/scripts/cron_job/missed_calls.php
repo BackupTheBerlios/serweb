@@ -1,7 +1,7 @@
 <?php
 
 /*
- * $Id: missed_calls.php,v 1.2 2006/07/10 13:45:05 kozlik Exp $
+ * $Id: missed_calls.php,v 1.3 2007/10/11 10:12:40 kozlik Exp $
  */
 
 /**
@@ -162,38 +162,52 @@ function get_send_mc_of_dom($uris, &$mail_from){
  *	send missed calls to all subescribers
  */
 function send_missed_calls(){
-	global $config, $data;
+    global $config, $data;
 
-	$an = $config->attr_names;
-	
-	do{
-		$opt = array('return_all' => true,
-		             'get_aliases' => true);
-		
-		/* get list of users and values of theirs attributes up_send_daily_missed_calls */		
-		if (false === ($users = $data->get_users(array(), $opt))) break;
-	
-		foreach($users as $row){
-			$ua = &User_Attrs::singleton($row['uid']);
-	
-			if (false === $send  = $ua->get_attribute($an['send_mc'])) return false;
-	
-			/* if email address is not filled skip this user */
-			if (!$row['email_address']) continue;
+    $an = $config->attr_names;
 
-			$mail_from = null;
-			if (false === $dom_send = get_send_mc_of_dom($row['uris'], $mail_from)) return false;
+    $opt = array('count_only' => true);
 
-			if (is_null($send)) {
-				$send = $dom_send;
-			}
+    /* count users */		
+    if (false === ($users_cnt = $data->get_users(array(), $opt))) return false;
 
-			if ($send) {
-				if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'], $mail_from)) return false;
-			}
-		}
-	
-	} while (false);
+    $step = 100;
+    $data->set_showed_rows($step);
+
+    for ($i=0; $i < $users_cnt; $i += $step){
+
+        $data->set_act_row($i);
+        $opt = array('order_by' => "uid",
+                     'get_aliases' => true);
+        
+        /* get list of users and values of theirs attributes up_send_daily_missed_calls */		
+        if (false === ($users = $data->get_users(array(), $opt))) return false;
+
+        foreach($users as $row){
+            $ua = &User_Attrs::singleton($row['uid']);
+            
+            if (false === $send  = $ua->get_attribute($an['send_mc'])) return false;
+            
+            /* if email address is not filled skip this user */
+            if (!$row['email_address']) continue;
+            
+            $mail_from = null;
+            if (false === $dom_send = get_send_mc_of_dom($row['uris'], $mail_from)) return false;
+            
+            if (is_null($send)) {
+                $send = $dom_send;
+            }
+            
+            if ($send) {
+                if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'], $mail_from)) return false;
+            }
+            
+            //free memory allocated by user attributes
+            unset($ua);
+        }
+        
+        unset($users);
+    }	
 }
 
 ?>
