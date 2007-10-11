@@ -1,7 +1,7 @@
 <?php
 
 /*
- * $Id: missed_calls.php,v 1.3 2007/10/11 10:12:40 kozlik Exp $
+ * $Id: missed_calls.php,v 1.4 2007/10/11 14:14:44 kozlik Exp $
  */
 
 /**
@@ -202,8 +202,9 @@ function send_missed_calls(){
                 if (false === send_mail_with_missed_calls($row['uid'], $row['email_address'], $mail_from)) return false;
             }
             
-            //free memory allocated by user attributes
-            unset($ua);
+            //free memory allocated by user attributes and uris
+            URIs::free($row['uid']);
+            User_Attrs::free($row['uid']);
         }
         
         unset($users);
