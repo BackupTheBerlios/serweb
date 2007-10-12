@@ -3,7 +3,7 @@
  *	Edit attribute types
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: attr_types.php,v 1.3 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: attr_types.php,v 1.4 2007/10/12 08:44:52 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -25,6 +25,8 @@ $perm->check("admin,hostmaster");
 $at  	= new apu_attr_types();
 $sr 	= new apu_sorter();
 $filter	= new apu_filter();
+
+$filter->set_opt('partial_match', false);
 $filter->set_opt('smarty_form', 'filter_form');
 
 $at->set_filter($filter);

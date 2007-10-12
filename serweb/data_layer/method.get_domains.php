@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_domains.php,v 1.8 2007/02/14 16:36:38 kozlik Exp $
+ *	@version    $Id: method.get_domains.php,v 1.9 2007/10/12 08:44:51 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -73,11 +73,14 @@ class CData_Layer_get_domains {
 	    $o_check_deleted =  (isset($opt['check_deleted_flag'])) ? $opt['check_deleted_flag'] : true;
 	    
 
-		$qw="";
-		if (!empty($o_filter['id']))          $qw .= "d.".$cd->did."  LIKE ".$this->sql_format("%".$o_filter['id']."%",       "s")." and ";
-		if (!empty($o_filter['name']))        $qw .= "d.".$cd->name." LIKE ".$this->sql_format("%".$o_filter['name']."%",     "s")." and ";
-		if (!empty($o_filter['customer']))    $qw .= "c.".$cc->name." LIKE ".$this->sql_format("%".$o_filter['customer']."%", "s")." and ";
-		if ( isset($o_filter['customer_id'])) $qw .= "c.".$cc->cid." = ".$this->sql_format($o_filter['customer_id'], "s")." and ";
+        $qw = array();
+		if (!empty($o_filter['id']))          $qw[] = $o_filter['id']->to_sql("d.".$cd->did);
+		if (!empty($o_filter['name']))        $qw[] = $o_filter['name']->to_sql("d.".$cd->name);
+		if (!empty($o_filter['customer']))    $qw[] = $o_filter['customer']->to_sql("c.".$cc->name);
+		if ( isset($o_filter['customer_id'])) $qw[] = $o_filter['customer_id']->to_sql("c.".$cc->cid);
+
+		if ($qw) $qw = implode(" and ", $qw)." and ";
+		else $qw = "";
 
 		/* prepare SQL query */
 

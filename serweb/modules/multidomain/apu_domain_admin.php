@@ -3,7 +3,7 @@
  * Application unit domain administrators 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_admin.php,v 1.7 2006/09/08 12:27:34 kozlik Exp $
+ * @version   $Id: apu_domain_admin.php,v 1.8 2007/10/12 08:44:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -53,6 +53,8 @@ class apu_domain_admin extends apu_base_class{
 	var $unassigned_domains = array();
 	/** array of IDs of domains assigned to admin */
 	var $assigned_ids = array();
+
+	var $filter=null;
 	
 	/** 
 	 *	return required data layer methods - static class 
@@ -104,39 +106,56 @@ class apu_domain_admin extends apu_base_class{
 										'src'  => get_path_to_buttons("btn_find.gif", $sess_lang));
 	}
 
+	function set_filter(&$filter){
+		$this->filter = &$filter;
+	}
+
 	/**
 	 *	this metod is called always at begining - initialize variables
 	 */
 	function init(){
-		global $sess, $sess_apu_da;
+		global $sess;
 		parent::init();
 
-		/* registger session variable if still isn't registered */
-		if (!$sess->is_registered('sess_apu_da')) $sess->register('sess_apu_da');
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_base_apu($this);
+		}
+	}
+
+	function get_filter_form(){
+		global $lang_str;
 		
-		/* set default value for session variable */
-		if (!isset($sess_apu_da['filter'])){ 
-			$sess_apu_da['filter']['id'] = '';
-			$sess_apu_da['filter']['name'] = '';
-			$sess_apu_da['filter']['customer'] = '';
-		}
+		$f = array();
 
-/*		if (!isset($sess_apu_da['act_row'])){ 
-			$sess_apu_da['act_row'] = 0;
-		}
+		$f[] = array("type"=>"text",
+		             "name"=>"name",
+					 "label"=>$lang_str['d_name']);
 
-		if (isset($_GET['act_row'])) 
-			$sess_apu_dl['act_row'] = $_GET['act_row'];
-*/
+		$f[] = array("type"=>"text",
+		             "name"=>"id",
+					 "label"=>$lang_str['d_id']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"customer",
+					 "label"=>$lang_str['owner']);
+
+		return $f;
 	}
 
 	function get_domains(&$errors){
-		global $data, $sess, $sess_apu_da;
+		global $data, $sess;
 		
+        $filter = array();
+		if (is_a($this->filter, "apu_base_class")){
+			$filter = $this->filter->get_filter();
+
+//    		$data->set_act_row($this->filter->get_act_row());
+		}
+
 		$opt = array();
 		if (false === $this->assigned_ids = $data->get_domains_of_admin($this->controler->user_id->get_uid(), $opt)) return false;
 
-		$opt = array("filter" => $sess_apu_da['filter'],
+		$opt = array("filter" => $filter,
 		             "return_all" => true,
 		             "get_domain_names" => true);
 		if (false === $domains = $data->get_domains($opt, $errors)) return false;
@@ -160,25 +179,6 @@ class apu_domain_admin extends apu_base_class{
 		return true;
 	}
 	
-	/**
-	 *	set to search filter by $_POST params
-	 */
-	function set_filter_by_posts(){
-		global $sess_apu_da;
-
-		/* show results from first row after form submit */
-		//$sess_apu_da['act_row'] = 0;
-		
-		/* set search filter by values submited by form */
-		$filter = &$sess_apu_da['filter'];
-	
-		if (isset($_POST['da_name'])) 		$filter['name']=$_POST['da_name'];
-		if (isset($_POST['da_id']))   		$filter['id']=$_POST['da_id'];
-		if (isset($_POST['da_customer']))	$filter['customer']=$_POST['da_customer'];
-
-		$this->f->load_defaults();
-	}
-
 	function set_domain_admin($add){
 		global $config;
 		
@@ -254,12 +254,6 @@ class apu_domain_admin extends apu_base_class{
 	 *	check _get and _post arrays and determine what we will do 
 	 */
 	function determine_action(){
-		if ($this->was_form_submited()){	// Is there data to process?
-			$this->action=array('action'=>"default",
-			                    'validate_form'=>true,
-								'reload'=>false);
-			return;
-		}
 
 		if (isset($_GET['da_assign'])){
 			$this->action=array('action'=>"assign_domain",
@@ -278,50 +272,6 @@ class apu_domain_admin extends apu_base_class{
 		$this->action=array('action'=>"default",
 			                'validate_form'=>false,
 							'reload'=>false);
-	}
-	
-	/**
-	 *	create html form 
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return null			FALSE on failure
-	 */
-	function create_html_form(&$errors){
-		global $sess_apu_da;
-		parent::create_html_form($errors);
-
-		$filter = &$sess_apu_da['filter'];
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"da_name",
-									 "size"=>11,
-									 "maxlength"=>128,
-		                             "value"=>$filter['name']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"da_id",
-									 "size"=>11,
-									 "maxlength"=>11,
-		                             "value"=>$filter['id']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"da_customer",
-									 "size"=>11,
-									 "maxlength"=>128,
-		                             "value"=>$filter['customer']));
-	}
-
-	/**
-	 *	validate html form 
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
-	 */
-	function validate_form(&$errors){
-		if (false === parent::validate_form($errors)) return false;
-
-		$this->set_filter_by_posts();
-		return true;
 	}
 	
 	/**
@@ -346,16 +296,6 @@ class apu_domain_admin extends apu_base_class{
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_assigned_domains'], $this->assigned_domains);
 		$smarty->assign_by_ref($this->opt['smarty_unassigned_domains'], $this->unassigned_domains);
-	}
-	
-	/**
-	 *	return info need to assign html form to smarty 
-	 */
-	function pass_form_to_html(){
-		return array('smarty_name' => $this->opt['smarty_form'],
-		             'form_name'   => $this->opt['form_name'],
-		             'after'       => '',
-					 'before'      => '');
 	}
 }
 

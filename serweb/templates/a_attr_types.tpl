@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.9 2007/01/18 14:56:59 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.10 2007/10/12 08:44:52 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -101,6 +101,8 @@
 			</div>
 		</td></tr>
 						
+        <tr><td colspan="4" class="note">{$lang_str.filter_wildcard_note}</td></tr>
+        
 		<tr><td colspan="4" align="right">{$filter_form.okey}</td></tr>
 		</table>
 		{$filter_form.finish}

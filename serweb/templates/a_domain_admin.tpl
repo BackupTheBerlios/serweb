@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_domain_admin.tpl,v 1.4 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_domain_admin.tpl,v 1.5 2007/10/12 08:44:52 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -7,9 +7,9 @@
 
 {literal}
 <style type="text/css">
-	#da_id,  #lid {width:150px;}
-	#da_name, #lname {width:150px;}
-	#da_customer, #lcustomer {width:150px;}
+	#id,  #lid {width:150px;}
+	#name, #lname {width:150px;}
+	#customer, #lcustomer {width:150px;}
 </style>	
 {/literal}
 
@@ -17,18 +17,19 @@
 {$form.start}
 <table border="0" cellspacing="0" cellpadding="0" align="center">
 <tr valign="bottom">
-<td><label for="da_id"  id="lid" >{$lang_str.d_id}</label></td>
-<td><label for="da_name" id="lname">{$lang_str.d_name}</label></td>
-<td><label for="da_customer" id="lcustomer">{$lang_str.owner}</label></td>
+<td><label for="id"  id="lid" >{$lang_str.d_id}</label></td>
+<td><label for="name" id="lname">{$lang_str.d_name}</label></td>
+<td><label for="customer" id="lcustomer">{$lang_str.owner}</label></td>
 </tr>
 
 <tr>
-<td>{$form.da_id}</td>
-<td>{$form.da_name}</td>
-<td>{$form.da_customer}</td>
+<td>{$form.id}</td>
+<td>{$form.name}</td>
+<td>{$form.customer}</td>
 </tr>
 				
 <tr><td colspan="3" height="5"></td></tr>
+<tr><td colspan="3" class="note">{$lang_str.filter_wildcard_note}</td></tr>
 <tr><td colspan="3" align="right">{$form.okey}</td></tr>
 </table>
 {$form.finish}

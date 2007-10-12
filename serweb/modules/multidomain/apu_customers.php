@@ -3,7 +3,7 @@
  * Application unit customers
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_customers.php,v 1.8 2007/02/06 10:15:34 kozlik Exp $
+ * @version   $Id: apu_customers.php,v 1.9 2007/10/12 08:44:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -270,7 +270,8 @@ class apu_customers extends apu_base_class{
 
 		/* check if customer owning some domains */
 		
-		$opt = array( 'filter' => array('customer_id' => $this->act_id));
+		$opt = array( 'filter' => array(
+                            'customer_id' => new Filter("customer_id", $this->act_id, "=")));
 		if (false === $domains = $data->get_domains($opt, $errors)) return false;
 		if (count($domains)){
 			/* set error message */

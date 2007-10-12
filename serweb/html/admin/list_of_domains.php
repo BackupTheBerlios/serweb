@@ -3,7 +3,7 @@
  *	Display list of domains
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: list_of_domains.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: list_of_domains.php,v 1.6 2007/10/12 08:44:52 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -15,7 +15,7 @@ $_phplib_page_open = array("sess" => "phplib_Session",
 
 $_required_modules = array('multidomain');
 
-$_required_apu = array('apu_domain_list'); 
+$_required_apu = array('apu_domain_list', 'apu_filter'); 
 
 
 /** include all others necessary files */
@@ -34,6 +34,13 @@ if (isset($_GET['m_do_deleted'])){
 
 
 $dl	= new apu_domain_list();
+$filter	= new apu_filter();
+
+$filter->set_opt('partial_match', false);
+$filter->set_opt('filter_name', 'list_of_domains');
+
+$dl->set_filter($filter);
+
 if (!$perm->have_perm('hostmaster')){
 	if (false === $dom = $_SESSION['auth']->get_administrated_domains()) $dom = array();
 	$dl->set_opt('only_domains', $dom);
@@ -42,6 +49,7 @@ if (!$perm->have_perm('hostmaster')){
 $dl->set_opt('script_create', "wiz_new_domain/1_new_domain.php");
 
 $controler->add_apu($dl);
+$controler->add_apu($filter);
 $controler->add_reqired_javascript('functions.js');
 $controler->set_template_name('a_list_of_domains.tpl');
 $controler->start();

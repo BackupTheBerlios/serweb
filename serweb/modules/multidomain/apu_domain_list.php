@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.10 2006/09/08 12:27:34 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.11 2007/10/12 08:44:52 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -70,6 +70,8 @@ class apu_domain_list extends apu_base_class{
 	var $smarty_action='default';
 	var $domains = array();
 
+	var $filter=null;
+
 	/** 
 	 *	return required data layer methods - static class 
 	 *
@@ -126,50 +128,42 @@ class apu_domain_list extends apu_base_class{
 		
 	}
 
+	function set_filter(&$filter){
+		$this->filter = &$filter;
+	}
+
 	/**
 	 *	this metod is called always at begining - initialize variables
 	 */
 	function init(){
-		global $sess, $sess_apu_dl;
+		global $sess;
 		parent::init();
 
-		/* registger session variable if still isn't registered */
-		if (!$sess->is_registered('sess_apu_dl')) $sess->register('sess_apu_dl');
-		
-		/* set default value for session variable */
-		if (!isset($sess_apu_dl['filter'])){ 
-			$sess_apu_dl['filter']['id'] = '';
-			$sess_apu_dl['filter']['name'] = '';
-			$sess_apu_dl['filter']['customer'] = '';
+		if (is_a($this->filter, "apu_base_class")){
+			$this->filter->set_base_apu($this);
 		}
-
-		if (!isset($sess_apu_dl['act_row'])){ 
-			$sess_apu_dl['act_row'] = 0;
-		}
-
-		if (isset($_GET['act_row'])) 
-			$sess_apu_dl['act_row'] = $_GET['act_row'];
 	}
 
-	/**
-	 *	set to search filter by $_POST params
-	 */
-	function set_filter_by_posts(){
-		global $sess_apu_dl;
-
-		/* show results from first row after form submit */
-		$sess_apu_dl['act_row'] = 0;
+	function get_filter_form(){
+		global $lang_str;
 		
-		/* set search filter by values submited by form */
-		$filter = &$sess_apu_dl['filter'];
-	
-		if (isset($_POST['dl_name'])) 		$filter['name']=$_POST['dl_name'];
-		if (isset($_POST['dl_id']))   		$filter['id']=$_POST['dl_id'];
-		if (isset($_POST['dl_customer']))	$filter['customer']=$_POST['dl_customer'];
+		$f = array();
 
-		$this->f->load_defaults();
+		$f[] = array("type"=>"text",
+		             "name"=>"name",
+					 "label"=>$lang_str['d_name']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"id",
+					 "label"=>$lang_str['d_id']);
+
+		$f[] = array("type"=>"text",
+		             "name"=>"customer",
+					 "label"=>$lang_str['owner']);
+
+		return $f;
 	}
-	
+
 	/**
 	 *	Default action - get list of domains
 	 *
@@ -177,11 +171,16 @@ class apu_domain_list extends apu_base_class{
 	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
 	 */
 	function action_default(&$errors){
-		global $data, $sess, $sess_apu_dl;
+		global $data, $sess;
 
-		$data->set_act_row($sess_apu_dl['act_row']);
+        $filter = array();
+		if (is_a($this->filter, "apu_base_class")){
+			$filter = $this->filter->get_filter();
 
-		$opt = array('filter' => $sess_apu_dl['filter'],
+    		$data->set_act_row($this->filter->get_act_row());
+		}
+
+		$opt = array('filter' => $filter,
 					 'get_domain_names' => true,
 					 'get_domain_flags' => true);
 					 
@@ -220,60 +219,10 @@ class apu_domain_list extends apu_base_class{
 	 *	check _get and _post arrays and determine what we will do 
 	 */
 	function determine_action(){
-		if ($this->was_form_submited()){	// Is there data to process?
-			$this->action=array('action'=>"default",
-			                    'validate_form'=>true,
-								'reload'=>false);
-		}
-		else $this->action=array('action'=>"default",
-			                     'validate_form'=>false,
-								 'reload'=>false);
+		$this->action=array('action'=>"default",
+		                    'validate_form'=>false,
+						    'reload'=>false);
 	}
-	
-	/**
-	 *	create html form 
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return null			FALSE on failure
-	 */
-	function create_html_form(&$errors){
-		global $sess_apu_dl;
-		parent::create_html_form($errors);
-
-		$filter = &$sess_apu_dl['filter'];
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"dl_name",
-									 "size"=>11,
-									 "maxlength"=>128,
-		                             "value"=>$filter['name']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"dl_id",
-									 "size"=>11,
-									 "maxlength"=>11,
-		                             "value"=>$filter['id']));
-
-		$this->f->add_element(array("type"=>"text",
-		                             "name"=>"dl_customer",
-									 "size"=>11,
-									 "maxlength"=>128,
-		                             "value"=>$filter['customer']));
-	}
-
-	/**
-	 *	validate html form 
-	 *
-	 *	@param array $errors	array with error messages
-	 *	@return bool			TRUE if given values of form are OK, FALSE otherwise
-	 */
-	function validate_form(&$errors){
-		if (false === parent::validate_form($errors)) return false;
-
-		$this->set_filter_by_posts();
-		return true;
-	}
-	
 	
 	/**
 	 *	assign variables to smarty 
@@ -286,15 +235,6 @@ class apu_domain_list extends apu_base_class{
 		$smarty->assign($this->opt['smarty_url_new_domain'], $sess->url($this->opt['script_create']."?kvrk=".uniqID("")."&new=1"));
 	}
 	
-	/**
-	 *	return info need to assign html form to smarty 
-	 */
-	function pass_form_to_html(){
-		return array('smarty_name' => $this->opt['smarty_form'],
-		             'form_name'   => $this->opt['form_name'],
-		             'after'       => '',
-					 'before'      => '');
-	}
 }
 
 ?>
