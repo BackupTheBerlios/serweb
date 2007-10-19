@@ -3,7 +3,7 @@
  * Application unit sorter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_sorter.php,v 1.4 2007/06/29 08:41:31 kozlik Exp $
+ * @version   $Id: apu_sorter.php,v 1.5 2007/10/19 10:21:03 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -150,7 +150,8 @@ class apu_sorter extends apu_base_class{
 			return (array)$this->session['get_param'];
 		}
 
-		return true;
+		$get = array('sorter_updated='.RawURLEncode($this->opt['instance_id']));
+		return $get;
 	}
 	
 	/**
