@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_textarea.inc,v 1.7 2007/09/17 18:56:32 kozlik Exp $
+ *	@version  $Id: of_textarea.inc,v 1.8 2007/10/19 10:22:54 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -17,6 +17,14 @@ class of_textarea extends of_element {
   var $rows;
   var $cols;
   var $wrap;
+  var $minlength=0;
+  var $maxlength;
+  var $length_e;
+  var $min_length_e;
+  var $max_length_e;
+  var $valid_regex;
+  var $valid_icase;
+  var $valid_e;
 
   // Constructor
   function of_textarea($a) {
@@ -60,6 +68,70 @@ class of_textarea extends of_element {
     return $str;
   }
 
+  function self_get_js($ndx_array) {
+    $str = "";
+
+      if ($this->length_e || $this->min_length_e || $this->max_length_e || $this->valid_e) {
+        $str .= "  var val=f.elements['".$this->name."'].value.replace('\\n', '\\r\\n')\n";
+      }
+
+      if ($this->length_e) {
+        $str .= "if (val.length < ".$this->minlength."\n";
+		if (!is_null($this->maxlength)){
+			$str .= "  ||  val.length > ".$this->maxlength;
+		}
+		$str .= ") {\n";
+        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->length_e))."\");\n";
+        $str .= "  f.elements['".$this->name."'].focus();\n";
+        $str .= "  return(false);\n}\n";
+      }
+      if ($this->min_length_e) {
+        $str .= "if (val.length < ".$this->minlength.") {\n";
+        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->min_length_e))."\");\n";
+        $str .= "  f.elements['".$this->name."'].focus();\n";
+        $str .= "  return(false);\n}\n";
+      }
+      if ($this->max_length_e) {
+        $str .= "if (val.length > ".$this->maxlength.") {\n";
+        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->max_length_e))."\");\n";
+        $str .= "  f.elements['".$this->name."'].focus();\n";
+        $str .= "  return(false);\n}\n";
+      }
+      if ($this->valid_e) {
+        $flags = ((isset($this->icase) and $this->icase) ? "i" : "");
+        $str .= "if (window.RegExp) {\n";
+        $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
+        $str .= "  if (!reg.test(val)) {\n";
+        $str .= "    alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
+        $str .= "    f.elements['".$this->name."'].focus();\n";
+        $str .= "    return(false);\n";
+        $str .= "  }\n}\n";
+      }
+
+    return $str;
+  }
+
+  function self_validate($val) {
+    if (!is_array($val)) $val = array($val);
+    reset($val);
+    while (list($k,$v) = each($val)) {
+      if ($this->length_e && ((strlen($v) < $this->minlength) || (strlen($v) > $this->maxlength)))
+        return $this->length_e;
+        
+      if ($this->min_length_e && (strlen($v) < $this->minlength))
+        return $this->min_length_e;
+        
+      if ($this->max_length_e && (strlen($v) > $this->maxlength))
+        return $this->max_length_e;
+        
+      if ($this->valid_e && (((isset($this->icase) and $this->icase) && 
+            !eregi($this->valid_regex,$v)) ||
+           (!(isset($this->icase) and $this->icase) &&
+            !ereg($this->valid_regex,$v))))
+        return $this->valid_e;
+    }
+    return false;
+  } 
 } // end TEXTAREA
 
 ?>
