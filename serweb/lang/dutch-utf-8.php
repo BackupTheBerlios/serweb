@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.46 2007/10/02 13:44:35 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.47 2007/11/05 12:55:11 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -403,7 +403,9 @@ $lang_str['l_account'] = 						"gebruiker";
 $lang_str['l_accounting'] = 					"rekening";
 $lang_str['realy_you_want_delete_this_user'] =	"Deze gebruiker verwijderen?";
 $lang_str['l_credentials'] = 					"gegevens";
+$lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"Gebruiker heeft geen gegevens";
+$lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */

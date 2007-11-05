@@ -3,7 +3,7 @@
  *	Display list of users
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: users.php,v 1.32 2007/10/02 13:44:35 kozlik Exp $
+ *	@version    $Id: users.php,v 1.33 2007/11/05 12:55:10 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -52,7 +52,6 @@ $smarty->assign('xxl_support', isModuleLoaded('xxl'));
 
 $sc->set_opt('use_chk_onlineonly', true);
 $sc->set_opt('get_user_aliases', true);
-$sc->set_opt('get_credentials', true);
 $sc->set_opt('allow_edit', 1);
 if (!$perm->have_perm('hostmaster')) $sc->set_opt('only_from_administrated_domains', true);
 

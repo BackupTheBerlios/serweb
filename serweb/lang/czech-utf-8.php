@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-utf-8.php,v 1.45 2007/10/02 13:44:35 kozlik Exp $
+ * $Id: czech-utf-8.php,v 1.46 2007/11/05 12:55:10 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -403,7 +403,9 @@ $lang_str['l_account'] = 						"účet";
 $lang_str['l_accounting'] = 					"přehled volání";
 $lang_str['realy_you_want_delete_this_user'] =	"Opravdu chcete smazat tohoto uživatele?";
 $lang_str['l_credentials'] = 					"kredenciály";
+$lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"Uživatel nemá žádné kredenciály";
+$lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */

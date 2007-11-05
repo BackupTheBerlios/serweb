@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.63 2007/10/02 13:44:35 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.64 2007/11/05 12:55:11 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -403,7 +403,9 @@ $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
 $lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";
 $lang_str['l_credentials'] = 					"credentials";
+$lang_str['l_uris'] = 					        "SIP URIs";
 $lang_str['user_has_no_credentials'] = 			"User has no credentials";
+$lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
