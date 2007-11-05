@@ -3,7 +3,7 @@
  *	Test serweb configuration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.3 2007/09/27 15:46:23 kozlik Exp $
+ *	@version    $Id: index.php,v 1.4 2007/11/05 13:26:29 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -20,6 +20,11 @@ require_once ($_SERWEB["configdir"] . "set_domain.php");
 require_once ($_SERWEB["configdir"] . "config_data_layer.php");
 require_once ($_SERWEB["configdir"] . "config_domain_defaults.php");
 require_once ($_SERWEB["configdir"] . "config.php");
+
+/** if config.developer is present, replace default config by developer config */
+if (file_exists($_SERWEB["configdir"] . "config.developer.php")){
+	require_once ($_SERWEB["configdir"] . "config.developer.php");
+}
 
 if (!$config->testing_facility){
 	die("Testing facility is disabled");
@@ -396,14 +401,15 @@ function test_dirs(){
 
 	$out = "";
 	$domain_dir = $_SERWEB["serwebdir"]."domains/";
-
 	
 	if (!is_dir($domain_dir) or !is_writable($domain_dir)) {
-		$out .= "Directory '".$domain_dir."' should exists and should be writeable for user '".get_current_user()."'<br />";
+    	$processUser = posix_getpwuid(posix_geteuid());
+		$out .= "Directory '".$domain_dir."' should exists and should be writeable for user '".$processUser['name']."'<br />";
 	}
 
 	if (!is_dir($config->apache_vhosts_dir) or !is_writable($config->apache_vhosts_dir)) {
-		$out .= "Directory '".$config->apache_vhosts_dir."' should exists and should be writeable for user '".get_current_user()."'<br />";
+    	$processUser = posix_getpwuid(posix_geteuid());
+		$out .= "Directory '".$config->apache_vhosts_dir."' should exists and should be writeable for user '".$processUser['name']."'<br />";
 	}
 
 
