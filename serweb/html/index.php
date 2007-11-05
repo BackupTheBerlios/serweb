@@ -5,16 +5,14 @@
  *	Page which redirecting user either to testing interface or to user interface
  *
  *	@author    Karel Kozlik
- *	@version   $Id: index.php,v 1.6 2007/02/14 16:36:39 kozlik Exp $ 
+ *	@version   $Id: index.php,v 1.7 2007/11/05 15:00:58 kozlik Exp $ 
  *	@package   serweb
  */ 
 
 /** include paths to directories */
 require("./set_dirs.php");
 
-require_once ($_SERWEB["functionsdir"] . "class_definitions.php");
-require_once ($_SERWEB["configdir"] . "config_paths.php");
-require_once ($_SERWEB["configdir"] . "config.php");
+require($_SERWEB["serwebdir"] . "main_prepend.php");
 
 if ($config->testing_facility){
 	Header("Location: test/index.php");
