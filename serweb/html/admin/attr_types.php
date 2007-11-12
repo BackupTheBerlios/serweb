@@ -3,7 +3,7 @@
  *	Edit attribute types
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: attr_types.php,v 1.4 2007/10/12 08:44:52 kozlik Exp $
+ *	@version    $Id: attr_types.php,v 1.5 2007/11/12 12:45:05 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -31,6 +31,8 @@ $filter->set_opt('smarty_form', 'filter_form');
 
 $at->set_filter($filter);
 $at->set_sorter($sr);
+
+$at->set_opt("dtdfile", $config->root_uri.$config->admin_pages_path."attr_types.dtd.php");
 
 $controler->add_apu($at);
 $controler->add_apu($sr);

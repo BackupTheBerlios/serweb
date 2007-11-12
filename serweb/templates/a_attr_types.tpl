@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.10 2007/10/12 08:44:52 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.11 2007/11/12 12:45:06 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -285,6 +285,13 @@
 {foreachelse}
 <div class="swNumOfFoundRecords">{$lang_str.no_records_found}</div>
 {/foreach}
+
+<div id="orphanlinks">
+<div>
+    <a href="{url url='attr_types_import.php'}">{$lang_str.l_import_xml}</a> - 
+    <a href="{url url=$url_export_xml}">{$lang_str.l_export_xml}</a> - 
+    <a href="{url url=$url_export_sql}">{$lang_str.l_export_sql}</a></div>
+</div>
 
 <br />
 <div class="swWarningBox"><h2>{$lang_str.warning}</h2>

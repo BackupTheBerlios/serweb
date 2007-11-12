@@ -1,0 +1,36 @@
+<!ELEMENT attr_types (attr_type*)>
+
+<!ELEMENT attr_type (name, type, description?, default_flags?, flags?, 
+                     priority?, access?, order?, group?)>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT type (rich, raw?, spec?)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT default_flags (for_ser?, for_serweb?, is_to?, is_from?)>
+<!ELEMENT flags (multivalue?, on_registration?, required?)>
+<!ELEMENT priority (uri?, user?, domain?, global?)>
+<!ELEMENT access (#PCDATA)>
+<!ELEMENT order (#PCDATA)>
+<!ELEMENT group (#PCDATA)>
+
+
+<!ELEMENT rich (#PCDATA)>
+<!ELEMENT raw  (#PCDATA)>
+<!ELEMENT spec (#PCDATA)>
+
+
+<!ELEMENT uri    EMPTY>
+<!ELEMENT user   EMPTY>
+<!ELEMENT domain EMPTY>
+<!ELEMENT global EMPTY>
+
+
+<!ELEMENT multivalue      EMPTY>
+<!ELEMENT on_registration EMPTY>
+<!ELEMENT required        EMPTY>
+
+
+<!ELEMENT for_ser    EMPTY>
+<!ELEMENT for_serweb EMPTY>
+<!ELEMENT is_to      EMPTY>
+<!ELEMENT is_from    EMPTY>

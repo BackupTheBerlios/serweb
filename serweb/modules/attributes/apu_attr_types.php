@@ -3,10 +3,12 @@
  * Application unit attribute types
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attr_types.php,v 1.11 2007/10/02 13:22:24 kozlik Exp $
+ * @version    $Id: apu_attr_types.php,v 1.12 2007/11/12 12:45:06 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
+
+require_once "attr_types_export.php";
 
 /**
  *	Application unit attribute types
@@ -100,7 +102,7 @@ class apu_attr_types extends apu_base_class{
 	 *	initialize internal variables
 	 */
 	function apu_attr_types(){
-		global $lang_str;
+		global $lang_str, $config;
 		parent::apu_base_class();
 
 		/* set default values to $this->opt */		
@@ -110,6 +112,8 @@ class apu_attr_types extends apu_base_class{
 		$this->opt['form_submit_extended']=array('type' => 'image',
 		                                         'text' => $lang_str['b_extended_settings'],
 		                                         'src'  => get_path_to_buttons("btn_extended_settings.gif", $_SESSION['lang']));
+
+        $this->opt['dtdfile'] = $config->root_uri.$_SERVER["PHP_SELF"]."?get_dtd";        
 
 
 		/* message on attributes update */
@@ -128,7 +132,9 @@ class apu_attr_types extends apu_base_class{
 		
 		$this->opt['smarty_attrs'] =			'attrs';
 		$this->opt['smarty_groups'] =			'groups';
-		$this->opt['smarty_url_toggle_groups'] = 'url_toggle_groups';
+		$this->opt['smarty_url_toggle_groups'] ='url_toggle_groups';
+		$this->opt['smarty_url_export_sql'] =   'url_export_sql';
+		$this->opt['smarty_url_export_xml'] =   'url_export_xml';
 		$this->opt['smarty_show_groups'] = 		'show_groups';
 		
 	}
@@ -354,7 +360,53 @@ class apu_attr_types extends apu_base_class{
 		
 	}	
 
-	
+    
+    /**
+     *	Method perform action export
+     *
+     *	@param array $errors	array with error messages
+     *	@return array			return array of $_GET params fo redirect or FALSE on failure
+     */
+
+    function action_export(&$errors){
+        global $config;
+
+        $export_obj = new attr_types_export();
+
+        if ($_GET['export'] == "sql"){
+            if (false === $export_obj->export_to_sql()) return false;
+        }
+        elseif ($_GET['export'] == "xml"){
+            if (false === $export_obj->export_to_xml($this->opt['dtdfile'])) return false;
+        }
+        else {
+            ErrorHandler::log_errors(PEAR::raiseError("Unknown export format: '".$_GET['export']."'"));
+        }
+
+        $this->controler->disable_html_output();
+
+        return true;
+    }
+
+    /**
+     *	Method perform action get dtd
+     *
+     *	@param array $errors	array with error messages
+     *	@return array			return array of $_GET params fo redirect or FALSE on failure
+     */
+
+    function action_get_dtd(&$errors){
+
+		Header("Content-Disposition: attachment;filename=attr_types.dtd");
+        header("Content-Type: application/xml-dtd");
+
+        require(dirname(__FILE__)."/attr_types.dtd");
+
+        $this->controler->disable_html_output();
+
+        return true;
+    }
+
 	/**
 	 *	Method perform action toggle_grp
 	 *
@@ -515,6 +567,20 @@ class apu_attr_types extends apu_base_class{
 			$this->action=array('action'=>"toggle_grp",
 			                    'validate_form'=>false,
 								'reload'=>true);
+			return;
+		}
+		elseif (isset($_GET['export'])){
+			$this->action=array('action'=>"export",
+			                    'validate_form'=>false,
+								'reload'=>false,
+                                'alone'=>true);
+			return;
+		}
+		elseif (isset($_GET['get_dtd'])){
+			$this->action=array('action'=>"get_dtd",
+			                    'validate_form'=>false,
+								'reload'=>false,
+                                'alone'=>true);
 			return;
 		}
 		else {
@@ -707,6 +773,8 @@ class apu_attr_types extends apu_base_class{
 
 		$smarty->assign($this->opt['smarty_show_groups'], empty($this->session['hide_groups']));
 		$smarty->assign_by_ref($this->opt['smarty_url_toggle_groups'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&toggle_grp=1"));
+		$smarty->assign_by_ref($this->opt['smarty_url_export_sql'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&export=sql"));
+		$smarty->assign_by_ref($this->opt['smarty_url_export_xml'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&export=xml"));
 
 	}
 	
