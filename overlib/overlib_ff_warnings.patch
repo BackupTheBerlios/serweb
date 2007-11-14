@@ -1,0 +1,145 @@
+--- ../../../../overlib/overlib.js	2006-01-20 15:51:49.000000000 +0100
++++ overlib.js	2007-11-14 12:35:35.526955200 +0100
+@@ -28,6 +28,76 @@
+ var olHautoFlag = 0;  // flags for over-riding VAUTO and HAUTO if corresponding
+ var olVautoFlag = 0;  // positioning commands are used on the command line
+ var hookPts = new Array(), postParse = new Array(), cmdLine = new Array(), runTime = new Array();
++
++
++
++var DONOTHING = null;
++var INARRAY = null;
++var CAPARRAY = null;
++var STICKY = null;
++var BACKGROUND = null;
++var NOCLOSE = null;
++var CAPTION = null;
++var LEFT = null;
++var RIGHT = null;
++var CENTER = null;
++var OFFSETX = null;
++var OFFSETY = null;
++var FGCOLOR = null;
++var BGCOLOR = null;
++var TEXTCOLOR = null;
++var CAPCOLOR = null;
++var CLOSECOLOR = null;
++var WIDTH = null;
++var BORDER = null;
++var CELLPAD = null;
++var STATUS = null;
++var AUTOSTATUS = null;
++var AUTOSTATUSCAP = null;
++var HEIGHT = null;
++var CLOSETEXT = null;
++var SNAPX = null;
++var SNAPY = null;
++var FIXX = null;
++var FIXY = null;
++var RELX = null;
++var RELY = null;
++var FGBACKGROUND = null;
++var BGBACKGROUND = null;
++var PADX = null;
++var PADY = null;
++var FULLHTML = null;
++var ABOVE = null;
++var BELOW = null;
++var CAPICON = null;
++var TEXTFONT = null;
++var CAPTIONFONT = null;
++var CLOSEFONT = null;
++var TEXTSIZE = null;
++var CAPTIONSIZE = null;
++var CLOSESIZE = null;
++var TIMEOUT = null;
++var FUNCTION = null;
++var DELAY = null;
++var HAUTO = null;
++var VAUTO = null;
++var CLOSECLICK = null;
++var WRAP = null;
++var FOLLOWMOUSE = null;
++var MOUSEOFF = null;
++var CLOSETITLE = null;
++var CSSOFF = null;
++var COMPATMODE = null;
++var CSSCLASS = null;
++var FGCLASS = null;
++var BGCLASS = null;
++var TEXTFONTCLASS = null;
++var CAPTIONFONTCLASS = null;
++var CLOSEFONTCLASS = null;
++
++
++
++
+ // for plugins
+ registerCommands('donothing,inarray,caparray,sticky,background,noclose,caption,left,right,center,offsetx,offsety,fgcolor,bgcolor,textcolor,capcolor,closecolor,width,border,cellpad,status,autostatus,autostatuscap,height,closetext,snapx,snapy,fixx,fixy,relx,rely,fgbackground,bgbackground,padx,pady,fullhtml,above,below,capicon,textfont,captionfont,closefont,textsize,captionsize,closesize,timeout,function,delay,hauto,vauto,closeclick,wrap,followmouse,mouseoff,closetitle,cssoff,compatmode,cssclass,fgclass,bgclass,textfontclass,captionfontclass,closefontclass');
+ 
+@@ -244,7 +314,7 @@
+ // overlib(arg0,...,argN)
+ // Loads parameters into global runtime variables.
+ function overlib() {
+-	if (!olLoaded || isExclusive(overlib.arguments)) return true;
++	if (!olLoaded || isExclusive(arguments)) return true;
+ 	if (olCheckMouseCapture) olMouseCapture();
+ 	if (over) {
+ 		over = (typeof over.id != 'string') ? o3_frame.document.all['overDiv'] : over;
+@@ -321,7 +391,7 @@
+ 	
+ 	if(!(over=createDivContainer())) return false;
+ 
+-	parseTokens('o3_', overlib.arguments);
++	parseTokens('o3_', arguments);
+ 	if (!postParseChecks()) return false;
+ 
+ 	if (o3_delay == 0) {
+@@ -361,7 +431,7 @@
+ 
+ // Method for setting page specific defaults.
+ function overlib_pagedefaults() {
+-	parseTokens('ol_', overlib_pagedefaults.arguments);
++	parseTokens('ol_', arguments);
+ }
+ 
+ 
+@@ -560,6 +630,7 @@
+ // Decides where we want the popup.
+ function placeLayer() {
+ 	var placeX, placeY, widthFix = 0;
++	var iwidth, winoffset, iheight, scrolloffset;
+ 	
+ 	// HORIZONTAL PLACEMENT, re-arranged to work in Safari
+ 	if (o3_frame.innerWidth) widthFix=18; 
+@@ -587,14 +658,14 @@
+ 
+ // Moves the layer
+ function olMouseMove(e) {
+-	var e = (e) ? e : event;
++	var ev = (e) ? e : event;
+ 
+-	if (e.pageX) {
+-		o3_x = e.pageX;
+-		o3_y = e.pageY;
+-	} else if (e.clientX) {
+-		o3_x = eval('e.clientX+o3_frame.'+docRoot+'.scrollLeft');
+-		o3_y = eval('e.clientY+o3_frame.'+docRoot+'.scrollTop');
++	if (ev.pageX) {
++		o3_x = ev.pageX;
++		o3_y = ev.pageY;
++	} else if (ev.clientX) {
++		o3_x = eval('ev.clientX+o3_frame.'+docRoot+'.scrollLeft');
++		o3_y = eval('ev.clientY+o3_frame.'+docRoot+'.scrollTop');
+ 	}
+ 	
+ 	if (o3_allowmove == 1) runHook("placeLayer", FREPLACE);
+@@ -1393,7 +1464,7 @@
+ 
+ // Runs any hooks registered.
+ function runHook(fnHookTo, hookType) {
+-	var l = hookPts[fnHookTo], k, rtnVal = null, optPm, arS, ar = runHook.arguments;
++	var l = hookPts[fnHookTo], k, rtnVal = null, optPm, arS, ar = arguments;
+ 
+ 	if (hookType == FREPLACE) {
+ 		arS = argToString(ar, 2);
