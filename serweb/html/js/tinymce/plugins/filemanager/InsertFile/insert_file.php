@@ -26,7 +26,9 @@ require('config.inc.php');
         ?>
         <script type="text/javascript" src="js/popup.js"></script>
         <script type="text/javascript" src="js/dialog.js"></script>
+<?php if (empty($_REQUEST['callback']) or $_REQUEST['callback']!="none") { ?>
         <script language="javascript" src="../../../tiny_mce_popup.js"></script>
+<?php } ?>
         <style type="text/css">
                 body { padding: 5px; }
                 table {

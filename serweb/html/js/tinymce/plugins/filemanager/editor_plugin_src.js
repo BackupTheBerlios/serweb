@@ -4,7 +4,7 @@ tinyMCE.importPluginLanguagePack('filemanager', 'en');
 function TinyMCE_filemanager_getControlHTML(control_name) {
     switch (control_name) {
         case "filemanager":
-            return '<img id="{$editor_id}_filemanager" src="{$pluginurl}/images/filemanager.gif" title="{$lang_insert_filemanager}" width="20" height="20" class="mceButtonNormal" onmouseover="tinyMCE.switchClass(this,\'mceButtonOver\');" onmouseout="tinyMCE.restoreClass(this);" onmousedown="tinyMCE.restoreAndSwitchClass(this,\'mceButtonDown\');" onclick="tinyMCE.execInstanceCommand(\'{$editor_id}\',\'mceFilemanager\');" />';
+            return '<a id="{$editor_id}_filemanager" class="mceButtonNormal" target="_self" href="javascript:tinyMCE.execInstanceCommand(\'{$editor_id}\',\'mceFilemanager\');" onclick="tinyMCE.execInstanceCommand(\'{$editor_id}\',\'mceFilemanager\'); return false;" onmousedown="return false;"><img src="{$pluginurl}/images/filemanager.gif" alt="{$lang_insert_filemanager}" title="{$lang_insert_filemanager}" /></a>';
     }
     return "";
 }
