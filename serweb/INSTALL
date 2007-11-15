@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.31 2007/09/27 15:46:23 kozlik Exp $
+$Id: INSTALL,v 1.32 2007/11/15 09:42:57 kozlik Exp $
 
 serweb - Installation
 
@@ -18,6 +18,7 @@ serweb - Installation
   - PECL package Runkit or Classkit (only PHP5 users)
   		see PHP 5 note bellow
   - overlib (http://www.bosrup.com/web/overlib/)
+  - tinyMCE 2.1.2 (http://tinymce.moxiecode.com)
   - MySQL 4.0 or later
   - running SER with MySQL support
 
@@ -47,8 +48,10 @@ serweb - Installation
   Quick Install:
   --------------
 
-    [1] Untar the distribution (be sure to untar the subdirectories)
-        and copy the Overlib library into directory /your/serweb/dir/html/js/overlib
+    [1] Untar the distribution (be sure to untar the subdirectories),
+        copy the Overlib library into directory /your/serweb/dir/html/js/overlib
+        and copy tinyMCE library (subdir tinymce/jscript/tiny_mce) into directory
+        /your/serweb/dir/html/js/tinymce
 
     [2] It is recommended to be only 'html' directory accessible throught the 
 	    HTML tree on your server. And leave other directories unaccessible
