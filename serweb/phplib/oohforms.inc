@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: oohforms.inc,v 1.12 2007/09/17 18:56:32 kozlik Exp $
+ *	@version  $Id: oohforms.inc,v 1.13 2007/11/15 09:50:48 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -271,6 +271,9 @@ class form {
       }
       if (strlen($after))
         $str .= "$after\n";
+
+      $str .= "return true;\n";
+
       $str .= "}\n//-->\n</script>";
     }
     

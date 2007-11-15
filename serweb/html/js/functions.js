@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.10 2007/10/04 19:55:11 kozlik Exp $
+ *  $Id: functions.js,v 1.11 2007/11/15 09:50:48 kozlik Exp $
  */
 
 
@@ -202,6 +202,7 @@ function toggle_visibility(el){
 				this.startElem[i] = f.elements[i].checked;
 			}
 		}
+		return true;
 	}
 	
 	/* compare form with saved state */
