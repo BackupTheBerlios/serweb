@@ -1029,7 +1029,7 @@ th.alternatpoplinkstyle a.swPopupLink {
 
 /* Stretcher */
 .toggler{
-	witdth:100%;
+	width:100%;
 	border: 1px solid black;
 	margin-bottom: 10px;
 }
