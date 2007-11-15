@@ -3,7 +3,7 @@
  *	Application unit registration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: apu_registration.php,v 1.20 2007/09/21 14:21:20 kozlik Exp $
+ *	@version    $Id: apu_registration.php,v 1.21 2007/11/15 16:13:51 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
@@ -215,6 +215,10 @@ class apu_registration extends apu_base_class{
 		$o = array();
         if (!is_null($did)) {
             $o['did'] = $did;
+        }
+        
+        if (!$an['uname_asign_mode']){
+            die("Config option \$config->attr_names['uname_asign_mode'] is not set.");
         }
 			
 		if (false === $uname_asign_mode = 
@@ -752,7 +756,8 @@ class apu_registration extends apu_base_class{
             case "fcfs": //first come first served
                 break;
             default:
-                die ("Unknown value of username assignment mode: '".$this->uname_assign_mode."'");
+        		ErrorHandler::log_errors(PEAR::raiseError("Unknown value of username assignment mode: '".$this->uname_assign_mode."'"));
+        		return false;
             }
         }
 
