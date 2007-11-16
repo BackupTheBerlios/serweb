@@ -105,5 +105,8 @@
 	* phonebook is sortable
 
 2007-09-21
-    * domain self registration
-    * username assignment modes for self registration of users 
+  * domain self registration
+  * username assignment modes for self registration of users 
+
+2007-11-12
+  * import/export attr-types
