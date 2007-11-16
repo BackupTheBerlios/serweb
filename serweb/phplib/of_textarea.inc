@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_textarea.inc,v 1.8 2007/10/19 10:22:54 kozlik Exp $
+ *	@version  $Id: of_textarea.inc,v 1.9 2007/11/16 15:04:51 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -18,7 +18,7 @@ class of_textarea extends of_element {
   var $cols;
   var $wrap;
   var $minlength=0;
-  var $maxlength;
+  var $maxlength=null;
   var $length_e;
   var $min_length_e;
   var $max_length_e;
@@ -115,7 +115,9 @@ class of_textarea extends of_element {
     if (!is_array($val)) $val = array($val);
     reset($val);
     while (list($k,$v) = each($val)) {
-      if ($this->length_e && ((strlen($v) < $this->minlength) || (strlen($v) > $this->maxlength)))
+      if ($this->length_e && 
+            ((strlen($v) < $this->minlength) || 
+             (!is_null($this->maxlength) && (strlen($v) > $this->maxlength))))
         return $this->length_e;
         
       if ($this->min_length_e && (strlen($v) < $this->minlength))
