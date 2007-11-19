@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.65 2007/11/12 12:45:06 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.66 2007/11/19 16:14:09 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error

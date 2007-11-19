@@ -1,0 +1,19 @@
+# This file contain text of email with missed calls of user 
+# 
+# 
+# replacements in allowed this file: 
+# 	none
+#
+# notice: line ends of non empty lines are stripped
+#
+subject: Vos appels manqués
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Bonjour,
+
+Il y a une liste de vos appels manqués d'hier.
+
+
+-- Ce message est produit automatiquement par SerWeb.

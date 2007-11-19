@@ -14,43 +14,39 @@
 #
 # notice: line ends of non empty lines are stripped
 #
-subject: Uw #@#domain#@# Registratie
+subject: Votre inscription #@#domain#@#
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-
-Beste #@#first_name#@# #@#last_name#@#,
-
-
-Dank u voor uw registratie bij #@#domain#@#.
+Merci de vous inscrire chez #@#domain#@#.
 
 
-Wij hebben voor u het volgeden sip adres aangemaakt: #@#sip_address#@#
+Nous réservons l'adresse SIP suivante pour vous : #@#sip_address#@#
 
 
-Om uw registratie te bevestigen gebruik, binnen 24 uur, onderstaande link:
+Pour conclure votre inscription, veuillez vérifier l'URL suivant dans les 24 heures :
 #@#confirmation_url#@#
 
-(Lukt dit u niet dan moet u opnieuw registreren.)
+(Si vous confirmez plus tard, vous devrez vous réinscrire.)
 
 
-Hier zijn de details van uw account:
+Voici les détails de votre compte :
 
 ---------------------------------------------------------------------
 
-   gebruikersnaam: #@#username#@#
+  Nom d'utilisateur : #@#username#@#
 
-       wachtwoord: #@#password#@#
- 
-            Email: #@#email#@#
+       Mot de passe : #@#password#@#
 
-   Volledige naam: #@#first_name#@# #@#last_name#@#
+           Courriel : #@#email#@#
 
-        Sip adres: #@#sip_address#@# 
+        Nom complet : #@#first_name#@# #@#last_name#@#
 
-(Gegevens opnieuw opvragen kan op de "wachtwoord vergeten" link op de registratie pagina)
+        adresse SIP : #@#sip_address#@# 
+
+(Vous pourrez toujours récupérer ces derniers par l'intermédiaire du lien « Mot de passe oublié » sur la page d'inscription)
 
 
 
--- Dit bericht is automatisch aangemaakt door SerWeb.
+-- Ce message est produit automatiquement par SerWeb.

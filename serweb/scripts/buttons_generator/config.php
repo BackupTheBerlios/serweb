@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: config.php,v 1.6 2006/09/18 13:17:50 kozlik Exp $
+ * $Id: config.php,v 1.7 2007/11/19 16:14:09 kozlik Exp $
  */
 
 /** 
@@ -109,7 +109,7 @@ $bg_cfg['button'][7]['type']		= 'blue_wide';
 
 $bg_cfg['button'][8]['filename']	= 'btn_login';
 $bg_cfg['button'][8]['lang_str']	= 'b_login';
-$bg_cfg['button'][8]['type']		= 'white';
+$bg_cfg['button'][8]['type']		= 'white_100';
 
 $bg_cfg['button'][9]['filename']	= 'btn_next';
 $bg_cfg['button'][9]['lang_str']	= 'b_next';
