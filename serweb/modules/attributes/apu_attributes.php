@@ -3,7 +3,7 @@
  * Application unit attributes
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attributes.php,v 1.15 2007/03/06 14:58:51 kozlik Exp $
+ * @version    $Id: apu_attributes.php,v 1.16 2007/12/12 14:09:38 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -197,10 +197,10 @@ class apu_attributes extends apu_base_class{
 			return $this->attr_types[$at_name]->get_user_access_to_change();
 
 		case "admin":
-			return true;
+			return $this->attr_types[$at_name]->get_admin_access_to_change();
 
 		case "hostmaster":
-			return true;
+			return $this->attr_types[$at_name]->get_hostmaster_access_to_change();
 		}
 		
 		return false;
@@ -212,10 +212,10 @@ class apu_attributes extends apu_base_class{
 			return $this->attr_types[$at_name]->get_user_access_to_read();
 
 		case "admin":
-			return true;
+			return $this->attr_types[$at_name]->get_admin_access_to_read();
 
 		case "hostmaster":
-			return true;
+			return $this->attr_types[$at_name]->get_hostmaster_access_to_read();
 		}
 		
 		return false;

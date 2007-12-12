@@ -3,7 +3,7 @@
  *	Classes for working with attribute types
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: attr_types.php,v 1.16 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: attr_types.php,v 1.17 2007/12/12 14:09:38 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_attributes
  */ 
@@ -25,6 +25,18 @@ class Attr_type{
 	var $flags;
 	var $priority;
 	var $opt = array();
+    /**
+     *  Access of attribute - bitmap
+     *
+     *  Meaning of bits:
+     *   0 - read only for users
+     *   1 - hidden for users
+     *   2 - read only for admins
+     *   3 - hidden for admins
+     *   4 - read only for hostmasters
+     *   5 - hidden for hostmasters
+     *
+     */
 	var $access;
 	var $order;
 	var $group;
@@ -298,14 +310,31 @@ class Attr_type{
 		return !(($this->access & 0x02) == 0x02);
 	}
 	
+	function get_admin_access_to_change(){
+		return !(($this->access & 0x04) == 0x04);
+	}
+	
+	function get_admin_access_to_read(){
+		return !(($this->access & 0x08) == 0x08);
+	}
+	
+	function get_hostmaster_access_to_change(){
+		return !(($this->access & 0x10) == 0x10);
+	}
+	
+	function get_hostmaster_access_to_read(){
+		return !(($this->access & 0x20) == 0x20);
+	}
+	
 	/**
 	 *	Return options for form access field
 	 */
 	function get_access_options(){
 		global $lang_str;
-		return array(array("value" => 0, "label" => $lang_str['at_access_0']),
-		             array("value" => 1, "label" => $lang_str['at_access_1']),
-		             array("value" => 3, "label" => $lang_str['at_access_3']));
+		return array(array("value" => 0,  "label" => $lang_str['at_access_0']),  //full access
+		             array("value" => 1,  "label" => $lang_str['at_access_1']),  //read-only for users
+		             array("value" => 3,  "label" => $lang_str['at_access_3']),  //hidden and read-only for users
+		             array("value" => 21, "label" => $lang_str['at_access_21']));//read-only for everyone
 	}
 	
 	function get_priority(){

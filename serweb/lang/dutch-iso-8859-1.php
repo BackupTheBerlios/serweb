@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.51 2007/11/19 16:14:09 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.52 2007/12/12 14:09:37 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -491,6 +491,7 @@ $lang_str['ff_did_format'] = 					"formaat voor nieuwe DIDs";
 $lang_str['at_access_0'] = 						"volledige toegang";
 $lang_str['at_access_1'] = 						"alleen lezen voor gebruikers";
 $lang_str['at_access_3'] = 						"alleen voor administrators (R/W)";
+$lang_str['at_access_21'] = 					"read only";	//to translate 
 
 
 $lang_str['th_att_name'] = 						"attribuut naam";

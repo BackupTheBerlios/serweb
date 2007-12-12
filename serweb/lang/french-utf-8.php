@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: french-utf-8.php,v 1.2 2007/11/19 16:14:09 kozlik Exp $
+ * $Id: french-utf-8.php,v 1.3 2007/12/12 14:09:37 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -491,6 +491,7 @@ $lang_str['ff_did_format'] = 					"format des DID nouvellement créés";
 $lang_str['at_access_0'] = 						"accès complet";
 $lang_str['at_access_1'] = 						"lecture seulement pour les utilisateurs";
 $lang_str['at_access_3'] = 						"pour les admin. seulement (lecture/écriture)";
+$lang_str['at_access_21'] = 					"read only";	//to translate 
 
 
 $lang_str['th_att_name'] = 						"nom de l'attribut";

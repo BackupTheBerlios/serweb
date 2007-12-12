@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.50 2007/11/19 16:14:09 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.51 2007/12/12 14:09:37 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -491,6 +491,7 @@ $lang_str['ff_did_format'] = 					"formát novì vytváøených DID";
 $lang_str['at_access_0'] = 						"plný pøístup";
 $lang_str['at_access_1'] = 						"pro uživatele je pouze pro ètení";
 $lang_str['at_access_3'] = 						"pouze pro administrátory (R/W)";
+$lang_str['at_access_21'] = 					"read only";	//to translate 
 
 
 $lang_str['th_att_name'] = 						"jméno atributu";

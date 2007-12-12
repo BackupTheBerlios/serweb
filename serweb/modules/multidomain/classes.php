@@ -189,6 +189,12 @@ class DomainManipulator{
             }
         }
 
+        /* set datetime_created attr */
+        if (!isset($domain_attrs[$an['datetime_created']])){
+            if (false === $da_h->set_attribute($an['datetime_created'], gmdate("Y-m-d H:i:s"))){
+                return false;
+            }
+        }
 
         return true;    
     }

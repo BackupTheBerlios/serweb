@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.55 2007/11/12 12:45:06 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.56 2007/12/12 14:09:37 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -490,7 +490,8 @@ $lang_str['ff_did_format'] = 					"format of newly created DIDs";
 
 $lang_str['at_access_0'] = 						"full access";
 $lang_str['at_access_1'] = 						"read only for users";
-$lang_str['at_access_3'] = 						"for admins only (R/W)";
+$lang_str['at_access_3'] = 						"hidden for users";
+$lang_str['at_access_21'] = 					"read only";
 
 
 $lang_str['th_att_name'] = 						"attribute name";
