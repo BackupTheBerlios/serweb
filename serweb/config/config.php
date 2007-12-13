@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.51 2007/09/27 15:46:23 kozlik Exp $
+ * $Id: config.php,v 1.52 2007/12/13 11:40:53 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -244,6 +244,20 @@
 	*/
 	$config->acc_use_cdr_table = false;
 
+	/* Displaying unpaired BYE records on accountig tab. Allowed values are:
+	    - false            - do not display unpaired BYE records
+	    - "admin"          - display unpaired BYE records only to admins
+	    - "hostmaster"     - display unpaired BYE records only to hostmasters
+	    - true             - display unpaired BYE records to everyone
+	    
+	   Please note that displaying unpaired BYE records could lead to performance
+	   problems for big databases. Display these records is not so useful for 
+       normal users. Probably it could be good for admins for debuging purposes.
+       
+       Default: 
+       $config->acc->get_unpaired_bye = "hostmaster";
+	*/
+	$config->acc->get_unpaired_bye = "hostmaster";
 
 	/* ------------------------------------------------------------*/
 	/* Logging                                                      */

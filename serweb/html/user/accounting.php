@@ -3,7 +3,7 @@
  *	Display incoming and outgoing calls
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: accounting.php,v 1.7 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: accounting.php,v 1.8 2007/12/13 11:40:53 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -21,10 +21,23 @@ $_required_apu = array('apu_accounting');
 /** include all others necessary files */
 require "prepend.php";
 
+/* Display unpaired BYE records? */
+$get_unpaired_bye = false;
+if ($config->acc->get_unpaired_bye === true){
+    $get_unpaired_bye = true;
+}
+
 if ($controler->come_from_admin_interface){
 	/* script is called from admin interface, load page attributes of admin interface */
 	require ("../admin/page_attributes.php");
 	$page_attributes['selected_tab']="users.php";
+	
+    /* Display unpaired BYE records to admins? */
+	if (($config->acc->get_unpaired_bye=="hostmaster" and $perm->have_perm("hostmaster")) or
+        ($config->acc->get_unpaired_bye=="admin" and $perm->have_perm("admin"))){
+
+        $get_unpaired_bye = true;
+    }
 }
 else{
 	$page_attributes['user_name'] = get_user_real_name($_SESSION['auth']->get_logged_user());
@@ -35,6 +48,7 @@ $acc			= new apu_accounting();
 $acc->set_opt('display_incoming', false);
 $acc->set_opt('display_outgoing', true);
 $acc->set_opt('display_missed', false);
+$acc->set_opt('get_unpaired_bye', $get_unpaired_bye);
 
 /* if you doesn't need this, disable it for perfonmance reasons */
 $acc->set_opt('get_user_status', true);

@@ -3,7 +3,7 @@
  * Application unit accounting 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_accounting.php,v 1.5 2006/09/08 12:27:33 kozlik Exp $
+ * @version   $Id: apu_accounting.php,v 1.6 2007/12/13 11:40:53 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -122,6 +122,8 @@ class apu_accounting extends apu_base_class{
 		$this->opt['display_incoming'] =	true;
 		$this->opt['display_outgoing'] =	true;
 		$this->opt['display_missed'] =		true;
+
+        $this->opt['get_unpaired_bye'] =    false;
 											
 		$this->opt['get_user_status'] = false;
 		$this->opt['get_phonebook_names'] = false;
@@ -199,6 +201,8 @@ class apu_accounting extends apu_base_class{
 			$opt['filter_incoming'] = $this->opt['display_incoming'];
 			$opt['filter_missed']   = $this->opt['display_missed'];
 		}
+
+		$opt['get_unpaired_bye']   = $this->opt['get_unpaired_bye'];
 		
 		return $opt;
 	}
