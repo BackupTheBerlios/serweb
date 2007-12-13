@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.53 2007/10/11 15:29:11 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.54 2007/12/13 14:57:23 kozlik Exp $
  */
 
 
@@ -539,7 +539,7 @@
                 );
 
 
-		$config->data_sql->acc->version = 					3;
+		$config->data_sql->acc->version = 					4;
 		
 		/*
 		 *	Definition of table missed_calls
@@ -550,7 +550,7 @@
 		$config->data_sql->missed_calls->table_name = 	"missed_calls";
  		$config->data_sql->missed_calls->flag_values = 	&$config->data_sql->acc->flag_values;
 
-		$config->data_sql->missed_calls->version = 		3;
+		$config->data_sql->missed_calls->version = 		4;
 
 
 		/*
