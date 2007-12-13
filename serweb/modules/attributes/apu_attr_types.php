@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attr_types.php,v 1.12 2007/11/12 12:45:06 kozlik Exp $
+ * @version    $Id: apu_attr_types.php,v 1.13 2007/12/13 11:36:06 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -198,18 +198,22 @@ class apu_attr_types extends apu_base_class{
 
 		$f[] = array("type"=>"text",
 		             "name"=>"name",
+		             "maxlength"=>32,
 					 "label"=>$lang_str['ff_att_name']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"rich_type",
+		             "maxlength"=>32,
 					 "label"=>$lang_str['ff_att_type']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"desc",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_label']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"group",
+		             "maxlength"=>32,
 					 "label"=>$lang_str['ff_att_group']);
 
 		$f[] = array("type"=>"checkbox",

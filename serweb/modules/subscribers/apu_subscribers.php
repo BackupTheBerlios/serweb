@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.12 2007/10/02 13:44:35 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.13 2007/12/13 11:36:05 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -224,34 +224,42 @@ class apu_subscribers extends apu_base_class{
 
 		$f[] = array("type"=>"text",
 		             "name"=>"uid",
+		             "maxlength"=>64,
 					 "label"=>$lang_str['ff_uid']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"username",
+		             "maxlength"=>64,
 					 "label"=>$lang_str['ff_username']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"fname",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_first_name']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"lname",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_last_name']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"email",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_email']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"domain",
+		             "maxlength"=>128,
 					 "label"=>$lang_str['ff_domain']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"alias",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_alias']);
 
 		$f[] = array("type"=>"text",
 		             "name"=>"sipuri",
+		             "maxlength"=>255,
 					 "label"=>$lang_str['ff_sip_address']);
 
 		if ($this->opt['use_chk_onlineonly']){
