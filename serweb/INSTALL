@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.32 2007/11/15 09:42:57 kozlik Exp $
+$Id: INSTALL,v 1.33 2007/12/13 14:54:34 kozlik Exp $
 
 serweb - Installation
 
@@ -10,6 +10,7 @@ serweb - Installation
   - mysql support for php (php-mysql package)
   - imap support for php (php-imap package)
   - PEAR package DB (should be included in PHP release 4.3 and later)
+  - PEAR package XML_Parser 1.2.6 (or later)
   - PEAR package XML_RPC (optional - should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
 		see http://pear.php.net/manual/en/installation.getting.php for details

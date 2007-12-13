@@ -3,7 +3,7 @@
  *	Test serweb configuration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.4 2007/11/05 13:26:29 kozlik Exp $
+ *	@version    $Id: index.php,v 1.5 2007/12/13 14:54:34 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -140,11 +140,10 @@ function test_pear_xml_rpc(){
 	}	
 
 	foreach ($list as $row){
-		if (ereg("^ *XML_RPC +([.1-9]+).*", $row, $regs)){
-			$v = explode(".", $regs[1]);
-			if ($v[0] == 0 or ($v[0] == 1 and $v[1] < 4)){
+		if (ereg("^ *XML_RPC +([.0-9]+).*", $row, $regs)){
+		    if (version_compare($regs[1], "1.4", "<")){
 				$out = "Installed PEAR XML_RPC package is old (version: ".$regs[1].
-				       "). Type \"pear upgrade XML_RPC\" ".
+				       "). Required verison is at least 1.4.0. Type \"pear upgrade XML_RPC\" ".
 				       "on your command line to upgrade this package to latest version. ";
 				
 				return array(3, $out);
@@ -156,6 +155,49 @@ function test_pear_xml_rpc(){
 	}
 
 	$out = "Can't check version of your PEAR XML_RPC package.";
+	
+	return array(3, $out);
+}
+
+
+function test_pear_xml_parser(){
+	global $_SERWEB;
+	
+	if (check_include("XML/Parser/Simple.php")) require_once ("XML/Parser/Simple.php");
+
+	if (!class_exists('XML_Parser_Simple')) {
+		$out = "PEAR XML_Parser package is not installed. Type \"pear install XML_Parser\" ".
+		       "on your command line.";
+
+		return array(2, $out);
+	}
+
+	exec("pear list", $list, $ret_val);
+	if ($ret_val != 0){
+		$out = "Version can't be checked. Can't execute 'pear list' command";
+		return array(3, $out);
+	}	
+
+	if (!is_array($list)){
+		$out = "Version can't be checked. 'pear list' command did not returned any output.";
+		return array(3, $out);
+	}	
+
+	foreach ($list as $row){
+		if (ereg("^ *XML_Parser +([.0-9]+).*", $row, $regs)){
+		    if (version_compare($regs[1], "1.2.6", "<")){
+				$out = "Installed PEAR XML_Parser package is old (version: ".$regs[1].
+				       "). Required verison is at least 1.2.6. Type \"pear upgrade XML_Parser\" ".
+				       "on your command line to upgrade this package to latest version. ";
+				
+				return array(3, $out);
+            }
+		
+			return array(1, 'OK');
+		}
+	}
+
+	$out = "Can't check version of your PEAR XML_Parser package.";
 	
 	return array(3, $out);
 }
@@ -479,6 +521,7 @@ function check($label, $check_function){
 		if (!check("Checking PEAR DB extendion:", "test_pear_db")) break;
 		if (!check("Checking PEAR Log extension:", "test_pear_log")) break;
 		if (!check("Checking PEAR XML_RPC extension:", "test_pear_xml_rpc")) break;
+		if (!check("Checking PEAR XML_Parser extension:", "test_pear_xml_parser")) break;
 		if (!check("Checking PEAR Net_DNS extension:", "test_pear_net_dns")) break;
 		if (!check("Checking PHP IMAP extension:", "test_imap")) break;
 		if (!check("Checking PHP CURL extension:", "test_curl")) break;
