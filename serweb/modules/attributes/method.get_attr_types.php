@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_attr_types.php,v 1.6 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: method.get_attr_types.php,v 1.7 2007/12/14 18:41:12 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_attributes
  */ 
@@ -58,7 +58,7 @@ class CData_Layer_get_attr_types{
 		$qw = array();
 
 		if (!empty($opt['filter']['order']))     $qw[] = $opt['filter']['order']->to_sql($c->order);
-		if (!empty($opt['filter']['name']))      $qw[] = $opt['filter']['name']->to_sql($c->name);
+		if (!empty($opt['filter']['at_name']))   $qw[] = $opt['filter']['at_name']->to_sql($c->name);
 		if (!empty($opt['filter']['rich_type'])) $qw[] = $opt['filter']['rich_type']->to_sql($c->rich_type);
 		if (!empty($opt['filter']['desc']))      $qw[] = $opt['filter']['desc']->to_sql($c->desc);
 		if (!empty($opt['filter']['group']))     $qw[] = $opt['filter']['group']->to_sql($c->group);

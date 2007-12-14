@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.12 2007/12/13 11:36:06 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.13 2007/12/14 18:41:12 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -150,12 +150,12 @@ class apu_domain_list extends apu_base_class{
 		$f = array();
 
 		$f[] = array("type"=>"text",
-		             "name"=>"name",
+		             "name"=>"dom_name",
 		             "maxlength"=>128,
 					 "label"=>$lang_str['d_name']);
 
 		$f[] = array("type"=>"text",
-		             "name"=>"id",
+		             "name"=>"dom_id",
 		             "maxlength"=>64,
 					 "label"=>$lang_str['d_id']);
 

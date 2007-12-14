@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_domains.php,v 1.9 2007/10/12 08:44:51 kozlik Exp $
+ *	@version    $Id: method.get_domains.php,v 1.10 2007/12/14 18:41:12 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -74,8 +74,8 @@ class CData_Layer_get_domains {
 	    
 
         $qw = array();
-		if (!empty($o_filter['id']))          $qw[] = $o_filter['id']->to_sql("d.".$cd->did);
-		if (!empty($o_filter['name']))        $qw[] = $o_filter['name']->to_sql("d.".$cd->name);
+		if (!empty($o_filter['dom_id']))      $qw[] = $o_filter['dom_id']->to_sql("d.".$cd->did);
+		if (!empty($o_filter['dom_name']))    $qw[] = $o_filter['dom_name']->to_sql("d.".$cd->name);
 		if (!empty($o_filter['customer']))    $qw[] = $o_filter['customer']->to_sql("c.".$cc->name);
 		if ( isset($o_filter['customer_id'])) $qw[] = $o_filter['customer_id']->to_sql("c.".$cc->cid);
 
@@ -137,7 +137,7 @@ class CData_Layer_get_domains {
 
 
 
-		if (empty($o_filter['name']))			
+		if (empty($o_filter['dom_name']))			
 			$q = "(".$q1.") union (".$q2.")";
 		else $q = &$q1;	
 		

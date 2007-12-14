@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attr_types.php,v 1.13 2007/12/13 11:36:06 kozlik Exp $
+ * @version    $Id: apu_attr_types.php,v 1.14 2007/12/14 18:41:12 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -197,7 +197,7 @@ class apu_attr_types extends apu_base_class{
 					 "label"=>$lang_str['ff_order']);
 
 		$f[] = array("type"=>"text",
-		             "name"=>"name",
+		             "name"=>"at_name",
 		             "maxlength"=>32,
 					 "label"=>$lang_str['ff_att_name']);
 
