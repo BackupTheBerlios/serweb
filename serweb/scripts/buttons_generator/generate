@@ -1,13 +1,13 @@
 #!/bin/sh
 PHP=`which php`
-exec $PHP -C -q -d output_buffering=1 $0 $@
+exec "$PHP" -C -q -d output_buffering=1 $0 $@
 <?php
 
 /**
  *This script is used for creation internationalized images of buttons.
  * 
  * @author    Karel Kozlik
- * @version   $Id: generate,v 1.1 2005/08/10 13:50:38 kozlik Exp $
+ * @version   $Id: generate,v 1.2 2007/12/14 16:58:36 kozlik Exp $
  */
 
 require("config.php");
