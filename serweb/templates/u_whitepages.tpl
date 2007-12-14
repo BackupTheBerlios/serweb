@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.8 2007/02/05 15:10:38 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.9 2007/12/14 18:47:23 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -38,7 +38,7 @@
 	</tr>
 	<tr>
 	<td>&nbsp;</td>
-	<td align="right">{$form.okey}</td>
+	<td align="right">{$form.okey}{$form.f_clear}</td>
 	</tr>
 	</table>
 {$form.finish}

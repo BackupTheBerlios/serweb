@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.52 2007/12/12 14:09:37 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.53 2007/12/14 18:47:22 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -95,6 +95,7 @@ $lang_str['b_test_firewall_NAT'] =		 		"Test firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Upload welkomsbericht";
 $lang_str['b_extended_settings'] =		 		"Extra settings";
 $lang_str['b_search'] =		 					"Zoeken";
+$lang_str['b_clear_filter'] =		 			"Clear filter";	//to translate 
 
 
 /* ------------------------------------------------------------*/

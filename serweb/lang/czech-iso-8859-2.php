@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.51 2007/12/12 14:09:37 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.52 2007/12/14 18:47:22 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -95,6 +95,7 @@ $lang_str['b_test_firewall_NAT'] =		 		"Otestovat firewall/NAT";
 $lang_str['b_upload_greeting'] =		 		"Nahrát nový pozdrav";
 $lang_str['b_extended_settings'] =		 		"Roz¹íøené nastavení";
 $lang_str['b_search'] =		 					"Hledej";
+$lang_str['b_clear_filter'] =		 			"Clear filter";	//to translate 
 
 
 /* ------------------------------------------------------------*/

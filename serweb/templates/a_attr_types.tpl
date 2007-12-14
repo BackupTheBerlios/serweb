@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.11 2007/11/12 12:45:06 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.12 2007/12/14 18:47:23 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -32,14 +32,14 @@
 		{$filter_form.start}
 		<table border="0" cellspacing="0" cellpadding="0" align="center">
 		<tr valign="bottom">
-		<td><label for="name" id="luid">{$filter_label.name}</label></td>
+		<td><label for="at_name" id="luid">{$filter_label.at_name}</label></td>
 		<td><label for="rich_type" id="lusrnm">{$filter_label.rich_type}</label></td>
 		<td><label for="group" id="ldomain">{$filter_label.group}</label></td>
 		<td><label for="desc" id="lfname">{$filter_label.desc}</label></td>
 		</tr>
 		
 		<tr>
-		<td>{$filter_form.name}</td>
+		<td>{$filter_form.at_name}</td>
 		<td>{$filter_form.rich_type}</td>
 		<td>{$filter_form.group}</td>
 		<td>{$filter_form.desc}</td>
@@ -103,7 +103,7 @@
 						
         <tr><td colspan="4" class="note">{$lang_str.filter_wildcard_note}</td></tr>
         
-		<tr><td colspan="4" align="right">{$filter_form.okey}</td></tr>
+		<tr><td colspan="4" align="right">{$filter_form.okey}{$filter_form.f_clear}</td></tr>
 		</table>
 		{$filter_form.finish}
 		</div>

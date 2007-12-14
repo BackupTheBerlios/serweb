@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: french-utf-8.php,v 1.3 2007/12/12 14:09:37 kozlik Exp $
+ * $Id: french-utf-8.php,v 1.4 2007/12/14 18:47:23 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -95,6 +95,7 @@ $lang_str['b_test_firewall_NAT'] =		 		"Tester le pare-feu / NAT";	// or: "Tes
 $lang_str['b_upload_greeting'] =		 		"Salutation de télédéchargement";
 $lang_str['b_extended_settings'] =		 		"Réglages avancés";
 $lang_str['b_search'] =		 					"Rechercher";
+$lang_str['b_clear_filter'] =		 			"Clear filter";	//to translate 
 
 
 /* ------------------------------------------------------------*/

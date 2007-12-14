@@ -3,7 +3,7 @@
  * Application unit filter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_filter.php,v 1.4 2007/10/02 13:18:18 kozlik Exp $
+ * @version   $Id: apu_filter.php,v 1.5 2007/12/14 18:47:22 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -57,7 +57,7 @@ class apu_filter extends apu_base_class{
 	 *	@return array	array of required javascript files
 	 */
 	function get_required_javascript(){
-		return array();
+		return array("filter.js");
 	}
 	
 	/**
@@ -89,6 +89,9 @@ class apu_filter extends apu_base_class{
 		$this->opt['form_submit']=array('type' => 'button',
 										'text' => $lang_str['b_search']);
 		
+		$this->opt['form_clear']=array('type' => 'button',
+										'text' => $lang_str['b_clear_filter']);
+		
 		
 	}
 
@@ -101,6 +104,10 @@ class apu_filter extends apu_base_class{
 	 */
 	function init(){
 		parent::init();
+
+        /* set form name if it is not set */
+        if (!$this->opt['form_name']) 
+            $this->opt['form_name'] = "form_".$this->opt['instance_id'];
 
 		$session_name = empty($this->opt['filter_name'])?
 		                $this->opt['instance_id']:
@@ -192,8 +199,10 @@ class apu_filter extends apu_base_class{
 		
 		$this->get_form_elements();
 
+		$js_elements = array();
 		
 		foreach ($this->form_elements as $k => $v){
+		    
 			if (!isset($this->session['f_values'][$v['name']])){
 				if (isset($v['initial'])) $this->session['f_values'][$v['name']] = $v['initial'];
 				else                      $this->session['f_values'][$v['name']] = null;
@@ -207,6 +216,10 @@ class apu_filter extends apu_base_class{
 			else{			
 				$v['value'] = $this->session['f_values'][$v['name']];
 			}
+
+		    $js_el = array();
+    	    $js_el["name"] = $v['name'];
+    	    $js_el["type"] = $v['type'];
 
 			/* do specific actions for each type */
 			switch ($v['type']){
@@ -227,6 +240,8 @@ class apu_filter extends apu_base_class{
 				$onclick = "if (this.checked) this.form.".$v['name']."_hidden".".value=1; else this.form.".$v['name']."_hidden".".value=0;";
 				
 				if (!empty($v['3state'])){
+            	    $js_el["three_state"] = true;
+
 					$v['disabled'] = empty($this->session['f_spec'][$v['name']]['enabled']);
 				
 					/* add the chcekbox element enabling or disabling the first one */
@@ -252,7 +267,17 @@ class apu_filter extends apu_base_class{
 			$this->form_elements[$k] = $v;
 
 			if (isset($v['label'])) $this->labels[$v['name']] = $v['label'];
+			
+			$js_elements[] = $js_el;
 		}
+		
+		$this->opt['form_clear']['extra_html'] = "onclick='filter_form_ctl.filter_clear(); return false;'";
+		$this->f->add_extra_submit("f_clear", $this->opt['form_clear']);
+
+		$onload_js = "
+			filter_form_ctl = new Filter_Form('".$this->opt['form_name']."', ".my_JSON_encode($js_elements).");
+		";
+		$this->controler->set_onload_js($onload_js);
 	}
 
 		

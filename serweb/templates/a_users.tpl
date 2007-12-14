@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.26 2007/11/05 12:55:11 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.27 2007/12/14 18:47:23 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -55,7 +55,7 @@
 
 <tr><td colspan="4" class="note">{$lang_str.filter_wildcard_note}</td></tr>
 				
-<tr><td colspan="4" align="right">{$form.okey}</td></tr>
+<tr><td colspan="4" align="right">{$form.okey}{$form.f_clear}</td></tr>
 </table>
 {$form.finish}
 </div>
