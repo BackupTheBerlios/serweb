@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.34 2007/09/17 18:56:31 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.35 2008/01/09 15:25:59 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -475,6 +475,7 @@ class page_conroler{
 			$this->f[$form_name]['apu_names'] = array();				// set of apu names added to hidden form element of this form
 			$this->f[$form_name]['js_before'] = "";
 			$this->f[$form_name]['js_after'] = "";
+			$this->f[$form_name]['get_param'] = array();
 			$this->f[$form_name]['msg_apu'] = array($apu->opt['instance_id']);	//APUs from which are messages displayed - default first APU assigned to this form
 		}
 		$this->f[$form_name]['apu'][] = &$apu;
@@ -763,6 +764,29 @@ class page_conroler{
 		return true;
 	}
 	
+    /**
+     *  Return URL used in html form 'action' param
+     *
+     *  The URL always paints to self page
+     *
+     *  @param  array   $get_param      array of GET parameters send in the URL
+     *  @return string                  the URL
+     */
+    function get_form_action($get_param){
+
+        $url = $_SERVER['PHP_SELF'];
+        
+        if ($get_param){
+            /* collect all get params to one string */
+            $get_param = implode('&', $get_param);
+            
+            $param_separator = strpos($url, "?") !== false ?  "&" : "?";
+            $url .= $param_separator.$get_param;
+        }
+        
+        return $url;
+    }
+	
 	/**
 	 *	assign values and form(s) to smarty
 	 *	
@@ -789,18 +813,23 @@ class page_conroler{
 			if (!isset($form_array['form_name']))   $form_array['form_name'] = '';
 			if (!isset($form_array['before']))      $form_array['before'] = '';
 			if (!isset($form_array['after']))       $form_array['after'] = '';
+			if (!isset($form_array['get_param']))   $form_array['get_param'] = array();
 			
 			/* if html form is shared, collect after and before javascript from all APUs */
 			if ($this->shared_html_form){
 				$this->f[$val->form_name]['js_before'] .= $form_array['before'];
 				$this->f[$val->form_name]['js_after'] .= $form_array['after'];
+				$this->f[$val->form_name]['get_param'] = 
+                            array_merge($this->f[$val->form_name]['get_param'], 
+                                        $form_array['get_param']);
 			}
 			/* otherwise create forms for all APUs */
 			else {
 				$smarty->assign_phplib_form($form_array['smarty_name'], 
 											$this->apu_objects[$key]->f, 
 											array('jvs_name'  => 'form_'.$this->apu_objects[$key]->opt['instance_id'],
-											      'form_name' => $form_array['form_name']), 
+											      'form_name' => $form_array['form_name'],
+                                                  'action'    => $this->get_form_action($form_array['get_param'])), 
 											array('before'    => $form_array['before'],
 											      'after'     => $form_array['after']));
 			}
@@ -812,7 +841,8 @@ class page_conroler{
 				$smarty->assign_phplib_form($val['smarty_name'], 
 											$this->f[$key]['form'], 
 											array('jvs_name'  => 'form_'.$key,
-											      'form_name' => $key), 
+											      'form_name' => $key,
+                                                  'action'    => $this->get_form_action($this->f[$key]['get_param'])), 
 											array('before'    => $this->f[$key]['js_before'],
 											      'after'     => $this->f[$key]['js_after']));
 			}

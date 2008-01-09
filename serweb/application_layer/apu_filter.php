@@ -3,7 +3,7 @@
  * Application unit filter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_filter.php,v 1.5 2007/12/14 18:47:22 kozlik Exp $
+ * @version   $Id: apu_filter.php,v 1.6 2008/01/09 15:25:58 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -40,6 +40,8 @@
 class apu_filter extends apu_base_class{
 	var $form_elements;
 	var $labels = array();
+	var $get_params = array();
+	var $filter_applied = false;
 	
 
 	/** 
@@ -84,6 +86,7 @@ class apu_filter extends apu_base_class{
 		$this->opt['form_name'] =			'';
 
 		$this->opt['smarty_form_label'] =	'filter_label';
+		$this->opt['smarty_filter_applied'] =	'filter_applied';
 
 
 		$this->opt['form_submit']=array('type' => 'button',
@@ -97,6 +100,10 @@ class apu_filter extends apu_base_class{
 
 	function set_base_apu(&$apu){
 		$this->base_apu = &$apu;
+	}
+
+	function set_get_params($get_params){
+		$this->get_params = array_merge($this->get_params, $get_params);
 	}
 
 	/**
@@ -171,7 +178,7 @@ class apu_filter extends apu_base_class{
 			return (array)$this->session['get_param'];
 		}
 
-		return true;
+        return $this->get_params;
 	}
 	
 	/**
@@ -227,6 +234,7 @@ class apu_filter extends apu_base_class{
 				if (!isset($v['maxlength'])){
 					$v['maxlength'] = 32;
 				}
+				if ($v['value']) $this->filter_applied = true;
 				break;
 			case "checkbox":
 				/* add the hidden element in order to it not depend 
@@ -254,7 +262,12 @@ class apu_filter extends apu_base_class{
 						));
 
 //					$onchange .= "if (this.checked) this.form.".$v['name'].".disable=false; else this.form.".$v['name'].".disable=true;";
+
+                    if (!$v['disabled']) $this->filter_applied = true;
 				}
+				else{
+                    if ($v['checked']) $this->filter_applied = true;
+                }
 
 				if (empty($v['extrahtml'])) $v['extrahtml'] = "";
 				$v['extrahtml'] .= " onclick='".$onclick."'";
@@ -287,6 +300,8 @@ class apu_filter extends apu_base_class{
 	function pass_values_to_html(){
 		global $smarty;
 		$smarty->assign_by_ref($this->opt['smarty_form_label'], $this->labels);
+
+		$smarty->assign_by_ref($this->opt['smarty_filter_applied'], $this->filter_applied);
 	}
 	
 	/**
@@ -296,7 +311,8 @@ class apu_filter extends apu_base_class{
 		return array('smarty_name' => $this->opt['smarty_form'],
 		             'form_name'   => $this->opt['form_name'],
 		             'after'       => '',
-					 'before'      => '');
+					 'before'      => '',
+                     'get_param'   => $this->get_params);
 	}
 	
 	function get_act_row(){

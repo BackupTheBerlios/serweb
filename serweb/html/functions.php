@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.88 2007/09/17 18:56:31 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.89 2008/01/09 15:25:59 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1398,7 +1398,7 @@ function sw_JSON_encode($var){
         case 'string':
             // STRINGS ARE EXPECTED TO BE IN ASCII OR UTF-8 FORMAT
 
-            return '"'.addslashes($var).'"';
+            return '"'.js_escape($var).'"';
 
         case 'array':
            /*

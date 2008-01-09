@@ -3,7 +3,7 @@
  *	Set attributes for all pages in admin interface
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: page_attributes.php,v 1.15 2007/09/17 18:56:31 kozlik Exp $
+ *	@version    $Id: page_attributes.php,v 1.16 2008/01/09 15:25:59 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -42,6 +42,7 @@ $page_attributes=array(
 	'run_at_html_body_begin' => '_disable_unneeded_tabs',
 	'logout'=>true,
 	'css_file' => array(multidomain_get_file("styles.css")),
+	'ie_selects' => true,
 	'prolog'=>"<body><h1>",
 	'separator'=>"</h1><hr class='separator' />",
 	'epilog'=>"</body>",

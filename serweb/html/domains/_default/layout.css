@@ -20,13 +20,15 @@
 /*
  * Links
  */
-.swMain a{
+.swMain a,
+.popup a{
 	font-weight:normal;
 	font-size: 0.85em;
 	color: #000000;
 	text-decoration:none;
 }
-.swMain a:hover{
+.swMain a:hover,
+.popup a:hover{
 	text-decoration:underline;
 }
 

@@ -3,7 +3,7 @@
  *  Functions for output basic page layout
  * 
  *  @author     Karel Kozlik
- *  @version    $Id: page.php,v 1.36 2007/09/17 18:56:31 kozlik Exp $
+ *  @version    $Id: page.php,v 1.37 2008/01/09 15:25:59 kozlik Exp $
  *  @package    serweb
  *  @subpackage framework
  */ 
@@ -67,6 +67,10 @@ function print_html_head($parameters=array()){
         else{
             echo '    <LINK REL="StyleSheet" HREF="'.htmlspecialchars($parameters['css_file']).'" TYPE="text/css" />'."\n";
         }
+    }
+
+    if (!empty($parameters['ie_selects'])){
+        echo '    <LINK REL="StyleSheet" HREF="'.htmlspecialchars($config->js_src_path."ie_select.css.php").'" TYPE="text/css" />'."\n";
     }
 
     if (isset($parameters['required_javascript']) and is_array($parameters['required_javascript'])){

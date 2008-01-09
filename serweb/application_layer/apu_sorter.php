@@ -3,7 +3,7 @@
  * Application unit sorter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_sorter.php,v 1.5 2007/10/19 10:21:03 kozlik Exp $
+ * @version   $Id: apu_sorter.php,v 1.6 2008/01/09 15:25:59 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -47,6 +47,7 @@
 class apu_sorter extends apu_base_class{
 	var $form_elements;
 	var $col_to_sort = null;
+	var $get_params = array();
 	
 
 	/** 
@@ -104,6 +105,10 @@ class apu_sorter extends apu_base_class{
 		$this->base_apu = &$apu;
 	}
 
+	function set_get_params($get_params){
+		$this->get_params = array_merge($this->get_params, $get_params);
+	}
+
 	/**
 	 *	this metod is called always at begining - initialize variables
 	 */
@@ -151,6 +156,7 @@ class apu_sorter extends apu_base_class{
 		}
 
 		$get = array('sorter_updated='.RawURLEncode($this->opt['instance_id']));
+        $get = array_merge($get, $this->get_params);
 		return $get;
 	}
 	
@@ -191,8 +197,11 @@ class apu_sorter extends apu_base_class{
 
 		$sort_urls = array();
 
+        $get_params = implode("&", $this->get_params);
+        if ($get_params) $get_params = "&".$get_params;
+
 		foreach($this->sort_columns as $v){
-			$sort_urls[$v] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&u_sort_".$v."=1");
+			$sort_urls[$v] = $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&u_sort_".$v."=1".$get_params);
 			$smarty->assign_by_ref($this->opt['smarty_vars']."_".$v, $sort_urls[$v]);
 		}
 

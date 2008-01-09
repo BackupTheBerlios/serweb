@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: oohforms.inc,v 1.13 2007/11/15 09:50:48 kozlik Exp $
+ *	@version  $Id: oohforms.inc,v 1.14 2008/01/09 15:26:00 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -226,7 +226,7 @@ class form {
       $method = "POST";
     }
     $str .= " method='".strtolower($method)."'";
-    $str .= " action='$action'";
+    $str .= " action='".htmlspecialchars($action, ENT_QUOTES)."'";
     $str .= " target='$target'";
     if ($jvs_name) {
       $this->jvs_name = $jvs_name;
