@@ -1,0 +1,27 @@
+Template: serweb/config
+Type: boolean
+Default: false
+Description: Change configuration ?
+ You have now opportunity to modify basic configuration for package
+ serweb.  You can repeat this configuartion later by running
+ "dpkg-reconfigure serweb". Note: the values you enter will be
+ automatcally used each time this package is upgraded or installed without
+ purging it's previous installation.
+
+Template: serweb/cron_daily
+Type: boolean
+Default: false
+Description: Allow execution of daily cronjob  ?
+ Do you want to allow execution of daily serweb script using
+ cron ?
+ .
+ Note: execution of this script should be enabled only on one of serweb
+ servers if installing serweb on multiple hosts.
+
+Template: serweb/cron_sync
+Type: boolean
+Default: false
+Description: Allow execution of synchronization cronjob  ?
+ Do you want to allow execution of serweb synchonization script in 10min
+ interval ? This script should be allowed if istalling serweb on multiple
+ hosts.

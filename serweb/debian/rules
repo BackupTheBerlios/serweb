@@ -1,0 +1,75 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+
+build:
+	dh_testdir
+	#$(MAKE) build
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+# install to $(CURDIR)/debian/serweb
+	mkdir -p $(CURDIR)/debian/serweb/usr/share/serweb/
+	LC_ALL=C dpkg-parsechangelog | sed -ne 's/^Version: *\([^2]*\)/\1/p' >$(CURDIR)/debian/serweb/usr/share/serweb/VERSION
+	cp -r application_layer config data_layer html lang modules phplib scripts smarty templates $(CURDIR)/debian/serweb/usr/share/serweb/
+	mkdir -p $(CURDIR)/debian/serweb/usr/share/doc/serweb/
+	cp -r doc/* $(CURDIR)/debian/serweb/usr/share/doc/serweb/
+	# remove xsl and xml files
+	find $(CURDIR)/debian/serweb/usr/share/doc/serweb -name *.xml -exec rm -f {} \;
+	find $(CURDIR)/debian/serweb/usr/share/doc/serweb -name *.xsl -exec rm -f {} \;
+	# remove .cvsignore file
+	find $(CURDIR)/debian/serweb -name .cvsignore -exec rm -f {} \;
+	# install logrotate configuration
+	mkdir -p $(CURDIR)/debian/serweb/etc/logrotate.d/
+	cp debian/serweb.logrotate $(CURDIR)/debian/serweb/etc/logrotate.d/serweb
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+#	dh_installchangelogs changelog
+#	dh_installdocs
+#	dh_installexamples
+#	dh_install
+#	dh_installmenu
+	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+#	dh_link
+#	dh_strip
+#	dh_compress
+#	dh_fixperms
+#	dh_perl
+#	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch: build install
+# nothing
+
+binary: binary-indep binary-arch
+# nothing
+
+clean:
+	dh_testdir
+	dh_testroot
+	-$(MAKE) clean
+	dh_clean 
+
+.PHONY: build install binary-indep binary-arch binary clean 

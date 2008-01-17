@@ -1,0 +1,78 @@
+#!/bin/sh
+
+set -e
+
+# don't do anything when called with other argument than configure 
+case "$1" in
+  configure)
+  ;;  
+  abort-upgrade|abort-remove|abort-deconfigure)
+    exit 0
+  ;;
+  *)
+    echo "postinst called with unknown argument \$1'" >&2
+    exit 1
+  ;;
+esac
+
+. /usr/share/debconf/confmodule
+
+
+echo "Creating /var/log/serweb file and changing it's ownership to www-data"
+touch /var/log/serweb
+chown www-data /var/log/serweb
+                       
+echo "Changing ownership of /usr/share/serweb/html/domains to www-data"
+chown www-data /usr/share/serweb/html/domains
+                                       
+echo "Creating directory /var/httpd/vhosts, owned by www-data"
+mkdir -p /var/httpd/vhosts
+chown www-data /var/httpd/vhosts
+                                                                
+echo "Creating directory /tmp/serweb, owned by www-data"
+mkdir -p /tmp/serweb
+chown www-data /tmp/serweb
+                                                                                        
+                                                                                        
+
+db_get serweb/config
+if [ "$RET" = "false" ] ; then
+  # do not change config file
+  echo "Package serweb config script: NOT modifying configuration."
+else
+
+  db_get serweb/cron_daily
+  if "$RET" = "true"; then
+    echo "Creating symlink to enable serweb daily cronjob"
+    ln -sf /usr/share/serweb/scripts/cron_job/serweb_daily /etc/cron.daily/serweb
+  else
+    echo "Removing serweb daily cronjob"
+    rm -f /etc/cron.daily/serweb
+  fi
+  
+ 
+  db_get serweb/cron_sync
+  if "$RET" = "true"; then
+    if cat /etc/crontab |grep -q "0/10 * * * * root /usr/share/serweb/scripts/cron_job/domain_sync.php"
+    then
+      echo "Serweb sync sript already added to /etc/crontab, skipping."
+    else
+      echo "Adding serweb sync sript to /etc/crontab."
+      echo "*/10 * * * * www-data /usr/share/serweb/scripts/cron_job/serweb_domain_sync" >>/etc/crontab
+    fi
+  fi
+
+fi
+
+
+echo ""
+echo "***"
+echo "Configuration of serweb has finished."
+echo "To change it's configuration use 'dpkg-reconfigure serweb'"
+echo "***"
+echo ""
+
+#DEBHELPER#
+
+
+exit 0

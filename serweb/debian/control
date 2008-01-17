@@ -1,0 +1,15 @@
+Source: serweb
+Maintainer: Pavel Kasparek <pavel@iptel.org>
+Section: net
+Priority: extra
+Standards-Version: 3.6.1
+Build-Depends:
+Origin: debian
+
+Package: serweb
+Architecture: any
+Depends: php4-cli, libapache2-mod-php4, php4-curl, php-pear, php-log, php-db, php-xml-parser, php4-mysql, php4-imap, serweb-overlib, tinymce, cron, logrotate, exim4 | mail-transport-agent, ${serweb:Depends}
+Description: web interface for self-provisioning of users of SER SIP Server
+ This software, serweb, is a web interface for self-provisioning
+ of users of SER SIP Server (http://www.iptel.org/ser/). It is
+ provided as is without any warranty under terms of GPL.
