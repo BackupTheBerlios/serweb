@@ -1,0 +1,11 @@
+Source: serweb-overlib
+Section: net
+Priority: optional
+Maintainer: Pavel Kasparek <pavel@iptel.org>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: serweb-overlib
+Architecture: any
+Description: Overlib library
+ This package contains the Overlib library.
