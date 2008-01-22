@@ -135,10 +135,13 @@ fi
 
 db_get serweb/apacheconfig
 if test "$RET" = "true"; then
-  db_set serweb/apacheconfig false
-  echo "Package serweb postinstall script: creating serweb configuration for Apache."
-  mkdir -p /etc/apache2/sites-available/
-  echo "Include /etc/serweb/apache2.conf" >/etc/apache2/sites-available/serweb
+  if test -f /etc/apache2/sites-available/serweb ; then
+    echo "Package serweb postinstall script: Apache configuration for serweb already exists, not creating it"
+  else
+    echo "Package serweb postinstall script: creating serweb configuration for Apache."
+    mkdir -p /etc/apache2/sites-available/
+    echo "Include /etc/serweb/apache2.conf" >/etc/apache2/sites-available/serweb
+  fi
 fi
 
 db_get serweb/apacheenable
