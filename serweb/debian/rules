@@ -29,6 +29,10 @@ install: build
 	# install logrotate configuration
 	mkdir -p $(CURDIR)/debian/serweb/etc/logrotate.d/
 	cp debian/serweb.logrotate $(CURDIR)/debian/serweb/etc/logrotate.d/serweb
+	# install apache serweb configuration
+	mkdir -p $(CURDIR)/debian/serweb/etc/serweb
+	cp apache/serweb $(CURDIR)/debian/serweb/etc/serweb/apache2.conf
+	#
 
 binary-indep: build install
 	dh_testdir

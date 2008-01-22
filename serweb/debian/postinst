@@ -17,6 +17,97 @@ esac
 
 . /usr/share/debconf/confmodule
 
+CONFIGFILE1=/usr/share/serweb/config/config_data_layer.php
+CONFIGFILE2=/etc/serweb/apache2.conf
+CONFIGFILE3=/usr/share/serweb/config/set_domain.php
+
+
+if ! test -e $CONFIGFILE1; then
+  echo "Warning: can't find config file $CONFIGFILE1. Configuration aborted."
+  exit 0
+fi
+
+if ! test -e $CONFIGFILE2; then
+  echo "Warning: can't find config file $CONFIGFILE2. Configuration aborted."
+  exit 0
+fi
+
+if ! test -e $CONFIGFILE3; then
+  echo "Warning: can't find config file $CONFIGFILE3. Configuration aborted."
+  exit 0
+fi
+
+
+function fn_config_replace 
+{
+	if test $# -ne 2; then
+	  echo "Error - bad number of input parameters"
+	  echo "usage:"
+	  echo "fn_config_replace config_file CFG_OPTION_something" 
+	  exit 1
+	fi
+
+	FILENAME="$1"
+	ITEM="$2"
+
+	echo "Changing config option $ITEM."
+	OLDFILE="$FILENAME.config_replace_bck"
+	cp -f $FILENAME $OLDFILE
+
+	REPLACEMENT="$FILENAME.repl"
+	TEMPFILE="$FILENAME.temp"
+	TAIL="$FILENAME.tail"
+
+	rm -f $REPLACEMENT
+	touch $REPLACEMENT # needed if the input is empty
+	while read -r LINE
+	do
+	  echo "$LINE" >> $REPLACEMENT
+	done
+
+	STARTPOS=`nl -b a $FILENAME | grep -w "CFGOPTION_$ITEM" | sed -e "s/^ *\([0-9]*\).*/\1/g"`
+	if [ "$STARTPOS" == "" ]; then
+		echo "WARNING: section $ITEM not found"
+		return
+	fi
+		
+	ENDPOS=`nl -b a $FILENAME | sed -e "1,${STARTPOS}d" | grep ENDCFGOPTION | head -n 1 | sed -e "s/^ *\([0-9]*\).*/\1/g"`
+	if [ "$STARTPOS" == "" ]; then
+		echo "WARNING: end of section $ITEM not found"
+		return
+	fi
+	ENDPOS=$(($ENDPOS-1))
+	STARTPOS=$(($STARTPOS+1))
+
+	cat $FILENAME | sed -e "1,${ENDPOS}d" > $TAIL
+	cat $FILENAME | sed -e "${STARTPOS},\$d" > $TEMPFILE
+	cat $REPLACEMENT >> $TEMPFILE
+	cat $TAIL >> $TEMPFILE
+	rm -f $TAIL
+	mv -f $TEMPFILE $FILENAME
+}
+
+# pads $1 with as many empty rows as needed until $2 lines are complete
+padLines() {
+	output="$1"
+	needed="$2"
+	num=`echo "$output" | wc -l`
+	echo "$output"
+	moreneeded=$(($needed-$num))
+	while (true); do
+	if [ $moreneeded -gt 0 ]
+	then
+		echo ""
+		moreneeded=$(($moreneeded-1))
+	else
+		break
+	fi
+	done
+}
+
+#----------------------------------------------------------------------------
+
+
 
 echo "Creating /var/log/serweb file and changing it's ownership to www-data"
 touch /var/log/serweb
@@ -33,36 +124,135 @@ echo "Creating directory /tmp/serweb, owned by www-data"
 mkdir -p /tmp/serweb
 chown www-data /tmp/serweb
                                                                                         
-                                                                                        
+
 
 db_get serweb/config
 if [ "$RET" = "false" ] ; then
   # do not change config file
   echo "Package serweb config script: NOT modifying configuration."
-else
+  exit 0
+fi
 
-  db_get serweb/cron_daily
-  if "$RET" = "true"; then
-    echo "Creating symlink to enable serweb daily cronjob"
-    ln -sf /usr/share/serweb/scripts/cron_job/serweb_daily /etc/cron.daily/serweb
-  else
-    echo "Removing serweb daily cronjob"
-    rm -f /etc/cron.daily/serweb
-  fi
+db_get serweb/apacheconfig
+if test "$RET" = "true"; then
+  db_set serweb/apacheconfig false
+  echo "Package serweb postinstall script: creating Apache serweb configuration file."
+  mkdir -p /etc/apache2/sites-available/serweb
+  echo "Include /etc/serweb/apache2.conf" >/etc/apache2/sites-available/serweb
+fi
+
+db_get serweb/apacheenable
+if test "$RET" = "true"; then
+  db_set serweb/apacheenable false
+  echo "Package serweb postinstall script: creating symlink to enable serweb apache configuration."
+  ln -sf /etc/apache2/sites-available/serweb /etc/apache2/sites-enabled/000-serweb
+fi
+
+db_get serweb/removeapache
+if test "$RET" = "true"; then
+  db_set serweb/removeapache false
+  echo "Package serweb config script: removing apache default configuration symlink"
+  rm -f /etc/apache2/sites-enabled/000-default || true
+fi
+
+BACKUP="$CONFIGFILE1.config_bck"
+
+echo "Package serweb postinstall script: MODIFYING config file $CONFIGFILE1."
+echo "Creating backup copy as $BACKUP"
+cp -f $CONFIGFILE1 $BACKUP
+
+
+db_get serweb/DB_HOST
+fn_config_replace $CONFIGFILE1 DB_HOST <<+++
+                \$config->data_sql->host[\$i]['host']="$RET";        //database host
++++
+
+db_get serweb/DB_PORT
+fn_config_replace $CONFIGFILE1 DB_PORT <<+++
+                \$config->data_sql->host[\$i]['port']="$RET";                         //database port - leave empty for
++++
+
+db_get serweb/DB_NAME
+fn_config_replace $CONFIGFILE1 DB_NAME <<+++
+                \$config->data_sql->host[\$i]['name']="$RET";                      //database name
++++
+
+db_get serweb/DB_USER
+fn_config_replace $CONFIGFILE1 DB_USER <<+++
+                \$config->data_sql->host[\$i]['user']="$RET";                      //database conection user
++++
+
+db_get serweb/DB_PASS
+fn_config_replace $CONFIGFILE1 DB_PASS <<+++
+                \$config->data_sql->host[\$i]['pass']="$RET";            //database conection password
++++
+
+db_get serweb/PROXIES
+echo "$RET"| sed 's/,/\n/g'|awk '{print  "$config->sip_proxies[] = array(+host+=>+" $1 "+);"}'|sed "s/+/\'/g" |\
+fn_config_replace $CONFIGFILE1 PROXIES
+
+db_get serweb/RPC_PORT
+fn_config_replace $CONFIGFILE1 RPC_PORT <<+++
+                \$config->ser_rpc['port']              = $RET;
++++
+
+BACKUP="$CONFIGFILE2.config_bck"
+
+echo "Package serweb postinstall script: MODIFYING config file $CONFIGFILE2."
+echo "Creating backup copy as $BACKUP"
+cp -f $CONFIGFILE2 $BACKUP
+
+db_get serweb/SERVERNAME
+if test "$RET" != ""; then
+  SERVERNAME="ServerName $RET"
+else
+  SERVERNAME="# ServerName serweb.example.com"
+fi
+  
+fn_config_replace $CONFIGFILE2 SERVERNAME <<+++
+        $SERVERNAME
++++
+
+BACKUP="$CONFIGFILE3.config_bck"
+
+echo "Package serweb postinstall script: MODIFYING config file $CONFIGFILE3."
+echo "Creating backup copy as $BACKUP"
+cp -f $CONFIGFILE3 $BACKUP
+
+db_get serweb/STRIPNAME
+fn_config_replace $CONFIGFILE3 STRIPNAME <<+++
+\$config->domain = ereg_replace( "($RET)?(.*)", "\\\\2",  \$_SERVER['SERVER_NAME']);
++++
+
+
+db_get serweb/apacheconf
+if test "$RET" = "true"; then
+  db_stop ||true
+  echo "Package serweb config script: restarting apache2"
+  invoke-rc.d apache2 restart || true
+fi
+
+db_get serweb/cron_daily
+if "$RET" = "true"; then
+  echo "Creating symlink to enable serweb daily cronjob"
+  ln -sf /usr/share/serweb/scripts/cron_job/serweb_daily /etc/cron.daily/serweb
+else
+  echo "Removing serweb daily cronjob"
+  rm -f /etc/cron.daily/serweb
+fi
   
  
-  db_get serweb/cron_sync
-  if "$RET" = "true"; then
-    if cat /etc/crontab |grep -q "0/10 * * * * root /usr/share/serweb/scripts/cron_job/domain_sync.php"
-    then
-      echo "Serweb sync sript already added to /etc/crontab, skipping."
-    else
-      echo "Adding serweb sync sript to /etc/crontab."
-      echo "*/10 * * * * www-data /usr/share/serweb/scripts/cron_job/serweb_domain_sync" >>/etc/crontab
-    fi
+db_get serweb/cron_sync
+if "$RET" = "true"; then
+  if cat /etc/crontab |grep -q "0/10 * * * * root /usr/share/serweb/scripts/cron_job/domain_sync.php"
+  then
+    echo "Serweb sync sript already added to /etc/crontab, skipping."
+  else
+    echo "Adding serweb sync sript to /etc/crontab."
+    echo "*/10 * * * * www-data /usr/share/serweb/scripts/cron_job/serweb_domain_sync" >>/etc/crontab
   fi
-
 fi
+
 
 
 echo ""

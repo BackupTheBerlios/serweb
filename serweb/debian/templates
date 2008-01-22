@@ -25,3 +25,95 @@ Description: Allow execution of synchronization cronjob  ?
  Do you want to allow execution of serweb synchonization script in 10min
  interval ? This script should be allowed if istalling serweb on multiple
  hosts.
+
+Template: serweb/apacheconfig
+Type: boolean
+Default: false
+Description: Create serweb configuration for Apache ?
+ There is a prepared configuration file /etc/serweb/apache2.conf for
+ Apache web server for running Serweb web interface, which sets Serweb
+ virtualhost.
+ .
+ Do you want to create Apache configuration file
+ /etc/apache2/sites-available/serweb
+ which will include the Serweb configuration ?
+
+Template: serweb/apacheenable
+Type: boolean
+Default: false
+Description: Enable config for Apache ?
+ Do you want to create a symlink /etc/apache2/sites-enabled/000-serweb to
+ /etc/apache2/sites-available/serweb to enable the Apache serweb configuration ?
+ .
+ Note: if you are running also other web sites on this server it
+ is recommended to set Apache configuration manually.
+
+Template: serweb/removeapache
+Type: boolean
+Default: false
+Description: Remove default Apache configuration ?
+ You may need to remove Apache default virtual host config file symlink
+ /etc/apache2/sites-enabled/000-default, depending on your web server
+ setup, which may be in conflict with serweb Apache configuration.
+
+Template: serweb/SERVERNAME
+Type: string
+Default: serweb.example.com
+Description: server name
+ Please enter server name to be used for this Apache virtual host. The
+ ServerName apache directive will not be used if you leave this option blank.
+
+Template: serweb/DB_HOST
+Type: string
+Default: localhost
+Description: database host
+ Please enter host name where SER database is located.
+
+Template: serweb/DB_PORT
+Type: string
+Default:
+Description: database port
+ Please enter port on which Mysql is listening. If you leave it blank the
+ default port number will be used.
+
+Template: serweb/DB_NAME
+Type: string
+Default: ser
+Description: database name
+ Please enter database name of SER database.
+
+Template: serweb/DB_USER
+Type: string
+Default: ser
+Description: database user
+ Please enter username to be used for database access.
+
+Template: serweb/DB_PASS
+Type: string
+Default: heslo
+Description: database password
+ Please enter password to be used for database acess.
+
+Template: serweb/PROXIES
+Type: string
+Default: localhost
+Description: xml-rpc hosts
+ Please enter comma separated list of hostnames to which XML-RPC requests to SER will be
+ sent. You should list all homeproxy servers private IP addresses here. 
+ .
+ Example: 192.168.0.1,192.168.0.2
+
+Template: serweb/RPC_PORT
+Type: string
+Default: 5072
+Description: xml-rpc port
+ Please enter port to use for XML-RPC requests to SER.
+
+Template: serweb/STRIPNAME
+Type: string
+Default: serweb\.|www\.|sip\.
+Description: hostname part to strip to get domain name
+ Please enter regular expression which sets the leading part of hostname
+ that will be stripped to get domain name. Leave this option blank to
+ disable this feature.
+

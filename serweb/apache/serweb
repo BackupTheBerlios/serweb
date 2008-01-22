@@ -1,0 +1,30 @@
+NameVirtualHost *
+
+<VirtualHost *>
+#CFGOPTION_SERVERNAME
+#	ServerName serweb.example.com
+#ENDCFGOPTION
+	ServerAdmin webmaster@localhost
+
+        DocumentRoot /usr/share/serweb/html/
+        <Directory /usr/share/serweb/html/>
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                allow from all
+
+                php_flag magic_quotes_gpc Off
+                php_flag magic_quotes_runtime Off
+        </Directory>
+
+        ErrorLog /var/log/apache2/serweb-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        CustomLog /var/log/apache2/serweb-access.log combined
+        ServerSignature On
+
+</VirtualHost>
+

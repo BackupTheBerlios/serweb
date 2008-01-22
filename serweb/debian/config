@@ -19,3 +19,40 @@ db_go
 db_input medium serweb/cron_sync || true
 db_go
 
+db_input medium serweb/apacheconfig || true
+db_go
+
+db_input medium serweb/apacheenable || true
+db_go
+
+db_input medium serweb/removeapache || true
+db_go
+
+db_input medium serweb/SERVERNAME || true
+db_go
+
+db_input medium serweb/DB_HOST || true
+db_go
+
+db_input medium serweb/DB_PORT || true
+db_go
+
+db_input medium serweb/DB_NAME || true
+db_go
+
+db_input medium serweb/DB_USER || true
+db_go
+
+db_input medium serweb/DB_PASS || true
+db_go
+
+db_input medium serweb/PROXIES || true
+db_go
+
+db_input medium serweb/RPC_PORT || true
+db_go
+
+db_input medium serweb/STRIPNAME || true
+db_go
+
+
