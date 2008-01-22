@@ -1,0 +1,14 @@
+Source: php-net-dns
+Section: web
+Priority: optional
+Maintainer: Pavel Kasparek <pavel@iptel.org>
+Build-Depends-Indep: debhelper (>= 5), php-pear
+Standards-Version: 3.6.2
+
+Package: php-net-dns
+Architecture: all
+Depends: php-pear (>= 4.4.0)
+Description: Resolver library used to communicate with a DNS server.
+ Resolver library used to communicate with a DNS server.
+ .
+ Sources downloaded from: http://pear.php.net/package/Net_DNS/
