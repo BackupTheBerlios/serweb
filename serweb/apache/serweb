@@ -26,5 +26,9 @@ NameVirtualHost *
         CustomLog /var/log/apache2/serweb-access.log combined
         ServerSignature On
 
+	# aliases for using tinymce
+	Alias /js/tinymce/plugins/filemanager /usr/share/serweb/html/js/tinymce/plugins/filemanager
+	Alias /js/tinymce /usr/share/tinymce/www
+
 </VirtualHost>
 

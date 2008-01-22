@@ -38,6 +38,16 @@ Description: Create serweb configuration for Apache ?
  /etc/apache2/sites-available/serweb
  which will include the Serweb configuration ?
 
+Template: serweb/apachenote
+Type: Note
+Description: Note about Apache configuration
+ If you will create serweb configuration for Apache manually, please don't forget to
+ set the following needed aliases:
+ .
+ Alias /js/tinymce/plugins/filemanager /usr/share/serweb/html/js/tinymce/plugins/filemanager
+ .
+ Alias /js/tinymce /usr/share/tinymce/www
+
 Template: serweb/apacheenable
 Type: boolean
 Default: false
