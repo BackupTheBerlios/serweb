@@ -204,7 +204,7 @@ Bugfix #9162
     <replace type="package-info" from="@package_version@" to="version"/>
     <replace type="pear-config" from="@data_dir@" to="data_dir"/>
    </file>
-   <file role="php" baseinstalldir="Net" md5sum="6c620523e305a35d9c29b9b8fda65da3" name="DNS.php">
+   <file role="php" baseinstalldir="Net" md5sum="b56f944f48d525fa7005a69751afc33d" name="DNS.php">
     <replace type="package-info" from="@package_version@" to="version"/>
     <replace type="pear-config" from="@data_dir@" to="data_dir"/>
    </file>
