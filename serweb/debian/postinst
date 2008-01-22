@@ -244,8 +244,7 @@ if "$RET" = "true"; then
   fi
 fi
 
-
-db_get serweb/apacheconf
+db_get serweb/apacheconfig
 if test "$RET" = "true"; then
   db_stop ||true
   echo "Package serweb config script: restarting apache2"
