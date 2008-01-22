@@ -1,0 +1,14 @@
+Source: php-xml-rpc
+Section: web
+Priority: optional
+Maintainer: Pavel Kasparek <pavel@iptel.org>
+Build-Depends-Indep: debhelper (>= 5), php-pear
+Standards-Version: 3.6.2
+
+Package: php-xml-rpc
+Architecture: all
+Depends: php-pear (>= 4.4.0)
+Description: PHP implementation of the XML-RPC protocol
+ PHP implementation of the XML-RPC protocol
+ .
+ Sources downloaded from: http://pear.php.net/package/XML_RPC/
