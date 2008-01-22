@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: set_domain.php,v 1.3 2007/11/16 16:21:57 kozlik Exp $
+ * $Id: set_domain.php,v 1.4 2008/01/22 20:13:06 paka Exp $
  */ 
 
 /* set domain name */
@@ -16,7 +16,10 @@ else{
 	comment next line, uncomment the next one and replace 'mydomain.org' string.
 */
 
+#CFGOPTION_STRIPNAME
     $config->domain = ereg_replace( "(serweb\.|www\.|sip\.)?(.*)", "\\2",  $_SERVER['SERVER_NAME']);
+#ENDCFGOPTION
+
 //	$config->domain = "mydomain.org";
 
 }

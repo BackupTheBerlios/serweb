@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.54 2007/12/13 14:57:23 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.55 2008/01/22 20:13:06 paka Exp $
  */
 
 
@@ -29,8 +29,9 @@
 		/**
 		 * The port for xml-rpc requests. 5060 is used by default
 		 */
+#CFGOPTION_RPC_PORT
 		//$config->ser_rpc['port']		= 5060;
-
+#ENDCFGOPTION
 		/**
 		 * Username for xml-rpc authentication (if required)
 		 */
@@ -96,6 +97,7 @@
 		 *	'host' key is required. If some keys are not specified in some 
 		 *	array, the default values from $config->ser_rpc are used.
 		 */
+#CFGOPTION_PROXIES
 /*
 		$config->sip_proxies[] = array('host'=>'proxy1.mydomain.org');
 		$config->sip_proxies[] = array('host'=>'proxy2.mydomain.org');
@@ -103,6 +105,7 @@
 		$config->sip_proxies[] = array('host'=>'proxy4.mydomain.org');
 		$config->sip_proxies[] = array('host'=>'proxy5.mydomain.org');
 */
+#ENDCFGOPTION
 
 		/**
 		 *	Obtain setting of database from SER - *** EXPERIMENTAL ***
@@ -126,11 +129,25 @@
 		$config->data_sql->type="mysql";			//type of db host, enter "mysql" for MySQL or "pgsql" for PostgreSQL
 
 		$i=0;
+#CFGOPTION_DB_HOST
 		$config->data_sql->host[$i]['host']="localhost";	//database host
+#ENDCFGOPTION
+
+#CFGOPTION_DB_PORT
 		$config->data_sql->host[$i]['port']="";				//database port - leave empty for default
+#ENDCFGOPTION
+
+#CFGOPTION_DB_NAME
 		$config->data_sql->host[$i]['name']="ser";			//database name
+#ENDCFGOPTION
+
+#CFGOPTION_DB_USER
 		$config->data_sql->host[$i]['user']="ser";			//database conection user
+#ENDCFGOPTION
+
+#CFGOPTION_DB_PASS
 		$config->data_sql->host[$i]['pass']="heslo";		//database conection password
+#ENDCFGOPTION
 
 		// If you want to configure additional backup SQL servers, do so below. 
 		/*
