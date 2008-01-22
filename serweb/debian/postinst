@@ -224,14 +224,6 @@ fn_config_replace $CONFIGFILE3 STRIPNAME <<+++
 \$config->domain = ereg_replace( "($RET)?(.*)", "\\\\2",  \$_SERVER['SERVER_NAME']);
 +++
 
-
-db_get serweb/apacheconf
-if test "$RET" = "true"; then
-  db_stop ||true
-  echo "Package serweb config script: restarting apache2"
-  invoke-rc.d apache2 restart || true
-fi
-
 db_get serweb/cron_daily
 if "$RET" = "true"; then
   echo "Creating symlink to enable serweb daily cronjob"
@@ -240,7 +232,6 @@ else
   echo "Removing serweb daily cronjob"
   rm -f /etc/cron.daily/serweb
 fi
-  
  
 db_get serweb/cron_sync
 if "$RET" = "true"; then
@@ -251,6 +242,14 @@ if "$RET" = "true"; then
     echo "Adding serweb sync sript to /etc/crontab."
     echo "*/10 * * * * www-data /usr/share/serweb/scripts/cron_job/serweb_domain_sync" >>/etc/crontab
   fi
+fi
+
+
+db_get serweb/apacheconf
+if test "$RET" = "true"; then
+  db_stop ||true
+  echo "Package serweb config script: restarting apache2"
+  invoke-rc.d apache2 restart || true
 fi
 
 
