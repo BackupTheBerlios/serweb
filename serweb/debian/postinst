@@ -20,6 +20,7 @@ esac
 CONFIGFILE1=/usr/share/serweb/config/config_data_layer.php
 CONFIGFILE2=/etc/serweb/apache2.conf
 CONFIGFILE3=/usr/share/serweb/config/set_domain.php
+CONFIGFILE4=/usr/share/serweb/config/config_paths.php
 
 
 if ! test -e $CONFIGFILE1; then
@@ -37,6 +38,10 @@ if ! test -e $CONFIGFILE3; then
   exit 0
 fi
 
+if ! test -e $CONFIGFILE4; then
+  echo "Warning: can't find config file $CONFIGFILE4. Configuration aborted."
+  exit 0
+fi
 
 function fn_config_replace 
 {
@@ -141,6 +146,14 @@ if test "$RET" = "true"; then
     echo "Package serweb postinstall script: creating serweb configuration for Apache."
     mkdir -p /etc/apache2/sites-available/
     echo "Include /etc/serweb/apache2.conf" >/etc/apache2/sites-available/serweb
+    echo "Setting root path in serweb configuration"
+    echo "Package serweb postinstall script: MODIFYING config file $CONFIGFILE4."
+    BACKUP="$CONFIGFILE4.config_bck"
+    echo "Creating backup copy as $BACKUP"
+    cp -f $CONFIGFILE4 $BACKUP
+fn_config_replace $CONFIGFILE4 ROOTPATH <<+++
+		\$config->root_path="/";
++++
   fi
 fi
 

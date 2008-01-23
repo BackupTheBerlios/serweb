@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_paths.php,v 1.11 2007/09/27 15:46:23 kozlik Exp $
+ * $Id: config_paths.php,v 1.12 2008/01/23 14:14:10 paka Exp $
  */
 
 		/* the web path bellow which serweb's "admin" and "user" 
@@ -24,7 +24,9 @@
 			  
 			  set just "/" in $config->root_path. 
 		*/
+#CFGOPTION_ROOTPATH
 		$config->root_path="/serweb/";
+#ENDCFGOPTION
 
 		/* roo uri of your server */
 		if (isset($_SERVER['SERVER_NAME']))
