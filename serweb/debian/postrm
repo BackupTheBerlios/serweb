@@ -1,5 +1,6 @@
 #!/bin/sh
 
-rm -f /etc/apache2/sites-enabled/serweb
+rm -f /etc/apache2/sites-available/serweb
+rm -f /etc/apache2/sites-enabled/000-serweb
 
 #DEBHELPER#
