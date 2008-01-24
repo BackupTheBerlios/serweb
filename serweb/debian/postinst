@@ -129,6 +129,8 @@ echo "Creating directory /tmp/serweb, owned by www-data"
 mkdir -p /tmp/serweb
 chown www-data /tmp/serweb
                                                                                         
+echo "Creating symlink to serweb configuration dir"
+ln -s /etc/serweb /usr/share/serweb/config
 
 
 db_get serweb/config

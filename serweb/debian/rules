@@ -18,7 +18,11 @@ install: build
 # install to $(CURDIR)/debian/serweb
 	mkdir -p $(CURDIR)/debian/serweb/usr/share/serweb/
 	LC_ALL=C dpkg-parsechangelog | sed -ne 's/^Version: *\([^2]*\)/\1/p' >$(CURDIR)/debian/serweb/usr/share/serweb/VERSION
-	cp -r application_layer config data_layer html lang modules phplib scripts smarty templates $(CURDIR)/debian/serweb/usr/share/serweb/
+	cp -r application_layer data_layer html lang modules phplib scripts smarty templates $(CURDIR)/debian/serweb/usr/share/serweb/
+	# copy config files
+	mkdir -p $(CURDIR)/debian/serweb/etc/serweb
+	cp -r config/* $(CURDIR)/debian/serweb/etc/serweb/
+	# documentation
 	mkdir -p $(CURDIR)/debian/serweb/usr/share/doc/serweb/
 	cp -r doc/* $(CURDIR)/debian/serweb/usr/share/doc/serweb/
 	# remove xsl and xml files
