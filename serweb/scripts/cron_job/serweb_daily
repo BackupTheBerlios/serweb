@@ -1,0 +1,3 @@
+#!/bin/sh
+cd /usr/share/serweb/scripts/cron_job
+/usr/bin/php /usr/share/serweb/scripts/cron_job/daily.php
