@@ -1,5 +1,5 @@
-/usr/share/serweb/config/config_data_layer.php
-/usr/share/serweb/config/config_domain_defaults.php
-/usr/share/serweb/config/config_lang.php
-/usr/share/serweb/config/config_paths.php
-/usr/share/serweb/config/config.php
+/etc/serweb/config_data_layer.php
+/etc/serweb/config_domain_defaults.php
+/etc/serweb/config_lang.php
+/etc/serweb/config_paths.php
+/etc/serweb/config.php
