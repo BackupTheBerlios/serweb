@@ -17,10 +17,10 @@ esac
 
 . /usr/share/debconf/confmodule
 
-CONFIGFILE1=/usr/share/serweb/config/config_data_layer.php
+CONFIGFILE1=/etc/serweb/config_data_layer.php
 CONFIGFILE2=/etc/serweb/apache2.conf
-CONFIGFILE3=/usr/share/serweb/config/set_domain.php
-CONFIGFILE4=/usr/share/serweb/config/config_paths.php
+CONFIGFILE3=/etc/serweb/set_domain.php
+CONFIGFILE4=/etc/serweb/config_paths.php
 
 
 if ! test -e $CONFIGFILE1; then
@@ -130,15 +130,14 @@ mkdir -p /tmp/serweb
 chown www-data /tmp/serweb
                                                                                         
 echo "Creating symlink to serweb configuration dir"
-ln -s /etc/serweb /usr/share/serweb/config
+ln -s /etc/serweb /usr/share/serweb/config || true
 
 
 db_get serweb/config
 if [ "$RET" = "false" ] ; then
   # do not change config file
   echo "Package serweb config script: NOT modifying configuration."
-  exit 0
-fi
+else
 
 db_get serweb/apacheconfig
 if test "$RET" = "true"; then
@@ -265,10 +264,11 @@ fi
 db_get serweb/apacheconfig
 if test "$RET" = "true"; then
   db_stop ||true
-  echo "Package serweb config script: restarting apache2"
+  echo "Package serweb config script: trying to restart apache2"
   invoke-rc.d apache2 restart || true
 fi
 
+fi # if change config
 
 
 echo ""
