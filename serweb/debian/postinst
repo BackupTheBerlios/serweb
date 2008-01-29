@@ -119,7 +119,7 @@ touch /var/log/serweb
 chown www-data /var/log/serweb
                        
 echo "Changing ownership of /usr/share/serweb/html/domains to www-data"
-chown www-data /usr/share/serweb/html/domains
+chown -R www-data /usr/share/serweb/html/domains
                                        
 echo "Creating directory /var/httpd/vhosts, owned by www-data"
 mkdir -p /var/httpd/vhosts
