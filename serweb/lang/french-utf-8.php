@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: french-utf-8.php,v 1.4 2007/12/14 18:47:23 kozlik Exp $
+ * $Id: french-utf-8.php,v 1.5 2008/03/05 10:38:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -407,6 +407,8 @@ $lang_str['l_credentials'] = 					"qualifications";
 $lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"L'utilisateur n'a pas les qualifications";	// or: "L'utilisateur n'a aucune qualification" ?
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
+$lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";	//to translate 
+$lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -708,6 +710,8 @@ $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can no
 $lang_str['err_no_srv_record'] =                "There is no SRV record for hostname <hostname>";	//to translate 
 $lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";	//to translate 
 $lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";	//to translate 
+$lang_str['err_cannot_delete_own_domain'] = 	"You can't delete domain of your own account";	//to translate 
+$lang_str['err_cannot_disable_own_domain'] = 	"You can't disable domain of your own account";	//to translate 
 
 
 

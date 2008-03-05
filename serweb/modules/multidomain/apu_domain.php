@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.21 2007/09/21 14:21:20 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.22 2008/03/05 10:38:44 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -638,6 +638,27 @@ class apu_domain extends apu_base_class{
 		return true;
 	}
 		
+    function form_invalid(){
+        /* if deletion failed, get list of subscribers */
+        if ($this->action['action'] == "delete_domain" or
+            $this->action['action'] == "enable_domain"){
+
+    		if ($this->opt['redirect_on_delete']){
+
+        		if ($this->action['action'] == "delete_domain")
+                    $this->controler->change_url_for_reload($this->opt['redirect_on_delete']);
+                else
+                    $this->controler->change_url_for_reload($this->opt['redirect_on_disable']);
+    			
+    			//force reload of the script
+                $this->controler->reload($this->controler->errors_to_get_array());
+    		}
+    		else{
+    			$this->action_default($errors);
+            }
+        }
+    }
+
 	/**
 	 *	check _get and _post arrays and determine what we will do 
 	 */
@@ -670,14 +691,14 @@ class apu_domain extends apu_base_class{
 
 		if (isset($_GET['enable']) or isset($_GET['disable'])){
 			$this->action=array('action'=>"enable_domain",
-			                    'validate_form'=>false,
+			                    'validate_form'=>true,
 								'reload'=>true);
 			return;
 		}
 
 		if (isset($_GET['delete'])){
 			$this->action=array('action'=>"delete_domain",
-			                    'validate_form'=>false,
+			                    'validate_form'=>true,
 								'reload'=>true);
 			return;
 		}
@@ -784,6 +805,23 @@ class apu_domain extends apu_base_class{
 	 */
 	function validate_form(&$errors){
 		global $lang_str;
+
+        if ($this->action['action'] == "delete_domain"){
+            if ($this->id == $_SESSION['auth']->serweb_auth->get_did()){
+                $errors[] = $lang_str['err_cannot_delete_own_domain'];
+                return false;
+            }
+        }
+        elseif ($this->action['action'] == "enable_domain"){
+            if (!isset($_GET['enable']) and
+                $this->id == $_SESSION['auth']->serweb_auth->get_did()){
+                $errors[] = $lang_str['err_cannot_disable_own_domain'];
+                return false;
+            }
+        }
+
+
+
 		if (false === parent::validate_form($errors)) return false;
 
 		if ($this->action['action'] == "update" and 

@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.13 2007/12/13 11:36:05 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.14 2008/03/05 10:38:44 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -383,6 +383,13 @@ class apu_subscribers extends apu_base_class{
 		return true;
 	}
 
+	function form_invalid(){
+		/* if deletion failed, get list of subscribers */
+		if ($this->action['action'] == "delete" or
+            $this->action['action'] == "disable"){
+			$this->action_default($errors);
+		}
+	}
 	
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
@@ -390,7 +397,7 @@ class apu_subscribers extends apu_base_class{
 		if ($this->opt['allow_edit']){
 			if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
 				$this->action=array('action'=>"delete",
-				                    'validate_form'=>false,
+				                    'validate_form'=>true,
 									'reload'=>true);
 				return;
 			}
@@ -404,7 +411,7 @@ class apu_subscribers extends apu_base_class{
 	
 			if (isset($_GET['sc_disable']) and $_GET['sc_disable'] == $this->opt['instance_id']){
 				$this->action=array('action'=>"disable",
-				                    'validate_form'=>false,
+				                    'validate_form'=>true,
 									'reload'=>true);
 				return;
 			}
@@ -414,7 +421,39 @@ class apu_subscribers extends apu_base_class{
 		                     'validate_form'=>false,
 							 'reload'=>false);
 	}
-	
+
+    /**
+     *	validate html form 
+     *
+     *	@param array $errors	array with error messages
+     *	@return bool			TRUE if given values of form are OK, FALSE otherwise
+     */
+    function validate_form(&$errors){
+        global $lang_str, $data, $config;
+        $form_ok = true;
+        
+        if ($this->action['action'] == "delete"){
+            if ($this->controler->user_id->get_uid() == 
+                $_SESSION['auth']->serweb_auth->get_uid()){
+                
+                $errors[] = $lang_str['err_cannot_delete_own_account'];
+                return false;
+            }
+        }
+        elseif ($this->action['action'] == "disable"){
+            if ($this->controler->user_id->get_uid() == 
+                $_SESSION['auth']->serweb_auth->get_uid()){
+                
+                $errors[] = $lang_str['err_cannot_disable_own_account'];
+                return false;
+            }
+        }
+        
+//      if (false === parent::validate_form($errors)) $form_ok = false;
+        
+        return $form_ok;
+    }
+    	
 	/* add messages to given array */
 	function return_messages(&$msgs){
 		global $_GET;

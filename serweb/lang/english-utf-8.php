@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.57 2007/12/14 18:47:22 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.58 2008/03/05 10:38:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -407,6 +407,8 @@ $lang_str['l_credentials'] = 					"credentials";
 $lang_str['l_uris'] = 					        "SIP URIs";
 $lang_str['user_has_no_credentials'] = 			"User has no credentials";
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";
+$lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";
+$lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -708,6 +710,8 @@ $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can no
 $lang_str['err_no_srv_record'] =                "There is no SRV record for hostname <hostname>";
 $lang_str['err_wrong_srv_record'] =             "SRV record(s) found, but it has wrong target host or port. Following SRV records have been found: ";
 $lang_str['err_domain_already_hosted'] = 		"This domain is already hosted on this server";
+$lang_str['err_cannot_delete_own_domain'] = 	"You can't delete domain of your own account";
+$lang_str['err_cannot_disable_own_domain'] = 	"You can't disable domain of your own account";
 
 
 

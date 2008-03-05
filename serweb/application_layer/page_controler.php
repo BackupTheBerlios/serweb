@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.35 2008/01/09 15:25:59 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.36 2008/03/05 10:38:43 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -123,6 +123,7 @@ class page_conroler{
 		$eh = &ErrorHandler::singleton();
 		$eh -> set_errors_ref($this->errors);
 
+        $this->errors_from_get_param();
 		$this->session_init();
 		$this->xxl_init();
 		$this->init_this_uid_and_did();
@@ -132,6 +133,35 @@ class page_conroler{
 		if (!isset($GLOBALS['data_selected_proxy']) or !$GLOBALS['data_selected_proxy']) 
 			$GLOBALS['data_selected_proxy'] = &$GLOBALS['data_auth'];
 	}
+
+    /**
+     *  Take error messages from GET param "pctl_set_errors" and put them 
+     *  into $this->errors array
+     */
+    function errors_from_get_param(){
+    
+        if (isset($_GET['pctl_set_errors'])){
+            if (is_array($_GET['pctl_set_errors'])){
+                foreach($_GET['pctl_set_errors'] as $v){
+                    $this->errors[] = $v;
+                }
+            }
+            else{
+                $this->errors[] = $_GET['pctl_set_errors'];
+            }
+        }
+    }
+
+    /**
+     *  Return array of GET params containing all error messages from
+     *  $this->errors array
+     */
+    function errors_to_get_array(){
+		$get = array();
+		foreach ($this->errors as $v) 
+            $get[] = RawURLEncode('pctl_set_errors[]').'='.RawURLEncode($v);
+        return $get;
+    }
 
 	function session_init(){
 	
