@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_list_of_domains.tpl,v 1.9 2007/12/14 18:47:23 kozlik Exp $ *}
+{* $Id: a_list_of_domains.tpl,v 1.10 2008/03/07 15:20:02 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -28,7 +28,12 @@
 <td>{$form.customer}</td>
 </tr>
 				
-<tr><td colspan="3" height="5"></td></tr>
+<tr><td colspan="3">
+    {if $allow_display_deleted}
+        <label for="deleted" style="display: inline;">{$lang_str.ff_show_deleted_domains}:</label>{$form.deleted}
+    {/if}&nbsp;
+</td></tr>
+{*<tr><td colspan="3" height="5"></td></tr>*}
 <tr><td colspan="3" class="note">{$lang_str.filter_wildcard_note}</td></tr>
 <tr><td colspan="3" align="right">{$form.okey}{$form.f_clear}</td></tr>
 </table>
@@ -61,17 +66,23 @@
 
 	<tr valign="top"  class="{cycle values='swTrOdd,swTrEven'} actionsrow">
 	<td align="left" colspan="3">
-		{if $row.url_layout}<a href="{$row.url_layout}">{$lang_str.l_change_layout}</a>{else}&nbsp;{/if}
-		{if $row.url_attributes}<a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a>{else}&nbsp;{/if}
-{if $hostmaster_actions}
-		{if $row.url_edit}<a href="{$row.url_edit}">{$lang_str.l_edit}</a>{else}&nbsp;{/if}
-	{if $row.disabled}
-		{if $row.url_enable}<a href="{$row.url_enable}">{$lang_str.l_enable}</a>{else}&nbsp;{/if}
-	{else}
-		{if $row.url_disable}<a href="{$row.url_disable}">{$lang_str.l_disable}</a>{else}&nbsp;{/if}
-	{/if}
-		{if $row.url_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}
-{/if}
+        {if $row.deleted}
+            <div class="actionsrownote">** {$lang_str.deleted_domain} **</div>
+            <a href="{$row.url_undele}">{$lang_str.l_undelete}</a>
+            <a href="{$row.url_purge}" onclick="return confirmDelete(this, '{$lang_str.realy_purge_domain}')">{$lang_str.l_purge}</a>
+        {else}
+    		{if $row.url_layout}<a href="{$row.url_layout}">{$lang_str.l_change_layout}</a>{else}&nbsp;{/if}
+    		{if $row.url_attributes}<a href="{$row.url_attributes}">{$lang_str.l_domain_attributes}</a>{else}&nbsp;{/if}
+            {if $hostmaster_actions}
+                {if $row.url_edit}<a href="{$row.url_edit}">{$lang_str.l_edit}</a>{else}&nbsp;{/if}
+                {if $row.disabled}
+                    {if $row.url_enable}<a href="{$row.url_enable}">{$lang_str.l_enable}</a>{else}&nbsp;{/if}
+            	{else}
+            		{if $row.url_disable}<a href="{$row.url_disable}">{$lang_str.l_disable}</a>{else}&nbsp;{/if}
+            	{/if}
+        		{if $row.url_dele}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_delete_domain}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}
+            {/if}
+        {/if}
 	</td>
 	</tr>
 	{if $smarty.foreach.domains.last}

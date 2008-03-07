@@ -4,7 +4,7 @@
  * Application unit domain_list
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain_list.php,v 1.13 2007/12/14 18:41:12 kozlik Exp $
+ * @version   $Id: apu_domain_list.php,v 1.14 2008/03/07 15:20:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -106,6 +106,8 @@ class apu_domain_list extends apu_base_class{
 		$this->opt['script_attributes'] =	'domain_attributes.php';
 
 		$this->opt['only_domains'] = null;
+ 
+ 		$this->opt['perm_display_deleted']	= false;
 
 		
 		/*** names of variables assigned to smarty ***/
@@ -164,6 +166,11 @@ class apu_domain_list extends apu_base_class{
 		             "maxlength"=>128,
 					 "label"=>$lang_str['owner']);
 
+ 		$f[] = array("type"=>"checkbox",
+ 		             "name"=>"deleted",
+ 					 "label"=>$lang_str['ff_show_deleted_domains'],
+ 					 "initial"=>false);
+ 
 		return $f;
 	}
 
@@ -189,6 +196,12 @@ class apu_domain_list extends apu_base_class{
 					 
 		if (!is_null($this->opt['only_domains']))
 			$opt['only_domains'] = $this->opt['only_domains'];
+
+        if ($this->opt['perm_display_deleted'] and 
+            $filter['deleted']->value) {
+            
+            $opt['check_deleted_flag'] = false;
+        }
 		
 		if (false === $this->domains = 
 				$data->get_domains(
@@ -211,6 +224,8 @@ class apu_domain_list extends apu_base_class{
 			$this->domains[$key]['url_enable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&enable=1");
 			$this->domains[$key]['url_disable'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&disable=1");
 			$this->domains[$key]['url_dele'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&delete=1");
+			$this->domains[$key]['url_undele'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&undelete=1");
+			$this->domains[$key]['url_purge'] = $sess->url($this->opt['script_edit']."?kvrk=".uniqID("")."&".$get."&purge=1");
 			$this->domains[$key]['url_layout'] = $sess->url($this->opt['script_layout']."?kvrk=".uniqID("")."&".$get);
 			$this->domains[$key]['url_attributes'] = $sess->url($this->opt['script_attributes']."?kvrk=".uniqID("")."&".$get);
 		}

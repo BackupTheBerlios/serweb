@@ -3,7 +3,7 @@
  *	Display list of domains
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: list_of_domains.php,v 1.6 2007/10/12 08:44:52 kozlik Exp $
+ *	@version    $Id: list_of_domains.php,v 1.7 2008/03/07 15:20:02 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -31,6 +31,16 @@ if (isset($_GET['m_do_deleted'])){
 		'short' => $lang_str['msg_domain_deleted_s'],
 		'long'  => $lang_str['msg_domain_deleted_l']));
 }
+if (isset($_GET['m_do_undeleted'])){
+	$controler->add_message(array(
+		'short' => $lang_str['msg_domain_undeleted_s'],
+		'long'  => $lang_str['msg_domain_undeleted_l']));
+}
+if (isset($_GET['m_do_purged'])){
+	$controler->add_message(array(
+		'short' => $lang_str['msg_domain_purged_s'],
+		'long'  => $lang_str['msg_domain_purged_l']));
+}
 
 
 $dl	= new apu_domain_list();
@@ -41,7 +51,11 @@ $filter->set_opt('filter_name', 'list_of_domains');
 
 $dl->set_filter($filter);
 
-if (!$perm->have_perm('hostmaster')){
+if ($perm->have_perm('hostmaster')){
+     $dl->set_opt('perm_display_deleted', true);
+     $smarty->assign('allow_display_deleted', true);
+}
+else{
 	if (false === $dom = $_SESSION['auth']->get_administrated_domains()) $dom = array();
 	$dl->set_opt('only_domains', $dom);
 }

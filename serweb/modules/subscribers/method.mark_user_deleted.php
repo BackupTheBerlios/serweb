@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.mark_user_deleted.php,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: method.mark_user_deleted.php,v 1.6 2008/03/07 15:20:02 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -23,6 +23,7 @@ class CData_Layer_mark_user_deleted {
 	 *	    this option is required (default: null)
 	 *	  - delete_asap (bool) - if is true, user will be deleted as soon 
 	 *	    as possible (on next cleaning of database) (default: false)
+	 *	  - undelete (bool) - undelete user (default: false)
 	 *      
 	 *	@param array $opt		associative array of options
 	 *	@return bool			TRUE on success, FALSE on failure
@@ -53,6 +54,7 @@ class CData_Layer_mark_user_deleted {
 		
 	    $o_uid     = (isset($opt['uid'])) ? $opt['uid'] : null;
 	    $o_del_asap = (isset($opt['delete_asap'])) ? (bool)$opt['delete_asap'] : false;
+	    $o_undelete = (isset($opt['undelete'])) ? (bool)$opt['undelete'] : false;
 
 		if (is_null($o_uid)) {
 			ErrorHandler::log_errors(PEAR::raiseError('subscriber which should be marked as deleted is not specified')); 
@@ -62,16 +64,25 @@ class CData_Layer_mark_user_deleted {
 		if (false === $this->transaction_start()) return false;
 
 
-		$val = $o_del_asap ? 1 : time();
 		$user_attrs = &User_Attrs::singleton($o_uid);
-		if (false === $user_attrs->set_attribute($an['deleted_ts'], time())) {
-			$this->transaction_rollback();
-			return false;
+		if ($o_undelete){
+            if (false === $user_attrs->unset_attribute($an['deleted_ts'])) {
+                $this->transaction_rollback();
+                return false;
+            }
 		}
+		else{
+            $val = $o_del_asap ? 1 : time();
+            if (false === $user_attrs->set_attribute($an['deleted_ts'], $o_del_asap)) {
+                $this->transaction_rollback();
+                return false;
+            }
+        }
 
-		$q = "update ".$tc_name." 
-		      set ".$cc->flags." = ".$cc->flags." | ".$fc['DB_DELETED']." 
-			  where ".$cc->uid." = ".$this->sql_format($o_uid, "s");
+        $q = "update ".$tc_name." set ";
+        if ($o_undelete)  $q .= $cc->flags." = ".$cc->flags." & ~".$fc['DB_DELETED'];
+        else              $q .= $cc->flags." = ".$cc->flags." | ".$fc['DB_DELETED'];
+        $q .= " where ".$cc->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -81,9 +92,10 @@ class CData_Layer_mark_user_deleted {
 		}
 
 
-		$q = "update ".$ta_name." 
-		      set ".$ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED']." 
-			  where ".$ca->uid." = ".$this->sql_format($o_uid, "s");
+        $q = "update ".$ta_name." set ";
+        if ($o_undelete)  $q .= $ca->flags." = ".$ca->flags." & ~".$fa['DB_DELETED'];
+        else              $q .= $ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED'];
+        $q .= " where ".$ca->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -93,9 +105,10 @@ class CData_Layer_mark_user_deleted {
 		}
 
 
-		$q = "update ".$tu_name." 
-		      set ".$cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED']." 
-			  where ".$cu->uid." = ".$this->sql_format($o_uid, "s");
+        $q = "update ".$tu_name." set ";
+        if ($o_undelete)  $q .= $cu->flags." = ".$cu->flags." & ~".$fu['DB_DELETED'];
+        else              $q .= $cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED'];
+        $q .= " where ".$cu->uid." = ".$this->sql_format($o_uid, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

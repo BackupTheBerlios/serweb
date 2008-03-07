@@ -945,6 +945,11 @@ a.actionsrow:hover {
 	background-color: #666;
 }
 
+.swTable tr.actionsrow .actionsrownote{
+    float: left;
+    font-weight: bold;
+}
+
 .swTable tr.informationrow a.swPopupLink,
 .swTable tr.informationrow a:hover.swPopupLink,
 .attributesTable a.swPopupLink,

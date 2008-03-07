@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: method.mark_domain_deleted.php,v 1.3 2006/03/08 15:46:27 kozlik Exp $
+ * $Id: method.mark_domain_deleted.php,v 1.4 2008/03/07 15:20:02 kozlik Exp $
  */
 
 class CData_Layer_mark_domain_deleted {
@@ -11,9 +11,9 @@ class CData_Layer_mark_domain_deleted {
 	 *
 	 *  Possible options:
 	 *
-	 *    did		(int)   	default: null
-	 *      id of domain which will be deleted
-	 *      REQUIRED
+	 *    - did		(int)   - REQUIRED - id of domain which will be deleted 
+     *                        (default: null)
+ 	 *	  - undelete (bool) - undelete domain (default: false)
 	 *      
 	 *	@param array $opt		associative array of options
 	 *	@return bool			TRUE on success, FALSE on failure
@@ -43,6 +43,7 @@ class CData_Layer_mark_domain_deleted {
 		$an = &$config->attr_names;
 
 	    $o_did = (isset($opt['did'])) ? $opt['did'] : null;
+ 	    $o_undelete = (isset($opt['undelete'])) ? (bool)$opt['undelete'] : false;
 
 		if (is_null($o_did)) {
 			ErrorHandler::log_errors(PEAR::raiseError('domain for mark as deleted is not specified')); 
@@ -51,27 +52,25 @@ class CData_Layer_mark_domain_deleted {
 
 		if (false === $this->transaction_start()) return false;
 
-		$domain_attrs = &Domain_Attrs::singleton($o_did);
-		if (false === $domain_attrs->set_attribute($an['deleted_ts'], time())) {
-			$this->transaction_rollback();
-			return false;
-		}
+        $domain_attrs = &Domain_Attrs::singleton($o_did);
+        if ($o_undelete){
+            if (false === $domain_attrs->unset_attribute($an['deleted_ts'])) {
+                $this->transaction_rollback();
+                return false;
+            }
+        }
+        else{
+            if (false === $domain_attrs->set_attribute($an['deleted_ts'], time())) {
+                $this->transaction_rollback();
+                return false;
+            }
+        }
 
 
-		$q = "update ".$td_name." 
-		      set ".$cd->flags." = ".$cd->flags." | ".$fd['DB_DELETED']."
-			  where ".$cd->did." = ".$this->sql_format($o_did, "s");
-
-		$res=$this->db->query($q);
-		if (DB::isError($res)) {
-			ErrorHandler::log_errors($res); 
-			$this->transaction_rollback();
-			return false;
-		}
-
-		$q = "update ".$ta_name." 
-		      set ".$ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED']."
-			  where ".$ca->did." = ".$this->sql_format($o_did, "s");
+		$q = "update ".$td_name." set ";
+        if ($o_undelete)  $q .= $cd->flags." = ".$cd->flags." & ~".$fd['DB_DELETED'];
+        else              $q .= $cd->flags." = ".$cd->flags." | ".$fd['DB_DELETED'];
+		$q .= " where ".$cd->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {
@@ -80,10 +79,23 @@ class CData_Layer_mark_domain_deleted {
 			return false;
 		}
 
+		$q = "update ".$ta_name." set ";
+        if ($o_undelete)  $q .= $ca->flags." = ".$ca->flags." & ~".$fa['DB_DELETED'];
+        else              $q .= $ca->flags." = ".$ca->flags." | ".$fa['DB_DELETED'];
+		$q .= " where ".$ca->did." = ".$this->sql_format($o_did, "s");
 
-		$q = "update ".$tu_name." 
-		      set ".$cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED']." 
-			  where ".$cu->did." = ".$this->sql_format($o_did, "s");
+		$res=$this->db->query($q);
+		if (DB::isError($res)) {
+			ErrorHandler::log_errors($res); 
+			$this->transaction_rollback();
+			return false;
+		}
+
+
+		$q = "update ".$tu_name." set ";
+        if ($o_undelete)  $q .= $cu->flags." = ".$cu->flags." & ~".$fu['DB_DELETED'];
+        else              $q .= $cu->flags." = ".$cu->flags." | ".$fu['DB_DELETED'];
+		$q .= " where ".$cu->did." = ".$this->sql_format($o_did, "s");
 
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

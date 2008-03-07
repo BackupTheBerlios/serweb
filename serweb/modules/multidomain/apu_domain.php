@@ -3,7 +3,7 @@
  * Application unit domain 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_domain.php,v 1.22 2008/03/05 10:38:44 kozlik Exp $
+ * @version   $Id: apu_domain.php,v 1.23 2008/03/07 15:20:02 kozlik Exp $
  * @package   serweb
  */ 
 
@@ -137,6 +137,9 @@ class apu_domain extends apu_base_class{
 		$this->opt['prohibited_domain_names'] = array();
 
 		$this->opt['no_domain_name_e'] = $lang_str['no_domain_name_is_set'];
+
+ 		$this->opt['perm_purge']			= false;
+ 		$this->opt['perm_undelete']			= false;
 		
 		$this->opt['form_add_submit']=array('type' => 'image',
 										'text' => $lang_str['b_add'],
@@ -145,6 +148,10 @@ class apu_domain extends apu_base_class{
 		/* messages */
 		$this->opt['msg_delete']['short'] =	&$lang_str['msg_domain_deleted_s'];
 		$this->opt['msg_delete']['long']  =	&$lang_str['msg_domain_deleted_l'];
+ 		$this->opt['msg_undelete']['short'] =	&$lang_str['msg_domain_undeleted_s'];
+ 		$this->opt['msg_undelete']['long']  =	&$lang_str['msg_domain_undeleted_l'];
+ 		$this->opt['msg_purge']['short'] =	&$lang_str['msg_domain_purged_s'];
+ 		$this->opt['msg_purge']['long']  =	&$lang_str['msg_domain_purged_l'];
 
 		/*** names of variables assigned to smarty ***/
 		/* form */
@@ -358,6 +365,58 @@ class apu_domain extends apu_base_class{
 		}
 
 		return array("m_do_deleted=".RawURLEncode($this->opt['instance_id']));
+	}
+
+	/**
+	 *	Method undelete domain
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_undelete_domain(&$errors){
+		global $data;
+
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
+        
+        $dm_h = &DomainManipulator::singleton($this->id);
+		if (false === $dm_h->undelete_domain()) return false;
+
+
+		if ($this->opt['redirect_on_undelete']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_undelete']);
+		}
+
+		return array("m_do_undeleted=".RawURLEncode($this->opt['instance_id']));
+	}
+
+	/**
+	 *	Method purge domain
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_purge_domain(&$errors){
+		global $data;
+
+		if (is_null($this->id)) {
+			log_errors(PEAR::raiseError('domain ID is not specified'), $errors); 
+			return false;
+		}
+        
+        $dm_h = &DomainManipulator::singleton($this->id);
+		if (false === $dm_h->purge_domain()) return false;
+
+
+		if ($this->opt['redirect_on_purge']){
+			$this->controler->change_url_for_reload($this->opt['redirect_on_purge']);
+		}
+
+		return array("m_do_purged=".RawURLEncode($this->opt['instance_id']));
 	}
 
 	/**
@@ -703,6 +762,21 @@ class apu_domain extends apu_base_class{
 			return;
 		}
 
+        if ($this->opt['perm_undelete'] and isset($_GET['undelete'])){
+            $this->action=array('action'=>"undelete_domain",
+                                'validate_form'=>false,
+                                'reload'=>true);
+            return;
+        }
+        
+        if ($this->opt['perm_purge'] and isset($_GET['purge'])){
+            $this->action=array('action'=>"purge_domain",
+                                'validate_form'=>false,
+                                'reload'=>true);
+            return;
+        }
+ 	
+
 		if (isset($_GET['dele_name'])){
 			$this->action=array('action'=>"delete_domain_alias",
 			                    'validate_form'=>false,
@@ -858,6 +932,16 @@ class apu_domain extends apu_base_class{
 			$msgs[]=&$this->opt['msg_delete'];
 			$this->smarty_action="was_deleted";
 		}
+
+ 		if (isset($_GET['m_do_undeleted']) and $_GET['m_do_undeleted'] == $this->opt['instance_id']){
+ 			$msgs[]=&$this->opt['msg_undelete'];
+ 			$this->smarty_action="was_undeleted";
+ 		}
+ 
+ 		if (isset($_GET['m_do_purged']) and $_GET['m_do_purged'] == $this->opt['instance_id']){
+ 			$msgs[]=&$this->opt['msg_purge'];
+ 			$this->smarty_action="was_purged";
+        }
 	}
 
 	/**

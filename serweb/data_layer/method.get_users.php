@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_users.php,v 1.25 2007/10/11 10:09:47 kozlik Exp $
+ *	@version    $Id: method.get_users.php,v 1.26 2008/03/07 15:20:01 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -49,6 +49,8 @@ class CData_Layer_get_users {
 	 *    - count_only       (bool) - just count users matching the filter. 
 	 *                                If this option is true, integer is 
 	 *                                returned instead of array
+	 *    - get_disabled     (bool) - include disabled users to the result(default: true)
+	 *    - get_deleted      (bool) - include deleted users to the result(default: false)
 	 *	
 	 *	@return array	array of users or FALSE on error
 	 */ 
@@ -92,8 +94,8 @@ class CData_Layer_get_users {
 	    $opt_count_only = (isset($opt['count_only'])) ? (bool)$opt['count_only'] : false;
 	    $opt_agreeing = (isset($opt['only_agreeing'])) ? (bool)$opt['only_agreeing'] : false;
 	    $opt_get_disabled = (isset($opt['get_disabled'])) ? (bool)$opt['get_disabled'] : true;
+	    $opt_get_deleted = (isset($opt['get_deleted'])) ? (bool)$opt['get_deleted'] : false;
 	    $opt_get_credentials = (isset($opt['get_credentials'])) ? (bool)$opt['get_credentials'] : false;
-
 
 	    $o_order_by = (isset($opt['order_by'])) ? $opt['order_by'] : "";
 	    $o_order_desc = (!empty($opt['order_desc'])) ? "desc" : "";
@@ -123,7 +125,8 @@ class CData_Layer_get_users {
             $filter_join_ph = true;
         }
 
-        if (!$opt_get_disabled)           $qw[] = "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0";
+        if (!$opt_get_disabled) $qw[] = "(cr.".$cc->flags." & ".$fc['DB_DISABLED'].") = 0";
+        if (!$opt_get_deleted)  $qw[] = "(cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
 
 		if(!empty($filter['sipuri'])){
             $q_uri = "select ".$cu->uid." 
@@ -135,7 +138,7 @@ class CData_Layer_get_users {
 		}
 
 		$query_c="";
-		if ($qw) $query_c = implode(" and ", $qw)." and ";
+		if ($qw) $query_c = implode(" and ", $qw);
 
 		$q_online = "";
 		if (!empty($filter['onlineonly']) and $filter['onlineonly']->value){
@@ -191,17 +194,18 @@ class CData_Layer_get_users {
 		$q_domains = "";
 		if (!is_null($opt_from_domains)){
 
+            if (!$opt_get_deleted)  $q_domains_w = " and ".$cu->flags." & ".$fu['DB_DELETED']." = 0";
 
             $q_domains = " join (select distinct ".$cu->uid." 
                                 from ".$tu_name." 
-                                where  ".$this->get_sql_in($cu->did, $opt_from_domains, true)." and 
-                                    ".$cu->flags." & ".$fu['DB_DELETED']." = 0) iuri 
+                                where  ".$this->get_sql_in($cu->did, $opt_from_domains, true).
+                                      $q_domains_w.") iuri 
                                 on cr.".$cc->uid." = iuri.".$cu->uid." ";
 		}
 
 		$q_uid_filter = "";
 		if (!is_null($opt_uid_filter)){
-			$q_uid_filter = $this->get_sql_in("cr.".$cc->uid, $opt_uid_filter, true)." and ";
+			$q_uid_filter = " and ".$this->get_sql_in("cr.".$cc->uid, $opt_uid_filter, true);
 		}
 
 		$q_tz_cols = $q_tz_from = "";
@@ -233,8 +237,9 @@ class CData_Layer_get_users {
                 $q .= "left outer join ".$ta_name." aem
                             on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')";
 
-            $q .= " where ".$query_c.$q_uid_filter." 
-				       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
+            if ($query_c or $q_uid_filter){
+                $q .= " where ".$query_c.$q_uid_filter;
+            }
 
 			$res=$this->db->query($q);
 			if (DB::isError($res)) {ErrorHandler::log_errors($res); return false;}
@@ -259,6 +264,7 @@ class CData_Layer_get_users {
 					 aph.".$ca->value." as phone,
 					 aem.".$ca->value." as email,
 					 cr.".$cc->flags." & ".$fc['DB_DISABLED']." as disabled,
+					 cr.".$cc->flags." & ".$fc['DB_DELETED']." as deleted,
 					 trim(concat(afn.".$ca->value.", ' ', aln.".$ca->value.")) as name
 					 ".$q_tz_cols."
 			  from ".$tc_name." cr ".$q_online.$q_admins.$q_dom_filter.$q_domains.$q_uri.$q_agree.$q_tz_from."
@@ -269,9 +275,11 @@ class CData_Layer_get_users {
 			        left outer join ".$ta_name." aph
 			            on (cr.".$cc->uid." = aph.".$ca->uid." and aph.".$ca->name."='".$an['phone']."')
 			        left outer join ".$ta_name." aem
-			            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')
-			  where ".$query_c.$q_uid_filter." 
-			       (cr.".$cc->flags." & ".$fc['DB_DELETED'].") = 0";
+			            on (cr.".$cc->uid." = aem.".$ca->uid." and aem.".$ca->name."='".$an['email']."')";
+            
+        if ($query_c or $q_uid_filter){
+            $q .= " where ".$query_c.$q_uid_filter;
+        }
 
 		if ($o_order_by) {
 			$q .= " order by ".$o_order_by." ".$o_order_desc;
@@ -302,6 +310,7 @@ class CData_Layer_get_users {
 			$out[$i]['email_address']  = $row['email'];
 			$out[$i]['get_param']      = $out[$i]['serweb_auth']->to_get_param();
 			$out[$i]['disabled']       = (bool)$row['disabled'];
+			$out[$i]['deleted']        = (bool)$row['deleted'];
 
 			if ($opt_get_timezones){
 				$out[$i]['timezone']   = $row['timezone'];

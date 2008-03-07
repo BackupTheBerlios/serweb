@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.58 2008/03/05 10:38:44 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.59 2008/03/07 15:20:02 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,8 @@ $lang_str['l_edit'] = 							"edit";
 $lang_str['l_extended'] = 						"extended";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
+$lang_str['l_undelete'] = 						"undelete";
+$lang_str['l_purge'] = 	    					"purge";
 $lang_str['l_back_to_main'] = 					"back to main page";
 $lang_str['l_back'] = 							"back";
 $lang_str['l_disable'] = 						"disable";
@@ -397,18 +399,25 @@ $lang_str['msg_acl_updated_s'] = 				"ACL updated";
 $lang_str['msg_acl_updated_l'] = 				"Access control list of user has been updated";
 $lang_str['msg_user_deleted_s'] = 				"User deleted";
 $lang_str['msg_user_deleted_l'] = 				"User has been deleted succesfuly";
+$lang_str['msg_user_undeleted_s'] = 			"User undeleted";
+$lang_str['msg_user_undeleted_l'] = 			"User has been undeleted succesfuly";
+$lang_str['msg_user_purged_s'] = 				"User purged";
+$lang_str['msg_user_purged_l'] = 				"User has been purged succesfuly";
 $lang_str['th_phone'] = 						"phone";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"aliases";
 $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
-$lang_str['realy_you_want_delete_this_user'] =	"Realy you want delete this user?";
+$lang_str['realy_you_want_delete_this_user'] =	"Do you realy want delete this user?";
+$lang_str['realy_you_want_purge_this_user'] =	"Do you realy want purge this user?";
 $lang_str['l_credentials'] = 					"credentials";
 $lang_str['l_uris'] = 					        "SIP URIs";
 $lang_str['user_has_no_credentials'] = 			"User has no credentials";
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";
 $lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";
 $lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";
+$lang_str['ff_show_deleted_users'] =            "show deleted users";
+$lang_str['deleted_user'] = 					"DELETED";
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -652,7 +661,8 @@ $lang_str['no_domains_found'] = 				"No domains found";
 $lang_str['new_dom_name'] = 					"Add new domain name";
 $lang_str['owner'] = 							"Owner";
 
-$lang_str['realy_delete_domain'] = 				"Do you Realy want to delete this domain?";
+$lang_str['realy_delete_domain'] = 				"Do you realy want delete this domain?";
+$lang_str['realy_purge_domain'] =               "Do you realy want purge this domain?";
 $lang_str['l_create_new_domain'] = 				"create new domain";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
@@ -661,9 +671,12 @@ $lang_str['can_not_del_last_dom_name'] = 		"Can not delete the only domain name"
 
 $lang_str['msg_domain_reload_s'] = 				"Config reloaded";
 $lang_str['msg_domain_reload_l'] = 				"Configuration of SER and web serwer has been reloaded";
-
 $lang_str['msg_domain_deleted_s'] = 			"Domain deleted";
 $lang_str['msg_domain_deleted_l'] = 			"This domain is no longer served and all associated records including subscriber data will be deleted soon. Make sure that DNS records no longer refer to this server";
+$lang_str['msg_domain_undeleted_s'] = 			"Domain undeleted";
+$lang_str['msg_domain_undeleted_l'] = 			"Domain has been undeleted succesfuly";
+$lang_str['msg_domain_purged_s'] = 				"Domain purged";
+$lang_str['msg_domain_purged_l'] = 				"Domain has been purged succesfuly";
 
 $lang_str['assigned_domains'] = 				"Assigned domains";
 $lang_str['unassigned_domains'] = 				"Unassigned domains";
@@ -704,6 +717,8 @@ $lang_str['fe_domain_not_selected']	= 			"Domain for user isn't selected";
 
 $lang_str['th_old_versions'] = 					"Old versions of this file";
 $lang_str['initial_ver'] = 						"initial";
+$lang_str['ff_show_deleted_domains'] =          "show deleted domains";
+$lang_str['deleted_domain'] = 					"DELETED";
 
 
 $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can not check the DNS setting";

@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.14 2008/03/05 10:38:44 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.15 2008/03/07 15:20:02 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -109,7 +109,7 @@ class apu_subscribers extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_users', 'mark_user_deleted', 
+		return array('get_users', 'mark_user_deleted', 'delete_sip_user',
 		             'enable_user', 'check_admin_perms_to_user');
 	}
 
@@ -141,12 +141,20 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['get_credentials']		= false;
 
 		$this->opt['allow_edit']			= false;
+
+		$this->opt['perm_purge']			= false;
+		$this->opt['perm_undelete']			= false;
+		$this->opt['perm_display_deleted']	= false;
 		
 		$this->opt['script_phonebook'] =			'';
 
 		/* message on attributes update */
 		$this->opt['msg_delete']['short'] =	&$lang_str['msg_user_deleted_s'];
 		$this->opt['msg_delete']['long']  =	&$lang_str['msg_user_deleted_l'];
+		$this->opt['msg_undelete']['short'] =	&$lang_str['msg_user_undeleted_s'];
+		$this->opt['msg_undelete']['long']  =	&$lang_str['msg_user_undeleted_l'];
+		$this->opt['msg_purge']['short'] =	&$lang_str['msg_user_purged_s'];
+		$this->opt['msg_purge']['long']  =	&$lang_str['msg_user_purged_l'];
 		
 		/*** names of variables assigned to smarty ***/
 		/* form */
@@ -276,6 +284,11 @@ class apu_subscribers extends apu_base_class{
     					 "initial"=>$this->opt['def_chk_adminsonly']);
     	}
 
+		$f[] = array("type"=>"checkbox",
+		             "name"=>"deleted",
+					 "label"=>$lang_str['ff_show_deleted_users'],
+					 "initial"=>false);
+
 		return $f;
 	}
 
@@ -311,6 +324,24 @@ class apu_subscribers extends apu_base_class{
 		return array("m_sc_user_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
+	function action_undelete(&$errors){
+		global $data;
+	    
+	    $opt = array("uid"      => $this->controler->user_id->get_uid(),
+                     "undelete" => true);
+		if (!$data->mark_user_deleted($opt)) return false;
+
+		return array("m_sc_user_undeleted=".RawURLEncode($this->opt['instance_id']));
+	}
+
+	function action_purge(&$errors){
+		global $data;
+	
+		if (!$data->delete_sip_user($this->controler->user_id->get_uid())) return false;
+
+		return array("m_sc_user_purged=".RawURLEncode($this->opt['instance_id']));
+	}
+
 	function action_default(&$errors){
 		global $data, $sess;
 
@@ -337,8 +368,12 @@ class apu_subscribers extends apu_base_class{
 			$filter = $this->filter->get_filter();
 
     		$data->set_act_row($this->filter->get_act_row());
+    		if ($this->opt['perm_display_deleted'] and 
+                $filter['deleted']->value) {
+                
+                $opt['get_deleted'] = true;
+            }
 		}
-
 		
 		if (false === $this->subscribers = 
 				$data->get_users(
@@ -358,6 +393,16 @@ class apu_subscribers extends apu_base_class{
 			$this->subscribers[$key]['url_dele'] = 
 				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
 						"&sc_dele=".RawURLEncode($this->opt['instance_id']).
+						"&".$val['get_param']);
+
+			$this->subscribers[$key]['url_undele'] = 
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&sc_undele=".RawURLEncode($this->opt['instance_id']).
+						"&".$val['get_param']);
+
+			$this->subscribers[$key]['url_purge'] = 
+				$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						"&sc_purge=".RawURLEncode($this->opt['instance_id']).
 						"&".$val['get_param']);
 
 			$this->subscribers[$key]['url_enable'] = 
@@ -398,6 +443,24 @@ class apu_subscribers extends apu_base_class{
 			if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
 				$this->action=array('action'=>"delete",
 				                    'validate_form'=>true,
+									'reload'=>true);
+				return;
+			}
+	
+			if ($this->opt['perm_undelete'] and isset($_GET['sc_undele']) and 
+                $_GET['sc_undele'] == $this->opt['instance_id']){
+				
+                $this->action=array('action'=>"undelete",
+				                    'validate_form'=>false,
+									'reload'=>true);
+				return;
+			}
+	
+			if ($this->opt['perm_purge'] and isset($_GET['sc_purge']) and 
+                $_GET['sc_purge'] == $this->opt['instance_id']){
+                
+				$this->action=array('action'=>"purge",
+				                    'validate_form'=>false,
 									'reload'=>true);
 				return;
 			}
@@ -461,6 +524,16 @@ class apu_subscribers extends apu_base_class{
 		if (isset($_GET['m_sc_user_deleted']) and $_GET['m_sc_user_deleted'] == $this->opt['instance_id']){
 			$msgs[]=&$this->opt['msg_delete'];
 			$this->smarty_action="was_deleted";
+		}
+
+		if (isset($_GET['m_sc_user_undeleted']) and $_GET['m_sc_user_undeleted'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_undelete'];
+			$this->smarty_action="was_undeleted";
+		}
+
+		if (isset($_GET['m_sc_user_purged']) and $_GET['m_sc_user_purged'] == $this->opt['instance_id']){
+			$msgs[]=&$this->opt['msg_purge'];
+			$this->smarty_action="was_purged";
 		}
 	}
 

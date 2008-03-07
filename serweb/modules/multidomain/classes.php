@@ -290,6 +290,78 @@ class DomainManipulator{
     }
 
 	/**
+	 *	Method undelete domain
+	 *
+	 *	@return bool			return TRUE on success, FALSE on failure
+	 */
+    function undelete_domain(){
+        global $data;
+
+        $data->add_method('mark_domain_deleted');
+        $data->add_method('reload_domains');
+
+        $opt = array();
+		$opt['did'] = $this->did;
+		$opt['undelete'] = true;
+		if (false === $data->mark_domain_deleted($opt)) return false;
+
+        /* unset list of domain names in order to be reloaded on next needs */
+        $this->dom_names = null;
+        
+        $errors = array();
+		if (false === $this->create_or_remove_all_symlinks(true)) return false;
+
+		/* notify SER to reload domains */
+		if (false === $data->reload_domains(null, $errors)) {
+            ErrorHandler::add_error($errors);
+            return false;
+        }
+        
+        return true;
+    }
+
+	/**
+	 *	Method purge domain
+	 *
+	 *	@return bool			return TRUE on success, FALSE on failure
+	 */
+    function purge_domain(){
+        global $data;
+
+        $data->add_method('get_domain');
+        $data->add_method('delete_domain');
+        $data->add_method('reload_domains');
+
+        /* get all domain names (including that marked as deleted) */
+        $opt = array();
+        $opt['filter']['did'] = $this->did;
+        $opt['check_deleted_flag'] = false;
+        
+        if (false === $dom_names = $data->get_domain($opt)) return $false;
+        $this->dom_names = $dom_names;
+
+		/* remove symlinks for all domain names */
+        $errors = array();
+		if (false === $this->create_or_remove_all_symlinks(false)) return false;
+
+		/* remove domain config directory */
+		if  (false === remove_domain_config_dir($this->did, $errors)) return false;
+
+        /* purge domain from database */
+		if (false === $data->delete_domain($this->did, null)) return false;
+
+        $this->dom_names = array();
+        
+		/* notify SER to reload domains */
+		if (false === $data->reload_domains(null, $errors)) {
+            ErrorHandler::add_error($errors);
+            return false;
+        }
+        
+        return true;
+    }
+
+	/**
 	 *	Method delete alias of the domain. 
 	 *
 	 *	@param string $alias	alias to delete

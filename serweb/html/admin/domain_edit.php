@@ -3,7 +3,7 @@
  *	Edit domain aliases, customer and admins
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: domain_edit.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: domain_edit.php,v 1.6 2008/03/07 15:20:02 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -32,8 +32,15 @@ $do	= new apu_domain();
 $do->set_opt('redirect_on_update', 'list_of_domains.php');
 $do->set_opt('redirect_on_disable', 'list_of_domains.php');
 $do->set_opt('redirect_on_delete', 'list_of_domains.php');
+$do->set_opt('redirect_on_undelete', 'list_of_domains.php');
+$do->set_opt('redirect_on_purge', 'list_of_domains.php');
 
 $do->set_opt('prohibited_domain_names', $config->prohibited_domains);
+
+if ($perm->have_perm('hostmaster')){
+    $do->set_opt('perm_undelete', true);
+    $do->set_opt('perm_purge', true);
+}
 
 $controler->add_apu($do);
 $controler->add_reqired_javascript('functions.js');

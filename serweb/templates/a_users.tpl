@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.27 2007/12/14 18:47:23 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.28 2008/03/07 15:20:02 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
@@ -51,7 +51,12 @@
 <td>&nbsp;</td>
 </tr>
 
-<tr><td colspan="4"><label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}</td></tr>
+<tr><td colspan="4">
+    <label for="onlineonly" style="display: inline;">{$lang_str.ff_show_online_only}:</label>{$form.onlineonly}
+    {if $allow_display_deleted}
+        <label for="deleted" style="display: inline;">{$lang_str.ff_show_deleted_users}:</label>{$form.deleted}
+    {/if}
+</td></tr>
 
 <tr><td colspan="4" class="note">{$lang_str.filter_wildcard_note}</td></tr>
 				
@@ -88,17 +93,24 @@
 	
 	<tr class="{cycle values='swTrOdd,swTrEven'} actionsrow" valign="top">
 	<td colspan="5" align="left">
-		<a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a>
-		<a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a>
-		<a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a>
-		<a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a>
-{*		<a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a>*}
-	{if $row.disabled}
-		<a href="{$row.url_enable}">{$lang_str.l_enable}</a>
-	{else}
-		<a href="{$row.url_disable}">{$lang_str.l_disable}</a>
-	{/if}
-		<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_user}')">{$lang_str.l_delete}</a>
+        {if $row.deleted}
+            <div class="actionsrownote">** {$lang_str.deleted_user} **</div>
+            <a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a>
+            <a href="{$row.url_undele}">{$lang_str.l_undelete}</a>
+            <a href="{$row.url_purge}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_purge_this_user}')">{$lang_str.l_purge}</a>
+        {else}
+            <a href="{url url='acl.php' uniq=1}&{$row.get_param}">{$lang_str.l_acl}</a>
+            <a href="{url url='aliases.php' uniq=1}&{$row.get_param}">{$lang_str.l_aliases}</a>
+            <a href="{$cfg->user_pages_path}{url url='my_account.php' uniq=1}&{$row.get_param}">{$lang_str.l_account}</a>
+            <a href="{$cfg->user_pages_path}{url url='accounting.php' uniq=1}&{$row.get_param}">{$lang_str.l_accounting}</a>
+{*          <a href="{url url='credentials.php' uniq=1}&{$row.get_param}">{$lang_str.l_credentials}</a>*}
+            {if $row.disabled}
+                <a href="{$row.url_enable}">{$lang_str.l_enable}</a>
+            {else}
+                <a href="{$row.url_disable}">{$lang_str.l_disable}</a>
+            {/if}
+            <a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_user}')">{$lang_str.l_delete}</a>
+        {/if}
 	</td>
 	</tr>
 	{if $smarty.foreach.users.last}
