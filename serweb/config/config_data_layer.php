@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.55 2008/01/22 20:13:06 paka Exp $
+ * $Id: config_data_layer.php,v 1.56 2008/03/19 12:10:03 kozlik Exp $
  */
 
 
@@ -254,6 +254,9 @@
 		 *	modparam("auth_db", "use_did", 0) is set in ser.cfg
 		 *	
 		 *	Otherwise set this option to true
+		 *
+		 *  Please note that it IS NOT RECOMENDED to change this value when 
+		 *  your credentials table is already populated with data.
 		 */
 		$config->auth['use_did'] = true;
 

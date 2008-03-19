@@ -269,10 +269,22 @@ class DomainManipulator{
     function delete_domain(){
         global $data;
 
+        include_module('subscribers');
+
         $data->add_method('mark_domain_deleted');
+        $data->add_method('mark_user_deleted');
         $data->add_method('reload_domains');
+        $data->add_method('get_uid_of_domain');
 
         $errors = array();
+
+        $opt = array();
+		if (false === $uids = $data->get_uid_of_domain($this->did, $opt)) return false;
+
+        foreach ($uids as $v){
+    		if (false === $data->mark_user_deleted(array("uid"=>$v))) return false;
+        }
+
 		if (false === $this->create_or_remove_all_symlinks(false)) return false;
 
 		$opt['did'] = $this->did;
@@ -459,6 +471,12 @@ class DomainManipulator{
         
         return true;
 	}
+
+    function delete_domain_users($opt){
+    
+        
+    
+    }
 
 }
 

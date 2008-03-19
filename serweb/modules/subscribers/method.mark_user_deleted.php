@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.mark_user_deleted.php,v 1.6 2008/03/07 15:20:02 kozlik Exp $
+ *	@version    $Id: method.mark_user_deleted.php,v 1.7 2008/03/19 12:10:03 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -73,7 +73,7 @@ class CData_Layer_mark_user_deleted {
 		}
 		else{
             $val = $o_del_asap ? 1 : time();
-            if (false === $user_attrs->set_attribute($an['deleted_ts'], $o_del_asap)) {
+            if (false === $user_attrs->set_attribute($an['deleted_ts'], $val)) {
                 $this->transaction_rollback();
                 return false;
             }
