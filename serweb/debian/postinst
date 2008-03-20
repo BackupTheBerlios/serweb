@@ -160,7 +160,6 @@ fi
 
 db_get serweb/apacheenable
 if test "$RET" = "true"; then
-  db_set serweb/apacheenable false
   echo "Package serweb postinstall script: creating symlink to enable serweb apache configuration."
   ln -sf /etc/apache2/sites-available/serweb /etc/apache2/sites-enabled/000-serweb
 fi
