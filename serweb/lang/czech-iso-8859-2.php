@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.53 2008/03/05 10:38:43 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.54 2008/03/28 07:11:51 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,8 @@ $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
+$lang_str['l_undelete'] = 						"undelete";	//to translate 
+$lang_str['l_purge'] = 	    					"purge";	//to translate 
 $lang_str['l_back_to_main'] = 					"zpìt na hlavní stránku";
 $lang_str['l_back'] = 							"zpìt";
 $lang_str['l_disable'] = 						"znepøístupnit";
@@ -77,6 +79,7 @@ $lang_str['fe_not_valid_domainname'] = 			"neplatné doménové jméno";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Pøidat";
+$lang_str['b_apply'] =		 					"Apply";	//to translate 
 $lang_str['b_back'] =		 					"Zpìt";
 $lang_str['b_delete_calls'] =		 			"Vymazat hovory";
 $lang_str['b_dial_your_voicemail'] =		 	"Vytoèit hlasovou schránku";
@@ -397,18 +400,25 @@ $lang_str['msg_acl_updated_s'] = 				"ACL aktualizován";
 $lang_str['msg_acl_updated_l'] = 				"Access control list byl aktualizován";
 $lang_str['msg_user_deleted_s'] = 				"U¾ivatel vymazán";
 $lang_str['msg_user_deleted_l'] = 				"U¾ivatel byl úspì¹nì vymazán";
+$lang_str['msg_user_undeleted_s'] = 			"User undeleted";	//to translate 
+$lang_str['msg_user_undeleted_l'] = 			"User has been undeleted succesfuly";	//to translate 
+$lang_str['msg_user_purged_s'] = 				"User purged";	//to translate 
+$lang_str['msg_user_purged_l'] = 				"User has been purged succesfuly";	//to translate 
 $lang_str['th_phone'] = 						"telefon";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"aliasy";
 $lang_str['l_account'] = 						"úèet";
 $lang_str['l_accounting'] = 					"pøehled volání";
 $lang_str['realy_you_want_delete_this_user'] =	"Opravdu chcete smazat tohoto u¾ivatele?";
+$lang_str['realy_you_want_purge_this_user'] =	"Do you realy want purge this user?";	//to translate 
 $lang_str['l_credentials'] = 					"kredenciály";
 $lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"U¾ivatel nemá ¾ádné kredenciály";
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
 $lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";	//to translate 
 $lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";	//to translate 
+$lang_str['ff_show_deleted_users'] =            "show deleted users";	//to translate 
+$lang_str['deleted_user'] = 					"DELETED";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -653,6 +663,7 @@ $lang_str['new_dom_name'] = 					"Pøidat nové doménové jméno";
 $lang_str['owner'] = 							"Vlastník";
 
 $lang_str['realy_delete_domain'] = 				"Opravdu chcete smazat tuto doménu?";
+$lang_str['realy_purge_domain'] =               "Do you realy want purge this domain?";	//to translate 
 $lang_str['l_create_new_domain'] = 				"vytvoøit novou doménu";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";	//to translate 
 $lang_str['no_domain_name_is_set'] = 			"Vlo¾te nejménì jedno jméno domény";
@@ -661,9 +672,12 @@ $lang_str['can_not_del_last_dom_name'] = 		"Nelze smazat jediné doménové jméno";
 
 $lang_str['msg_domain_reload_s'] = 				"Konfigurace znovu naètena";
 $lang_str['msg_domain_reload_l'] = 				"Konfigurace SERu a webového serveru byla znovu naètena";
-
 $lang_str['msg_domain_deleted_s'] = 			"Doména smazána";
 $lang_str['msg_domain_deleted_l'] = 			"Tato doména není nadále obsluhována a v¹echny asociované záznamy vèetnì u¾ivatelských dat budou smazány. Ujistìte se ¾e DNS záznamy nadále neukazují na tento server";
+$lang_str['msg_domain_undeleted_s'] = 			"Domain undeleted";	//to translate 
+$lang_str['msg_domain_undeleted_l'] = 			"Domain has been undeleted succesfuly";	//to translate 
+$lang_str['msg_domain_purged_s'] = 				"Domain purged";	//to translate 
+$lang_str['msg_domain_purged_l'] = 				"Domain has been purged succesfuly";	//to translate 
 
 $lang_str['assigned_domains'] = 				"Pøiøazené domény";
 $lang_str['unassigned_domains'] = 				"Nepøiøazené domény";
@@ -704,6 +718,8 @@ $lang_str['fe_domain_not_selected']	= 			"Doména u¾ivatele není vybrána";
 
 $lang_str['th_old_versions'] = 					"Pøedchozí verze tohoto souboru";
 $lang_str['initial_ver'] = 						"poèáteèní";
+$lang_str['ff_show_deleted_domains'] =          "show deleted domains";	//to translate 
+$lang_str['deleted_domain'] = 					"DELETED";	//to translate 
 
 
 $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can not check the DNS setting";	//to translate 

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.51 2008/03/05 10:38:44 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.52 2008/03/28 07:11:52 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,8 @@ $lang_str['l_edit'] = 							"toevoegen";
 $lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_change'] = 						"wijzigen";
 $lang_str['l_delete'] = 						"verwijderen";
+$lang_str['l_undelete'] = 						"undelete";	//to translate 
+$lang_str['l_purge'] = 	    					"purge";	//to translate 
 $lang_str['l_back_to_main'] = 					"terug";
 $lang_str['l_back'] = 							"terug";
 $lang_str['l_disable'] = 						"uit";
@@ -77,6 +79,7 @@ $lang_str['fe_not_valid_domainname'] = 			"domeinnaam ongeldig";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Toevoegen";
+$lang_str['b_apply'] =		 					"Apply";	//to translate 
 $lang_str['b_back'] =		 					"Terug";
 $lang_str['b_delete_calls'] =		 			"Verwijder berichten";
 $lang_str['b_dial_your_voicemail'] =		 	"Bel voicemail";
@@ -397,18 +400,25 @@ $lang_str['msg_acl_updated_s'] = 				"ACL gewijzigd";
 $lang_str['msg_acl_updated_l'] = 				"Rechtentabel van gebruikers is gewijzigd";
 $lang_str['msg_user_deleted_s'] = 				"Gebruiker verwijderd";
 $lang_str['msg_user_deleted_l'] = 				"Gebruiker is verwijderd";
+$lang_str['msg_user_undeleted_s'] = 			"User undeleted";	//to translate 
+$lang_str['msg_user_undeleted_l'] = 			"User has been undeleted succesfuly";	//to translate 
+$lang_str['msg_user_purged_s'] = 				"User purged";	//to translate 
+$lang_str['msg_user_purged_l'] = 				"User has been purged succesfuly";	//to translate 
 $lang_str['th_phone'] = 						"telefoonphone";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"alias";
 $lang_str['l_account'] = 						"gebruiker";
 $lang_str['l_accounting'] = 					"rekening";
 $lang_str['realy_you_want_delete_this_user'] =	"Deze gebruiker verwijderen?";
+$lang_str['realy_you_want_purge_this_user'] =	"Do you realy want purge this user?";	//to translate 
 $lang_str['l_credentials'] = 					"gegevens";
 $lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"Gebruiker heeft geen gegevens";
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
 $lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";	//to translate 
 $lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";	//to translate 
+$lang_str['ff_show_deleted_users'] =            "show deleted users";	//to translate 
+$lang_str['deleted_user'] = 					"DELETED";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -653,6 +663,7 @@ $lang_str['new_dom_name'] = 					"Nieuwe domeinnaam toevoegen";
 $lang_str['owner'] = 							"Eigenaar";
 
 $lang_str['realy_delete_domain'] = 				"Verwijder dit domein?";
+$lang_str['realy_purge_domain'] =               "Do you realy want purge this domain?";	//to translate 
 $lang_str['l_create_new_domain'] = 				"domein toevoegen";
 $lang_str['l_reload_ser'] = 					"opnieuw laden, SER en webserver";
 $lang_str['no_domain_name_is_set'] = 			"minimaal 1 domeinnaam toevoegen";
@@ -661,9 +672,12 @@ $lang_str['can_not_del_last_dom_name'] = 		"Alleen domeinnaam verwijderen mag ni
 
 $lang_str['msg_domain_reload_s'] = 				"Configuratie is opnieuw geladen";
 $lang_str['msg_domain_reload_l'] = 				"Configuratie van SER en webserwer is opnieuw geladen";
-
 $lang_str['msg_domain_deleted_s'] = 			"Domein verwijderd";
 $lang_str['msg_domain_deleted_l'] = 			"Dit domein wordt niet langer ondersteund en de aanwezige records worden verwijderd. Zorg er voor dat uw DNS records niet langer naar deze server verwijzen.";
+$lang_str['msg_domain_undeleted_s'] = 			"Domain undeleted";	//to translate 
+$lang_str['msg_domain_undeleted_l'] = 			"Domain has been undeleted succesfuly";	//to translate 
+$lang_str['msg_domain_purged_s'] = 				"Domain purged";	//to translate 
+$lang_str['msg_domain_purged_l'] = 				"Domain has been purged succesfuly";	//to translate 
 
 $lang_str['assigned_domains'] = 				"Toegewezen domeinen";
 $lang_str['unassigned_domains'] = 				"Niet toegewezen domeinen";
@@ -704,6 +718,8 @@ $lang_str['fe_domain_not_selected']	= 			"Domein voor gebruiker is niet geselect
 
 $lang_str['th_old_versions'] = 					"Oude versies van dit bestand";
 $lang_str['initial_ver'] = 						"begin";
+$lang_str['ff_show_deleted_domains'] =          "show deleted domains";	//to translate 
+$lang_str['deleted_domain'] = 					"DELETED";	//to translate 
 
 
 $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can not check the DNS setting";	//to translate 

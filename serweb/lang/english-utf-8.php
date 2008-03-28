@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.59 2008/03/07 15:20:02 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.60 2008/03/28 07:11:52 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -79,6 +79,7 @@ $lang_str['fe_not_valid_domainname'] = 			"not valid domainname";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =		 					"Add";
+$lang_str['b_apply'] =		 					"Apply";
 $lang_str['b_back'] =		 					"Back";
 $lang_str['b_delete_calls'] =		 			"Delete calls";
 $lang_str['b_dial_your_voicemail'] =		 	"Dial your voicemail";

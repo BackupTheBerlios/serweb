@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: french-utf-8.php,v 1.5 2008/03/05 10:38:44 kozlik Exp $
+ * $Id: french-utf-8.php,v 1.6 2008/03/28 07:11:52 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -32,6 +32,8 @@ $lang_str['l_edit'] =							"modifier";
 $lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_change'] =							"changer";
 $lang_str['l_delete'] =							"effacer";
+$lang_str['l_undelete'] = 						"undelete";	//to translate 
+$lang_str['l_purge'] = 	    					"purge";	//to translate 
 $lang_str['l_back_to_main'] = 					"retourner à la page principale";
 $lang_str['l_back'] =							"retourner";
 $lang_str['l_disable'] = 						"désactiver";
@@ -77,6 +79,7 @@ $lang_str['fe_not_valid_domainname'] = 			"nom de domaine non valide";
 /* ------------------------------------------------------------*/
 
 $lang_str['b_add'] =							"Ajouter";
+$lang_str['b_apply'] =		 					"Apply";	//to translate 
 $lang_str['b_back'] =		 					"Retourner";
 $lang_str['b_delete_calls'] =		 			"Effacer les appels";
 $lang_str['b_dial_your_voicemail'] =		 	"Composer votre messagerie vocale";
@@ -397,18 +400,25 @@ $lang_str['msg_acl_updated_s'] = 				"ACL mise à jour";
 $lang_str['msg_acl_updated_l'] = 				"Liste de contrôle d'acces ACL d'utilisateur a été mise à jour";
 $lang_str['msg_user_deleted_s'] = 				"Utilisateur effacé";
 $lang_str['msg_user_deleted_l'] = 				"L'utilisateur a été effacé avec succès";
+$lang_str['msg_user_undeleted_s'] = 			"User undeleted";	//to translate 
+$lang_str['msg_user_undeleted_l'] = 			"User has been undeleted succesfuly";	//to translate 
+$lang_str['msg_user_purged_s'] = 				"User purged";	//to translate 
+$lang_str['msg_user_purged_l'] = 				"User has been purged succesfuly";	//to translate 
 $lang_str['th_phone'] = 						"téléphone";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"alias";
 $lang_str['l_account'] = 						"compte";
 $lang_str['l_accounting'] = 					"comptabilité";
 $lang_str['realy_you_want_delete_this_user'] =	"Voulez-vous vraiment effacer cet utilisateur ?";
+$lang_str['realy_you_want_purge_this_user'] =	"Do you realy want purge this user?";	//to translate 
 $lang_str['l_credentials'] = 					"qualifications";
 $lang_str['l_uris'] = 					        "SIP URIs";	//to translate 
 $lang_str['user_has_no_credentials'] = 			"L'utilisateur n'a pas les qualifications";	// or: "L'utilisateur n'a aucune qualification" ?
 $lang_str['user_has_no_sip_uris'] = 			"User has no SIP URIs";	//to translate 
 $lang_str['err_cannot_delete_own_account'] = 	"You can't delete your own account";	//to translate 
 $lang_str['err_cannot_disable_own_account'] = 	"You can't disable your own account";	//to translate 
+$lang_str['ff_show_deleted_users'] =            "show deleted users";	//to translate 
+$lang_str['deleted_user'] = 					"DELETED";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin - ACL, aliases                                   */
@@ -653,6 +663,7 @@ $lang_str['new_dom_name'] = 					"Ajouter un nouveau nom de domaine";
 $lang_str['owner'] = 							"Propriétaire";
 
 $lang_str['realy_delete_domain'] = 				"Voulez-vous vraiment effacer ce domaine ?";
+$lang_str['realy_purge_domain'] =               "Do you realy want purge this domain?";	//to translate 
 $lang_str['l_create_new_domain'] = 				"créer un nouveau domaine";
 $lang_str['l_reload_ser'] = 					"recharger SER etle serveur Web";
 $lang_str['no_domain_name_is_set'] = 			"Écrivez au moins un nom de domaine";
@@ -661,9 +672,12 @@ $lang_str['can_not_del_last_dom_name'] = 		"Il n'est pas possible de supprimer l
 
 $lang_str['msg_domain_reload_s'] = 				"Config. rechargée";
 $lang_str['msg_domain_reload_l'] = 				"La configuration de SER et du serveur Web a été rechargée";
-
 $lang_str['msg_domain_deleted_s'] = 			"Domaine effacé";
 $lang_str['msg_domain_deleted_l'] = 			"Ce domaine n'est plus servi et tous les fiches associés incluant les données d'abonné seront bientôt supprimés. Assurez vous que les enregistrements DNS ne se rapportent plus à ce serveur";
+$lang_str['msg_domain_undeleted_s'] = 			"Domain undeleted";	//to translate 
+$lang_str['msg_domain_undeleted_l'] = 			"Domain has been undeleted succesfuly";	//to translate 
+$lang_str['msg_domain_purged_s'] = 				"Domain purged";	//to translate 
+$lang_str['msg_domain_purged_l'] = 				"Domain has been purged succesfuly";	//to translate 
 
 $lang_str['assigned_domains'] = 				"Domaines assignés";
 $lang_str['unassigned_domains'] = 				"Domaines non assignés";	//or: "Domaines désassignés" ?
@@ -704,6 +718,8 @@ $lang_str['fe_domain_not_selected']	= 			"Le domaine pour l'utilisateur n'est pa
 
 $lang_str['th_old_versions'] = 					"Anciennes versions de ce fichier";
 $lang_str['initial_ver'] = 						"initiale";
+$lang_str['ff_show_deleted_domains'] =          "show deleted domains";	//to translate 
+$lang_str['deleted_domain'] = 					"DELETED";	//to translate 
 
 
 $lang_str['err_dns_lookup'] =                   "Error during DNS lookup. Can not check the DNS setting";	//to translate 
