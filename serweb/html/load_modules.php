@@ -3,7 +3,7 @@
  *	Functions needed for load module
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: load_modules.php,v 1.6 2008/06/26 09:51:14 kozlik Exp $
+ *	@version    $Id: load_modules.php,v 1.7 2008/06/26 09:52:19 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -32,7 +32,7 @@
 		$loaded_modules = getLoadedModules();
 	
 		foreach($loaded_modules as $module){
-		    echo $module = str_replace("-", "_", $module);
+		    $module = str_replace("-", "_", $module);
 			if (function_exists($module."_init"))
 				call_user_func($module."_init");
 		}
