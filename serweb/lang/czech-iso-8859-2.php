@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.54 2008/03/28 07:11:51 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.55 2008/08/13 11:02:51 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error

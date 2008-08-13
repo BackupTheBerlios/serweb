@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-iso-8859-1.php,v 1.55 2008/03/28 07:11:52 kozlik Exp $
+ * $Id: dutch-iso-8859-1.php,v 1.56 2008/08/13 11:02:51 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -447,7 +447,7 @@ $lang_str['th_is_canon'] = 						"canonical";	//to translate
 $lang_str['th_uri_is_to'] = 					"aan";
 $lang_str['th_uri_is_from'] = 					"van";
 $lang_str['l_ack'] = 							"bevestig";
-$lang_str['l_deny'] = 							"deny";	//to translate 
+$lang_str['l_deny'] = 							"cancel";	//to translate 
 $lang_str['uris_with_same_uname_did'] = 		"bestaande URIs met dezelfde gebruikersnaam en domein";
 $lang_str['ack_values'] = 						"Bevestig waarden";
 $lang_str['uri_already_exists'] = 				"URI met deze gebruikersnaam en domein zijn al aanwezig. Bevestig deze waarden.";

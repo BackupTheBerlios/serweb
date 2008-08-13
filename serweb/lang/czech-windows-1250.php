@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-windows-1250.php,v 1.54 2008/03/28 07:11:52 kozlik Exp $
+ * $Id: czech-windows-1250.php,v 1.55 2008/08/13 11:02:51 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
