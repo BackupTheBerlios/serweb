@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: method.check_credentials.php,v 1.3 2006/09/08 12:27:34 kozlik Exp $
+ * $Id: method.check_credentials.php,v 1.4 2008/08/13 11:27:53 kozlik Exp $
  */
 
 require_once 'Auth/RADIUS.php';
@@ -50,7 +50,8 @@ class Serweb_Auth_RADIUS_CHAP_MD5 extends Auth_RADIUS_CHAP_MD5{
 	}
 }
 
-define('RADIUS_SER_ATTRS', 225);
+define('RADIUS_SER_VENDOR', 24960);
+define('RADIUS_SER_UID', 17);
 
 function radiusAuthGetAttributes(&$r_obj){
     while ($attrib = radius_get_attr($r_obj->res)) {
@@ -63,25 +64,14 @@ function radiusAuthGetAttributes(&$r_obj){
         $r_obj->rawAttributes[] = array("attr"=>$attr, "data"=>$data);
 
         switch ($attr) {
-        case RADIUS_SER_ATTRS:
-        	$attrs = radius_cvt_string($data);
-        	$attrs = explode(":", $attrs, 2);
-        	
-        	if (count($attrs) != 2) break;
+        case RADIUS_VENDOR_SPECIFIC:
+		$vavp = radius_get_vendor_attr($data);
 
-        	if (isset($this->attributes['ser-attrs'][$attrs[0]])){
-				$at_item = &$r_obj->attributes['ser-attrs'][$attrs[0]];
-
-        		if (is_array($at_item)){
-					$at_item[] = $attrs[1];
-				}
-				else {
-					$at_item = array($at_item, $attrs[1]);
-				}
+		if ($vavp['vendor'] == RADIUS_SER_VENDOR){ 
+			if ($vavp['attr'] == RADIUS_SER_UID){
+				$r_obj->attributes['ser-attrs']['uid'] = $vavp['data'];
 			}
-			else{
-				$r_obj->attributes['ser-attrs'][$attrs[0]] = $attrs[1];
-			}
+		}
             break;
         }
     }
@@ -154,7 +144,7 @@ class CData_Layer_check_credentials {
 			return -1;
 		}
 
-		return md5($rauth->attributes['ser-attrs']['uid']);
+		return $rauth->attributes['ser-attrs']['uid'];
 	}
 }
 ?>
