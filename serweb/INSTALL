@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.33 2007/12/13 14:54:34 kozlik Exp $
+$Id: INSTALL,v 1.34 2008/08/13 11:51:21 kozlik Exp $
 
 serweb - Installation
 
@@ -13,11 +13,11 @@ serweb - Installation
   - PEAR package XML_Parser 1.2.6 (or later)
   - PEAR package XML_RPC (optional - should be included in PHP release 4.3 and later)
   - PEAR package LOG (optional - not included in PHP realase)
-		see http://pear.php.net/manual/en/installation.getting.php for details
+        see http://pear.php.net/manual/en/installation.getting.php for details
   - PEAR package Net_DNS (optional - required by domain self-registration feature)
-		see http://pear.php.net/manual/en/installation.getting.php for details
+        see http://pear.php.net/manual/en/installation.getting.php for details
   - PECL package Runkit or Classkit (only PHP5 users)
-  		see PHP 5 note bellow
+        see PHP 5 note bellow
   - overlib (http://www.bosrup.com/web/overlib/)
   - tinyMCE 2.1.2 (http://tinymce.moxiecode.com)
   - MySQL 4.0 or later
@@ -26,24 +26,24 @@ serweb - Installation
   Important:
   ----------
   
-  	Please keep in mind that using latest CVS version isn't recomended
-  	and it is on your own risc. This version is developer and may be unstable and buggy.
-  	For get latest stable version use this command:
-  	
-  	cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_0_10_0 serweb
+    Please keep in mind that using latest CVS version isn't recomended
+    and it is on your own risc. This version is developer and may be unstable and buggy.
+    For get latest stable version use this command:
+    
+    cvs -d:pserver:anonymous@cvs.berlios.de:/cvsroot/serweb co -P -r rel_2_0_0 serweb
 
 
   PHP 5 note
   ----------
     PHP 5 users have to install Runkit or Classkit extension from PECL repository.
     See http://www.php.net/manual/en/ref.classkit.php 
-	or  http://www.php.net/manual/en/ref.runkit.php
-	for installation instructions.
-	
-	Unfortunately both classkit and runkit extensions are in beta state and 
-	it seems there is no heavy development effort on them. Useing classkit
-	is safe with PHP 5.0 but cause core dump in PHP >= 5.1. Use of runkit
-	seems to be working in PHP 5.0, 5.1 and 5.2. But it is more experimental.
+    or  http://www.php.net/manual/en/ref.runkit.php
+    for installation instructions.
+    
+    Unfortunately both classkit and runkit extensions are in beta state and 
+    it seems there is no heavy development effort on them. Useing classkit
+    is safe with PHP 5.0 but cause core dump in PHP >= 5.1. Use of runkit
+    seems to be working in PHP 5.0, 5.1 and 5.2. But it is more experimental.
 
 
   Quick Install:
@@ -55,14 +55,14 @@ serweb - Installation
         /your/serweb/dir/html/js/tinymce
 
     [2] It is recommended to be only 'html' directory accessible throught the 
-	    HTML tree on your server. And leave other directories unaccessible
-	    throught http. Do it by creating alias in your httpd.conf,
-		for example:
-	    	Alias /serweb "/your/serweb/dir/html" 
-	    	
-	    notice: If you are intending use serweb with multidomain support, skip 
-	            this step. And instead of it follow instructions in file
-	            mudules/multidomain/README
+        HTML tree on your server. And leave other directories unaccessible
+        throught http. Do it by creating alias in your httpd.conf,
+        for example:
+            Alias /serweb "/your/serweb/dir/html" 
+            
+        notice: If you are intending use serweb with multidomain support, skip 
+                this step. And instead of it follow instructions in file
+                mudules/multidomain/README
 
     [3] Open the file config_data_layer.php in your favourite editor and change
         the values for db_type, db_host, db_name, db_user and db_pass
@@ -81,37 +81,37 @@ serweb - Installation
     [6] There are some config options which are specific for individual domains
         in multidomain setup. If you are intending to use serweb in multidomain
         setup look for detailed info in file mudules/multidomain/README. 
-		Otherwise if you will use serweb only for a single domain change these
-		options in file html/domains/_default/config.ini.php
-	    
+        Otherwise if you will use serweb only for a single domain change these
+        options in file html/domains/_default/config.ini.php
+        
     [7] make sure your php.ini includes the following values:
             - short_open_tag = on
 
-	[8] create initial admin account - see README file for details
+    [8] create initial admin account - see README file for details
             
     [9] Open the file http://<your-host>/<your-install-dir>/admin/index.php
         or http://<your-host>/<your-install-dir>/user/index.php
         in your browser. Serweb should now display a login screen.
         The initial username is 'admin@_default_' with password 'heslo'. Its 
-		strongly recomended to change this password after first login.
+        strongly recomended to change this password after first login.
         
         Notice: Do not replace '<your-host>' in url mentioned above by
         'localhost'. Use real name of the server instead of 'localhost'!!
-		It is because serweb obtail domainname from this url and the domainname
-		is also used for user authentication.
+        It is because serweb obtail domainname from this url and the domainname
+        is also used for user authentication.
         
     [10] If everything work, is now time to create cronjobs. Follow instructions 
-	    in file scripts/cron_job/INSTALL
-	    
+        in file scripts/cron_job/INSTALL
+        
 
   Config files notes:
   -------------------
 
   Config files are readed in this order:
-	1. config_paths.php
-	2. config_data_layer.php
-	3. config.php
-	4. domains/<domain>/config.php
+    1. config_paths.php
+    2. config_data_layer.php
+    3. config.php
+    4. domains/<domain>/config.php
 
   In domain depending config.php can be changed only values said
   in variable 'domain_depend_config' in main config.php. This is
