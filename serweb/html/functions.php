@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.89 2008/01/09 15:25:59 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.90 2008/08/13 11:07:58 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -440,6 +440,62 @@ class Creg{
 		return $js;
 	}
 
+    /**
+     *  check if given IPv4 address is valid netmask
+     *  
+     *  @param  string  $adr    IPv4 address
+     *  @return bool
+     */
+    function check_netmask($adr){
+        // check if given string is IPv4 address
+        if (!$this->is_ipv4address($adr)) return false;
+        
+        $parts = explode(".", $adr);
+        
+        $starting = true;
+        foreach ($parts as $v){
+            if (!is_numeric($v)) return false;      // part is not numeric
+        
+            $v = (int)$v;
+            if ($starting){
+                /* allow ones at the begining */ 
+                if ($v == 255) continue;
+                if (!in_array($v, array(254, 252, 248, 240, 224, 192, 128, 0))){
+                    return false;
+                }
+                $starting = false;
+            }
+            /* allow only zeros at the end */
+            elseif ($v != 0) return false;
+        }
+        
+        return true;
+    }
+
+
+    /**
+     *  check if given IPv4 address is network address of network with given netmask
+     *  
+     *  @param  string  $ip         IPv4 address
+     *  @param  string  $netmask    IPv4 address
+     *  @return bool
+     */
+    function check_network_address($ip, $netmask){
+        // check if given string is IPv4 address
+        if (!$this->is_ipv4address($ip)) return false;
+        if (!$this->check_netmask($netmask)) return false;
+        
+        $parts_ip = explode(".", $ip);
+        $parts_mask = explode(".", $netmask);
+        
+        for ($i=0; $i<4; $i++){
+            $ip = (int)$parts_ip[$i];
+            $mask = (int)$parts_mask[$i];
+            if ($ip != ($ip & $mask)) return false;
+        }
+        
+        return true;
+    }
 }
 
 
@@ -1049,27 +1105,33 @@ function sw_log($message, $priority = null){
 }
 
 /**
- *	Log action of user
+ *  Log action of user
  *
- *	@param string $screen_name	Name of screen where the action has been performed.
- *	@param string $action      	Action which has been performed.
- *	@param bool $success      	Has been action preformed successfully?
- *	@param mixed $errors      	String or array of errors which occurs during action
- *	@param array $opt        	Optional parrameters - reserved for future use
- *	@return none 			
+ *  Allowed options:
+ *   - cancel (bool)  - indicates that submit of html form has been canceled [default: false]
+ *   - errors (mixed) - string or array of errors which occurs during action [default: none]
+ *
+ *
+ *  @param string $screen_name  Name of screen where the action has been performed.
+ *  @param array $action        Action which has been performed.
+ *  @param string $msg          Message describing the action
+ *  @param bool $success        Has been action preformed successfully?
+ *  @param array $opt           Optional parrameters - reserved for future use
+ *  @return none
  */
  
-function action_log($screen_name, $action, $success = true, $errors = "", $opt = array()){
-	global $config;
+function action_log($screen_name, $action, $msg, $success = true, $opt = array()){
+    global $config;
 
-	if (!empty($config->custom_act_log_function)){
-		call_user_func($config->custom_act_log_function, $screen_name, $action, $success, $errors, $opt);	
-	}
-	else{
-        sw_log($screen_name." - ".$action." ".($success ? "successfull" : "failed"), PEAR_LOG_INFO);
+    $opt['action_str'] = is_array($action) ? $action['action'] : $action; 
+
+    if (!empty($config->custom_act_log_function)){
+        call_user_func($config->custom_act_log_function, $screen_name, $action, $msg, $success, $opt);  
+    }
+    else{
+        sw_log($screen_name." - ".$action['action']." ".$msg." ".($success ? "[successfull]" : "[failed]"), PEAR_LOG_INFO);
     }
 }
-
 /**
  *	get error message from PEAR_Error object and write it to $errors array and to error log
  *

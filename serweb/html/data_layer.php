@@ -3,7 +3,7 @@
  *	Data layer
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: data_layer.php,v 1.27 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: data_layer.php,v 1.28 2008/08/13 11:07:58 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -1012,6 +1012,8 @@ class CData_Layer{
 	 *	  "B" - bool - allow NULL values
 	 *	  "i" - image (binary data)
 	 *	  "I" - image (binary data) - allow NULL values
+	 *	  "t" - datetime
+	 *	  "T" - datetime - allow NULL values
 	 *
 	 *	@param	mixed	$val
 	 *	@param	string	$type
@@ -1051,11 +1053,30 @@ class CData_Layer{
 				return "'".$this->db->escapeSimple($val)."'";
 			}
 
+		case "T":	
+			if (is_null($val)) return "NULL";
+		case "t":	
+			return "'".gmdate("Y-m-d H:i:s", $val)."'";
+		
 		default:
 			return "";
 		}
 	
 	}
+
+	/**
+	 *	Convert datetime obtained from database to timestamp
+	 *
+	 *	@param	string	$val
+	 *	@return	int		
+	 */
+
+    function sql_time_to_ts($val){
+        list($year, $month, $day, $hour, $minute, $second) = 
+            sscanf($val, "%d-%d-%d %d:%d:%d");
+
+        return gmmktime($hour, $minute, $second, $month, $day, $year);
+    }
 
 	/**
 	 *	Unescape binary data obtained from database

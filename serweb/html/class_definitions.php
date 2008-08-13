@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.27 2007/10/11 14:13:25 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.28 2008/08/13 11:07:58 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -1274,12 +1274,14 @@ class Filter {
 	var $value="";
 	var $op="like";
 	var $asterisks=true;
+	var $case_sensitive = false;
 
-	function Filter($name, $value=null, $op="like", $asterisks=true){
+	function Filter($name, $value=null, $op="like", $asterisks=true, $case_sensitive=false){
 		$this->name = $name;
 		$this->value = $value;
 		$this->op = $op;
 		$this->asterisks = $asterisks;
+		$this->case_sensitive = $case_sensitive;
 	}
 	
 	function to_sql($var=null, $int=false){
@@ -1305,7 +1307,14 @@ class Filter {
 		
 		
 		if ($int)	return $var." ".$this->op." ".(int)$val;
-		else		return $var." ".$this->op." '".addslashes($val)."'";
+		else {
+		    if ($this->case_sensitive){
+        		return $var." ".$this->op." BINARY '".addslashes($val)."'";
+            }
+            else{
+        		return $var." ".$this->op." '".addslashes($val)."'";
+            } 
+        }
 	
 	}
 

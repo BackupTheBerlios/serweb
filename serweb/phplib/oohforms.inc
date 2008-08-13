@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: oohforms.inc,v 1.14 2008/01/09 15:26:00 kozlik Exp $
+ *	@version  $Id: oohforms.inc,v 1.15 2008/08/13 11:07:59 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -189,6 +189,60 @@ class of_submit extends of_element {
     // SUBMIT will not change its value
   }
 } // end SUBMIT
+
+/**
+ *	@package  PHPLib
+ */
+class of_button extends of_element {
+
+  var $src;
+
+  function of_button($a) {    
+    $this->setup_element($a);
+  }
+
+  function self_get($val, $which, &$count) {
+    $str = "";
+    
+    $sv = empty($val) ? $this->value : $val;
+    $str .= "<button name='$this->name' value=\"".htmlspecialchars($sv, ENT_QUOTES)."\"";
+
+    if (empty($this->button_type)) $this->button_type="submit";
+
+    switch ($this->button_type){
+    case "reset": 
+        $str .= ' type="reset" class="inpReset';
+        break;
+    case "button": 
+        $str .= ' type="button" class="inpButton';
+        break;
+    default: 
+        $str .= ' type="submit" class="inpSubmit';
+    }
+
+    if (!empty($this->class)){
+		$str .= " ".implode(" ", (array)$this->class);
+	}
+    $str .= "\""; //end of class attribute
+
+    if ($this->extrahtml) 
+        $str .= " $this->extrahtml";
+
+    if (!empty($this->disabled)){
+	    $str .= " disabled";
+    }
+
+    $str .= " >";
+    $str .= !empty($this->content) ? $this->content : $this->value; 
+    $str .= "</button>";
+    
+    return $str;
+  }
+  
+  function self_load_defaults($val) {
+    // BUTTON will not change its value
+  }
+} // end BUTTON
 
 /**
  *	@package  PHPLib

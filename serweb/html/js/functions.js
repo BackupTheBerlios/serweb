@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.11 2007/11/15 09:50:48 kozlik Exp $
+ *  $Id: functions.js,v 1.12 2008/08/13 11:07:58 kozlik Exp $
  */
 
 
@@ -164,6 +164,51 @@ function toggle_visibility(el){
 	else{
 		el.style.display = "none";
 	}
+}
+
+/**
+ *      Return the item of radio button with given value
+ */ 
+function get_radio_by_value(el, val){
+
+    for (var i=0; i<el.length; i++){
+        if (el.item(i).value == val){
+            return el.item(i);
+        }
+    }
+    return null;
+}
+
+/**
+ *      Enable/disable a link
+ *      
+ *  THis function expect the &lt;a&gt; element wrapped within &lt;span&gt; element. 
+ *  Reference to the &lt;span&gt; should be parameter of the function. Function
+ *  also expect the link is initialy enabled. 
+ *      
+ *  @param  bool                en      enable/disable
+ *  @param  Element parentEl    parrent &lt;span&gt; element which wrap the &lt;a&gt; element
+ */ 
+enable_link = function(en, parentEl){
+    
+    var linkEls = parentEl.getElementsByTagName('a');
+    
+    if (en){ //enable
+        if (linkEls.length > 0) return; // links already enabled
+
+        // restore content of the wraping <span> element
+        parentEl.innerHTML = parentEl.linkUserData;
+        // delete the stored data
+        parentEl.linkUserData = null;
+    }
+    else{    //disable
+        if (linkEls.length == 0) return; // no links enabled
+        
+        // save content of wraping <span> element
+        parentEl.linkUserData = parentEl.innerHTML;
+        // and replace content of the <span> element with another one
+        parentEl.innerHTML = '<span class="disabledLink">'+linkEls[0].innerHTML+'</span>';
+    }
 }
 
 /***********************************************************
