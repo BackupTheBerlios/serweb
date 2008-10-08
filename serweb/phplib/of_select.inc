@@ -4,7 +4,7 @@
  *
  *  @author   Copyright (c) 1998 by Jay Bloodworth
  *  @author   Karel Kozlik
- *  @version  $Id: of_select.inc,v 1.13 2008/01/09 15:26:00 kozlik Exp $
+ *  @version  $Id: of_select.inc,v 1.14 2008/10/08 09:43:30 kozlik Exp $
  *  @package  PHPLib
  */
 
@@ -48,6 +48,10 @@ class of_select extends of_element {
 
         if (!empty($this->disabled)){
             $str .= " disabled";
+        }
+
+        if (!empty($this->title)){
+            $str .= " title='".htmlspecialchars($this->title, ENT_QUOTES)."'";
         }
         $str .= ">";
 

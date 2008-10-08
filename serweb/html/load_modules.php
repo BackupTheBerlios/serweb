@@ -3,10 +3,13 @@
  *	Functions needed for load module
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: load_modules.php,v 1.7 2008/06/26 09:52:19 kozlik Exp $
+ *	@version    $Id: load_modules.php,v 1.8 2008/10/08 09:43:29 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
+
+    /** Flag indicating whether init_modules() function has been already executed */
+    $__modules_initiated__ = false;
 
 	/**
 	 * Include file "include.php" from each loaded module
@@ -28,14 +31,30 @@
 	/**
 	 * Call function <module_name>_init() for each loaded module
 	 */
+	function init_module($module){
+	    static $initiated_modules = array();
+
+        /* if module is laready initited -> exit */
+        if (!empty($initiated_modules[$module])) return;
+	    
+        $module = str_replace("-", "_", $module);
+		if (function_exists($module."_init"))
+			call_user_func($module."_init");
+			
+		$initiated_modules[$module] = true;
+	}
+
+	/**
+	 * Call function <module_name>_init() for each loaded module
+	 */
 	function init_modules(){
 		$loaded_modules = getLoadedModules();
 	
 		foreach($loaded_modules as $module){
-		    $module = str_replace("-", "_", $module);
-			if (function_exists($module."_init"))
-				call_user_func($module."_init");
+		    init_module($module);
 		}
+
+        $GLOBALS['__modules_initiated__'] = true;
 		
 		unset($loaded_modules);
 	}
@@ -56,6 +75,9 @@
 		if (file_exists($_SERWEB["modulesdir"] . $mod."/include.php")){ 
 			require_once ($_SERWEB["modulesdir"] . $mod."/include.php");
 		}
+	
+        /* if other modules has been already initiated, init module imediately */	
+		if ($GLOBALS['__modules_initiated__']) init_module($mod);
 	}
 	
 

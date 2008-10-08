@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_file.inc,v 1.6 2007/09/17 18:56:32 kozlik Exp $
+ *	@version  $Id: of_file.inc,v 1.7 2008/10/08 09:43:30 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -30,12 +30,16 @@ class of_file extends of_element {
       $str .= " $this->extrahtml";
     $str .= " class=\"inpFile";
     if (!empty($this->class)){
-		$str .= " ".implode(" ", (array)$this->class);
-	}
+        $str .= " ".implode(" ", (array)$this->class);
+    }
     $str .= "\"";
 
     if (!empty($this->disabled)){
-	    $str .= " disabled";
+        $str .= " disabled";
+    }
+
+    if (!empty($this->title)){
+        $str .= " title='".htmlspecialchars($this->title, ENT_QUOTES)."'";
     }
 
     $str .= " />";

@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.12 2008/08/13 11:07:58 kozlik Exp $
+ *  $Id: functions.js,v 1.13 2008/10/08 09:43:29 kozlik Exp $
  */
 
 
@@ -189,7 +189,7 @@ function get_radio_by_value(el, val){
  *  @param  bool                en      enable/disable
  *  @param  Element parentEl    parrent &lt;span&gt; element which wrap the &lt;a&gt; element
  */ 
-enable_link = function(en, parentEl){
+function enable_link(en, parentEl){
     
     var linkEls = parentEl.getElementsByTagName('a');
     
@@ -209,6 +209,18 @@ enable_link = function(en, parentEl){
         // and replace content of the <span> element with another one
         parentEl.innerHTML = '<span class="disabledLink">'+linkEls[0].innerHTML+'</span>';
     }
+}
+
+/**
+ *  This function is same as HTMLSpecialChars function from PHP
+ */ 
+function HTMLSpecialChars(str){
+    str = str.replace("&", "&amp;", "g");
+    str = str.replace("<", "&lt;", "g");
+    str = str.replace(">", "&gt;", "g");
+    str = str.replace("\"", "&quot;", "g");
+    str = str.replace("'", "&#039;", "g");
+    return str;
 }
 
 /***********************************************************

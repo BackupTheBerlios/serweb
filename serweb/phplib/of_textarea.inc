@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_textarea.inc,v 1.9 2007/11/16 15:04:51 kozlik Exp $
+ *	@version  $Id: of_textarea.inc,v 1.10 2008/10/08 09:43:30 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -41,11 +41,15 @@ class of_textarea extends of_element {
       $str .= " $this->extrahtml";
 
     if (!empty($this->class)){
-		$str .= " class=\"".implode(" ", (array)$this->class)."\"";
-	}
+        $str .= " class=\"".implode(" ", (array)$this->class)."\"";
+    }
 
     if (!empty($this->disabled)){
-	    $str .= " disabled";
+        $str .= " disabled";
+    }
+
+    if (!empty($this->title)){
+        $str .= " title='".htmlspecialchars($this->title, ENT_QUOTES)."'";
     }
 
     $str .= ">" . htmlspecialchars($this->value) ."</textarea>";

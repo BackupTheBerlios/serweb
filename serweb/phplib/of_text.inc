@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_text.inc,v 1.9 2007/09/17 18:56:32 kozlik Exp $
+ *	@version  $Id: of_text.inc,v 1.10 2008/10/08 09:43:30 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -49,13 +49,18 @@ class of_text extends of_element {
 
     $str .= ($this->pass)? " class=\"inpPassword" : " class=\"inpText";
     if (!empty($this->class)){
-		$str .= " ".implode(" ", (array)$this->class);
-	}
+        $str .= " ".implode(" ", (array)$this->class);
+    }
     $str .= "\"";
 
     if (!empty($this->disabled)){
-	    $str .= " disabled";
+        $str .= " disabled";
     }
+
+    if (!empty($this->title)){
+        $str .= " title='".htmlspecialchars($this->title, ENT_QUOTES)."'";
+    }
+
 
     $str .= " />";
     
@@ -106,7 +111,7 @@ class of_text extends of_element {
 */    
       if ($this->length_e) {
         $str .= "if (f.elements['".$this->name."'].value.length < $this->minlength) {\n";
-        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->length_e))."\");\n";
+        $str .= "  alert(\"".str_replace("\n", '\n', addslashes($this->length_e))."\".replace('#VALUE#', f.elements['".$this->name."'].value));\n";
         $str .= "  f.elements['".$this->name."'].focus();\n";
         $str .= "  return(false);\n}\n";
       }
@@ -116,7 +121,7 @@ class of_text extends of_element {
         $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
 //        $str .= "  var reg = /$this->valid_regex/$flags;\n";
         $str .= "  if (!reg.test(f.elements['".$this->name."'].value)) {\n";
-        $str .= "    alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
+        $str .= "    alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\".replace('#VALUE#', f.elements['".$this->name."'].value));\n";
         $str .= "    f.elements['".$this->name."'].focus();\n";
         $str .= "    return(false);\n";
         $str .= "  }\n}\n";
@@ -131,12 +136,12 @@ class of_text extends of_element {
     reset($val);
     while (list($k,$v) = each($val)) {
       if ($this->length_e && (strlen($v) < $this->minlength))
-        return $this->length_e;
+        return str_replace("#VALUE#", $v, $this->length_e);
       if ($this->valid_e && (((isset($this->icase) and $this->icase) && 
             !eregi($this->valid_regex,$v)) ||
            (!(isset($this->icase) and $this->icase) &&
             !ereg($this->valid_regex,$v))))
-        return $this->valid_e;
+        return str_replace("#VALUE#", $v, $this->valid_e);
     }
     return false;
   } 

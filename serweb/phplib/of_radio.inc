@@ -4,7 +4,7 @@
  *
  *  @author   Copyright (c) 1998 by Jay Bloodworth
  *  @author   Karel Kozlik
- *  @version  $Id: of_radio.inc,v 1.10 2008/01/09 15:26:00 kozlik Exp $
+ *  @version  $Id: of_radio.inc,v 1.11 2008/10/08 09:43:30 kozlik Exp $
  *  @package  PHPLib
  */
 
@@ -25,12 +25,18 @@ class of_radio extends of_element {
         $str = "";
         $extrahtml = "";
         $disabled = false;
+        $title = "";
+
+        if (!empty($this->title)){
+            $title = $this->title;
+        }
 
         if (isset($this->options) and is_array($this->options)){
             foreach ($this->options as $opt){
                 if ($opt['value'] == $val){
                     if (!empty($opt['extrahtml'])) $extrahtml = " ".$opt['extrahtml'];
                     if (!empty($opt['disabled']))  $disabled = true;
+                    if (!empty($opt['title']))     $title = $opt['title'];
                     break;
                 }
             }
@@ -49,6 +55,10 @@ class of_radio extends of_element {
 
         if (!empty($this->disabled) or $disabled){
             $str .= " disabled";
+        }
+
+        if ($title){
+            $str .= " title='".htmlspecialchars($title, ENT_QUOTES)."'";
         }
 
         $str .= " ".$extrahtml;

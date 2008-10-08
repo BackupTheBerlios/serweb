@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.90 2008/08/13 11:07:58 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.91 2008/10/08 09:43:29 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -84,6 +84,7 @@ class Creg{
 
 	var $alphanum;
 	var $mark;
+	var $reserved;
 	var $unreserved;
 	var $escaped;
 	var $user_unreserved;
@@ -116,8 +117,11 @@ class Creg{
 	function Creg(){
 		global $config, $reg_validate_email;
 		
+		$this->SP=" ";
+		$this->HTAB="\t";
 		$this->alphanum="[a-zA-Z0-9]";
 		$this->mark="[-_.!~*'()]";
+		$this->reserved="[;/?:@&=+$,]";
 		$this->unreserved="(".$this->alphanum."|".$this->mark.")";
 		$this->escaped="(%[0-9a-fA-F][0-9a-fA-F])";
 		$this->user_unreserved="[&=+$,;?/]";
@@ -182,6 +186,10 @@ class Creg{
 		$this->phonenumber_strict = $config->strict_phonenumber_regex;		// "\\+?[1-9]+"
 		
 		$this->email = $reg_validate_email;
+		
+		/** regex matching reason phrase from status line */
+		$this->reason_phrase = "(".$this->reserved."|".$this->unreserved."|".
+                            $this->escaped."|".$this->SP."|".$this->HTAB.")*";
 	}
 
     /**
@@ -493,6 +501,36 @@ class Creg{
             $mask = (int)$parts_mask[$i];
             if ($ip != ($ip & $mask)) return false;
         }
+        
+        return true;
+    }
+    
+    /**
+     *  validate regular expression
+     *
+     *  Validate syntax of regular expression (uses PCRE - Perl Compatible  
+     *  Regular Expressions)
+     *
+     *  @param  string  $pattern    RegEx String pattern to validate
+     *  @return bool                true if valid regex, false if not
+     *
+     */
+    function check_regexp($pattern){
+        global $config;
+        
+        if ($config->external_regexp_validator){
+        	exec($config->external_regexp_validator." ".escapeshellarg($pattern), $output);
+        
+        	if (isset($output[0]) and $output[0]=="1"){
+        		return true;
+        	}
+        	return false;
+        }
+        
+        /* 
+           external validator is not set
+           some php validation should be implemented there 
+         */
         
         return true;
     }

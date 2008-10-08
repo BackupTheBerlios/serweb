@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.28 2008/08/13 11:07:58 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.29 2008/10/08 09:43:29 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -430,6 +430,15 @@ class Domains{
 
     function free() {
         StaticVarHandler::getvar("Domains", 0, true);
+    }
+
+    /**
+     *  Flush all cached domains. Next call of get_domains() method will reload 
+     *  them from DB.     
+     */         
+    function flush(){
+        $this->domains = null;
+        $this->domain_names = null;
     }
 
 	/*
@@ -1361,6 +1370,48 @@ class StaticVarHandler{
             if (!isset($vars[$class][$key])) $vars[$class][$key]=null;
             return $vars[$class][$key];
         }
+    }
+}
+
+
+class ModuleCallback{
+
+    var $module;
+    /** callback function */
+    var $fn;
+
+    function ModuleCallback($module, $fn){
+        $this->module = $module;
+        $this->fn = $fn;
+    }
+}
+
+class CallbackCaller{
+
+    function call_array($callback_arr, $param, $opt, $break_on_error = false){
+    
+        $ok = true;
+        
+        if (is_array($callback_arr)){
+            foreach($callback_arr as $v){
+                if (!$this->call($v, $param, $opt)){
+                    $ok = false;
+                    if ($break_on_error) return false;
+                }
+            }
+        }
+
+        return $ok;    
+    }
+    
+    
+    function call($callback, $param, &$opt){
+        include_module($callback->module);
+
+        $opt = array();
+        if (false === call_user_func_array($callback->fn, array($param, &$opt))) return false;
+    
+        return true;
     }
 }
 
