@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.29 2008/10/08 09:43:29 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.30 2008/10/27 21:15:17 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -1321,7 +1321,7 @@ class Filter {
         		return $var." ".$this->op." BINARY '".addslashes($val)."'";
             }
             else{
-        		return $var." ".$this->op." '".addslashes($val)."'";
+        		return "lower(".$var.") ".$this->op." lower('".addslashes($val)."')";
             } 
         }
 	

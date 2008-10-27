@@ -3,7 +3,7 @@
  *	Extension for phplib object oriented html form
  * 
  *	@author    Karel Kozlik
- *	@version   $Id: oohform_ext.php,v 1.8 2007/09/17 18:56:31 kozlik Exp $
+ *	@version   $Id: oohform_ext.php,v 1.9 2008/10/27 21:15:16 kozlik Exp $
  *	@package   serweb
  *	@subpackage framework
  */
@@ -98,11 +98,17 @@ class form_ext extends form{
 	
     /**
      *  Retrun names of all hidden elements in the form
+     *  
+     *  Elements used internaly by this class are skipped (hidden submits, 
+     *  hidden cancels and 'form_cancels')          
      *
      *  @return array
      */
     function get_hidden_el_names(){
-        return (array)$this->hidden;
+        return array_diff((array)$this->hidden, 
+                    array_merge($this->hidden_cancels, 
+                                $this->hidden_submits, 
+                                array("form_cancels")));
     }
     
     /**
