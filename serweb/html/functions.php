@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.91 2008/10/08 09:43:29 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.92 2008/11/19 16:20:46 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -216,6 +216,17 @@ class Creg{
 	 */
 	function get_domainname($sip){
 		return ereg_replace($this->sip_s_address,"\\5", $sip);
+	}
+
+
+	/** return javascript which do the same as method {@link get_domainname} 
+	 *
+	 *	@param string $in_var 	name of js variable with string containing sip uri 
+	 *	@param string $out_var	name of js variable to which hostpart will be stored 
+	 *	@return string 			line of javascript code
+	 */
+	function get_domainname_js($in_var, $out_var){
+		return $out_var." = ".$in_var.".replace(/".str_replace('/','\/',$this->sip_s_address)."/, '\$5')";
 	}
 
 	/**
