@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.13 2008/10/08 09:43:29 kozlik Exp $
+ *  $Id: functions.js,v 1.14 2009/01/08 20:39:29 kozlik Exp $
  */
 
 
@@ -222,6 +222,117 @@ function HTMLSpecialChars(str){
     str = str.replace("'", "&#039;", "g");
     return str;
 }
+
+
+/**
+ *  Parse host part from sip uri
+ *    
+ *  @param  string  uri     sip uri
+ *  @return string          hostpart or FALSE on invalid uri 
+ */
+function parse_host_from_sip_uri(uri){
+
+
+    if      (uri.substr(0,4).toLowerCase() == 'sip:')  uri = uri.substr(4); //strip initial 'sip:'
+    else if (uri.substr(0,5).toLowerCase() == 'sips:') uri = uri.substr(5); //strip initial 'sips:'
+    else    return false; //not valid uri
+    
+    var ipv6 = 0;
+    var hostpos = uri.indexOf('@');
+    var hostlen = null;
+
+    if ( hostpos < 0 ) hostpos = 0;
+    else               hostpos++; 
+
+    for (var i=hostpos; (i < uri.length) && (hostlen == null); i++){
+        switch (uri.substr(i, 1)){
+        case '[':  ipv6++; break;
+        case ']':  ipv6--; break;
+        case ':':
+                   if (!ipv6){ //colon is not part of ipv6 address
+                        hostlen = i-1;  //colon is separator of host and port
+                        break;
+                   } 
+                   break;
+        case ';':
+                   hostlen = i-1;  //semicolon is start of uri parameters
+                   break;
+        }
+    }
+
+    if (hostlen == null) hostlen = uri.length;
+
+    // hostlen now do not contain real lenght of host part, 
+    // but the position of its end, so calculate the length:
+    
+    hostlen = hostlen - hostpos + 1;
+    
+    return uri.substr(hostpos, hostlen);
+}
+
+
+/**
+ *  Parse port from sip uri
+ *    
+ *  @param  string  uri     sip uri
+ *  @return int             port number or FALSE on invalid uri or NULL when no port in the uri  
+ */
+function parse_port_from_sip_uri(uri){
+
+    if      (uri.substr(0,4).toLowerCase() == 'sip:')  uri = uri.substr(4); //strip initial 'sip:'
+    else if (uri.substr(0,5).toLowerCase() == 'sips:') uri = uri.substr(5); //strip initial 'sips:'
+    else    return false; //not valid uri
+    
+    var ipv6 = 0;
+    var portpos = null;
+    var ch;
+
+    /* start parsing after '@' to avoid some special characters in user part */
+    var startpos = uri.indexOf('@');
+    if ( startpos < 0 ) startpos = 0;
+    else                startpos++; 
+
+    for (var i=startpos; (i < uri.length) && (portpos == null); i++){
+        ch = uri.substr(i, 1);
+
+        switch (ch){
+        case '[':  ipv6++; break;
+        case ']':  ipv6--; break;
+        case ':':
+                   if (!ipv6){ //colon is not part of ipv6 address
+                        portpos = i;  //position of port inside address string
+                        break;
+                   } 
+                   break;
+        case ';':
+                   return null;  //start of uri parameters -> no port in the uri
+                   break;
+        }
+    }
+
+    if (portpos == null) return null;   //no port in the uri
+
+    portpos++; //move after the colon
+    var portlen = 0;
+
+    for (var i=portpos; i < uri.length; i++){
+        ch = uri.substr(i, 1);
+
+        if (ch<'0' || ch>'9') break;
+        portlen++;
+    }
+
+    if (portlen == 0) return false; //no port in uri, but it contains colon -> invalid uri
+
+    var port = Number(uri.substr(portpos, portlen));
+    if (port == Number.NaN)     return false; //should never happen, but to be sure...
+   
+    return port;
+}
+
+
+
+
 
 /***********************************************************
  * Functions for display varning message if form is changed
