@@ -1,6 +1,6 @@
-<?
+<?php
 /*
- * $Id: method.get_cdr_entries.php,v 1.5 2006/09/08 12:27:33 kozlik Exp $
+ * $Id: method.get_cdr_entries.php,v 1.6 2009/02/18 09:11:34 kozlik Exp $
  */
 
 class CData_Layer_get_cdr_entries {
@@ -186,7 +186,7 @@ class CData_Layer_get_cdr_entries {
 			else $o['hangup']="n/a"; */
 			$o['hangup']="n/a";
 
-			$o['length'] = date ('H:i:s', $ts_stop - $timestamp);
+			$o['length'] = gmdate ('H:i:s', $ts_stop - $timestamp);
 
 			$o['url_ctd'] = "javascript: open_ctd_win('".rawURLEncode($o['to_uri'])."');";
 			$o['sip_to']  = htmlspecialchars(ereg_replace("(.*)(;tag=.*)","\\1",$o['sip_to']));

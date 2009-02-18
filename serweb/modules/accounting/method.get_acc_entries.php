@@ -1,6 +1,6 @@
-<?
+<?php
 /*
- * $Id: method.get_acc_entries.php,v 1.7 2007/12/13 11:39:40 kozlik Exp $
+ * $Id: method.get_acc_entries.php,v 1.8 2009/02/18 09:11:34 kozlik Exp $
  */
 
 /*
@@ -201,7 +201,7 @@ class CData_Layer_get_acc_entries {
                                  substr($row->bye_time,8,2),    //day
                                  substr($row->bye_time,0,4));   //year
 
-                $o['length'] = date ('H:i:s', $bye_ts - $inv_ts);
+                $o['length'] = gmdate ('H:i:s', $bye_ts - $inv_ts);
 
 
 //              sec_to_time(unix_timestamp(t2.time)-unix_timestamp(t1.time)) as length, 
