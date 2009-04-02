@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: of_textarea.inc,v 1.10 2008/10/08 09:43:30 kozlik Exp $
+ *	@version  $Id: of_textarea.inc,v 1.11 2009/04/02 16:26:34 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -104,7 +104,12 @@ class of_textarea extends of_element {
       if ($this->valid_e) {
         $flags = ((isset($this->icase) and $this->icase) ? "i" : "");
         $str .= "if (window.RegExp) {\n";
-        $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
+        if (!empty($this->valid_regex_js)){
+            $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex_js)."/$flags;\n";
+        }
+        else{
+            $str .= "  var reg = /".str_replace('/','\/',$this->valid_regex)."/$flags;\n";
+        }
         $str .= "  if (!reg.test(val)) {\n";
         $str .= "    alert(\"".str_replace("\n", '\n', addslashes($this->valid_e))."\");\n";
         $str .= "    f.elements['".$this->name."'].focus();\n";

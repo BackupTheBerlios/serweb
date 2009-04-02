@@ -4,7 +4,7 @@
  *
  *	@author   Copyright (c) 1998 by Jay Bloodworth
  *	@author   Karel Kozlik
- *	@version  $Id: oohforms.inc,v 1.15 2008/08/13 11:07:59 kozlik Exp $
+ *	@version  $Id: oohforms.inc,v 1.16 2009/04/02 16:26:34 kozlik Exp $
  *	@package  PHPLib
  */
 
@@ -19,6 +19,10 @@ class of_element {
   var $extrahtml;
   var $js_validate = true;
   var $php_validate = true;
+  var $skip_validation = false;
+  var $form; //reference to the html form (set during element creation)
+  var $js_trim_value = false; // register javascript event handler trimming 
+                              // whitespaces at beginning and end of value
   
   function marshal_dispatch($m,$func) {   
     $vname = $this->name;
@@ -205,7 +209,7 @@ class of_button extends of_element {
     $str = "";
     
     $sv = empty($val) ? $this->value : $val;
-    $str .= "<button name='$this->name' value=\"".htmlspecialchars($sv, ENT_QUOTES)."\"";
+    $str .= "<button name='$this->name' id='$this->name' value=\"".htmlspecialchars($sv, ENT_QUOTES)."\"";
 
     if (empty($this->button_type)) $this->button_type="submit";
 
@@ -313,14 +317,45 @@ class form {
     if ($this->jvs_name) {
       $jvs_name = $this->jvs_name;
       $str .= "<script type='text/javascript' language='javascript'>\n<!--\n";
-      $str .= "function ${jvs_name}_Validator(f) {\n";
+      
+      foreach($this->elements as $k=>$v){
+            $el = $v["ob"];
+            //print_r($el);
+            if ($el->type=="of_textarea" and $el->maxlength){
+
+                // register event listeners to textarea 
+                $str .="
+                    var el=document.getElementById('".$el->name."');
+                    el.my_max_length = ".$el->maxlength.";
+                    phplib_ctl.add_event(el, 'keyup', phplib_ctl.oh_textarea_max_length);
+                    phplib_ctl.add_event(el, 'keypress', phplib_ctl.oh_textarea_max_length);
+                    phplib_ctl.add_event(el, 'change', phplib_ctl.oh_textarea_max_length);
+                    phplib_ctl.add_event(el, 'cut', phplib_ctl.oh_textarea_max_length);
+                    phplib_ctl.add_event(el, 'paste', phplib_ctl.oh_textarea_max_length);
+                ";
+            }
+
+            if ($el->js_trim_value){
+                $str .="
+                    phplib_ctl.add_event(document.getElementById('".$el->name."'), 'blur', phplib_ctl.oh_trim);";
+            }
+      }
+      
+      $str .= "\nfunction ${jvs_name}_Validator(f) {\n";
 
       if (strlen($before))
         $str .= "$before\n";
       reset($this->elements);
       while (list($k,$elrec) = each($this->elements)) {
         $el = $elrec["ob"];
-        if ($el->js_validate)
+
+        if ($el->js_trim_value){
+            $str .="
+                phplib_ctl.trim(document.getElementById('".$el->name."'));
+            ";
+        }
+
+        if (!$el->skip_validation and $el->js_validate)
             $str .= $el->self_get_js($elrec["ndx_array"]);
       }
       if (strlen($after))
@@ -359,6 +394,7 @@ class form {
     }
     $el = new $t($el);
     $el->type = $t; # as suggested by Michael Graham (magog@the-wire.com)
+    $el->form = &$this;
 
     if (isset($el->isfile) and $el->isfile) 
       $this->isfile = true;
@@ -430,7 +466,7 @@ class form {
     }
     while ($elrec) {
       $el = $elrec["ob"];
-      if ($el->php_validate){
+      if (!$el->skip_validation and $el->php_validate){
         if ($res = $el->marshal_dispatch(isset($this->method)?$this->method:"","self_validate")){
           $err[]=$res;
         }

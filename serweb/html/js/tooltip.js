@@ -17,7 +17,7 @@ function Tooltip(varname){
     this.lastYPos = 0;
 
     /** timer */
-    this.ID = null;
+    this.timer = null;
     /** determine whether tooltip is already displayed - timer expired */
     this.displayed=false;
     /** mouse position */
@@ -29,6 +29,11 @@ function Tooltip(varname){
     /** container of tooltip */
     this.oDv=document.createElement("div");
     this.oFrm=document.createElement("iframe");
+
+    /** Actualy displayed tooltip message. It is used as param for function  
+     *  showToolTip() which is invoked via timer.
+     */
+    this.tooltip;
 }
 
 
@@ -78,6 +83,8 @@ Tooltip.prototype.applyStyles = function(content){
 /** Display the tooltip */
 Tooltip.prototype.showToolTip = function(){
 
+    this.applyStyles(this.tooltip);
+
     this.oDv.style.left = (this.mouseX+this.ox)+"px";
     this.oDv.style.top  = (this.mouseY+this.oy)+"px";       
 
@@ -91,7 +98,7 @@ Tooltip.prototype.showToolTip = function(){
     this.oDv.style.visibility = 'visible';
 
     this.displayed=true;
-    this.ID=null;
+    this.timer=null;
 }
 
 /** Hide the tooltip */
@@ -100,7 +107,7 @@ Tooltip.prototype.hideToolTip = function(){
     this.oDv.style.visibility = 'hidden';
     this.oFrm.style.display =   'none';
     this.displayed=false;
-    if (this.ID != null)  clearTimeout(this.ID);
+    if (this.timer != null)  clearTimeout(this.timer);
 }
 
 /**
@@ -147,10 +154,10 @@ Tooltip.prototype.onMouseMove = function(e){
            moved*/
         if (!this.displayed && this.mousePosChanged(evt)){
 
-            this.applyStyles(CSE.tooltip);
-            if (this.ID != null)  clearTimeout(this.ID);
+            if (this.timer != null)  clearTimeout(this.timer);
+            this.tooltip = CSE.tooltip;
 
-            this.ID = setTimeout(this.varname+".showToolTip()", 500);
+            this.timer = setTimeout(this.varname+".showToolTip()", 500);
     
             // This added to alleviate bug in IE6 w.r.t DOCTYPE
             bodyScrollTop = document.documentElement && document.documentElement.scrollTop ? 
@@ -164,12 +171,11 @@ Tooltip.prototype.onMouseMove = function(e){
             this.mouseX += bodyScrollLet;
             this.mouseY += bodyScrollTop;
         }
-        if (this.LSE != CSE){
-            this.hideToolTip();
-        }
     }
-    else{
-        this.hideToolTip();
+
+    if (this.LSE != CSE){
+        if (this.timer != null)    clearTimeout(this.timer);
+        if (this.displayed)     this.hideToolTip();
     }
 
     this.LSE = CSE;

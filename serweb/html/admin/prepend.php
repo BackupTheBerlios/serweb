@@ -3,7 +3,7 @@
  *	Load all required files
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: prepend.php,v 1.12 2007/09/17 18:56:31 kozlik Exp $
+ *	@version    $Id: prepend.php,v 1.13 2009/04/02 16:26:34 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -24,6 +24,7 @@ require("page_attributes.php");
 
 require($_SERWEB["serwebdir"] . "load_apu.php");
 
+	$controler->add_reqired_javascript('phplib.js');
 	init_modules();
 
 ?>

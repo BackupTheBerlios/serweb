@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.92 2008/11/19 16:20:46 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.93 2009/04/02 16:26:33 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -135,6 +135,13 @@ class Creg{
 		$this->ipv6address="(".$this->hexpart."(:".$this->ipv4address.")?)";
 		$this->ipv6reference="(\\[".$this->ipv6address."])";
 
+        $this->utf8_cont = "[\x80-\xbf]";
+        $this->utf8_nonascii = "([\xc0-\xdf]".$this->utf8_cont.")|".
+                               "([\xe0-\xef]".$this->utf8_cont."{2})|".
+                               "([\xf0-\xf7]".$this->utf8_cont."{3})|".
+                               "([\xf8-\xfb]".$this->utf8_cont."{4})|".
+                               "([\xfc-\xfd]".$this->utf8_cont."{5})";
+
 		/* toplabel is the name of top-level DNS domain ".com" -- alphanum only
 		   domainlabel is one part of the dot.dot name string in a DNS name ("iptel");
 		     it must begin with alphanum, can contain special characters (-) and end
@@ -147,7 +154,7 @@ class Creg{
 		$this->host="(".$this->hostname."|".$this->ipv4address."|".$this->ipv6reference.")";
 
 		$this->token="(([-.!%*_+`'~]|".$this->alphanum.")+)";
-		$this->param_unreserved="[\\][/:&+$]";
+		$this->param_unreserved="\\[|]|[/:&+$]";
 		$this->paramchar="(".$this->param_unreserved."|".$this->unreserved."|".$this->escaped.")";
 		$this->pname="((".$this->paramchar.")+)";
 		$this->pvalue="((".$this->paramchar.")+)";
@@ -186,10 +193,19 @@ class Creg{
 		$this->phonenumber_strict = $config->strict_phonenumber_regex;		// "\\+?[1-9]+"
 		
 		$this->email = $reg_validate_email;
-		
+
 		/** regex matching reason phrase from status line */
 		$this->reason_phrase = "(".$this->reserved."|".$this->unreserved."|".
-                            $this->escaped."|".$this->SP."|".$this->HTAB.")*";
+                            $this->escaped."|".$this->utf8_nonascii."|".
+                            $this->SP."|".$this->HTAB.")*";
+
+		/** Regex matching reason phrase from status line.  
+		 *  This is javascript version of the above. This uses interval
+		 *  of unicode character codes instead of utf8_nonascii regexp.
+		 */
+		$this->reason_phrase_js = "(".$this->reserved."|".$this->unreserved."|".
+                            $this->escaped."|[\\u0080-\\uFFFF]|".
+                            $this->SP."|".$this->HTAB.")*";
 	}
 
     /**
