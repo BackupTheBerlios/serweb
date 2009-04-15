@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.36 2008/03/05 10:38:43 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.37 2009/04/15 14:58:52 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -1018,6 +1018,7 @@ class page_conroler{
 		
 		   $_POST = array_map('stripslashes_deep', $_POST);
 		   $_GET = array_map('stripslashes_deep', $_GET);
+		   $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
 		   $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 		}
 
