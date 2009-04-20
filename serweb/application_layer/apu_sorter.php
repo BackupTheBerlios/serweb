@@ -3,7 +3,7 @@
  * Application unit sorter 
  * 
  * @author    Karel Kozlik
- * @version   $Id: apu_sorter.php,v 1.6 2008/01/09 15:25:59 kozlik Exp $
+ * @version   $Id: apu_sorter.php,v 1.7 2009/04/20 09:32:26 kozlik Exp $
  * @package   serweb
  * @subpackage framework
  */ 
@@ -93,6 +93,8 @@ class apu_sorter extends apu_base_class{
 		$this->opt['form_name'] =			'';
 
 		$this->opt['smarty_vars'] =			'url_sort';
+		$this->opt['smarty_order'] =		'sorter_order_by';
+		$this->opt['smarty_dir'] =		    'sorter_dir';
 
 
 		$this->opt['form_submit']=array('type' => 'button',
@@ -151,6 +153,13 @@ class apu_sorter extends apu_base_class{
 			call_user_func($this->opt['on_change_callback']);
 		}
 
+        if (isset($this->base_apu->opt['screen_name'])){
+            $msg = "Sorting order changed to sort entries by '".$this->col_to_sort."'";
+            if ($this->session['reverse_order']) $msg .= " in reverse order";
+        
+            action_log($this->base_apu->opt['screen_name'], "sort", $msg);
+        }
+
 		if (!empty($this->session['get_param'])) {
 			return (array)$this->session['get_param'];
 		}
@@ -206,6 +215,8 @@ class apu_sorter extends apu_base_class{
 		}
 
 		$smarty->assign_by_ref($this->opt['smarty_vars'], $sort_urls);
+		$smarty->assign($this->opt['smarty_order'], $this->get_sort_col());
+		$smarty->assign($this->opt['smarty_dir'], $this->get_sort_dir());
 	}
 		
 	
