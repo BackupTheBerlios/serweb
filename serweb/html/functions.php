@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.93 2009/04/02 16:26:33 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.94 2009/05/06 08:36:03 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1625,4 +1625,18 @@ function js_escape($str){
 	return str_replace("\n", '\n', addslashes($str));
 }
 
+/**
+ *	Add GET parameter(s) to URL
+ *	
+ *  Join URL with parameter useing '?' or '&' depending on whether URL already 
+ *  contain some parameters	
+ *	
+ *	@param	string	$url
+ *	@param	string	$param
+ *	@return	string
+ */
+function add_param_to_url($url, $param){
+    if (strpos($url, "?")) return $url."&".$param;
+    else                   return $url."?".$param;
+}
 ?>
