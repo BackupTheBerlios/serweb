@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_user_attrs.php,v 1.3 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: method.get_user_attrs.php,v 1.4 2009/05/06 08:41:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_attributes
  */ 
@@ -54,6 +54,8 @@ class CData_Layer_get_user_attrs {
 		    from ".$t_name."
 			where  ".$c->uid." = ".$this->sql_format($uid, "s")." and 
 			      (".$c->flags." & ".$flags_val.") = ".$flags_val;
+
+        if (isset($c->order)) $q .= " order by ".$c->name.", ".$c->order;
 		
 		$res=$this->db->query($q);
 		if (DB::isError($res)) {

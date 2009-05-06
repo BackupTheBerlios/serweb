@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.update_domain_attr.php,v 1.4 2007/02/14 16:36:41 kozlik Exp $
+ *	@version    $Id: method.update_domain_attr.php,v 1.5 2009/05/06 08:41:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_attributes
  */ 
@@ -58,42 +58,43 @@ class CData_Layer_update_domain_attr {
 		if (is_object($at) and $at->is_multivalue()){
 			if (!isset($opt['old_value'])) $opt['old_value'] = array();
 		
-			$insert = array_diff($value, $opt['old_value']);
-			$delete = array_diff($opt['old_value'], $value);
+			$q = "delete from ".$t_name." 
+			      where ".$c->name."  = ".$this->sql_format($name, "s")." and 
+						".$c->did."   = ".$this->sql_format($did,  "s");
+			$res=$this->db->query($q);
+			if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 
-			foreach($insert as $v){
+            $ion = isset($c->order) ? ", ".$c->order : "";
+            $iov = 0;
+
+			foreach($value as $v){
 				$q = "insert into ".$t_name."(
-				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
+				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.$ion.")
 				      values (".$this->sql_format($did,   "s").", 
 					          ".$this->sql_format($name,  "s").", 
 							  ".$this->sql_format($v,     "s").", 
 							  ".$this->sql_format($type,  "n").", 
-							  ".$this->sql_format($flags, "n").")";
+							  ".$this->sql_format($flags, "n").
+							  (isset($c->order)?", ".$iov++:"").")";
 				$res=$this->db->query($q);
 				if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
 			}
 
-			foreach($delete as $v){
-				$q = "delete from ".$t_name." 
-				      where ".$c->name."  = ".$this->sql_format($name, "s")." and 
-					        ".$c->value." = ".$this->sql_format($v,    "s")." and 
-							".$c->did."   = ".$this->sql_format($did,  "s");
-				$res=$this->db->query($q);
-				if (DB::isError($res)) { ErrorHandler::log_errors($res); return false; }
-			}
-		
 		}
 		
 		else{
 			if (!isset($opt['old_value'])){
+
+                $ion = isset($c->order) ? ", ".$c->order : "";
+                $iov = isset($c->order) ? ", 0" : "";;
 				
 				$q = "insert into ".$t_name."(
-				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.")
+				             ".$c->did.", ".$c->name.", ".$c->value.", ".$c->type.", ".$c->flags.$ion.")
 				      values (".$this->sql_format($did,   "s").", 
 					          ".$this->sql_format($name,  "s").", 
 							  ".$this->sql_format($value, "s").", 
 							  ".$this->sql_format($type,  "n").", 
-							  ".$this->sql_format($flags, "n").")";
+							  ".$this->sql_format($flags, "n").$iov.")";
 			}
 			elseif($opt['old_value'] == $value) {
 				/* don't need update DB */
