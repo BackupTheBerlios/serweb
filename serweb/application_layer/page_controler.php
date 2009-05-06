@@ -3,7 +3,7 @@
  * Page controler
  * 
  * @author     Karel Kozlik
- * @version    $Id: page_controler.php,v 1.37 2009/04/15 14:58:52 kozlik Exp $
+ * @version    $Id: page_controler.php,v 1.38 2009/05/06 08:35:10 kozlik Exp $
  * @package    serweb
  * @subpackage framework
  */ 
@@ -84,6 +84,8 @@ class page_conroler{
 	var $js_after_document = array();
 	/** url to which header location will redirect - default is self */
 	var $url_for_reload = null;
+	/** array of GET parameters added to each URL created by page controler */
+	var $global_get_params = array();
 	/** flag determining if standard html output will be generated. 
 	 *	Sometimes an APU need generate other output than HTML. In this case it 
 	 *	should call method disable_html_output() and the smarty template will 
@@ -462,6 +464,15 @@ class page_conroler{
 		$this->url_for_reload = $url;
 	}
 
+    /**
+     *  Add GET parameter to each URL created by page controller
+     *     
+	 *	@param string $get_param    GET parameter in form 'foo=bar' 
+     */         
+    function add_get_param($get_param){
+        $this->global_get_params[] = $get_param;
+    }
+
 	/** 
 	 *	Disabling generation of HTML output
 	 *
@@ -581,9 +592,9 @@ class page_conroler{
 	 */
 	function reload($get_param){
 		global $sess;
-		
+				
 		/* collect all get params to one string */
-		$get_param = implode('&', $get_param);
+		$get_param = implode('&', array_merge($this->global_get_params, $get_param));
 		
 		/* send header */
 		if (!$this->url_for_reload) $this->url_for_reload = $_SERVER['PHP_SELF'];
@@ -805,6 +816,8 @@ class page_conroler{
     function get_form_action($get_param){
 
         $url = $_SERVER['PHP_SELF'];
+        
+        $get_param = array_merge($this->global_get_params, $get_param);
         
         if ($get_param){
             /* collect all get params to one string */
