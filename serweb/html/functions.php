@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.94 2009/05/06 08:36:03 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.95 2009/05/15 06:51:00 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -148,10 +148,13 @@ class Creg{
 			 with alphanums
 		   hostname can include any number of domain lables and end with toplable
 		*/
-		$this->toplabel="([a-zA-Z]|([a-zA-Z](~|".$this->alphanum.")*".$this->alphanum."))";
-		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."([~-]|".$this->alphanum.")*".$this->alphanum."))";
-		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel.")";
+		$this->toplabel="([a-zA-Z]|([a-zA-Z](-|".$this->alphanum.")*".$this->alphanum."))";
+		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."(-|".$this->alphanum.")*".$this->alphanum."))";
+		$this->hostname="((".$this->domainlabel."\\.)*".$this->toplabel."\\.?)";
 		$this->host="(".$this->hostname."|".$this->ipv4address."|".$this->ipv6reference.")";
+
+        // domain name according to RFC 1035, section 2.3.1
+		$this->domainname="((".$this->toplabel."\\.)*".$this->toplabel.")";
 
 		$this->token="(([-.!%*_+`'~]|".$this->alphanum.")+)";
 		$this->param_unreserved="\\[|]|[/:&+$]";
