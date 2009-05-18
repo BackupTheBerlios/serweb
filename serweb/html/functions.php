@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.95 2009/05/15 06:51:00 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.96 2009/05/18 14:34:19 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -146,7 +146,7 @@ class Creg{
 		   domainlabel is one part of the dot.dot name string in a DNS name ("iptel");
 		     it must begin with alphanum, can contain special characters (-) and end
 			 with alphanums
-		   hostname can include any number of domain lables and end with toplable
+		   hostname can include any number of domain lables and end with toplabel
 		*/
 		$this->toplabel="([a-zA-Z]|([a-zA-Z](-|".$this->alphanum.")*".$this->alphanum."))";
 		$this->domainlabel="(".$this->alphanum."|(".$this->alphanum."(-|".$this->alphanum.")*".$this->alphanum."))";
@@ -209,6 +209,11 @@ class Creg{
 		$this->reason_phrase_js = "(".$this->reserved."|".$this->unreserved."|".
                             $this->escaped."|[\\u0080-\\uFFFF]|".
                             $this->SP."|".$this->HTAB.")*";
+
+        $this->global_hex_digits = "\\+[0-9]{1,3}(".$this->phonedigit_hex.")*";
+
+        /** regex matching value of rn-context uri param by RFC4636 */
+        $this->rn_descriptor = "(".$this->hostname=.")|(".$this->global_hex_digits.")";
 	}
 
     /**
