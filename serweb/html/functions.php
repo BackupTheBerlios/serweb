@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.96 2009/05/18 14:34:19 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.97 2009/05/19 09:38:58 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -213,7 +213,7 @@ class Creg{
         $this->global_hex_digits = "\\+[0-9]{1,3}(".$this->phonedigit_hex.")*";
 
         /** regex matching value of rn-context uri param by RFC4636 */
-        $this->rn_descriptor = "(".$this->hostname=.")|(".$this->global_hex_digits.")";
+        $this->rn_descriptor = "(".$this->hostname.")|(".$this->global_hex_digits.")";
 	}
 
     /**
