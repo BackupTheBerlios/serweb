@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.14 2009/01/08 20:39:29 kozlik Exp $
+ *  $Id: functions.js,v 1.15 2009/05/28 13:17:38 kozlik Exp $
  */
 
 
@@ -330,6 +330,30 @@ function parse_port_from_sip_uri(uri){
     return port;
 }
 
+
+/**
+ *  Register handler (fn) of event (evt) on object (obj) - browser independent
+ */
+add_event = function(obj, evt, fn){
+    if (obj.addEventListener) //w3c model
+        obj.addEventListener(evt, fn, false);
+    else if (obj.attachEvent) //MS model
+        obj.attachEvent('on'+evt, fn);
+    else //other
+        obj['on'+evt] = fn;
+}
+
+/**
+ *  Unregister handler (fn) of event (evt) on object (obj) - browser independent
+ */
+remove_event = function(obj, evt, fn){
+       if (obj.removeEventListener) //w3c model
+               obj.removeEventListener(evt, fn, false);
+       else if (obj.detachEvent) //MS model
+               obj.detachEvent('on'+evt, fn);
+    else //other
+        obj['on'+evt] = null;
+}
 
 
 
