@@ -3,7 +3,7 @@
  *	Data layer
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: data_layer.php,v 1.28 2008/08/13 11:07:58 kozlik Exp $
+ *	@version    $Id: data_layer.php,v 1.29 2009/06/09 13:50:41 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -770,6 +770,22 @@ class CData_Layer{
 		if ($this->get_act_row() >= $this->get_num_rows()) 
 			$this->set_act_row(max(0, $this->get_num_rows()-$this->get_showed_rows()));
 	}
+
+    /**
+     *  Return pager info for use by smarty pager plugin     
+     */
+    function get_pager(){
+        $pager = array();
+        
+        $pager['url']   = $_SERVER['PHP_SELF']."?kvrk=".uniqid("")."&act_row=";
+        $pager['pos']   = $this->get_act_row();
+        $pager['items'] = $this->get_num_rows();
+        $pager['limit'] = $this->get_showed_rows();
+        $pager['from']  = $this->get_res_from();
+        $pager['to']    = $this->get_res_to();
+        
+        return $pager;
+    }
 	
 
 	/**
