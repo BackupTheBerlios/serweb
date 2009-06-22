@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.30 2008/10/27 21:15:17 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.31 2009/06/22 09:51:24 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -1388,7 +1388,7 @@ class ModuleCallback{
 
 class CallbackCaller{
 
-    function call_array($callback_arr, $param, $opt, $break_on_error = false){
+    function call_array($callback_arr, $param, &$opt, $break_on_error = false){
     
         $ok = true;
         
