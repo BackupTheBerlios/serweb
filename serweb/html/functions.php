@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.97 2009/05/19 09:38:58 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.98 2009/06/24 11:18:24 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -161,17 +161,31 @@ class Creg{
 		$this->paramchar="(".$this->param_unreserved."|".$this->unreserved."|".$this->escaped.")";
 		$this->pname="((".$this->paramchar.")+)";
 		$this->pvalue="((".$this->paramchar.")+)";
-		$this->uri_parameter="(".$this->pname."(=".$this->pvalue.")?)";
-		$this->uri_parameters="((;".$this->uri_parameter.")*)";
 
-		$this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
+        $this->method="((INVITE)|(ACK)|(OPTIONS)|(BYE)|(CANCEL)|(REGISTER)|".$this->token.")";
 
-		/** regex matching sip uri */
-		$this->sip_address="[sS][iI][pP]:".$this->address;
-		/** regex matching sips uri */
-		$this->sips_address="[sS][iI][pP][sS]:".$this->address;
-		/** regex matching sip or sips uri */
-		$this->sip_s_address="[sS][iI][pP][sS]?:".$this->address;
+        $this->transport_param="(transport=((udp)|(tcp)|(sctp)|(tls)|".$this->token."))";
+        $this->user_param="(user=((phone)|(ip)|".$this->token."))";
+        $this->method_param="(method=".$this->method.")";
+        $this->ttl_param="(ttl=[0-9]{1,3})";
+        $this->maddr_param="(maddr=".$this->host.")";
+        $this->lr_param="(lr)";
+        $this->other_param="(".$this->pname."(=".$this->pvalue.")?)";
+
+        $this->uri_parameter="(".$this->transport_param."|".$this->user_param."|".
+                    $this->method_param."|".$this->ttl_param."|".$this->maddr_param."|".
+                    $this->lr_param."|".$this->other_param.")";
+        $this->uri_parameters="((;".$this->uri_parameter.")*)";
+
+        $this->address="(".$this->user."@)?".$this->host."(:".$this->port.")?".$this->uri_parameters;
+
+        /** regex matching sip uri */
+        $this->sip_address="[sS][iI][pP]:".$this->address;
+        /** regex matching sips uri */
+        $this->sips_address="[sS][iI][pP][sS]:".$this->address;
+        /** regex matching sip or sips uri */
+        $this->sip_s_address="[sS][iI][pP][sS]?:".$this->address;
+
 
 
 		/** reg.exp. validating sip header name */
@@ -1630,7 +1644,7 @@ function redirect_to_HTTPS(){
  *	@return	string
  */
 function js_escape($str){
-	return str_replace("\n", '\n', addslashes($str));
+    return str_replace("\n", '\n', addslashes($str));
 }
 
 /**
