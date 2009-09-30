@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.6 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.7 2009/09/30 16:11:53 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
 
@@ -15,7 +15,7 @@
 {if $action=="ack"}
 	<h2 class="swTitle">{$lang_str.ack_values}</h2>
 	<div>{$lang_str.uri_already_exists}</div>
-	{if $is_to_warning}<br /><div class="swWarning">{$lang_str.is_to_warning}</div>{/if}
+	{if $is_to_warning}<br /><div class="swWarning">{$lang_str.is_to_warning|replace:'<uri>':$uri_for_ack}</div>{/if}
 
 	<br />
 	

@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.61 2008/08/13 11:02:52 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.62 2009/09/30 16:11:52 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -451,7 +451,7 @@ $lang_str['l_deny'] = 							"cancel";
 $lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";
 $lang_str['ack_values'] = 						"Confirm values";
 $lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please confirm the values.";
-$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";
+$lang_str['is_to_warning'] = 					"WARNING: URI <uri> is already used by another user and  flag 'IS TO' is set for it. If you will continue, 'IS TO' flag will be cleared for that URI";
 $lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";
 $lang_str['uid_with_alias'] = 					"List of UID with alias";
 
