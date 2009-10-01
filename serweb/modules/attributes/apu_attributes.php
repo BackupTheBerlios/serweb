@@ -3,7 +3,7 @@
  * Application unit attributes
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attributes.php,v 1.16 2007/12/12 14:09:38 kozlik Exp $
+ * @version    $Id: apu_attributes.php,v 1.17 2009/10/01 09:42:54 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -456,6 +456,8 @@ class apu_attributes extends apu_base_class{
 
 		// add elements to form object
 		foreach($this->opt['attributes'] as $att){
+			if (!$this->access_to_change($att)) continue; //if attribute cannot be changed, do not add it ot the form
+
 			$opt = array();
 			$opt['err_msg']  = isset($this->opt['error_messages'][$att]) ? $this->opt['error_messages'][$att] : null;
 
@@ -477,6 +479,8 @@ class apu_attributes extends apu_base_class{
 
 		//check values of attributes and format its
 		foreach($this->opt['attributes'] as $att){
+			if (!$this->access_to_change($att)) continue; //if attribute cannot be changed, do not validate it
+
 			if (!$this->attr_types[$att]->check_value($_POST[$att])){
 
 				// value of attribute is wrong
