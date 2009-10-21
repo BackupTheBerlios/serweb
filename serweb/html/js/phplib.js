@@ -1,7 +1,7 @@
 /**
  *  Javascript functions supporting phplib object oriented html forms
  * 
- *  $Id: phplib.js,v 1.1 2009/04/02 16:26:34 kozlik Exp $
+ *  $Id: phplib.js,v 1.2 2009/10/21 08:07:39 kozlik Exp $
  *
  */
 
@@ -16,6 +16,8 @@ function PHPlib_ctl(varname){
  *  Register handler (fn) of event (evt) on object (obj) - browser independent
  */
 PHPlib_ctl.prototype.add_event = function(obj, evt, fn){
+    if (!obj) return;
+
     // register 'unload' event listener to opener window which close find popup 
     // when opened
     if (obj.addEventListener) //w3c model
@@ -30,6 +32,8 @@ PHPlib_ctl.prototype.add_event = function(obj, evt, fn){
  *  Unregister handler (fn) of event (evt) on object (obj) - browser independent
  */
 PHPlib_ctl.prototype.remove_event = function(obj, evt, fn){
+    if (!obj) return;
+
 	if (obj.removeEventListener) //w3c model
 		obj.removeEventListener(evt, fn, false);
 	else if (obj.detachEvent) //MS model
@@ -57,6 +61,8 @@ PHPlib_ctl.prototype.get_element_from_event = function(event){
  *  Trim whitespaces from begining and end of value of element
  */  
 PHPlib_ctl.prototype.trim = function(el){
+    if (!el) return;
+
     el.value = el.value.replace(new RegExp("^[ \t\n\r]*"), "");
     el.value = el.value.replace(new RegExp("[ \t\n\r]*$"), "");
 }

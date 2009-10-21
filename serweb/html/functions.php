@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.98 2009/06/24 11:18:24 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.99 2009/10/21 08:07:39 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -216,6 +216,10 @@ class Creg{
                             $this->escaped."|".$this->utf8_nonascii."|".
                             $this->SP."|".$this->HTAB.")*";
 
+        /** like reason_phrase, but matching only ascii chars */
+		$this->reason_phrase_ascii = "(".$this->reserved."|".$this->unreserved."|".
+                            $this->escaped."|".$this->SP."|".$this->HTAB.")*";
+
 		/** Regex matching reason phrase from status line.  
 		 *  This is javascript version of the above. This uses interval
 		 *  of unicode character codes instead of utf8_nonascii regexp.
@@ -224,10 +228,18 @@ class Creg{
                             $this->escaped."|[\\u0080-\\uFFFF]|".
                             $this->SP."|".$this->HTAB.")*";
 
+        /** like reason_phrase_js, but matching only ascii chars */
+		$this->reason_phrase_ascii_js = "(".$this->reserved."|".$this->unreserved."|".
+                            $this->escaped."|".$this->SP."|".$this->HTAB.")*";
+
         $this->global_hex_digits = "\\+[0-9]{1,3}(".$this->phonedigit_hex.")*";
 
         /** regex matching value of rn-context uri param by RFC4636 */
         $this->rn_descriptor = "(".$this->hostname.")|(".$this->global_hex_digits.")";
+
+
+        /** regex matching natural number */
+        $this->natural_num = "[0-9]+";
 	}
 
     /**
@@ -561,27 +573,61 @@ class Creg{
      *  Regular Expressions)
      *
      *  @param  string  $pattern    RegEx String pattern to validate
+     *  @param  string  $format     pcre/posix     
      *  @return bool                true if valid regex, false if not
      *
      */
-    function check_regexp($pattern){
+    function check_regexp($pattern, $format = "pcre"){
         global $config;
-        
-        if ($config->external_regexp_validator){
-        	exec($config->external_regexp_validator." ".escapeshellarg($pattern), $output);
-        
-        	if (isset($output[0]) and $output[0]=="1"){
-        		return true;
-        	}
-        	return false;
-        }
-        
-        /* 
-           external validator is not set
-           some php validation should be implemented there 
-         */
-        
+
+        switch ($format){
+        case "pcre":
+            if ($config->external_regexp_validator_pcre){
+            	exec($config->external_regexp_validator_pcre." ".escapeshellarg($pattern), $output);
+            
+            	if (isset($output[0]) and $output[0]=="1"){
+            		return true;
+            	}
+            	return false;
+            }
+
+            /* 
+               external validator is not set
+               some php validation should be implemented there 
+             */
+
+            break;
+
+        case "posix":
+            if ($config->external_regexp_validator_posix){
+            	exec($config->external_regexp_validator_posix." ".escapeshellarg($pattern), $output);
+            
+            	if (isset($output[0]) and $output[0]=="1"){
+            		return true;
+            	}
+            	return false;
+            }
+
+            /* 
+               external validator is not set
+               some php validation should be implemented there 
+             */
+
+            break;
+        default:
+            die(__FILE__.":".__LINE__." check_regexp: unknown value of format attribute: '".$format."'");
+        }        
+                
         return true;
+    }
+    
+    /**
+     *  Check whether the argument is natural number (as integer or it's 
+     *  string representation). Natural number is non-negative integer.    
+     */
+    function is_natural_num($val){
+        if (ereg("^".$this->natural_num."$", $val)) return true;
+        return false;
     }
 }
 
@@ -1661,4 +1707,28 @@ function add_param_to_url($url, $param){
     if (strpos($url, "?")) return $url."&".$param;
     else                   return $url."?".$param;
 }
+
+
+/**
+ *	Clone array of objects
+ *	
+ *  Create new array that contains new copies of object, not references 
+ *  to same objects 
+ *	
+ *	@param	array	$array
+ *	@return	array
+ */
+function clone_array($array){
+
+    if (!is_array($array)) return $array;
+
+    $clone = array();
+    foreach($array as $k=>$v){
+        if (is_object($v))  $clone[$k] = clone $v;
+        else                $clone[$k] = $v;
+    }
+    
+    return $clone;
+}
+
 ?>

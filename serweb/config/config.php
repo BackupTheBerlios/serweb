@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config.php,v 1.53 2008/10/08 09:43:29 kozlik Exp $
+ * $Id: config.php,v 1.54 2009/10/21 08:07:38 kozlik Exp $
  */
 
 /*****************************************************************************
@@ -459,8 +459,15 @@
 	$config->clear_text_pw=true;
  				
 
-    /* program used to validate regular expressions. It should return "1" to 
-       stdout when regexp given by first parameter is valid. 
+    /* program used to validate regular expressions in pcre format. It should 
+       return "1" to stdout when regexp given by first parameter is valid. 
      */
-    $config->external_regexp_validator = null;
+    $config->external_regexp_validator_pcre  = null;
+
+    /* program used to validate regular expressions in posix format. It should 
+       return "1" to stdout when regexp given by first parameter is valid. 
+     */
+    $config->external_regexp_validator_posix = null;
+
+
 ?>

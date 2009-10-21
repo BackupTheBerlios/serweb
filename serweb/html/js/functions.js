@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.15 2009/05/28 13:17:38 kozlik Exp $
+ *  $Id: functions.js,v 1.16 2009/10/21 08:07:39 kozlik Exp $
  */
 
 
@@ -177,6 +177,43 @@ function get_radio_by_value(el, val){
         }
     }
     return null;
+}
+
+/**
+ *  Get element identified by its tag name and class name
+ *      
+ *  @param  Element parentEl     parrent element of the tree inside which the search is performed
+ *  @param  string  tagName      name of tag to search
+ *  @param  string  className    name of class
+ *  @return Element 
+ */ 
+function get_element_by_className(parentEl, tagName, className){
+
+    var elements = parentEl.getElementsByTagName(tagName);
+    var classNames;
+    
+    for (var i=0; i<elements.length; i++){
+        classNames = elements[i].className.split(' ');
+        for (var j=0; j<classNames.length; j++){
+            if (classNames[j] == className) return elements[i];
+        }
+    }
+
+    return null;
+}
+
+/**
+ *      Set selectedIndex of select by value of option
+ */ 
+function set_select_by_value(el, val){
+
+    for (var i=0; i<el.options.length; i++){
+        if (el.options[i].value == val){
+            el.selectedIndex=i;
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
