@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.56 2008/03/19 12:10:03 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.57 2009/10/22 07:44:09 kozlik Exp $
  */
 
 
@@ -237,16 +237,36 @@
          *     proxies in the setup. When a proxy is not accessible during the notify
          *     it is not notified and still useing the old data.
          *     
-         *     List od sip proxies shold be set by config variable:
+         *     List of sip proxies shold be set by config variable:
          *     $config->sip_proxies
          *     
-         *   - all sip proxies periodically checkig value of global AVP 
+         *   - all sip proxies periodically checking value of global AVP 
          *     'domain_data_version' and if the value is changed, they reload the 
          *     domain data
          *
          *   Set following option to true to enable notifing of sip proxies by serweb
          */
         $config->domain_reload_ser_notify = false;
+
+        /**
+         *  When data in global attrs are changed, all sip proxies should be notified 
+         *  about it to reload the data. There are two methods how to do it:
+         *   
+         *   - serweb could notify ser itself, by it's management interface.
+         *     It have the disadvantage that serweb have to know about all sip 
+         *     proxies in the setup. When a proxy is not accessible during the notify
+         *     it is not notified and still useing the old data.
+         *     
+         *     List of sip proxies shold be set by config variable:
+         *     $config->sip_proxies
+         *     
+         *   - all sip proxies periodically checking value of global AVP 
+         *     'gattr_timestamp' and if the value is changed, they reload the 
+         *     global attrs
+         *
+         *   Set following option to true to enable notifing of sip proxies by serweb
+         */
+        $config->g_attrs_reload_ser_notify = false;
 
 		/**
 		 *	Set to false if SER useing did column of credentials table
@@ -291,53 +311,54 @@
 		// If you want to configure more LDAP backup servers, copy and paste the above (including the "$i++;")
 		
 
-		/**
-		 *	Names of attributes used internaly by serweb
-		 *	
-		 *	DON'T CHANGE IF YOU DON'T KNOW WHAT YOU ARE DOING !!
-		 */
+        /**
+         *  Names of attributes used internaly by serweb
+         *  
+         *  DON'T CHANGE IF YOU DON'T KNOW WHAT YOU ARE DOING !!
+         */
 
-		$config->attr_names = array(
-								'fname'				=> 'first_name',		//first name of user
-								'lname'				=> 'last_name',			//last name of user
-								'phone'				=> 'phone',				//phone of user
-								'email'				=> 'email',				//email address of user
-								'show_status'		=> 'sw_show_status',	//show to others if user is online
-								'lang'				=> 'lang',				//language
-								'timezone'			=> 'timezone',			//timezone
-								'allow_find'		=> 'sw_allow_find',		//allow other to look up for this user
-								'send_mc'			=> 'sw_send_missed',	//send missed calls
-								'acl'				=> 'acl',				//contain access control list of user - have to be declared as multivalue
+        $config->attr_names = array(
+                                'fname'             => 'first_name',        //first name of user
+                                'lname'             => 'last_name',         //last name of user
+                                'phone'             => 'phone',             //phone of user
+                                'email'             => 'email',             //email address of user
+                                'show_status'       => 'sw_show_status',    //show to others if user is online
+                                'lang'              => 'lang',              //language
+                                'timezone'          => 'timezone',          //timezone
+                                'allow_find'        => 'sw_allow_find',     //allow other to look up for this user
+                                'send_mc'           => 'sw_send_missed',    //send missed calls
+                                'acl'               => 'acl',               //contain access control list of user - have to be declared as multivalue
 
-								'is_admin'			=> 'sw_is_admin',		//have admin privilege
-								'is_hostmaster'		=> 'sw_is_hostmaster',	//have hostmaster privilege
-								'acl_control'		=> 'sw_acl_control',	//have to be declared as multivalue, contain list of ACL entries which admin may change
-								'highest_alias_number' => 'sw_highest_alias_number',	//highest assigned alias number
+                                'is_admin'          => 'sw_is_admin',       //have admin privilege
+                                'is_hostmaster'     => 'sw_is_hostmaster',  //have hostmaster privilege
+                                'acl_control'       => 'sw_acl_control',    //have to be declared as multivalue, contain list of ACL entries which admin may change
+                                'highest_alias_number' => 'sw_highest_alias_number',    //highest assigned alias number
 
-								'confirmation'		=> 'sw_confirmation',	//confirmation of registration
-								'uname_asign_mode'  => 'sw_uname_assign_mode', //mode of username assignment on registration
-								'pending_ts'		=> 'sw_pending_ts',		//registration timestamp - for deleting pending accounts
-								'deleted_ts'		=> 'sw_deleted_ts',		//deleted timestamp
-								'datetime_created'  => 'datetime_created',  //time of user creation
-								'require_conf' 		=> 'sw_require_confirm',//require confirmation
+                                'confirmation'      => 'sw_confirmation',   //confirmation of registration
+                                'uname_asign_mode'  => 'sw_uname_assign_mode', //mode of username assignment on registration
+                                'pending_ts'        => 'sw_pending_ts',     //registration timestamp - for deleting pending accounts
+                                'deleted_ts'        => 'sw_deleted_ts',     //deleted timestamp
+                                'datetime_created'  => 'datetime_created',  //time of user creation
+                                'require_conf'      => 'sw_require_confirm',//require confirmation
 
-								'digest_realm'		=> 'digest_realm',		
-								'contact_email'		=> 'contact_email',		//email address used in mail header from when serweb sending email
-								'admin'				=> 'sw_admin',			//have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
-								'dom_owner'			=> 'sw_owner',			//contain id of customer owning domain
+                                'digest_realm'      => 'digest_realm',      
+                                'contact_email'     => 'contact_email',     //email address used in mail header from when serweb sending email
+                                'admin'             => 'sw_admin',          //have to be declared as multivalue, meaning of this attribute is: 'admin of domain'
+                                'dom_owner'         => 'sw_owner',          //contain id of customer owning domain
 
-								'uid_format'		=> 'uid_format',		//format of newly created UIDs
-								'did_format'		=> 'did_format',		//format of newly created DIDs
+                                'uid_format'        => 'uid_format',        //format of newly created UIDs
+                                'did_format'        => 'did_format',        //format of newly created DIDs
 
-								'sd_fname'			=> 'first_name',		//speed dial first name
-								'sd_lname'			=> 'last_name',			//speed dial last name
+                                'sd_fname'          => 'first_name',        //speed dial first name
+                                'sd_lname'          => 'last_name',         //speed dial last name
 
-								'domain_default_flags'		=> 'sw_domain_default_flags',		//default flags for domains
-								'credential_default_flags'	=> 'sw_credential_default_flags',	//default flags for credentials
-								'uri_default_flags'			=> 'sw_uri_default_flags',			//default flags for URIs
+                                'domain_default_flags'      => 'sw_domain_default_flags',       //default flags for domains
+                                'credential_default_flags'  => 'sw_credential_default_flags',   //default flags for credentials
+                                'uri_default_flags'         => 'sw_uri_default_flags',          //default flags for URIs
 
-								'domain_data_version'		=> 'domain_data_version'			//version of data in domain table
-		                      );
+                                'domain_data_version'       => 'domain_data_version',           //version of data in domain table
+                                'gattr_timestamp'           => 'gattr_timestamp'                //version of data in global AVPs
+                              );
 
 
 

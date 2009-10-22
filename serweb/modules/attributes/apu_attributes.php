@@ -3,10 +3,12 @@
  * Application unit attributes
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attributes.php,v 1.17 2009/10/01 09:42:54 kozlik Exp $
+ * @version    $Id: apu_attributes.php,v 1.18 2009/10/22 07:44:09 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
+
+include_module('multidomain');
 
 /**
  *	This application unit is used for view and change values of attributes
@@ -111,7 +113,8 @@ class apu_attributes extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('get_attr_types', 'get_user_attrs', 'get_domain_attrs', 'get_global_attrs');
+		return array('get_attr_types', 'get_user_attrs', 'get_domain_attrs', 
+                     'get_global_attrs', 'reload_domains', 'reload_global_attrs');
 	}
 
 	/* return array of strings - requred javascript files */
@@ -294,6 +297,15 @@ class apu_attributes extends apu_base_class{
 				break;
 				}
 			}
+		}
+
+		switch($this->opt['attrs_kind']){
+		case "domain":
+			if (false === $data->reload_domains(null, $errors)) return false;
+		break;
+		case "global":
+			if (false === $data->reload_global_attrs(null, $errors)) return false;
+		break;
 		}
 
 		if ($this->opt['on_update_callback']){
