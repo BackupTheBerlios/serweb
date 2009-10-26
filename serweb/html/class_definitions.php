@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.32 2009/07/01 09:47:43 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.33 2009/10/26 11:17:49 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -283,11 +283,12 @@ class SerwebUser {
 		return $param."=".RawURLencode($uid.":".$did.":".$username.":".$realm);
 	}
 
-	
-	function to_smarty(){
-		return array('uname' => $this->username,
-		             'realm' => $this->realm);
-	}
+    
+    function to_smarty(){
+        return array('uname' => $this->username,
+                     'realm' => $this->realm,
+                     'domain'=> $this->get_domainname());
+    }
 }
 
 /**
