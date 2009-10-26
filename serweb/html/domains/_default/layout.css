@@ -130,10 +130,10 @@ div#swTabs div.swTabsR{
 	padding: 0;
 }
 
-div#swTabs ul li#swActiveTab div.swTabsL{
+div#swTabs ul li.swActiveTab div.swTabsL{
 }
 
-div#swTabs ul li#swActiveTab div.swTabsR{
+div#swTabs ul li.swActiveTab div.swTabsR{
 }
 
 div#swTabs ul li a, div#swTabs ul li strong {
@@ -194,10 +194,10 @@ div.subTabs div.swTabsR{
 	display: none;
 }
 
-div.subTabs ul li#swActiveTab div.swTabsL{
+div.subTabs ul li.swActiveTab div.swTabsL{
 }
 
-div.subTabs ul li#swActiveTab div.swTabsR{
+div.subTabs ul li.swActiveTab div.swTabsR{
 }
 
 div.subTabs ul li a, div.subTabs ul li strong {

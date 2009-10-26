@@ -42,11 +42,11 @@ div#swTabs div.swTabsR{
 	background-image : url(img/green_theme/tab_right_border.png);
 }
 
-div#swTabs ul li#swActiveTab div.swTabsL{
+div#swTabs ul li.swActiveTab div.swTabsL{
 	background-image : url(img/green_theme/tab_left_border_active.png);
 }
 
-div#swTabs ul li#swActiveTab div.swTabsR{
+div#swTabs ul li.swActiveTab div.swTabsR{
 	background-image : url(img/green_theme/tab_right_border_active.png);
 }
 
@@ -80,7 +80,7 @@ div.subTabs ul li:hover {
 	background: rgb(230,230,230);
 }
 
-div.subTabs ul li#swActiveTab {
+div.subTabs ul li.swActiveTab {
 	background: rgb(230,230,230);
 }
 

@@ -51,7 +51,7 @@ are printed following by <div id="swContent">.
 	The structure is this (the first tab is selected):
 	
 	<div id="swTabs"><ul>
-		<li id="swActiveTab"><div class="swTabsL"></div><strong><span>name of tab1</span></strong><div class="swTabsR"></div></li>
+		<li class="swActiveTab"><div class="swTabsL"></div><strong><span>name of tab1</span></strong><div class="swTabsR"></div></li>
 		<li><div class="swTabsL"></div><a href="..."  class="tabl"><span>name of tab2</span></a><div class="swTabsR"></div></li>
 		<li><div class="swTabsL"></div><a href="..."  class="tabl"><span>name of tab3</span></a><div class="swTabsR"></div></li>
 				.
