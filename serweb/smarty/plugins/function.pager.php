@@ -98,20 +98,20 @@
 	$lto=$pos+(($link_limit+1)*$limit); if ($lto>$items) $lto=$items;
 
 	if ($txt_first){
-		if ($pos>0) $out.='<a href="'.$sess->url($url.'0').'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_first.'</a>'.$separator;
+		if ($pos>0) $out.='<a href="'.htmlspecialchars($sess->url($url.'0'), ENT_QUOTES).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_first.'</a>'.$separator;
 		elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_first.'</span>'.$separator;
 	}
 
     // If page links are not the displayed
     if(true == $skip_page_links)
     {
-        if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>';
+        if ($pos>0) $out.='<a href="'.htmlspecialchars($sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)), ENT_QUOTES).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>';
         elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>';
 
     }
     else
     {
-        if ($pos>0) $out.='<a href="'.$sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
+        if ($pos>0) $out.='<a href="'.htmlspecialchars($sess->url($url.((($pos-$limit)>0)?($pos-$limit):0)), ENT_QUOTES).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_prev.'</a>'.$separator;
         elseif($display=='always') $out.='<span class="'.$class_text.'">'.$txt_prev.'</span>'.$separator;
 
         // skip printing page links
@@ -123,17 +123,17 @@
             if ($i<=$pos and $pos<($i+$limit))
                 $out.='<span class="'.$class_numon.'">'.(floor($i/$limit)+1).'</span>';
             else
-                $out.='<a href="'.$sess->url($url.$i).'" class="'.$class_num.'" '.$link_special_html.'>'.(floor($i/$limit)+1).'</a>';
+                $out.='<a href="'.htmlspecialchars($sess->url($url.$i), ENT_QUOTES).'" class="'.$class_num.'" '.$link_special_html.'>'.(floor($i/$limit)+1).'</a>';
         }
     }
 
  	if (($pos+$limit)<$items) 
-		$out.=$separator.'<a href="'.$sess->url($url.($pos+$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_next.'</a>';
+		$out.=$separator.'<a href="'.htmlspecialchars($sess->url($url.($pos+$limit)), ENT_QUOTES).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_next.'</a>';
 	elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_next.'</span>';
 
 	if ($txt_last){
 	 	if (($pos+$limit)<$items) 
-			$out.=$separator.'<a href="'.$sess->url($url.(floor($items/$limit)*$limit)).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_last.'</a>';
+			$out.=$separator.'<a href="'.htmlspecialchars($sess->url($url.(floor($items/$limit)*$limit)), ENT_QUOTES).'" class="'.$class_text.'" '.$link_special_html.'>'.$txt_last.'</a>';
 		elseif ($display=='always') $out.=$separator.'<span class="'.$class_text.'">'.$txt_last.'</span>';
 	}
 
