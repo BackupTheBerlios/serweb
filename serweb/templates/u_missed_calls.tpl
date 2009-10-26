@@ -1,7 +1,9 @@
 {* Smarty *}
-{* $Id: u_missed_calls.tpl,v 1.8 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: u_missed_calls.tpl,v 1.9 2009/10/26 11:12:42 kozlik Exp $ *}
 
 {include file='_head.tpl'}
+
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {foreach from=$missed_calls item='row' name='missed_calls'}
 	{if $smarty.foreach.missed_calls.first}
@@ -16,8 +18,8 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">
-		{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}
-			{if $row.name}{$row.name|escape|empty2nbsp}
+		{if $config->enable_ctd}<a href="{$row.url_ctd|escape}">{/if}
+			{if $row.name}<span class="swPopupLink" {popup text=$row.sip_to|escape|escape|empty2nbsp}>{$row.name|escape|empty2nbsp}</span>
 			{else} {$row.sip_to|escape|empty2nbsp}
 			{/if}
 		{if $config->enable_ctd}</a>{/if}
@@ -37,7 +39,7 @@
 	</div>
 
         <div id="orphanlinks">
-        <div class="swLinkToTabExtension"><a href="{$url_delete}">{$lang_str.b_delete_calls}</a></div>
+        <div class="swLinkToTabExtension"><a href="{$url_delete|escape}">{$lang_str.b_delete_calls}</a></div>
         </div>
 	{/if}
 {foreachelse}
@@ -45,5 +47,5 @@
 {/foreach}
 
 
-<br>
+<br />
 {include file='_tail.tpl'}

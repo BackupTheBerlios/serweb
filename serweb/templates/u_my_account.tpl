@@ -1,12 +1,12 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.21 2007/01/18 14:06:04 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.22 2009/10/26 11:12:42 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 {popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {if $come_from_admin_interface}
-<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}</h2>
+<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}@{$user_auth.domain|escape}</h2>
 {/if}
 
 {html_tabs tabs=$attr_groups 
@@ -98,7 +98,7 @@
 	{/if}
 {/foreach}
 	
-<br class="swCleaner"><br>
+<br class="swCleaner" /><br />
 
 {if $config->allow_change_usrloc}	
 
@@ -118,7 +118,7 @@
 	<td align="center">{$row.expires|empty2nbsp}</td>
 	<td align="center">{$row.q|empty2nbsp}</td>
 	<td align="center">{$row.geo_loc|empty2nbsp}</td>
-	<td align="center"><a href="{$row.url_dele}" class="actionsrow">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_dele|escape}" class="actionsrow">{$lang_str.l_delete}</a></td>
 	</tr>
 	{if $smarty.foreach.usrloc.last}
 	</table>
@@ -144,16 +144,16 @@
 {if $config->enable_dial_voicemail or $config->enable_test_firewall}
 <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_dial_your_voicemail.gif" width="165" height="16" border="0" alt="{$lang_str.b_dial_your_voicemail}"></a></td>{/if}
-{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_test_firewall_NAT.gif" width="165" height="16" border="0" alt="{$lang_str.b_test_firewall_NAT}"></a></td>{/if}
+{if $config->enable_dial_voicemail}<td align="center"><a href="{$url_ctd|escape}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_dial_your_voicemail.gif" width="165" height="16" border="0" alt="{$lang_str.b_dial_your_voicemail}"></a></td>{/if}
+{if $config->enable_test_firewall}<td align="center"><a href="{$url_stun|escape}"><img src="{$cfg->img_src_path}int/{$lang_set.ldir}/buttons/btn_test_firewall_NAT.gif" width="165" height="16" border="0" alt="{$lang_str.b_test_firewall_NAT}"></a></td>{/if}
 </tr>
 </table>
 {/if}
 
 
 {if $come_from_admin_interface}
-	<div class="swBackToMainPage"><a href="{$url_admin}">{$lang_str.l_back_to_main}</a></div>
+	<div class="swBackToMainPage"><a href="{$url_admin|escape}">{$lang_str.l_back_to_main}</a></div>
 {/if}
-<br>
+<br />
 {include file='_tail.tpl'}
 

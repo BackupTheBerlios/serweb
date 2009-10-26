@@ -1,11 +1,13 @@
 {* Smarty *}
-{* $Id: u_accounting.tpl,v 1.11 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: u_accounting.tpl,v 1.12 2009/10/26 11:12:42 kozlik Exp $ *}
 
 
 {include file='_head.tpl'}
 
+{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+
 {if $come_from_admin_interface}
-<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}</h2>
+<h2 class="swTitle">{$lang_str.user}: {$user_auth.uname|escape}@{$user_auth.domain|escape}</h2>
 {/if}
 
 {foreach from=$acc item='row' name='accounting'}
@@ -22,8 +24,8 @@
 
 	<tr valign="top" class="{cycle values='swTrOdd,swTrEven'}">
 	<td align="left">
-		{if $config->enable_ctd}<a href="{$row.url_ctd}">{/if}
-			{if $row.name}{$row.name|escape|empty2nbsp}
+		{if $config->enable_ctd}<a href="{$row.url_ctd|escape}">{/if}
+			{if $row.name}<span class="swPopupLink" {popup text=$row.sip_to|escape|escape|empty2nbsp}>{$row.name|escape|empty2nbsp}</span>
 			{else} {$row.sip_to|escape|empty2nbsp}
 			{/if}
 		{if $config->enable_ctd}</a>{/if}
@@ -43,7 +45,7 @@
 	</div>
 
 	<div id="orphanlinks">
-	<div class="swLinkToTabExtension"><a href="{$url_delete}">{$lang_str.b_delete_calls}</a></div>
+	<div class="swLinkToTabExtension"><a href="{$url_delete|escape}">{$lang_str.b_delete_calls}</a></div>
 	</div>
 	{/if}
 {foreachelse}
@@ -52,9 +54,9 @@
 
 
 {if $come_from_admin_interface}
-	<br>
-	<div class="swBackToMainPage"><a href="{$url_admin}">{$lang_str.l_back_to_main}</a></div>
+	<br />
+	<div class="swBackToMainPage"><a href="{$url_admin|escape}">{$lang_str.l_back_to_main}</a></div>
 {/if}
 
-<br>
+<br />
 {include file='_tail.tpl'}
