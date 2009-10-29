@@ -1058,3 +1058,26 @@ th.alternatpoplinkstyle a.swPopupLink {
 	display: none;
 	margin: 5px 0px;
 }
+
+
+.popupFormItem {
+    display:block;
+    text-align:left;
+}
+
+.popupFormItem .inpSubmit {
+    display:block;
+    font-size:10px;
+    margin:auto;
+    width:70px;
+}
+
+.popupFormCol {
+    margin:auto;
+    width:200px;
+}
+
+.popupFormSubmitCol {
+    float:left;
+    width:120px;
+}

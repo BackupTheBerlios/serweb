@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.12 2007/12/14 18:47:23 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.13 2009/10/29 13:01:06 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -24,7 +24,7 @@
 {popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <div class="toggler">
-	<a href="javascript: toggle_visibility(document.getElementById('stretcher_f'));"><h2 class="swTitle">{$lang_str.search_filter}:</h2></a>
+	<a href="javascript:toggle_visibility(document.getElementById('stretcher_f'));" style="display:block;"><h2 class="swTitle">{$lang_str.search_filter}:</h2></a>
 	
 	<div class="stretcher" id="stretcher_f">
 		<div class="swForm swHorizontalForm">
@@ -96,7 +96,7 @@
 		
 			<div class="flagForm">
 				<div style="width:110px;">
-					<a href={$url_toggle_groups}>{$lang_str.l_attr_grp_toggle}</a>
+					<a href={$url_toggle_groups|escape}>{$lang_str.l_attr_grp_toggle}</a>
 				</div>
 			</div>
 		</td></tr>
@@ -211,16 +211,16 @@
 	{if $smarty.foreach.at.first}
 	<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable alternatpoplinkstyle">
 	<tr>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_order}"      class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_name}"      >{$lang_str.th_att_name}</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_rich_type}" >{$lang_str.th_att_type}</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_flags_r}"    class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_u}" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_d}" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_g}" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_s}"  class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_sw}" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
-	<th class="alternatpoplinkstyle"><a href="{$url_sort_desc}"       class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_order|escape}"      class="swPopupLink" {popup text=$lang_str.at_hint_order}>{$lang_str.th_order}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_name|escape}"      >{$lang_str.th_att_name}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_rich_type|escape}" >{$lang_str.th_att_type}</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_flags_r|escape}"    class="swPopupLink" {popup text=$lang_str.at_hint_registration}>R</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_u|escape}" class="swPopupLink" {popup text=$lang_str.at_hint_user        }>U</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_d|escape}" class="swPopupLink" {popup text=$lang_str.at_hint_domain      }>D</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_priority_g|escape}" class="swPopupLink" {popup text=$lang_str.at_hint_global      }>G</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_s|escape}"  class="swPopupLink" {popup text=$lang_str.at_hint_for_ser     }>S</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_d_flags_sw|escape}" class="swPopupLink" {popup text=$lang_str.at_hint_for_serweb  }>SW</a></th>
+	<th class="alternatpoplinkstyle"><a href="{$url_sort_desc|escape}"       class="swPopupLink" {popup text=$lang_str.at_hint_label       }>{$lang_str.th_label}</a></th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
 	<th>&nbsp;</th>
@@ -229,7 +229,8 @@
 
 	{if $show_groups and $grp != $row.group}{setvar grp=$row.group}
 		<tr>
-		<td colspan="13">{$lang_str.th_att_group}: {$row.group}</td>
+		<td colspan="12">{$lang_str.th_att_group}: {$row.group}</td>
+    	<td align="center"><a href="{$row.url_grp_rename|escape}" class="actionsrow">{$lang_str.l_rename}</a></td>
 		</tr>
 	{/if}
 {*foreach from=$attrs item='row' name='at'}
@@ -263,11 +264,11 @@
 			/if}{
 		/if}</td>
 	<td align="center">{
-		if $row.url_ext}<a href="{$row.url_ext}" class="actionsrow">{$lang_str.l_extended}</a>{
+		if $row.url_ext}<a href="{$row.url_ext|escape}" class="actionsrow">{$lang_str.l_extended}</a>{
 		else}&nbsp;{
 		/if}</td>
-	<td align="center"><a href="{$row.url_edit}" class="actionsrow">{$lang_str.l_edit}</a></td>
-	<td align="center"><a href="{$row.url_dele}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
+	<td align="center"><a href="{$row.url_edit|escape}" class="actionsrow">{$lang_str.l_edit}</a></td>
+	<td align="center"><a href="{$row.url_dele|escape}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_want_you_delete_this_attr}')">{$lang_str.l_delete}</a></td>
 	</tr>
 {*/if}
 
@@ -289,15 +290,15 @@
 <div id="orphanlinks">
 <div>
     <a href="{url url='attr_types_import.php'}">{$lang_str.l_import_xml}</a> - 
-    <a href="{url url=$url_export_xml}">{$lang_str.l_export_xml}</a> - 
-    <a href="{url url=$url_export_sql}">{$lang_str.l_export_sql}</a></div>
+    <a href="{url url=$url_export_xml|escape}">{$lang_str.l_export_xml}</a> - 
+    <a href="{url url=$url_export_sql|escape}">{$lang_str.l_export_sql}</a></div>
 </div>
 
 <br />
 <div class="swWarningBox"><h2>{$lang_str.warning}</h2>
 {$lang_str.attr_type_warning}
 </div>
-<br>
+<br />
 
 <br />
 {include file='_tail.tpl'}

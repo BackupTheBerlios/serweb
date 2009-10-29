@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.71 2008/08/13 11:02:52 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.72 2009/10/29 13:01:03 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -30,6 +30,7 @@ $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"edit";
 $lang_str['l_extended'] = 						"extended";
+$lang_str['l_rename'] = 						"rename";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_undelete'] = 						"undelete";
@@ -451,7 +452,7 @@ $lang_str['l_deny'] = 							"cancel";
 $lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and domain";
 $lang_str['ack_values'] = 						"Confirm values";
 $lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please confirm the values.";
-$lang_str['is_to_warning'] = 					"WARNING: flag 'IS TO' is set for another URI. If you will continue, this flag will be cleared in the URI";
+$lang_str['is_to_warning'] = 					"WARNING: URI <uri> is already used by another user and  flag 'IS TO' is set for it. If you will continue, 'IS TO' flag will be cleared for that URI";
 $lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";
 $lang_str['uid_with_alias'] = 					"List of UID with alias";
 
@@ -500,6 +501,9 @@ $lang_str['ff_fr_timer'] = 						"final response timer";
 $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";
 $lang_str['ff_uid_format'] = 					"format of newly created UIDs";
 $lang_str['ff_did_format'] = 					"format of newly created DIDs";
+
+$lang_str['title_group_rename'] = 				"Rename group";
+$lang_str['ff_new_group'] = 					"new name of group";
 
 $lang_str['at_access_0'] = 						"full access";
 $lang_str['at_access_1'] = 						"read only for users";
@@ -574,6 +578,7 @@ $lang_str['attr_grp_general'] = 				"general";
 $lang_str['attr_grp_privacy'] = 				"privacy";
 $lang_str['attr_grp_other'] = 					"other";
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";
+$lang_str['err_at_new_grp_empty'] = 	        "Group name can't be empty";
 $lang_str['attr_grp_create_new'] = 				"create new group";
 
 

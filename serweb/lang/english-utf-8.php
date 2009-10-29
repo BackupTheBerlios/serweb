@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.62 2009/09/30 16:11:52 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.63 2009/10/29 13:01:03 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -30,6 +30,7 @@ $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"edit";
 $lang_str['l_extended'] = 						"extended";
+$lang_str['l_rename'] = 						"rename";
 $lang_str['l_change'] = 						"change";
 $lang_str['l_delete'] = 						"delete";
 $lang_str['l_undelete'] = 						"undelete";
@@ -501,6 +502,9 @@ $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";
 $lang_str['ff_uid_format'] = 					"format of newly created UIDs";
 $lang_str['ff_did_format'] = 					"format of newly created DIDs";
 
+$lang_str['title_group_rename'] = 				"Rename group";
+$lang_str['ff_new_group'] = 					"new name of group";
+
 $lang_str['at_access_0'] = 						"full access";
 $lang_str['at_access_1'] = 						"read only for users";
 $lang_str['at_access_3'] = 						"hidden for users";
@@ -574,6 +578,7 @@ $lang_str['attr_grp_general'] = 				"general";
 $lang_str['attr_grp_privacy'] = 				"privacy";
 $lang_str['attr_grp_other'] = 					"other";
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";
+$lang_str['err_at_new_grp_empty'] = 	        "Group name can't be empty";
 $lang_str['attr_grp_create_new'] = 				"create new group";
 
 

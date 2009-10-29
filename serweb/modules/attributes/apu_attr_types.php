@@ -3,7 +3,7 @@
  * Application unit attribute types
  * 
  * @author     Karel Kozlik
- * @version    $Id: apu_attr_types.php,v 1.14 2007/12/14 18:41:12 kozlik Exp $
+ * @version    $Id: apu_attr_types.php,v 1.15 2009/10/29 13:01:05 kozlik Exp $
  * @package    serweb
  * @subpackage mod_attributes
  */ 
@@ -84,7 +84,7 @@ class apu_attr_types extends apu_base_class{
 	 *	@return array	array of required data layer methods
 	 */
 	function get_required_data_layer_methods(){
-		return array('update_attr_type', 'del_attr_type');
+		return array('update_attr_type', 'del_attr_type', 'rename_attr_type_group');
 	}
 
 	/**
@@ -93,7 +93,8 @@ class apu_attr_types extends apu_base_class{
 	 *	@return array	array of required javascript files
 	 */
 	function get_required_javascript(){
-		return array();
+        return array('get_js.php?mod=attributes&js=attr_types.js', 
+                     'overlib/overlib.js');
 	}
 	
 	/**
@@ -315,6 +316,7 @@ class apu_attr_types extends apu_base_class{
 			if ($at[$k]->apu_edit()){
 				$this->smarty_attrs[$k]['url_ext'] = $sess->url($this->opt['type_spec_script']."?attrib_name=".RawURLEncode($at[$k]->get_name())."&kvrk=".uniqID(""));
 			}
+			$this->smarty_attrs[$k]['url_grp_rename'] = "javascript:at_ctl.groupNameDialog('".js_escape($at[$k]->group)."')";
 
 		}
 	}
@@ -505,6 +507,22 @@ class apu_attr_types extends apu_base_class{
 	}
 
 	/**
+	 *	Method perform action rename_group
+	 *
+	 *	@param array $errors	array with error messages
+	 *	@return array			return array of $_GET params fo redirect or FALSE on failure
+	 */
+
+	function action_rename_group(&$errors){
+		global $data;
+
+		/* store changes to DB */
+		if (false === $data->rename_attr_type_group($_GET['old_group_name'], $_GET['new_group_name'], null)) return false;
+
+		return true;
+	}
+
+	/**
 	 *	Method perform action edit
 	 *
 	 *	@param array $errors	array with error messages
@@ -567,6 +585,12 @@ class apu_attr_types extends apu_base_class{
 								'reload'=>true);
 			return;
 		}
+		elseif (isset($_GET['rename_group'])){
+			$this->action=array('action'=>"rename_group",
+			                    'validate_form'=>true,
+								'reload'=>true);
+			return;
+		}
 		elseif (isset($_GET['toggle_grp'])){
 			$this->action=array('action'=>"toggle_grp",
 			                    'validate_form'=>false,
@@ -602,7 +626,7 @@ class apu_attr_types extends apu_base_class{
 	 *	@return null			FALSE on failure
 	 */
 	function create_html_form(&$errors){
-		global $lang_str;
+		global $lang_str, $sess;
 		parent::create_html_form($errors);
 		
 		/* get list of attributes */
@@ -724,7 +748,26 @@ class apu_attr_types extends apu_base_class{
 			$this->f->add_extra_submit('extended_settings', $this->opt['form_submit_extended']);
 		}
 
+        /* Instantiate page controler object */
+        $onload_js = "
+            var at_ctl;
+            at_ctl = new Attr_types_ctl('at_ctl', ".my_JSON_encode($lang_str).", '".js_escape($sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&rename_group=1"))."');";
+
+        $this->controler->set_onload_js($onload_js);
+
 	}
+
+    function form_invalid(){
+        if ($this->action['action'] == "rename_group"){
+            if (false === $this->action_default($errors)) return false;
+        }
+        elseif ($this->action['action'] == "add"){
+            if (false === $this->action_default($errors)) return false;
+        }
+        elseif ($this->action['action'] == "update"){
+            if (false === $this->action_default($errors)) return false;
+        }
+    }
 
 	/**
 	 *	validate html form 
@@ -734,6 +777,20 @@ class apu_attr_types extends apu_base_class{
 	 */
 	function validate_form(&$errors){
 		global $lang_str;
+
+        if ($this->action['action'] == "rename_group"){
+            if (!isset($_GET['old_group_name'])){
+                $_GET['old_group_name'] = null;
+                sw_log("Attribute types: 'rename group' action ivoked without group name given. URL broken??", PEAR_LOG_INFO);
+            }
+
+            if (empty($_GET['new_group_name'])){
+				$errors[] = $lang_str['err_at_new_grp_empty'];
+				return false;
+            }
+            return true;
+        }
+
 		if (false === parent::validate_form($errors)) return false;
 		
 		if ($_POST['attr_group'] == '__new__'){

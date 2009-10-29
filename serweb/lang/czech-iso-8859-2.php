@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.55 2008/08/13 11:02:51 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.56 2009/10/29 13:01:03 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -30,6 +30,7 @@ $lang_str['no_records'] = 						"®ádné záznamy";
 $lang_str['l_logout'] = 						"Odhlá¹ení";
 $lang_str['l_edit'] = 							"zmìnit";
 $lang_str['l_extended'] = 						"extended";	//to translate 
+$lang_str['l_rename'] = 						"rename";	//to translate 
 $lang_str['l_change'] = 						"zmìnit";
 $lang_str['l_delete'] = 						"smazat";
 $lang_str['l_undelete'] = 						"undelete";	//to translate 
@@ -501,6 +502,9 @@ $lang_str['ff_fr_inv_timer'] = 					"final response invite timer";	//to translat
 $lang_str['ff_uid_format'] = 					"formát novì vytváøených UID";
 $lang_str['ff_did_format'] = 					"formát novì vytváøených DID";
 
+$lang_str['title_group_rename'] = 				"Rename group";	//to translate 
+$lang_str['ff_new_group'] = 					"new name of group";	//to translate 
+
 $lang_str['at_access_0'] = 						"plný pøístup";
 $lang_str['at_access_1'] = 						"pro u¾ivatele je pouze pro ètení";
 $lang_str['at_access_3'] = 						"pouze pro administrátory (R/W)";
@@ -574,6 +578,7 @@ $lang_str['attr_grp_general'] = 				"general";	//to translate
 $lang_str['attr_grp_privacy'] = 				"privacy";	//to translate 
 $lang_str['attr_grp_other'] = 					"other";	//to translate 
 $lang_str['err_at_grp_empty'] = 				"Attribute group can't be empty";	//to translate 
+$lang_str['err_at_new_grp_empty'] = 	        "Group name can't be empty";	//to translate 
 $lang_str['attr_grp_create_new'] = 				"create new group";	//to translate 
 
 

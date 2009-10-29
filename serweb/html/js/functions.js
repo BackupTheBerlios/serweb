@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.16 2009/10/21 08:07:39 kozlik Exp $
+ *  $Id: functions.js,v 1.17 2009/10/29 13:01:03 kozlik Exp $
  */
 
 
@@ -14,6 +14,21 @@ Function.prototype.bindObj = function(object) {
 		return __method.apply(object, arguments);
 	}
 } 
+
+/**
+ *	Trim methods for a string
+ */ 
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g,"");
+}
+
+String.prototype.ltrim = function() {
+	return this.replace(/^\s+/,"");
+}
+
+String.prototype.rtrim = function() {
+	return this.replace(/\s+$/,"");
+}
 
 /* confirm click to <a href=""> */
 
