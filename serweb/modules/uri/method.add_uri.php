@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.add_uri.php,v 1.7 2007/02/14 16:36:38 kozlik Exp $
+ *	@version    $Id: method.add_uri.php,v 1.1 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_uri
  */ 

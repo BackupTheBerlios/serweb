@@ -3,7 +3,7 @@
  *	Application unit aliases
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_aliases.php,v 1.8 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: apu_aliases.php,v 1.9 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_uri
  */ 
@@ -97,12 +97,14 @@ class apu_aliases extends apu_base_class{
 
 	/* return required data layer methods - static class */
 	function get_required_data_layer_methods(){
-		return array('delete_uri', 'add_uri', 'update_uri');
+		return array('delete_uri', 'add_uri', 'update_uri', 'get_uris',
+                     'get_new_alias_number');
 	}
 
 	/* return array of strings - requred javascript files */
 	function get_required_javascript(){
-		return array();
+		return array('functions.js',
+                     'get_js.php?mod=uri&js=aliases.js');
 	}
 	
 	/* constructor */
@@ -137,11 +139,14 @@ class apu_aliases extends apu_base_class{
 		$this->opt['smarty_ack_uris'] = 	'ack_uris';
 		$this->opt['smarty_url_ack'] = 		'url_ack';
 		$this->opt['smarty_url_deny'] = 	'url_deny';
+		$this->opt['smarty_url_insert'] =   'url_insert';
+		$this->opt['smarty_url_uri_suggest'] =  'url_uri_suggest';
+		$this->opt['smarty_url_uri_generate'] = 'url_uri_generate';
 		$this->opt['smarty_uri_for_ack'] = 	'uri_for_ack';
 		$this->opt['smarty_is_to_warning'] ='is_to_warning';
 		
 		/* name of html form */
-		$this->opt['form_name'] =			'';
+		$this->opt['form_name'] =			'uriForm';
 	}
 
 	/* this metod is called always at begining */
@@ -585,11 +590,103 @@ class apu_aliases extends apu_base_class{
 		$this->smarty_action="edit";
 	}
 
+	function action_insert(&$errors){
+
+		$this->smarty_action="insert";
+	}
+
 	function action_default(&$errors){
 		if (false === $this->get_aliases($errors)) return false;
 		return true;
 	}
-	
+    
+    function action_generate_query(&$errors){
+        global $data;
+
+        $this->controler->disable_html_output();
+        header("Content-Type: text/plain");
+
+        $did = $_GET['al_did'];
+
+		// generate numeric alias 
+		if (false === $alias_uname=$data->get_new_alias_number($did, null)) {
+			return false;
+		}
+
+        $response = new stdClass();
+        $response->uri_uname = $alias_uname;
+
+        echo my_JSON_encode($response);
+        return true;
+    }
+    
+    function action_usage_query(&$errors){
+        global $data;
+
+        $this->controler->disable_html_output();
+        header("Content-Type: text/plain");
+
+        $uname = $_GET['al_uname'];
+        $did = $_GET['al_did'];
+
+        $uris_handler = &URIS::singleton_2($uname, $did);
+        if (false === $uris = $uris_handler->get_URIs()) return false;
+
+        $response = new stdClass();
+        $response->uri_used = (count($uris) > 0) ? true : false;
+
+        echo my_JSON_encode($response);
+        return true;
+    }
+    
+    function action_suggest_query(&$errors){
+        global $data;
+
+        $this->controler->disable_html_output();
+        header("Content-Type: text/plain");
+
+        $uname = $_GET['al_uname'];
+        $did = $_GET['al_did'];
+
+        if (ereg("^[0-9]+$", $uname)){
+            // suggestion for numeric aliases
+            $uris = array();
+            for ($i=0; $i<strlen($uname); $i++){
+                $gen_uris = array();
+                for ($j=0; $j<10; $j++) $gen_uris[substr_replace($uname, $j, $i, 1)] = 1;
+            
+                $opt = array(); 
+                $opt['filter']['did'] = new Filter("did", $did, "=", false, false);
+                $opt['filter']['username'] = new Filter("username", substr_replace($uname, "?", $i, 1), "like", false, false);
+                if (false === $used_uris = $data->get_uris(null, $opt)) return false;
+    
+                foreach($used_uris as $v) unset($gen_uris[$v->username]);
+    
+                $uris = array_merge($uris, array_keys($gen_uris));
+            }
+        }
+        else{
+            $gen_uris = array();
+            for ($j=0; $j<10; $j++) $gen_uris[$uname.$j] = 1;
+
+            $opt = array(); 
+            $opt['filter']['did'] = new Filter("did", $did, "=", false, false);
+            $opt['filter']['username'] = new Filter("username", $uname."?", "like", false, false);
+            if (false === $used_uris = $data->get_uris(null, $opt)) return false;
+
+            foreach($used_uris as $v) unset($gen_uris[$v->username]);
+
+            $uris = array_keys($gen_uris);
+        }
+
+        sort($uris);
+        $response = new stdClass();
+        $response->suggested_uris = $uris;
+
+        echo my_JSON_encode($response);
+        return true;
+    }
+    
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
 
@@ -665,6 +762,14 @@ class apu_aliases extends apu_base_class{
 			if (isset($_SESSION['apu_aliases']['ack'])) 
 				unset($_SESSION['apu_aliases']['ack']);
 			
+			if (isset($_GET['uri_insert'])){
+	
+				$this->action = array('action'=>"insert",
+				                      'validate_form'=>false,
+				                      'reload'=>false);
+				return;
+			}
+	
 			if (isset($_GET['uri_edit'])){
 				$this->act_alias['username'] = $_GET['al_un'];
 				$this->act_alias['did'] =      $_GET['al_did'];
@@ -686,6 +791,33 @@ class apu_aliases extends apu_base_class{
 				                      'reload'=>true);
 				return;
 			}
+
+			if (isset($_GET['uri_usage'])){
+	
+				$this->action = array('action'=>"usage_query",
+				                      'validate_form'=>false,
+				                      'reload'=>false,
+                                      'alone'=>true);
+				return;
+			}
+
+			if (isset($_GET['uri_suggest'])){
+	
+				$this->action = array('action'=>"suggest_query",
+				                      'validate_form'=>false,
+				                      'reload'=>false,
+                                      'alone'=>true);
+				return;
+			}
+
+			if (isset($_GET['uri_generate'])){
+	
+				$this->action = array('action'=>"generate_query",
+				                      'validate_form'=>false,
+				                      'reload'=>false,
+                                      'alone'=>true);
+				return;
+			}
 		}
 		
 		$this->action=array('action'=>"default",
@@ -697,7 +829,7 @@ class apu_aliases extends apu_base_class{
 	/* create html form */
 	function create_html_form(&$errors){
 		parent::create_html_form($errors);
-		global $lang_str, $config;
+		global $lang_str, $config, $sess;
 		
 		$domains = &Domains::singleton();
 		if (false === $this->domain_names = $domains->get_id_name_pairs()) return false;
@@ -750,13 +882,15 @@ class apu_aliases extends apu_base_class{
 										 "valid_regex"=>"^".$reg->user."$",
 										 "valid_e"=>$lang_str['fe_not_valid_username'],
 										 "length_e"=>$lang_str['fe_not_filled_username'],
-			                             "value"=>isset($this->act_alias['username']) ? $this->act_alias['username'] : ""));
+			                             "value"=>isset($this->act_alias['username']) ? $this->act_alias['username'] : "",
+                                         "extrahtml"=>"onkeyup='alias_ctl.onAliasChange();' oncut='alias_ctl.onAliasChange();' onpaste='alias_ctl.onAliasChange();'"));
 	
 			$this->f->add_element(array("type"=>"select",
 										 "name"=>"al_domain",
 										 "options"=>$dom_options,
 										 "value"=>(isset($this->act_alias['did']) ? $this->act_alias['did'] : $this->user_id->get_did()),
-										 "size"=>1));
+										 "size"=>1,
+                                         "extrahtml"=>"onchange='alias_ctl.onAliasChange();' onkeyup='alias_ctl.onAliasChange();'"));
 
 			$this->f->add_element(array("type"=>"checkbox",
 										 "name"=>"al_is_canon",
@@ -785,6 +919,20 @@ class apu_aliases extends apu_base_class{
 			$this->f->add_element(array("type"=>   "hidden",
 			                             "name"=>  "al_id_f",
 			                             "value"=> $this->act_alias['flags']));
+
+
+            $onload_js = "
+                var alias_ctl;
+                alias_ctl = new Aliases_ctl('alias_ctl');
+                alias_ctl.init('".$this->opt['form_name']."');
+                alias_ctl.onAliasChangeUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_usage=1")."';
+                alias_ctl.aliasSuggestUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_suggest=1")."';
+                alias_ctl.aliasGenerateUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_generate=1")."';
+                alias_ctl.lang_str.no_suggestions='".js_escape($lang_str['no_suggestions'])."'                
+            ";
+
+            $this->controler->set_onload_js($onload_js);
+
 		}
 	}
 
@@ -854,10 +1002,13 @@ class apu_aliases extends apu_base_class{
 
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 
 		$smarty->assign_by_ref($this->opt['smarty_aliases'], $this->aliases);
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
+		$smarty->assign_by_ref($this->opt['smarty_url_insert'], $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_insert=1"));
+		$smarty->assign($this->opt['smarty_url_uri_suggest'], "javascript:alias_ctl.aliasSuggest();");
+		$smarty->assign($this->opt['smarty_url_uri_generate'], "javascript:alias_ctl.aliasGenerate();");
 
 		if ($this->smarty_action=="ack"){
 			$smarty->assign_by_ref($this->opt['smarty_ack_uris'], $this->ack_uris);

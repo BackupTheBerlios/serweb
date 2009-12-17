@@ -1,7 +1,7 @@
 /**
  *  Various javascript functions used on most of pages
  * 
- *  $Id: functions.js,v 1.17 2009/10/29 13:01:03 kozlik Exp $
+ *  $Id: functions.js,v 1.18 2009/12/17 12:11:56 kozlik Exp $
  */
 
 
@@ -407,7 +407,20 @@ remove_event = function(obj, evt, fn){
         obj['on'+evt] = null;
 }
 
-
+/**
+ *  Get absolute position of element
+ */
+function getAbsolutePosition( oElement ) {
+    if( typeof( oElement.offsetParent ) != 'undefined' ) {
+        for( var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent ) {
+            posX += oElement.offsetLeft;
+            posY += oElement.offsetTop;
+    }
+        return [ posX, posY ];
+    } else {
+        return [ oElement.x, oElement.y ];
+    }
+}
 
 
 /***********************************************************

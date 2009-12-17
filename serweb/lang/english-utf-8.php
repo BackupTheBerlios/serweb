@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.63 2009/10/29 13:01:03 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.64 2009/12/17 12:11:56 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -29,6 +29,7 @@ $lang_str['from'] = 							"from";
 $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
 $lang_str['l_edit'] = 							"edit";
+$lang_str['l_insert'] = 						"insert";
 $lang_str['l_extended'] = 						"extended";
 $lang_str['l_rename'] = 						"rename";
 $lang_str['l_change'] = 						"change";
@@ -41,6 +42,7 @@ $lang_str['l_disable'] = 						"disable";
 $lang_str['l_enable'] = 						"enable";
 $lang_str['l_disable_all'] = 					"disable all";
 $lang_str['l_enable_all'] = 					"enable all";
+$lang_str['l_generate'] = 					    "generate";
 $lang_str['status_unknown'] = 					"unknown";
 $lang_str['status_nonlocal'] = 					"non-local";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -455,6 +457,10 @@ $lang_str['uri_already_exists'] = 				"URI with selected username and domain alr
 $lang_str['is_to_warning'] = 					"WARNING: URI <uri> is already used by another user and  flag 'IS TO' is set for it. If you will continue, 'IS TO' flag will be cleared for that URI";
 $lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";
 $lang_str['uid_with_alias'] = 					"List of UID with alias";
+$lang_str['uri_available'] = 					"This alias is not used yet.";
+$lang_str['uri_not_available'] = 				"This alias is already used.";
+$lang_str['l_uri_suggest'] = 					"Suggest me another one";
+$lang_str['no_suggestions'] = 					"Sorry, no suggestions!";
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */

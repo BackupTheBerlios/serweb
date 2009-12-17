@@ -3,7 +3,7 @@
  *	Classes used in registration module
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: classes.php,v 1.4 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: classes.php,v 1.5 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
@@ -92,6 +92,7 @@ class Registration{
 	
 		$an = &$config->attr_names;
 
+		include_module("uri");
 		$data->add_method('add_credentials');
 		$data->add_method('add_uri');
 

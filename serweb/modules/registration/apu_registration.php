@@ -3,11 +3,12 @@
  *	Application unit registration
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: apu_registration.php,v 1.21 2007/11/15 16:13:51 kozlik Exp $
+ *	@version    $Id: apu_registration.php,v 1.22 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
 
+include_module("uri");
 
 /** 
  *	Application unit registration

@@ -1,7 +1,7 @@
 <?php
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_aliases.php,v 1.11 2009/09/30 16:11:44 kozlik Exp $
+ *	@version    $Id: method.get_uris.php,v 1.1 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -10,7 +10,7 @@
  * 
  *	@package    serweb
  */ 
-class CData_Layer_get_aliases {
+class CData_Layer_get_uris {
 	var $required_methods = array();
 	
 	/**
@@ -26,7 +26,7 @@ class CData_Layer_get_aliases {
 	 *	@return array			array of URI or FALSE on error
 	 */ 
 	  
-	function get_aliases($uid, $opt){
+	function get_uris($uid, $opt){
 		global $config;
 
 		$errors = array();
@@ -42,28 +42,26 @@ class CData_Layer_get_aliases {
 		/* flags */
 		$f = &$config->data_sql->uri->flag_values;
 
-		$qw = "";
-		if (!is_null($uid)) 
-			$qw .= $c->uid." = ".$this->sql_format($uid, "s")." and ";
 
-		if (isset($opt['filter']['did'])) 
-			$qw .= $c->did." = ".$this->sql_format($opt['filter']['did'], "s")." and ";
+        $qw = array();
+        if (!is_null($uid))                      $qw[] = $c->uid." = ".$this->sql_format($uid, "s");
 
-		if (isset($opt['filter']['username'])) 
-			$qw .= "lower(".$c->username.") = lower(".$this->sql_format($opt['filter']['username'], "s").") and ";
+        if (isset($opt['filter']['did']))        $qw[] = $opt['filter']['did']->to_sql($c->did);
+        if (isset($opt['filter']['username']))   $qw[] = $opt['filter']['username']->to_sql($c->username);
+        if (isset($opt['filter']['scheme']))     $qw[] = $opt['filter']['scheme']->to_sql($c->scheme);
 
-		if (isset($opt['filter']['scheme']))
-			$qw .= $c->scheme." = ".$this->sql_format($opt['filter']['scheme'], "s")." and ";
+        if ($qw) $qw = " where ".implode(' and ', $qw);
+        else $qw = "";
 
-		$qw .= $this->get_sql_bool(true);
+
 
 		$q="select ".$c->scheme." as scheme, 
 		           ".$c->uid." as uid, 
 				   ".$c->username." as username, 
 				   ".$c->did." as did,
 				   ".$c->flags." as flags
-		    from ".$t_name." 
-			where ".$qw."
+		    from ".$t_name. 
+			$qw."
 			order by ".$c->did.", ".$c->username;
 
 		

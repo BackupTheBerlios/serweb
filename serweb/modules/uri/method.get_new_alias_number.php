@@ -1,7 +1,7 @@
 <?
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.get_new_alias_number.php,v 1.5 2007/10/04 19:59:22 kozlik Exp $
+ *	@version    $Id: method.get_new_alias_number.php,v 1.1 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_registration
  */ 
@@ -98,7 +98,7 @@ class CData_Layer_get_new_alias_number {
             }while($row[0]);
 
             $da_h = &Domain_Attrs::singleton($did);
-            if (false === $da_h->set_attribute($config->attr_names['highest_alias_number'], $alias+1)) return false;
+            if (false === $da_h->set_attribute($config->attr_names['highest_alias_number'], $alias)) return false;
 
 			return $alias;
 		}

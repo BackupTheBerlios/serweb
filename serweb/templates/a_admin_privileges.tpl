@@ -1,10 +1,10 @@
 {* Smarty *}
-{* $Id: a_admin_privileges.tpl,v 1.9 2006/03/09 09:17:53 kozlik Exp $ *}
+{* $Id: a_admin_privileges.tpl,v 1.10 2009/12/17 12:11:56 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
 {if $allow_change_privileges}
-	<h2 class="swTitle">{$lang_str.admin_privileges_of} {$uname|escape}</h2>
+	<h2 class="swTitle">{$lang_str.admin_privileges_of} {$uname|escape}@{$domain|escape}</h2>
 	
 	<div class="swForm">
 	{$form.start}

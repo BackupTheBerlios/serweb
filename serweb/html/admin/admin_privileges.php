@@ -3,7 +3,7 @@
  *	Edit privileges of admins
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: admin_privileges.php,v 1.16 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: admin_privileges.php,v 1.17 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -29,7 +29,7 @@ $pr	= new apu_privileges();
 $page_attributes['selected_tab']="list_of_admins.php";
 
 $smarty->assign('uname', $controler->user_id->get_username());
-$smarty->assign('domain',$config->domain);
+$smarty->assign('domain',$controler->user_id->get_domainname());
 
 $pr->set_opt('redirect_on_update', 'list_of_admins.php');
 

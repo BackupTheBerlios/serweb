@@ -3,7 +3,7 @@
  *	Edit URIs of users
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: aliases.php,v 1.8 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: aliases.php,v 1.9 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -29,7 +29,7 @@ $al	= new apu_aliases();
 $page_attributes['selected_tab']="users.php";
 
 $smarty->assign('uname', $controler->user_id->get_username());
-$smarty->assign('domain',$config->domain);
+$smarty->assign('domain',$controler->user_id->get_domainname());
 
 $al->set_opt('get_all_uids_for_uri', true);
 $al->set_opt('allow_edit', true);

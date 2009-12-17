@@ -3,7 +3,7 @@
  *	Edit access control lists of users
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: acl.php,v 1.20 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: acl.php,v 1.21 2009/12/17 12:11:56 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -29,7 +29,7 @@ $acl	= new apu_acl();
 $page_attributes['selected_tab']="users.php";
 
 $smarty->assign('uname', $controler->user_id->get_username());
-$smarty->assign('domain',$config->domain);
+$smarty->assign('domain',$controler->user_id->get_domainname());
 
 $acl->set_opt('allow_edit', true);
 $acl->set_opt('redirect_on_update', 'users.php');

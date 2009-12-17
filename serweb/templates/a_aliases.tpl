@@ -1,13 +1,16 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.8 2009/09/30 16:23:33 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.9 2009/12/17 12:11:56 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
+{include file='_popup_init.tpl' no_select_tab=1}
 
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 {literal}
 <style type="text/css">
-	#al_username,   #al_domain   {width:150px;}
+	#al_username,   #al_domain,
+    #al_usage_info_used, #al_usage_info_not_used {
+        width:150px;
+    }
 </style>	
 {/literal}
 
@@ -34,11 +37,13 @@
 
 
 	<br />
- 
+
+    <div id="orphanlinks">
 	<table border=0 cellpadding="1" cellspacing="0" align="center" width="250">
 	<tr><td width="50%"><a href="{$url_deny}">{$lang_str.l_deny}</a></td>
 	    <td width="50%"><a href="{$url_ack}">{$lang_str.l_ack}</a></td></tr>
 	</table>
+    </div>
 
 	<h2 class="swTitle">{$lang_str.uris_with_same_uname_did}:</h2>
 
@@ -66,21 +71,25 @@
 		{/if}
 	{/foreach}
 
-{else}
+{elseif $action=="insert" or $action=="edit"}
 
-	<h2 class="swTitle">{$lang_str.change_aliases_of_user}: {$uname|escape}</h2>
-	
 	<div class="swForm">
 	{$form.start}
 		<table border="0" cellspacing="2" cellpadding="0" align="center">
 		<tr>
 		<td><label for="al_username">{$lang_str.ff_alias}({$lang_str.ff_username}):</label></td>
-		<td>{$form.al_username}</td>
+		<td>{$form.al_username}<span id="aliasSuggestionsPlace"></span><a href="{$url_uri_generate|escape}" class="helperLink">{$lang_str.l_generate}</a></td>
 		</tr>
 		<tr>
 		<td><label for="al_domain">{$lang_str.ff_alias}({$lang_str.ff_domain}):</label></td>
 		<td>{$form.al_domain}</td>
 		</tr>
+		<tr>
+        <td>&nbsp;</td>
+        <td><div id="al_usage_info_used" class="usageInfoUsed" style="display:none">{$lang_str.uri_not_available}<br /><a href="{$url_uri_suggest}">{$lang_str.l_uri_suggest}</a></div>
+            <div id="al_usage_info_not_used" class="usageInfoNotUsed" style="display:none">{$lang_str.uri_available}</div>
+        </td>
+        </tr>
 		<tr>
 		<td><label for="al_is_canon">{$lang_str.ff_is_canon}:</label></td>
 		<td>{$form.al_is_canon}</td>
@@ -99,14 +108,17 @@
 		</tr>
 		<tr>
 		<td>&nbsp;</td>
-		<td>{$form.okey}</td>
+		<td>{$form.cancel}&nbsp;{$form.okey}</td>
 		</tr>
 		</table>
 	{$form.finish}
 	</div>
+
+{else}
+
+	<h2 class="swTitle">{$lang_str.change_aliases_of_user}: {$uname|escape}@{$domain|escape}</h2>
 	
-	
-	
+		
 	{foreach from=$aliases item='row' name='aliases'}
 		{if $smarty.foreach.aliases.first}
 		<table border="1" cellpadding="1" cellspacing="0" align="center" class="swTable">
@@ -134,8 +146,8 @@
 		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_canon}</td>
 		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_to}</td>
 		<td align="center" class="swValignMid">{include file="includes/yes_no.tpl" ok=$row.is_from}</td>
-		<td align="center" style="width:6em;">{if $row.allow_change}<a href="{$row.url_edit}">{$lang_str.l_change}</a>{else}&nbsp;{/if}</td>
-		<td align="center" style="width:6em;">{if $row.allow_change}<a href="{$row.url_dele}" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_alias}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
+		<td align="center">{if $row.allow_change}<a href="{$row.url_edit|escape}" class="actionsrow">{$lang_str.l_edit}</a>{else}&nbsp;{/if}</td>
+		<td align="center">{if $row.allow_change}<a href="{$row.url_dele|escape}" class="actionsrow" onclick="return confirmDelete(this, '{$lang_str.realy_you_want_delete_this_alias}')">{$lang_str.l_delete}</a>{else}&nbsp;{/if}</td>
 		</tr>
 		{if $smarty.foreach.aliases.last}
 		</table>
@@ -143,7 +155,10 @@
 	{foreachelse}
 	<div class="swNumOfFoundRecords">{$lang_str.user_have_not_any_aliases}</div>
 	{/foreach}
+
+    <div id="orphanlinks"><a href="{$url_insert|escape}">{$lang_str.l_insert}</a></div>
 {/if}
+
 
 <div class="swBackToMainPage"><a href="{url url='users.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
 

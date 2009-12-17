@@ -814,6 +814,44 @@ tr.flushright td{
 	background-color: #CC0000;
 }
 
+.usageInfoUsed,
+.usageInfoNotUsed{
+	text-align:center;
+	color: #FFFFFF;
+	padding: 2px;
+	display: block;
+	font-size: smaller;
+}
+
+.usageInfoUsed{
+	color: #CC0000;
+}
+
+.usageInfoNotUsed{
+	color: #009900;
+}
+
+.usageInfoUsed a{
+	color: #CC0000;
+	font-size: 1em;
+	font-style: italic;
+}
+
+
+
+#aliasSuggestionsPlace{
+    margin-left:10px;
+}
+
+.aliasSuggestPopup{
+    overflow:auto;
+    height: 150px;
+}
+
+.aliasSuggestPopupNS{
+    font-weight: bold;
+    font-size: 0.8em
+}
 
 .swDomainEnabled,
 .swUserEnabled,
@@ -976,14 +1014,19 @@ th.alternatpoplinkstyle a.swPopupLink {
 #orphanlinks {
 	margin:20px 0px;
 }
- #orphanlinks a {
+#orphanlinks a {
 	font-size: 0.9em;
 	font-weight: bold;
 	color: #333333;
 	text-decoration: none;
 }
- #orphanlinks a:hover {
+#orphanlinks a:hover {
 	text-decoration: underline;
+}
+
+a.helperLink{
+    color: #666666;
+    font-size: 0.75em;
 }
 
 /*domain layout*/
@@ -1081,3 +1124,36 @@ th.alternatpoplinkstyle a.swPopupLink {
     float:left;
     width:120px;
 }
+
+
+/* popup window opened by overlib */
+
+.ovlibBg{
+    background: #999999;
+    
+}
+
+.ovlibFg{
+    background: #EFE7D6;
+}
+
+.ovlibCaption{
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.ovlibClose{
+    text-align: right;
+    font-size: 0.8em;
+}
+
+.ovlibClose,
+.ovlibClose a{
+    color: #EFE7D6;
+}
+
+.ovlibText{
+    color: #000000;
+}
+

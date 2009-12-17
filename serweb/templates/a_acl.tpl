@@ -1,9 +1,9 @@
 {* Smarty *}
-{* $Id: a_acl.tpl,v 1.4 2006/03/09 09:17:53 kozlik Exp $ *}
+{* $Id: a_acl.tpl,v 1.5 2009/12/17 12:11:56 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 
-<h2 class="swTitle">{$lang_str.access_control_list_of_user}: {$uname|escape}</h2>
+<h2 class="swTitle">{$lang_str.access_control_list_of_user}: {$uname|escape}@{$domain|escape}</h2>
 
 {foreach from=$acl_control item='row' name='acl_control'}
 	{if $smarty.foreach.acl_control.first}

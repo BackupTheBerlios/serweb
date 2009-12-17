@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.33 2009/10/26 11:17:49 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.34 2009/12/17 12:11:55 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -950,15 +950,16 @@ class URIs{
 	function load_URIs(){
 		global $data;
 		
-		$data->add_method('get_aliases');
+		include_module("uri");
+		$data->add_method('get_uris');
 		
 		$opt = array();
 		$opt['filter'] = array();
 		
-		if (!is_null($this->f_username)) $opt['filter']['username'] = $this->f_username;
-		if (!is_null($this->f_did))      $opt['filter']['did']      = $this->f_did;
-		
-		if (false === $uris = $data->get_aliases($this->uid, $opt)) return false;
+		if (!is_null($this->f_username)) $opt['filter']['username'] = new Filter("username", $this->f_username, "=", false, false);
+		if (!is_null($this->f_did))      $opt['filter']['did']      = new Filter("did", $this->f_did, "=", false, false);
+
+		if (false === $uris = $data->get_uris($this->uid, $opt)) return false;
 		$this->URIs = &$uris;
 
 		return true;	
