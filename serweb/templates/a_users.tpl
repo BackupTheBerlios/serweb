@@ -1,9 +1,8 @@
 {* Smarty *}
-{* $Id: a_users.tpl,v 1.28 2008/03/07 15:20:02 kozlik Exp $ *}
+{* $Id: a_users.tpl,v 1.29 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 <h2 class="swTitle">{$lang_str.search_filter}:</h2>
 

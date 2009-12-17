@@ -1,9 +1,8 @@
 {* Smarty *}
-{* $Id: a_domain_attributes.tpl,v 1.3 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: a_domain_attributes.tpl,v 1.4 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 {if $attributes}
 	<div class="swForm">

@@ -1,9 +1,8 @@
 {* Smarty *}
-{* $Id: u_missed_calls.tpl,v 1.9 2009/10/26 11:12:42 kozlik Exp $ *}
+{* $Id: u_missed_calls.tpl,v 1.10 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 {foreach from=$missed_calls item='row' name='missed_calls'}
 	{if $smarty.foreach.missed_calls.first}

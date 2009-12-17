@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_attr_types.tpl,v 1.13 2009/10/29 13:01:06 kozlik Exp $ *}
+{* $Id: a_attr_types.tpl,v 1.14 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -20,8 +20,8 @@
 {/literal}
 
 {include file='_head.tpl'}
+{include file='_popup_init.tpl'}
 
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <div class="toggler">
 	<a href="javascript:toggle_visibility(document.getElementById('stretcher_f'));" style="display:block;"><h2 class="swTitle">{$lang_str.search_filter}:</h2></a>

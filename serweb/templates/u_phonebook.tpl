@@ -1,9 +1,8 @@
 {* Smarty *}
-{* $Id: u_phonebook.tpl,v 1.12 2007/02/06 10:36:10 kozlik Exp $ *}
+{* $Id: u_phonebook.tpl,v 1.13 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 <div class="swForm">
 {$form.start}

@@ -1,9 +1,8 @@
 {* Smarty *}
-{* $Id: u_whitepages.tpl,v 1.9 2007/12/14 18:47:23 kozlik Exp $ *}
+{* $Id: u_whitepages.tpl,v 1.10 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 <h2 class="swTitle">{$lang_str.find_user}</h2>
 

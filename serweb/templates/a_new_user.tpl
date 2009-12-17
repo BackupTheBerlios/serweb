@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_new_user.tpl,v 1.3 2006/09/08 12:27:35 kozlik Exp $ *}
+{* $Id: a_new_user.tpl,v 1.4 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {literal}
 <style type="text/css">
@@ -9,8 +9,8 @@
 
 
 {include file='_head.tpl'}
+{include file='_popup_init.tpl'}
 
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
 
 <h2 class="swTitle">{$lang_str.register_new_user}:</h2>
 

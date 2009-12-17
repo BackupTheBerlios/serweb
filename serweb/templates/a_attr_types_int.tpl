@@ -1,8 +1,8 @@
 {* Smarty *}
-{* $Id: a_attr_types_int.tpl,v 1.1 2006/12/07 13:47:27 kozlik Exp $ *}
+{* $Id: a_attr_types_int.tpl,v 1.2 2009/12/17 17:12:19 kozlik Exp $ *}
 
 {include file='_head.tpl'}
-{popup_init src="`$cfg->js_src_path`overlib/overlib.js"}
+{include file='_popup_init.tpl'}
 
 <h2 class="swTitle">{$lang_str.at_int_title}</h2>
 
