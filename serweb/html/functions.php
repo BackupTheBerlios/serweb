@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.99 2009/10/21 08:07:39 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.100 2009/12/21 13:20:46 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -1253,7 +1253,7 @@ function sw_log($message, $priority = null){
  *  @return none
  */
  
-function action_log($screen_name, $action, $msg, $success = true, $opt = array()){
+function action_log($screen_name, $action, $msg=null, $success = true, $opt = array()){
     global $config;
 
     $opt['action_str'] = is_array($action) ? $action['action'] : $action; 
@@ -1262,6 +1262,7 @@ function action_log($screen_name, $action, $msg, $success = true, $opt = array()
         call_user_func($config->custom_act_log_function, $screen_name, $action, $msg, $success, $opt);  
     }
     else{
+        if (is_null($msg)) $msg = "action performed";
         sw_log($screen_name." - ".$action['action']." ".$msg." ".($success ? "[successfull]" : "[failed]"), PEAR_LOG_INFO);
     }
 }
