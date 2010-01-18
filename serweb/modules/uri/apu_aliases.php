@@ -3,7 +3,7 @@
  *	Application unit aliases
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_aliases.php,v 1.9 2009/12/17 12:11:56 kozlik Exp $
+ *	@version    $Id: apu_aliases.php,v 1.10 2010/01/18 15:02:14 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_uri
  */ 
@@ -608,6 +608,9 @@ class apu_aliases extends apu_base_class{
 
         $did = $_GET['al_did'];
 
+        // check whether user have access to the did of the uri
+        if (!$this->check_did($did)) return true; //finish the action execution
+
 		// generate numeric alias 
 		if (false === $alias_uname=$data->get_new_alias_number($did, null)) {
 			return false;
@@ -629,6 +632,9 @@ class apu_aliases extends apu_base_class{
         $uname = $_GET['al_uname'];
         $did = $_GET['al_did'];
 
+        // check whether user have access to the did of the uri
+        if (!$this->check_did($did)) return true; //finish the action execution
+
         $uris_handler = &URIS::singleton_2($uname, $did);
         if (false === $uris = $uris_handler->get_URIs()) return false;
 
@@ -648,38 +654,11 @@ class apu_aliases extends apu_base_class{
         $uname = $_GET['al_uname'];
         $did = $_GET['al_did'];
 
-        if (ereg("^[0-9]+$", $uname)){
-            // suggestion for numeric aliases
-            $uris = array();
-            for ($i=0; $i<strlen($uname); $i++){
-                $gen_uris = array();
-                for ($j=0; $j<10; $j++) $gen_uris[substr_replace($uname, $j, $i, 1)] = 1;
-            
-                $opt = array(); 
-                $opt['filter']['did'] = new Filter("did", $did, "=", false, false);
-                $opt['filter']['username'] = new Filter("username", substr_replace($uname, "?", $i, 1), "like", false, false);
-                if (false === $used_uris = $data->get_uris(null, $opt)) return false;
-    
-                foreach($used_uris as $v) unset($gen_uris[$v->username]);
-    
-                $uris = array_merge($uris, array_keys($gen_uris));
-            }
-        }
-        else{
-            $gen_uris = array();
-            for ($j=0; $j<10; $j++) $gen_uris[$uname.$j] = 1;
+        // check whether user have access to the did of the uri
+        if (!$this->check_did($did)) return true; //finish the action execution
 
-            $opt = array(); 
-            $opt['filter']['did'] = new Filter("did", $did, "=", false, false);
-            $opt['filter']['username'] = new Filter("username", $uname."?", "like", false, false);
-            if (false === $used_uris = $data->get_uris(null, $opt)) return false;
+        if (false === $uris = URI_functions::suggest_uri($uname, $did)) return false;
 
-            foreach($used_uris as $v) unset($gen_uris[$v->username]);
-
-            $uris = array_keys($gen_uris);
-        }
-
-        sort($uris);
         $response = new stdClass();
         $response->suggested_uris = $uris;
 
@@ -924,7 +903,7 @@ class apu_aliases extends apu_base_class{
             $onload_js = "
                 var alias_ctl;
                 alias_ctl = new Aliases_ctl('alias_ctl');
-                alias_ctl.init('".$this->opt['form_name']."');
+                alias_ctl.init('".$this->opt['form_name']."', 'al_username', 'al_domain');
                 alias_ctl.onAliasChangeUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_usage=1")."';
                 alias_ctl.aliasSuggestUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_suggest=1")."';
                 alias_ctl.aliasGenerateUrl='".$sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("")."&uri_generate=1")."';

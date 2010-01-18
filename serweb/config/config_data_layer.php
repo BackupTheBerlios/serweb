@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.57 2009/10/22 07:44:09 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.58 2010/01/18 15:02:13 kozlik Exp $
  */
 
 
@@ -333,6 +333,7 @@
                                 'is_hostmaster'     => 'sw_is_hostmaster',  //have hostmaster privilege
                                 'acl_control'       => 'sw_acl_control',    //have to be declared as multivalue, contain list of ACL entries which admin may change
                                 'highest_alias_number' => 'sw_highest_alias_number',    //highest assigned alias number
+                                'max_uri_user'      => 'sw_max_uri_user',   //maximum number of uris per user
 
                                 'confirmation'      => 'sw_confirmation',   //confirmation of registration
                                 'uname_asign_mode'  => 'sw_uname_assign_mode', //mode of username assignment on registration

@@ -24,6 +24,9 @@ function Aliases_ctl(varname){
     this.info_el_nu = null;
     this.suggest_el = null;
 
+    this.el_name_uname  = null;
+    this.el_name_domain = null;
+
     this.suggest_domain = null;
     
     this.lang_str = new Object();
@@ -34,7 +37,7 @@ function Aliases_ctl(varname){
  *  init function
  *      
  */ 
-Aliases_ctl.prototype.init = function(form_name){
+Aliases_ctl.prototype.init = function(form_name, el_name_uname, el_name_domain){
 
     var forms = document.forms;
     
@@ -49,15 +52,18 @@ Aliases_ctl.prototype.init = function(form_name){
     this.info_el_nu = document.getElementById('al_usage_info_not_used');
     this.suggest_el = document.getElementById('aliasSuggestionsPlace');
 
-	this.form.al_username.setAttribute("autocomplete","off");
+    this.el_name_uname  = el_name_uname;
+    this.el_name_domain = el_name_domain;
+
+	this.form[this.el_name_uname].setAttribute("autocomplete","off");
 }
 
 
 Aliases_ctl.prototype.onAliasChange = function(){
 
     var url;
-    var uname_el = this.form.al_username;
-    var did_el = this.form.al_domain;
+    var uname_el = this.form[this.el_name_uname];
+    var did_el = this.form[this.el_name_domain];
 
     var uname = uname_el.value;
     var did =   did_el.options[did_el.selectedIndex].value;
@@ -115,7 +121,7 @@ Aliases_ctl.prototype.onAliasChange_callback = function(http_request){
 
 Aliases_ctl.prototype.useSuggestion = function(uname){
 
-    var uname_el = this.form.al_username;
+    var uname_el = this.form[this.el_name_uname];
     uname_el.value = uname;
 
     // close popup window if any is open
@@ -127,8 +133,8 @@ Aliases_ctl.prototype.useSuggestion = function(uname){
 Aliases_ctl.prototype.aliasSuggest = function(){
 
     var url;
-    var uname_el = this.form.al_username;
-    var did_el = this.form.al_domain;
+    var uname_el = this.form[this.el_name_uname];
+    var did_el = this.form[this.el_name_domain];
 
     var uname = uname_el.value;
     var did =   did_el.options[did_el.selectedIndex].value;
@@ -181,7 +187,7 @@ Aliases_ctl.prototype.aliasSuggest_callback = function(http_request){
 Aliases_ctl.prototype.aliasGenerate = function(){
 
     var url;
-    var did_el = this.form.al_domain;
+    var did_el = this.form[this.el_name_domain];
 
     var did =   did_el.options[did_el.selectedIndex].value;
 
@@ -198,7 +204,7 @@ Aliases_ctl.prototype.aliasGenerate_callback = function(http_request){
     if (http_request.readyState == 4) { 
 
         var response = eval('(' + http_request.responseText + ')');
-        var uname_el = this.form.al_username;
+        var uname_el = this.form[this.el_name_uname];
 
         if (response.uri_uname) {
             uname_el.value = response.uri_uname;

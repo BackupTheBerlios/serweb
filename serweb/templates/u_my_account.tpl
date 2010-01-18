@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.23 2009/12/17 17:12:19 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.24 2010/01/18 15:02:14 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 {include file='_popup_init.tpl'}
@@ -80,6 +80,7 @@
 
 	{if $smarty.foreach.aliases.last}
 	</table>
+	<br /><a href="{url url='uri.php'}">{$lang_str.l_edit_uri}</a>
 	</div>
 	{/if}
 {/foreach}
