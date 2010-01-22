@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.100 2009/12/21 13:20:46 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.101 2010/01/22 16:55:08 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -73,6 +73,14 @@ $sip_status_messages_array[600]="600 Busy Everywhere";
 $sip_status_messages_array[603]="603 Decline";
 $sip_status_messages_array[604]="604 Does Not Exist Anywhere";
 $sip_status_messages_array[606]="606 Not Acceptable";
+
+
+/* Hack making serweb to work in PHP4
+   for details see: http://acko.net/blog/php-clone 
+ */
+if (version_compare(phpversion(), '5.0') < 0) {
+    eval('function clone($object) { return $object; }');
+}
 
 
 /**
@@ -1725,7 +1733,7 @@ function clone_array($array){
 
     $clone = array();
     foreach($array as $k=>$v){
-        if (is_object($v))  $clone[$k] = clone $v;
+        if (is_object($v))  $clone[$k] = clone($v);
         else                $clone[$k] = $v;
     }
     
