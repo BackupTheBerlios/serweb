@@ -3,7 +3,7 @@
  *	Definitions of common classes
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: class_definitions.php,v 1.34 2009/12/17 12:11:55 kozlik Exp $
+ *	@version    $Id: class_definitions.php,v 1.35 2010/05/13 13:44:19 kozlik Exp $
  *	@package    serweb
  */ 
 
@@ -1298,12 +1298,9 @@ class Filter {
 	function to_sql($var=null, $int=false){
 
 		if (is_null($var)) $var = $this->name;
-		
-		
 		if ($this->op == "is_null")		return $var." is null";
 
 		$val = $this->value;
-		
 		if ($this->op == "like"){
 		    /* escape '%' and '_' characters - these are not wildcards */
 			$val = str_replace('%', '\%', $val);
@@ -1332,18 +1329,36 @@ class Filter {
 	function to_sql_bool($var=null){
 
 		if (is_null($var)) $var = $this->name;
-		
 		if ($this->op == "is_null")		return $var." is null";
 
 		$val = $this->value;
-		
 		if ($val){
 			return "(".$var.")";
 		}
 		else{
 			return "!(".$var.")";
 		}
-	
+	}
+
+	function to_sql_float($var=null){
+
+		if (is_null($var)) $var = $this->name;
+		if ($this->op == "is_null")		return $var." is null";
+
+		$val = $this->value;
+		if ($this->op == "like"){
+		    /* escape '%' and '_' characters - these are not wildcards */
+			$val = str_replace('%', '\%', $val);
+			$val = str_replace('_', '\_', $val);
+			
+			/* replace '*' and '?' with their wildcard equivalent  */
+			$val = str_replace('*', '%', $val);
+			$val = str_replace('?', '_', $val);
+			
+			if ($this->asterisks) $val = "%".$val."%";
+		}
+		
+        return $var." ".$this->op." ".(float)$val;
 	}
 }
 
@@ -1413,6 +1428,29 @@ class CallbackCaller{
         if (false === call_user_func_array($callback->fn, array($param, &$opt))) return false;
     
         return true;
+    }
+
+
+    /**
+     *  Call all calbacks given in $callback_arr and return array of returned
+     *  values.     
+     */    
+    function call_array_rv($callback_arr, $param, &$opt, $break_on_error = false){
+        $ret_values = array();
+        
+        if (is_array($callback_arr)){
+            foreach($callback_arr as $k => $v){
+                $ret_values[$k] = $this->call_rv($v, $param, $opt);
+            }
+        }
+
+        return $ret_values;    
+    }
+    
+    
+    function call_rv($callback, $param, &$opt){
+        include_module($callback->module);
+        return call_user_func_array($callback->fn, array($param, &$opt));
     }
 }
 
