@@ -1,0 +1,13 @@
+SerWeb depends on runkit pecl package, which is unfortunately not maintained 
+any more. Here are some instructions how to create .deb package with runkit:
+
+
+
+apt-get install checkinstall
+apt-get install php-pear php5-dev
+
+svn checkout http://svn.php.net/repository/pecl/runkit/trunk/
+cd trunk
+echo /etc/php5/conf.d/runkit.ini >include.list
+checkinstall --exclude=/usr/share/php/.filemap,/usr/share/php/.lock,/usr/share/php/.depdblock,/usr/share/php/.depdb  --include=include.list pecl install package.xml
+
