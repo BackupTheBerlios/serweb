@@ -8,7 +8,7 @@ Origin: debian
 
 Package: serweb
 Architecture: any
-Depends: php4-cli, libapache2-mod-php4, php4-curl, php-pear, php-log, php-db, php-xml-parser, php4-mysql, php4-imap, serweb-overlib, tinymce, php-net-dns, php-xml-rpc, cron, logrotate, exim4 | mail-transport-agent, ${serweb:Depends}
+Depends: php5-cli, libapache2-mod-php5, php5-curl, php-pear, php-log, php-db, php-xml-parser, php5-mysql, php5-imap, serweb-overlib, tinymce, php-net-dns, php-xml-rpc, cron, logrotate, exim4 | mail-transport-agent, ${serweb:Depends}
 Suggests: mysql-server, ser
 Description: web interface for self-provisioning of users of SER SIP Server
  This software, serweb, is a web interface for self-provisioning
