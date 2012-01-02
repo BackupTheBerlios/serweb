@@ -3,7 +3,7 @@
  * Miscellaneous functions and variable definitions
  * 
  * @author    Karel Kozlik
- * @version   $Id: functions.php,v 1.101 2010/01/22 16:55:08 kozlik Exp $ 
+ * @version   $Id: functions.php,v 1.102 2012/01/02 11:57:53 kozlik Exp $ 
  * @package   serweb
  */ 
 
@@ -668,7 +668,7 @@ function send_mail($to, $text, $headers = array()){
 	foreach ($headers as $k=>$v){
 		/* exclude header 'subject'. It is given throught another parameter of function */
 		if ($k=='subject') continue;
-		$str_headers .= $k.": ".$v."\n";
+		$str_headers .= ucfirst($k).": ".$v."\n";
 	}
 
 	/* get charset */
