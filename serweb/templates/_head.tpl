@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: _head.tpl,v 1.9 2007/10/29 15:27:52 kozlik Exp $ *}
+{* $Id: _head.tpl,v 1.10 2012/08/29 16:06:45 kozlik Exp $ *}
 
 {if $parameters.user_name}
 	<div class="swHeadingUser">{$parameters.user_name.fname|escape} {$parameters.user_name.lname|escape} &lt;{$parameters.user_name.uname|escape}@{$parameters.user_name.realm|escape}&gt;</div>
@@ -7,6 +7,10 @@
 
 {if $parameters.logout}
 	<div class="swHeadingLogout"><a href="{url url="`$parameters.path_to_pages`logout.php"}">{$lang_str.l_logout|escape}</a></div>
+{/if}
+
+{if $parameters.self_account_delete}
+	<div class="swHeadingDeleAccount"><a href="{$parameters.self_account_delete|escape}">{$lang_str.l_dele_account|escape}</a></div>
 {/if}
 
 <br class="cleaner" />

@@ -82,6 +82,24 @@
 .swHeadingLogout a:hover {
 	text-decoration:underline;
 }
+
+.swHeadingDeleAccount{
+	font-size : 0.8em;
+	height: 20px;
+	padding: 0;
+	position: absolute;
+	top: 85px;
+	width: 200px;
+	text-align: right;
+	left: 681px;
+}
+.swHeadingDeleAccount a {
+	text-decoration:none;
+	color: #B5C8DB;
+}
+.swHeadingDeleAccount a:hover {
+	text-decoration:underline;
+}
 /*
  *	TABs defintions
  */

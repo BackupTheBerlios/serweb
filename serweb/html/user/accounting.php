@@ -3,7 +3,7 @@
  *	Display incoming and outgoing calls
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: accounting.php,v 1.8 2007/12/13 11:40:53 kozlik Exp $
+ *	@version    $Id: accounting.php,v 1.9 2012/08/29 16:06:43 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 

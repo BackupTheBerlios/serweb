@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.54 2009/10/29 13:01:03 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.55 2012/08/29 16:06:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -28,7 +28,10 @@ $lang_str['user'] = 							"gebruiker";
 $lang_str['from'] = 							"van";
 $lang_str['no_records'] = 						"Geen gegevens";
 $lang_str['l_logout'] = 						"Logout";
+$lang_str['l_dele_account'] = 					"Delete my account";	//to translate 
+$lang_str['l_cancel'] = 						"cancel";	//to translate 
 $lang_str['l_edit'] = 							"toevoegen";
+$lang_str['l_insert'] = 						"insert";	//to translate 
 $lang_str['l_extended'] = 						"extended";	//to translate 
 $lang_str['l_rename'] = 						"rename";	//to translate 
 $lang_str['l_change'] = 						"wijzigen";
@@ -41,6 +44,7 @@ $lang_str['l_disable'] = 						"uit";
 $lang_str['l_enable'] = 						"aan";
 $lang_str['l_disable_all'] = 					"alles uit";
 $lang_str['l_enable_all'] = 					"alles aan";
+$lang_str['l_generate'] = 					    "generate";	//to translate 
 $lang_str['status_unknown'] = 					"onbekend";
 $lang_str['status_nonlocal'] = 					"niet lokaal";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -177,6 +181,16 @@ $lang_str['session_expired'] = 					"Sessie verlopen";
 $lang_str['session_expired_relogin'] = 			"Uw sessie is verlopen, opnieuw inloggen.";
 
 /* ------------------------------------------------------------*/
+/*      account delete                                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_self_account_delete_l'] = 		"Your account has been deleted";	//to translate 
+$lang_str['l_yes_delete_it'] = 					"yes delete it";	//to translate 
+$lang_str['are_you_sure_to_delete_account'] = 	"Are you sure you want to delete your account?";	//to translate 
+$lang_str['delete_account_description'] = 		"If you confirm this your account will be deleted. Your data will persist in database for next <keep_days> days and then will be purged. You could ask the admin of your domain during this time period to undelete your account if you change your meaning.";	//to translate 
+
+
+/* ------------------------------------------------------------*/
 /*      my account                                             */
 /* ------------------------------------------------------------*/
 
@@ -205,6 +219,7 @@ $lang_str['contact_expire_day'] = 				"over een dag";
 $lang_str['contact_will_not_expire'] = 			"permanent";
 $lang_str['acl_err_local_forward'] = 			"doorsturen verboden";
 $lang_str['acl_err_gateway_forward'] = 			"gateway contacten verboden";
+$lang_str['l_edit_uri'] = 						"edit aliases";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      phonebook                                              */
@@ -302,6 +317,8 @@ $lang_str['ff_send_daily_missed_calls'] =		"verstuur dagelijks mijn gemiste beri
 $lang_str['ff_uri_def_f'] =						"standaard waarden voor uri";
 $lang_str['ff_credential_def_f'] =				"standaard gegevns";
 $lang_str['ff_domain_def_f'] =					"standaard waarden voor domein";
+
+$lang_str['ff_max_uri_user'] =					"maximum number of URIs per user";	//to translate 
 
 $lang_str['attr_fwd_busy_target'] =				"destination for on-busy forwarding";	//to translate 
 $lang_str['attr_fwd_noanswer_target'] =			"destination for on-no-answer forwarding";	//to translate 
@@ -438,6 +455,8 @@ $lang_str['msg_alias_added_l'] = 				"De Alias is bij de gebruiker toegevoegd";
 $lang_str['change_aliases_of_user'] = 			"Wijzig de alias van gebruiker";
 $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
+$lang_str['ff_uri'] = 						    "URI";	//to translate 
+$lang_str['th_uri'] = 						    "URI";	//to translate 
 $lang_str['realy_you_want_delete_this_alias'] = "Alias verwijderen, weet u het zeker?";
 $lang_str['user_have_not_any_aliases'] = 		"Gebruiker heeft geen alias";
 $lang_str['ff_is_canon'] = 						"is canonical";	//to translate 
@@ -455,6 +474,21 @@ $lang_str['uri_already_exists'] = 				"URI met deze gebruikersnaam en domein zij
 $lang_str['is_to_warning'] = 					"LET OP: waarde 'AAN' is in gebruik voor een andere URI. Doorgaan, verwijderd de waarde in URI";
 $lang_str['err_canon_uri_exists'] = 			"Kan deze waarde voor URI niet wijzigen";
 $lang_str['uid_with_alias'] = 					"Overzicht UID met alias";
+$lang_str['uri_available'] = 					"This alias is not used yet.";	//to translate 
+$lang_str['uri_not_available'] = 				"This alias is already used.";	//to translate 
+$lang_str['l_uri_suggest'] = 					"Suggest me another one";	//to translate 
+$lang_str['no_suggestions'] = 					"Sorry, no suggestions!";	//to translate 
+$lang_str['err_ri_dup'] =                       "An equivalent URI already exists.";	//to translate 
+$lang_str['err_uri_limit_reached'] =            "Maximum number of URIs has been reached";	//to translate 
+$lang_str['err_uri_modify_not_permited'] =      "You are not permited to modify this URI";	//to translate 
+$lang_str['user_uris'] =                        "User URIs";	//to translate 
+$lang_str['l_back_to_my_account'] = 			"back to my account";	//to translate 
+$lang_str['msg_uri_deleted_s'] = 				"URI Deleted";	//to translate 
+$lang_str['msg_uri_deleted_l'] = 				"The URI has been deleted";	//to translate 
+$lang_str['msg_uri_updated_s'] = 				"URI Updated";	//to translate 
+$lang_str['msg_uri_updated_l'] = 				"The URI has been updated";	//to translate 
+$lang_str['msg_uri_created_s'] =   				"URI Added";	//to translate 
+$lang_str['msg_uri_created_l'] =   				"The URI has been added";	//to translate 
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */

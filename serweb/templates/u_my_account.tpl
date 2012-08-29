@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: u_my_account.tpl,v 1.24 2010/01/18 15:02:14 kozlik Exp $ *}
+{* $Id: u_my_account.tpl,v 1.25 2012/08/29 16:06:45 kozlik Exp $ *}
 
 {include file='_head.tpl'}
 {include file='_popup_init.tpl'}

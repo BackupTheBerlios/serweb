@@ -3,7 +3,7 @@
  *	Display user's settings
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: my_account.php,v 1.19 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: my_account.php,v 1.20 2012/08/29 16:06:43 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 

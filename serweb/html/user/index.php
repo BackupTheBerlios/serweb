@@ -3,7 +3,7 @@
  *	Login screen
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.6 2007/09/27 15:46:23 kozlik Exp $
+ *	@version    $Id: index.php,v 1.7 2012/08/29 16:06:43 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -48,8 +48,12 @@ $login->set_opt("auth_class", "phplib_Auth");
 
 unset ($page_attributes['tab_collection']);
 $page_attributes['logout']=false;
+$page_attributes['self_account_delete']=false;
 $smarty->assign('domain',$config->domain);
 
+if (isset($_GET['m_sc_user_self_deleted'])){
+    $controler->messages[] = array("long"=>$lang_str['msg_self_account_delete_l']);
+}
 
 $controler->add_apu($login);
 

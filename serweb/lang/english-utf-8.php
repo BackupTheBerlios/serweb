@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.65 2010/01/18 15:02:14 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.66 2012/08/29 16:06:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -28,6 +28,8 @@ $lang_str['user'] = 							"user";
 $lang_str['from'] = 							"from";
 $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
+$lang_str['l_dele_account'] = 					"Delete my account";
+$lang_str['l_cancel'] = 						"cancel";
 $lang_str['l_edit'] = 							"edit";
 $lang_str['l_insert'] = 						"insert";
 $lang_str['l_extended'] = 						"extended";
@@ -177,6 +179,16 @@ $lang_str['l_have_my_domain'] = 				"Have-my-domain!";
 $lang_str['remember_uname'] = 					"Remember my username on this computer";
 $lang_str['session_expired'] = 					"Session expired";
 $lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";
+
+/* ------------------------------------------------------------*/
+/*      account delete                                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_self_account_delete_l'] = 		"Your account has been deleted";
+$lang_str['l_yes_delete_it'] = 					"yes delete it";
+$lang_str['are_you_sure_to_delete_account'] = 	"Are you sure you want to delete your account?";
+$lang_str['delete_account_description'] = 		"If you confirm this your account will be deleted. Your data will persist in database for next <keep_days> days and then will be purged. You could ask the admin of your domain during this time period to undelete your account if you change your meaning.";
+
 
 /* ------------------------------------------------------------*/
 /*      my account                                             */

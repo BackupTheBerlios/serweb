@@ -3,7 +3,7 @@
  *	Login page for admin interface
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: index.php,v 1.23 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: index.php,v 1.24 2012/08/29 16:06:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -19,6 +19,7 @@ $login	= new apu_login();
 
 unset ($page_attributes['tab_collection']);
 $page_attributes['logout']=false;
+$page_attributes['self_account_delete']=false;
 $smarty->assign('domain',$config->domain);
 
 $login->set_opt("auth_class", "phplib_Auth");

@@ -3,7 +3,7 @@
  *	File displayed when login session expire and user have to relogin
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: relogin.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: relogin.php,v 1.6 2012/08/29 16:06:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage framework
  */ 
@@ -13,6 +13,7 @@
 	print_html_head($page_attributes);
 	unset ($page_attributes['tab_collection']);
 	$page_attributes['logout']=false;
+    $page_attributes['self_account_delete']=false;
 
 	print_html_body_begin($page_attributes);
 

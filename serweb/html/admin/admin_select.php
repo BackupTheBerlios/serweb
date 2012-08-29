@@ -3,7 +3,7 @@
  *	Select admin
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: admin_select.php,v 1.5 2007/10/02 13:44:35 kozlik Exp $
+ *	@version    $Id: admin_select.php,v 1.6 2012/08/29 16:06:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -39,6 +39,7 @@ $smarty->assign('finish_url', 'admin_assign.php?da_assign=1&pr_set_admin_privile
 
 $page_attributes['tab_collection'] = array();
 $page_attributes['logout']	 = false;
+$page_attributes['self_account_delete']=false;
 $page_attributes['prolog']	 ="<body class=\"swWizard\"><h1>";
 $page_attributes['separator']="</h1><hr class='separator' />";
 $page_attributes['epilog']	 ="</body>";

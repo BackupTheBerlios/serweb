@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.15 2008/03/07 15:20:02 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.16 2012/08/29 16:06:44 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -32,6 +32,9 @@
  *	'only_from_administrated_domains'	(bool) default: false
  *	 set to true for display only users from domains administrated by admin
  *	
+ *	'get_user_list'  			(bool) default: true
+ *	 determines whether APU should retrieve list of users on default action
+ *	
  *	'get_user_aliases'			(bool) default: false
  *	 set to true if you want display aliases of users
  *	
@@ -55,6 +58,9 @@
  *   set true if instance of this APU should be used for change values
  *	 by default only get list of subscribers is enabled
  *
+ *	'url_after_self_delete'		(string) default: ''
+ *	 URL to which will be browser redirected after user self delete his/her account. 
+ *	
  *	'script_phonebook'			(string) default: ''
  *	 Name of script with phonebook. If is set, array of users will contain 
  *	 field 'url_add_to_pb' which is url for add subscriber to phonebook.
@@ -133,6 +139,7 @@ class apu_subscribers extends apu_base_class{
 
 		$this->opt['only_from_administrated_domains'] = false;
 
+		$this->opt['get_user_list']			= true;
 		$this->opt['get_user_aliases']		= false;
 		$this->opt['get_user_sip_uri']		= false;
 		$this->opt['get_timezones']			= false;
@@ -145,6 +152,8 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['perm_purge']			= false;
 		$this->opt['perm_undelete']			= false;
 		$this->opt['perm_display_deleted']	= false;
+
+		$this->opt['url_after_self_delete'] = '';
 		
 		$this->opt['script_phonebook'] =			'';
 
@@ -165,6 +174,8 @@ class apu_subscribers extends apu_base_class{
 		$this->opt['smarty_pager'] =		'pager';
 
 		$this->opt['smarty_subscribers'] = 	'users';
+
+		$this->opt['smarty_url_self_delete'] =   'url_self_delete';
 
 		/* name of html form */
 		$this->opt['form_name'] =			'';
@@ -324,6 +335,19 @@ class apu_subscribers extends apu_base_class{
 		return array("m_sc_user_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
 
+	function action_self_delete(&$errors){
+		global $data, $sess;
+	
+		if (!$data->mark_user_deleted(array("uid"=>$_SESSION['auth']->serweb_auth->get_uid()))) return false;
+        $_SESSION['auth']->logout();
+        $sess->delete();
+
+        if ($this->opt['smarty_url_self_delete']) {
+            $this->controler->change_url_for_reload($this->opt['smarty_url_self_delete']);
+        }
+		return array("m_sc_user_self_deleted=".RawURLEncode($this->opt['instance_id']));
+	}
+
 	function action_undelete(&$errors){
 		global $data;
 	    
@@ -345,7 +369,9 @@ class apu_subscribers extends apu_base_class{
 	function action_default(&$errors){
 		global $data, $sess;
 
-		
+        // Do nothing if $this->opt['get_user_list'] is false
+		if (!$this->opt['get_user_list']) return true;
+        
 		$opt = array('get_user_aliases' => $this->opt['get_user_aliases'],
 		             'get_sip_uri'      => $this->opt['get_user_sip_uri'],
 					 'get_timezones'    => $this->opt['get_timezones'],
@@ -439,7 +465,15 @@ class apu_subscribers extends apu_base_class{
 	/* check _get and _post arrays and determine what we will do */
 	function determine_action(){
 
+		if (isset($_GET['sc_self_dele']) and $_GET['sc_self_dele'] == $this->opt['instance_id']){
+			$this->action=array('action'=>"self_delete",
+			                    'validate_form'=>false,
+								'reload'=>true);
+			return;
+		}
+
 		if ($this->opt['allow_edit']){
+	
 			if (isset($_GET['sc_dele']) and $_GET['sc_dele'] == $this->opt['instance_id']){
 				$this->action=array('action'=>"delete",
 				                    'validate_form'=>true,
@@ -539,10 +573,15 @@ class apu_subscribers extends apu_base_class{
 
 	/* assign variables to smarty */
 	function pass_values_to_html(){
-		global $smarty;
+		global $smarty, $sess;
 		$smarty->assign_by_ref($this->opt['smarty_action'], $this->smarty_action);
 		$smarty->assign_by_ref($this->opt['smarty_pager'], $this->pager);
 		$smarty->assign_by_ref($this->opt['smarty_subscribers'], $this->subscribers);
+
+		$smarty->assign_by_ref($this->opt['smarty_url_self_delete'], 
+                            $sess->url($_SERVER['PHP_SELF']."?kvrk=".uniqID("").
+						               "&sc_self_dele=".RawURLEncode($this->opt['instance_id'])));
+
 	}
 	
 	/* return info need to assign html form to smarty */

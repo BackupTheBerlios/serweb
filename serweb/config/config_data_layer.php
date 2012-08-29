@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_data_layer.php,v 1.58 2010/01/18 15:02:13 kozlik Exp $
+ * $Id: config_data_layer.php,v 1.59 2012/08/29 16:06:42 kozlik Exp $
  */
 
 

@@ -3,7 +3,7 @@
  *	Set attributes for all pages in admin interface
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: page_attributes.php,v 1.16 2008/01/09 15:25:59 kozlik Exp $
+ *	@version    $Id: page_attributes.php,v 1.17 2012/08/29 16:06:42 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -41,6 +41,7 @@ $page_attributes=array(
 	'path_to_pages' => $config->admin_pages_path,
 	'run_at_html_body_begin' => '_disable_unneeded_tabs',
 	'logout'=>true,
+	'self_account_delete'=> $sess->url($config->user_pages_path."account_delete.php?admin_interface=1"),
 	'css_file' => array(multidomain_get_file("styles.css")),
 	'ie_selects' => true,
 	'prolog'=>"<body><h1>",

@@ -1,7 +1,7 @@
 <?
 /**
  *	@author     Karel Kozlik
- *	@version    $Id: method.delete_uri.php,v 1.5 2007/02/14 16:46:31 kozlik Exp $
+ *	@version    $Id: method.delete_uri.php,v 1.6 2012/08/29 16:06:45 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_uri
  */ 

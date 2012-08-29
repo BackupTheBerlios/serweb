@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.72 2009/10/29 13:01:03 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.73 2012/08/29 16:06:44 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -28,7 +28,10 @@ $lang_str['user'] = 							"user";
 $lang_str['from'] = 							"from";
 $lang_str['no_records'] = 						"No records";
 $lang_str['l_logout'] = 						"Logout";
+$lang_str['l_dele_account'] = 					"Delete my account";
+$lang_str['l_cancel'] = 						"cancel";
 $lang_str['l_edit'] = 							"edit";
+$lang_str['l_insert'] = 						"insert";
 $lang_str['l_extended'] = 						"extended";
 $lang_str['l_rename'] = 						"rename";
 $lang_str['l_change'] = 						"change";
@@ -41,6 +44,7 @@ $lang_str['l_disable'] = 						"disable";
 $lang_str['l_enable'] = 						"enable";
 $lang_str['l_disable_all'] = 					"disable all";
 $lang_str['l_enable_all'] = 					"enable all";
+$lang_str['l_generate'] = 					    "generate";
 $lang_str['status_unknown'] = 					"unknown";
 $lang_str['status_nonlocal'] = 					"non-local";
 $lang_str['status_nonexists'] = 				"non-existent";
@@ -177,6 +181,16 @@ $lang_str['session_expired'] = 					"Session expired";
 $lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.";
 
 /* ------------------------------------------------------------*/
+/*      account delete                                         */
+/* ------------------------------------------------------------*/
+
+$lang_str['msg_self_account_delete_l'] = 		"Your account has been deleted";
+$lang_str['l_yes_delete_it'] = 					"yes delete it";
+$lang_str['are_you_sure_to_delete_account'] = 	"Are you sure you want to delete your account?";
+$lang_str['delete_account_description'] = 		"If you confirm this your account will be deleted. Your data will persist in database for next <keep_days> days and then will be purged. You could ask the admin of your domain during this time period to undelete your account if you change your meaning.";
+
+
+/* ------------------------------------------------------------*/
 /*      my account                                             */
 /* ------------------------------------------------------------*/
 
@@ -205,6 +219,7 @@ $lang_str['contact_expire_day'] = 				"one day";
 $lang_str['contact_will_not_expire'] = 			"permanent";
 $lang_str['acl_err_local_forward'] = 			"local forwarding prohibited";
 $lang_str['acl_err_gateway_forward'] = 			"gateway contacts prohibited";
+$lang_str['l_edit_uri'] = 						"edit aliases";
 
 /* ------------------------------------------------------------*/
 /*      phonebook                                              */
@@ -302,6 +317,8 @@ $lang_str['ff_send_daily_missed_calls'] =		"send me daily my missed calls to my 
 $lang_str['ff_uri_def_f'] =						"default flags for uri";
 $lang_str['ff_credential_def_f'] =				"default flags for credentials";
 $lang_str['ff_domain_def_f'] =					"default flags for domain";
+
+$lang_str['ff_max_uri_user'] =					"maximum number of URIs per user";
 
 $lang_str['attr_fwd_busy_target'] =				"destination for on-busy forwarding";
 $lang_str['attr_fwd_noanswer_target'] =			"destination for on-no-answer forwarding";
@@ -438,6 +455,8 @@ $lang_str['msg_alias_added_l'] = 				"The Alias has been added to user";
 $lang_str['change_aliases_of_user'] = 			"Change aliases of user";
 $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
+$lang_str['ff_uri'] = 						    "URI";
+$lang_str['th_uri'] = 						    "URI";
 $lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
 $lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";
 $lang_str['ff_is_canon'] = 						"is canonical";
@@ -453,8 +472,23 @@ $lang_str['uris_with_same_uname_did'] = 		"existing URIs with same username and 
 $lang_str['ack_values'] = 						"Confirm values";
 $lang_str['uri_already_exists'] = 				"URI with selected username and domain already exists. Please confirm the values.";
 $lang_str['is_to_warning'] = 					"WARNING: URI <uri> is already used by another user and  flag 'IS TO' is set for it. If you will continue, 'IS TO' flag will be cleared for that URI";
-$lang_str['err_canon_uri_exists'] = 			"Can not set URI canonical because there is another canonical URI which you can not affect";
+$lang_str['err_canon_uri_exists'] = 			"Canonical flag can't be set for this URI because each user can have only one URI with this flag enabled. And it is already enabled for another URI which you are not permited to change.";
 $lang_str['uid_with_alias'] = 					"List of UID with alias";
+$lang_str['uri_available'] = 					"This alias is not used yet.";
+$lang_str['uri_not_available'] = 				"This alias is already used.";
+$lang_str['l_uri_suggest'] = 					"Suggest me another one";
+$lang_str['no_suggestions'] = 					"Sorry, no suggestions!";
+$lang_str['err_ri_dup'] =                       "An equivalent URI already exists.";
+$lang_str['err_uri_limit_reached'] =            "Maximum number of URIs has been reached";
+$lang_str['err_uri_modify_not_permited'] =      "You are not permited to modify this URI";
+$lang_str['user_uris'] =                        "User URIs";
+$lang_str['l_back_to_my_account'] = 			"back to my account";
+$lang_str['msg_uri_deleted_s'] = 				"URI Deleted";
+$lang_str['msg_uri_deleted_l'] = 				"The URI has been deleted";
+$lang_str['msg_uri_updated_s'] = 				"URI Updated";
+$lang_str['msg_uri_updated_l'] = 				"The URI has been updated";
+$lang_str['msg_uri_created_s'] =   				"URI Added";
+$lang_str['msg_uri_created_l'] =   				"The URI has been added";
 
 /* ------------------------------------------------------------*/
 /*      admin privileges                                       */

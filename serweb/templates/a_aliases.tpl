@@ -1,5 +1,5 @@
 {* Smarty *}
-{* $Id: a_aliases.tpl,v 1.10 2009/12/17 17:12:19 kozlik Exp $ *}
+{* $Id: a_aliases.tpl,v 1.11 2012/08/29 16:06:45 kozlik Exp $ *}
 
 {include file='_head.tpl' no_select_tab=1}
 {include file='_popup_init.tpl'}
