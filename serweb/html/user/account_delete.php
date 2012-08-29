@@ -3,7 +3,7 @@
  *	Delete user's account (after confirmation)
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: account_delete.php,v 1.1 2012/08/29 16:06:43 kozlik Exp $
+ *	@version    $Id: account_delete.php,v 1.2 2012/08/29 16:20:50 kozlik Exp $
  *	@package    serweb
  *	@subpackage user_pages
  */ 
@@ -34,7 +34,7 @@ $page_attributes['self_account_delete']=false;
 
 $sc = new apu_subscribers();
 $sc->set_opt('get_user_list', false);
-$sc->set_opt('smarty_url_self_delete', $sess->url($config->user_pages_path."index.php"));
+$sc->set_opt('url_after_self_delete', $sess->url($config->user_pages_path."index.php"));
 
 if (isset($_SERVER["HTTP_REFERER"])) $cancel_url = $_SERVER["HTTP_REFERER"];
 else                                 $cancel_url = $sess->url($config->user_pages_path."account_delete.php");

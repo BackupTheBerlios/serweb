@@ -3,7 +3,7 @@
  *	Application unit subscribers
  *	
  *	@author     Karel Kozlik
- *	@version    $Id: apu_subscribers.php,v 1.16 2012/08/29 16:06:44 kozlik Exp $
+ *	@version    $Id: apu_subscribers.php,v 1.17 2012/08/29 16:20:50 kozlik Exp $
  *	@package    serweb
  *	@subpackage mod_subscribers
  */ 
@@ -342,8 +342,8 @@ class apu_subscribers extends apu_base_class{
         $_SESSION['auth']->logout();
         $sess->delete();
 
-        if ($this->opt['smarty_url_self_delete']) {
-            $this->controler->change_url_for_reload($this->opt['smarty_url_self_delete']);
+        if ($this->opt['url_after_self_delete']) {
+            $this->controler->change_url_for_reload($this->opt['url_after_self_delete']);
         }
 		return array("m_sc_user_self_deleted=".RawURLEncode($this->opt['instance_id']));
 	}
