@@ -3,7 +3,7 @@
  *	Javascript functions for TinyMCE
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: tinymce.js.php,v 1.5 2007/02/14 16:36:40 kozlik Exp $
+ *	@version    $Id: tinymce.js.php,v 1.6 2013/06/11 16:36:41 kozlik Exp $
  *	@package    serweb
  *	@subpackage js
  */ 
@@ -24,31 +24,36 @@ phplib_load();
 $js_url = $config->js_src_path."tinymce/tiny_mce_src.js";
 ?>
 
-var tinyMCEmode = false;
 var tinyMCEsess = "<? echo urlencode($sess->name)."=".$sess->id; ?>";
 
 function toogleEditorMode(sEditorID) {
-    if(tinyMCEmode) {
-        tinyMCE.removeMCEControl(tinyMCE.getEditorId(sEditorID));
-        tinyMCEmode = false;
+    if(tinyMCE.activeEditor) {
+        // if there is active editor, just toggle it
+        tinyMCE.execCommand('mceToggleEditor', false, sEditorID);
     } else {
-        tinyMCE.addMCEControl(document.getElementById(sEditorID), sEditorID);
-        tinyMCEmode = true;
+        // otherwise add it
+        tinyMCE.execCommand('mceAddControl', false, sEditorID);
     }
 }
 
 function openFileManager(){
-    var template = new Array();
+    var open_file;
     
-    template['file']   = '<?php echo $config->js_src_path; ?>tinymce/plugins/filemanager/InsertFile/insert_file.php'; // Relative to theme
-	template['file'] += "?callback=none"
+    open_file  = tinyMCE.baseURL+'/plugins/filemanager/InsertFile/insert_file.php'; 
+	open_file += "?callback=none"
     if (typeof(window.tinyMCEsess) != "undefined"){
-		template['file'] += "&"+window.tinyMCEsess
+		open_file += "&"+window.tinyMCEsess
     }
-    template['width']  = 660;
-    template['height'] = 500;
 
-    tinyMCE.openWindow(template, new Array());
+    var ed = tinyMCE.get('dummy_fm_editor');
+
+    ed.windowManager.open({
+        file : open_file,
+        width : 660,
+        height : 500,
+        close_previous : true,
+        inline : 1
+    });
 }
 
 document.write('<script language="javascript" type="text/javascript" src="<? echo $js_url; ?>"></script>');

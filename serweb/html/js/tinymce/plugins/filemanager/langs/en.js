@@ -1,3 +1,5 @@
 // UK lang variables
 
-tinyMCELang['lang_insert_filemanager'] = 'Insert File Link';
+tinyMCE.addI18n('en.filemanager',{ 
+    desc: 'Insert File Link'
+});
