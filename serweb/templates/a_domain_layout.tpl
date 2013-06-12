@@ -1,23 +1,20 @@
 {* Smarty *}
-{* $Id: a_domain_layout.tpl,v 1.5 2006/05/23 09:13:38 kozlik Exp $ *}
+{* $Id: a_domain_layout.tpl,v 1.6 2013/06/12 15:02:30 kozlik Exp $ *}
 
+{if $action == 'edit_text' or $action == 'edit_layout'}
 {literal}
 <script language="javascript" type="text/javascript">
-
-	var dialog_win = null;
-	var dialog_field_name = null;
-
 	tinyMCE.init({
 		mode : "none",
 		theme : "advanced",
-		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,zoom,flash,searchreplace,print,paste,directionality,fullscreen,noneditable,contextmenu,filemanager",
+		plugins : "table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,searchreplace,print,paste,directionality,fullscreen,noneditable,contextmenu,filemanager",
 //		theme_advanced_buttons1_add_before : "save,newdocument,separator",
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,formatselect",
 		theme_advanced_buttons1_add : "fontselect,fontsizeselect",
-		theme_advanced_buttons2_add : "separator,preview,zoom,separator,forecolor,backcolor",
+		theme_advanced_buttons2_add : "separator,preview,separator,forecolor,backcolor",
 		theme_advanced_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
 		theme_advanced_buttons3_add_before : "tablecontrols,separator",
-		theme_advanced_buttons3_add : "iespell,flash,advhr,separator,print,separator,fullscreen,filemanager",
+		theme_advanced_buttons3_add : "iespell,advhr,separator,print,separator,fullscreen,filemanager",
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_statusbar_location : "bottom",
@@ -29,12 +26,36 @@
 		theme_advanced_resizing : true,
 		theme_advanced_resize_horizontal : true
 	});
+</script>
+{/literal}
+{else}
+{literal}
+<script language="javascript" type="text/javascript">
+	tinyMCE.init({
+		mode : "exact",
+        elements : "dummy_fm_editor",
+		theme : "advanced",
+		plugins : "filemanager",
+		theme_advanced_buttons1 : "filemanager",
+		theme_advanced_statusbar_location : "none",
+		file_browser_callback : "fileBrowserCallBack"
+	});
+</script>
+{/literal}
+{/if}
+
+
+{literal}
+<script language="javascript" type="text/javascript">
+
+	var dialog_win = null;
+	var dialog_field_name = null;
 
 	function fileBrowserCallBack(field_name, url, type, win) {
 		dialog_win = win;
 		dialog_field_name = field_name;
 
-		tinyMCE.execInstanceCommand('dl_content', 'mceFilemanager', null, "insertFileToTinyMCE");
+        tinyMCE.activeEditor.execCommand('mceFilemanager', null, "insertFileToTinyMCE");
 	}
 	
 	function insertFileToTinyMCE(url){
@@ -132,6 +153,7 @@
 	
 	
 	<div class="swBackToMainPage"><a href="{url url='list_of_domains.php' uniq=1}">{$lang_str.l_back_to_main}</a></div>
+    <div id="dummy_fm_editor" style="display: none;"></div>
 {/if}
 
 <br>
