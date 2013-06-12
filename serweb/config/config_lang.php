@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: config_lang.php,v 1.4 2007/11/19 16:14:08 kozlik Exp $
+ * $Id: config_lang.php,v 1.5 2013/06/12 15:09:34 kozlik Exp $
  */
 
 /**
@@ -45,7 +45,7 @@ $available_languages = array(
     'en-utf-8'     => array('en([-_][[:alpha:]]{2})?|english',  'english-utf-8', 'en'),
     'en-iso-8859-1'=> array('en([-_][[:alpha:]]{2})?|english',  'english-iso-8859-1', 'en'),
     'fr-utf-8'     => array('fr([-_][[:alpha:]]{2})?|french',   'french-utf-8', 'fr'),
-//    'de-iso-8859-1'=> array('de([-_][[:alpha:]]{2})?|german', 'german-iso-8859-1', 'de')
+    'de-utf-8'     => array('de([-_][[:alpha:]]{2})?|german',   'german-utf-8', 'de')
 );
 
 $reference_language = 'en-utf-8';
