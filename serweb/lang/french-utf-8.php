@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: french-utf-8.php,v 1.8 2012/08/29 16:06:44 kozlik Exp $
+ * $Id: french-utf-8.php,v 1.9 2013/06/13 12:37:34 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"adresse";
 $lang_str['lf_terms_and_conditions'] =			"modalités et conditions";
 $lang_str['lf_mail_register_by_admin'] = 		"Courrier envoyé à l'utilisateur quand est créé par l'admin.";	// ??
 $lang_str['lf_mail_register'] = 				"inscription de confirmation du courrier";	// ??
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";	//to translate 
 $lang_str['lf_mail_fp_conf'] = 					"confirmation par courrier du mot de passe de remise à zéro quand l'ancien a été oublié";	// ??
 $lang_str['lf_mail_fp_pass'] = 					"expédier le nouveau mot de passe quand l'ancien a été oublié";	// ??
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";	//to translate 
 $lang_str['lf_config'] = 						"configuration du domaine";
 
 $lang_str['l_toggle_wysiwyg'] = 				"basculer en tel-tel (WYSIWYG)";

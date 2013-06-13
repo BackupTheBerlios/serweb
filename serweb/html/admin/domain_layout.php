@@ -3,7 +3,7 @@
  *	Edit domain layout
  * 
  *	@author     Karel Kozlik
- *	@version    $Id: domain_layout.php,v 1.5 2007/02/14 16:36:39 kozlik Exp $
+ *	@version    $Id: domain_layout.php,v 1.6 2013/06/13 12:37:33 kozlik Exp $
  *	@package    serweb
  *	@subpackage admin_pages
  */ 
@@ -55,12 +55,16 @@ $text_files[] = array('filename' => "terms.txt",
                       'desc' => $lang_str['lf_terms_and_conditions']);
 $text_files[] = array('filename' => "mail_register.txt",
                       'desc' => $lang_str['lf_mail_register']);
+$text_files[] = array('filename' => "mail_register_conf.txt",
+                      'desc' => $lang_str['lf_mail_register_conf']);
 $text_files[] = array('filename' => "mail_registered_by_admin.txt",
                       'desc' => $lang_str['lf_mail_register_by_admin']);
 $text_files[] = array('filename' => "mail_forgot_password_pass.txt",
                       'desc' => $lang_str['lf_mail_fp_pass']);
 $text_files[] = array('filename' => "mail_forgot_password_conf.txt",
                       'desc' => $lang_str['lf_mail_fp_conf']);
+$text_files[] = array('filename' => "mail_missed_calls.txt",
+                      'desc' => $lang_str['lf_mail_mmissed_calls']);
 
 
 $dl->set_opt('layout_files', $layout_files);

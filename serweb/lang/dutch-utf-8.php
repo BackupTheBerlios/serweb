@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: dutch-utf-8.php,v 1.55 2012/08/29 16:06:44 kozlik Exp $
+ * $Id: dutch-utf-8.php,v 1.56 2013/06/13 12:37:34 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"adres";
 $lang_str['lf_terms_and_conditions'] =			"voorwaarden";
 $lang_str['lf_mail_register_by_admin'] = 		"mail naar gebruiker gemaakt door admin";
 $lang_str['lf_mail_register'] = 				"mail bevestig registratie";
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";	//to translate 
 $lang_str['lf_mail_fp_conf'] = 					"mail bevestiging voor nieuw wachtwoord";
 $lang_str['lf_mail_fp_pass'] = 					"mail bevestiging voor nieuw wachtwoord (wachwoord vergeten)";
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";	//to translate 
 $lang_str['lf_config'] = 						"domein configuratie";
 
 $lang_str['l_toggle_wysiwyg'] = 				"gebruik WYSIWYG";

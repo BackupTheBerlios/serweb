@@ -1,6 +1,6 @@
-<?php
+<?
 /*
- * $Id: german-utf-8.php,v 1.1 2013/06/12 15:09:34 kozlik Exp $
+ * $Id: german-utf-8.php,v 1.2 2013/06/13 12:37:34 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -369,7 +369,7 @@ $lang_str['l_back_to_loginform'] = 				"Zurück zum Loginformular";
 $lang_str['msg_user_registered_s'] = 			"Benutzer angemeldet";
 $lang_str['msg_user_registered_l'] = 			"Ein neuer Benutzer wurde erfolgreich angemeldet";
 $lang_str['register_new_user'] = 				"neuen Benutzer anmelden";
-$lang_str["err_domain_of_email_not_match"] =    "Ihre E-Mail Adresse gehört nicht zu der Domain, bei der Sie sich anmelden möchten.";
+$lang_str["err_domain_of_email_not_match"] =    "Your email address is not from same domain as into which you are registering";
 
 /* ------------------------------------------------------------*/
 /*      registration - finished                                */
@@ -395,7 +395,7 @@ $lang_str['reg_conf_failed'] = 					"Bedauerlicherweise schlug der ".$config->do
 $lang_str['reg_conf_nr_not_exists'] = 			"Entweder ist Ihre Bestätigungsnummer falsch, oder Ihr Konto wurde bereits erstellt!";
 $lang_str['err_reg_conf_not_exists_conf_num'] = "Diese Bestätigungsnummer existiert leider nicht";
 
-/* ------------------------------------------------------------*/ 
+/* ------------------------------------------------------------*/
 /*      registration - forgot password                         */
 /* ------------------------------------------------------------*/
 
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"Adresse";
 $lang_str['lf_terms_and_conditions'] =			"allgemeine Geschäftsbedingungen";
 $lang_str['lf_mail_register_by_admin'] = 		"Mail die an den Benutzer geschickt wird, nachdem dieser vom Administrator angelegt wurde";
 $lang_str['lf_mail_register'] = 				"Anmeldebestätigungsmail";
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";	//to translate 
 $lang_str['lf_mail_fp_conf'] = 					"Bestätigungsemail für neues Passwort, wenn das alte vergessen wurde";
 $lang_str['lf_mail_fp_pass'] = 					"E-Mail mit neuem Passwort, wenn das alte vergessen wurde";
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";	//to translate 
 $lang_str['lf_config'] = 						"Domain Konfiguration";
 
 $lang_str['l_toggle_wysiwyg'] = 				"WYSIWYG umschalten";

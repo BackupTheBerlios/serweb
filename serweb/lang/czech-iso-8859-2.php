@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: czech-iso-8859-2.php,v 1.57 2012/08/29 16:06:43 kozlik Exp $
+ * $Id: czech-iso-8859-2.php,v 1.58 2013/06/13 12:37:33 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"adresa";
 $lang_str['lf_terms_and_conditions'] =			"podmínky a po¾adavky";
 $lang_str['lf_mail_register_by_admin'] = 		"text emailu zasílaného u¾ivateli pokud je novì zaregistrován administrátorem";
 $lang_str['lf_mail_register'] = 				"text emailu potvrzujícího registraci";
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";	//to translate 
 $lang_str['lf_mail_fp_conf'] = 					"text emailu pro potvrzení znovu nastevení hesla poté co jej u¾vatel zapomnìl";
 $lang_str['lf_mail_fp_pass'] = 					"text emailu obsahující novì vygenerované heslo";
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";	//to translate 
 $lang_str['lf_config'] = 						"konfiguraèní soubor domény";
 
 $lang_str['l_toggle_wysiwyg'] = 				"pøepnout WYSIWYG";	

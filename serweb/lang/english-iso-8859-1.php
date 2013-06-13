@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-iso-8859-1.php,v 1.73 2012/08/29 16:06:44 kozlik Exp $
+ * $Id: english-iso-8859-1.php,v 1.74 2013/06/13 12:37:34 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -167,8 +167,8 @@ $lang_str['th_uid'] = 							"uid";
 $lang_str['bad_username'] = 					"Bad username or password";
 $lang_str['account_disabled'] = 				"Your account was disabled";
 $lang_str['domain_not_found'] = 				"Your domain not found";
-$lang_str['msg_logout_s'] = 					"Loged out";
-$lang_str['msg_logout_l'] = 					"You have loged out. To login again, type your username and password bellow";
+$lang_str['msg_logout_s'] = 					"Logged out";
+$lang_str['msg_logout_l'] = 					"You have logged out. To login again, type your username and password bellow";
 $lang_str['userlogin'] = 						"Userlogin";
 $lang_str['adminlogin'] = 						"Adminlogin";
 $lang_str['enter_username_and_passw'] = 		"Please enter your username and password";
@@ -187,7 +187,7 @@ $lang_str['session_expired_relogin'] = 			"Your session expired, please relogin.
 $lang_str['msg_self_account_delete_l'] = 		"Your account has been deleted";
 $lang_str['l_yes_delete_it'] = 					"yes delete it";
 $lang_str['are_you_sure_to_delete_account'] = 	"Are you sure you want to delete your account?";
-$lang_str['delete_account_description'] = 		"If you confirm this your account will be deleted. Your data will persist in database for next <keep_days> days and then will be purged. You could ask the admin of your domain during this time period to undelete your account if you change your meaning.";
+$lang_str['delete_account_description'] = 		"If you confirm this your account will be deleted. Your data will persist in database for next <keep_days> days and then will be purged. You could ask the admin of your domain during this time period to undelete your account if you change your mind.";
 
 
 /* ------------------------------------------------------------*/
@@ -261,14 +261,14 @@ $lang_str['th_hangup'] = 						"hang up";
 $lang_str['calls_count'] = 						"Calls";
 $lang_str['no_calls'] = 						"No calls";
 $lang_str['msg_calls_deleted_s'] = 				"Calls deleted";
-$lang_str['msg_calls_deleted_l'] = 				"Calls has been succesfully deleted";
+$lang_str['msg_calls_deleted_l'] = 				"Calls has been successfully deleted";
 
 
 /* ------------------------------------------------------------*/
 /*      send IM                                                */
 /* ------------------------------------------------------------*/
 
-$lang_str['fe_no_im'] = 						"you didn't write message";
+$lang_str['fe_no_im'] = 						"you didn't write any message";
 $lang_str['fe_im_too_long'] = 					"instant message is too long";
 $lang_str['msg_im_send_s'] = 					"Message Sent";
 $lang_str['msg_im_send_l'] = 					"Message has been successfully sent to address";
@@ -353,7 +353,7 @@ $lang_str['err_sending_mail'] = 				"Sorry, there was an error when sending mail
 $lang_str['registration_introduction_1'] = 		"To register, please fill out the form below and click the submit button at the bottom of the page. An email message will be sent to you confirming your registration. Please contact";
 $lang_str['registration_introduction_2'] = 		"if you have any questions concerning registration and our free trial SIP services.";
 $lang_str['reg_email_desc'] = 					"Address to which a subscription confirmation request will be sent. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.)";
-$lang_str['reg_email_uname_desc'] = 			"Your SIP address will be same as your email address. Subscription confirmation request will be sent to this address. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.) Your email address have to be from domain ".$config->domain.".";
+$lang_str['reg_email_uname_desc'] = 			"Your SIP address will be same as your email address. Subscription confirmation request will be sent to this address. (If an invalid address is given, no confirmation will be sent and no SIP account will be created.) Your email address has to be of domain ".$config->domain.".";
 $lang_str['ff_phone'] = 						"phone";
 $lang_str['reg_phone_desc'] = 					"This is your PSTN phone number where you can be reached.";
 $lang_str['ff_pick_username'] = 				"pick your user name";
@@ -427,8 +427,8 @@ $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"aliases";
 $lang_str['l_account'] = 						"account";
 $lang_str['l_accounting'] = 					"accounting";
-$lang_str['realy_you_want_delete_this_user'] =	"Do you realy want delete this user?";
-$lang_str['realy_you_want_purge_this_user'] =	"Do you realy want purge this user?";
+$lang_str['realy_you_want_delete_this_user'] =	"Do you really want delete this user?";
+$lang_str['realy_you_want_purge_this_user'] =	"Do you really want purge this user?";
 $lang_str['l_credentials'] = 					"credentials";
 $lang_str['l_uris'] = 					        "SIP URIs";
 $lang_str['user_has_no_credentials'] = 			"User has no credentials";
@@ -457,8 +457,8 @@ $lang_str['ff_alias'] = 						"alias";
 $lang_str['th_alias'] = 						"alias";
 $lang_str['ff_uri'] = 						    "URI";
 $lang_str['th_uri'] = 						    "URI";
-$lang_str['realy_you_want_delete_this_alias'] = "Realy you want delete this alias?";
-$lang_str['user_have_not_any_aliases'] = 		"User haven't any aliases";
+$lang_str['realy_you_want_delete_this_alias'] = "Do you really want to delete this alias?";
+$lang_str['user_have_not_any_aliases'] = 		"User doesn't have any aliases";
 $lang_str['ff_is_canon'] = 						"is canonical";
 $lang_str['ff_is_enabled'] = 					"is enabled";
 $lang_str['ff_uri_is_to'] = 					"can be used as 'to' uri";
@@ -559,8 +559,8 @@ $lang_str['ff_item_value'] = 					"item value";
 $lang_str['th_item_label'] = 					"item label";
 $lang_str['th_item_value'] = 					"item value";
 $lang_str['l_back_to_editing_attributes'] = 	"back to editing attributes";
-$lang_str['realy_want_you_delete_this_attr'] = 	"Realy want you delete this attribute?";
-$lang_str['realy_want_you_delete_this_item'] = 	"Realy want you delete this item?";
+$lang_str['realy_want_you_delete_this_attr'] = 	"Really want you delete this attribute?";
+$lang_str['realy_want_you_delete_this_item'] = 	"Really want you delete this item?";
 
 
 $lang_str['attr_type_warning'] = 				"On this page you may define new attributes and change types of them, their flags, etc. Preddefined attributes are mostly used internaly by SerWeb or by SER. Do not change them if you do not know what are you doing!!!";
@@ -636,9 +636,9 @@ $lang_str['th_for_ser'] = 						"for SER";
 $lang_str['th_for_serweb'] = 					"for SerWeb";
 
 $lang_str['err_credential_changed_domain'] = 	"Domain of user has been changed. You have to also fill new password";
-$lang_str['warning_credential_changed_domain'] =		"Serweb is configured to not store clear text passwords. That mean, if you change domain of user, you have to also fill password field. Otherwise hashed password become invalid.";
+$lang_str['warning_credential_changed_domain'] =		"SerWeb is configured to not store plain-text passwords. This means, if you change a user's domain, the hashed password becomes invalid. Hence, in this case,  you also have to populate the password field.";
 
-$lang_str['realy_want_you_delete_this_credential'] = 	"Realy want you delete this credential?";
+$lang_str['realy_want_you_delete_this_credential'] = 	"Really want you delete this credential?";
 
 
 /* ------------------------------------------------------------*/
@@ -666,9 +666,9 @@ $lang_str['fe_invalid_greeting_file'] = 		"greeting file is invalid";
 $lang_str['fe_greeting_file_no_wav'] = 			"greeting file type must be audio/wav";
 $lang_str['fe_greeting_file_too_big'] = 		"greeting file is too big";
 $lang_str['msg_greeting_stored_s'] = 			"Greeting stored";
-$lang_str['msg_greeting_stored_l'] = 			"Your greeting has been succesfully stored";
+$lang_str['msg_greeting_stored_l'] = 			"Your greeting has been successfully stored";
 $lang_str['msg_greeting_deleted_s'] = 			"Greeting removed";
-$lang_str['msg_greeting_deleted_l'] = 			"Your greeting has been succesfully removed";
+$lang_str['msg_greeting_deleted_l'] = 			"Your greeting has been successfully removed";
 
 /* ------------------------------------------------------------*/
 /*      whitelist                                              */
@@ -701,8 +701,8 @@ $lang_str['no_domains_found'] = 				"No domains found";
 $lang_str['new_dom_name'] = 					"Add new domain name";
 $lang_str['owner'] = 							"Owner";
 
-$lang_str['realy_delete_domain'] = 				"Do you realy want delete this domain?";
-$lang_str['realy_purge_domain'] =               "Do you realy want purge this domain?";
+$lang_str['realy_delete_domain'] = 				"Do you really want delete this domain?";
+$lang_str['realy_purge_domain'] =               "Do you really want purge this domain?";
 $lang_str['l_create_new_domain'] = 				"create new domain";
 $lang_str['l_reload_ser'] = 					"reload SER and web server";
 $lang_str['no_domain_name_is_set'] = 			"Enter at least one domain name";
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"address";
 $lang_str['lf_terms_and_conditions'] =			"terms and conditions";
 $lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";
 $lang_str['lf_mail_register'] = 				"mail confirmation registration";
-$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password whan an old one was forgotten";
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";
+$lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password when an old one was forgotten";
 $lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";
 $lang_str['lf_config'] = 						"domain configuration";
 
 $lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";
@@ -791,7 +793,7 @@ $lang_str['l_skip_asignment_of_admin'] = 		"skip assignment of admin";
 /* ------------------------------------------------------------*/
 
 $lang_str['have_a_domain_head'] = 				"Have-my-domain!";
-$lang_str['have_a_domain_introduction'] = 		"On this page you could register your own domain to be hosted on ".$config->domain." server. If you would like to have your domain hosted on ".$config->domain." server you have to set DNS for your domain in proper way first. There have to be a SRV record for service 'SIP' and protocol 'UDP' pointing to host <srv_host> and port <srv_port>.";
+$lang_str['have_a_domain_introduction'] = 		"On this page you could register your own domain to be hosted on ".$config->domain." server. If you would like to have your domain hosted on ".$config->domain." server you have to set DNS for your domain in proper way first. There has to be a SRV record for the service 'SIP' with the protocol 'UDP' pointing to host <srv_host> and port <srv_port>.";
 $lang_str['have_a_domain_introduction2'] = 		"Register your domain in two steps:";
 $lang_str['have_a_domain_step1'] = 				"Check DNS record for your domain";
 $lang_str['have_a_domain_step2'] = 				"Create account for administrator of the domain";

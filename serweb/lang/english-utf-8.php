@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: english-utf-8.php,v 1.67 2013/06/12 15:42:59 kozlik Exp $
+ * $Id: english-utf-8.php,v 1.68 2013/06/13 12:37:34 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -738,8 +738,10 @@ $lang_str['ff_address'] = 						"address";
 $lang_str['lf_terms_and_conditions'] =			"terms and conditions";
 $lang_str['lf_mail_register_by_admin'] = 		"mail which is send to user when is created by admin";
 $lang_str['lf_mail_register'] = 				"mail confirmation registration";
+$lang_str['lf_mail_register_conf'] = 			"mail confirmation registration (email validation required)";
 $lang_str['lf_mail_fp_conf'] = 					"mail confirmation of reset password when an old one was forgotten";
 $lang_str['lf_mail_fp_pass'] = 					"mail new password whan an old one was forgotten";
+$lang_str['lf_mail_mmissed_calls'] = 			"mail with missed calls";
 $lang_str['lf_config'] = 						"domain configuration";
 
 $lang_str['l_toggle_wysiwyg'] = 				"toggle WYSIWYG";
