@@ -1,6 +1,6 @@
 <?
 /*
- * $Id: german-utf-8.php,v 1.2 2013/06/13 12:37:34 kozlik Exp $
+ * $Id: german-utf-8.php,v 1.3 2013/06/14 14:27:54 kozlik Exp $
  *
  * Prefixes:
  * 'fe' - form error
@@ -22,16 +22,16 @@ $lang_set['time_format'] = 		"H:i";
 /*      common messages                                        */
 /* ------------------------------------------------------------*/
 
-$lang_str['user_management'] = 					"Benutzer Verwaltung";
+$lang_str['user_management'] = 					"Benutzerverwaltung";
 $lang_str['admin_interface'] = 					"Administrator Oberfläche";
 $lang_str['user'] = 							"Benutzer";
 $lang_str['from'] = 							"von";
 $lang_str['no_records'] = 						"Keine Einträge";
 $lang_str['l_logout'] = 						"Logout";
-$lang_str['l_dele_account'] = 					"Lösche mein Konto";
+$lang_str['l_dele_account'] = 					"Konto löschen";
 $lang_str['l_cancel'] = 						"abbrechen";
 $lang_str['l_edit'] = 							"bearbeiten";
-$lang_str['l_insert'] = 						"einfügen";
+$lang_str['l_insert'] = 						"hinzufügen";
 $lang_str['l_extended'] = 						"erweitert";
 $lang_str['l_rename'] = 						"umbenennen";
 $lang_str['l_change'] = 						"wechseln";
@@ -112,13 +112,13 @@ $lang_str['b_clear_filter'] =		 			"Filter löschen";
 
 $lang_str['tab_my_account'] =		 			"Mein Konto";
 $lang_str['tab_phonebook'] =		 			"Telefonbuch";
-$lang_str['tab_missed_calls'] =	 				"verpasste Anrufe";
+$lang_str['tab_missed_calls'] =	 				"Verpasste Anrufe";
 $lang_str['tab_accounting'] =	 				"Buchhaltung";
 $lang_str['tab_send_im'] =	 					"IM senden";
 $lang_str['tab_message_store'] =	 			"Nachrichten Speicher";
 $lang_str['tab_voicemail'] =	 				"Voicemail";
 $lang_str['tab_user_preferences'] =	 			"Benutzereinstellungen";
-$lang_str['tab_speed_dial'] =	 				"Kurzwahl";
+$lang_str['tab_speed_dial'] =	 				"Kurzwahlen";
 
 $lang_str['tab_users'] =	 					"Benutzer";
 $lang_str['tab_admin_privileges'] =	 			"Administratorrechte";
@@ -137,7 +137,7 @@ $lang_str['ff_sip_address'] = 					"SIP Adresse";
 $lang_str['ff_your_timezone'] = 				"Ihre Zeitzone";
 $lang_str['ff_username'] = 						"Benutzername";
 $lang_str['ff_email'] = 						"E-Mail";
-$lang_str['ff_show_online_only'] = 				"Nur online Benutzer anzeigen";
+$lang_str['ff_show_online_only'] = 				"Nur 'Online' Benutzer anzeigen";
 $lang_str['ff_language'] = 						"Sprache";
 $lang_str['ff_reg_confirmation'] = 				"Anmeldebestätigung obligatorisch";
 $lang_str['ff_uid'] = 							"UID";
@@ -169,14 +169,14 @@ $lang_str['account_disabled'] = 				"Ihr Konto wurde deaktiviert";
 $lang_str['domain_not_found'] = 				"Ihre Domain wurde nicht gefunden";
 $lang_str['msg_logout_s'] = 					"Abgemeldet";
 $lang_str['msg_logout_l'] = 					"Sie sind abgemeldet. Zur erneuten Anmeldung, geben Sie unten Ihren Benutzernamen und Passwort ein";
-$lang_str['userlogin'] = 						"Benutzeranmeldung";
+$lang_str['userlogin'] = 						"Anmeldung";
 $lang_str['adminlogin'] = 						"Administratoranmeldung";
 $lang_str['enter_username_and_passw'] = 		"Bitte geben Sie Ihren Benutzernamen und Ihr Passwort ein";
 $lang_str['ff_password'] = 						"Passwort";
 $lang_str['l_forgot_passw'] = 					"Passwort vergessen?";
 $lang_str['l_register'] = 						"Registrieren!";
 $lang_str['l_have_my_domain'] = 				"Meine-Eigene-Domain!";
-$lang_str['remember_uname'] = 					"Speichere meinen Benutzernamen auf diesem Computer";
+$lang_str['remember_uname'] = 					"Meinen Benutzernamen auf diesem Computer merken";
 $lang_str['session_expired'] = 					"Sitzung abgelaufen";
 $lang_str['session_expired_relogin'] = 			"Ihre Sitzung ist abgelaufen, bitte melden Sie sich erneut an.";
 
@@ -426,7 +426,7 @@ $lang_str['th_phone'] = 						"Telefone";
 $lang_str['l_acl'] = 							"ACL";
 $lang_str['l_aliases'] = 						"Aliasse";
 $lang_str['l_account'] = 						"Konto";
-$lang_str['l_accounting'] = 					"Buchhaltung";
+$lang_str['l_accounting'] = 					"Abrechnung";
 $lang_str['realy_you_want_delete_this_user'] =	"Möchten Sie diesen Benutzer wirklich löschen?";
 $lang_str['realy_you_want_purge_this_user'] =	"Möchten Sie diesen Benutzer wirklich endgültig entfernen?";
 $lang_str['l_credentials'] = 					"Anmeldedaten";
@@ -608,9 +608,9 @@ $lang_str['err_at_int_range'] = 				"muss im Bereich %d bis %d liegen";
 $lang_str['err_at_int_range_min'] = 			"muss größer seine als %d";
 $lang_str['err_at_int_range_max'] = 			"muss kleiner seine als %d";
 
-$lang_str['attr_grp_general'] = 				"allgemein";
-$lang_str['attr_grp_privacy'] = 				"Vertraulichkeit";
-$lang_str['attr_grp_other'] = 					"anders";
+$lang_str['attr_grp_general'] = 				"Allgemeines";
+$lang_str['attr_grp_privacy'] = 				"Privatsphäre";
+$lang_str['attr_grp_other'] = 					"Sonstiges";
 $lang_str['err_at_grp_empty'] = 				"Attribut Gruppe darf nicht leer sein";
 $lang_str['err_at_new_grp_empty'] = 	        "Gruppenname darf nicht leer sein";
 $lang_str['attr_grp_create_new'] = 				"Neue Gruppe anlegen";
