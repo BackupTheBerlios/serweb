@@ -60,9 +60,9 @@
 	padding: 0;
 	position: absolute;
 	top: 25px;
-	left: 681px;
+	left: 381px;
 	text-align: right;
-	width: 200px;
+	width: 500px;
 }
 
 .swHeadingLogout{
@@ -71,9 +71,9 @@
 	padding: 0;
 	position: absolute;
 	top: 45px;
-	width: 200px;
+	width: 400px;
 	text-align: right;
-	left: 681px;
+	left: 481px;
 }
 .swHeadingLogout a {
 	text-decoration:none;
@@ -89,9 +89,9 @@
 	padding: 0;
 	position: absolute;
 	top: 85px;
-	width: 200px;
+	width: 400px;
 	text-align: right;
-	left: 681px;
+	left: 481px;
 }
 .swHeadingDeleAccount a {
 	text-decoration:none;
